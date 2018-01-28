@@ -19,6 +19,12 @@ Meteor.methods({
 		sex,
 	}) {
 
+		niss = niss.trim();
+		firstname = firstname.trim();
+		lastname = lastname.trim();
+		birthdate = birthdate.trim();
+		sex = sex.trim();
+
 		check(niss, String);
 		check(firstname, String);
 		check(lastname, String);
