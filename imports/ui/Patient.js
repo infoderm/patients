@@ -72,14 +72,14 @@ function Patient ( { classes, theme, patient } ) {
 	const deleteThisPatient = () => Meteor.call('patients.remove', patient._id);
 
 	return (
-		<Grid item xs={12} sm={6} md={4}>
+		<Grid item sm={12} md={4}>
 			<Card className={classes.card}>
 				<div className={classes.details}>
 					<CardHeader
 						className={classes.header}
 						avatar={
 							<Avatar className={classes[patient.sex]}>
-								{patient.sex[0].toUpperCase()}
+								{patient.sex.slice(0,1).toUpperCase()}
 							</Avatar>
 						}
 						title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
