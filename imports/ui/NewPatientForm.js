@@ -27,6 +27,7 @@ export default class NewPatientForm extends React.Component {
 			lastname: '',
 			birthdate: '',
 			sex: '',
+			photo: '',
 		};
 
 	}
@@ -43,6 +44,7 @@ export default class NewPatientForm extends React.Component {
 			lastname: '',
 			birthdate: '',
 			sex: '',
+			photo: '',
 		});
 
 	}

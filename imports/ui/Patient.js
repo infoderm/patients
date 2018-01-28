@@ -6,11 +6,12 @@ import { withStyles } from 'material-ui/styles';
 
 import Grid from 'material-ui/Grid';
 
-import Card, { CardContent, CardMedia } from 'material-ui/Card';
+import Card, { CardHeader, CardContent, CardMedia, CardActions } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
+import Paper from 'material-ui/Paper';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
 
@@ -29,24 +30,29 @@ const styles = theme => ({
 		flex: 1,
 		flexDirection: 'column',
 	},
+	header: {
+		flex: '1 0 auto',
+	},
 	content: {
 		flex: '1 0 auto',
 	},
-	avatar: {
-		fontSize: "4em",
-		margin: 30,
+	photoPlaceHolder: {
+		display: 'flex',
+		fontSize: '4rem',
+		margin: 0,
 		width: 140,
-		height: 140,
+		height: 200,
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: '#fff',
+		backgroundColor: '#999',
 	},
 	photo: {
 		width: 140,
 		height: 200,
 	},
-	controls: {
+	actions: {
 		display: 'flex',
-		alignItems: 'center',
-		paddingLeft: theme.spacing.unit,
-		paddingBottom: theme.spacing.unit,
 	},
 	male: {
 		color: '#fff',
@@ -66,24 +72,27 @@ function Patient ( { classes, theme, patient } ) {
 	const deleteThisPatient = () => Meteor.call('patients.remove', patient._id);
 
 	return (
-		<Grid item sm={12} md={6}>
+		<Grid item xs={12} sm={6} md={4}>
 			<Card className={classes.card}>
 				<div className={classes.details}>
+					<CardHeader
+						className={classes.header}
+						avatar={
+							<Avatar className={classes[patient.sex]}>
+								{patient.sex[0].toUpperCase()}
+							</Avatar>
+						}
+						title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
+						subheader={new Date(patient.birthdate).toDateString()}
+					/>
 					<CardContent className={classes.content}>
-						<Typography type="headline">
-							<Avatar className={classes[patient.sex]}>{patient.sex[0].toUpperCase()}</Avatar>
-							<span className={classes.name}>{patient.firstname} {patient.lastname.toUpperCase()}</span>
-							<Chip label={patient.niss}/>
-						</Typography>
-						<Typography type="subheading" color="textSecondary">
-							<span>{new Date(patient.birthdate).toDateString()}</span>
-						</Typography>
 					</CardContent>
-					<div className={classes.control}>
+					<CardActions className={classes.actions} disableActionSpacing>
 						<IconButton aria-label="Delete" onClick={deleteThisPatient}>
 							<DeleteIcon />
 						</IconButton>
-					</div>
+						<Chip label={patient.niss}/>
+					</CardActions>
 				</div>
 				{ patient.photo ?
 				<CardMedia
@@ -91,7 +100,9 @@ function Patient ( { classes, theme, patient } ) {
 					image={`data:image/png;base64,${patient.photo}`}
 					title={`${patient.firstname} ${patient.lastname}`}
 				/> :
-				<Avatar className={classes.avatar}>{patient.firstname[0]}{patient.lastname[0]}</Avatar>
+				<div className={classes.photoPlaceHolder}>
+					{patient.firstname[0]}{patient.lastname[0]}
+				</div>
 				}
 			</Card>
 		</Grid>
