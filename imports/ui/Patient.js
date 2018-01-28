@@ -23,7 +23,7 @@ import { Patients } from '../api/patients.js';
 const styles = theme => ({
 	card: {
 		display: 'flex',
-		height: 200,
+		minHeight: 200,
 	},
 	details: {
 		display: 'flex',
@@ -72,7 +72,7 @@ function Patient ( { classes, theme, patient } ) {
 	const deleteThisPatient = () => Meteor.call('patients.remove', patient._id);
 
 	return (
-		<Grid item sm={12} md={4}>
+		<Grid item sm={12} md={6} lg={4} xl={3}>
 			<Card className={classes.card}>
 				<div className={classes.details}>
 					<CardHeader
