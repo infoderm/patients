@@ -10,7 +10,8 @@
     "bcrypt": "^1.0.3",
     "meteor-node-stubs": "~0.2.4",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-materialize": "^1.1.2"
   },
   "devDependencies": {
     "chai": "^4.1.2"

@@ -21,3 +21,4 @@ react-meteor-data
 accounts-ui
 accounts-password
 meteortesting:mocha
+materialize:materialize

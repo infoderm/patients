@@ -1,5 +1,6 @@
 import React, { Component } from 'react' ;
 import ReactDOM from 'react-dom';
+import { Breadcrumb , MenuItem , Row , Input , Button , Collection , Navbar , NavItem } from 'react-materialize';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
@@ -16,17 +17,26 @@ class App extends Component {
 		this.state = {
 			filterSex: 'all',
 		};
+
+		this.form = {
+		};
+
+		this.filter = {
+		};
+
 	}
 
 	handleSubmit(event) {
 
 		event.preventDefault();
 
-		const niss = ReactDOM.findDOMNode(this.refs.nissInput).value.trim();
-		const firstname = ReactDOM.findDOMNode(this.refs.firstnameInput).value.trim();
-		const lastname = ReactDOM.findDOMNode(this.refs.lastnameInput).value.trim();
-		const birthdate = ReactDOM.findDOMNode(this.refs.birthdateInput).value.trim();
-		const sex = ReactDOM.findDOMNode(this.refs.sexInput).value.trim();
+		console.log(this.form);
+
+		const niss = this.form.niss.state.value.trim();
+		const firstname = this.form.firstname.state.value.trim();
+		const lastname = this.form.lastname.state.value.trim();
+		const birthdate = this.form.birthdate.state.value.trim();
+		const sex = this.form.sex.state.value.trim();
 
 		Meteor.call('patients.insert', {
 			niss,
@@ -36,17 +46,17 @@ class App extends Component {
 			sex,
 		});
 
-		ReactDOM.findDOMNode(this.refs.nissInput).value = '';
-		ReactDOM.findDOMNode(this.refs.firstnameInput).value = '';
-		ReactDOM.findDOMNode(this.refs.lastnameInput).value = '';
-		ReactDOM.findDOMNode(this.refs.birthdateInput).value = '';
-		ReactDOM.findDOMNode(this.refs.sexInput).value = '';
+		this.form.niss.input.value = '';
+		this.form.firstname.input.value = '';
+		this.form.lastname.input.value = '';
+		this.form.birthdate.dateInput.value = '';
+		this.form.sex.selectInput.value = '';
 
 	}
 
-	handleChangeFilterSex(){
+	handleChangeFilterSex(value){
 		this.setState({
-			filterSex: ReactDOM.findDOMNode(this.refs.filterSexSelect).value,
+			filterSex: value,
 		});
 	}
 
@@ -62,44 +72,50 @@ class App extends Component {
 
 	render(){
 		return (
-			<div className="container">
+			<div>
+			<Navbar brand='Dermatodoc' right>
 				<AccountsUIWrapper/>
+			</Navbar>
+			<div className="container">
 				<header>
-					<h1>Patients (A: {this.props.allCount}, F: {this.props.femaleCount}, M: {this.props.maleCount}, O: {this.props.otherCount})</h1>
-					<label className="filter-sex">
-						Filter by sex:
-						<select
-							readOnly
-							ref="filterSexSelect"
-							value={this.state.filterSex}
-							onChange={this.handleChangeFilterSex.bind(this)}
-						>
-							<option value="all">All</option>
-							<option value="female">Only female</option>
-							<option value="male">Only male</option>
-							<option value="other">Only other</option>
-						</select>
-					</label>
+					<Breadcrumb>
+						<MenuItem>Patients</MenuItem>
+						<MenuItem>{this.state.filterSex}</MenuItem>
+					</Breadcrumb>
+					<Input type="select"
+						label="Filter by sex"
+						ref={node => this.filter.sex = node}
+						value={this.state.filterSex}
+						onChange={(e, value) => this.handleChangeFilterSex(value)}
+					>
+						<option value="all">All</option>
+						<option value="female">Only female</option>
+						<option value="male">Only male</option>
+						<option value="other">Only other</option>
+					</Input>
 					{ this.props.currentUser ?
 					<form className="new-patient" onSubmit={this.handleSubmit.bind(this)}>
-						<input type="text" ref="nissInput" placeholder="NISS"/>
-						<input type="text" ref="firstnameInput" placeholder="First name"/>
-						<input type="text" ref="lastnameInput" placeholder="Last name"/>
-						<select ref="sexInput" required="true">
-							<option value="female">Female</option>
-							<option value="male">Male</option>
-							<option value="other">Other</option>
-							<option value="" selected>Choose sex</option>
-						</select>
-						<input type="text" ref="birthdateInput" placeholder="Birth date"/>
-						<input type="submit" value="Create"/>
+						<Row>
+							<Input s={2} label="NISS" type="text" ref={node => this.form.niss = node}/>
+							<Input s={3} label="First name" type="text" ref={node => this.form.firstname = node}/>
+							<Input s={3} label="Last name" type="text" ref={node => this.form.lastname = node}/>
+							<Input s={1} label="Sex" type="select" ref={node => this.form.sex = node} defaultValue="">
+								<option value="female">Female</option>
+								<option value="male">Male</option>
+								<option value="other">Other</option>
+								<option value="" disabled>Sex</option>
+							</Input>
+							<Input s={2} label="Birth date" type="date" ref={node => this.form.birthdate = node}/>
+							<Button s={1} floating large className='blue' waves='light' icon='add' />
+						</Row>
 					</form> : ''
 					}
 				</header>
-				<ul>
+				<Collection header="Patients">
 					{this.renderPatients()}
-				</ul>
+				</Collection>
 			</div>
+		</div>
 		);
 	}
 }
@@ -109,9 +125,9 @@ export default withTracker(() => {
 	return {
 		currentUser: Meteor.user() ,
 		patients: Patients.find({}, { sort: { firstname: 1 } }).fetch() ,
-		allCount: Patients.find({}).count() ,
-		femaleCount: Patients.find({ sex: 'female'}).count() ,
-		maleCount: Patients.find({ sex: 'male'}).count() ,
-		otherCount: Patients.find({ sex: 'other'}).count() ,
+		//allCount: Patients.find({}).count() ,
+		//femaleCount: Patients.find({ sex: 'female'}).count() ,
+		//maleCount: Patients.find({ sex: 'male'}).count() ,
+		//otherCount: Patients.find({ sex: 'other'}).count() ,
 	};
 }) (App);
