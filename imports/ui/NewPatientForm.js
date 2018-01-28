@@ -48,6 +48,7 @@ export default class NewPatientForm extends React.Component {
 	}
 
 	handleDrop ( event ) {
+
 		event.preventDefault();
 
 		// TODO validate using xsd
@@ -60,10 +61,11 @@ export default class NewPatientForm extends React.Component {
 		const attributes = identity._attributes ;
 		const d = attributes.dateofbirth;
 
-		this.setState({
+		Meteor.call('patients.insert', {
 			niss: attributes.nationalnumber,
 			firstname: identity.firstname._text,
 			lastname: identity.name._text,
+			photo: identity.photo._text,
 			birthdate: `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`,
 			sex: attributes.gender,
 		});

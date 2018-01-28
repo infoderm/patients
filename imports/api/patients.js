@@ -17,23 +17,26 @@ Meteor.methods({
 		lastname,
 		birthdate,
 		sex,
+		photo,
 	}) {
+
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
 
 		niss = niss.trim();
 		firstname = firstname.trim();
 		lastname = lastname.trim();
 		birthdate = birthdate.trim();
 		sex = sex.trim();
+		photo = photo.replace(/\n/g,'');
 
 		check(niss, String);
 		check(firstname, String);
 		check(lastname, String);
 		check(birthdate, String);
 		check(sex, String);
-
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
+		check(photo, String);
 
 		Patients.insert({
 			niss,
@@ -41,6 +44,7 @@ Meteor.methods({
 			lastname,
 			birthdate,
 			sex,
+			photo,
 			createdAt: new Date(),
 			owner: this.userId,
 			username: Meteor.users.findOne(this.userId).username,

@@ -5,6 +5,8 @@ import React from 'react' ;
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
+import Reboot from 'material-ui/Reboot';
+
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -49,27 +51,31 @@ class App extends React.Component {
 		return (
 			<MuiThemeProvider theme={theme}>
 			<div>
-			<AppBar position="static" color="default">
-				<Toolbar>
-					<Typography type="title" color="inherit">DERMATODOC</Typography>
-					<AccountsUIWrapper/>
-				</Toolbar>
-			</AppBar>
-			<Select
-				label="Filter by sex"
-				value={this.state.filterSex}
-				onChange={e => this.setState({ filterSex: e.target.value })}
-			>
-				<MenuItem value="all">All</MenuItem>
-				<MenuItem value="female">Only female</MenuItem>
-				<MenuItem value="male">Only male</MenuItem>
-				<MenuItem value="other">Only other</MenuItem>
-			</Select>
-			{ this.props.currentUser ? <NewPatientForm/> : '' }
-			<Grid container spacing={24}>
-				{this.renderPatients()}
-			</Grid>
-		</div></MuiThemeProvider>
+				<Reboot/>
+				<AppBar position="static">
+					<Toolbar>
+						<Typography type="title" color="inherit" style={{flex:1}}>DERMATODOC</Typography>
+						<AccountsUIWrapper/>
+					</Toolbar>
+				</AppBar>
+				<Select
+					label="Filter by sex"
+					value={this.state.filterSex}
+					onChange={e => this.setState({ filterSex: e.target.value })}
+				>
+					<MenuItem value="all">All</MenuItem>
+					<MenuItem value="female">Only female</MenuItem>
+					<MenuItem value="male">Only male</MenuItem>
+					<MenuItem value="other">Only other</MenuItem>
+				</Select>
+				<div style={{ padding: 12 }}>
+				{ this.props.currentUser ? <NewPatientForm/> : '' }
+					<Grid container spacing={24}>
+						{this.renderPatients()}
+					</Grid>
+				</div>
+			</div>
+			</MuiThemeProvider>
 		);
 	}
 }
