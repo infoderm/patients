@@ -24,11 +24,13 @@ import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import DoneIcon from 'material-ui-icons/Done';
 import Zoom from 'material-ui/transitions/Zoom';
-import blue from 'material-ui/colors/blue';
 import green from 'material-ui/colors/green';
 
+import insertFromXML from '../client/insertFromXML.js';
 import { Patients } from '../api/patients.js';
 
+import WholeWindowDropZone from './WholeWindowDropZone.js';
+import Filter from './Filter.js';
 import NewPatientForm from './NewPatientForm.js';
 import Patient from './Patient.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
@@ -44,14 +46,6 @@ const styles = theme => ({
 	filterSex: {
 		marginLeft: "2rem",
 	},
-	dropzone: {
-		position: "fixed",
-		top: 0,
-		left: 0,
-		width: "100%",
-		height: "100vh",
-		backgroundColor: blue[900],
-	}
 });
 
 class App extends React.Component {
@@ -77,25 +71,23 @@ class App extends React.Component {
 
 	render(){
 
-		const { classes, theme } = this.props;
+		const { classes, theme, patients } = this.props;
 
 		const transitionDuration = {
 		  enter: theme.transitions.duration.enteringScreen,
 		  exit: theme.transitions.duration.leavingScreen,
 		}
 
+		const suggestions = patients.map( patient => { return { label : `${patient.firstname} ${patient.lastname}` } ; } ) ;
+
 		return (
 			<MuiThemeProvider theme={muitheme}>
 			<div>
 				<Reboot/>
-				<div id="dropzone" className={classes.dropzone}>
-					<Button fab color='primary'>
-						<AddIcon />
-					</Button>
-				</div>
+				<WholeWindowDropZone callback={insertFromXML}/>
 				<AppBar position="static">
 					<Toolbar>
-						<Typography type="title" color="inherit" style={{flex:1}}>DERMATODOC</Typography>
+						<Typography type="title" color="inherit" style={{flex:1}}>Patients</Typography>
 						<AccountsUIWrapper/>
 						<Select
 							className={classes.filterSex}
@@ -108,6 +100,7 @@ class App extends React.Component {
 							<MenuItem value="male">Only male</MenuItem>
 							<MenuItem value="other">Only other</MenuItem>
 						</Select>
+						<Filter suggestions={suggestions}/>
 					</Toolbar>
 				</AppBar>
 				<div style={{ padding: 12 }}>
