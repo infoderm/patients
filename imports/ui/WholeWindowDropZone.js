@@ -102,7 +102,7 @@ class WholeWindowDropZone extends React.Component {
 
 		return (
 			<div ref={node => this._container = node} className={classes.container}>
-				<Button fab color='primary'>
+				<Button variant="fab" color='primary'>
 					<AddIcon />
 				</Button>
 			</div>

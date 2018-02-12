@@ -90,7 +90,7 @@ export default class NewPatientForm extends React.Component {
 					/>
 				</Grid>
 				<Grid item xs={2}>
-					<Button fab color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
+					<Button variant="fab" color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
 						<AddIcon />
 					</Button>
 				</Grid>
