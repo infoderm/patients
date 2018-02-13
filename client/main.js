@@ -11,7 +11,7 @@ Meteor.startup(
   () => render(
     (
       <BrowserRouter>
-        <App />
+        <App/>
       </BrowserRouter>
     ) ,
     document.getElementById('render-target')

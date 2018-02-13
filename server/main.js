@@ -4,4 +4,5 @@ import '../imports/api/patients.js';
 
 Meteor.startup(() => {
   // code to run on server at startup
+  // e.g. creation of mongodb indices
 });

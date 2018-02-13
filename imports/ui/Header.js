@@ -11,8 +11,6 @@ import Typography from 'material-ui/Typography';
 import Select from 'material-ui/Select'
 import { MenuItem } from 'material-ui/Menu'
 
-import { Patients } from '../api/patients.js';
-
 import Filter from './Filter.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
 

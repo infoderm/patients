@@ -8,10 +8,10 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import DoneIcon from 'material-ui-icons/Done';
-import Zoom from 'material-ui/transitions/Zoom';
 
 import NewPatientForm from './NewPatientForm.js';
 import PatientsList from './PatientsList.js';
+import PatientDetails from './PatientDetails.js';
 
 const styles = theme => ({
 	fab: {
@@ -37,61 +37,37 @@ class Main extends React.Component {
 			<Switch>
 				<Route exact path='/' render={
 					(props) => {
-						const { classes, theme, patients, filterSex, currentUser } = this.props;
-
-						const transitionDuration = {
-							enter: theme.transitions.duration.enteringScreen,
-							exit: theme.transitions.duration.leavingScreen,
-						};
+						const { classes, patients, filterSex, currentUser } = this.props;
 
 						return (
 							<div>
 								<PatientsList patients={patients} filterSex={filterSex}/>
-								{ currentUser && <Zoom
-									appear={true}
-									key="Start creation"
-									in={true}
-									timeout={transitionDuration}
-									enterDelay={transitionDuration.exit}
-									unmountOnExit
-								>
+								{ currentUser &&
 									<Link to='/new'>
 										<Button variant="fab" className={classes.fab} color='primary' onClick={e => this.setState({creationMode: true})}>
 											<AddIcon />
 										</Button>
 									</Link>
-								</Zoom> }
+								}
 							</div>
 						) ;
 					}
 				}/>
 
-				<Route exact path='/new' render={
-					(props) => {
-						const { classes , theme } = this.props;
+				<Route path='/patient/:id' component={PatientDetails}/>
 
-						const transitionDuration = {
-							enter: theme.transitions.duration.enteringScreen,
-							exit: theme.transitions.duration.leavingScreen,
-						};
+				<Route path='/new' render={
+					(props) => {
+						const { classes } = this.props;
 
 						return (
 							<div style={{ padding: 12 }}>
 								<NewPatientForm/>
-								<Zoom
-									appear={true}
-									key="Save creation"
-									in={true}
-									timeout={transitionDuration}
-									enterDelay={transitionDuration.exit}
-									unmountOnExit
-								>
-									<Link to='/'>
-										<Button variant="fab" className={classes.fab} color='secondary' onClick={e => this.setState({creationMode: false})}>
-											<DoneIcon />
-										</Button>
-									</Link>
-								</Zoom>
+								<Link to='/'>
+									<Button variant="fab" className={classes.fab} color='secondary' onClick={e => this.setState({creationMode: false})}>
+										<DoneIcon />
+									</Button>
+								</Link>
 							</div>
 						) ;
 					}

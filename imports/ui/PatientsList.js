@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 
 import Grid from 'material-ui/Grid';
 
-import Patient from './Patient.js';
+import PatientCard from './PatientCard.js';
 
 const styles = theme => ({ });
 
@@ -23,7 +23,7 @@ class PatientsList extends React.Component {
     return (
       <div style={{ padding: 12 }}>
       <Grid container spacing={24}>
-      { patients.map(patient => ( <Patient key={patient._id} patient={patient}/> )) }
+      { patients.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
       </Grid>
       </div>
     ) ;

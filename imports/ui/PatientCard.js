@@ -2,6 +2,9 @@ import { Meteor } from 'meteor/meteor' ;
 
 import React from 'react' ;
 import PropTypes from 'prop-types';
+
+import { Link } from 'react-router-dom'
+
 import { withStyles } from 'material-ui/styles';
 
 import Grid from 'material-ui/Grid';
@@ -17,8 +20,6 @@ import DeleteIcon from 'material-ui-icons/Delete';
 
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
-
-import { Patients } from '../api/patients.js';
 
 const styles = theme => ({
 	card: {
@@ -67,51 +68,56 @@ const styles = theme => ({
 	},
 });
 
-function Patient ( { classes, theme, patient } ) {
+function PatientCard ( { classes, theme, patient } ) {
 
-	const deleteThisPatient = () => Meteor.call('patients.remove', patient._id);
+	const deleteThisPatient = ( event ) => {
+		event.preventDefault();
+		Meteor.call('patients.remove', patient._id);
+	};
 
 	return (
 		<Grid item sm={12} md={6} lg={4} xl={3}>
-			<Card className={classes.card}>
-				<div className={classes.details}>
-					<CardHeader
-						className={classes.header}
-						avatar={
-							<Avatar className={classes[patient.sex]}>
-								{patient.sex.slice(0,1).toUpperCase()}
-							</Avatar>
-						}
-						title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
-						subheader={new Date(patient.birthdate).toDateString()}
-					/>
-					<CardContent className={classes.content}>
-					</CardContent>
-					<CardActions className={classes.actions} disableActionSpacing>
-						<IconButton aria-label="Delete" onClick={deleteThisPatient}>
-							<DeleteIcon />
-						</IconButton>
-						<Chip label={patient.niss}/>
-					</CardActions>
-				</div>
-				{ patient.photo ?
-				<CardMedia
-					className={classes.photo}
-					image={`data:image/png;base64,${patient.photo}`}
-					title={`${patient.firstname} ${patient.lastname}`}
-				/> :
-				<div className={classes.photoPlaceHolder}>
-					{patient.firstname[0]}{patient.lastname[0]}
-				</div>
-				}
-			</Card>
+			<Link to={`patient/${patient._id}`}>
+				<Card className={classes.card}>
+					<div className={classes.details}>
+						<CardHeader
+							className={classes.header}
+							avatar={
+								<Avatar className={classes[patient.sex]}>
+									{patient.sex.slice(0,1).toUpperCase()}
+								</Avatar>
+							}
+							title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
+							subheader={new Date(patient.birthdate).toDateString()}
+						/>
+						<CardContent className={classes.content}>
+						</CardContent>
+						<CardActions className={classes.actions} disableActionSpacing>
+							<IconButton aria-label="Delete" onClick={deleteThisPatient}>
+								<DeleteIcon />
+							</IconButton>
+							<Chip label={patient.niss}/>
+						</CardActions>
+					</div>
+					{ patient.photo ?
+					<CardMedia
+						className={classes.photo}
+						image={`data:image/png;base64,${patient.photo}`}
+						title={`${patient.firstname} ${patient.lastname}`}
+					/> :
+					<div className={classes.photoPlaceHolder}>
+						{patient.firstname[0]}{patient.lastname[0]}
+					</div>
+					}
+				</Card>
+			</Link>
 		</Grid>
 	);
 }
 
-Patient.propTypes = {
+PatientCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(Patient);
+export default withStyles(styles, { withTheme: true })(PatientCard);
