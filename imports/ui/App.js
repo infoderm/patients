@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
+import { withRouter } from 'react-router-dom'
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames' ;
@@ -51,14 +52,16 @@ App.propTypes = {
 	theme: PropTypes.object.isRequired,
 };
 
-export default withTracker(() => {
-	Meteor.subscribe('patients');
-	return {
-		currentUser: Meteor.user() ,
-		patients: Patients.find({}, { sort: { firstname: 1 } }).fetch() ,
-		//allCount: Patients.find({}).count() ,
-		//femaleCount: Patients.find({ sex: 'female'}).count() ,
-		//maleCount: Patients.find({ sex: 'male'}).count() ,
-		//otherCount: Patients.find({ sex: 'other'}).count() ,
-	};
-}) ( withStyles(styles, { withTheme: true }) (App) );
+export default withRouter(
+	withTracker(() => {
+		Meteor.subscribe('patients');
+		return {
+			currentUser: Meteor.user() ,
+			patients: Patients.find({}, { sort: { firstname: 1 } }).fetch() ,
+			//allCount: Patients.find({}).count() ,
+			//femaleCount: Patients.find({ sex: 'female'}).count() ,
+			//maleCount: Patients.find({ sex: 'male'}).count() ,
+			//otherCount: Patients.find({ sex: 'other'}).count() ,
+		};
+	}) ( withStyles(styles, { withTheme: true }) (App) )
+);

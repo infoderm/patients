@@ -33,10 +33,6 @@ class Main extends React.Component {
 
 	constructor(props){
 		super(props);
-
-		this.state = {
-			creationMode: false,
-		};
 	}
 
 	render(){
@@ -52,7 +48,7 @@ class Main extends React.Component {
 								<PatientsList patients={patients} filterSex={filterSex}/>
 								{ currentUser &&
 									<Link to='/new'>
-										<Button variant="fab" className={classes.fab} color='primary' onClick={e => this.setState({creationMode: true})}>
+										<Button variant="fab" className={classes.fab} color='primary'>
 											<AddIcon />
 										</Button>
 									</Link>
@@ -72,7 +68,7 @@ class Main extends React.Component {
 							<div style={{ padding: 12 }}>
 								<NewPatientForm/>
 								<Link to='/'>
-									<Button variant="fab" className={classes.fab} color='secondary' onClick={e => this.setState({creationMode: false})}>
+									<Button variant="fab" className={classes.fab} color='secondary'>
 										<DoneIcon />
 									</Button>
 								</Link>
