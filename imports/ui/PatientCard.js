@@ -77,7 +77,7 @@ function PatientCard ( { classes, theme, patient } ) {
 
 	return (
 		<Grid item sm={12} md={6} lg={4} xl={3}>
-			<Link to={`patient/${patient._id}`}>
+			<Link to={`/patient/${patient._id}`}>
 				<Card className={classes.card}>
 					<div className={classes.details}>
 						<CardHeader
