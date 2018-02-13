@@ -21,6 +21,14 @@ const styles = theme => ({
 	},
 });
 
+const NoMatch = ({ location }) => (
+	<div>
+		<h3>
+			No match for <code>{location.pathname}</code>
+		</h3>
+	</div>
+);
+
 class Main extends React.Component {
 
 	constructor(props){
@@ -54,9 +62,9 @@ class Main extends React.Component {
 					}
 				}/>
 
-				<Route path='/patient/:id' component={PatientDetails}/>
+				<Route exact path='/patient/:id' component={PatientDetails}/>
 
-				<Route path='/new' render={
+				<Route exact path='/new' render={
 					(props) => {
 						const { classes } = this.props;
 
@@ -72,6 +80,8 @@ class Main extends React.Component {
 						) ;
 					}
 				}/>
+
+				<Route component={NoMatch}/>
 
 			</Switch>
 		);
