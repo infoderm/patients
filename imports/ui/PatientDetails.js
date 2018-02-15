@@ -19,27 +19,18 @@ import Paper from 'material-ui/Paper';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
 
+import { FormControl } from 'material-ui/Form';
+import Input, { InputLabel } from 'material-ui/Input';
+import TextField from 'material-ui/TextField'
+import Select from 'material-ui/Select'
+import { MenuItem } from 'material-ui/Menu'
+
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 
 import { Patients } from '../api/patients.js';
 
 const styles = theme => ({
-	card: {
-		display: 'flex',
-		minHeight: 200,
-	},
-	details: {
-		display: 'flex',
-		flex: 1,
-		flexDirection: 'column',
-	},
-	header: {
-		flex: '1 0 auto',
-	},
-	content: {
-		flex: '1 0 auto',
-	},
 	photoPlaceHolder: {
 		display: 'flex',
 		fontSize: '4rem',
@@ -50,73 +41,101 @@ const styles = theme => ({
 		justifyContent: 'center',
 		color: '#fff',
 		backgroundColor: '#999',
+		verticalAlign: 'top',
+		display: 'inline-flex',
+		marginRight: theme.spacing.unit * 2,
 	},
 	photo: {
 		width: 140,
 		height: 200,
+		verticalAlign: 'top',
+		marginRight: theme.spacing.unit * 2,
 	},
-	actions: {
-		display: 'flex',
+	formControl: {
+		margin: theme.spacing.unit,
+		overflow: 'auto',
 	},
-	male: {
-		color: '#fff',
-		backgroundColor: blue[500],
-	},
-	female: {
-		color: '#fff',
-		backgroundColor: pink[500],
-	},
-	name: {
-		display: 'flex',
+	container: {
+		padding: theme.spacing.unit * 3,
 	},
 });
 
-function PatientDetails ( { classes, theme, loading, patient } ) {
+class PatientDetails extends React.Component {
 
-	if (loading) return <div>Loading...</div>;
-	if (!patient) return <div>Error: Patient not found.</div>;
+	constructor ( props ) {
+		super(props);
+		this.state = {};
+	}
 
-	const deleteThisPatient = ( event ) => {
-		event.preventDefault();
-		Meteor.call('patients.remove', patient._id);
-	};
+	componentWillReceiveProps ( nextProps ) {
+		this.setState(nextProps.patient);
+	}
 
-	return (
-		<Grid item sm={12} md={6} lg={4} xl={3}>
-			<Card className={classes.card}>
-				<div className={classes.details}>
-					<CardHeader
-						className={classes.header}
-						avatar={
-							<Avatar className={classes[patient.sex]}>
-								{patient.sex.slice(0,1).toUpperCase()}
-							</Avatar>
-						}
-						title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
-						subheader={new Date(patient.birthdate).toDateString()}
+	render ( ) {
+
+		const { classes, theme, loading, patient } = this.props ;
+
+		if (loading) return <div>Loading...</div>;
+		if (!patient) return <div>Error: Patient not found.</div>;
+
+		const deleteThisPatient = ( event ) => {
+			event.preventDefault();
+			Meteor.call('patients.remove', patient._id);
+		};
+
+		return (
+			<div>
+				<Typography variant="display3">Details</Typography>
+				<div className={classes.container}>
+					{ patient.photo ?
+					<img
+						className={classes.photo}
+						src={`data:image/png;base64,${patient.photo}`}
+						title={`${patient.firstname} ${patient.lastname}`}
+					/> :
+					<div className={classes.photoPlaceHolder}>
+						{patient.firstname[0]}{patient.lastname[0]}
+					</div>
+					}
+					<TextField className={classes.formControl} label="NISS" value={this.state.niss} onChange={e => this.setState({ niss: e.target.value})} disabled={true}/>
+					<TextField className={classes.formControl} label="First name" value={this.state.firstname} onChange={e => this.setState({ firstname: e.target.value})} disabled={true}/>
+					<TextField className={classes.formControl} label="Last name" value={this.state.lastname} onChange={e => this.setState({ lastname: e.target.value})} disabled={true}/>
+					<FormControl className={classes.formControl} disabled={true}>
+						<InputLabel htmlFor="sex">Sex</InputLabel>
+						<Select
+							value={this.state.sex}
+							onChange={e => this.setState({ sex: e.target.value})}
+							inputProps={{
+								name: 'sex',
+								id: 'sex',
+							}}
+						>
+							<MenuItem value=""><em>None</em></MenuItem>
+							<MenuItem value="female">Female</MenuItem>
+							<MenuItem value="male">Male</MenuItem>
+							<MenuItem value="other">Other</MenuItem>
+						</Select>
+					</FormControl>
+					<TextField className={classes.formControl} type="date"
+						disabled={true}
+						label="Birth date"
+						InputLabelProps={{
+						  shrink: true,
+						}}
+						value={this.state.birthdate}
+						onChange={e => this.setState({ birthdate: e.target.value})}
 					/>
-					<CardContent className={classes.content}>
-					</CardContent>
-					<CardActions className={classes.actions} disableActionSpacing>
-						<IconButton aria-label="Delete" onClick={deleteThisPatient}>
-							<DeleteIcon />
-						</IconButton>
-						<Chip label={patient.niss}/>
-					</CardActions>
 				</div>
-				{ patient.photo ?
-				<CardMedia
-					className={classes.photo}
-					image={`data:image/png;base64,${patient.photo}`}
-					title={`${patient.firstname} ${patient.lastname}`}
-				/> :
-				<div className={classes.photoPlaceHolder}>
-					{patient.firstname[0]}{patient.lastname[0]}
+				<Typography variant="display3">Appointments</Typography>
+				<div className={classes.container}>
 				</div>
-				}
-			</Card>
-		</Grid>
-	);
+				<Typography variant="display3">Prescriptions</Typography>
+				<div className={classes.container}>
+				</div>
+			</div>
+		);
+	}
+
 }
 
 PatientDetails.propTypes = {

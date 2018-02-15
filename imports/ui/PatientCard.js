@@ -10,7 +10,6 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 
 import Card, { CardHeader, CardContent, CardMedia, CardActions } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
 
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';

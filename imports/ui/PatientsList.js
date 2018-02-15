@@ -21,11 +21,9 @@ class PatientsList extends React.Component {
       patients = patients.filter(patient => patient.sex === filterSex);
     }
     return (
-      <div style={{ padding: 12 }}>
       <Grid container spacing={24}>
       { patients.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
       </Grid>
-      </div>
     ) ;
   }
 

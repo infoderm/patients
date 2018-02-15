@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
-import { MenuItem } from 'material-ui/Menu';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import Downshift from 'downshift';
 
 function renderInput(inputProps) {
@@ -29,17 +30,18 @@ function renderSuggestion(params) {
   const isSelected = selectedItem === suggestion.label;
 
   return (
-    <MenuItem
-      {...itemProps}
-      key={suggestion.label}
-      selected={isHighlighted}
-      component="div"
-      style={{
-        fontWeight: isSelected ? 500 : 400,
-      }}
-    >
-      {suggestion.label}
-    </MenuItem>
+    <Link to={`/patient/${suggestion._id}`} key={suggestion._id}>
+      <MenuItem
+        {...itemProps}
+        selected={isHighlighted}
+        component="div"
+        style={{
+          fontWeight: isSelected ? 500 : 400,
+        }}
+      >
+        {suggestion.label}
+      </MenuItem>
+    </Link>
   );
 }
 
@@ -57,8 +59,13 @@ function getSuggestions(suggestions, inputValue) {
 
 const styles = {
   container: {
+    position: 'relative',
     flexGrow: 1,
     width: 200,
+  },
+  suggestions: {
+    position: 'absolute',
+    width: '100%',
   },
 };
 
@@ -72,12 +79,12 @@ function Filter({ classes, suggestions}) {
             fullWidth: true,
             classes,
             InputProps: getInputProps({
-              placeholder: 'Search a country (start with a)',
+              placeholder: 'Search a patient',
               id: 'integration-downshift',
             }),
           })}
           {isOpen ? (
-            <Paper square>
+            <Paper square className={classes.suggestions}>
               {getSuggestions(suggestions, inputValue).map((suggestion, index) =>
                 renderSuggestion({
                   suggestion,

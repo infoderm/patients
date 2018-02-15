@@ -18,10 +18,18 @@ import { Patients } from '../api/patients.js';
 import WholeWindowDropZone from './WholeWindowDropZone.js';
 import Header from './Header.js';
 import Main from './Main.js';
+import PermanentDrawer from './PermanentDrawer.js';
 
 const muitheme = createMuiTheme();
 
-const styles = theme => ({});
+const styles = theme => ({
+	appFrame: {
+		position: 'relative',
+		display: 'flex',
+		width: '100%',
+		minHeight: '100vh',
+	},
+});
 
 class App extends React.Component {
 
@@ -32,15 +40,18 @@ class App extends React.Component {
 
 	render(){
 
-		const { theme, currentUser, patients } = this.props;
+		const { classes, theme, currentUser, patients } = this.props;
 
 		return (
 			<MuiThemeProvider theme={muitheme}>
 				<div>
 					<Reboot/>
 					<WholeWindowDropZone callback={insertFromXML}/>
-					<Header ref={node => this.header = node} patients={patients}/>
-					<Main currentUser={currentUser} patients={patients} filterSex={'all'}/>
+					<div className={classes.appFrame}>
+						<Header ref={node => this.header = node} patients={patients}/>
+						<PermanentDrawer/>
+						<Main currentUser={currentUser} patients={patients} filterSex={'all'}/>
+					</div>
 				</div>
 			</MuiThemeProvider>
 		);

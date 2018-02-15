@@ -14,7 +14,14 @@ import { MenuItem } from 'material-ui/Menu'
 import Filter from './Filter.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
 
+const drawerWidth = 240;
+
 const styles = theme => ({
+	appBar: {
+		position: 'fixed',
+		width: `calc(100% - ${drawerWidth}px)`,
+		marginLeft: drawerWidth,
+	},
 	filterSex: {
 		marginLeft: "2rem",
 	},
@@ -37,13 +44,14 @@ class Header extends React.Component {
 		const suggestions = patients.map(
 			patient => ({
 				label : `${patient.firstname} ${patient.lastname}` ,
+				_id : patient._id ,
 			})
 		) ;
 
 		return (
-			<AppBar position="sticky">
+			<AppBar className={classes.appBar}>
 				<Toolbar>
-					<Typography type="title" color="inherit" style={{flex:1}}>Patients</Typography>
+					<Typography variant="title" color="inherit" style={{flex:1}}>DermatoDoc</Typography>
 					<AccountsUIWrapper/>
 					<Select
 						className={classes.filterSex}

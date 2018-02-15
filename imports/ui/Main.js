@@ -14,10 +14,21 @@ import PatientsList from './PatientsList.js';
 import PatientDetails from './PatientDetails.js';
 
 const styles = theme => ({
+	main: {
+		backgroundColor: theme.palette.background.default,
+		width: '100%',
+		padding: theme.spacing.unit * 3,
+		height: 'calc(100% - 56px)',
+		marginTop: 56,
+		[theme.breakpoints.up('sm')]: {
+			height: 'calc(100% - 64px)',
+			marginTop: 64,
+		},
+	},
 	fab: {
 		position: 'fixed',
-		bottom: theme.spacing.unit * 2,
-		right: theme.spacing.unit * 2,
+		bottom: theme.spacing.unit * 3,
+		right: theme.spacing.unit * 3,
 	},
 });
 
@@ -37,49 +48,49 @@ class Main extends React.Component {
 
 	render(){
 
-		return (
-			<Switch>
-				<Route exact path='/' render={
-					(props) => {
-						const { classes, patients, filterSex, currentUser } = this.props;
+		const { classes, patients, filterSex, currentUser } = this.props;
 
-						return (
-							<div>
-								<PatientsList patients={patients} filterSex={filterSex}/>
-								{ currentUser &&
-									<Link to='/new'>
-										<Button variant="fab" className={classes.fab} color='primary'>
-											<AddIcon />
+		return (
+			<main className={classes.main}>
+				<Switch>
+					<Route exact path='/' render={
+						(props) => {
+							return (
+								<div>
+									<PatientsList patients={patients} filterSex={filterSex}/>
+									{ currentUser &&
+										<Link to='/new'>
+											<Button variant="fab" className={classes.fab} color='primary'>
+												<AddIcon />
+											</Button>
+										</Link>
+									}
+								</div>
+							) ;
+						}
+					}/>
+
+					<Route exact path='/patient/:id' component={PatientDetails}/>
+
+					<Route exact path='/new' render={
+						(props) => {
+							return (
+								<div style={{ padding: 12 }}>
+									<NewPatientForm/>
+									<Link to='/'>
+										<Button variant="fab" className={classes.fab} color='secondary'>
+											<DoneIcon />
 										</Button>
 									</Link>
-								}
-							</div>
-						) ;
-					}
-				}/>
+								</div>
+							) ;
+						}
+					}/>
 
-				<Route exact path='/patient/:id' component={PatientDetails}/>
+					<Route component={NoMatch}/>
 
-				<Route exact path='/new' render={
-					(props) => {
-						const { classes } = this.props;
-
-						return (
-							<div style={{ padding: 12 }}>
-								<NewPatientForm/>
-								<Link to='/'>
-									<Button variant="fab" className={classes.fab} color='secondary'>
-										<DoneIcon />
-									</Button>
-								</Link>
-							</div>
-						) ;
-					}
-				}/>
-
-				<Route component={NoMatch}/>
-
-			</Switch>
+				</Switch>
+			</main>
 		);
 }
 }
