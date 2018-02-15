@@ -71,9 +71,10 @@ const styles = theme => ({
 	},
 });
 
-function PatientDetails ( { classes, theme, ready, patient } ) {
+function PatientDetails ( { classes, theme, loading, patient } ) {
 
-	if (!patient) return <div>Loading...</div>;
+	if (loading) return <div>Loading...</div>;
+	if (!patient) return <div>Error: Patient not found.</div>;
 
 	const deleteThisPatient = ( event ) => {
 		event.preventDefault();
@@ -125,7 +126,10 @@ PatientDetails.propTypes = {
 
 export default withTracker(({match}) => {
 	const _id = match.params.id;
-	Meteor.subscribe('patient', _id);
-	const patient = Patients.findOne(_id);
-	return { patient } ;
+	const handle = Meteor.subscribe('patient', _id);
+	if ( handle.ready() ) {
+		const patient = Patients.findOne(_id);
+		return { loading: false, patient } ;
+	}
+	else return { loading: true } ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );
