@@ -8,11 +8,9 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
-import Select from 'material-ui/Select'
-import { MenuItem } from 'material-ui/Menu'
-
 import Filter from './Filter.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
+import AccountsUI from './AccountsUI.js';
 
 const drawerWidth = 240;
 
@@ -22,8 +20,9 @@ const styles = theme => ({
 		width: `calc(100% - ${drawerWidth}px)`,
 		marginLeft: drawerWidth,
 	},
-	filterSex: {
-		marginLeft: "2rem",
+	title: {
+		flex: '0 1 auto',
+		marginLeft: theme.spacing.unit * 3,
 	},
 });
 
@@ -31,15 +30,11 @@ class Header extends React.Component {
 
 	constructor(props){
 		super(props);
-
-		this.state = {
-			filterSex: 'all',
-		};
 	}
 
 	render(){
 
-		const { classes, patients } = this.props;
+		const { classes, patients, currentUser } = this.props;
 
 		const suggestions = patients.map(
 			patient => ({
@@ -51,20 +46,11 @@ class Header extends React.Component {
 		return (
 			<AppBar className={classes.appBar}>
 				<Toolbar>
-					<Typography variant="title" color="inherit" style={{flex:1}}>DermatoDoc</Typography>
-					<AccountsUIWrapper/>
-					<Select
-						className={classes.filterSex}
-						label="Filter by sex"
-						value={this.state.filterSex}
-						onChange={e => this.setState({ filterSex: e.target.value })}
-					>
-						<MenuItem value="all">All</MenuItem>
-						<MenuItem value="female">Only female</MenuItem>
-						<MenuItem value="male">Only male</MenuItem>
-						<MenuItem value="other">Only other</MenuItem>
-					</Select>
+					<Typography variant="title" color="inherit" className={classes.title}>{location.pathname}</Typography>
+					<div style={{flex:'1 1 auto'}}></div>
 					<Filter suggestions={suggestions}/>
+					<AccountsUIWrapper/>
+					<AccountsUI currentUser={currentUser}/>
 				</Toolbar>
 			</AppBar>
 			);

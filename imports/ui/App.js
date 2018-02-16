@@ -48,7 +48,7 @@ class App extends React.Component {
 					<Reboot/>
 					<WholeWindowDropZone callback={insertFromXML}/>
 					<div className={classes.appFrame}>
-						<Header ref={node => this.header = node} patients={patients}/>
+						<Header ref={node => this.header = node} patients={patients} currentUser={currentUser}/>
 						<PermanentDrawer/>
 						<Main currentUser={currentUser} patients={patients} filterSex={'all'}/>
 					</div>

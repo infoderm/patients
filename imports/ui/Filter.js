@@ -1,11 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import Downshift from 'downshift';
+
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import Menu, { MenuItem } from 'material-ui/Menu';
-import Downshift from 'downshift';
+import { InputAdornment } from 'material-ui/Input';
+import SearchIcon from 'material-ui-icons/Search';
+import { fade } from 'material-ui/styles/colorManipulator';
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
@@ -57,28 +63,57 @@ function getSuggestions(suggestions, inputValue) {
   });
 }
 
-const styles = {
+const styles = theme => ({
   container: {
     position: 'relative',
-    flexGrow: 1,
-    width: 200,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit * 2,
+    borderRadius: 2,
+    background: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      background: fade(theme.palette.common.white, 0.25),
+    },
   },
   suggestions: {
     position: 'absolute',
     width: '100%',
   },
-};
+  adornment: {
+    display: 'inline-flex',
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'relative',
+    pointerEvents: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    verticalAlign: 'middle',
+  },
+  input: {
+    border: 0,
+    color: 'inherit',
+    verticalAlign: 'middle',
+    whiteSpace: 'normal',
+    background: 'none',
+    '&::before': {
+      height: '0 !important',
+    } ,
+    '&::after': {
+      height: '0 !important',
+    } ,
+  },
+});
 
-function Filter({ classes, suggestions}) {
+function Filter({ classes, suggestions }) {
 
   return (
     <Downshift>
       {({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => (
         <div className={classes.container}>
+          <div className={classes.adornment}><SearchIcon/></div>
           {renderInput({
-            fullWidth: true,
             classes,
             InputProps: getInputProps({
+              className: classes.input,
               placeholder: 'Search a patient',
               id: 'integration-downshift',
             }),

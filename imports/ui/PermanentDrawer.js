@@ -14,13 +14,17 @@ import List, {
 import { MenuItem } from 'material-ui/Menu';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
+import FaceIcon from 'material-ui-icons/Face';
+import AddIcon from 'material-ui-icons/Add';
+import LocalPharmacyIcon from 'material-ui-icons/LocalPharmacy';
+import LocalHospitalIcon from 'material-ui-icons/LocalHospital';
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   drawerPaper: {
-    position: 'relative',
-    height: '100%',
+    position: 'fixed',
+    height: '100vh',
     width: drawerWidth,
   },
   drawerHeader: theme.mixins.toolbar,
@@ -40,11 +44,17 @@ function PermanentDrawer ( { classes } ) {
         <List>
           <Link to="/">
             <ListItem button>
+              <ListItemIcon>
+                <FaceIcon/>
+              </ListItemIcon>
               <ListItemText primary="Patients"/>
             </ListItem>
           </Link>
           <Link to="/new">
             <ListItem button>
+              <ListItemIcon>
+                <AddIcon/>
+              </ListItemIcon>
               <ListItemText primary="Add patient"/>
             </ListItem>
           </Link>
@@ -53,7 +63,16 @@ function PermanentDrawer ( { classes } ) {
         <List>
           <Link to="/drugs">
             <ListItem button>
+              <ListItemIcon>
+                <LocalPharmacyIcon/>
+              </ListItemIcon>
               <ListItemText primary="Drugs"/>
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <LocalHospitalIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Hospitals"/>
             </ListItem>
           </Link>
         </List>

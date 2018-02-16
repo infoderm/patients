@@ -16,10 +16,11 @@ import PatientDetails from './PatientDetails.js';
 const styles = theme => ({
 	main: {
 		backgroundColor: theme.palette.background.default,
-		width: '100%',
+		width: 'calc(100% - 240px)',
 		padding: theme.spacing.unit * 3,
 		height: 'calc(100% - 56px)',
 		marginTop: 56,
+		marginLeft: 240,
 		[theme.breakpoints.up('sm')]: {
 			height: 'calc(100% - 64px)',
 			marginTop: 64,
