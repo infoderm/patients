@@ -49,7 +49,6 @@ class Header extends React.Component {
 					<Typography variant="title" color="inherit" className={classes.title}>{location.pathname}</Typography>
 					<div style={{flex:'1 1 auto'}}></div>
 					<Filter suggestions={suggestions}/>
-					<AccountsUIWrapper/>
 					<AccountsUI currentUser={currentUser}/>
 				</Toolbar>
 			</AppBar>

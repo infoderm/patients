@@ -1,16 +1,15 @@
 import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
 
 import React from 'react';
 
-import List , { ListItem } from 'material-ui/List';
 import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import Popover from 'material-ui/Popover';
-import MoreVertIcon from 'material-ui-icons/MoreVert';
+import Menu , { MenuItem } from 'material-ui/Menu';
+import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+
+import ChangePasswordPopover from './ChangePasswordPopover.js';
 
 class Logout extends React.Component {
 
@@ -18,58 +17,12 @@ class Logout extends React.Component {
 
 		const logout = event => { Meteor.logout(); } ;
 
-		return <ListItem button onClick={logout}>Logout</ListItem>
+		return <MenuItem onClick={logout}>Logout</MenuItem>
 
 	}
 
 }
 
-class ChangePasswordForm extends React.Component {
-	render ( ) {
-
-		const changePassword = event => {
-			event.preventDefault();
-			const oldPassword = event.target.changePasswordOld.value;
-			const newPassword = event.target.changePasswordNew.value;
-			Accounts.changePassword(oldPassword, newPassword);
-		} ;
-
-		return (
-			<form autoComplete="off">
-				<TextField label="Old password" variant="password" name="changePasswordOld"/>
-				<TextField label="New password" variant="password" name="changePasswordNew"/>
-				<Button onClick={changePassword}>Change password</Button>
-			</form>
-		);
-	}
-}
-
-class ChangePasswordPopover extends React.Component {
-
-	render ( ) {
-		const { anchorEl , handleClose } = this.props ;
-
-		return (
-			<Popover
-				id="dashboard-options"
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				onClose={handleClose}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'right',
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'right',
-				}}
-			>
-				<ChangePasswordForm/>
-			</Popover>
-		) ;
-	}
-
-}
 
 class OptionsPopover extends React.Component {
 
@@ -81,25 +34,15 @@ class OptionsPopover extends React.Component {
 		} ;
 
 		return (
-			<Popover
+			<Menu
 				id="dashboard-options"
 				anchorEl={anchorEl}
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'right',
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'right',
-				}}
 			>
-				<List>
-					<ListItem button onClick={handleModeChangePassword}>Change password</ListItem>
-					<Logout onClick={handleClose}>Logout</Logout>
-				</List>
-			</Popover>
+				<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
+				<Logout onClick={handleClose}>Logout</Logout>
+			</Menu>
 		) ;
 	}
 
@@ -123,6 +66,9 @@ class Dashboard extends React.Component {
 
 	render() {
 
+		const { anchorEl , mode } = this.state;
+		const { classes , currentUser } = this.props;
+
 		const handleClick = event => {
 			this.setState({ mode: 'options' , anchorEl: event.currentTarget });
 		};
@@ -135,9 +81,6 @@ class Dashboard extends React.Component {
 			this.setState({ mode: newmode });
 		};
 
-		const { anchorEl , mode } = this.state;
-		const { classes , currentUser } = this.props;
-
 		return (
 			<div>
 				<Button
@@ -146,8 +89,8 @@ class Dashboard extends React.Component {
 				onClick={handleClick}
 				style={{color: 'inherit'}}
 				>
-				{currentUser.username}
-				<MoreVertIcon className={classes.rightIcon}/>
+				Logged in as {currentUser.username}
+				<AccountCircleIcon className={classes.rightIcon}/>
 				</Button>
 				{ mode === 'options' ?
 					<OptionsPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>

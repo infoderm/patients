@@ -26,6 +26,7 @@ const styles = theme => ({
     position: 'fixed',
     height: '100vh',
     width: drawerWidth,
+    overflowY: 'scroll',
   },
   drawerHeader: theme.mixins.toolbar,
 });
