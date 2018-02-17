@@ -35,7 +35,7 @@ class RegisterPopover extends React.Component {
 
 	render ( ) {
 
-		const { classes , anchorEl , handleClose } = this.props ;
+		const { classes , anchorEl , handleClose , changeMode } = this.props ;
 
 		const { username , password } = this.state ;
 
@@ -61,9 +61,10 @@ class RegisterPopover extends React.Component {
 				}}
 			>
 				<form className={classes.form} autoComplete="off">
-					<TextField className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
+					<TextField autoFocus className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
 					<TextField className={classes.row} label="Password" variant="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
-					<Button className={classes.row} onClick={register}>Register</Button>
+					<Button color="primary" className={classes.row} onClick={register}>Register</Button>
+					<Button color="secondary" className={classes.row} onClick={e=>changeMode('login')}>Already registered?</Button>
 				</form>
 			</Popover>
 		) ;

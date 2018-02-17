@@ -13,27 +13,6 @@ import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 import LoginPopover from './LoginPopover.js' ;
 import RegisterPopover from './RegisterPopover.js' ;
 
-class OptionsPopover extends React.Component {
-
-	render ( ) {
-
-		const { anchorEl , handleClose , changeMode } = this.props ;
-
-		return (
-			<Menu
-				id="sign-in-options"
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				onClose={handleClose}
-			>
-				<MenuItem onClick={e=>changeMode('login')}>Login</MenuItem>
-				<MenuItem onClick={e=>changeMode('register')}>Register</MenuItem>
-			</Menu>
-		) ;
-	}
-
-}
-
 class SignInForm extends React.Component {
 
 	constructor ( props ) {
@@ -50,7 +29,7 @@ class SignInForm extends React.Component {
 		const { anchorEl , mode } = this.state ;
 
 		const handleClick = event => {
-			this.setState({ mode: 'choice' , anchorEl: event.currentTarget });
+			this.setState({ mode: 'login' , anchorEl: event.currentTarget });
 		};
 
 		const handleClose = () => {
@@ -64,7 +43,7 @@ class SignInForm extends React.Component {
 		return (
 			<div>
 				<Button
-				aria-owns={anchorEl ? mode === 'choice' ? 'sign-in-options' : mode === 'login' ? 'login-popover' : 'register-popover' : null}
+				aria-owns={anchorEl ? mode === 'login' ? 'login-popover' : 'register-popover' : null}
 				aria-haspopup="true"
 				onClick={handleClick}
 				style={{color: 'inherit'}}
@@ -72,12 +51,10 @@ class SignInForm extends React.Component {
 					Sign in
 					<AccountCircleIcon className={classes.rightIcon}/>
 				</Button>
-				{ mode === 'choice' ?
-					<OptionsPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>
-				: mode === 'login' ?
-					<LoginPopover anchorEl={anchorEl} handleClose={handleClose}/>
+				{ mode === 'login' ?
+					<LoginPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>
 				:
-					<RegisterPopover anchorEl={anchorEl} handleClose={handleClose}/>
+					<RegisterPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>
 				}
 			</div>
 		) ;

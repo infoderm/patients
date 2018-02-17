@@ -61,9 +61,9 @@ class ChangePasswordPopover extends React.Component {
 				}}
 			>
 				<form className={classes.form} autoComplete="off">
-					<TextField className={classes.row} label="Old password" variant="password" value={oldPassword} onChange={e => this.setState({ oldPassword: e.target.value})}/>
+					<TextField autoFocus className={classes.row} label="Old password" variant="password" value={oldPassword} onChange={e => this.setState({ oldPassword: e.target.value})}/>
 					<TextField className={classes.row} label="New password" variant="password" value={newPassword} onChange={e => this.setState({ newPassword: e.target.value})}/>
-					<Button className={classes.row} onClick={changePassword}>Change password</Button>
+					<Button color="secondary" className={classes.row} onClick={changePassword}>Change password</Button>
 				</form>
 			</Popover>
 		) ;
