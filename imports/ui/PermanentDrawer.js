@@ -42,39 +42,33 @@ function PermanentDrawer ( { classes } ) {
         <div className={classes.drawerHeader} />
         <Divider/>
         <List>
-          <Link to="/">
-            <ListItem button>
-              <ListItemIcon>
-                <FaceIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Patients"/>
-            </ListItem>
-          </Link>
-          <Link to="/new">
-            <ListItem button>
-              <ListItemIcon>
-                <AddIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Add patient"/>
-            </ListItem>
-          </Link>
+          <ListItem button component={Link} to="/">
+            <ListItemIcon>
+              <FaceIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Patients"/>
+          </ListItem>
+          <ListItem button component={Link} to="/new">
+            <ListItemIcon>
+              <AddIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Add patient"/>
+          </ListItem>
         </List>
         <Divider/>
         <List>
-          <Link to="/drugs">
-            <ListItem button>
-              <ListItemIcon>
-                <LocalPharmacyIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Drugs"/>
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon>
-                <LocalHospitalIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Hospitals"/>
-            </ListItem>
-          </Link>
+          <ListItem button component={Link} to="/drugs">
+            <ListItemIcon>
+              <LocalPharmacyIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Drugs"/>
+          </ListItem>
+          <ListItem button component={Link} to="/hospitals">
+            <ListItemIcon>
+              <LocalHospitalIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Hospitals"/>
+          </ListItem>
         </List>
       </Drawer>
     );

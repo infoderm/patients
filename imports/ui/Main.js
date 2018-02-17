@@ -60,29 +60,25 @@ class Main extends React.Component {
 								<div>
 									<PatientsList patients={patients} filterSex={filterSex}/>
 									{ currentUser &&
-										<Link to='/new'>
-											<Button variant="fab" className={classes.fab} color='primary'>
-												<AddIcon />
-											</Button>
-										</Link>
+										<Button variant="fab" className={classes.fab} color="primary" component={Link} to="/new">
+											<AddIcon/>
+										</Button>
 									}
 								</div>
 							) ;
 						}
 					}/>
 
-					<Route exact path='/patient/:id' component={PatientDetails}/>
+					<Route exact path="/patient/:id" component={PatientDetails}/>
 
-					<Route exact path='/new' render={
+					<Route exact path="/new" render={
 						(props) => {
 							return (
 								<div style={{ padding: 12 }}>
 									<NewPatientForm/>
-									<Link to='/'>
-										<Button variant="fab" className={classes.fab} color='secondary'>
-											<DoneIcon />
-										</Button>
-									</Link>
+									<Button variant="fab" className={classes.fab} color="secondary" component={Link} to="/">
+										<DoneIcon/>
+									</Button>
 								</div>
 							) ;
 						}

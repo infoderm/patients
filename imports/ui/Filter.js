@@ -36,18 +36,18 @@ function renderSuggestion(params) {
   const isSelected = selectedItem === suggestion.label;
 
   return (
-    <Link to={`/patient/${suggestion._id}`} key={suggestion._id}>
-      <MenuItem
-        {...itemProps}
-        selected={isHighlighted}
-        component="div"
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-        }}
-      >
-        {suggestion.label}
-      </MenuItem>
-    </Link>
+    <MenuItem
+      {...itemProps}
+      selected={isHighlighted}
+      component={Link}
+      to={`/patient/${suggestion._id}`}
+      key={suggestion._id}
+      style={{
+        fontWeight: isSelected ? 500 : 400,
+      }}
+    >
+      {suggestion.label}
+    </MenuItem>
   );
 }
 

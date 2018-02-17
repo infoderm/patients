@@ -76,40 +76,38 @@ function PatientCard ( { classes, theme, patient } ) {
 
 	return (
 		<Grid item sm={12} md={12} lg={6} xl={4}>
-			<Link to={`/patient/${patient._id}`}>
-				<Card className={classes.card}>
-					<div className={classes.details}>
-						<CardHeader
-							className={classes.header}
-							avatar={
-								<Avatar className={classes[patient.sex]}>
-									{patient.sex.slice(0,1).toUpperCase()}
-								</Avatar>
-							}
-							title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
-							subheader={new Date(patient.birthdate).toDateString()}
-						/>
-						<CardContent className={classes.content}>
-						</CardContent>
-						<CardActions className={classes.actions} disableActionSpacing>
-							<IconButton aria-label="Delete" onClick={deleteThisPatient}>
-								<DeleteIcon />
-							</IconButton>
-							<Chip label={patient.niss}/>
-						</CardActions>
-					</div>
-					{ patient.photo ?
-					<CardMedia
-						className={classes.photo}
-						image={`data:image/png;base64,${patient.photo}`}
-						title={`${patient.firstname} ${patient.lastname}`}
-					/> :
-					<div className={classes.photoPlaceHolder}>
-						{patient.firstname[0]}{patient.lastname[0]}
-					</div>
-					}
-				</Card>
-			</Link>
+			<Card className={classes.card} component={Link} to={`/patient/${patient._id}`}>
+				<div className={classes.details}>
+					<CardHeader
+						className={classes.header}
+						avatar={
+							<Avatar className={classes[patient.sex]}>
+								{patient.sex.slice(0,1).toUpperCase()}
+							</Avatar>
+						}
+						title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
+						subheader={new Date(patient.birthdate).toDateString()}
+					/>
+					<CardContent className={classes.content}>
+					</CardContent>
+					<CardActions className={classes.actions} disableActionSpacing>
+						<IconButton aria-label="Delete" onClick={deleteThisPatient}>
+							<DeleteIcon />
+						</IconButton>
+						<Chip label={patient.niss}/>
+					</CardActions>
+				</div>
+				{ patient.photo ?
+				<CardMedia
+					className={classes.photo}
+					image={`data:image/png;base64,${patient.photo}`}
+					title={`${patient.firstname} ${patient.lastname}`}
+				/> :
+				<div className={classes.photoPlaceHolder}>
+					{patient.firstname[0]}{patient.lastname[0]}
+				</div>
+				}
+			</Card>
 		</Grid>
 	);
 }
