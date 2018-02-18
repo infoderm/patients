@@ -25,7 +25,7 @@ class SignInForm extends React.Component {
 
 	render ( ) {
 
-		const { classes } = this.props ;
+		const { classes , feedback } = this.props ;
 		const { anchorEl , mode } = this.state ;
 
 		const handleClick = event => {
@@ -52,9 +52,9 @@ class SignInForm extends React.Component {
 					<AccountCircleIcon className={classes.rightIcon}/>
 				</Button>
 				{ mode === 'login' ?
-					<LoginPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>
+					<LoginPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode} feedback={feedback}/>
 				:
-					<RegisterPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>
+					<RegisterPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode} feedback={feedback}/>
 				}
 			</div>
 		) ;

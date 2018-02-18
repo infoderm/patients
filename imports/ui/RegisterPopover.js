@@ -35,13 +35,15 @@ class RegisterPopover extends React.Component {
 
 	render ( ) {
 
-		const { classes , anchorEl , handleClose , changeMode } = this.props ;
+		const { classes , anchorEl , handleClose , changeMode , feedback } = this.props ;
 
 		const { username , password } = this.state ;
 
 		const register = event => {
 			event.preventDefault();
-			Accounts.createUser({ username, password });
+			Accounts.createUser({ username, password }, err => {
+				feedback(err ? err.message : 'New user successfully created!');
+			});
 		} ;
 
 		return (

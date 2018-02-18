@@ -33,22 +33,23 @@ class AccountsUI extends React.Component {
 
 		const handleClose = (event, reason) => {
 			if (reason === 'clickaway') return;
-			this.setState({ open: false, message: '' });
+			this.setState({ open: false });
 		};
 
 		return (
 			<div>
 				{ currentUser ? <Dashboard currentUser={currentUser} feedback={feedback}/> : <SignInForm feedback={feedback}/> }
 				<Snackbar
+					className={classes.snackbar}
 					anchorOrigin={{
 						vertical: 'bottom',
-						horizontal: 'left',
+						horizontal: 'center',
 					}}
 					open={open}
 					autoHideDuration={6000}
 					onClose={handleClose}
 					SnackbarContentProps={{
-					'aria-describedby': 'account-ui-snackbar-message',
+						'aria-describedby': 'account-ui-snackbar-message',
 					}}
 					message={<span id="account-ui-snackbar-message">{message}</span>}
 					action={[
@@ -59,7 +60,7 @@ class AccountsUI extends React.Component {
 						className={classes.close}
 						onClick={handleClose}
 					>
-						<CloseIcon />
+						<CloseIcon/>
 					</IconButton>,
 					]}
 				/>
@@ -75,6 +76,8 @@ const styles = theme => ({
   close: {
     width: theme.spacing.unit * 4,
     height: theme.spacing.unit * 4,
+  },
+  snackbar: {
   },
 });
 

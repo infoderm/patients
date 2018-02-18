@@ -42,7 +42,7 @@ class LoginPopover extends React.Component {
 		const login = event => {
 			event.preventDefault();
 			Meteor.loginWithPassword(username, password, err => {
-				feedback(err || 'Logged in successfully!') ;
+				feedback( err ? err.message : 'Welcome back!' ) ;
 			});
 		} ;
 

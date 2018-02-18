@@ -42,7 +42,11 @@ class ChangePasswordPopover extends React.Component {
 		const changePassword = event => {
 			event.preventDefault();
 			Accounts.changePassword(oldPassword, newPassword, err => {
-				err ? feedback(err) : feedback('Password changed successfully!');
+				if ( err ) feedback(err.message);
+				else {
+					feedback( 'Password changed successfully!' );
+					handleClose();
+				}
 			});
 		} ;
 

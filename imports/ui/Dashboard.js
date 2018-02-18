@@ -15,7 +15,13 @@ class Logout extends React.Component {
 
 	render ( ) {
 
-		const logout = event => { Meteor.logout(); } ;
+		const { feedback } = this.props ;
+
+		const logout = event => {
+			Meteor.logout( err => {
+				feedback( err ? err.message : 'See you soon!' ) ;
+			});
+		} ;
 
 		return <MenuItem onClick={logout}>Logout</MenuItem>
 
@@ -27,7 +33,7 @@ class Logout extends React.Component {
 class OptionsPopover extends React.Component {
 
 	render ( ) {
-		const { anchorEl , handleClose , changeMode } = this.props ;
+		const { anchorEl , handleClose , changeMode , feedback } = this.props ;
 
 		const handleModeChangePassword = () => {
 			changeMode('change-password');
@@ -41,7 +47,7 @@ class OptionsPopover extends React.Component {
 				onClose={handleClose}
 			>
 				<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
-				<Logout onClick={handleClose}>Logout</Logout>
+				<Logout onClick={handleClose} feedback={feedback}>Logout</Logout>
 			</Menu>
 		) ;
 	}
@@ -67,7 +73,7 @@ class Dashboard extends React.Component {
 	render() {
 
 		const { anchorEl , mode } = this.state;
-		const { classes , currentUser } = this.props;
+		const { classes , currentUser , feedback } = this.props;
 
 		const handleClick = event => {
 			this.setState({ mode: 'options' , anchorEl: event.currentTarget });
@@ -93,9 +99,9 @@ class Dashboard extends React.Component {
 				<AccountCircleIcon className={classes.rightIcon}/>
 				</Button>
 				{ mode === 'options' ?
-					<OptionsPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode}/>
+					<OptionsPopover anchorEl={anchorEl} handleClose={handleClose} changeMode={changeMode} feedback={feedback}/>
 				:
-					<ChangePasswordPopover anchorEl={anchorEl} handleClose={handleClose}/>
+					<ChangePasswordPopover anchorEl={anchorEl} handleClose={handleClose} feedback={feedback}/>
 				}
 			</div>
 		);
