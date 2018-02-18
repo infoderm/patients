@@ -30,6 +30,8 @@ class ChangePasswordPopover extends React.Component {
 		this.state = {
 			oldPassword: '',
 			newPassword: '',
+			errorOldPassword: '',
+			errorNewPassword: '',
 		} ;
 	}
 
@@ -37,14 +39,27 @@ class ChangePasswordPopover extends React.Component {
 
 		const { classes , anchorEl , handleClose , feedback } = this.props ;
 
-		const { oldPassword , newPassword } = this.state ;
+		const { oldPassword , newPassword , errorOldPassword , errorNewPassword } = this.state ;
 
 		const changePassword = event => {
 			event.preventDefault();
 			Accounts.changePassword(oldPassword, newPassword, err => {
-				if ( err ) feedback(err.message);
+				if ( err ) {
+					const { message , reason } = err;
+					feedback(message);
+					if ( reason === 'Incorrect password' ) {
+						this.setState({ errorOldPassword: reason , errorNewPassword: '' });
+					}
+					else if ( reason === 'Password may not be empty' ) {
+						this.setState({ errorOldPassword: '' , errorNewPassword: reason });
+					}
+					else {
+						this.setState({ errorOldPassword: '' , errorNewPassword: '' });
+					}
+				}
 				else {
 					feedback( 'Password changed successfully!' );
+					this.setState({ errorOldPassword: '' , errorNewPassword: '' });
 					handleClose();
 				}
 			});
@@ -67,9 +82,9 @@ class ChangePasswordPopover extends React.Component {
 				}}
 			>
 				<form className={classes.form} autoComplete="off">
-					<TextField autoFocus className={classes.row} label="Old password" variant="password" value={oldPassword} onChange={e => this.setState({ oldPassword: e.target.value})}/>
-					<TextField className={classes.row} label="New password" variant="password" value={newPassword} onChange={e => this.setState({ newPassword: e.target.value})}/>
-					<Button color="secondary" className={classes.row} onClick={changePassword}>Change password</Button>
+					<TextField error={!!errorOldPassword} helperText={errorOldPassword} autoFocus className={classes.row} label="Old password" variant="password" value={oldPassword} onChange={e => this.setState({ oldPassword: e.target.value})}/>
+					<TextField error={!!errorNewPassword} helperText={errorNewPassword} className={classes.row} label="New password" variant="password" value={newPassword} onChange={e => this.setState({ newPassword: e.target.value})}/>
+					<Button type="submit" color="secondary" className={classes.row} onClick={changePassword}>Change password</Button>
 				</form>
 			</Popover>
 		) ;

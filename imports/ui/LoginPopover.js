@@ -30,6 +30,8 @@ class LoginPopover extends React.Component {
 		this.state = {
 			username: '',
 			password: '',
+			errorUsername: '',
+			errorPassword: '',
 		} ;
 	}
 
@@ -37,12 +39,30 @@ class LoginPopover extends React.Component {
 
 		const { classes , anchorEl , handleClose , changeMode , feedback } = this.props ;
 
-		const { username , password } = this.state ;
+		const { username , password , errorUsername , errorPassword } = this.state ;
 
 		const login = event => {
 			event.preventDefault();
 			Meteor.loginWithPassword(username, password, err => {
-				feedback( err ? err.message : 'Welcome back!' ) ;
+				if ( err ) {
+					const { message , reason } = err;
+					feedback(message);
+					if ( reason === 'User not found' ) {
+						this.setState({ errorUsername: reason , errorPassword: '' });
+					}
+					else if ( reason === 'Match failed' ) {
+						this.setState({ errorUsername: 'Please enter a username' , errorPassword: '' });
+					}
+					else if ( reason === 'Incorrect password' ) {
+						this.setState({ errorUsername: '' , errorPassword: reason });
+					}
+					else {
+						this.setState({ errorUsername: '' , errorPassword: '' });
+					}
+				}
+				else {
+					feedback('Welcome back!');
+				}
 			});
 		} ;
 
@@ -63,9 +83,9 @@ class LoginPopover extends React.Component {
 				}}
 			>
 				<form className={classes.form} autoComplete="off">
-					<TextField autoFocus className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
-					<TextField className={classes.row} label="Password" variant="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
-					<Button color="primary" className={classes.row} onClick={login}>Log in</Button>
+					<TextField error={!!errorUsername} helperText={errorUsername} autoFocus className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
+					<TextField error={!!errorPassword} helperText={errorPassword} className={classes.row} label="Password" variant="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
+					<Button type="submit" color="primary" className={classes.row} onClick={login}>Log in</Button>
 					<Button color="secondary" className={classes.row} onClick={e=>changeMode('register')}>Create account?</Button>
 				</form>
 			</Popover>

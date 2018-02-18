@@ -30,6 +30,8 @@ class RegisterPopover extends React.Component {
 		this.state = {
 			username: '',
 			password: '',
+			errorUsername: '',
+			errorPassword: '',
 		} ;
 	}
 
@@ -37,12 +39,30 @@ class RegisterPopover extends React.Component {
 
 		const { classes , anchorEl , handleClose , changeMode , feedback } = this.props ;
 
-		const { username , password } = this.state ;
+		const { username , password , errorUsername , errorPassword } = this.state ;
 
 		const register = event => {
 			event.preventDefault();
 			Accounts.createUser({ username, password }, err => {
-				feedback(err ? err.message : 'New user successfully created!');
+				if ( err ) {
+					const { message , reason } = err;
+					feedback(message);
+					if ( reason === 'Need to set a username or email' ) {
+						this.setState({ errorUsername: 'Please enter a username' , errorPassword: '' });
+					}
+					else if ( reason === 'Username already exists.' ) {
+						this.setState({ errorUsername: reason , errorPassword: '' });
+					}
+					else if ( reason === 'Password may not be empty' ) {
+						this.setState({ errorUsername: '' , errorPassword: reason });
+					}
+					else {
+						this.setState({ errorUsername: '' , errorPassword: '' });
+					}
+				}
+				else {
+					feedback('Welcome!');
+				}
 			});
 		} ;
 
@@ -63,9 +83,9 @@ class RegisterPopover extends React.Component {
 				}}
 			>
 				<form className={classes.form} autoComplete="off">
-					<TextField autoFocus className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
-					<TextField className={classes.row} label="Password" variant="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
-					<Button color="primary" className={classes.row} onClick={register}>Register</Button>
+					<TextField error={!!errorUsername} helperText={errorUsername} autoFocus className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
+					<TextField error={!!errorPassword} helperText={errorPassword} className={classes.row} label="Password" variant="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
+					<Button type="submit" color="primary" className={classes.row} onClick={register}>Register</Button>
 					<Button color="secondary" className={classes.row} onClick={e=>changeMode('login')}>Already registered?</Button>
 				</form>
 			</Popover>
