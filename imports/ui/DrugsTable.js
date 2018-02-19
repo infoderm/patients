@@ -173,16 +173,23 @@ const styles = theme => ({
   },
 });
 
+function sortRows ( data , order , orderBy ) {
+  return order === 'desc' ?
+    data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+    : data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+}
+
 class EnhancedTable extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    const data = [];
-    props.drugs.map( drug => data.push(drug) );
+    const order = 'asc' ;
+    const orderBy = 'mppcv' ;
+    const data = sortRows( Array.from(props.drugs) , order , orderBy );
 
     this.state = {
-      order: 'asc',
-      orderBy: 'mppcv',
+      order,
+      orderBy,
       selected: new Set(),
       data,
       page: 0,
@@ -191,10 +198,14 @@ class EnhancedTable extends React.Component {
 
   }
 
-  componentWillReceiveProps ( { drugs } ) {
-    const data = [];
-    drugs.map( drug => data.push(drug) );
+  componentWillReceiveProps ( props ) {
+
+    const { order , orderBy } = this.state;
+
+    const data = sortRows( Array.from(props.drugs) , order , orderBy );
+
     this.setState({data});
+
   }
 
   handleRequestSort = (event, property) => {
@@ -205,10 +216,7 @@ class EnhancedTable extends React.Component {
       order = 'asc';
     }
 
-    const data =
-      order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+    const data = sortRows(this.state.data, order, orderBy);
 
     this.setState({ data, order, orderBy });
   };
@@ -223,9 +231,8 @@ class EnhancedTable extends React.Component {
 
   handleRowClick = (event, id) => {
     const { selected } = this.state;
-    const newSelected = new Set(selected);
-    newSelected.delete(id) || newSelected.add(id);
-    this.setState({ selected: newSelected });
+    selected.delete(id) || selected.add(id);
+    this.setState({ selected });
   };
 
   handleChangePage = (event, page) => {
@@ -324,6 +331,6 @@ EnhancedTable.propTypes = {
 export default withTracker(() => {
 	Meteor.subscribe('drugs');
 	return {
-		drugs: Drugs.find({}, { sort: { mppcv: 1 } }).fetch() ,
+		drugs: Drugs.find().fetch() ,
 	};
 }) ( withStyles(styles, { withTheme: true }) (EnhancedTable) )
