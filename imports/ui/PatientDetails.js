@@ -78,11 +78,6 @@ class PatientDetails extends React.Component {
 		if (loading) return <div>Loading...</div>;
 		if (!patient) return <div>Error: Patient not found.</div>;
 
-		const deleteThisPatient = ( event ) => {
-			event.preventDefault();
-			Meteor.call('patients.remove', patient._id);
-		};
-
 		return (
 			<div>
 				<Typography variant="display3">Details</Typography>

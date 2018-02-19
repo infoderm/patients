@@ -65,4 +65,4 @@ Meteor.methods({
 		Patients.remove(patientId);
 	},
 
-})
+});

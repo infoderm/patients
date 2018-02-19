@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
+import { Patients } from '../api/patients.js';
+
 import React from 'react' ;
 import { withRouter } from 'react-router-dom'
 
@@ -12,8 +14,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 import Reboot from 'material-ui/Reboot';
 
-import insertFromXML from '../client/insertFromXML.js';
-import { Patients } from '../api/patients.js';
+import handleDrop from '../client/handleDrop.js';
 
 import WholeWindowDropZone from './WholeWindowDropZone.js';
 import Header from './Header.js';
@@ -46,7 +47,7 @@ class App extends React.Component {
 			<MuiThemeProvider theme={muitheme}>
 				<div>
 					<Reboot/>
-					<WholeWindowDropZone callback={insertFromXML}/>
+					<WholeWindowDropZone callback={handleDrop}/>
 					<div className={classes.appFrame}>
 						<Header ref={node => this.header = node} patients={patients} currentUser={currentUser}/>
 						<PermanentDrawer/>

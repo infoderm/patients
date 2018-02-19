@@ -12,6 +12,7 @@ import DoneIcon from 'material-ui-icons/Done';
 import NewPatientForm from './NewPatientForm.js';
 import PatientsList from './PatientsList.js';
 import PatientDetails from './PatientDetails.js';
+import DrugsTable from './DrugsTable.js';
 
 const styles = theme => ({
 	main: {
@@ -83,6 +84,8 @@ class Main extends React.Component {
 							) ;
 						}
 					}/>
+
+					<Route exact path="/drugs" render={(props) => <DrugsTable/>}/>
 
 					<Route component={NoMatch}/>
 

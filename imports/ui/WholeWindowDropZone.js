@@ -66,14 +66,14 @@ class WholeWindowDropZone extends React.Component {
 			}
 		};
 
-		this._listeners.handleDrop = e => {
-			e.preventDefault();
-			const data = e.dataTransfer.getData('text/plain');
+		this._listeners.handleDrop = event => {
+			event.preventDefault();
+			const data = event.dataTransfer;
 			try {
 				callback(data);
 			}
-			catch ( e ) {
-				console.error(e);
+			catch ( err ) {
+				console.error(err);
 			}
 			hide(this._container);
 		};
@@ -103,7 +103,7 @@ class WholeWindowDropZone extends React.Component {
 		return (
 			<div ref={node => this._container = node} className={classes.container}>
 				<Button variant="fab" color='primary'>
-					<AddIcon />
+					<AddIcon/>
 				</Button>
 			</div>
 		);
