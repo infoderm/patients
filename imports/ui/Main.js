@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames' ;
 import { withStyles } from 'material-ui/styles';
 
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import DoneIcon from 'material-ui-icons/Done';
+import Typography from 'material-ui/Typography';
 
-import NewPatientForm from './NewPatientForm.js';
 import PatientsList from './PatientsList.js';
 import PatientDetails from './PatientDetails.js';
+import NewPatientForm from './NewPatientForm.js';
+import ConsultationsList from './ConsultationsList.js';
+import ConsultationDetails from './ConsultationDetails.js';
+import NewConsultationForm from './NewConsultationForm.js';
 import DrugsTable from './DrugsTable.js';
 
 const styles = theme => ({
@@ -36,9 +37,12 @@ const styles = theme => ({
 
 const NoMatch = ({ location }) => (
 	<div>
-		<h3>
-			No match for <code>{location.pathname}</code>
-		</h3>
+		<Typography variant="headline">
+			No match for <code>{location.pathname}</code>.
+		</Typography>
+		<Typography variant="subheading">
+			Work in progress. Come back later.
+		</Typography>
 	</div>
 );
 
@@ -50,7 +54,7 @@ class Main extends React.Component {
 
 	render(){
 
-		const { classes, patients, filterSex, currentUser } = this.props;
+		const { classes, patients, currentUser } = this.props;
 
 		return (
 			<main className={classes.main}>
@@ -58,34 +62,30 @@ class Main extends React.Component {
 					<Route exact path='/' render={
 						(props) => {
 							return (
-								<div>
-									<PatientsList patients={patients} filterSex={filterSex}/>
-									{ currentUser &&
-										<Button variant="fab" className={classes.fab} color="primary" component={Link} to="/new">
-											<AddIcon/>
-										</Button>
-									}
-								</div>
+								<PatientsList patients={patients}/>
 							) ;
 						}
 					}/>
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
 
-					<Route exact path="/new" render={
+					<Route exact path="/new/patient" render={
 						(props) => {
 							return (
 								<div style={{ padding: 12 }}>
 									<NewPatientForm/>
-									<Button variant="fab" className={classes.fab} color="secondary" component={Link} to="/">
-										<DoneIcon/>
-									</Button>
 								</div>
 							) ;
 						}
 					}/>
 
-					<Route exact path="/drugs" render={(props) => <DrugsTable/>}/>
+					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
+
+					<Route exact path="/drugs" component={DrugsTable}/>
+
+					<Route exact path="/consultations" component={ConsultationsList}/>
+
+					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
 
 					<Route component={NoMatch}/>
 

@@ -4,7 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import { Patients } from '../api/patients.js';
 
 import React from 'react' ;
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames' ;
@@ -41,17 +41,17 @@ class App extends React.Component {
 
 	render(){
 
-		const { classes, theme, currentUser, patients } = this.props;
+		const { classes, theme, currentUser, patients, history } = this.props;
 
 		return (
 			<MuiThemeProvider theme={muitheme}>
 				<div>
 					<Reboot/>
-					<WholeWindowDropZone callback={handleDrop}/>
+					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame}>
 						<Header ref={node => this.header = node} patients={patients} currentUser={currentUser}/>
 						<PermanentDrawer/>
-						<Main currentUser={currentUser} patients={patients} filterSex={'all'}/>
+						<Main currentUser={currentUser} patients={patients}/>
 					</div>
 				</div>
 			</MuiThemeProvider>
@@ -62,6 +62,7 @@ class App extends React.Component {
 App.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 };
 
 export default withRouter(

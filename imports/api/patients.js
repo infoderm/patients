@@ -42,7 +42,7 @@ Meteor.methods({
 		check(sex, String);
 		check(photo, String);
 
-		Patients.insert({
+		return Patients.insert({
 			niss,
 			firstname,
 			lastname,
@@ -62,7 +62,7 @@ Meteor.methods({
 		if (patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		Patients.remove(patientId);
+		return Patients.remove(patientId);
 	},
 
 });

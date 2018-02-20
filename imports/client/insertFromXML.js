@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor' ;
 import { xml2json } from 'xml-js' ;
 
-export default function insertFromXML ( xmlString ) {
+export default function insertFromXML ( history, xmlString ) {
 
   // TODO validate using xsd
   const jsonString = xml2json(xmlString, {compact: true, spaces: 4});
@@ -19,6 +19,9 @@ export default function insertFromXML ( xmlString ) {
     photo: identity.photo._text,
     birthdate: `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`,
     sex: attributes.gender,
+  } , (err, _id) => {
+    if ( err ) console.error(err) ;
+    else history.push({pathname: `/patient/${_id}`}) ;
   });
 
 }

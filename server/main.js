@@ -1,9 +1,33 @@
 import { Meteor } from 'meteor/meteor';
 
-import '../imports/api/patients.js';
-import '../imports/api/drugs.js';
+import { Patients } from '../imports/api/patients.js';
+import { Drugs } from '../imports/api/drugs.js';
+import { Consultations } from '../imports/api/consultations.js';
 
 Meteor.startup(() => {
   // code to run on server at startup
-  // e.g. creation of mongodb indices
+  Patients.rawCollection().createIndex({
+    niss: 1,
+  },{
+    background: true,
+  });
+
+  Drugs.rawCollection().createIndex({
+    mppcv: 1,
+  },{
+    background: true,
+  });
+
+  Consultations.rawCollection().createIndex({
+    datetime: -1,
+  },{
+    background: true,
+  });
+  Consultations.rawCollection().createIndex({
+    patientId: 1,
+    datetime: -1,
+  },{
+    background: true,
+  });
+
 });

@@ -41,7 +41,7 @@ Meteor.methods({
 		if (drug.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		Drugs.remove(drugId);
+		return Drugs.remove(drugId);
 	},
 
 });

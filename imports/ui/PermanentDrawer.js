@@ -16,6 +16,8 @@ import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import FaceIcon from 'material-ui-icons/Face';
 import AddIcon from 'material-ui-icons/Add';
+import SupervisorAccountIcon from 'material-ui-icons/SupervisorAccount';
+import AccessTimeIcon from 'material-ui-icons/AccessTime';
 import LocalPharmacyIcon from 'material-ui-icons/LocalPharmacy';
 import LocalHospitalIcon from 'material-ui-icons/LocalHospital';
 
@@ -49,11 +51,17 @@ function PermanentDrawer ( { classes } ) {
             </ListItemIcon>
             <ListItemText primary="Patients"/>
           </ListItem>
-          <ListItem button component={Link} to="/new">
+          <ListItem button component={Link} to="/consultations">
             <ListItemIcon>
-              <AddIcon/>
+              <SupervisorAccountIcon/>
             </ListItemIcon>
-            <ListItemText primary="Add patient"/>
+            <ListItemText primary="Consultations"/>
+          </ListItem>
+          <ListItem button component={Link} to="/appointments">
+            <ListItemIcon>
+              <AccessTimeIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Appointments"/>
           </ListItem>
         </List>
         <Divider/>

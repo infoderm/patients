@@ -1,6 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 
 import React from 'react' ;
+import PropTypes from 'prop-types';
+
+import { withRouter } from 'react-router-dom' ;
 
 import Grid from 'material-ui/Grid';
 
@@ -12,7 +15,7 @@ import { MenuItem } from 'material-ui/Menu'
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 
-export default class NewPatientForm extends React.Component {
+class NewPatientForm extends React.Component {
 
 	constructor(props){
 		super(props);
@@ -30,17 +33,14 @@ export default class NewPatientForm extends React.Component {
 
 	handleSubmit ( event ) {
 
+		const { history } = this.props ;
+		const patient = this.state ;
+
 		event.preventDefault();
 
-		Meteor.call('patients.insert', this.state);
-
-		this.setState({
-			niss: '',
-			firstname: '',
-			lastname: '',
-			birthdate: '',
-			sex: '',
-			photo: '',
+		Meteor.call('patients.insert', patient, (err, _id) => {
+			if ( err ) console.error(err) ;
+			else history.push({pathname: `/patient/${_id}`}) ;
 		});
 
 	}
@@ -98,3 +98,10 @@ export default class NewPatientForm extends React.Component {
 		);
 	}
 }
+
+NewPatientForm.propTypes = {
+	history: PropTypes.object.isRequired,
+};
+
+
+export default withRouter(NewPatientForm);
