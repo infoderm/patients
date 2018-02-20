@@ -16,6 +16,7 @@ Meteor.startup(() => {
     mppcv: 1,
   },{
     background: true,
+    unique: true,
   });
 
   Consultations.rawCollection().createIndex({
