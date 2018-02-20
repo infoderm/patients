@@ -26,11 +26,30 @@ const styles = theme => ({
 	},
 });
 
+function getSuggestions(suggestions, inputValue) {
+  let count = 0;
+
+  return suggestions.filter(suggestion => {
+    const keep = count < 5 && (!inputValue || suggestion.label.toLowerCase().includes(inputValue.toLowerCase()));
+
+    if (keep) ++count;
+
+    return keep;
+  });
+}
+
 class Header extends React.Component {
 
 	constructor(props){
 		super(props);
 	}
+
+	handleChange = (selectedItem, downshiftState) => {
+		if ( selectedItem ) {
+			const { history } = this.props;
+			history.push(`/patient/${selectedItem._id}`);
+		}
+	};
 
 	render(){
 
@@ -48,7 +67,7 @@ class Header extends React.Component {
 				<Toolbar>
 					<Typography variant="title" color="inherit" className={classes.title}>{location.pathname}</Typography>
 					<div style={{flex:'1 1 auto'}}></div>
-					<Filter suggestions={suggestions}/>
+					<Filter filter={getSuggestions} suggestions={suggestions} itemToString={item => item ? item.label : ''} onChange={this.handleChange}/>
 					<AccountsUI currentUser={currentUser}/>
 				</Toolbar>
 			</AppBar>
@@ -59,6 +78,7 @@ class Header extends React.Component {
 Header.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true }) (Header) ;

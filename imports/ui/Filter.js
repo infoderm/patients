@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import Downshift from 'downshift';
 
@@ -28,39 +27,6 @@ function renderInput(inputProps) {
       }}
     />
   );
-}
-
-function renderSuggestion(params) {
-  const { suggestion, index, itemProps, highlightedIndex, selectedItem } = params;
-  const isHighlighted = highlightedIndex === index;
-  const isSelected = selectedItem === suggestion.label;
-
-  return (
-    <MenuItem
-      {...itemProps}
-      selected={isHighlighted}
-      component={Link}
-      to={`/patient/${suggestion._id}`}
-      key={suggestion._id}
-      style={{
-        fontWeight: isSelected ? 500 : 400,
-      }}
-    >
-      {suggestion.label}
-    </MenuItem>
-  );
-}
-
-function getSuggestions(suggestions, inputValue) {
-  let count = 0;
-
-  return suggestions.filter(suggestion => {
-    const keep = count < 5 && (!inputValue || suggestion.label.toLowerCase().includes(inputValue.toLowerCase()));
-
-    if (keep) ++count;
-
-    return keep;
-  });
 }
 
 const styles = theme => ({
@@ -103,11 +69,18 @@ const styles = theme => ({
   },
 });
 
-function Filter({ classes, suggestions }) {
+function Filter({ filter , suggestions , itemToString , classes , ...rest }) {
 
   return (
-    <Downshift>
-      {({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => (
+    <Downshift itemToString={itemToString} {...rest}>
+      {({
+        getInputProps,
+        getItemProps,
+        isOpen,
+        inputValue,
+        selectedItem,
+        highlightedIndex,
+      }) => (
         <div className={classes.container}>
           <div className={classes.adornment}><SearchIcon/></div>
           {renderInput({
@@ -115,19 +88,24 @@ function Filter({ classes, suggestions }) {
             InputProps: getInputProps({
               className: classes.input,
               placeholder: 'Search a patient',
-              id: 'integration-downshift',
             }),
           })}
           {isOpen ? (
             <Paper square className={classes.suggestions}>
-              {getSuggestions(suggestions, inputValue).map((suggestion, index) =>
-                renderSuggestion({
-                  suggestion,
-                  index,
-                  itemProps: getItemProps({ item: suggestion.label }),
-                  highlightedIndex,
-                  selectedItem,
-                }),
+              {filter(suggestions, inputValue).map((item, index) =>
+                  <MenuItem
+                    key={item._id}
+                    {...getItemProps({
+                      item,
+                      index,
+                      selected: highlightedIndex === index,
+                      style: {
+                        fontWeight: selectedItem === item ? 500 : 400,
+                      },
+                    })}
+                  >
+                    {itemToString(item)}
+                  </MenuItem>
               )}
             </Paper>
           ) : null}

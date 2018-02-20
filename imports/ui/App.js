@@ -49,7 +49,7 @@ class App extends React.Component {
 					<Reboot/>
 					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame}>
-						<Header ref={node => this.header = node} patients={patients} currentUser={currentUser}/>
+						<Header ref={node => this.header = node} patients={patients} currentUser={currentUser} history={history}/>
 						<PermanentDrawer/>
 						<Main currentUser={currentUser} patients={patients}/>
 					</div>
