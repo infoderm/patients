@@ -19,8 +19,10 @@ import SupervisorAccountIcon from 'material-ui-icons/SupervisorAccount';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
-import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
+import EditIcon from 'material-ui-icons/Edit';
+import SaveIcon from 'material-ui-icons/Save';
+import UndoIcon from 'material-ui-icons/Undo';
 
 import { FormControl } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
@@ -32,6 +34,7 @@ import { Patients } from '../api/patients.js';
 import { Consultations } from '../api/consultations.js';
 
 import ConsultationCard from './ConsultationCard.js';
+import PatientDeletionDialog from './PatientDeletionDialog.js';
 
 const styles = theme => ({
 	photoPlaceHolder: {
@@ -82,6 +85,8 @@ class PatientDetails extends React.Component {
 		super(props);
 		this.state = {
 			patient: props.patient,
+			editing: false,
+			deleting: false,
 		};
 	}
 
@@ -89,10 +94,19 @@ class PatientDetails extends React.Component {
 		this.setState({ patient: nextProps.patient });
 	}
 
+	saveDetails = event => {
+		Meteor.call('patients.update', this.props.patient._id, this.state.patient , ( err , res ) => {
+			if ( err ) console.log(err);
+			else {
+				this.setState({ editing: false });
+			}
+		} ) ;
+	} ;
+
 	render ( ) {
 
 		const { classes, theme, loading, consultations } = this.props ;
-		const { patient } = this.state;
+		const { patient , editing , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
 		if (!patient) return <div>Error: Patient not found.</div>;
@@ -115,14 +129,40 @@ class PatientDetails extends React.Component {
 					</Grid>
 					<Grid item sm={8} md={10}>
 						<form>
-							<TextField className={classes.formControl} label="NISS" value={patient.niss} onChange={e => this.setState({ niss: e.target.value})} disabled={true} margin="normal"/>
-							<TextField className={classes.formControl} label="First name" value={patient.firstname} onChange={e => this.setState({ firstname: e.target.value})} disabled={true} margin="normal"/>
-							<TextField className={classes.formControl} label="Last name" value={patient.lastname} onChange={e => this.setState({ lastname: e.target.value})} disabled={true} margin="normal"/>
-							<FormControl className={classes.formControl} disabled={true}>
+						<Grid container>
+							<Grid item xs={2}>
+								<TextField className={classes.formControl}
+									label="NISS"
+									value={patient.niss}
+									onChange={e => this.setState({ patient : { ...this.state.patient , niss: e.target.value } } )}
+									disabled={!editing}
+									margin="normal"
+								/>
+							</Grid>
+							<Grid item xs={3}>
+								<TextField className={classes.formControl}
+									label="First name"
+									value={patient.firstname}
+									onChange={e => this.setState({ patient : { ...this.state.patient , firstname: e.target.value } } )}
+									disabled={!editing}
+									margin="normal"
+								/>
+							</Grid>
+							<Grid item xs={3}>
+								<TextField className={classes.formControl}
+									label="Last name"
+									value={patient.lastname}
+									onChange={e => this.setState({ patient : { ...this.state.patient , lastname: e.target.value } } )}
+									disabled={!editing}
+									margin="normal"
+								/>
+							</Grid>
+							<Grid item xs={2}>
+							<FormControl className={classes.formControl} disabled={!editing}>
 								<InputLabel htmlFor="sex">Sex</InputLabel>
 								<Select
 									value={patient.sex}
-									onChange={e => this.setState({ sex: e.target.value})}
+									onChange={e => this.setState({ patient : { ...this.state.patient , sex: e.target.value } } )}
 									inputProps={{
 										name: 'sex',
 										id: 'sex',
@@ -134,44 +174,78 @@ class PatientDetails extends React.Component {
 									<MenuItem value="other">Other</MenuItem>
 								</Select>
 							</FormControl>
+							</Grid>
+							<Grid item xs={2}>
 							<TextField className={classes.formControl} type="date"
-								disabled={true}
+								disabled={!editing}
 								label="Birth date"
 								InputLabelProps={{
 								  shrink: true,
 								}}
 								value={patient.birthdate}
-								onChange={e => this.setState({ birthdate: e.target.value})}
+								onChange={e => this.setState({ patient : { ...this.state.patient , birthdate: e.target.value } } )}
 								margin="normal"
 							/>
+							</Grid>
+							<Grid item xs={12}>
 							<TextField
-								disabled={true}
+								disabled={!editing}
 								label="About"
 								placeholder="Write some information here"
 								multiline
 								rows={4}
 								className={classes.about}
 								value={patient.about}
-								onChange={e => this.setState({ about: e.target.value})}
+								onChange={e => this.setState({ patient : { ...this.state.patient , about: e.target.value } } )}
 								margin="normal"
 							/>
+							</Grid>
+						</Grid>
 						</form>
+					</Grid>
+					<Grid container>
+						<Grid item xs={6}>
+							{ editing ?
+							<div>
+								<Button className={classes.button} color="primary" onClick={this.saveDetails}>
+									Save patient details
+									<SaveIcon className={classes.rightIcon}/>
+								</Button>
+								<Button className={classes.button} color="secondary" onClick={e => this.setState({ editing: false, patient: this.props.patient })}>
+									Undo changes
+									<UndoIcon className={classes.rightIcon}/>
+								</Button>
+							</div>:
+							<Button className={classes.button} color="default" onClick={e => this.setState({ editing: true })}>
+								Edit patient details
+								<EditIcon className={classes.rightIcon}/>
+							</Button> }
+						</Grid>
+						<Grid item xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+							<Button className={classes.button} color="secondary" onClick={e => this.setState({ deleting: true})}>
+								Delete this patient
+								<DeleteIcon className={classes.rightIcon}/>
+							</Button>
+							<PatientDeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} patient={this.props.patient}/>
+						</Grid>
 					</Grid>
 				</Grid>
 				<Typography variant="display3">Consultations</Typography>
 				<div className={classes.container}>
 					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
-					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patient._id}`}>
+					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${this.props.patient._id}`}>
 						Create a new consultation
 						<SupervisorAccountIcon className={classes.rightIcon}/>
 					</Button>
 				</div>
+				{ false && ( <div>
 				<Typography variant="display3">Prescriptions</Typography>
 				<div className={classes.container}>
 				</div>
 				<Typography variant="display3">Appointments</Typography>
 				<div className={classes.container}>
 				</div>
+				</div>)}
 			</div>
 		);
 	}

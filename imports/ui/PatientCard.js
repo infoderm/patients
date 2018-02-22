@@ -13,9 +13,6 @@ import Card, { CardHeader, CardContent, CardMedia, CardActions } from 'material-
 
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
-import Paper from 'material-ui/Paper';
-import IconButton from 'material-ui/IconButton';
-import DeleteIcon from 'material-ui-icons/Delete';
 
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
@@ -53,6 +50,7 @@ const styles = theme => ({
 	},
 	actions: {
 		display: 'flex',
+		paddingLeft: theme.spacing.unit * 2,
 	},
 	male: {
 		color: '#fff',
@@ -68,11 +66,6 @@ const styles = theme => ({
 });
 
 function PatientCard ( { classes, theme, patient } ) {
-
-	const deleteThisPatient = ( event ) => {
-		event.preventDefault();
-		Meteor.call('patients.remove', patient._id);
-	};
 
 	return (
 		<Grid item sm={12} md={12} lg={6} xl={4}>
@@ -91,9 +84,6 @@ function PatientCard ( { classes, theme, patient } ) {
 					<CardContent className={classes.content}>
 					</CardContent>
 					<CardActions className={classes.actions} disableActionSpacing>
-						<IconButton aria-label="Delete" onClick={deleteThisPatient}>
-							<DeleteIcon />
-						</IconButton>
 						<Chip label={patient.niss}/>
 					</CardActions>
 				</div>
