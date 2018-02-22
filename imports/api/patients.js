@@ -24,15 +24,13 @@ function sanitize ( {
 	about,
 } ) {
 
-	about = about || '' ;
-
 	check(niss, String);
 	check(firstname, String);
 	check(lastname, String);
 	check(birthdate, String);
 	check(sex, String);
 	check(photo, String);
-	check(about, String);
+	about === undefined || check(about, String);
 
 	niss = niss.trim();
 	firstname = firstname.trim();
@@ -40,7 +38,7 @@ function sanitize ( {
 	birthdate = birthdate.trim();
 	sex = sex.trim();
 	photo = photo.replace(/\n/g,'');
-	about = about.trim();
+	about = about && about.trim();
 
 	return {
 		niss,

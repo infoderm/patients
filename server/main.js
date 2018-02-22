@@ -9,14 +9,15 @@ Meteor.startup(() => {
   Patients.rawCollection().createIndex({
     niss: 1,
   },{
+    unique: true,
     background: true,
   });
 
   Drugs.rawCollection().createIndex({
     mppcv: 1,
   },{
-    background: true,
     unique: true,
+    background: true,
   });
 
   Consultations.rawCollection().createIndex({

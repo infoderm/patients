@@ -20,7 +20,7 @@ function ConsultationCard(props) {
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-	<Typography className={classes.heading}>Consultation on {datetime.toString()} for patient {patientId}</Typography>
+	<Typography className={classes.heading}>Consultation on {datetime.toLocaleString()} for patient {patientId}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
 	<Typography>{report}</Typography>
