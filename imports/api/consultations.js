@@ -20,15 +20,30 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-	'consultations.insert'({ datetime , report , patientId }) {
+	'consultations.insert'({
+		patientId,
+		datetime,
+		reason,
+		done,
+		todo,
+		treatment,
+		next,
+		more,
+	}) {
 
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
 		check(datetime, Date);
-		check(report, String);
 		check(patientId, String);
+
+		check(reason, String);
+		check(done, String);
+		check(todo, String);
+		check(treatment, String);
+		check(next, String);
+		check(more, String);
 
 		const createdAt = new Date();
 		const owner = this.userId;
@@ -36,9 +51,15 @@ Meteor.methods({
 
 		return Consultations.insert({
 
-			datetime ,
-			report ,
 			patientId ,
+			datetime ,
+
+			reason,
+			done,
+			todo,
+			treatment,
+			next,
+			more,
 
 			createdAt ,
 			owner ,

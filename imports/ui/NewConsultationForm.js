@@ -18,7 +18,7 @@ import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 
 const styles = theme => ({
-	report: {
+	multiline: {
 		margin: theme.spacing.unit,
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing.unit*2}px)`,
@@ -30,13 +30,23 @@ class NewConsultationForm extends React.Component {
 	constructor(props){
 		super(props);
 
-		const now = new Date().toISOString();
+		const now = new Date();
+		const year = now.getFullYear();
+		const month = now.getMonth()+1;
+		const day = now.getDate();
+		const hours = now.getHours();
+		const minutes = now.getMinutes();
 
 		this.state = {
 			patientId: props.match.params.id,
-			date: now.slice(0,10),
-			time: now.slice(11,16),
-			report: '',
+			date: `${year}-${month<10?0:''}${month}-${day<10?0:''}${day}`,
+			time: `${hours<10?0:''}${hours}:${minutes<10?0:''}${minutes}`,
+			reason: '',
+			done: '',
+			todo: '',
+			treatment: '',
+			next: '',
+			more: '',
 		};
 
 	}
@@ -44,7 +54,17 @@ class NewConsultationForm extends React.Component {
 	handleSubmit ( event ) {
 
 		const { history } = this.props ;
-		const { patientId, date, time, report } = this.state ;
+		const {
+			patientId,
+			date,
+			time,
+			reason,
+			done,
+			todo,
+			treatment,
+			next,
+			more,
+		} = this.state ;
 
 		event.preventDefault();
 
@@ -53,7 +73,12 @@ class NewConsultationForm extends React.Component {
 		Meteor.call('consultations.insert', {
 			patientId,
 			datetime,
-			report,
+			reason,
+			done,
+			todo,
+			treatment,
+			next,
+			more,
 		}, (err, _id) => {
 			if ( err ) console.error(err) ;
 			else history.push({pathname: `/consultation/${_id}`}) ;
@@ -94,13 +119,74 @@ class NewConsultationForm extends React.Component {
 				</Grid>
 				<Grid item xs={12}>
 					<TextField
-						label="Report"
-						placeholder="Write some information on the consultation here"
+						autoFocus
+						label="Motif de la visite"
+						placeholder="Motif de la visite"
 						multiline
-						rows={10}
-						className={classes.report}
-						value={this.state.report}
-						onChange={e => this.setState({ report: e.target.value})}
+						rows={4}
+						className={classes.multiline}
+						value={this.state.reason}
+						onChange={e => this.setState({ reason: e.target.value})}
+						margin="normal"
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						label="Examens déjà réalisés"
+						placeholder="Examens déjà réalisés"
+						multiline
+						rows={4}
+						className={classes.multiline}
+						value={this.state.done}
+						onChange={e => this.setState({ done: e.target.value})}
+						margin="normal"
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						label="Examens à réaliser"
+						placeholder="Examens à réaliser"
+						multiline
+						rows={4}
+						className={classes.multiline}
+						value={this.state.todo}
+						onChange={e => this.setState({ todo: e.target.value})}
+						margin="normal"
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						label="Traitement"
+						placeholder="Traitement"
+						multiline
+						rows={4}
+						className={classes.multiline}
+						value={this.state.treatment}
+						onChange={e => this.setState({ treatment: e.target.value})}
+						margin="normal"
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						label="À revoir"
+						placeholder="À revoir"
+						multiline
+						rows={4}
+						className={classes.multiline}
+						value={this.state.next}
+						onChange={e => this.setState({ next: e.target.value})}
+						margin="normal"
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						label="Autres remarques"
+						placeholder="Write some additional information about the consultation here"
+						multiline
+						rows={4}
+						className={classes.multiline}
+						value={this.state.more}
+						onChange={e => this.setState({ more: e.target.value})}
 						margin="normal"
 					/>
 				</Grid>
