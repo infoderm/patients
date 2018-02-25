@@ -15,13 +15,19 @@ if (Meteor.isServer) {
 }
 
 function sanitize ( {
+
 	niss,
 	firstname,
 	lastname,
 	birthdate,
 	sex,
 	photo,
+
+	antecedents,
+	allergies,
+	ongoing,
 	about,
+
 } ) {
 
 	check(niss, String);
@@ -30,6 +36,9 @@ function sanitize ( {
 	check(birthdate, String);
 	check(sex, String);
 	check(photo, String);
+	antecedents === undefined || check(antecedents, String);
+	allergies === undefined || check(allergies, String);
+	ongoing === undefined || check(ongoing, String);
 	about === undefined || check(about, String);
 
 	niss = niss.trim();
@@ -38,6 +47,9 @@ function sanitize ( {
 	birthdate = birthdate.trim();
 	sex = sex.trim();
 	photo = photo.replace(/\n/g,'');
+	antecedents = antecedents && antecedents.trim();
+	allergies = allergies && allergies.trim();
+	ongoing = ongoing && ongoing.trim();
 	about = about && about.trim();
 
 	return {
@@ -47,6 +59,10 @@ function sanitize ( {
 		birthdate,
 		sex,
 		photo,
+
+		antecedents,
+		allergies,
+		ongoing,
 		about,
 	} ;
 

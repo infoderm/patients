@@ -59,14 +59,20 @@ const styles = theme => ({
 	formControl: {
 		margin: theme.spacing.unit,
 		overflow: 'auto',
+		'& input, & div' : {
+			color: 'black !important',
+		} ,
 	},
 	container: {
 		padding: theme.spacing.unit * 3,
 	},
-	about: {
+	multiline: {
 		margin: theme.spacing.unit,
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing.unit*2}px)`,
+		'& textarea' : {
+			color: 'black !important',
+		} ,
 	},
 	button: {
 		margin: theme.spacing.unit,
@@ -187,6 +193,45 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								disabled={!editing}
+								label="Antécédents"
+								placeholder="Write some information here"
+								multiline
+								rows={3}
+								className={classes.multiline}
+								value={patient.antecedents}
+								onChange={e => this.setState({ patient : { ...this.state.patient , antecedents: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								disabled={!editing}
+								label="Allergies"
+								placeholder="Write some information here"
+								multiline
+								rows={3}
+								className={classes.multiline}
+								value={patient.allergies}
+								onChange={e => this.setState({ patient : { ...this.state.patient , allergies: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								disabled={!editing}
+								label="Traitement en cours"
+								placeholder="Write some information here"
+								multiline
+								rows={3}
+								className={classes.multiline}
+								value={patient.ongoing}
+								onChange={e => this.setState({ patient : { ...this.state.patient , ongoing: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
 							<Grid item xs={12}>
 							<TextField
 								disabled={!editing}
@@ -194,7 +239,7 @@ class PatientDetails extends React.Component {
 								placeholder="Write some information here"
 								multiline
 								rows={4}
-								className={classes.about}
+								className={classes.multiline}
 								value={patient.about}
 								onChange={e => this.setState({ patient : { ...this.state.patient , about: e.target.value } } )}
 								margin="normal"
