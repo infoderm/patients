@@ -17,6 +17,8 @@ import { MenuItem } from 'material-ui/Menu'
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 
+import { format } from 'date-fns' ;
+
 const styles = theme => ({
 	multiline: {
 		margin: theme.spacing.unit,
@@ -31,16 +33,11 @@ class NewConsultationForm extends React.Component {
 		super(props);
 
 		const now = new Date();
-		const year = now.getFullYear();
-		const month = now.getMonth()+1;
-		const day = now.getDate();
-		const hours = now.getHours();
-		const minutes = now.getMinutes();
 
 		this.state = {
 			patientId: props.match.params.id,
-			date: `${year}-${month<10?0:''}${month}-${day<10?0:''}${day}`,
-			time: `${hours<10?0:''}${hours}:${minutes<10?0:''}${minutes}`,
+			date: format(now, 'YYYY-MM-DD'),
+			time: format(now, 'HH:mm'),
 			reason: '',
 			done: '',
 			todo: '',

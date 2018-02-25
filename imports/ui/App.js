@@ -7,7 +7,6 @@ import React from 'react' ;
 import { withRouter } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
-import classNames from 'classnames' ;
 import { withStyles } from 'material-ui/styles';
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -36,7 +35,6 @@ class App extends React.Component {
 
 	constructor(props){
 		super(props);
-		this.header = null;
 	}
 
 	render(){
@@ -49,7 +47,7 @@ class App extends React.Component {
 					<Reboot/>
 					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame}>
-						<Header ref={node => this.header = node} patients={patients} currentUser={currentUser} history={history}/>
+						<Header patients={patients} currentUser={currentUser}/>
 						<PermanentDrawer/>
 						<Main currentUser={currentUser} patients={patients}/>
 					</div>

@@ -8,6 +8,22 @@ if (Meteor.isServer) {
 	Meteor.publish('drugs', function () {
 		return Drugs.find({ owner: this.userId });
 	});
+	Meteor.publish('drug', function (_id) {
+		check(_id, String);
+		return Drugs.find({ owner: this.userId , _id });
+	});
+	Meteor.publish('drugs.search', function ( query , limit ) {
+		check(query, String);
+		check(limit, Number);
+		return Drugs.find(
+			{ $text : { $search : query } } ,
+			{
+				fields : { score: { $meta: "textScore" } } ,
+				sort : { score: { $meta: "textScore" } } ,
+				limit ,
+			}
+		) ;
+	});
 }
 
 Meteor.methods({

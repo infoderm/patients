@@ -1,7 +1,7 @@
 import React from 'react' ;
+import { withRouter } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
-import classNames from 'classnames' ;
 import { withStyles } from 'material-ui/styles';
 
 import AppBar from 'material-ui/AppBar';
@@ -81,4 +81,4 @@ Header.propTypes = {
 	history: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true }) (Header) ;
+export default withRouter( withStyles(styles, { withTheme: true }) (Header) ) ;

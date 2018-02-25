@@ -49,7 +49,7 @@ class NewPatientForm extends React.Component {
 
 	render(){
 		return (
-			<Grid container spacing={24}>
+			<Grid container spacing={24} style={{ padding: 12 }}>
 				<Grid item xs={2}>
 					<TextField label="NISS" value={this.state.niss} onChange={e => this.setState({ niss: e.target.value})}/>
 				</Grid>

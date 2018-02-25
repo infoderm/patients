@@ -20,11 +20,18 @@ Meteor.startup(() => {
     background: true,
   });
 
+  Drugs.rawCollection().createIndex({
+    '$**': 'text',
+  },{
+    background: true,
+  });
+
   Consultations.rawCollection().createIndex({
     datetime: -1,
   },{
     background: true,
   });
+
   Consultations.rawCollection().createIndex({
     patientId: 1,
     datetime: -1,

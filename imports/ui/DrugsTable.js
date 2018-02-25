@@ -4,6 +4,8 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import { Drugs } from '../api/drugs.js';
 
 import React from 'react';
+import { Link } from 'react-router-dom'
+
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
@@ -286,7 +288,7 @@ class EnhancedTable extends React.Component {
                     <TableCell padding="checkbox">
                       <Checkbox checked={isSelected} />
                     </TableCell>
-                    <TableCell numeric>{n.mppcv}</TableCell>
+                    <TableCell numeric><Link to={`/drug/${n._id}`}>{n.mppcv}</Link></TableCell>
                     <TableCell padding="none">{n.mpp_nl}</TableCell>
                     <TableCell padding="none">{n.mpp_fr}</TableCell>
                     <TableCell padding="none">{n.nvos_}</TableCell>
@@ -326,10 +328,11 @@ class EnhancedTable extends React.Component {
 
 EnhancedTable.propTypes = {
   classes: PropTypes.object.isRequired,
+  query: PropTypes.string.isRequired,
 };
 
-export default withTracker(() => {
-	Meteor.subscribe('drugs');
+export default withTracker(({query}) => {
+	Meteor.subscribe('drugs.search' , query, -20);
 	return {
 		drugs: Drugs.find().fetch() ,
 	};

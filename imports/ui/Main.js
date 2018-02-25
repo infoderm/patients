@@ -2,10 +2,11 @@ import React from 'react' ;
 import { Switch , Route , Link } from 'react-router-dom'
 
 import PropTypes from 'prop-types';
-import classNames from 'classnames' ;
 import { withStyles } from 'material-ui/styles';
 
 import Typography from 'material-ui/Typography';
+
+import startOfToday from 'date-fns/start_of_today'
 
 import PatientsList from './PatientsList.js';
 import PatientDetails from './PatientDetails.js';
@@ -13,7 +14,9 @@ import NewPatientForm from './NewPatientForm.js';
 import ConsultationsList from './ConsultationsList.js';
 import ConsultationDetails from './ConsultationDetails.js';
 import NewConsultationForm from './NewConsultationForm.js';
-import DrugsTable from './DrugsTable.js';
+import DrugsSearch from './DrugsSearch.js';
+import DrugDetails from './DrugDetails.js';
+import Calendar from './Calendar.js';
 
 const styles = theme => ({
 	main: {
@@ -46,6 +49,14 @@ const NoMatch = ({ location }) => (
 	</div>
 );
 
+const ConsultationsListFromMatch = ({ match }) => (
+	<ConsultationsList day={new Date(match.params.day)}/>
+);
+
+const ConsultationsListToday = () => (
+	<ConsultationsList day={startOfToday()}/>
+);
+
 class Main extends React.Component {
 
 	constructor(props){
@@ -60,7 +71,7 @@ class Main extends React.Component {
 			<main className={classes.main}>
 				<Switch>
 					<Route exact path='/' render={
-						(props) => {
+						props => {
 							return (
 								<PatientsList patients={patients}/>
 							) ;
@@ -69,23 +80,21 @@ class Main extends React.Component {
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
 
-					<Route exact path="/new/patient" render={
-						(props) => {
-							return (
-								<div style={{ padding: 12 }}>
-									<NewPatientForm/>
-								</div>
-							) ;
-						}
-					}/>
+					<Route exact path="/new/patient" component={NewPatientForm}/>
+
+					<Route exact path="/drugs" component={DrugsSearch}/>
+
+					<Route exact path="/drug/:id" component={DrugDetails}/>
+
+					<Route exact path="/consultations" component={ConsultationsListToday}/>
 
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 
-					<Route exact path="/drugs" component={DrugsTable}/>
-
-					<Route exact path="/consultations" component={ConsultationsList}/>
-
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
+
+					<Route exact path="/calendar" component={Calendar}/>
+
+					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
 
 					<Route component={NoMatch}/>
 

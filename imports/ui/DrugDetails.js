@@ -5,9 +5,7 @@ import React from 'react' ;
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
-import { Consultations } from '../api/consultations.js';
-
-import ConsultationCard from './ConsultationCard.js';
+import { Drugs } from '../api/drugs.js';
 
 const styles = theme => ({
 	container: {
@@ -15,32 +13,32 @@ const styles = theme => ({
 	},
 });
 
-class ConsultationDetails extends React.Component {
+class DrugDetails extends React.Component {
 
 	constructor ( props ) {
 		super(props);
 		this.state = {
-			consultation: props.consultation,
+			drug: props.drug,
 		};
 	}
 
 	componentWillReceiveProps ( nextProps ) {
-		this.setState({ consultation: nextProps.consultation });
+		this.setState({ drug: nextProps.drug });
 	}
 
 
 	render ( ) {
 
 		const { classes, theme, loading } = this.props ;
-		const { consultation } = this.state;
+		const { drug } = this.state;
 
 		if (loading) return <div>Loading...</div>;
-		if (!consultation) return <div>Error: Consultation not found.</div>;
+		if (!drug) return <div>Error: Drug not found.</div>;
 
 		return (
 			<div>
 				<div className={classes.container}>
-					<ConsultationCard consultation={consultation}/>
+					<pre>{JSON.stringify(drug, null, 4)}</pre>
 				</div>
 			</div>
 		);
@@ -48,17 +46,17 @@ class ConsultationDetails extends React.Component {
 
 }
 
-ConsultationDetails.propTypes = {
+DrugDetails.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 };
 
 export default withTracker(({match}) => {
 	const _id = match.params.id;
-	const handle = Meteor.subscribe('consultation', _id);
+	const handle = Meteor.subscribe('drug', _id);
 	if ( handle.ready() ) {
-		const consultation = Consultations.findOne(_id);
-		return { loading: false, consultation } ;
+		const drug = Drugs.findOne(_id);
+		return { loading: false, drug } ;
 	}
 	else return { loading: true } ;
-}) ( withStyles(styles, { withTheme: true })(ConsultationDetails) );
+}) ( withStyles(styles, { withTheme: true })(DrugDetails) );

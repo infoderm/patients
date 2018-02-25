@@ -5,6 +5,8 @@ import React from 'react' ;
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
+import addDays from 'date-fns/add_days'
+
 import { Consultations } from '../api/consultations.js';
 
 import ConsultationCard from './ConsultationCard.js';
@@ -26,10 +28,8 @@ class ConsultationsList extends React.Component {
 		const { classes, consultations } = this.props ;
 
 		return (
-			<div>
-				<div className={classes.container}>
-					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
-				</div>
+			<div className={classes.container}>
+				{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 			</div>
 		);
 	}
@@ -39,11 +39,13 @@ class ConsultationsList extends React.Component {
 ConsultationsList.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	day: PropTypes.object.isRequired,
 };
 
-export default withTracker(() => {
+export default withTracker(({ day }) => {
+	const nextDay = addDays(day, 1);
 	Meteor.subscribe('consultations');
 	return {
-		consultations: Consultations.find({}, {sort: {datetime: -1}}).fetch() ,
+		consultations: Consultations.find({ datetime : { $gte : day , $lt : nextDay } }, {sort: {datetime: -1}}).fetch() ,
 	} ;
 }) ( withStyles(styles, { withTheme: true })(ConsultationsList) );

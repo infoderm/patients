@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
@@ -17,6 +16,7 @@ import Divider from 'material-ui/Divider';
 import FaceIcon from 'material-ui-icons/Face';
 import AddIcon from 'material-ui-icons/Add';
 import SupervisorAccountIcon from 'material-ui-icons/SupervisorAccount';
+import TodayIcon from 'material-ui-icons/Today';
 import AccessTimeIcon from 'material-ui-icons/AccessTime';
 import LocalPharmacyIcon from 'material-ui-icons/LocalPharmacy';
 import LocalHospitalIcon from 'material-ui-icons/LocalHospital';
@@ -56,6 +56,12 @@ function PermanentDrawer ( { classes } ) {
               <SupervisorAccountIcon/>
             </ListItemIcon>
             <ListItemText primary="Consultations"/>
+          </ListItem>
+          <ListItem button component={Link} to="/calendar">
+            <ListItemIcon>
+              <TodayIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Calendar"/>
           </ListItem>
           <ListItem button component={Link} to="/appointments">
             <ListItemIcon>
