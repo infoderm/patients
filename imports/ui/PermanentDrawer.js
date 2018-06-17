@@ -63,7 +63,7 @@ function PermanentDrawer ( { classes } ) {
             </ListItemIcon>
             <ListItemText primary="Calendar"/>
           </ListItem>
-          <ListItem button component={Link} to="/appointments">
+          <ListItem disabled button component={Link} to="/appointments">
             <ListItemIcon>
               <AccessTimeIcon/>
             </ListItemIcon>
@@ -78,7 +78,7 @@ function PermanentDrawer ( { classes } ) {
             </ListItemIcon>
             <ListItemText primary="Drugs"/>
           </ListItem>
-          <ListItem button component={Link} to="/hospitals">
+          <ListItem disabled button component={Link} to="/hospitals">
             <ListItemIcon>
               <LocalHospitalIcon/>
             </ListItemIcon>
