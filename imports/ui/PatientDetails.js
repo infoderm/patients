@@ -151,9 +151,9 @@ class PatientDetails extends React.Component {
 							</Grid>
 							<Grid item xs={3}>
 								<TextField className={classes.formControl}
-									label="First name"
-									value={patient.firstname}
-									onChange={e => this.setState({ patient : { ...this.state.patient , firstname: e.target.value } } )}
+									label="Last name"
+									value={patient.lastname}
+									onChange={e => this.setState({ patient : { ...this.state.patient , lastname: e.target.value } } )}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -162,9 +162,9 @@ class PatientDetails extends React.Component {
 							</Grid>
 							<Grid item xs={3}>
 								<TextField className={classes.formControl}
-									label="Last name"
-									value={patient.lastname}
-									onChange={e => this.setState({ patient : { ...this.state.patient , lastname: e.target.value } } )}
+									label="First name"
+									value={patient.firstname}
+									onChange={e => this.setState({ patient : { ...this.state.patient , firstname: e.target.value } } )}
 									inputProps={{
 										readOnly: !editing,
 									}}

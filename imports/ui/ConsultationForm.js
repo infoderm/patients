@@ -135,12 +135,12 @@ class ConsultationForm extends React.Component {
 					}
 					{(loadingPatient || !patient) ? '' :
 					<Grid item xs={2}>
-						<TextField inputProps={{readOnly: true}} label="Firstname" value={patient.firstname}/>
+						<TextField inputProps={{readOnly: true}} label="Lastname" value={patient.lastname}/>
 					</Grid>
 					}
 					{(loadingPatient || !patient) ? '' :
 					<Grid item xs={2}>
-						<TextField inputProps={{readOnly: true}} label="Lastname" value={patient.lastname}/>
+						<TextField inputProps={{readOnly: true}} label="Firstname" value={patient.firstname}/>
 					</Grid>
 					}
 					{(loadingPatient || !patient) ? '' :

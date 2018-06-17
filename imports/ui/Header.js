@@ -57,7 +57,7 @@ class Header extends React.Component {
 
 		const suggestions = patients.map(
 			patient => ({
-				label : `${patient.firstname} ${patient.lastname}` ,
+				label : `${patient.lastname} ${patient.firstname}` ,
 				_id : patient._id ,
 			})
 		) ;

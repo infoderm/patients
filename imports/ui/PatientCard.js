@@ -78,7 +78,7 @@ function PatientCard ( { classes, theme, patient } ) {
 								{patient.sex.slice(0,1).toUpperCase()}
 							</Avatar>
 						}
-						title={`${patient.firstname} ${patient.lastname.toUpperCase()}`}
+						title={`${patient.lastname.toUpperCase()} ${patient.firstname}`}
 						subheader={new Date(patient.birthdate).toDateString()}
 					/>
 					<CardContent className={classes.content}>

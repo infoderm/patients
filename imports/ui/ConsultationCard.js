@@ -89,7 +89,7 @@ class ConsultationCard extends React.Component {
 	  <div className={classes.chips}>
 	    <Chip label={format(datetime,'dddd Do MMMM YYYY')} className={classes.chip}/>
 	    <Chip label={format(datetime,'hh:mmA')} className={classes.chip}/>
-	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.firstname} ${patient.lastname}`} className={classes.chip} component={Link} to={`/patient/${patientId}`}/>
+	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.chip} component={Link} to={`/patient/${patientId}`}/>
 	  </div>
 	</ExpansionPanelSummary>
 	<ExpansionPanelDetails>

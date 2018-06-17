@@ -68,7 +68,7 @@ export default withRouter(
 		Meteor.subscribe('patients');
 		return {
 			currentUser: Meteor.user() ,
-			patients: Patients.find({}, { sort: { firstname: 1 } }).fetch() ,
+			patients: Patients.find({}, { sort: { lastname: 1 } }).fetch() ,
 			//allCount: Patients.find({}).count() ,
 			//femaleCount: Patients.find({ sex: 'female'}).count() ,
 			//maleCount: Patients.find({ sex: 'male'}).count() ,
