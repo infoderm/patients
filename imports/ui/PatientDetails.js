@@ -210,7 +210,7 @@ class PatientDetails extends React.Component {
 								label="Antécédents"
 								placeholder={placeholder}
 								multiline
-								rows={3}
+								rows={8}
 								className={classes.multiline}
 								value={patient.antecedents}
 								onChange={e => this.setState({ patient : { ...this.state.patient , antecedents: e.target.value } } )}
@@ -225,7 +225,7 @@ class PatientDetails extends React.Component {
 								label="Allergies"
 								placeholder={placeholder}
 								multiline
-								rows={3}
+								rows={8}
 								className={classes.multiline}
 								value={patient.allergies}
 								onChange={e => this.setState({ patient : { ...this.state.patient , allergies: e.target.value } } )}
@@ -240,13 +240,108 @@ class PatientDetails extends React.Component {
 								label="Traitement en cours"
 								placeholder={placeholder}
 								multiline
-								rows={3}
+								rows={8}
 								className={classes.multiline}
 								value={patient.ongoing}
 								onChange={e => this.setState({ patient : { ...this.state.patient , ongoing: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
+
+							<Grid item xs={12} md={4}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="Rue et Numéro"
+								placeholder={placeholder}
+								multiline
+								rows={1}
+								className={classes.multiline}
+								value={patient.streetandnumber}
+								onChange={e => this.setState({ patient : { ...this.state.patient , streetandnumber: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="Code Postal"
+								placeholder={placeholder}
+								multiline
+								rows={1}
+								className={classes.multiline}
+								value={patient.zip}
+								onChange={e => this.setState({ patient : { ...this.state.patient , zip: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="Commune"
+								placeholder={placeholder}
+								multiline
+								rows={1}
+								className={classes.multiline}
+								value={patient.municipality}
+								onChange={e => this.setState({ patient : { ...this.state.patient , municipality: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+
+							<Grid item xs={12} md={4}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="Numéro de téléphone"
+								placeholder={placeholder}
+								multiline
+								rows={1}
+								className={classes.multiline}
+								value={patient.phone}
+								onChange={e => this.setState({ patient : { ...this.state.patient , phone: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="Médecin Traitant"
+								placeholder={placeholder}
+								multiline
+								rows={1}
+								className={classes.multiline}
+								value={patient.doctor}
+								onChange={e => this.setState({ patient : { ...this.state.patient , doctor: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="Mutuelle"
+								placeholder={placeholder}
+								multiline
+								rows={1}
+								className={classes.multiline}
+								value={patient.insurance}
+								onChange={e => this.setState({ patient : { ...this.state.patient , insurance: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+
+
+
 							<Grid item xs={12}>
 							<TextField
 								inputProps={{
