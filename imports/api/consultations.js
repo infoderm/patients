@@ -18,9 +18,35 @@ if (Meteor.isServer) {
 	});
 }
 
-Meteor.methods({
+function sanitize ( {
+	patientId,
+	datetime,
+	reason,
+	done,
+	todo,
+	treatment,
+	next,
+	more,
+} ) {
 
-	'consultations.insert'({
+	check(patientId, String);
+	check(datetime, Date);
+
+	check(reason, String);
+	check(done, String);
+	check(todo, String);
+	check(treatment, String);
+	check(next, String);
+	more === undefined || check(more, String);
+
+	reason = reason.trim();
+	done = done.trim();
+	todo = todo.trim();
+	treatment = treatment.trim();
+	next = next.trim();
+	more = more && more.trim();
+
+	return {
 		patientId,
 		datetime,
 		reason,
@@ -29,44 +55,34 @@ Meteor.methods({
 		treatment,
 		next,
 		more,
-	}) {
+	} ;
+
+}
+
+Meteor.methods({
+
+	'consultations.insert'(consultation) {
 
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		check(datetime, Date);
-		check(patientId, String);
-
-		check(reason, String);
-		check(done, String);
-		check(todo, String);
-		check(treatment, String);
-		check(next, String);
-		check(more, String);
-
-		const createdAt = new Date();
-		const owner = this.userId;
-		const username = Meteor.users.findOne(this.userId).username;
-
 		return Consultations.insert({
-
-			patientId ,
-			datetime ,
-
-			reason,
-			done,
-			todo,
-			treatment,
-			next,
-			more,
-
-			createdAt ,
-			owner ,
-			username ,
-
+			...sanitize(consultation),
+			createdAt: new Date(),
+			owner: this.userId,
+			username: Meteor.users.findOne(this.userId).username,
 		});
 
+	},
+
+	'consultations.update'(consultationId, fields) {
+		check(consultationId, String);
+		const consultation = Consultations.findOne(consultationId);
+		if (consultation.owner !== this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+		return Consultations.update(consultationId, { $set: sanitize(fields) });
 	},
 
 	'consultations.remove'(consultationId){

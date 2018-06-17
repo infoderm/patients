@@ -90,6 +90,8 @@ class Main extends React.Component {
 
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 
+					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
+
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
 
 					<Route exact path="/calendar" component={Calendar}/>

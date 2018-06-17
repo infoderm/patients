@@ -117,6 +117,9 @@ function ConsultationCard(props) {
       </ExpansionPanelDetails>
 	  <Divider/>
       <ExpansionPanelActions>
+	<Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
+	  Edit<EditIcon/>
+	</Button>
 	<Button color="secondary" onClick={deleteThisConsultation}>
 	  Delete<DeleteIcon/>
 	</Button>
