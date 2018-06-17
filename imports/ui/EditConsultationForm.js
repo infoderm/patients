@@ -4,7 +4,7 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
 
-import ConsultationFrom from './ConsultationFrom.js' ;
+import ConsultationForm from './ConsultationForm.js' ;
 
 class NewConsultationForm extends React.Component {
 

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 import React from 'react' ;
 
-import ConsultationFrom from './ConsultationFrom.js' ;
+import ConsultationForm from './ConsultationForm.js' ;
 
 export default class NewConsultationForm extends React.Component {
 

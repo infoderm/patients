@@ -13,6 +13,7 @@ import PatientDetails from './PatientDetails.js';
 import NewPatientForm from './NewPatientForm.js';
 import ConsultationsList from './ConsultationsList.js';
 import ConsultationDetails from './ConsultationDetails.js';
+import EditConsultationForm from './EditConsultationForm.js';
 import NewConsultationForm from './NewConsultationForm.js';
 import DrugsSearch from './DrugsSearch.js';
 import DrugDetails from './DrugDetails.js';
