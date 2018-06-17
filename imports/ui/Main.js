@@ -74,7 +74,15 @@ class Main extends React.Component {
 					<Route exact path='/' render={
 						props => {
 							return (
-								<PatientsList patients={patients}/>
+								<PatientsList patients={patients} page={0} perpage={10}/>
+							) ;
+						}
+					}/>
+
+					<Route exact path='/patients/page/:page' render={
+						( { match } ) => {
+							return (
+								<PatientsList patients={patients} page={parseInt(match.params.page,10)} perpage={10}/>
 							) ;
 						}
 					}/>
