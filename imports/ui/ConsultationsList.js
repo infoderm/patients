@@ -12,6 +12,7 @@ import { format } from 'date-fns' ;
 import addDays from 'date-fns/add_days'
 import subDays from 'date-fns/sub_days'
 
+import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import NavigateBeforeIcon from 'material-ui-icons/NavigateBefore';
 import NavigateNextIcon from 'material-ui-icons/NavigateNext';
@@ -51,6 +52,7 @@ class ConsultationsList extends React.Component {
 
 		return (
 			<div>
+				<Typography variant="display3">{format(day, 'dddd Do MMMM YYYY')}</Typography>
 				<div className={classes.container}>
 					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 				</div>

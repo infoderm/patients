@@ -40,7 +40,7 @@ class ConsultationDetails extends React.Component {
 		return (
 			<div>
 				<div className={classes.container}>
-					<ConsultationCard consultation={consultation}/>
+					<ConsultationCard consultation={consultation} defaultExpanded={true}/>
 				</div>
 			</div>
 		);

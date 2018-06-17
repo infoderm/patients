@@ -33,6 +33,8 @@ import DeleteIcon from 'material-ui-icons/Delete';
 
 import { format } from 'date-fns' ;
 
+import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
+
 import { Patients } from '../api/patients.js';
 
 const styles = theme => ({
@@ -50,89 +52,96 @@ const styles = theme => ({
   },
 });
 
-function ConsultationCard(props) {
+class ConsultationCard extends React.Component {
 
-  const {
-    classes ,
-    loadingPatient ,
-    patient ,
-    consultation : {
-      _id,
-      patientId,
-      datetime,
-      reason,
-      done,
-      todo,
-      treatment,
-      next,
-      more,
-    } ,
-  } = props;
+  constructor (props) {
+    super(props)
+    this.state = {
+      deleting: false,
+    };
+  }
 
-  const deleteThisConsultation = event => {
-    Meteor.call('consultations.remove', _id, (err, res) => {
-      if (err) console.error(err);
-      else {
-	console.log(res);
-      }
-    }) ;
-  } ;
+  render () {
 
-  return (
-    <ExpansionPanel>
-      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-	<div className={classes.chips}>
-	  <Chip label={format(datetime,'D MMMM YYYY')} className={classes.chip}/>
-	  <Chip label={format(datetime,'hh:mmA')} className={classes.chip}/>
-	  <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.firstname} ${patient.lastname}`} className={classes.chip} component={Link} to={`/patient/${patientId}`}/>
-	</div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-	<List>
-	  <ListItem>
-	    <Avatar><InfoIcon/></Avatar>
-	    <ListItemText primary="Motif de la consultation" secondary={reason}/>
-	  </ListItem>
-	  <ListItem>
-	    <Avatar><DoneIcon/></Avatar>
-	    <ListItemText primary="Examens déjà réalisés" secondary={done}/>
-	  </ListItem>
-	  <ListItem>
-	    <Avatar><HourglassFullIcon/></Avatar>
-	    <ListItemText primary="Examens à réaliser" secondary={todo}/>
-	  </ListItem>
-	  <ListItem>
-	    <Avatar><EditIcon/></Avatar>
-	    <ListItemText primary="Traitement" secondary={treatment}/>
-	  </ListItem>
-	  <ListItem>
-	    <Avatar><AlarmIcon/></Avatar>
-	    <ListItemText primary="À revoir" secondary={next}/>
-	  </ListItem>
-	  <ListItem>
-	    <Avatar><WarningIcon/></Avatar>
-	    <ListItemText primary="Autres remarques" secondary={more}/>
-	  </ListItem>
-	</List>
-      </ExpansionPanelDetails>
-	  <Divider/>
-      <ExpansionPanelActions>
-	<Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
-	  Edit<EditIcon/>
-	</Button>
-	<Button color="secondary" onClick={deleteThisConsultation}>
-	  Delete<DeleteIcon/>
-	</Button>
-      </ExpansionPanelActions>
-    </ExpansionPanel>
-  );
+    const {
+      defaultExpanded,
+      classes ,
+      loadingPatient ,
+      patient ,
+      consultation : {
+	_id,
+	patientId,
+	datetime,
+	reason,
+	done,
+	todo,
+	treatment,
+	next,
+	more,
+      } ,
+    } = this.props;
+
+    const { deleting } = this.state;
+
+    return (
+      <ExpansionPanel defaultExpanded={defaultExpanded}>
+	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+	  <div className={classes.chips}>
+	    <Chip label={format(datetime,'dddd Do MMMM YYYY')} className={classes.chip}/>
+	    <Chip label={format(datetime,'hh:mmA')} className={classes.chip}/>
+	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.firstname} ${patient.lastname}`} className={classes.chip} component={Link} to={`/patient/${patientId}`}/>
+	  </div>
+	</ExpansionPanelSummary>
+	<ExpansionPanelDetails>
+	  <List>
+	    <ListItem>
+	      <Avatar><InfoIcon/></Avatar>
+	      <ListItemText primary="Motif de la consultation" secondary={reason}/>
+	    </ListItem>
+	    <ListItem>
+	      <Avatar><DoneIcon/></Avatar>
+	      <ListItemText primary="Examens déjà réalisés" secondary={done}/>
+	    </ListItem>
+	    <ListItem>
+	      <Avatar><HourglassFullIcon/></Avatar>
+	      <ListItemText primary="Examens à réaliser" secondary={todo}/>
+	    </ListItem>
+	    <ListItem>
+	      <Avatar><EditIcon/></Avatar>
+	      <ListItemText primary="Traitement" secondary={treatment}/>
+	    </ListItem>
+	    <ListItem>
+	      <Avatar><AlarmIcon/></Avatar>
+	      <ListItemText primary="À revoir" secondary={next}/>
+	    </ListItem>
+	    <ListItem>
+	      <Avatar><WarningIcon/></Avatar>
+	      <ListItemText primary="Autres remarques" secondary={more}/>
+	    </ListItem>
+	  </List>
+	</ExpansionPanelDetails>
+	    <Divider/>
+	<ExpansionPanelActions>
+	  <Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
+	    Edit<EditIcon/>
+	  </Button>
+	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
+	    Delete<DeleteIcon/>
+	  </Button>
+	  {(loadingPatient || !patient) ? '':
+	  <ConsultationDeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} consultation={this.props.consultation} patient={patient}/>
+	  }
+	</ExpansionPanelActions>
+      </ExpansionPanel>
+    );
+  }
+
 }
 
 ConsultationCard.propTypes = {
   classes: PropTypes.object.isRequired,
   consultation: PropTypes.object.isRequired,
 };
-
 
 export default withTracker(({consultation}) => {
 	const _id = consultation.patientId;
