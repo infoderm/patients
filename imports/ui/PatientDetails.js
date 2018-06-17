@@ -117,6 +117,8 @@ class PatientDetails extends React.Component {
 		if (loading) return <div>Loading...</div>;
 		if (!patient) return <div>Error: Patient not found.</div>;
 
+		const placeholder = !editing ? "To edit this field you first need to click the edit button" : "Write some information here";
+
 		return (
 			<div>
 				<Typography variant="display3">Details</Typography>
@@ -141,7 +143,9 @@ class PatientDetails extends React.Component {
 									label="NISS"
 									value={patient.niss}
 									onChange={e => this.setState({ patient : { ...this.state.patient , niss: e.target.value } } )}
-									disabled={!editing}
+									inputProps={{
+										readOnly: !editing,
+									}}
 									margin="normal"
 								/>
 							</Grid>
@@ -150,7 +154,9 @@ class PatientDetails extends React.Component {
 									label="First name"
 									value={patient.firstname}
 									onChange={e => this.setState({ patient : { ...this.state.patient , firstname: e.target.value } } )}
-									disabled={!editing}
+									inputProps={{
+										readOnly: !editing,
+									}}
 									margin="normal"
 								/>
 							</Grid>
@@ -159,17 +165,20 @@ class PatientDetails extends React.Component {
 									label="Last name"
 									value={patient.lastname}
 									onChange={e => this.setState({ patient : { ...this.state.patient , lastname: e.target.value } } )}
-									disabled={!editing}
+									inputProps={{
+										readOnly: !editing,
+									}}
 									margin="normal"
 								/>
 							</Grid>
 							<Grid item xs={2}>
-							<FormControl className={classes.formControl} disabled={!editing}>
+							<FormControl className={classes.formControl}>
 								<InputLabel htmlFor="sex">Sex</InputLabel>
 								<Select
 									value={patient.sex}
 									onChange={e => this.setState({ patient : { ...this.state.patient , sex: e.target.value } } )}
 									inputProps={{
+										readOnly: !editing,
 										name: 'sex',
 										id: 'sex',
 									}}
@@ -195,9 +204,11 @@ class PatientDetails extends React.Component {
 							</Grid>
 							<Grid item xs={12} md={4}>
 							<TextField
-								disabled={!editing}
+								inputProps={{
+									readOnly: !editing,
+								}}
 								label="Antécédents"
-								placeholder="Write some information here"
+								placeholder={placeholder}
 								multiline
 								rows={3}
 								className={classes.multiline}
@@ -208,9 +219,11 @@ class PatientDetails extends React.Component {
 							</Grid>
 							<Grid item xs={12} md={4}>
 							<TextField
-								disabled={!editing}
+								inputProps={{
+									readOnly: !editing,
+								}}
 								label="Allergies"
-								placeholder="Write some information here"
+								placeholder={placeholder}
 								multiline
 								rows={3}
 								className={classes.multiline}
@@ -221,9 +234,11 @@ class PatientDetails extends React.Component {
 							</Grid>
 							<Grid item xs={12} md={4}>
 							<TextField
-								disabled={!editing}
+								inputProps={{
+									readOnly: !editing,
+								}}
 								label="Traitement en cours"
-								placeholder="Write some information here"
+								placeholder={placeholder}
 								multiline
 								rows={3}
 								className={classes.multiline}
@@ -234,9 +249,11 @@ class PatientDetails extends React.Component {
 							</Grid>
 							<Grid item xs={12}>
 							<TextField
-								disabled={!editing}
+								inputProps={{
+									readOnly: !editing,
+								}}
 								label="About"
-								placeholder="Write some information here"
+								placeholder={placeholder}
 								multiline
 								rows={4}
 								className={classes.multiline}
