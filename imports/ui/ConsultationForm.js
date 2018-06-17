@@ -33,7 +33,7 @@ class ConsultationForm extends React.Component {
 	constructor(props){
 		super(props);
 
-		const consultation = { props } ;
+		const { consultation } = props ;
 
 		this.state = {
 			patientId: consultation.patientId,

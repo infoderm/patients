@@ -6,6 +6,8 @@ import React from 'react' ;
 
 import ConsultationForm from './ConsultationForm.js' ;
 
+import { Consultations } from '../api/consultations.js';
+
 class NewConsultationForm extends React.Component {
 
 	constructor ( props ) {
@@ -28,7 +30,7 @@ class NewConsultationForm extends React.Component {
 		if (loading) return <div>Loading...</div>;
 		if (!consultation) return <div>Error: Consultation not found.</div>;
 
-		return <ConsultationFrom consultation={consultation}/> ;
+		return <ConsultationForm consultation={consultation}/> ;
 
 	}
 }
@@ -41,4 +43,4 @@ export default withTracker(({match}) => {
 		return { loading: false, consultation } ;
 	}
 	else return { loading: true } ;
-}) ( ConsultationDetails );
+}) ( NewConsultationForm );

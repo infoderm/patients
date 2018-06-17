@@ -26,7 +26,7 @@ export default class NewConsultationForm extends React.Component {
 			more: '',
 		};
 
-		return <ConsultationFrom consultation={consultation}/> ;
+		return <ConsultationForm consultation={consultation}/> ;
 
 	}
 }
