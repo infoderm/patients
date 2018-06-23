@@ -30,8 +30,12 @@ import EditIcon from 'material-ui-icons/Edit';
 import AlarmIcon from 'material-ui-icons/Alarm';
 import WarningIcon from 'material-ui-icons/Warning';
 import DeleteIcon from 'material-ui-icons/Delete';
+import EuroSymbolIcon from 'material-ui-icons/EuroSymbol';
+import BookIcon from 'material-ui-icons/Book';
 
 import { format } from 'date-fns' ;
+
+import Currency from 'currency-formatter' ;
 
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
 
@@ -49,6 +53,18 @@ const styles = theme => ({
   } ,
   chip: {
     marginRight: theme.spacing.unit,
+  },
+  patientchip: {
+    marginRight: theme.spacing.unit,
+    backgroundColor: '#88f',
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  debtchip: {
+    marginRight: theme.spacing.unit,
+    backgroundColor: '#f88',
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
@@ -78,6 +94,10 @@ class ConsultationCard extends React.Component {
 	treatment,
 	next,
 	more,
+	currency,
+	price,
+	paid,
+	book,
       } ,
     } = this.props;
 
@@ -87,9 +107,10 @@ class ConsultationCard extends React.Component {
       <ExpansionPanel defaultExpanded={defaultExpanded}>
 	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
 	  <div className={classes.chips}>
-	    <Chip label={format(datetime,'dddd Do MMMM YYYY')} className={classes.chip}/>
+	    <Chip label={format(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${format(datetime,'YYYY-MM-DD')}`}/>
 	    <Chip label={format(datetime,'hh:mmA')} className={classes.chip}/>
-	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.chip} component={Link} to={`/patient/${patientId}`}/>
+	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
+	    { currency === undefined || price === undefined || paid === undefined || paid === price ? '' : <Chip label={`Doit ${Currency.format(price-paid, {code: currency})}`} className={classes.debtchip}/> }
 	  </div>
 	</ExpansionPanelSummary>
 	<ExpansionPanelDetails>
@@ -118,6 +139,16 @@ class ConsultationCard extends React.Component {
 	      <Avatar><WarningIcon/></Avatar>
 	      <ListItemText primary="Autres remarques" secondary={more}/>
 	    </ListItem>
+	    { currency === undefined || price === undefined  || paid === undefined ? '' :
+	    <ListItem>
+	      <Avatar><EuroSymbolIcon/></Avatar>
+	      <ListItemText primary="Paiement" secondary={`À payé ${Currency.format(paid, {code: currency})} de ${Currency.format(price, {code: currency})}.`}/>
+	    </ListItem> }
+	    { book === '' ? '' :
+	    <ListItem>
+	      <Avatar><BookIcon/></Avatar>
+	      <ListItemText primary="Carnet" secondary={book}/>
+	    </ListItem> }
 	  </List>
 	</ExpansionPanelDetails>
 	    <Divider/>

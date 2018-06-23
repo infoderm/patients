@@ -54,10 +54,10 @@ class NewPatientForm extends React.Component {
 					<TextField label="NISS" value={this.state.niss} onChange={e => this.setState({ niss: e.target.value})}/>
 				</Grid>
 				<Grid item xs={2}>
-					<TextField label="First name" value={this.state.firstname} onChange={e => this.setState({ firstname: e.target.value})}/>
+					<TextField label="Last name" value={this.state.lastname} onChange={e => this.setState({ lastname: e.target.value})}/>
 				</Grid>
 				<Grid item xs={2}>
-					<TextField label="Last name" value={this.state.lastname} onChange={e => this.setState({ lastname: e.target.value})}/>
+					<TextField label="First name" value={this.state.firstname} onChange={e => this.setState({ firstname: e.target.value})}/>
 				</Grid>
 				<Grid item xs={2}>
 					<FormControl>

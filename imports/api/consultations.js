@@ -27,6 +27,11 @@ function sanitize ( {
 	treatment,
 	next,
 	more,
+
+	currency,
+	price,
+	paid,
+	book,
 } ) {
 
 	check(patientId, String);
@@ -39,12 +44,20 @@ function sanitize ( {
 	check(next, String);
 	more === undefined || check(more, String);
 
+	currency === undefined || check(currency, String);
+	price === undefined || check(price, Number);
+	paid === undefined || check(paid, Number);
+	book === undefined || check(book, String);
+
 	reason = reason.trim();
 	done = done.trim();
 	todo = todo.trim();
 	treatment = treatment.trim();
 	next = next.trim();
 	more = more && more.trim();
+
+	currency = currency && currency.trim().toUpperCase()
+	book = book && book.trim();
 
 	return {
 		patientId,
@@ -55,6 +68,11 @@ function sanitize ( {
 		treatment,
 		next,
 		more,
+
+		currency,
+		price,
+		paid,
+		book,
 	} ;
 
 }

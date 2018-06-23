@@ -8,26 +8,18 @@ import ConsultationForm from './ConsultationForm.js' ;
 
 import { Consultations } from '../api/consultations.js';
 
-class NewConsultationForm extends React.Component {
+class EditConsultationForm extends React.Component {
 
 	constructor ( props ) {
 		super(props);
-		this.state = {
-			consultation: props.consultation,
-		};
 	}
-
-	componentWillReceiveProps ( nextProps ) {
-		this.setState({ consultation: nextProps.consultation });
-	}
-
 
 	render(){
 
 		const { loading } = this.props ;
-		const { consultation } = this.state;
-
 		if (loading) return <div>Loading...</div>;
+
+		const { consultation } = this.props ;
 		if (!consultation) return <div>Error: Consultation not found.</div>;
 
 		return <ConsultationForm consultation={consultation}/> ;
@@ -43,4 +35,4 @@ export default withTracker(({match}) => {
 		return { loading: false, consultation } ;
 	}
 	else return { loading: true } ;
-}) ( NewConsultationForm );
+}) ( EditConsultationForm );

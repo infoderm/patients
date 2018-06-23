@@ -17,8 +17,7 @@ import TextField from 'material-ui/TextField'
 import Select from 'material-ui/Select'
 import { MenuItem } from 'material-ui/Menu'
 import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import EditIcon from 'material-ui-icons/Edit';
+import SaveIcon from 'material-ui-icons/Save';
 
 import { format } from 'date-fns' ;
 
@@ -47,6 +46,11 @@ const styles = theme => ({
 		width: '48px',
 		height: '48px',
 	},
+	fab: {
+		position: 'fixed',
+		bottom: theme.spacing.unit * 3,
+		right: theme.spacing.unit * 3,
+	},
 });
 
 class ConsultationForm extends React.Component {
@@ -66,6 +70,14 @@ class ConsultationForm extends React.Component {
 			treatment: consultation.treatment,
 			next: consultation.next,
 			more: consultation.more,
+
+			currency: consultation.currency || 'EUR',
+			price: consultation.price,
+			paid: consultation.paid,
+			book: consultation.book,
+
+			syncPaid: true,
+
 		};
 
 	}
@@ -86,6 +98,11 @@ class ConsultationForm extends React.Component {
 			treatment,
 			next,
 			more,
+
+			currency,
+			price,
+			paid,
+			book,
 		} = this.state ;
 
 		const datetime = new Date(`${date}T${time}`);
@@ -99,6 +116,11 @@ class ConsultationForm extends React.Component {
 			treatment,
 			next,
 			more,
+
+			currency,
+			price: parseInt(price,10),
+			paid: parseInt(paid,10),
+			book,
 		} ;
 
 		if ( consultationId === undefined ) {
@@ -153,7 +175,7 @@ class ConsultationForm extends React.Component {
 						<TextField disabled={true} label="Patient id" value={this.state.patientId}/>
 					</Grid>
 					}
-					<Grid item xs={1}>
+					<Grid item xs={2}>
 						<TextField type="date"
 							label="Date"
 							InputLabelProps={{
@@ -172,11 +194,6 @@ class ConsultationForm extends React.Component {
 							value={this.state.time}
 							onChange={e => this.setState({ time: e.target.value})}
 						/>
-					</Grid>
-					<Grid item xs={1}>
-						<Button variant="fab" mini={true} color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
-							{consultationId === undefined ? <AddIcon/> : <EditIcon/>}
-						</Button>
 					</Grid>
 				</Grid>
 				<Grid className={classes.form} container spacing={24}>
@@ -253,12 +270,50 @@ class ConsultationForm extends React.Component {
 							margin="normal"
 						/>
 					</Grid>
-					<Grid item xs={2}>
-						<Button variant="fab" color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
-							{consultationId === undefined ? <AddIcon/> : <EditIcon/>}
-						</Button>
+
+					<Grid item xs={3}>
+						<TextField
+							select
+							label="Currency"
+							value={this.state.currency}
+							onChange={e => this.setState({ currency : e.target.value })}
+							margin="normal"
+							helperText="Please select your currency"
+						>
+							<MenuItem value="EUR">€</MenuItem>
+						</TextField>
+					</Grid>
+					<Grid item xs={3}>
+						<TextField
+							label="Prix"
+							type="number"
+							value={this.state.price}
+							onChange={e => this.setState({ price: e.target.value , paid: this.state.syncPaid ? e.target.value : this.state.paid })}
+							margin="normal"
+						/>
+					</Grid>
+					<Grid item xs={3}>
+						<TextField
+							label="Payé"
+							type="number"
+							value={this.state.paid}
+							onChange={e => this.setState({ paid : e.target.value , syncPaid: false })}
+							margin="normal"
+						/>
+					</Grid>
+					<Grid item xs={3}>
+						<TextField
+							label="Carnet"
+							type="number"
+							value={this.state.book}
+							onChange={e => this.setState({ book : e.target.value })}
+							margin="normal"
+						/>
 					</Grid>
 				</Grid>
+				<Button variant="fab" className={classes.fab} color="primary" aria-label="save" onClick={this.handleSubmit.bind(this)}>
+					<SaveIcon/>
+				</Button>
 			</div>
 		);
 	}
