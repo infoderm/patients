@@ -1,3 +1,4 @@
+import "@babel/polyfill";
 import { Meteor } from 'meteor/meteor';
 
 import { Patients } from '../imports/api/patients.js';
