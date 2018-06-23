@@ -14,10 +14,11 @@ import subDays from 'date-fns/sub_days' ;
 import addHours from 'date-fns/add_hours' ;
 import isBefore from 'date-fns/is_before' ;
 
-import { sum } from '@aureooms/js-itertools' ;
+import { count } from '@aureooms/js-cardinality' ;
 
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import Divider from 'material-ui/Divider';
 import NavigateBeforeIcon from 'material-ui-icons/NavigateBefore';
 import NavigateNextIcon from 'material-ui-icons/NavigateNext';
 
@@ -55,15 +56,23 @@ class ConsultationsList extends React.Component {
 		const dayAfter = format( addDays(day, 1), 'YYYY-MM-DD' ) ;
 
 		const pause = addHours(day, 15);
-		const am = sum(consultations.map(c => isBefore(c.datetime, pause)));
-		const pm = sum(consultations.map(c => 1)) - am;
+		const am = consultations.filter(c => isBefore(c.datetime, pause));
+		const pm = consultations.filter(c => !isBefore(c.datetime, pause));
+		const cam = count(am);
+		const cpm = count(pm);
 
 		return (
 			<div>
-				<Typography variant="display3">{`${format(day, 'dddd Do MMMM YYYY')} (AM: ${am}, PM: ${pm})`}</Typography>
+				<Typography variant="display3">{`${format(day, 'dddd Do MMMM YYYY')} (AM: ${cam}, PM: ${cpm})`}</Typography>
+				{ cpm === 0 ? '' :
 				<div className={classes.container}>
-					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
-				</div>
+					{ pm.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
+				</div> }
+				{ cpm === 0 || cam === 0 ? '' : <Divider/>}
+				{ cam === 0 ? '' :
+				<div className={classes.container}>
+					{ am.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
+				</div> }
 				<Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/calendar/${dayBefore}`}>
 					<NavigateBeforeIcon/>
 				</Button>

@@ -7,6 +7,8 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
 import startOfToday from 'date-fns/start_of_today'
+import startOfDay from 'date-fns/start_of_day'
+import parse from 'date-fns/parse'
 
 import PatientsList from './PatientsList.js';
 import PatientDetails from './PatientDetails.js';
@@ -51,7 +53,7 @@ const NoMatch = ({ location }) => (
 );
 
 const ConsultationsListFromMatch = ({ match }) => (
-	<ConsultationsList day={new Date(match.params.day)}/>
+	<ConsultationsList day={startOfDay(parse(match.params.day))}/>
 );
 
 const ConsultationsListToday = () => (
