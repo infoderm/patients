@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom' ;
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import Grid from 'material-ui/Grid';
-import TextField from 'material-ui/TextField';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 
 import { format } from 'date-fns' ;
 

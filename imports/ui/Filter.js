@@ -3,14 +3,15 @@ import React from 'react';
 import Downshift from 'downshift';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import TextField from 'material-ui/TextField';
-import Paper from 'material-ui/Paper';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { InputAdornment } from 'material-ui/Input';
-import SearchIcon from 'material-ui-icons/Search';
-import { fade } from 'material-ui/styles/colorManipulator';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;

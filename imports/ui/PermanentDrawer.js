@@ -1,25 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import List, {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from 'material-ui/List';
-import { MenuItem } from 'material-ui/Menu';
-import TextField from 'material-ui/TextField';
-import Divider from 'material-ui/Divider';
-import FaceIcon from 'material-ui-icons/Face';
-import AddIcon from 'material-ui-icons/Add';
-import SupervisorAccountIcon from 'material-ui-icons/SupervisorAccount';
-import TodayIcon from 'material-ui-icons/Today';
-import AccessTimeIcon from 'material-ui-icons/AccessTime';
-import LocalPharmacyIcon from 'material-ui-icons/LocalPharmacy';
-import LocalHospitalIcon from 'material-ui-icons/LocalHospital';
+import { withStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Divider from '@material-ui/core/Divider';
+import FaceIcon from '@material-ui/icons/Face';
+import AddIcon from '@material-ui/icons/Add';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import TodayIcon from '@material-ui/icons/Today';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
+import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 
 const drawerWidth = 240;
 

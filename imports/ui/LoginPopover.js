@@ -2,12 +2,12 @@ import { Accounts } from 'meteor/accounts-base';
 
 import React from 'react';
 
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import Popover from 'material-ui/Popover';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Popover from '@material-ui/core/Popover';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	popover: {

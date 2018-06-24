@@ -2,12 +2,13 @@ import { Meteor } from 'meteor/meteor';
 
 import React from 'react';
 
-import Button from 'material-ui/Button';
-import Menu , { MenuItem } from 'material-ui/Menu';
-import AccountCircleIcon from 'material-ui-icons/AccountCircle';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import ChangePasswordPopover from './ChangePasswordPopover.js';
 

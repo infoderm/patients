@@ -5,9 +5,9 @@ import React from 'react' ;
 import { withRouter } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import TextField from 'material-ui/TextField' ;
+import TextField from '@material-ui/core/TextField' ;
 
 import { Drugs } from '../api/drugs.js';
 

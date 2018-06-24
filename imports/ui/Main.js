@@ -2,9 +2,9 @@ import React from 'react' ;
 import { Switch , Route , Link } from 'react-router-dom'
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
 import startOfToday from 'date-fns/start_of_today'
 import startOfDay from 'date-fns/start_of_day'

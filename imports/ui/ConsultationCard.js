@@ -6,32 +6,33 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelActions,
-} from 'material-ui/ExpansionPanel';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 
-import Divider from 'material-ui/Divider';
+import Divider from '@material-ui/core/Divider';
 
-import List, { ListItem, ListItemText } from 'material-ui/List';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
-import Button from 'material-ui/Button';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import InfoIcon from 'material-ui-icons/Info';
-import DoneIcon from 'material-ui-icons/Done';
-import HourglassFullIcon from 'material-ui-icons/HourglassFull';
-import EditIcon from 'material-ui-icons/Edit';
-import AlarmIcon from 'material-ui-icons/Alarm';
-import WarningIcon from 'material-ui-icons/Warning';
-import DeleteIcon from 'material-ui-icons/Delete';
-import EuroSymbolIcon from 'material-ui-icons/EuroSymbol';
-import BookIcon from 'material-ui-icons/Book';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import InfoIcon from '@material-ui/icons/Info';
+import DoneIcon from '@material-ui/icons/Done';
+import HourglassFullIcon from '@material-ui/icons/HourglassFull';
+import EditIcon from '@material-ui/icons/Edit';
+import AlarmIcon from '@material-ui/icons/Alarm';
+import WarningIcon from '@material-ui/icons/Warning';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+import BookIcon from '@material-ui/icons/Book';
 
 import { format } from 'date-fns' ;
 

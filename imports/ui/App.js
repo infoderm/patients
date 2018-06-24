@@ -7,11 +7,11 @@ import React from 'react' ;
 import { withRouter } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import Reboot from 'material-ui/Reboot';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import handleDrop from '../client/handleDrop.js';
 
@@ -44,7 +44,7 @@ class App extends React.Component {
 		return (
 			<MuiThemeProvider theme={muitheme}>
 				<div>
-					<Reboot/>
+					<CssBaseline/>
 					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame}>
 						<Header patients={patients} currentUser={currentUser}/>

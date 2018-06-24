@@ -5,15 +5,16 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom' ;
 
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 
-import { FormControl } from 'material-ui/Form';
-import Input , { InputLabel } from 'material-ui/Input';
-import TextField from 'material-ui/TextField'
-import Select from 'material-ui/Select'
-import { MenuItem } from 'material-ui/Menu'
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
 class NewPatientForm extends React.Component {
 

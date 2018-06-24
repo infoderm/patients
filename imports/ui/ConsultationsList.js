@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import { format } from 'date-fns' ;
 import addDays from 'date-fns/add_days' ;
@@ -16,11 +16,11 @@ import isBefore from 'date-fns/is_before' ;
 
 import { count } from '@aureooms/js-cardinality' ;
 
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import Divider from 'material-ui/Divider';
-import NavigateBeforeIcon from 'material-ui-icons/NavigateBefore';
-import NavigateNextIcon from 'material-ui-icons/NavigateNext';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import { Consultations } from '../api/consultations.js';
 

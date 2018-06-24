@@ -6,29 +6,29 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 
-import Card, { CardHeader, CardContent, CardMedia, CardActions } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
-import Button from 'material-ui/Button';
-import SupervisorAccountIcon from 'material-ui-icons/SupervisorAccount';
+import Button from '@material-ui/core/Button';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
-import Avatar from 'material-ui/Avatar';
-import Chip from 'material-ui/Chip';
-import Paper from 'material-ui/Paper';
-import DeleteIcon from 'material-ui-icons/Delete';
-import EditIcon from 'material-ui-icons/Edit';
-import SaveIcon from 'material-ui-icons/Save';
-import UndoIcon from 'material-ui-icons/Undo';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+import UndoIcon from '@material-ui/icons/Undo';
 
-import { FormControl } from 'material-ui/Form';
-import Input, { InputLabel } from 'material-ui/Input';
-import TextField from 'material-ui/TextField'
-import Select from 'material-ui/Select'
-import { MenuItem } from 'material-ui/Menu'
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
 
 import { Patients } from '../api/patients.js';
 import { Consultations } from '../api/consultations.js';

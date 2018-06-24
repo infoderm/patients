@@ -5,17 +5,20 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
 
-import Card, { CardHeader, CardContent, CardMedia, CardActions } from 'material-ui/Card';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 
-import Avatar from 'material-ui/Avatar';
-import Chip from 'material-ui/Chip';
-
-import blue from 'material-ui/colors/blue';
-import pink from 'material-ui/colors/pink';
+import blue from '@material-ui/core/colors/blue';
+import pink from '@material-ui/core/colors/pink';
 
 const styles = theme => ({
 	card: {

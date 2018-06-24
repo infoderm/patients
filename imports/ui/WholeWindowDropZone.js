@@ -1,12 +1,12 @@
 import React from 'react' ;
 
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
-import blue from 'material-ui/colors/blue';
+import blue from '@material-ui/core/colors/blue';
 
 const styles = theme => ({
 	container: {

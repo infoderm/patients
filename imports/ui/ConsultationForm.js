@@ -6,18 +6,19 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom' ;
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-import Grid from 'material-ui/Grid';
-import Avatar from 'material-ui/Avatar'
+import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar'
 
-import { FormControl } from 'material-ui/Form';
-import Input , { InputLabel } from 'material-ui/Input';
-import TextField from 'material-ui/TextField'
-import Select from 'material-ui/Select'
-import { MenuItem } from 'material-ui/Menu'
-import Button from 'material-ui/Button';
-import SaveIcon from 'material-ui-icons/Save';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
 
 import { format } from 'date-fns' ;
 
