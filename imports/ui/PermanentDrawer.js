@@ -19,6 +19,7 @@ import TodayIcon from '@material-ui/icons/Today';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
 
 const drawerWidth = 240;
 
@@ -71,6 +72,12 @@ function PermanentDrawer ( { classes } ) {
         </List>
         <Divider/>
         <List>
+          <ListItem button component={Link} to="/stats">
+            <ListItemIcon>
+              <ShowChartIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Stats"/>
+          </ListItem>
           <ListItem button component={Link} to="/drugs">
             <ListItemIcon>
               <LocalPharmacyIcon/>

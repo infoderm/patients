@@ -20,6 +20,7 @@ import NewConsultationForm from './NewConsultationForm.js';
 import DrugsSearch from './DrugsSearch.js';
 import DrugDetails from './DrugDetails.js';
 import Calendar from './Calendar.js';
+import Stats from './Stats.js';
 
 const styles = theme => ({
 	main: {
@@ -108,6 +109,8 @@ class Main extends React.Component {
 					<Route exact path="/calendar" component={Calendar}/>
 
 					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
+
+					<Route exact path="/stats" component={Stats}/>
 
 					<Route component={NoMatch}/>
 
