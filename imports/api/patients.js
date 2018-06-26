@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import { Consultations } from './consultations.js';
+
 export const Patients = new Mongo.Collection('patients');
 
 if (Meteor.isServer) {
@@ -133,6 +135,9 @@ Meteor.methods({
 		const patient = Patients.findOne(patientId);
 		if (patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
+		}
+		for (const consultation of Consultations.find({ owner: this.userId , patientId: patientId })) {
+			Consultations.remove(consultation._id);
 		}
 		return Patients.remove(patientId);
 	},
