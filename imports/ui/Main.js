@@ -14,6 +14,7 @@ import PatientsList from './PatientsList.js';
 import PatientDetails from './PatientDetails.js';
 import NewPatientForm from './NewPatientForm.js';
 import ConsultationsList from './ConsultationsList.js';
+import UnpaidConsultationsList from './UnpaidConsultationsList.js';
 import ConsultationDetails from './ConsultationDetails.js';
 import EditConsultationForm from './EditConsultationForm.js';
 import NewConsultationForm from './NewConsultationForm.js';
@@ -111,6 +112,8 @@ class Main extends React.Component {
 					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
 
 					<Route exact path="/stats" component={Stats}/>
+
+					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
 
 					<Route component={NoMatch}/>
 

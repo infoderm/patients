@@ -16,6 +16,9 @@ if (Meteor.isServer) {
 		check(patientId, String);
 		return Consultations.find({ owner: this.userId , patientId: patientId });
 	});
+	Meteor.publish('consultations.unpaid', function () {
+		return Consultations.find({ owner: this.userId , $expr:{$ne:[ "$paid", "$price"]} });
+	});
 }
 
 function sanitize ( {
