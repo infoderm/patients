@@ -23,3 +23,4 @@ accounts-password@1.5.1
 meteortesting:mocha
 dynamic-import@0.4.0
 underscore@1.0.10
+ostrio:files

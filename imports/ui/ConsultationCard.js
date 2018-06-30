@@ -33,6 +33,8 @@ import WarningIcon from '@material-ui/icons/Warning';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BookIcon from '@material-ui/icons/Book';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import { format } from 'date-fns' ;
 
@@ -99,6 +101,7 @@ class ConsultationCard extends React.Component {
 	price,
 	paid,
 	book,
+	attachments,
       } ,
     } = this.props;
 
@@ -150,12 +153,20 @@ class ConsultationCard extends React.Component {
 	      <Avatar><BookIcon/></Avatar>
 	      <ListItemText primary="Carnet" secondary={book}/>
 	    </ListItem> }
+	    { attachments === undefined || attachments.length === 0 ? '' :
+	    <ListItem>
+	      <Avatar><AttachmentIcon/></Avatar>
+	      <ListItemText primary="Attachments" secondary={`${attachments.length}`}/>
+	    </ListItem> }
 	  </List>
 	</ExpansionPanelDetails>
 	    <Divider/>
 	<ExpansionPanelActions>
 	  <Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
 	    Edit<EditIcon/>
+	  </Button>
+	  <Button color="primary" component={Link} to={`/consultation/${_id}/attach`}>
+	    Attach File<AttachFileIcon/>
 	  </Button>
 	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
 	    Delete<DeleteIcon/>

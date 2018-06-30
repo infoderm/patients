@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import { Uploads } from './uploads.js';
+
 export const Consultations = new Mongo.Collection('consultations');
 
 if (Meteor.isServer) {
@@ -100,16 +102,30 @@ Meteor.methods({
 	'consultations.update'(consultationId, fields) {
 		check(consultationId, String);
 		const consultation = Consultations.findOne(consultationId);
-		if (consultation.owner !== this.userId) {
+		if (!consultation || consultation.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 		return Consultations.update(consultationId, { $set: sanitize(fields) });
 	},
 
+	'consultations.attach'(consultationId, uploadId) {
+		check(consultationId, String);
+		check(uploadId, String);
+		const consultation = Consultations.findOne(consultationId);
+		const upload = Uploads.findOne(uploadId);
+		if (!consultation || consultation.owner !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own consultation');
+		}
+		if (!upload || upload.userId !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		}
+		return Consultations.update(consultationId, { $addToSet: { attachments: uploadId } });
+	},
+
 	'consultations.remove'(consultationId){
 		check(consultationId, String);
 		const consultation = Consultations.findOne(consultationId);
-		if (consultation.owner !== this.userId) {
+		if (!consultation || consultation.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 		return Consultations.remove(consultationId);
