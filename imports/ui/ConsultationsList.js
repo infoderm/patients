@@ -63,7 +63,7 @@ class ConsultationsList extends React.Component {
 
 		return (
 			<div>
-				<Typography variant="display3">{`${format(day, 'dddd Do MMMM YYYY')} (AM: ${cam}, PM: ${cpm})`}</Typography>
+				<Typography variant="display2">{`${format(day, 'dddd Do MMMM YYYY')} (AM: ${cam}, PM: ${cpm})`}</Typography>
 				{ cpm === 0 ? '' :
 				<div className={classes.container}>
 					{ pm.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }

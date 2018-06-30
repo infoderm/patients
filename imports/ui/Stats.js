@@ -8,11 +8,11 @@ import Frequency from './stats/Frequency.js' ;
 
 export default ( ) => (
   <div>
-    <Typography variant="display3">Global gender count</Typography>
-    <Sex width={300} height={300}/>
-    <Typography variant="display3">Age vs Sex</Typography>
+    <Typography variant="display2">Global gender count</Typography>
+    <Sex width={400} height={400}/>
+    <Typography variant="display2">Age vs Gender</Typography>
     <Age width={800} height={500}/>
-    <Typography variant="display3">Frequency vs Sex</Typography>
+    <Typography variant="display2">Frequency vs Gender</Typography>
     <Frequency width={800} height={500}/>
   </div>
 ) ;

@@ -26,6 +26,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -38,6 +39,8 @@ import { Consultations } from '../api/consultations.js';
 
 import ConsultationCard from './ConsultationCard.js';
 import PatientDeletionDialog from './PatientDeletionDialog.js';
+
+import insurances from '../client/insurances.js';
 
 const styles = theme => ({
 	photoPlaceHolder: {
@@ -138,7 +141,7 @@ class PatientDetails extends React.Component {
 						</div>
 						}
 						{ !patient.birthdate ? '' :
-						<Typography variant="display5">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
+						<Typography variant="display1">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
 					</Grid>
 					<Grid item sm={8} md={10}>
 						<form>
@@ -147,7 +150,7 @@ class PatientDetails extends React.Component {
 								<TextField className={classes.formControl}
 									label="NISS"
 									value={patient.niss}
-									onChange={e => this.setState({ patient : { ...this.state.patient , niss: e.target.value } } )}
+									onChange={e => this.setState({ patient : { ...patient , niss: e.target.value } } )}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -158,7 +161,7 @@ class PatientDetails extends React.Component {
 								<TextField className={classes.formControl}
 									label="Last name"
 									value={patient.lastname}
-									onChange={e => this.setState({ patient : { ...this.state.patient , lastname: e.target.value } } )}
+									onChange={e => this.setState({ patient : { ...patient , lastname: e.target.value } } )}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -169,7 +172,7 @@ class PatientDetails extends React.Component {
 								<TextField className={classes.formControl}
 									label="First name"
 									value={patient.firstname}
-									onChange={e => this.setState({ patient : { ...this.state.patient , firstname: e.target.value } } )}
+									onChange={e => this.setState({ patient : { ...patient , firstname: e.target.value } } )}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -181,7 +184,7 @@ class PatientDetails extends React.Component {
 								<InputLabel htmlFor="sex">Sex</InputLabel>
 								<Select
 									value={patient.sex}
-									onChange={e => this.setState({ patient : { ...this.state.patient , sex: e.target.value } } )}
+									onChange={e => this.setState({ patient : { ...patient , sex: e.target.value } } )}
 									inputProps={{
 										readOnly: !editing,
 										name: 'sex',
@@ -203,7 +206,7 @@ class PatientDetails extends React.Component {
 								  shrink: true,
 								}}
 								value={patient.birthdate}
-								onChange={e => this.setState({ patient : { ...this.state.patient , birthdate: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , birthdate: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -218,7 +221,7 @@ class PatientDetails extends React.Component {
 								rows={8}
 								className={classes.multiline}
 								value={patient.antecedents}
-								onChange={e => this.setState({ patient : { ...this.state.patient , antecedents: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , antecedents: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -233,7 +236,7 @@ class PatientDetails extends React.Component {
 								rows={8}
 								className={classes.multiline}
 								value={patient.allergies}
-								onChange={e => this.setState({ patient : { ...this.state.patient , allergies: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -248,7 +251,7 @@ class PatientDetails extends React.Component {
 								rows={8}
 								className={classes.multiline}
 								value={patient.ongoing}
-								onChange={e => this.setState({ patient : { ...this.state.patient , ongoing: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , ongoing: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -264,7 +267,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.streetandnumber}
-								onChange={e => this.setState({ patient : { ...this.state.patient , streetandnumber: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , streetandnumber: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -279,7 +282,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.zip}
-								onChange={e => this.setState({ patient : { ...this.state.patient , zip: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , zip: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -294,7 +297,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.municipality}
-								onChange={e => this.setState({ patient : { ...this.state.patient , municipality: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , municipality: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -310,7 +313,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.phone}
-								onChange={e => this.setState({ patient : { ...this.state.patient , phone: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , phone: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -320,12 +323,15 @@ class PatientDetails extends React.Component {
 									readOnly: !editing,
 								}}
 								label="Médecin Traitant"
+								InputProps={{
+									startAdornment: <InputAdornment position="start">Dr</InputAdornment>,
+								}}
 								placeholder={placeholder}
 								multiline
 								rows={1}
 								className={classes.multiline}
 								value={patient.doctor}
-								onChange={e => this.setState({ patient : { ...this.state.patient , doctor: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , doctor: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
@@ -333,19 +339,20 @@ class PatientDetails extends React.Component {
 							<TextField
 								inputProps={{
 									readOnly: !editing,
+									list: "datalist-for-insurances",
 								}}
 								label="Mutuelle"
 								placeholder={placeholder}
-								multiline
 								rows={1}
 								className={classes.multiline}
 								value={patient.insurance}
-								onChange={e => this.setState({ patient : { ...this.state.patient , insurance: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , insurance: e.target.value } } )}
 								margin="normal"
 							/>
+							<datalist id="datalist-for-insurances">
+								{ insurances.map(insurance => ( <option key={insurance._id} value={insurance.label}/> )) }
+							</datalist>
 							</Grid>
-
-
 
 							<Grid item xs={12}>
 							<TextField
@@ -355,10 +362,10 @@ class PatientDetails extends React.Component {
 								label="About"
 								placeholder={placeholder}
 								multiline
-								rows={4}
+								rows={2}
 								className={classes.multiline}
 								value={patient.about}
-								onChange={e => this.setState({ patient : { ...this.state.patient , about: e.target.value } } )}
+								onChange={e => this.setState({ patient : { ...patient , about: e.target.value } } )}
 								margin="normal"
 							/>
 							</Grid>
