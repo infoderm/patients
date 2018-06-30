@@ -41,6 +41,7 @@ import { format } from 'date-fns' ;
 import Currency from 'currency-formatter' ;
 
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
+import AttachmentLink from './AttachmentLink.js';
 
 import { Patients } from '../api/patients.js';
 
@@ -56,6 +57,10 @@ const styles = theme => ({
   } ,
   chip: {
     marginRight: theme.spacing.unit,
+  },
+  link: {
+    marginRight: theme.spacing.unit,
+    fontWeight: 'bold',
   },
   patientchip: {
     marginRight: theme.spacing.unit,
@@ -156,7 +161,14 @@ class ConsultationCard extends React.Component {
 	    { attachments === undefined || attachments.length === 0 ? '' :
 	    <ListItem>
 	      <Avatar><AttachmentIcon/></Avatar>
-	      <ListItemText primary="Attachments" secondary={`${attachments.length}`}/>
+	      <ListItemText
+		primary="Attachments"
+		secondary={
+		  attachments.map(
+		    attachmentId => ( <AttachmentLink className={classes.link} key={attachmentId} attachmentId={attachmentId}/> )
+		  )
+		}
+	      />
 	    </ListItem> }
 	  </List>
 	</ExpansionPanelDetails>

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { FilesCollection } from 'meteor/ostrio:files';
+import { check } from 'meteor/check';
 
 import Grid from 'gridfs-stream'; // We'll use this package to work with GridFS
 import fs from 'fs';              // Required to read files initially uploaded via Meteor-Files
@@ -68,8 +69,16 @@ export const Uploads = new FilesCollection({
 });
 
 if (Meteor.isServer) {
+
   Uploads.denyClient();
+
   Meteor.publish('uploads', function () {
-    return Uploads.find().cursor;
+    return Uploads.find({ userId: this.userId }).cursor;
   });
+
+  Meteor.publish('upload', function (_id) {
+    check(_id, String);
+    return Uploads.find({ userId: this.userId , _id }).cursor;
+  });
+
 }
