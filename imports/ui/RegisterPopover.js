@@ -84,7 +84,7 @@ class RegisterPopover extends React.Component {
 			>
 				<form className={classes.form} autoComplete="off">
 					<TextField error={!!errorUsername} helperText={errorUsername} autoFocus className={classes.row} label="Username" value={username} onChange={e => this.setState({ username: e.target.value})}/>
-					<TextField error={!!errorPassword} helperText={errorPassword} className={classes.row} label="Password" variant="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
+					<TextField error={!!errorPassword} helperText={errorPassword} className={classes.row} label="Password" type="password" value={password} onChange={e => this.setState({ password: e.target.value})}/>
 					<Button type="submit" color="primary" className={classes.row} onClick={register}>Register</Button>
 					<Button color="secondary" className={classes.row} onClick={e=>changeMode('login')}>Already registered?</Button>
 				</form>
