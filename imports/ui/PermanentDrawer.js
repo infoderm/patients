@@ -12,6 +12,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
+
+import format from 'date-fns/format' ;
+import startOfToday from 'date-fns/start_of_today' ;
+
 import FaceIcon from '@material-ui/icons/Face';
 import AddIcon from '@material-ui/icons/Add';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
@@ -21,6 +25,7 @@ import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
+import BookIcon from '@material-ui/icons/Book';
 
 const drawerWidth = 240;
 
@@ -52,7 +57,7 @@ function PermanentDrawer ( { classes } ) {
             </ListItemIcon>
             <ListItemText primary="Patients"/>
           </ListItem>
-          <ListItem button component={Link} to="/consultations">
+          <ListItem button component={Link} to={`/calendar/${format(startOfToday(), 'YYYY-MM-DD')}`}>
             <ListItemIcon>
               <SupervisorAccountIcon/>
             </ListItemIcon>
@@ -73,18 +78,27 @@ function PermanentDrawer ( { classes } ) {
         </List>
         <Divider/>
         <List>
-          <ListItem button component={Link} to="/unpaid">
-            <ListItemIcon>
-              <MoneyOffIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Unpaid"/>
-          </ListItem>
           <ListItem button component={Link} to="/stats">
             <ListItemIcon>
               <ShowChartIcon/>
             </ListItemIcon>
             <ListItemText primary="Stats"/>
           </ListItem>
+          <ListItem disabled button component={Link} to="/books">
+            <ListItemIcon>
+              <BookIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Carnets"/>
+          </ListItem>
+          <ListItem button component={Link} to="/unpaid">
+            <ListItemIcon>
+              <MoneyOffIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Unpaid"/>
+          </ListItem>
+        </List>
+        <Divider/>
+        <List>
           <ListItem button component={Link} to="/drugs">
             <ListItemIcon>
               <LocalPharmacyIcon/>

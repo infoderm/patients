@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 
-import startOfToday from 'date-fns/start_of_today'
 import startOfDay from 'date-fns/start_of_day'
 import parse from 'date-fns/parse'
 
@@ -58,10 +57,6 @@ const ConsultationsListFromMatch = ({ match }) => (
 	<ConsultationsList day={startOfDay(parse(match.params.day))}/>
 );
 
-const ConsultationsListToday = () => (
-	<ConsultationsList day={startOfToday()}/>
-);
-
 class Main extends React.Component {
 
 	constructor(props){
@@ -98,8 +93,6 @@ class Main extends React.Component {
 					<Route exact path="/drugs" component={DrugsSearch}/>
 
 					<Route exact path="/drug/:id" component={DrugDetails}/>
-
-					<Route exact path="/consultations" component={ConsultationsListToday}/>
 
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 
