@@ -24,7 +24,13 @@ class UnpaidConsultationsList extends React.Component {
 
 	render ( ) {
 
-		const { classes, consultations } = this.props ;
+		const { classes, loading } = this.props ;
+
+		if (loading) return <div>Loading...</div>;
+
+		const { consultations } = this.props ;
+
+		if (consultations.length === 0) return <div>All consultations have been paid for :)</div>;
 
 		return (
 			<div className={classes.container}>
@@ -41,8 +47,10 @@ UnpaidConsultationsList.propTypes = {
 };
 
 export default withTracker(() => {
-	Meteor.subscribe('consultations.unpaid');
+	const handle = Meteor.subscribe('consultations.unpaid');
+	if ( !handle.ready() ) return { loading: true } ;
 	return {
+		loading: false,
 		consultations: Consultations.find({}, {sort: {datetime: 1}}).fetch() ,
 	} ;
 }) ( withStyles(styles, { withTheme: true })(UnpaidConsultationsList) );
