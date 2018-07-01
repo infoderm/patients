@@ -34,8 +34,6 @@ export default withTooltip(
     data,
   }) => {
 
-	console.log(data);
-
     if (width < 10) return 'Cannot display chart on such small dimensions';
 
     if (!at_least(1, data)) return 'Not enough data to display chart';

@@ -25,16 +25,12 @@ const Chart = ({
 
 	const id2count = new Map(fromkeys(map(patient => patient._id, patients), 0));
 
-	console.log(id2count);
-
 	for (const consultation of consultations) {
 		const id = consultation.patientId;
 		id2count.set(id,id2count.get(id)+1);
 	}
 
 	const id2sex = new Map(map(patient => [patient._id, patient.sex], patients));
-
-	console.log(id2sex);
 
 	const count2count = new Map();
 
@@ -44,8 +40,6 @@ const Chart = ({
 		const sex = id2sex.get(id) || 'none';
 		sex2count.set(sex,sex2count.get(sex)+1);
 	}
-
-	console.log(count2count);
 
 	const data = [];
 

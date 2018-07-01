@@ -131,8 +131,6 @@ class PatientDetails extends React.Component {
 		if ( this.props.patient.attachments ) Array.prototype.push.apply(attachments, this.props.patient.attachments);
 		for ( const consultation of consultations ) if ( consultation.attachments ) Array.prototype.push.apply(attachments, consultation.attachments);
 
-		console.debug(attachments);
-
 		return (
 			<div>
 				<Typography variant="display3">Details</Typography>
