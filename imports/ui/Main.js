@@ -21,8 +21,6 @@ import DrugsSearch from './DrugsSearch.js';
 import DrugDetails from './DrugDetails.js';
 import Calendar from './Calendar.js';
 import Stats from './Stats.js';
-import UploadConsultationAttachment from './UploadConsultationAttachment.js';
-import UploadPatientAttachment from './PatientDetails.js';
 
 const styles = theme => ({
 	main: {
@@ -90,8 +88,6 @@ class Main extends React.Component {
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
 
-					<Route exact path="/patient/:id/attach" component={UploadPatientAttachment}/>
-
 					<Route exact path="/new/patient" component={NewPatientForm}/>
 
 					<Route exact path="/drugs" component={DrugsSearch}/>
@@ -99,8 +95,6 @@ class Main extends React.Component {
 					<Route exact path="/drug/:id" component={DrugDetails}/>
 
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
-
-					<Route exact path="/consultation/:id/attach" component={UploadConsultationAttachment}/>
 
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
 

@@ -5,17 +5,14 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button' ;
 
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import { Uploads } from '../api/uploads.js';
 
 const styles = theme => ({
-	rightIcon: {
-		marginLeft: theme.spacing.unit,
-	},
 });
 
-class UploadConsultationAttachment extends React.Component {
+class AttachFileButton extends React.Component {
 
     constructor (props) {
         super(props);
@@ -24,7 +21,8 @@ class UploadConsultationAttachment extends React.Component {
 
     upload (event) {
 
-      const consultationId = this.props.match.params.id;
+      const itemId = this.props.item;
+      const method = this.props.method;
       const files = event.target.files ;
 
       for ( const file of files ) {
@@ -45,8 +43,9 @@ class UploadConsultationAttachment extends React.Component {
             }
             else {
                 console.log(`[Upload] File "${fileObj.name} (${fileObj._id})" successfully uploaded`);
-                Meteor.call('consultations.attach', consultationId, fileObj._id, (err, res) => {
+                Meteor.call(method, itemId, fileObj._id, (err, res) => {
                   if ( err ) console.error(err) ;
+                  else console.log(`[Attach] File "${fileObj.name} (${fileObj._id})" successfully attached to item "${itemId}" using method "${method}".`) ;
                 });
             }
         });
@@ -56,11 +55,11 @@ class UploadConsultationAttachment extends React.Component {
     }
 
     render () {
-      const { classes } = this.props ;
+      const { method , item , ...rest } = this.props ;
       return (
         <div>
-            <Button variant="raised" color="primary" onClick={() => this._input.click()}>
-                Upload<CloudUploadIcon className={classes.rightIcon}/>
+            <Button { ...rest} onClick={() => this._input.click()}>
+              Attach File<AttachFileIcon/>
             </Button>
             <input
                 multiple
@@ -74,9 +73,9 @@ class UploadConsultationAttachment extends React.Component {
     }
 }
 
-UploadConsultationAttachment.propTypes = {
+AttachFileButton.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(UploadConsultationAttachment);
+export default withStyles(styles, { withTheme: true })(AttachFileButton);

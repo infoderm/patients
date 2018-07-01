@@ -33,7 +33,6 @@ import WarningIcon from '@material-ui/icons/Warning';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BookIcon from '@material-ui/icons/Book';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import { format } from 'date-fns' ;
@@ -41,6 +40,7 @@ import { format } from 'date-fns' ;
 import Currency from 'currency-formatter' ;
 
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
+import AttachFileButton from './AttachFileButton.js';
 import AttachmentLink from './AttachmentLink.js';
 
 import { Patients } from '../api/patients.js';
@@ -58,8 +58,10 @@ const styles = theme => ({
   chip: {
     marginRight: theme.spacing.unit,
   },
-  link: {
+  linksep: {
     marginRight: theme.spacing.unit,
+  },
+  link: {
     fontWeight: 'bold',
   },
   patientchip: {
@@ -119,6 +121,13 @@ class ConsultationCard extends React.Component {
 	    <Chip label={format(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${format(datetime,'YYYY-MM-DD')}`}/>
 	    <Chip label={format(datetime,'hh:mmA')} className={classes.chip}/>
 	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
+	    { attachments === undefined || attachments.length === 0 ? '' :
+	      <Chip
+		avatar={<Avatar><AttachmentIcon/></Avatar>}
+		label={attachments.length}
+		className={classes.chip}
+	      />
+	    }
 	    { currency === undefined || price === undefined || paid === undefined || paid === price ? '' : <Chip label={`Doit ${Currency.format(price-paid, {code: currency})}`} className={classes.debtchip}/> }
 	  </div>
 	</ExpansionPanelSummary>
@@ -162,10 +171,15 @@ class ConsultationCard extends React.Component {
 	    <ListItem>
 	      <Avatar><AttachmentIcon/></Avatar>
 	      <ListItemText
-		primary="Attachments"
+		primary={`${attachments.length} attachments`}
 		secondary={
 		  attachments.map(
-		    attachmentId => ( <AttachmentLink className={classes.link} key={attachmentId} attachmentId={attachmentId}/> )
+		    (attachmentId, i) => (
+		      <React.Fragment key={attachmentId}>
+			{!!i && <span className={classes.linksep}>,</span>}
+			<AttachmentLink className={classes.link} attachmentId={attachmentId}/>
+		      </React.Fragment>
+		    )
 		  )
 		}
 	      />
@@ -177,9 +191,7 @@ class ConsultationCard extends React.Component {
 	  <Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
 	    Edit<EditIcon/>
 	  </Button>
-	  <Button color="primary" component={Link} to={`/consultation/${_id}/attach`}>
-	    Attach File<AttachFileIcon/>
-	  </Button>
+	  <AttachFileButton color="primary" method="consultations.attach" item={_id}/>
 	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
 	    Delete<DeleteIcon/>
 	  </Button>
