@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 
 import ConsultationsMissingAPrice from './issues/ConsultationsMissingAPrice.js' ;
 import ConsultationsMissingABook from './issues/ConsultationsMissingABook.js' ;
+import PatientsMissingABirthdate from './issues/PatientsMissingABirthdate.js' ;
+import PatientsMissingAGender from './issues/PatientsMissingAGender.js' ;
 
 const styles = theme => ({
 	container: {
@@ -19,6 +21,10 @@ const Issues = ( { classes } ) => (
 		<ConsultationsMissingAPrice className={classes.container}/>
 		<Typography variant="display2">Consultations missing a book</Typography>
 		<ConsultationsMissingABook className={classes.container}/>
+		<Typography variant="display2">Patients missing a gender</Typography>
+		<PatientsMissingAGender className={classes.container}/>
+		<Typography variant="display2">Patients missing a birthdate</Typography>
+		<PatientsMissingABirthdate className={classes.container}/>
 	</div>
 ) ;
 
