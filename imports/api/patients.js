@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import { Consultations } from './consultations.js';
+import { Uploads } from './uploads.js';
 
 export const Patients = new Mongo.Collection('patients');
 
@@ -128,6 +129,20 @@ Meteor.methods({
 			throw new Meteor.Error('not-authorized');
 		}
 		return Patients.update(patientId, { $set: sanitize(fields) });
+	},
+
+	'patients.attach'(patientId, uploadId) {
+		check(patientId, String);
+		check(uploadId, String);
+		const patient = Patients.findOne(patientId);
+		const upload = Uploads.findOne(uploadId);
+		if (!patient || patient.owner !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own patient');
+		}
+		if (!upload || upload.userId !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		}
+		return Patients.update(patientId, { $addToSet: { attachments: uploadId } });
 	},
 
 	'patients.remove'(patientId){

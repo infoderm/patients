@@ -39,6 +39,8 @@ import { Consultations } from '../api/consultations.js';
 
 import ConsultationCard from './ConsultationCard.js';
 import PatientDeletionDialog from './PatientDeletionDialog.js';
+import AttachFileButton from './AttachFileButton.js';
+import AttachmentLink from './AttachmentLink.js';
 
 import insurances from '../client/insurances.js';
 
@@ -124,6 +126,12 @@ class PatientDetails extends React.Component {
 		if (!patient) return <div>Error: Patient not found.</div>;
 
 		const placeholder = !editing ? "To edit this field you first need to click the edit button" : "Write some information here";
+
+		const attachments = [];
+		if ( this.props.patient.attachments ) Array.prototype.push.apply(attachments, this.props.patient.attachments);
+		for ( const consultation of consultations ) if ( consultation.attachments ) Array.prototype.push.apply(attachments, consultation.attachments);
+
+		console.debug(attachments);
 
 		return (
 			<div>
@@ -407,6 +415,22 @@ class PatientDetails extends React.Component {
 						<SupervisorAccountIcon className={classes.rightIcon}/>
 					</Button>
 				</div>
+				{ attachments.length === 0 ?
+				<Typography variant="display3">No attachments</Typography> :
+				<div>
+				<Typography variant="display3">All attachments</Typography>
+				<div className={classes.container}>
+					{attachments.map(
+						(attachmentId, i) => (
+						  <React.Fragment key={attachmentId}>
+						{!!i && <span className={classes.linksep}>,</span>}
+						<AttachmentLink className={classes.link} attachmentId={attachmentId}/>
+						  </React.Fragment>
+						)
+					)}
+	  				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
+				</div>
+				</div>}
 				{ false && ( <div>
 				<Typography variant="display3">Prescriptions</Typography>
 				<div className={classes.container}>
