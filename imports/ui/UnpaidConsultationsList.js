@@ -30,11 +30,13 @@ class UnpaidConsultationsList extends React.Component {
 
 		const { consultations } = this.props ;
 
-		if (consultations.length === 0) return <div>All consultations have been paid for :)</div>;
+		const unpaidConsultations = consultations.filter(consultation => consultation.paid !== consultation.price);
+
+		if (unpaidConsultations.length === 0) return <div>All consultations have been paid for :)</div>;
 
 		return (
 			<div className={classes.container}>
-				{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
+				{ unpaidConsultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 			</div>
 		);
 	}
