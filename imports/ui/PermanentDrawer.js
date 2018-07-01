@@ -26,6 +26,7 @@ import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 
 const drawerWidth = 240;
 
@@ -95,6 +96,12 @@ function PermanentDrawer ( { classes } ) {
               <MoneyOffIcon/>
             </ListItemIcon>
             <ListItemText primary="Unpaid"/>
+          </ListItem>
+          <ListItem button component={Link} to="/issues">
+            <ListItemIcon>
+              <ReportProblemIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Issues"/>
           </ListItem>
         </List>
         <Divider/>

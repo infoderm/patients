@@ -21,6 +21,7 @@ import DrugsSearch from './DrugsSearch.js';
 import DrugDetails from './DrugDetails.js';
 import Calendar from './Calendar.js';
 import Stats from './Stats.js';
+import Issues from './Issues.js';
 
 const styles = theme => ({
 	main: {
@@ -107,6 +108,8 @@ class Main extends React.Component {
 					<Route exact path="/stats" component={Stats}/>
 
 					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
+
+					<Route exact path="/issues" component={Issues}/>
 
 					<Route component={NoMatch}/>
 
