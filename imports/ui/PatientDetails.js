@@ -415,8 +415,7 @@ class PatientDetails extends React.Component {
 				</div>
 				{ attachments.length === 0 ?
 				<Typography variant="display3">No attachments</Typography> :
-				<div>
-				<Typography variant="display3">All attachments</Typography>
+				<Typography variant="display3">All attachments</Typography> }
 				<div className={classes.container}>
 					{attachments.map(
 						(attachmentId, i) => (
@@ -428,7 +427,6 @@ class PatientDetails extends React.Component {
 					)}
 	  				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
 				</div>
-				</div>}
 				{ false && ( <div>
 				<Typography variant="display3">Prescriptions</Typography>
 				<div className={classes.container}>
