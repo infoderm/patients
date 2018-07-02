@@ -28,6 +28,7 @@
     "gridfs-stream": "^1.1.1",
     "meteor-node-stubs": "~0.4.1",
     "papaparse": "^4.5.0",
+    "pdfjs-dist": "^2.0.489",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
