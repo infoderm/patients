@@ -23,8 +23,6 @@ class AttachmentThumbnail extends React.Component {
 
     if ( loading ) return ;
 
-    console.debug('loading thumbnail for', attachment.name);
-
     const desiredWidth = width && parseInt(width, 10);
     const desiredHeight = height && parseInt(height, 10);
 

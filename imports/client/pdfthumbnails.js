@@ -19,14 +19,14 @@ function createContext ( page, desiredWidth, desiredHeight ) {
     const scaledViewport = page.getViewport(scale);
 
     const canvas = document.createElement('canvas');
-    canvas.width = desiredWith || scaledViewport.width;
+    canvas.width = desiredWidth || scaledViewport.width;
     canvas.height = desiredHeight || scaledViewport.height;
 
     const ctx = canvas.getContext('2d');
 
     return {
       canvasContext: ctx,
-      scaledViewport: viewport
+      viewport: scaledViewport
     };
 
 }
@@ -39,7 +39,7 @@ export function thumbnail ( file , { page = 1 , width , height , type , encoderO
     .then( doc => doc.getPage(page) )
     .then( thepage => {
       const renderContext = createContext(thepage, width, height);
-      return page.render(renderContext).then( () => renderContext ) ;
+      return thepage.render(renderContext).then( () => renderContext ) ;
     })
     .then( renderContext => {
       const canvas = renderContext.canvasContext.canvas;

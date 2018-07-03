@@ -8,6 +8,9 @@ import { BrowserRouter } from 'react-router-dom'
 import '../imports/startup/accounts-config.js';
 import App from '../imports/ui/App.js';
 
+// required for pdfjs to work
+(typeof window !== 'undefined' ? window : {}).pdfjsWorker = require('pdfjs-dist/build/pdf.worker.js');
+
 Meteor.startup(
   () => render(
     (
