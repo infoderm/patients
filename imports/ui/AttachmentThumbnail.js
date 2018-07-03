@@ -17,18 +17,21 @@ class AttachmentThumbnail extends React.Component {
     } ;
   }
 
-  componentDidMount() {
+  componentWillReceiveProps ( nextProps ) {
 
-    const { loading, attachmentId, attachment , ...rest } = this.props ;
-
-    const { width , height } = rest ;
+    const { loading, attachmentId, attachment , width , height } = nextProps ;
 
     if ( loading ) return ;
+
+    console.debug('loading thumbnail for', attachment.name);
+
+    const desiredWidth = width && parseInt(width, 10);
+    const desiredHeight = height && parseInt(height, 10);
 
     const fileurl = link(attachment);
     if ( attachment.isImage ) this.setState({src: fileurl}) ;
     else if ( attachment.isPDF ) {
-      thumbnail(fileurl, {width, height})
+      thumbnail(fileurl, {width: desiredWidth, height: desiredHeight})
         .then(dataUrl => this.setState({src: dataUrl})) ;
     }
 

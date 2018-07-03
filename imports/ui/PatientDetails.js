@@ -41,6 +41,7 @@ import ConsultationCard from './ConsultationCard.js';
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 import AttachFileButton from './AttachFileButton.js';
 import AttachmentLink from './AttachmentLink.js';
+import AttachmentThumbnail from './AttachmentThumbnail.js';
 
 import insurances from '../client/insurances.js';
 
@@ -90,6 +91,10 @@ const styles = theme => ({
 	},
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
+	},
+	thumbnail: {
+		marginLeft: theme.spacing.unit,
+		marginRight: theme.spacing.unit,
 	},
 });
 
@@ -418,11 +423,10 @@ class PatientDetails extends React.Component {
 				<Typography variant="display3">All attachments</Typography> }
 				<div className={classes.container}>
 					{attachments.map(
-						(attachmentId, i) => (
-						  <React.Fragment key={attachmentId}>
-						{!!i && <span className={classes.linksep}>,</span>}
-						<AttachmentLink className={classes.link} attachmentId={attachmentId}/>
-						  </React.Fragment>
+						attachmentId => (
+		      			<React.Fragment key={attachmentId}>
+							<AttachmentThumbnail className={classes.thumbnail} height="300" attachmentId={attachmentId}/>
+						</React.Fragment>
 						)
 					)}
 	  				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
