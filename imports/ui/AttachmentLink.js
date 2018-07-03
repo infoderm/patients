@@ -3,10 +3,12 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import { Uploads } from '../api/uploads.js';
 
+const link = attachment => `/${attachment.link().split('/').slice(3).join('/')}` ;
+
 const AttachmentLink = ( { loading, attachmentId, attachment , ...rest } ) => {
   if ( loading ) return (<span {...rest}>{attachmentId}</span>);
   else return (
-    <a {...rest} href={`/${attachment.link().split('/').slice(3).join('/')}`} alt={attachment.name}>{attachment.name}</a>
+    <a {...rest} href={link(attachment)} alt={attachment.name}>{attachment.name}</a>
   ) ;
 } ;
 
