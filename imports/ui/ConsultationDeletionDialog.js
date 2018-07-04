@@ -42,7 +42,7 @@ class ConsultationDeletionDialog extends React.Component {
       if ( lastname.toLowerCase() === patient.lastname.toLowerCase() ) {
 	this.setState({lastnameError: ''});
 	Meteor.call('consultations.remove', consultation._id, (err, res) => {
-	  if ( err ) console.log( err ) ;
+	  if ( err ) console.error( err ) ;
 	  else {
 	    console.log(`Consultation #${consultation._id} deleted.`)
 	    onClose();

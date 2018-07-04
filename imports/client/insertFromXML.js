@@ -32,7 +32,7 @@ export default function insertFromXML ( history, xmlString ) {
       const patient = Patients.findOne({niss: op.niss});
       if ( patient ) {
         Meteor.call('patients.update', patient._id, op , ( err , res ) => {
-          if ( err ) console.log(err);
+          if ( err ) console.error(err);
           else {
             history.push({pathname: `/patient/${patient._id}`}) ;
           }

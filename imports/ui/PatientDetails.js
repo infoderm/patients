@@ -111,7 +111,7 @@ class PatientDetails extends React.Component {
 
 	saveDetails = event => {
 		Meteor.call('patients.update', this.props.patient._id, this.state.patient , ( err , res ) => {
-			if ( err ) console.log(err);
+			if ( err ) console.error(err);
 			else {
 				this.setState({ editing: false });
 			}
