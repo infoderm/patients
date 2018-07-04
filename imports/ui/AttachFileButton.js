@@ -30,7 +30,10 @@ class AttachFileButton extends React.Component {
         const upload = Uploads.insert({
             file ,
             streams: 'dynamic',
-            chunkSize: 'dynamic'
+            chunkSize: 'dynamic',
+            meta: {
+                createdAt: new Date(),
+            },
         }, false);
 
         upload.on('start', function () {

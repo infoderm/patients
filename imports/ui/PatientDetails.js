@@ -41,7 +41,7 @@ import ConsultationCard from './ConsultationCard.js';
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 import AttachFileButton from './AttachFileButton.js';
 import AttachmentLink from './AttachmentLink.js';
-import AttachmentThumbnail from './AttachmentThumbnail.js';
+import AttachmentsGallery from './AttachmentsGallery.js';
 
 import insurances from '../client/insurances.js';
 
@@ -92,10 +92,6 @@ const styles = theme => ({
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
 	},
-	thumbnail: {
-		marginLeft: theme.spacing.unit,
-		marginRight: theme.spacing.unit,
-	},
 });
 
 class PatientDetails extends React.Component {
@@ -134,6 +130,7 @@ class PatientDetails extends React.Component {
 
 		const attachments = [];
 		if ( this.props.patient.attachments ) Array.prototype.push.apply(attachments, this.props.patient.attachments);
+		attachments.reverse();
 		for ( const consultation of consultations ) if ( consultation.attachments ) Array.prototype.push.apply(attachments, consultation.attachments);
 
 		return (
@@ -422,14 +419,8 @@ class PatientDetails extends React.Component {
 				<Typography variant="display3">No attachments</Typography> :
 				<Typography variant="display3">All attachments</Typography> }
 				<div className={classes.container}>
-					{attachments.map(
-						attachmentId => (
-		      			<React.Fragment key={attachmentId}>
-							<AttachmentThumbnail className={classes.thumbnail} height="300" attachmentId={attachmentId}/>
-						</React.Fragment>
-						)
-					)}
-	  				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
+					<AttachmentsGallery attachmentsId={attachments}/>
+					<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
 				</div>
 				{ false && ( <div>
 				<Typography variant="display3">Prescriptions</Typography>
@@ -456,7 +447,7 @@ export default withTracker(({match}) => {
 	Meteor.subscribe('patient.consultations', _id);
 	if ( handle.ready() ) {
 		const patient = Patients.findOne(_id);
-		const consultations = Consultations.find({}, {sort: { datetime: -1 }}).fetch();
+		const consultations = Consultations.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
 		return { loading: false, patient, consultations } ;
 	}
 	else return { loading: true } ;

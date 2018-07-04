@@ -1,6 +1,8 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
+import CardMedia from '@material-ui/core/CardMedia';
+
 import { Uploads } from '../api/uploads.js';
 import { thumbnail } from '../client/pdfthumbnails.js';
 
@@ -23,12 +25,11 @@ class AttachmentThumbnail extends React.Component {
 
     if ( loading ) return ;
 
-    const desiredWidth = width && parseInt(width, 10);
-    const desiredHeight = height && parseInt(height, 10);
-
     const fileurl = link(attachment);
     if ( attachment.isImage ) this.setState({src: fileurl}) ;
     else if ( attachment.isPDF ) {
+      const desiredWidth = width && parseInt(width, 10);
+      const desiredHeight = height && parseInt(height, 10);
       thumbnail(fileurl, {width: desiredWidth, height: desiredHeight})
         .then(dataUrl => this.setState({src: dataUrl})) ;
     }
@@ -40,8 +41,8 @@ class AttachmentThumbnail extends React.Component {
     const { loading, attachmentId, attachment , ...rest } = this.props ;
     const { src } = this.state ;
 
-    if ( loading ) return <img {...rest} src={src} alt={attachmentId}/>;
-    else return <img {...rest} src={src} alt={attachment.name}/>;
+    if ( loading ) return <CardMedia {...rest} image={src} alt={attachmentId}/>;
+    else return <CardMedia {...rest} image={src} alt={attachment.name}/>;
 
   }
 
