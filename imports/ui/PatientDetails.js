@@ -335,7 +335,6 @@ class PatientDetails extends React.Component {
 									startAdornment: <InputAdornment position="start">Dr</InputAdornment>,
 								}}
 								placeholder={placeholder}
-								multiline
 								rows={1}
 								className={classes.multiline}
 								value={patient.doctor}
