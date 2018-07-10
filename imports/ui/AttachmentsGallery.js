@@ -8,39 +8,18 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import format from 'date-fns/format' ;
 import startOfDay from 'date-fns/start_of_day' ;
-import addDays from 'date-fns/add_days' ;
-import subDays from 'date-fns/sub_days' ;
-import addHours from 'date-fns/add_hours' ;
-import isBefore from 'date-fns/is_before' ;
 
 import { list , map , groupby } from '@aureooms/js-itertools' ;
 
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-
 import { Uploads } from '../api/uploads.js';
 
-import AttachmentThumbnail from './AttachmentThumbnail.js';
+import AttachmentCard from './AttachmentCard.js';
 
 const styles = theme => ({
-	card: {
-		display: 'inline-block',
-		margin: theme.spacing.unit,
-	},
-	thumbnail: {
-		height: "300px",
-	},
 });
 
-const link = attachment => `/${Uploads.link(attachment).split('/').slice(3).join('/')}` ;
-
-class ConsultationsList extends React.Component {
+class AttachmentGallery extends React.Component {
 
 	constructor ( props ) {
 		super(props);
@@ -64,15 +43,7 @@ class ConsultationsList extends React.Component {
 		return (
 			<div>
 				{list(map( ( [ k , g ] ) => g.map(
-					attachment => (
-					<Card className={classes.card} key={attachment._id} component="a" href={link(attachment)}>
-						<CardHeader
-							title={attachment.name}
-							subheader={format(k, 'YYYY-MM-DD')}
-						/>
-						<AttachmentThumbnail className={classes.thumbnail} height="300" attachmentId={attachment._id}/>
-					</Card>
-					)
+				attachment => <AttachmentCard key={attachment._id} attachment={attachment}/>
 				) , groups ))}
 			</div>
 		);
@@ -80,7 +51,7 @@ class ConsultationsList extends React.Component {
 
 }
 
-ConsultationsList.propTypes = {
+AttachmentGallery.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 };
@@ -93,4 +64,4 @@ export default withTracker(({attachmentsId}) => {
 		attachments: Uploads.find({_id: {$in: attachmentsId}}, {sort: { 'meta.createdAt': -1}}).fetch()
 	} ;
 
-}) ( withStyles(styles, { withTheme: true })(ConsultationsList) );
+}) ( withStyles(styles, { withTheme: true })(AttachmentGallery) );
