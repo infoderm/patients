@@ -128,10 +128,35 @@ class PatientDetails extends React.Component {
 
 		const placeholder = !editing ? "To edit this field you first need to click the edit button" : "Write some information here";
 
-		const attachments = [];
-		if ( this.props.patient.attachments ) Array.prototype.push.apply(attachments, this.props.patient.attachments);
-		attachments.reverse();
-		for ( const consultation of consultations ) if ( consultation.attachments ) Array.prototype.push.apply(attachments, consultation.attachments);
+		const attachmentsInfo = [];
+		if ( this.props.patient.attachments ) {
+			Array.prototype.push.apply(
+				attachmentsInfo,
+				this.props.patient.attachments.map(x => [
+					x ,
+					{
+						collection: 'patients' ,
+						_id: this.props.patient._id ,
+					} ,
+				]),
+			);
+		}
+		attachmentsInfo.reverse();
+
+		for ( const consultation of consultations ) {
+			if ( consultation.attachments ) {
+				Array.prototype.push.apply(
+					attachmentsInfo,
+					consultation.attachments.map(x => [
+						x ,
+						{
+							collection: 'consultations' ,
+							_id: consultation._id ,
+						} ,
+					]),
+				);
+			}
+		}
 
 		return (
 			<div>
@@ -414,11 +439,11 @@ class PatientDetails extends React.Component {
 						<SupervisorAccountIcon className={classes.rightIcon}/>
 					</Button>
 				</div>
-				{ attachments.length === 0 ?
+				{ attachmentsInfo.length === 0 ?
 				<Typography variant="display3">No attachments</Typography> :
 				<Typography variant="display3">All attachments</Typography> }
 				<div className={classes.container}>
-					<AttachmentsGallery attachmentsId={attachments}/>
+					<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
 					<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
 				</div>
 				{ false && ( <div>

@@ -145,6 +145,20 @@ Meteor.methods({
 		return Patients.update(patientId, { $addToSet: { attachments: uploadId } });
 	},
 
+	'patients.detach'(patientId, uploadId) {
+		check(patientId, String);
+		check(uploadId, String);
+		const patient = Patients.findOne(patientId);
+		const upload = Uploads.findOne(uploadId);
+		if (!patient || patient.owner !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own patient');
+		}
+		if (!upload || upload.userId !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		}
+		return Patients.update(patientId, { $pull: { attachments: uploadId } });
+	},
+
 	'patients.remove'(patientId){
 		check(patientId, String);
 		const patient = Patients.findOne(patientId);

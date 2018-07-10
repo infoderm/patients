@@ -27,7 +27,7 @@ class AttachmentGallery extends React.Component {
 
 	render ( ) {
 
-		const { classes, loading, attachments } = this.props ;
+		const { classes, loading, attachmentsParents, attachments } = this.props ;
 
 		if ( loading ) return 'Loading...';
 
@@ -43,7 +43,7 @@ class AttachmentGallery extends React.Component {
 		return (
 			<div>
 				{list(map( ( [ k , g ] ) => g.map(
-				attachment => <AttachmentCard key={attachment._id} attachment={attachment}/>
+				attachment => <AttachmentCard key={attachment._id} attachment={attachment} parent={attachmentsParents.get(attachment._id)}/>
 				) , groups ))}
 			</div>
 		);
@@ -56,12 +56,14 @@ AttachmentGallery.propTypes = {
 	theme: PropTypes.object.isRequired,
 };
 
-export default withTracker(({attachmentsId}) => {
+export default withTracker(({attachmentsInfo}) => {
 	const handle = Meteor.subscribe('uploads');
 	if (!handle.ready()) return { loading: true };
 
+	const attachmentsId = attachmentsInfo.map(x => x[0]);
 	return {
-		attachments: Uploads.find({_id: {$in: attachmentsId}}, {sort: { 'meta.createdAt': -1}}).fetch()
+		attachmentsParents: new Map(attachmentsInfo),
+		attachments: Uploads.find({_id: {$in: attachmentsId}}, {sort: { 'meta.createdAt': -1}}).fetch(),
 	} ;
 
 }) ( withStyles(styles, { withTheme: true })(AttachmentGallery) );

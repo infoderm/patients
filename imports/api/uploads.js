@@ -82,3 +82,26 @@ if (Meteor.isServer) {
   });
 
 }
+
+Meteor.methods({
+	'uploads.remove'( uploadId ) {
+
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+
+		return Uploads.remove({ _id: uploadId }, err => {
+			if ( err ) console.error(`[Trash] Error during removal: ${err}`);
+			else console.log(`[Trash] File removed from DB and FS`);
+		});
+
+	},
+
+	'uploads.updateFilename'( uploadId , filename) {
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+		check(filename, String) ;
+		return Uploads.collection.update(uploadId, { $set: { name: filename } });
+	}
+});

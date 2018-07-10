@@ -122,6 +122,20 @@ Meteor.methods({
 		return Consultations.update(consultationId, { $addToSet: { attachments: uploadId } });
 	},
 
+	'consultations.detach'(consultationId, uploadId) {
+		check(consultationId, String);
+		check(uploadId, String);
+		const consultation = Consultations.findOne(consultationId);
+		const upload = Uploads.findOne(uploadId);
+		if (!consultation || consultation.owner !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own consultation');
+		}
+		if (!upload || upload.userId !== this.userId) {
+			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		}
+		return Consultations.update(consultationId, { $pull: { attachments: uploadId } });
+	},
+
 	'consultations.remove'(consultationId){
 		check(consultationId, String);
 		const consultation = Consultations.findOne(consultationId);

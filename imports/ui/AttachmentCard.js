@@ -27,6 +27,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import { Uploads } from '../api/uploads.js';
 
 import AttachmentThumbnail from './AttachmentThumbnail.js';
+import AttachmentEditionDialog from './AttachmentEditionDialog.js';
+import AttachmentDeletionDialog from './AttachmentDeletionDialog.js';
 
 const styles = theme => ({
 	card: {
@@ -46,6 +48,8 @@ class AttachmentCard extends React.Component {
 		super(props);
 		this.state = {
 			menu: null,
+			editing: false,
+			deleting: false,
 		} ;
 	}
 
@@ -59,11 +63,21 @@ class AttachmentCard extends React.Component {
 		event.preventDefault();
 	}
 
+	openEditDialog ( event ) {
+		this.setState({menu: null, editing: true});
+		event.preventDefault();
+	}
+
+	openDeleteDialog ( event ) {
+		this.setState({menu: null, deleting: true});
+		event.preventDefault();
+	}
+
 	render ( ) {
 
-		const { classes, attachment } = this.props ;
+		const { classes, attachment, parent } = this.props ;
 
-		const { menu } = this.state ;
+		const { menu , editing , deleting } = this.state ;
 
 		return (
 			<Card className={classes.card} component="a" href={link(attachment)}>
@@ -89,15 +103,17 @@ class AttachmentCard extends React.Component {
 						  open={Boolean(menu)}
 						  onClose={this.closeMenu.bind(this)}
 						>
-							<MenuItem onClick={this.closeMenu.bind(this)}>
+							<MenuItem onClick={this.openEditDialog.bind(this)}>
 								<ListItemIcon><EditIcon/></ListItemIcon>
 								<ListItemText>Rename</ListItemText>
 							</MenuItem>
-							<MenuItem onClick={this.closeMenu.bind(this)}>
+							<MenuItem onClick={this.openDeleteDialog.bind(this)}>
 								<ListItemIcon><DeleteIcon/></ListItemIcon>
 								<ListItemText>Delete</ListItemText>
 							</MenuItem>
 						</Menu>
+						<AttachmentEditionDialog open={editing} onClose={e => this.setState({ editing: false})} attachment={attachment}/>
+						<AttachmentDeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} detach={`${parent.collection}.detach`} itemId={parent._id} attachment={attachment}/>
 					</div>
 					}
 				/>
@@ -111,6 +127,8 @@ class AttachmentCard extends React.Component {
 AttachmentCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	attachment: PropTypes.object.isRequired,
+	parent: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(AttachmentCard);
