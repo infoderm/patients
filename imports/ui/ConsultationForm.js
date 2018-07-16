@@ -25,6 +25,9 @@ import { format } from 'date-fns' ;
 import { Patients } from '../api/patients.js';
 
 const styles = theme => ({
+	container: {
+		paddingBottom: '5em',
+	},
 	multiline: {
 		margin: theme.spacing.unit,
 		overflow: 'auto',
@@ -145,7 +148,7 @@ class ConsultationForm extends React.Component {
 		const { classes , consultation : { _id : consultationId }, loadingPatient, patient } = this.props ;
 
 		return (
-			<div>
+			<div className={classes.container}>
 				<Grid className={classes.header} container spacing={24}>
 					{(loadingPatient || !patient || !patient.photo) ? '' :
 					<Grid item xs={1}>
@@ -279,7 +282,6 @@ class ConsultationForm extends React.Component {
 							value={this.state.currency}
 							onChange={e => this.setState({ currency : e.target.value })}
 							margin="normal"
-							helperText="Please select your currency"
 						>
 							<MenuItem value="EUR">€</MenuItem>
 						</TextField>
