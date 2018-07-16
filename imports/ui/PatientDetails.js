@@ -43,7 +43,7 @@ import AttachFileButton from './AttachFileButton.js';
 import AttachmentLink from './AttachmentLink.js';
 import AttachmentsGallery from './AttachmentsGallery.js';
 
-import insurances from '../client/insurances.js';
+import { Insurances } from '../api/insurances.js';
 
 const styles = theme => ({
 	photoPlaceHolder: {
@@ -123,7 +123,7 @@ class PatientDetails extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, loading, consultations } = this.props ;
+		const { classes, theme, loading, consultations, insurances } = this.props ;
 		const { patient , editing , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
@@ -387,7 +387,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							<datalist id="datalist-for-insurances">
-								{ insurances.map(insurance => ( <option key={insurance._id} value={insurance.label}/> )) }
+								{ insurances.map(insurance => ( <option key={insurance._id} value={insurance.name}/> )) }
 							</datalist>
 							</Grid>
 
@@ -488,10 +488,12 @@ export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('patient', _id);
 	Meteor.subscribe('patient.consultations', _id);
+	Meteor.subscribe('insurances', _id);
 	if ( handle.ready() ) {
 		const patient = Patients.findOne(_id);
 		const consultations = Consultations.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
-		return { loading: false, patient, consultations } ;
+		const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
+		return { loading: false, patient, consultations, insurances } ;
 	}
-	else return { loading: true } ;
+	else return { loading: true, consultations: [], insurances: [] } ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );

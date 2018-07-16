@@ -5,6 +5,8 @@ import { check } from 'meteor/check';
 import { Consultations } from './consultations.js';
 import { Uploads } from './uploads.js';
 
+import { insurances } from './insurances.js';
+
 export const Patients = new Mongo.Collection('patients');
 
 if (Meteor.isServer) {
@@ -119,8 +121,12 @@ Meteor.methods({
 			throw new Meteor.Error('not-authorized');
 		}
 
+		const fields = sanitize(patient);
+
+		if ( fields.insurance ) insurances.add(this.userId, fields.insurance) ;
+
 		return Patients.insert({
-			...sanitize(patient),
+			...fields,
 			createdAt: new Date(),
 			owner: this.userId,
 			username: Meteor.users.findOne(this.userId).username,
@@ -128,13 +134,18 @@ Meteor.methods({
 
 	},
 
-	'patients.update'(patientId, fields) {
+	'patients.update'(patientId, newfields) {
 		check(patientId, String);
 		const patient = Patients.findOne(patientId);
 		if (patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		return Patients.update(patientId, { $set: sanitize(fields) });
+
+		const fields = sanitize(newfields);
+
+		if ( fields.insurance ) insurances.add(this.userId, fields.insurance) ;
+
+		return Patients.update(patientId, { $set: fields });
 	},
 
 	'patients.attach'(patientId, uploadId) {
