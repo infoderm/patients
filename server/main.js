@@ -5,6 +5,7 @@ import { Patients } from '../imports/api/patients.js';
 import { Drugs } from '../imports/api/drugs.js';
 import { Consultations } from '../imports/api/consultations.js';
 import { Insurances , insurances } from '../imports/api/insurances.js';
+import { Doctors , doctors } from '../imports/api/doctors.js';
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -52,6 +53,18 @@ Meteor.startup(() => {
   Patients.find().map( ( { owner , insurance } ) => insurance && insurances.add(owner, insurance));
 
   Insurances.rawCollection().createIndex({
+    name: 1,
+    owner: 1,
+  },{
+    unique: true,
+    background: true,
+  });
+
+  Doctors.remove({});
+
+  Patients.find().map( ( { owner , doctor } ) => doctor && doctors.add(owner, doctor));
+
+  Doctors.rawCollection().createIndex({
     name: 1,
     owner: 1,
   },{

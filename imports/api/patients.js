@@ -6,6 +6,7 @@ import { Consultations } from './consultations.js';
 import { Uploads } from './uploads.js';
 
 import { insurances } from './insurances.js';
+import { doctors } from './doctors.js';
 
 export const Patients = new Mongo.Collection('patients');
 
@@ -124,6 +125,7 @@ Meteor.methods({
 		const fields = sanitize(patient);
 
 		if ( fields.insurance ) insurances.add(this.userId, fields.insurance) ;
+		if ( fields.doctor ) doctors.add(this.userId, fields.doctor) ;
 
 		return Patients.insert({
 			...fields,
@@ -144,6 +146,7 @@ Meteor.methods({
 		const fields = sanitize(newfields);
 
 		if ( fields.insurance ) insurances.add(this.userId, fields.insurance) ;
+		if ( fields.doctor ) doctors.add(this.userId, fields.doctor) ;
 
 		return Patients.update(patientId, { $set: fields });
 	},

@@ -44,6 +44,7 @@ import AttachmentLink from './AttachmentLink.js';
 import AttachmentsGallery from './AttachmentsGallery.js';
 
 import { Insurances } from '../api/insurances.js';
+import { Doctors } from '../api/doctors.js';
 
 const styles = theme => ({
 	photoPlaceHolder: {
@@ -123,7 +124,7 @@ class PatientDetails extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, loading, consultations, insurances } = this.props ;
+		const { classes, theme, loading, consultations, insurances, doctors } = this.props ;
 		const { patient , editing , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
@@ -359,6 +360,7 @@ class PatientDetails extends React.Component {
 							<TextField
 								inputProps={{
 									readOnly: !editing,
+									list: "datalist-for-doctors",
 								}}
 								label="Médecin Traitant"
 								InputProps={{
@@ -371,6 +373,9 @@ class PatientDetails extends React.Component {
 								onChange={e => this.setState({ patient : { ...patient , doctor: e.target.value } } )}
 								margin="normal"
 							/>
+							<datalist id="datalist-for-doctors">
+								{ doctors.map(doctor => ( <option key={doctor._id} value={doctor.name}/> )) }
+							</datalist>
 							</Grid>
 							<Grid item xs={12} md={4}>
 							<TextField
@@ -488,12 +493,14 @@ export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('patient', _id);
 	Meteor.subscribe('patient.consultations', _id);
-	Meteor.subscribe('insurances', _id);
+	Meteor.subscribe('insurances');
+	Meteor.subscribe('doctors');
 	if ( handle.ready() ) {
 		const patient = Patients.findOne(_id);
 		const consultations = Consultations.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
 		const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
-		return { loading: false, patient, consultations, insurances } ;
+		const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
+		return { loading: false, patient, consultations, insurances, doctors } ;
 	}
-	else return { loading: true, consultations: [], insurances: [] } ;
+	else return { loading: true, consultations: [], insurances: [], doctors: [] } ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );
