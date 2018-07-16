@@ -39,6 +39,8 @@ function sanitize ( {
 	doctor,
 	insurance,
 
+	noshow,
+
 } ) {
 
 	check(niss, String);
@@ -60,6 +62,8 @@ function sanitize ( {
 	phone === undefined || check(phone, String);
 	doctor === undefined || check(doctor, String);
 	insurance === undefined || check(insurance, String);
+
+	noshow === undefined || check(noshow, Number);
 
 	niss = niss.trim();
 	firstname = firstname.trim();
@@ -101,6 +105,8 @@ function sanitize ( {
 		phone,
 		doctor,
 		insurance,
+
+		noshow,
 
 	} ;
 

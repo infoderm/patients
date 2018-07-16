@@ -92,6 +92,9 @@ const styles = theme => ({
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
 	},
+	problem:{
+		color: 'red',
+	},
 });
 
 class PatientDetails extends React.Component {
@@ -175,6 +178,8 @@ class PatientDetails extends React.Component {
 						}
 						{ !patient.birthdate ? '' :
 						<Typography variant="display1">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
+						{ !patient.noshow ? '' :
+						<Typography className={classes.problem} variant="display1">PVPP &gt; 0</Typography> }
 					</Grid>
 					<Grid item sm={8} md={10}>
 						<form>
@@ -386,7 +391,7 @@ class PatientDetails extends React.Component {
 							</datalist>
 							</Grid>
 
-							<Grid item xs={12}>
+							<Grid item xs={9}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -398,6 +403,20 @@ class PatientDetails extends React.Component {
 								className={classes.multiline}
 								value={patient.about}
 								onChange={e => this.setState({ patient : { ...patient , about: e.target.value } } )}
+								margin="normal"
+							/>
+							</Grid>
+							<Grid item xs={3}>
+							<TextField
+								inputProps={{
+									readOnly: !editing,
+								}}
+								label="PVPP"
+								type="number"
+								placeholder={placeholder}
+								className={classes.multiline}
+								value={patient.noshow || 0}
+								onChange={e => this.setState({ patient : { ...patient , noshow: parseInt(e.target.value,10) } } )}
 								margin="normal"
 							/>
 							</Grid>
