@@ -64,14 +64,14 @@ class ConsultationsList extends React.Component {
 		return (
 			<div>
 				<Typography variant="display2">{`${format(day, 'dddd Do MMMM YYYY')} (AM: ${cam}, PM: ${cpm})`}</Typography>
-				{ cpm === 0 ? '' :
-				<div className={classes.container}>
-					{ pm.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
-				</div> }
-				{ cpm === 0 || cam === 0 ? '' : <Divider/>}
 				{ cam === 0 ? '' :
 				<div className={classes.container}>
 					{ am.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
+				</div> }
+				{ cpm === 0 || cam === 0 ? '' : <Divider/>}
+				{ cpm === 0 ? '' :
+				<div className={classes.container}>
+					{ pm.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 				</div> }
 				<Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/calendar/${dayBefore}`}>
 					<NavigateBeforeIcon/>
@@ -96,6 +96,6 @@ export default withTracker(({ day }) => {
 	Meteor.subscribe('consultations');
 	return {
 		day,
-		consultations: Consultations.find({ datetime : { $gte : day , $lt : nextDay } }, {sort: {datetime: -1}}).fetch() ,
+		consultations: Consultations.find({ datetime : { $gte : day , $lt : nextDay } }, {sort: {datetime: 1}}).fetch() ,
 	} ;
 }) ( withStyles(styles, { withTheme: true })(ConsultationsList) );
