@@ -10,9 +10,9 @@ import { Doctors , doctors } from '../imports/api/doctors.js';
 Meteor.startup(() => {
   // code to run on server at startup
   Patients.rawCollection().createIndex({
+    owner: 1,
     niss: 1,
   },{
-    unique: true,
     background: true,
   });
 
@@ -23,6 +23,7 @@ Meteor.startup(() => {
   });
 
   Drugs.rawCollection().createIndex({
+    owner: 1,
     mppcv: 1,
   },{
     unique: true,
@@ -53,8 +54,8 @@ Meteor.startup(() => {
   Patients.find().map( ( { owner , insurance } ) => insurance && insurances.add(owner, insurance));
 
   Insurances.rawCollection().createIndex({
-    name: 1,
     owner: 1,
+    name: 1,
   },{
     unique: true,
     background: true,
@@ -65,8 +66,8 @@ Meteor.startup(() => {
   Patients.find().map( ( { owner , doctor } ) => doctor && doctors.add(owner, doctor));
 
   Doctors.rawCollection().createIndex({
-    name: 1,
     owner: 1,
+    name: 1,
   },{
     unique: true,
     background: true,
