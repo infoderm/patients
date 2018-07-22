@@ -8,6 +8,14 @@ import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
 
 Meteor.startup(() => {
+
+  // drop all indexes
+  Patients.rawCollection().dropIndexes();
+  Drugs.rawCollection().dropIndexes();
+  Consultations.rawCollection().dropIndexes();
+  Insurances.rawCollection().dropIndexes();
+  Doctors.rawCollection().dropIndexes();
+
   // code to run on server at startup
   Patients.rawCollection().createIndex({
     owner: 1,
