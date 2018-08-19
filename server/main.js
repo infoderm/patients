@@ -9,12 +9,12 @@ import { Doctors , doctors } from '../imports/api/doctors.js';
 
 Meteor.startup(() => {
 
-  // drop all indexes
-  Patients.rawCollection().dropIndexes();
-  Drugs.rawCollection().dropIndexes();
-  Consultations.rawCollection().dropIndexes();
-  Insurances.rawCollection().dropIndexes();
-  Doctors.rawCollection().dropIndexes();
+  // drop all indexes (if the collection is not empty)
+  if (Patients.find().count() !== 0) Patients.rawCollection().dropIndexes();
+  if (Drugs.find().count() !== 0) Drugs.rawCollection().dropIndexes();
+  if (Consultations.find().count() !== 0) Consultations.rawCollection().dropIndexes();
+  if (Insurances.find().count() !== 0) Insurances.rawCollection().dropIndexes();
+  if (Doctors.find().count() !== 0) Doctors.rawCollection().dropIndexes();
 
   // code to run on server at startup
   Patients.rawCollection().createIndex({
