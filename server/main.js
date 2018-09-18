@@ -25,18 +25,21 @@ Meteor.startup(() => {
   });
 
   Patients.rawCollection().createIndex({
+    owner: 1,
     lastname: 1,
   },{
     background: true,
   });
 
   Patients.rawCollection().createIndex({
+    owner: 1,
     doctor: 1,
   },{
     background: true,
   });
 
   Patients.rawCollection().createIndex({
+    owner: 1,
     insurance: 1,
   },{
     background: true,
@@ -57,12 +60,14 @@ Meteor.startup(() => {
   });
 
   Consultations.rawCollection().createIndex({
+    owner: 1,
     datetime: -1,
   },{
     background: true,
   });
 
   Consultations.rawCollection().createIndex({
+    owner: 1,
     patientId: 1,
     datetime: -1,
   },{
