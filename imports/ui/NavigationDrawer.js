@@ -41,7 +41,7 @@ const styles = theme => ({
   drawerHeader: theme.mixins.toolbar,
 });
 
-function PermanentDrawer ( { classes } ) {
+function NavigationDrawer ( { classes } ) {
     return (
       <Drawer
         variant="permanent"
@@ -130,8 +130,8 @@ function PermanentDrawer ( { classes } ) {
     );
 }
 
-PermanentDrawer.propTypes = {
+NavigationDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PermanentDrawer);
+export default withStyles(styles)(NavigationDrawer);

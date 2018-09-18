@@ -18,7 +18,7 @@ import handleDrop from '../client/handleDrop.js';
 import WholeWindowDropZone from './WholeWindowDropZone.js';
 import Header from './Header.js';
 import Main from './Main.js';
-import PermanentDrawer from './PermanentDrawer.js';
+import NavigationDrawer from './NavigationDrawer.js';
 
 const muitheme = createMuiTheme();
 
@@ -48,7 +48,7 @@ class App extends React.Component {
 					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame}>
 						<Header patients={patients} currentUser={currentUser}/>
-						<PermanentDrawer/>
+						<NavigationDrawer/>
 						<Main currentUser={currentUser} patients={patients}/>
 					</div>
 				</div>
