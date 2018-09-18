@@ -417,11 +417,10 @@ class PatientDetails extends React.Component {
 									readOnly: !editing,
 								}}
 								label="PVPP"
-								type="number"
 								placeholder={placeholder}
 								className={classes.multiline}
 								value={patient.noshow || 0}
-								onChange={e => this.setState({ patient : { ...patient , noshow: parseInt(e.target.value,10) } } )}
+								onChange={e => this.setState({ patient : { ...patient , noshow: e.target.value === '' ? 0 : parseInt(e.target.value,10) } } )}
 								margin="normal"
 							/>
 							</Grid>

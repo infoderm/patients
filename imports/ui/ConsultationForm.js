@@ -289,7 +289,6 @@ class ConsultationForm extends React.Component {
 					<Grid item xs={3}>
 						<TextField
 							label="Prix"
-							type="number"
 							value={this.state.price}
 							onChange={e => this.setState({ price: e.target.value , paid: this.state.syncPaid ? e.target.value : this.state.paid })}
 							margin="normal"
@@ -298,7 +297,6 @@ class ConsultationForm extends React.Component {
 					<Grid item xs={3}>
 						<TextField
 							label="Payé"
-							type="number"
 							value={this.state.paid}
 							onChange={e => this.setState({ paid : e.target.value , syncPaid: false })}
 							margin="normal"
@@ -307,7 +305,6 @@ class ConsultationForm extends React.Component {
 					<Grid item xs={3}>
 						<TextField
 							label="Carnet"
-							type="number"
 							value={this.state.book}
 							onChange={e => this.setState({ book : e.target.value })}
 							margin="normal"
