@@ -10,10 +10,9 @@ if (Meteor.isServer) {
 	});
 }
 
-export const doctors = {} ;
+export const doctors = {
 
-if (Meteor.isServer) {
-  doctors.add = ( owner , name ) => {
+  add: ( owner , name ) => {
 
     check(owner, String);
     check(name, String);
@@ -21,15 +20,15 @@ if (Meteor.isServer) {
     name = name.trim();
 
     const fields = {
-        owner,
-        name,
+      owner,
+      name,
     };
 
     return Doctors.upsert( fields, { $set: fields } ) ;
 
-  } ;
+  } ,
 
-  doctors.remove = ( owner , name ) => {
+  remove: ( owner , name ) => {
 
     check(owner, String);
     check(name, String);
@@ -37,12 +36,12 @@ if (Meteor.isServer) {
     name = name.trim();
 
     const fields = {
-        owner,
-        name,
+      owner,
+      name,
     };
 
     return Doctors.remove( fields ) ;
 
-  } ;
+  } ,
 
 }
