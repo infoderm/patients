@@ -30,6 +30,18 @@ Meteor.startup(() => {
     background: true,
   });
 
+  Patients.rawCollection().createIndex({
+    doctor: 1,
+  },{
+    background: true,
+  });
+
+  Patients.rawCollection().createIndex({
+    insurance: 1,
+  },{
+    background: true,
+  });
+
   Drugs.rawCollection().createIndex({
     owner: 1,
     mppcv: 1,
