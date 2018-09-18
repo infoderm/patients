@@ -185,9 +185,7 @@ Meteor.methods({
 		if (patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		for (const consultation of Consultations.find({ owner: this.userId , patientId: patientId })) {
-			Consultations.remove(consultation._id);
-		}
+		Consultations.remove({ owner: this.userId , patientId: patientId }) ;
 		return Patients.remove(patientId);
 	},
 
