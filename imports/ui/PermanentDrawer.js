@@ -19,6 +19,7 @@ import startOfToday from 'date-fns/start_of_today' ;
 import FaceIcon from '@material-ui/icons/Face';
 import AddIcon from '@material-ui/icons/Add';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import TodayIcon from '@material-ui/icons/Today';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
@@ -60,7 +61,7 @@ function PermanentDrawer ( { classes } ) {
           </ListItem>
           <ListItem button component={Link} to={`/calendar/${format(startOfToday(), 'YYYY-MM-DD')}`}>
             <ListItemIcon>
-              <SupervisorAccountIcon/>
+              <FolderSharedIcon/>
             </ListItemIcon>
             <ListItemText primary="Consultations"/>
           </ListItem>
@@ -106,6 +107,12 @@ function PermanentDrawer ( { classes } ) {
         </List>
         <Divider/>
         <List>
+          <ListItem button component={Link} to="/doctors">
+            <ListItemIcon>
+              <SupervisorAccountIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Doctors"/>
+          </ListItem>
           <ListItem button component={Link} to="/drugs">
             <ListItemIcon>
               <LocalPharmacyIcon/>

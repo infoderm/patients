@@ -11,13 +11,21 @@ import { doctors } from './doctors.js';
 export const Patients = new Mongo.Collection('patients');
 
 if (Meteor.isServer) {
+
 	Meteor.publish('patients', function () {
 		return Patients.find({ owner: this.userId });
 	});
+
 	Meteor.publish('patient', function (_id) {
 		check(_id, String);
 		return Patients.find({ owner: this.userId , _id });
 	});
+
+	Meteor.publish('patients-of-doctor', function (doctor) {
+		check(doctor, String);
+		return Patients.find({ owner: this.userId , doctor });
+	});
+
 }
 
 function sanitize ( {

@@ -1,3 +1,6 @@
+import { Meteor } from 'meteor/meteor' ;
+import { withTracker } from 'meteor/react-meteor-data' ;
+
 import React from 'react' ;
 
 import { Link } from 'react-router-dom'
@@ -7,11 +10,13 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import FaceIcon from '@material-ui/icons/Face';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-import PatientCard from './PatientCard.js';
+import { Doctors } from '../../api/doctors.js';
+
+import DoctorCard from './DoctorCard.js';
 
 const styles = theme => ({
   buttonTile: {
@@ -34,31 +39,25 @@ const styles = theme => ({
   },
 });
 
-class PatientsList extends React.Component {
+class DoctorsList extends React.Component {
 
   constructor(props){
     super(props);
   }
 
   render() {
-    const { patients , classes , page , perpage } = this.props;
+    const { doctors , classes , page , perpage } = this.props;
     return (
       <div>
         <Grid container spacing={24}>
-          <Grid item sm={12} md={12} lg={6} xl={4}>
-            <Button variant="raised" className={classes.buttonTile} component={Link} to="/new/patient">
-              Add a new patient
-              <FaceIcon className={classes.rightIcon}/>
-            </Button>
-          </Grid>
-          { patients.slice(page*perpage, (page+1)*perpage).map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+          { doctors.map(doctor => ( <DoctorCard key={doctor._id} doctor={doctor}/> )) }
         </Grid>
         { page === 0 ? '' :
-        <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/patients/page/${page-1}`}>
+        <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/doctors/page/${page-1}`}>
             <NavigateBeforeIcon/>
         </Button> }
-        { page + 1 === Math.ceil(patients.length / perpage) ? '' :
-        <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`/patients/page/${page+1}`}>
+        { doctors.length < perpage ? '' :
+        <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`/doctors/page/${page+1}`}>
             <NavigateNextIcon/>
         </Button> }
       </div>
@@ -67,12 +66,16 @@ class PatientsList extends React.Component {
 
 }
 
-
-PatientsList.propTypes = {
+DoctorsList.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true }) (PatientsList) ;
+export default withTracker(({page, perpage}) => {
+  Meteor.subscribe('doctors');
+  return {
+    doctors: Doctors.find({}, {name: { $slice: [ page*perpage, perpage ] }}).fetch() ,
+  } ;
+}) ( withStyles(styles, { withTheme: true })(DoctorsList) );

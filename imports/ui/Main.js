@@ -10,6 +10,7 @@ import startOfDay from 'date-fns/start_of_day'
 import parse from 'date-fns/parse'
 
 import PatientsList from './PatientsList.js';
+import DoctorsList from './doctors/DoctorsList.js';
 import PatientDetails from './PatientDetails.js';
 import NewPatientForm from './NewPatientForm.js';
 import ConsultationsList from './ConsultationsList.js';
@@ -83,6 +84,22 @@ class Main extends React.Component {
 						( { match } ) => {
 							return (
 								<PatientsList patients={patients} page={parseInt(match.params.page,10)} perpage={10}/>
+							) ;
+						}
+					}/>
+
+					<Route exact path='/doctors' render={
+						( { match } ) => {
+							return (
+								<DoctorsList page={0} perpage={10}/>
+							) ;
+						}
+					}/>
+
+					<Route exact path='/doctors/page/:page' render={
+						( { match } ) => {
+							return (
+								<DoctorsList page={parseInt(match.params.page,10)} perpage={10}/>
 							) ;
 						}
 					}/>
