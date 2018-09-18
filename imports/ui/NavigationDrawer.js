@@ -19,6 +19,8 @@ import startOfToday from 'date-fns/start_of_today' ;
 import FaceIcon from '@material-ui/icons/Face';
 import AddIcon from '@material-ui/icons/Add';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import BusinessIcon from '@material-ui/icons/Business';
+import BugReportIcon from '@material-ui/icons/BugReport';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import TodayIcon from '@material-ui/icons/Today';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
@@ -113,6 +115,21 @@ function NavigationDrawer ( { classes } ) {
             </ListItemIcon>
             <ListItemText primary="Doctors"/>
           </ListItem>
+          <ListItem disabled button component={Link} to="/insurances">
+            <ListItemIcon>
+              <BusinessIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Insurances"/>
+          </ListItem>
+          <ListItem disabled button component={Link} to="/allergies">
+            <ListItemIcon>
+              <BugReportIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Allergies"/>
+          </ListItem>
+        </List>
+        <Divider/>
+        <List>
           <ListItem button component={Link} to="/drugs">
             <ListItemIcon>
               <LocalPharmacyIcon/>
