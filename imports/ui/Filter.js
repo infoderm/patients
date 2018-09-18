@@ -63,9 +63,11 @@ const styles = theme => ({
     background: 'none',
     '&::before': {
       height: '0 !important',
+      border: '0 !important',
     } ,
     '&::after': {
       height: '0 !important',
+      border: '0 !important',
     } ,
   },
 });
