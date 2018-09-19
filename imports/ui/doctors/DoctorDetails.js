@@ -7,11 +7,9 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 
 import { Patients } from '../../api/patients.js';
 
-export default function DoctorDetails ( { match } ) {
+export default function DoctorDetails ( { match , page , perpage } ) {
 
-	const name = match.params.name ;
-	const page = ( match.params.page && parseInt(match.params.page, 10) ) || 0 ;
-	const perpage = 10 ;
+	page = match && match.params.page && parseInt(match.params.page,10) || page ;
 
 	return (
 		<TagDetails
@@ -29,7 +27,12 @@ export default function DoctorDetails ( { match } ) {
 
 }
 
-DoctorDetails.propTypes = {
-	match: PropTypes.object.isRequired,
+DoctorDetails.defaultProps = {
+	page: 0,
+	perpage: 10,
 } ;
 
+DoctorDetails.propTypes = {
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired,
+} ;
