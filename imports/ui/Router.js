@@ -60,10 +60,6 @@ const ConsultationsListFromMatch = ({ match }) => (
 	<ConsultationsList day={startOfDay(parse(match.params.day))}/>
 );
 
-const DoctorsListFromMatch = ( { match } ) => (
-	<DoctorsList page={parseInt(match.params.page,10)}/>
-);
-
 class Main extends React.Component {
 
 	constructor(props){
@@ -88,7 +84,7 @@ class Main extends React.Component {
 					}/>
 
 					<Route exact path="/doctors" component={DoctorsList}/>
-					<Route exact path="/doctors/page/:page" component={DoctorsListFromMatch}/>
+					<Route exact path="/doctors/page/:page" component={DoctorsList}/>
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
 

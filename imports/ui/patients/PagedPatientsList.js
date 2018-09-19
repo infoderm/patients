@@ -35,18 +35,18 @@ const styles = theme => ({
 
 function PagedPatientsList ( props ) {
 
-  const { patients , classes , root , page , perpage } = props;
+  const { classes , root , page , perpage , items } = props;
 
   return (
     <div>
       <Grid container spacing={24}>
-        { patients.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+        { items.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
       </Grid>
       { page === 0 ? '' :
       <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
         <NavigateBeforeIcon/>
       </Button> }
-      { patients.length < perpage ? '' :
+      { items.length < perpage ? '' :
       <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
         <NavigateNextIcon/>
       </Button> }
@@ -60,6 +60,7 @@ PagedPatientsList.propTypes = {
   root: PropTypes.string.isRequired,
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
+  items: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true }) (PagedPatientsList) ;
