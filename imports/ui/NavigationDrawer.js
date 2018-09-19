@@ -57,99 +57,71 @@ function NavigationDrawer ( { classes } ) {
         <Divider/>
         <List>
           <ListItem button component={Link} to="/">
-            <ListItemIcon>
-              <FaceIcon/>
-            </ListItemIcon>
+            <ListItemIcon><FaceIcon/></ListItemIcon>
             <ListItemText primary="Patients"/>
           </ListItem>
           <ListItem button component={Link} to={`/calendar/${format(startOfToday(), 'YYYY-MM-DD')}`}>
-            <ListItemIcon>
-              <FolderSharedIcon/>
-            </ListItemIcon>
+            <ListItemIcon><FolderSharedIcon/></ListItemIcon>
             <ListItemText primary="Consultations"/>
           </ListItem>
           <ListItem button component={Link} to="/calendar">
-            <ListItemIcon>
-              <TodayIcon/>
-            </ListItemIcon>
+            <ListItemIcon><TodayIcon/></ListItemIcon>
             <ListItemText primary="Calendar"/>
           </ListItem>
           <ListItem disabled button component={Link} to="/appointments">
-            <ListItemIcon>
-              <AccessTimeIcon/>
-            </ListItemIcon>
+            <ListItemIcon><AccessTimeIcon/></ListItemIcon>
             <ListItemText primary="Appointments"/>
           </ListItem>
         </List>
         <Divider/>
         <List>
           <ListItem button component={Link} to="/stats">
-            <ListItemIcon>
-              <ShowChartIcon/>
-            </ListItemIcon>
+            <ListItemIcon><ShowChartIcon/></ListItemIcon>
             <ListItemText primary="Stats"/>
           </ListItem>
           <ListItem disabled button component={Link} to="/books">
-            <ListItemIcon>
-              <BookIcon/>
-            </ListItemIcon>
+            <ListItemIcon><BookIcon/></ListItemIcon>
             <ListItemText primary="Carnets"/>
           </ListItem>
           <ListItem button component={Link} to="/unpaid">
-            <ListItemIcon>
-              <MoneyOffIcon/>
-            </ListItemIcon>
+            <ListItemIcon><MoneyOffIcon/></ListItemIcon>
             <ListItemText primary="Unpaid"/>
           </ListItem>
           <ListItem button component={Link} to="/issues">
-            <ListItemIcon>
-              <ReportProblemIcon/>
-            </ListItemIcon>
+            <ListItemIcon><ReportProblemIcon/></ListItemIcon>
             <ListItemText primary="Issues"/>
           </ListItem>
         </List>
         <Divider/>
         <List>
           <ListItem button component={Link} to="/doctors">
-            <ListItemIcon>
-              <SupervisorAccountIcon/>
-            </ListItemIcon>
+            <ListItemIcon><SupervisorAccountIcon/></ListItemIcon>
             <ListItemText primary="Doctors"/>
           </ListItem>
           <ListItem disabled button component={Link} to="/insurances">
-            <ListItemIcon>
-              <BusinessIcon/>
-            </ListItemIcon>
+            <ListItemIcon><BusinessIcon/></ListItemIcon>
             <ListItemText primary="Insurances"/>
           </ListItem>
           <ListItem disabled button component={Link} to="/allergies">
-            <ListItemIcon>
-              <BugReportIcon/>
-            </ListItemIcon>
+            <ListItemIcon><BugReportIcon/></ListItemIcon>
             <ListItemText primary="Allergies"/>
           </ListItem>
         </List>
         <Divider/>
         <List>
           <ListItem button component={Link} to="/drugs">
-            <ListItemIcon>
-              <LocalPharmacyIcon/>
-            </ListItemIcon>
+            <ListItemIcon><LocalPharmacyIcon/></ListItemIcon>
             <ListItemText primary="Drugs"/>
           </ListItem>
           <ListItem disabled button component={Link} to="/hospitals">
-            <ListItemIcon>
-              <LocalHospitalIcon/>
-            </ListItemIcon>
+            <ListItemIcon><LocalHospitalIcon/></ListItemIcon>
             <ListItemText primary="Hospitals"/>
           </ListItem>
         </List>
         <Divider/>
         <List>
           <ListItem disabled button component={Link} to="/settings">
-            <ListItemIcon>
-              <SettingsIcon/>
-            </ListItemIcon>
+            <ListItemIcon><SettingsIcon/></ListItemIcon>
             <ListItemText primary="Settings"/>
           </ListItem>
         </List>
