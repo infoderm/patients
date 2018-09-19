@@ -106,6 +106,7 @@ class DoctorCard extends React.Component {
 			}
 			title={doctor.name}
 			subheader={loading ? '...' : `soigne ${patients.length} patients`}
+ 			component={Link} to={`/doctor/${doctor.name}`}
 			/>
 			<CardContent className={classes.content}>
 			{loading ? '...' : patients.slice(0,2).map(patient => (

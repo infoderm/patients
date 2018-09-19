@@ -10,16 +10,21 @@ import startOfDay from 'date-fns/start_of_day'
 import parse from 'date-fns/parse'
 
 import PatientsList from './PatientsList.js';
-import DoctorsList from './doctors/DoctorsList.js';
 import PatientDetails from './PatientDetails.js';
 import NewPatientForm from './NewPatientForm.js';
+
+import DoctorsList from './doctors/DoctorsList.js';
+import DoctorDetails from './doctors/DoctorDetails.js';
+
 import ConsultationsList from './ConsultationsList.js';
 import UnpaidConsultationsList from './UnpaidConsultationsList.js';
 import ConsultationDetails from './ConsultationDetails.js';
 import EditConsultationForm from './EditConsultationForm.js';
 import NewConsultationForm from './NewConsultationForm.js';
+
 import DrugsSearch from './DrugsSearch.js';
 import DrugDetails from './DrugDetails.js';
+
 import Calendar from './Calendar.js';
 import Stats from './Stats.js';
 import Issues from './Issues.js';
@@ -85,6 +90,9 @@ class Main extends React.Component {
 					<Route exact path="/doctors/page/:page" component={DoctorsListFromMatch}/>
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
+
+					<Route exact path="/doctor/:name" component={DoctorDetails}/>
+					<Route exact path="/doctor/:name/page/:page" component={DoctorDetails}/>
 
 					<Route exact path="/new/patient" component={NewPatientForm}/>
 
