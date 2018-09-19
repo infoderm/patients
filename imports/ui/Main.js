@@ -54,6 +54,10 @@ const ConsultationsListFromMatch = ({ match }) => (
 	<ConsultationsList day={startOfDay(parse(match.params.day))}/>
 );
 
+const DoctorsListFromMatch = ( { match } ) => (
+	<DoctorsList page={parseInt(match.params.page,10)}/>
+);
+
 class Main extends React.Component {
 
 	constructor(props){
@@ -67,37 +71,18 @@ class Main extends React.Component {
 		return (
 			<main className={classes.main}>
 				<Switch>
-					<Route exact path='/' render={
-						props => {
-							return (
-								<PatientsList patients={patients} page={0} perpage={10}/>
-							) ;
-						}
+					<Route exact path="/" render={
+						props => ( <PatientsList patients={patients}/> )
 					}/>
 
-					<Route exact path='/patients/page/:page' render={
-						( { match } ) => {
-							return (
-								<PatientsList patients={patients} page={parseInt(match.params.page,10)} perpage={10}/>
-							) ;
-						}
+					<Route exact path="/patients/page/:page" render={
+						( { match } ) => (
+							<PatientsList patients={patients} page={parseInt(match.params.page,10)}/>
+						)
 					}/>
 
-					<Route exact path='/doctors' render={
-						( { match } ) => {
-							return (
-								<DoctorsList page={0} perpage={10}/>
-							) ;
-						}
-					}/>
-
-					<Route exact path='/doctors/page/:page' render={
-						( { match } ) => {
-							return (
-								<DoctorsList page={parseInt(match.params.page,10)} perpage={10}/>
-							) ;
-						}
-					}/>
+					<Route exact path="/doctors" component={DoctorsList}/>
+					<Route exact path="/doctors/page/:page" component={DoctorsListFromMatch}/>
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
 

@@ -66,6 +66,11 @@ class DoctorsList extends React.Component {
 
 }
 
+DoctorsList.defaultProps = {
+  page: 0,
+  perpage: 10,
+} ;
+
 DoctorsList.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,

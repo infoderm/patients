@@ -67,10 +67,15 @@ class PatientsList extends React.Component {
 
 }
 
+PatientsList.defaultProps = {
+	page: 0,
+	perpage: 10,
+} ;
 
 PatientsList.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  patients: PropTypes.array.isRequired,
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
 };
