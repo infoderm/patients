@@ -4,10 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 
-import ConsultationsMissingAPrice from './issues/ConsultationsMissingAPrice.js' ;
-import ConsultationsMissingABook from './issues/ConsultationsMissingABook.js' ;
-import PatientsMissingABirthdate from './issues/PatientsMissingABirthdate.js' ;
-import PatientsMissingAGender from './issues/PatientsMissingAGender.js' ;
+import ConsultationsMissingAPrice from './ConsultationsMissingAPrice.js' ;
+import ConsultationsMissingABook from './ConsultationsMissingABook.js' ;
+import PatientsMissingABirthdate from './PatientsMissingABirthdate.js' ;
+import PatientsMissingAGender from './PatientsMissingAGender.js' ;
 
 const styles = theme => ({
 	container: {

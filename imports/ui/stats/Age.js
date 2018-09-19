@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
-import { Patients } from '../../api/patients.js';
 
 import React from 'react';
 
@@ -9,7 +8,9 @@ import subYears from 'date-fns/sub_years';
 import isAfter from 'date-fns/is_after';
 
 import { at_least , count } from '@aureooms/js-cardinality';
+
 import StackedBarChart from './StackedBarChart.js';
+import { Patients } from '../../api/patients.js';
 
 const Chart = ({
     width,

@@ -1,7 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
-import { Patients } from '../../api/patients.js';
-import { Consultations } from '../../api/consultations.js';
 
 import React from 'react';
 
@@ -15,6 +13,8 @@ import { fromkeys , object } from '@aureooms/js-mapping';
 import { increasing } from '@aureooms/js-compare';
 
 import StackedBarChart from './StackedBarChart.js';
+import { Patients } from '../../api/patients.js';
+import { Consultations } from '../../api/consultations.js';
 
 const Chart = ({
 	width,

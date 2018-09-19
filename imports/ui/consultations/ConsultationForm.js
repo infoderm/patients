@@ -22,7 +22,7 @@ import SaveIcon from '@material-ui/icons/Save';
 
 import { format } from 'date-fns' ;
 
-import { Patients } from '../api/patients.js';
+import { Patients } from '../../api/patients.js';
 
 const styles = theme => ({
 	container: {

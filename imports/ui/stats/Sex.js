@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
-import { Patients } from '../../api/patients.js';
 
 import React from 'react';
 import { Pie } from '@vx/shape';
@@ -10,6 +9,8 @@ import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import purple from '@material-ui/core/colors/purple';
 import grey from '@material-ui/core/colors/grey';
+
+import { Patients } from '../../api/patients.js';
 
 function Label({ x, y, children }) {
   return (

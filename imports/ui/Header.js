@@ -8,9 +8,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-import Filter from './Filter.js';
-import AccountsUIWrapper from './AccountsUIWrapper.js';
-import AccountsUI from './AccountsUI.js';
+import SearchBox from './patients/SearchBox.js';
+import AccountsUIWrapper from './users/AccountsUIWrapper.js';
+import AccountsUI from './users/AccountsUI.js';
 
 const drawerWidth = 240;
 
@@ -67,7 +67,7 @@ class Header extends React.Component {
 				<Toolbar>
 					<Typography variant="title" color="inherit" className={classes.title}>{location.pathname}</Typography>
 					<div style={{flex:'1 1 auto'}}></div>
-					<Filter filter={getSuggestions} suggestions={suggestions} itemToString={item => item ? item.label : ''} onChange={this.handleChange}/>
+					<SearchBox filter={getSuggestions} suggestions={suggestions} itemToString={item => item ? item.label : ''} onChange={this.handleChange}/>
 					<AccountsUI currentUser={currentUser}/>
 				</Toolbar>
 			</AppBar>

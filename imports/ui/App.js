@@ -15,9 +15,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import handleDrop from '../client/handleDrop.js';
 
-import WholeWindowDropZone from './WholeWindowDropZone.js';
+import WholeWindowDropZone from './input/WholeWindowDropZone.js';
 import Header from './Header.js';
-import Main from './Main.js';
+import Router from './Router.js';
 import NavigationDrawer from './NavigationDrawer.js';
 
 const muitheme = createMuiTheme();
@@ -49,7 +49,7 @@ class App extends React.Component {
 					<div className={classes.appFrame}>
 						<Header patients={patients} currentUser={currentUser}/>
 						<NavigationDrawer/>
-						<Main currentUser={currentUser} patients={patients}/>
+						<Router currentUser={currentUser} patients={patients}/>
 					</div>
 				</div>
 			</MuiThemeProvider>

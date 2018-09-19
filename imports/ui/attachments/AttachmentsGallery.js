@@ -12,9 +12,9 @@ import startOfDay from 'date-fns/start_of_day' ;
 
 import { list , map , groupby } from '@aureooms/js-itertools' ;
 
-import { Uploads } from '../api/uploads.js';
-
 import AttachmentCard from './AttachmentCard.js';
+
+import { Uploads } from '../../api/uploads.js';
 
 const styles = theme => ({
 });

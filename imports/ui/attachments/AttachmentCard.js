@@ -24,11 +24,11 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { Uploads } from '../api/uploads.js';
-
 import AttachmentThumbnail from './AttachmentThumbnail.js';
 import AttachmentEditionDialog from './AttachmentEditionDialog.js';
 import AttachmentDeletionDialog from './AttachmentDeletionDialog.js';
+
+import { Uploads } from '../../api/uploads.js';
 
 const styles = theme => ({
 	card: {

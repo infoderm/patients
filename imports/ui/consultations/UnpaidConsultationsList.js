@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import { Consultations } from '../api/consultations.js';
-
 import ConsultationCard from './ConsultationCard.js';
+
+import { Consultations } from '../../api/consultations.js';
 
 const styles = theme => ({
 	container: {

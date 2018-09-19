@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-import PatientCard from '../PatientCard.js';
+import PatientCard from './PatientCard.js';
 
 const styles = theme => ({
   buttonTile: {

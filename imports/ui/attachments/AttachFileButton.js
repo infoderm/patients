@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button' ;
 
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
-import { Uploads } from '../api/uploads.js';
+import { Uploads } from '../../api/uploads.js';
 
 const styles = theme => ({
 });

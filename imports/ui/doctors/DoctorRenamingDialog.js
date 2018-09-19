@@ -16,7 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import MeteorSimpleAutoCompleteTextField from '../forms/MeteorSimpleAutoCompleteTextField.js';
+import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoCompleteTextField.js';
 
 import { Doctors } from '../../api/doctors.js';
 

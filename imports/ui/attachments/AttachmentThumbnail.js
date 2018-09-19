@@ -3,8 +3,8 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import CardMedia from '@material-ui/core/CardMedia';
 
-import { Uploads } from '../api/uploads.js';
-import { thumbnail } from '../client/pdfthumbnails.js';
+import { Uploads } from '../../api/uploads.js';
+import { thumbnail } from '../../client/pdfthumbnails.js';
 
 const link = attachment => `/${attachment.link().split('/').slice(3).join('/')}` ;
 

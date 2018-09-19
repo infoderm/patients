@@ -40,10 +40,11 @@ import { format } from 'date-fns' ;
 import Currency from 'currency-formatter' ;
 
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
-import AttachFileButton from './AttachFileButton.js';
-import AttachmentLink from './AttachmentLink.js';
 
-import { Patients } from '../api/patients.js';
+import AttachFileButton from '../attachments/AttachFileButton.js';
+import AttachmentLink from '../attachments/AttachmentLink.js';
+
+import { Patients } from '../../api/patients.js';
 
 const styles = theme => ({
   heading: {

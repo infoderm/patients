@@ -34,17 +34,18 @@ import MenuItem from '@material-ui/core/MenuItem'
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import startOfToday from 'date-fns/start_of_today';
 
-import { Patients } from '../api/patients.js';
-import { Consultations } from '../api/consultations.js';
-
-import ConsultationCard from './ConsultationCard.js';
 import PatientDeletionDialog from './PatientDeletionDialog.js';
-import AttachFileButton from './AttachFileButton.js';
-import AttachmentLink from './AttachmentLink.js';
-import AttachmentsGallery from './AttachmentsGallery.js';
 
-import { Insurances } from '../api/insurances.js';
-import { Doctors } from '../api/doctors.js';
+import ConsultationCard from '../consultations/ConsultationCard.js';
+
+import AttachFileButton from '../attachments/AttachFileButton.js';
+import AttachmentLink from '../attachments/AttachmentLink.js';
+import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
+
+import { Patients } from '../../api/patients.js';
+import { Consultations } from '../../api/consultations.js';
+import { Insurances } from '../../api/insurances.js';
+import { Doctors } from '../../api/doctors.js';
 
 const styles = theme => ({
 	photoPlaceHolder: {

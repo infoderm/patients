@@ -6,7 +6,7 @@ import React from 'react' ;
 
 import ConsultationForm from './ConsultationForm.js' ;
 
-import { Consultations } from '../api/consultations.js';
+import { Consultations } from '../../api/consultations.js';
 
 class EditConsultationForm extends React.Component {
 

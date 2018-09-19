@@ -2,9 +2,9 @@ import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
 
-import Sex from './stats/Sex.js' ;
-import Age from './stats/Age.js' ;
-import Frequency from './stats/Frequency.js' ;
+import Sex from './Sex.js' ;
+import Age from './Age.js' ;
+import Frequency from './Frequency.js' ;
 
 export default ( ) => (
   <div>

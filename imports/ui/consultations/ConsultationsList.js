@@ -22,9 +22,9 @@ import Divider from '@material-ui/core/Divider';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-import { Consultations } from '../api/consultations.js';
-
 import ConsultationCard from './ConsultationCard.js';
+
+import { Consultations } from '../../api/consultations.js';
 
 const styles = theme => ({
 	container: {

@@ -9,25 +9,26 @@ import Typography from '@material-ui/core/Typography';
 import startOfDay from 'date-fns/start_of_day'
 import parse from 'date-fns/parse'
 
-import PatientsList from './PatientsList.js';
-import PatientDetails from './PatientDetails.js';
-import NewPatientForm from './NewPatientForm.js';
+import PatientsList from './patients/PatientsList.js';
+import PatientDetails from './patients/PatientDetails.js';
+import NewPatientForm from './patients/NewPatientForm.js';
 
 import DoctorsList from './doctors/DoctorsList.js';
 import DoctorDetails from './doctors/DoctorDetails.js';
 
-import ConsultationsList from './ConsultationsList.js';
-import UnpaidConsultationsList from './UnpaidConsultationsList.js';
-import ConsultationDetails from './ConsultationDetails.js';
-import EditConsultationForm from './EditConsultationForm.js';
-import NewConsultationForm from './NewConsultationForm.js';
+import ConsultationsList from './consultations/ConsultationsList.js';
+import UnpaidConsultationsList from './consultations/UnpaidConsultationsList.js';
+import ConsultationDetails from './consultations/ConsultationDetails.js';
+import EditConsultationForm from './consultations/EditConsultationForm.js';
+import NewConsultationForm from './consultations/NewConsultationForm.js';
+import Calendar from './consultations/Calendar.js';
 
-import DrugsSearch from './DrugsSearch.js';
-import DrugDetails from './DrugDetails.js';
+import DrugsSearch from './drugs/DrugsSearch.js';
+import DrugDetails from './drugs/DrugDetails.js';
 
-import Calendar from './Calendar.js';
-import Stats from './Stats.js';
-import Issues from './Issues.js';
+import Stats from './stats/Stats.js';
+
+import Issues from './issues/Issues.js';
 
 const styles = theme => ({
 	main: {

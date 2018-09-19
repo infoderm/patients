@@ -1,8 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
-import { Drugs } from '../api/drugs.js';
-
 import React from 'react';
 import { Link } from 'react-router-dom'
 
@@ -28,6 +26,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
+
+import { Drugs } from '../../api/drugs.js';
 
 const columnData = [
   { id: 'mppcv', numeric: true, disablePadding: false, label: 'MPPCV' },

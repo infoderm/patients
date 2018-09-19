@@ -1,10 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
-import { Consultations } from '../../api/consultations.js';
 
 import React from 'react';
 
-import ConsultationCard from '../ConsultationCard.js';
+import ConsultationCard from '../consultations/ConsultationCard.js';
+
+import { Consultations } from '../../api/consultations.js';
 
 const ConsultationsMissingAPrice = ( { loading, consultations, ...rest }) => {
 

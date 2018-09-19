@@ -9,9 +9,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField' ;
 
-import { Drugs } from '../api/drugs.js';
-
 import DrugsTable from './DrugsTable.js' ;
+
+import { Drugs } from '../../api/drugs.js';
 
 const styles = theme => ({ });
 

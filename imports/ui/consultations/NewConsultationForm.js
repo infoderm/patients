@@ -9,7 +9,7 @@ import addYears from 'date-fns/add_years';
 
 import ConsultationForm from './ConsultationForm.js' ;
 
-import { Consultations } from '../api/consultations.js';
+import { Consultations } from '../../api/consultations.js';
 
 class NewConsultationForm extends React.Component {
 

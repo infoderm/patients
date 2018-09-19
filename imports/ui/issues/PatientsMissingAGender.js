@@ -1,12 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
-import { Patients } from '../../api/patients.js';
 
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
-import PatientCard from '../PatientCard.js';
+import PatientCard from '../patients/PatientCard.js';
+
+import { Patients } from '../../api/patients.js';
 
 const PatientsMissingAGender = ( { loading, patients, ...rest }) => {
 
