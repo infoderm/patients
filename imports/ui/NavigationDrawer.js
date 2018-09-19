@@ -45,87 +45,179 @@ const styles = theme => ({
 });
 
 function NavigationDrawer ( { classes } ) {
-    return (
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor="left"
-      >
-        <div className={classes.drawerHeader} />
-        <Divider/>
-        <List>
-          <ListItem button component={Link} to="/">
-            <ListItemIcon><FaceIcon/></ListItemIcon>
-            <ListItemText primary="Patients"/>
-          </ListItem>
-          <ListItem button component={Link} to={`/calendar/${format(startOfToday(), 'YYYY-MM-DD')}`}>
-            <ListItemIcon><FolderSharedIcon/></ListItemIcon>
-            <ListItemText primary="Consultations"/>
-          </ListItem>
-          <ListItem button component={Link} to="/calendar">
-            <ListItemIcon><TodayIcon/></ListItemIcon>
-            <ListItemText primary="Calendar"/>
-          </ListItem>
-          <ListItem disabled button component={Link} to="/appointments">
-            <ListItemIcon><AccessTimeIcon/></ListItemIcon>
-            <ListItemText primary="Appointments"/>
-          </ListItem>
-        </List>
-        <Divider/>
-        <List>
-          <ListItem button component={Link} to="/stats">
-            <ListItemIcon><ShowChartIcon/></ListItemIcon>
-            <ListItemText primary="Stats"/>
-          </ListItem>
-          <ListItem disabled button component={Link} to="/books">
-            <ListItemIcon><BookIcon/></ListItemIcon>
-            <ListItemText primary="Carnets"/>
-          </ListItem>
-          <ListItem button component={Link} to="/unpaid">
-            <ListItemIcon><MoneyOffIcon/></ListItemIcon>
-            <ListItemText primary="Unpaid"/>
-          </ListItem>
-          <ListItem button component={Link} to="/issues">
-            <ListItemIcon><ReportProblemIcon/></ListItemIcon>
-            <ListItemText primary="Issues"/>
-          </ListItem>
-        </List>
-        <Divider/>
-        <List>
-          <ListItem button component={Link} to="/doctors">
-            <ListItemIcon><SupervisorAccountIcon/></ListItemIcon>
-            <ListItemText primary="Doctors"/>
-          </ListItem>
-          <ListItem disabled button component={Link} to="/insurances">
-            <ListItemIcon><BusinessIcon/></ListItemIcon>
-            <ListItemText primary="Insurances"/>
-          </ListItem>
-          <ListItem disabled button component={Link} to="/allergies">
-            <ListItemIcon><BugReportIcon/></ListItemIcon>
-            <ListItemText primary="Allergies"/>
-          </ListItem>
-        </List>
-        <Divider/>
-        <List>
-          <ListItem button component={Link} to="/drugs">
-            <ListItemIcon><LocalPharmacyIcon/></ListItemIcon>
-            <ListItemText primary="Drugs"/>
-          </ListItem>
-          <ListItem disabled button component={Link} to="/hospitals">
-            <ListItemIcon><LocalHospitalIcon/></ListItemIcon>
-            <ListItemText primary="Hospitals"/>
-          </ListItem>
-        </List>
-        <Divider/>
-        <List>
-          <ListItem disabled button component={Link} to="/settings">
-            <ListItemIcon><SettingsIcon/></ListItemIcon>
-            <ListItemText primary="Settings"/>
-          </ListItem>
-        </List>
-      </Drawer>
+
+  const blocks = [
+
+    {
+
+      title : 'main' ,
+
+      links : [
+
+        {
+          to: "/" ,
+          icon: <FaceIcon/> ,
+          title: "Patients"
+        } ,
+
+        {
+          to: `/calendar/${format(startOfToday(), 'YYYY-MM-DD')}` ,
+          icon: <FolderSharedIcon/> ,
+          title: "Consultations"
+        } ,
+
+        {
+          to: "/calendar" ,
+          icon: <TodayIcon/> ,
+          title: "Calendar" ,
+        } ,
+
+        {
+          to: "/appointments" ,
+          icon: <AccessTimeIcon/> ,
+          title: "Appointments" ,
+          disabled: true ,
+        } ,
+
+      ] ,
+
+    } ,
+
+    {
+
+      title: 'management' ,
+
+      links: [
+
+        {
+          to: "/stats" ,
+          icon: <ShowChartIcon/> ,
+          title: "Stats" ,
+        } ,
+
+        {
+          to: "/books" ,
+          icon: <BookIcon/> ,
+          title: "Carnets" ,
+          disabled: true ,
+        } ,
+
+        {
+          to: "/unpaid" ,
+          icon: <MoneyOffIcon/> ,
+          title: "Unpaid" ,
+        } ,
+
+        {
+          to: "/issues" ,
+          icon: <ReportProblemIcon/> ,
+          title: "Issues" ,
+        } ,
+
+      ] ,
+
+    } ,
+
+    {
+
+      title: 'tags' ,
+
+      links: [
+
+        {
+          to: "/doctors" ,
+          icon: <SupervisorAccountIcon/> ,
+          title: "Doctors" ,
+        } ,
+
+        {
+          to: "/insurances" ,
+          icon: <BusinessIcon/> ,
+          title: "Insurances" ,
+          disabled: true ,
+        } ,
+
+        {
+          to: "/allergies" ,
+          icon: <BugReportIcon/> ,
+          title: "Allergies" ,
+          disabled: true ,
+        } ,
+
+      ] ,
+
+    } ,
+
+    {
+
+      title: 'external' ,
+
+      links: [
+        {
+          to: "/drugs" ,
+          icon: <LocalPharmacyIcon/> ,
+          title: "Drugs" ,
+        } ,
+
+        {
+          to: "/hospitals" ,
+          icon: <LocalHospitalIcon/> ,
+          title: "Hospitals" ,
+          disabled: true ,
+        } ,
+
+      ] ,
+
+    } ,
+
+    {
+
+      title: 'app' ,
+
+      links: [
+
+        {
+          to: "/settings" ,
+          icon: <SettingsIcon/> ,
+          title: "Settings" ,
+          disabled: true ,
+        } ,
+
+      ] ,
+
+    } ,
+
+  ] ;
+
+  return (
+    <Drawer
+      variant="permanent"
+      classes={{
+      paper: classes.drawerPaper,
+      }}
+      anchor="left"
+    >
+      <div className={classes.drawerHeader} />
+      <Divider/>
+
+      {
+        blocks.map( ({ title , links }) => (
+        <div key={title}>
+          <List>
+            {
+              links.map( link => (
+                <ListItem key={link.to} disabled={link.disabled} button component={Link} to={link.to}>
+                  <ListItemIcon>{link.icon}</ListItemIcon>
+                  <ListItemText primary={link.title}/>
+                </ListItem>
+              ) )
+            }
+          </List>
+          <Divider/>
+        </div>
+        ) )
+      }
+    </Drawer>
     );
 }
 
