@@ -41,7 +41,7 @@ function DoctorCard ( { classes , item } ) {
 					{patients.length > NITEMS && `et ${patients.length - NITEMS} autres`}
 				</div>
 			)}
-			avatar={<Avatar className={classes.avatar}>DR</Avatar>}
+			avatar={<Avatar className={classes.avatar}>Dr</Avatar>}
 			DeletionDialog={DoctorDeletionDialog}
 			RenamingDialog={DoctorRenamingDialog}
 		/>

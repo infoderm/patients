@@ -7,8 +7,9 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 
 import { Patients } from '../../api/patients.js';
 
-export default function DoctorDetails ( { match , page , perpage } ) {
+export default function DoctorDetails ( { match , name , page , perpage } ) {
 
+	name = match && match.params.name || name ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
 
 	return (
