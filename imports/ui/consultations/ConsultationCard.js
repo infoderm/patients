@@ -35,7 +35,7 @@ import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
-import { format } from 'date-fns' ;
+import format from 'date-fns/format' ;
 
 import Currency from 'currency-formatter' ;
 

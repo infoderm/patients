@@ -80,6 +80,7 @@ class TagCard extends React.Component {
 			items,
 			RenamingDialog,
 			DeletionDialog,
+			abbr,
 		} = this.props ;
 
 		const { deleting , renaming } = this.state ;
@@ -99,18 +100,18 @@ class TagCard extends React.Component {
 			{loading ? '...' : content(items)}
 			</CardContent>
 			<CardActions className={classes.actions} disableActionSpacing>
-			<Button color="primary" onClick={e => this.setState({ renaming: true})}>
-			Rename<EditIcon/>
-			</Button>
-			<Button color="secondary" onClick={e => this.setState({ deleting: true})}>
-			Delete<DeleteIcon/>
-			</Button>
-			<RenamingDialog open={renaming} onClose={e => this.setState({ renaming: false})} tag={tag}/>
-			<DeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} tag={tag}/>
+			{RenamingDialog && <Button color="primary" onClick={e => this.setState({ renaming: true})}>
+				Rename<EditIcon/>
+			</Button>}
+			{DeletionDialog && <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
+				Delete<DeleteIcon/>
+			</Button>}
+			{ RenamingDialog && <RenamingDialog open={renaming} onClose={e => this.setState({ renaming: false})} tag={tag}/> }
+			{ DeletionDialog && <DeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} tag={tag}/> }
 			</CardActions>
 			</div>
 			<div className={classes.photoPlaceHolder}>
-			{tag.name[0]}
+			{abbr || tag.name[0]}
 			</div>
 			</Card>
 			</Grid>
@@ -128,8 +129,6 @@ TagCard.propTypes = {
 	avatar: PropTypes.object.isRequired,
 	subheader: PropTypes.func.isRequired,
 	content: PropTypes.func.isRequired,
-	DeletionDialog: PropTypes.func.isRequired,
-	RenamingDialog: PropTypes.func.isRequired,
 
 	subscription: PropTypes.string.isRequired,
 	collection: PropTypes.object.isRequired,

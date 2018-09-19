@@ -3,23 +3,35 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import { Uploads } from './uploads.js';
+import { books } from './books.js';
 
 export const Consultations = new Mongo.Collection('consultations');
 
 if (Meteor.isServer) {
+
 	Meteor.publish('consultations', function () {
 		return Consultations.find({ owner: this.userId });
 	});
+
 	Meteor.publish('consultation', function (_id) {
 		check(_id, String);
 		return Consultations.find({ owner: this.userId , _id });
 	});
+
 	Meteor.publish('patient.consultations', function (patientId) {
 		check(patientId, String);
 		return Consultations.find({ owner: this.userId , patientId: patientId });
 	});
+
 	Meteor.publish('consultations.unpaid', function () {
 		return Consultations.find({ owner: this.userId , $expr:{$ne:[ "$paid", "$price"]} });
+	});
+
+	Meteor.publish('book.consultations', function ( name ) {
+		return Consultations.find({
+			owner: this.userId ,
+			...books.selector(name) ,
+		});
 	});
 }
 
@@ -90,8 +102,12 @@ Meteor.methods({
 			throw new Meteor.Error('not-authorized');
 		}
 
+		const fields = sanitize(consultation);
+
+		if ( fields.datetime && fields.book ) books.add(this.userId, books.name(fields.datetime, fields.book)) ;
+
 		return Consultations.insert({
-			...sanitize(consultation),
+			...fields,
 			createdAt: new Date(),
 			owner: this.userId,
 			username: Meteor.users.findOne(this.userId).username,
@@ -99,13 +115,17 @@ Meteor.methods({
 
 	},
 
-	'consultations.update'(consultationId, fields) {
+	'consultations.update'(consultationId, newfields) {
 		check(consultationId, String);
 		const consultation = Consultations.findOne(consultationId);
 		if (!consultation || consultation.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		return Consultations.update(consultationId, { $set: sanitize(fields) });
+
+		const fields = sanitize(newfields);
+		if ( fields.datetime && fields.book ) books.add(this.userId, books.name(fields.datetime, fields.book)) ;
+
+		return Consultations.update(consultationId, { $set: fields });
 	},
 
 	'consultations.attach'(consultationId, uploadId) {

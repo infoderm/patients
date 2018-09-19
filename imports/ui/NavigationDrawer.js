@@ -90,22 +90,21 @@ function NavigationDrawer ( { classes } ) {
       links: [
 
         {
-          to: "/stats" ,
-          icon: <ShowChartIcon/> ,
-          title: "Stats" ,
-        } ,
-
-        {
           to: "/books" ,
           icon: <BookIcon/> ,
           title: "Carnets" ,
-          disabled: true ,
         } ,
 
         {
           to: "/unpaid" ,
           icon: <MoneyOffIcon/> ,
           title: "Unpaid" ,
+        } ,
+
+        {
+          to: "/stats" ,
+          icon: <ShowChartIcon/> ,
+          title: "Stats" ,
         } ,
 
         {

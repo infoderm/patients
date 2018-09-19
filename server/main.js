@@ -6,6 +6,7 @@ import { Drugs } from '../imports/api/drugs.js';
 import { Consultations } from '../imports/api/consultations.js';
 import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
+import { Books , books } from '../imports/api/books.js';
 
 Meteor.startup(() => {
 
@@ -15,6 +16,7 @@ Meteor.startup(() => {
   if (Consultations.find().count() !== 0) Consultations.rawCollection().dropIndexes();
   if (Insurances.find().count() !== 0) Insurances.rawCollection().dropIndexes();
   if (Doctors.find().count() !== 0) Doctors.rawCollection().dropIndexes();
+  if (Books.find().count() !== 0) Books.rawCollection().dropIndexes();
 
   // code to run on server at startup
   Patients.rawCollection().createIndex({
@@ -74,6 +76,14 @@ Meteor.startup(() => {
     background: true,
   });
 
+  Consultations.rawCollection().createIndex({
+    owner: 1,
+    book: 1,
+    datetime: 1,
+  },{
+    background: true,
+  });
+
   Insurances.remove({});
 
   Patients.find().map( ( { owner , insurance } ) => insurance && insurances.add(owner, insurance));
@@ -91,6 +101,18 @@ Meteor.startup(() => {
   Patients.find().map( ( { owner , doctor } ) => doctor && doctors.add(owner, doctor));
 
   Doctors.rawCollection().createIndex({
+    owner: 1,
+    name: 1,
+  },{
+    unique: true,
+    background: true,
+  });
+
+  Books.remove({});
+
+  Consultations.find().map( ( { owner , datetime , book } ) => datetime && book && books.add(owner, books.name(datetime, book)));
+
+  Books.rawCollection().createIndex({
     owner: 1,
     name: 1,
   },{
