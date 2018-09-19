@@ -30,6 +30,7 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const drawerWidth = 240;
 
@@ -141,6 +142,15 @@ function NavigationDrawer ( { classes } ) {
               <LocalHospitalIcon/>
             </ListItemIcon>
             <ListItemText primary="Hospitals"/>
+          </ListItem>
+        </List>
+        <Divider/>
+        <List>
+          <ListItem disabled button component={Link} to="/settings">
+            <ListItemIcon>
+              <SettingsIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Settings"/>
           </ListItem>
         </List>
       </Drawer>
