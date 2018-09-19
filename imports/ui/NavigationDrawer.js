@@ -134,7 +134,6 @@ function NavigationDrawer ( { classes } ) {
           to: "/insurances" ,
           icon: <BusinessIcon/> ,
           title: "Insurances" ,
-          disabled: true ,
         } ,
 
         {

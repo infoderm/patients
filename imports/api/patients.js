@@ -26,6 +26,11 @@ if (Meteor.isServer) {
 		return Patients.find({ owner: this.userId , doctor });
 	});
 
+	Meteor.publish('patients-of-insurance', function (insurance) {
+		check(insurance, String);
+		return Patients.find({ owner: this.userId , insurance });
+	});
+
 }
 
 function sanitize ( {

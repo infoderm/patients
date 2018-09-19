@@ -16,6 +16,9 @@ import NewPatientForm from './patients/NewPatientForm.js';
 import DoctorsList from './doctors/DoctorsList.js';
 import DoctorDetails from './doctors/DoctorDetails.js';
 
+import InsurancesList from './insurances/InsurancesList.js';
+import InsuranceDetails from './insurances/InsuranceDetails.js';
+
 import ConsultationsList from './consultations/ConsultationsList.js';
 import UnpaidConsultationsList from './consultations/UnpaidConsultationsList.js';
 import ConsultationDetails from './consultations/ConsultationDetails.js';
@@ -83,35 +86,31 @@ class Main extends React.Component {
 						)
 					}/>
 
+					<Route exact path="/patient/:id" component={PatientDetails}/>
+					<Route exact path="/new/patient" component={NewPatientForm}/>
+
+					<Route exact path="/calendar" component={Calendar}/>
+					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
+					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
+					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
+					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
+
 					<Route exact path="/doctors" component={DoctorsList}/>
 					<Route exact path="/doctors/page/:page" component={DoctorsList}/>
-
-					<Route exact path="/patient/:id" component={PatientDetails}/>
-
 					<Route exact path="/doctor/:name" component={DoctorDetails}/>
 					<Route exact path="/doctor/:name/page/:page" component={DoctorDetails}/>
 
-					<Route exact path="/new/patient" component={NewPatientForm}/>
-
-					<Route exact path="/drugs" component={DrugsSearch}/>
-
-					<Route exact path="/drug/:id" component={DrugDetails}/>
-
-					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
-
-					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
-
-					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
-
-					<Route exact path="/calendar" component={Calendar}/>
-
-					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
+					<Route exact path="/insurances" component={InsurancesList}/>
+					<Route exact path="/insurances/page/:page" component={InsurancesList}/>
+					<Route exact path="/insurance/:name" component={InsuranceDetails}/>
+					<Route exact path="/insurance/:name/page/:page" component={InsuranceDetails}/>
 
 					<Route exact path="/stats" component={Stats}/>
-
 					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
-
 					<Route exact path="/issues" component={Issues}/>
+
+					<Route exact path="/drugs" component={DrugsSearch}/>
+					<Route exact path="/drug/:id" component={DrugDetails}/>
 
 					<Route component={NoMatch}/>
 
