@@ -109,7 +109,7 @@ class DoctorCard extends React.Component {
  			component={Link} to={`/doctor/${doctor.name}`}
 			/>
 			<CardContent className={classes.content}>
-			{loading ? '...' : patients.slice(0,2).map(patient => (
+			{loading ? '...' : patients.slice(0,1).map(patient => (
 				<Chip
 				key={patient._id}
 				avatar={patient.photo? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null}
@@ -119,7 +119,7 @@ class DoctorCard extends React.Component {
 				to={`/patient/${patient._id}`}
 				/>
 			))}
-			{!loading && patients.length > 2 && `et ${patients.length - 2} autres`}
+			{!loading && patients.length > 1 && `et ${patients.length - 1} autres`}
 			</CardContent>
 			<CardActions className={classes.actions} disableActionSpacing>
 			<Button color="primary" onClick={e => this.setState({ renaming: true})}>
