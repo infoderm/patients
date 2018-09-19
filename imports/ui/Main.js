@@ -37,11 +37,6 @@ const styles = theme => ({
 			marginTop: 64,
 		},
 	},
-	fab: {
-		position: 'fixed',
-		bottom: theme.spacing.unit * 3,
-		right: theme.spacing.unit * 3,
-	},
 });
 
 const NoMatch = ({ location }) => (
