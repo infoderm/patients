@@ -81,6 +81,6 @@ DoctorsList.propTypes = {
 export default withTracker(({page, perpage}) => {
   Meteor.subscribe('doctors');
   return {
-    doctors: Doctors.find({}, {name: { $slice: [ page*perpage, perpage ] }}).fetch() ,
+    doctors: Doctors.find({}, {sort: { name: 1 }, skip: page*perpage, limit: perpage}).fetch() ,
   } ;
 }) ( withStyles(styles, { withTheme: true })(DoctorsList) );

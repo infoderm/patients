@@ -41,6 +41,6 @@ export default withTracker(({match}) => {
 		name,
 		page,
 		perpage,
-		patients: Patients.find({doctor: name}, {lastname: { $slice: [ page*perpage, perpage ] }}).fetch()
+		patients: Patients.find({doctor: name}, {sort: { lastname: 1 }, skip: page*perpage, limit: perpage}).fetch()
 	} ;
 }) ( DoctorDetails );
