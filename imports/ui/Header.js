@@ -9,7 +9,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 import SearchBox from './patients/SearchBox.js';
-import AccountsUIWrapper from './users/AccountsUIWrapper.js';
 import AccountsUI from './users/AccountsUI.js';
 
 const drawerWidth = 240;
