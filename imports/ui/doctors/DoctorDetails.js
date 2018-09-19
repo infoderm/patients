@@ -34,7 +34,7 @@ DoctorDetails.propTypes = {
 
 export default withTracker(({match}) => {
 	const name = match.params.name ;
-	const page = match.params.page || 0 ;
+	const page = ( match.params.page && parseInt(match.params.page, 10) ) || 0 ;
 	const perpage = 10 ;
 	Meteor.subscribe('patients-of-doctor', name);
 	return {
