@@ -1,0 +1,7 @@
+[Unit]
+Description=Run patient's backup once
+
+[Service]
+Type=oneshot
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/sh %h/dev/dermatodoc/patients/.backup/backup.sh
