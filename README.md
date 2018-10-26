@@ -25,7 +25,7 @@
     ncu -a
     meteor npm install
     
-## deployement
+## deployment
 
 ### tools
 
