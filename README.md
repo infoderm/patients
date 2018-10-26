@@ -1,11 +1,36 @@
 # patients
 
-    Patients meteor app
+> Patients meteor app
 
-## dev
+## development
+
+### tools
+
+    curl https://install.meteor.com | sh
+    npm i -g npm-check-updates
+    
+### source
 
     git clone gh:dermatodoc/patients
     cd patients
-    meteor update
     meteor npm install
+    
+### test server
+    
     meteor run -p 12345
+
+### dependency management
+
+    meteor update
+    ncu -a
+    meteor npm install
+    
+## deployement
+
+### tools
+
+    npm i -g mup
+    
+### deploy
+
+    mup deploy
