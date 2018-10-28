@@ -10,6 +10,7 @@ import addYears from 'date-fns/add_years';
 import ConsultationForm from './ConsultationForm.js' ;
 
 import { Consultations } from '../../api/consultations.js';
+import { books } from '../../api/books.js';
 
 class NewConsultationForm extends React.Component {
 
@@ -19,7 +20,7 @@ class NewConsultationForm extends React.Component {
 
 	render(){
 
-		const { match , loading , lastConsultationOfThisYear } = this.props ;
+		const { match , loading , bookPrefill } = this.props ;
 
 		if ( loading ) return 'Loading...' ;
 
@@ -36,7 +37,7 @@ class NewConsultationForm extends React.Component {
 			currency: 'EUR',
 			price: 0,
 			paid: 0,
-			book: lastConsultationOfThisYear ? lastConsultationOfThisYear.book : '1',
+			book: bookPrefill,
 		};
 
 		return <ConsultationForm consultation={consultation}/> ;
@@ -50,22 +51,43 @@ export default withTracker(() => {
 	const beginningOfThisYear = startOfYear(today);
 	const beginningOfNextYear = addYears(beginningOfThisYear, 1);
 	if ( handle.ready() ) {
+
+		let bookPrefill = '1' ;
+
+		const lastConsultationOfThisYear = Consultations.findOne(
+			{
+				datetime : {
+					$gte : beginningOfThisYear ,
+					$lt : beginningOfNextYear ,
+				}
+			},
+			{
+				sort: {
+					datetime: -1 ,
+					limit: 1 ,
+				}
+			} ,
+		) ;
+
+		if ( lastConsultationOfThisYear ) {
+
+			const consultation = lastConsultationOfThisYear ;
+
+			bookPrefill = consultation.book ;
+
+			const name = books.name( consultation.datetime , consultation.book ) ;
+
+			const selector = books.selector( name ) ;
+
+			const count = Consultations.find( selector ).count();
+
+			if ( count >= books.MAX_CONSULTATIONS ) bookPrefill = ''+((+bookPrefill)+1) ;
+
+		}
+
 		return {
 			loading: false,
-			lastConsultationOfThisYear: Consultations.findOne(
-				{
-					datetime : {
-						$gte : beginningOfThisYear ,
-						$lt : beginningOfNextYear ,
-					}
-				},
-				{
-					sort: {
-						datetime: -1 ,
-						limit: 1 ,
-					}
-				} ,
-			) ,
+			bookPrefill,
 		} ;
 	}
 	else return { loading: true } ;

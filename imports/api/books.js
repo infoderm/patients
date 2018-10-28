@@ -81,4 +81,6 @@ export const books = {
 
   } ,
 
+  MAX_CONSULTATIONS: 50 ,
+
 } ;
