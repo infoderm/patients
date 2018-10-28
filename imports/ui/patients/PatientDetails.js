@@ -165,7 +165,6 @@ class PatientDetails extends React.Component {
 
 		return (
 			<div>
-				<Typography variant="display3">Details</Typography>
 				<Grid container className={classes.container}>
 					<Grid item sm={4} md={2}>
 						{ patient.photo ?
