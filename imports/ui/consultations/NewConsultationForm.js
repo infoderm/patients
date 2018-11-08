@@ -75,13 +75,11 @@ export default withTracker(() => {
 
 			bookPrefill = consultation.book ;
 
-			const name = books.name( consultation.datetime , consultation.book ) ;
-
-			const selector = books.selector( name ) ;
-
-			const count = Consultations.find( selector ).count();
-
-			if ( count >= books.MAX_CONSULTATIONS ) bookPrefill = ''+((+bookPrefill)+1) ;
+			// // The code below will add + 1 when a book exceeds capacity
+			//const name = books.name( consultation.datetime , consultation.book ) ;
+			//const selector = books.selector( name ) ;
+			//const count = Consultations.find( selector ).count();
+			//if ( count >= books.MAX_CONSULTATIONS ) bookPrefill = ''+((+bookPrefill)+1) ;
 
 		}
 
