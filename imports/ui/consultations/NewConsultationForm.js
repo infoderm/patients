@@ -59,7 +59,10 @@ export default withTracker(() => {
 				datetime : {
 					$gte : beginningOfThisYear ,
 					$lt : beginningOfNextYear ,
-				}
+				} ,
+				book : {
+					$ne : '0' ,
+				} ,
 			},
 			{
 				sort: {
