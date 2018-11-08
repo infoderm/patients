@@ -46,7 +46,7 @@ class PatientsList extends React.Component {
       <div>
         <Grid container spacing={24}>
           <Grid item sm={12} md={12} lg={6} xl={4}>
-            <Button variant="raised" className={classes.buttonTile} component={Link} to="/new/patient">
+            <Button variant="contained" className={classes.buttonTile} component={Link} to="/new/patient">
               Add a new patient
               <FaceIcon className={classes.rightIcon}/>
             </Button>
