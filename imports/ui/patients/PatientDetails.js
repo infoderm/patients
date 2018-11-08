@@ -163,6 +163,9 @@ class PatientDetails extends React.Component {
 			}
 		}
 
+		const minRows = 8 ;
+		const maxRows = 100 ;
+
 		return (
 			<div>
 				<Grid container className={classes.container}>
@@ -257,7 +260,8 @@ class PatientDetails extends React.Component {
 								label="Antécédents"
 								placeholder={placeholder}
 								multiline
-								rows={8}
+								rows={minRows}
+								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.antecedents}
 								onChange={e => this.setState({ patient : { ...patient , antecedents: e.target.value } } )}
@@ -272,7 +276,8 @@ class PatientDetails extends React.Component {
 								label="Allergies"
 								placeholder={placeholder}
 								multiline
-								rows={8}
+								rows={minRows}
+								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.allergies}
 								onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
@@ -287,7 +292,8 @@ class PatientDetails extends React.Component {
 								label="Traitement en cours"
 								placeholder={placeholder}
 								multiline
-								rows={8}
+								rows={minRows}
+								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.ongoing}
 								onChange={e => this.setState({ patient : { ...patient , ongoing: e.target.value } } )}
