@@ -22,7 +22,7 @@ function renderInput(inputProps) {
       inputRef={ref}
       inputProps={{
         classes: {
-          input: classes.input,
+          input: classes.inputInput,
         },
         ...InputProps,
       }}
@@ -55,21 +55,19 @@ const styles = theme => ({
     justifyContent: 'center',
     verticalAlign: 'middle',
   },
-  input: {
-    border: 0,
-    color: 'inherit',
-    verticalAlign: 'middle',
-    whiteSpace: 'normal',
-    background: 'none',
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    transition: theme.transitions.create('width'),
+    width: '100%',
     color: 'white',
-    '&::before': {
-      height: '0 !important',
-      border: '0 !important',
-    } ,
-    '&::after': {
-      height: '0 !important',
-      border: '0 !important',
-    } ,
+    [theme.breakpoints.up('sm')]: {
+      width: 220,
+      '&:focus': {
+        width: 320,
+      },
+    },
   },
 });
 
@@ -90,8 +88,8 @@ function Filter({ filter , suggestions , itemToString , classes , ...rest }) {
           {renderInput({
             classes,
             InputProps: getInputProps({
-              className: classes.input,
-              placeholder: 'Search a patient',
+              className: classes.inputInput,
+              placeholder: 'Search a patient…',
             }),
           })}
           {isOpen ? (
