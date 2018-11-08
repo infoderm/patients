@@ -54,6 +54,7 @@ class Header extends React.Component {
 
   reduceState = (state, changes) => {
     switch (changes.type) {
+      case Downshift.stateChangeTypes.keyDownEnter:
       case Downshift.stateChangeTypes.clickItem:
 	return {
 	  ...changes,

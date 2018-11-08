@@ -5,7 +5,7 @@ import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import TextField from '@material-ui/core/TextField';
+import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,10 +17,10 @@ function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
 
   return (
-    <TextField
+    <InputBase
       {...other}
       inputRef={ref}
-      InputProps={{
+      inputProps={{
         classes: {
           input: classes.input,
         },
@@ -61,6 +61,7 @@ const styles = theme => ({
     verticalAlign: 'middle',
     whiteSpace: 'normal',
     background: 'none',
+    color: 'white',
     '&::before': {
       height: '0 !important',
       border: '0 !important',
