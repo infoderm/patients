@@ -79,7 +79,7 @@ class Header extends React.Component {
     return (
       <AppBar className={classes.appBar}>
 	<Toolbar>
-	  <Typography variant="title" color="inherit" className={classes.title}>{location.pathname}</Typography>
+	  <Typography variant="h6" color="inherit" className={classes.title}>{location.pathname}</Typography>
 	  <div style={{flex:'1 1 auto'}}></div>
 	  <SearchBox
 	    filter={getSuggestions}

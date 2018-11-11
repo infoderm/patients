@@ -119,6 +119,8 @@ function Filter({ filter , suggestions , itemToString , classes , ...rest }) {
 
 Filter.propTypes = {
   classes: PropTypes.object.isRequired,
+  filter: PropTypes.func.isRequired,
+  suggestions: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles)(Filter);

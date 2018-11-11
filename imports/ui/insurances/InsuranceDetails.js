@@ -6,6 +6,7 @@ import TagDetails from '../tags/TagDetails.js';
 import PagedPatientsList from '../patients/PagedPatientsList.js';
 
 import { Patients } from '../../api/patients.js';
+import { insurances } from '../../api/insurances.js';
 
 export default function InsuranceDetails ( { match , name , page , perpage } ) {
 
@@ -19,8 +20,8 @@ export default function InsuranceDetails ( { match , name , page , perpage } ) {
 			page={page}
 			perpage={perpage}
 			collection={Patients}
-			subscription="patients-of-insurance"
-			selector={{insurance: name}}
+			subscription={insurances.options.parentPublication}
+			selector={{insurances: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
 		/>

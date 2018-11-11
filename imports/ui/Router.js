@@ -32,6 +32,9 @@ import DoctorDetails from './doctors/DoctorDetails.js';
 import InsurancesList from './insurances/InsurancesList.js';
 import InsuranceDetails from './insurances/InsuranceDetails.js';
 
+import AllergiesList from './allergies/AllergiesList.js';
+import AllergyDetails from './allergies/AllergyDetails.js';
+
 import DrugsSearch from './drugs/DrugsSearch.js';
 import DrugDetails from './drugs/DrugDetails.js';
 
@@ -52,10 +55,10 @@ const styles = theme => ({
 
 const NoMatch = ({ location }) => (
 	<div>
-		<Typography variant="headline">
+		<Typography variant="h5">
 			No match for <code>{location.pathname}</code>.
 		</Typography>
-		<Typography variant="subheading">
+		<Typography variant="subtitle1">
 			Work in progress. Come back later.
 		</Typography>
 	</div>
@@ -115,6 +118,11 @@ class Main extends React.Component {
 					<Route exact path="/insurances/page/:page" component={InsurancesList}/>
 					<Route exact path="/insurance/:name" component={InsuranceDetails}/>
 					<Route exact path="/insurance/:name/page/:page" component={InsuranceDetails}/>
+
+					<Route exact path="/allergies" component={AllergiesList}/>
+					<Route exact path="/allergies/page/:page" component={AllergiesList}/>
+					<Route exact path="/allergy/:name" component={AllergyDetails}/>
+					<Route exact path="/allergy/:name/page/:page" component={AllergyDetails}/>
 
 					<Route exact path="/drugs" component={DrugsSearch}/>
 					<Route exact path="/drug/:id" component={DrugDetails}/>

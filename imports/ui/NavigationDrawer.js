@@ -139,7 +139,6 @@ function NavigationDrawer ( { classes } ) {
           to: "/allergies" ,
           icon: <BugReportIcon/> ,
           title: "Allergies" ,
-          disabled: true ,
         } ,
 
       ] ,

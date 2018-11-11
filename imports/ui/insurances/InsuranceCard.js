@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { withStyles } from '@material-ui/core/styles';
 
+import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
@@ -15,6 +16,7 @@ import InsuranceDeletionDialog from './InsuranceDeletionDialog.js';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog.js';
 
 import { Patients } from '../../api/patients.js';
+import { insurances } from '../../api/insurances.js';
 
 const styles = theme => ({
 	avatar: {
@@ -31,14 +33,14 @@ function InsuranceCard ( { classes , item } ) {
 		<TagCard
 			tag={item}
 			collection={Patients}
-			subscription="patients-of-insurance"
-			selector={{insurance: item.name}}
+			subscription={insurances.options.parentPublication}
+			selector={{insurances: item.name}}
 			root="/insurance"
-			subheader={patients => `soigne ${patients.length} patients`}
+			subheader={patients => `assure ${patients.length} patients`}
 			content={patients => (
 				<div>
 					{patients.slice(0,NITEMS).map(patient => <PatientChip key={patient._id} patient={patient}/>)}
-					{patients.length > NITEMS && `et ${patients.length - NITEMS} autres`}
+					{patients.length > NITEMS && <Chip label={`+ ${patients.length - NITEMS}`}/> }
 				</div>
 			)}
 			avatar={<Avatar className={classes.avatar}>In</Avatar>}
