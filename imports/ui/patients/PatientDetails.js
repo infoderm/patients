@@ -6,6 +6,10 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
+import { list } from '@aureooms/js-itertools' ;
+import { filter } from '@aureooms/js-itertools' ;
+import { take } from '@aureooms/js-itertools' ;
+
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -101,6 +105,17 @@ const styles = theme => ({
 		color: 'red',
 	},
 });
+
+const tagFilter = set => (suggestions, inputValue) => {
+
+	const notInSet = x => !set ? true : set.indexOf(x.name)===-1 ;
+	const matches = x => !inputValue || x.name.toLowerCase().includes(inputValue.toLowerCase()) ;
+
+	const keep = 5 ;
+
+	return list( take( filter(notInSet, filter(matches, suggestions) ) , keep ) ) ;
+
+} ;
 
 class PatientDetails extends React.Component {
 
@@ -293,7 +308,7 @@ class PatientDetails extends React.Component {
 									suggestions={allergies}
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
-									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									filter={tagFilter(patient.allergies)}
 									readOnly={!editing}
 									TextFieldProps={{
 										label: "Allergies",
@@ -374,7 +389,7 @@ class PatientDetails extends React.Component {
 									suggestions={doctors}
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
-									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									filter={tagFilter(patient.doctors)}
 									readOnly={!editing}
 									TextFieldProps={{
 										label: "Médecin Traitant",
@@ -393,7 +408,7 @@ class PatientDetails extends React.Component {
 									suggestions={insurances}
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
-									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									filter={tagFilter(patient.insurances)}
 									readOnly={!editing}
 									TextFieldProps={{
 										label: "Mutuelle",

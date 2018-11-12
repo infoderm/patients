@@ -190,7 +190,6 @@ class TagSelector extends React.Component {
             {isOpen ? (
               <Paper className={classes.paper} square>
                 {filter(suggestions, inputValue2)
-                .filter(x=>(value||[]).indexOf(itemToString(x))===-1)
                 .map((suggestion, index) =>
                   renderSuggestion({
                     suggestion,
