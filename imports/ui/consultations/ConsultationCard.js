@@ -39,6 +39,7 @@ import format from 'date-fns/format' ;
 
 import Currency from 'currency-formatter' ;
 
+import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
@@ -84,6 +85,7 @@ class ConsultationCard extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      settling: false,
       deleting: false,
     };
   }
@@ -113,7 +115,10 @@ class ConsultationCard extends React.Component {
       } ,
     } = this.props;
 
-    const { deleting } = this.state;
+    const { settling , deleting } = this.state;
+
+    const owes = ! (currency === undefined || price === undefined || paid === undefined || paid === price) ;
+    const owed = owes ? price - paid : 0 ;
 
     return (
       <ExpansionPanel defaultExpanded={defaultExpanded}>
@@ -129,7 +134,7 @@ class ConsultationCard extends React.Component {
 		className={classes.chip}
 	      />
 	    }
-	    { currency === undefined || price === undefined || paid === undefined || paid === price ? '' : <Chip label={`Doit ${Currency.format(price-paid, {code: currency})}`} className={classes.debtchip}/> }
+	    { owes && <Chip label={`Doit ${Currency.format(owed, {code: currency})}`} className={classes.debtchip}/> }
 	  </div>
 	</ExpansionPanelSummary>
 	<ExpansionPanelDetails>
@@ -192,11 +197,17 @@ class ConsultationCard extends React.Component {
 	  <Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
 	    Edit<EditIcon/>
 	  </Button>
+	  { owes && <Button color="primary" onClick={e => this.setState({ settling: true})}>
+	    Settle debt<EuroSymbolIcon/>
+	  </Button> }
 	  <AttachFileButton color="primary" method="consultations.attach" item={_id}/>
 	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
 	    Delete<DeleteIcon/>
 	  </Button>
-	  {(loadingPatient || !patient) ? '':
+	  {(loadingPatient || !patient) ? null :
+	  <ConsultationDebtSettlementDialog open={settling} onClose={e => this.setState({ settling: false})} consultation={this.props.consultation} patient={patient}/>
+	  }
+	  {(loadingPatient || !patient) ? null :
 	  <ConsultationDeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} consultation={this.props.consultation} patient={patient}/>
 	  }
 	</ExpansionPanelActions>

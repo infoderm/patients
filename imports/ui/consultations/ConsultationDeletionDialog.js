@@ -59,9 +59,9 @@ class ConsultationDeletionDialog extends React.Component {
 	  open={open}
 	  onClose={onClose}
 	  component="form"
-	  aria-labelledby="patient-deletion-dialog-title"
+	  aria-labelledby="consultation-deletion-dialog-title"
 	>
-	  <DialogTitle id="patient-deletion-dialog-title">Delete consultation for patient {patient.firstname} {patient.lastname}</DialogTitle>
+	  <DialogTitle id="consultation-deletion-dialog-title">Delete consultation for patient {patient.firstname} {patient.lastname}</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
 	      If you do not want to delete this consultation, click cancel.
