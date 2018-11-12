@@ -56,12 +56,13 @@ class TagSelector extends React.Component {
 
   state = {
     inputValue: '' ,
+    highlightedIndex: null ,
   } ;
 
   handleKeyDown = event => {
-    // TODO should take into account readonly flag of the input
     const { inputValue } = this.state;
-    const { value , onChange } = this.props;
+    const { value , onChange , readOnly } = this.props;
+    if ( readOnly ) return ;
     switch(keycode(event)) {
       case 'backspace':
         if (value && value.length && !inputValue.length) {
@@ -73,8 +74,7 @@ class TagSelector extends React.Component {
         }
         break;
       case 'enter':
-        if (inputValue.length) {
-          // TODO do not do that when an change is about to occur
+        if (inputValue.length && this.highlightedIndex === null) {
           const item = inputValue.trim();
           let newValue = (value||[]).slice();
           if (newValue.indexOf(item) === -1) newValue.push(item);
@@ -114,6 +114,22 @@ class TagSelector extends React.Component {
     }) ;
   };
 
+  stateReducer = ( state , changes ) => {
+    switch ( changes.type ) {
+      case Downshift.stateChangeTypes.changeInput:
+        return {
+          ...changes,
+          highlightedIndex: null,
+        } ;
+      default:
+        return changes;
+    }
+  } ;
+
+  handleStateChange = ( changes , state ) => {
+    this.highlightedIndex = state.highlightedIndex ;
+  } ;
+
   handleDelete = item => () => {
     const { value , onChange } = this.props ;
     const newValue = (value || []).slice();
@@ -126,15 +142,15 @@ class TagSelector extends React.Component {
   };
 
   render() {
-    const { value , classes , filter , suggestions , itemToString , itemToKey , chipProps , inputProps , placeholder } = this.props;
+    const { value , classes , filter , suggestions , itemToString , itemToKey , chipProps , TextFieldProps , placeholder , readOnly } = this.props;
     const { inputValue } = this.state;
-
-    console.debug('TagSelector', 'value', value);
 
     return (
       <Downshift
         inputValue={inputValue}
         onChange={this.handleChange}
+        stateReducer={this.stateReducer}
+        onStateChange={this.handleStateChange}
         selectedItem={value || []}
         itemToString={itemToString}
         itemToKey={itemToKey}
@@ -149,9 +165,12 @@ class TagSelector extends React.Component {
         }) => (
           <div className={classes.container}>
             {renderInput({
-              ...inputProps,
+              ...TextFieldProps,
               fullWidth: true,
               classes,
+              inputProps: {
+                readOnly,
+              },
               InputProps: getInputProps({
                 startAdornment: ( value || [] ).map(item => (
                   <Chip
@@ -160,12 +179,12 @@ class TagSelector extends React.Component {
                     tabIndex={-1}
                     label={item}
                     className={classes.chip}
-                    onDelete={this.handleDelete(item)}
+                    onDelete={readOnly ? null : this.handleDelete(item)}
                   />
                 )),
                 onChange: this.handleInputChange,
                 onKeyDown: this.handleKeyDown,
-                placeholder: placeholder || '',
+                placeholder,
               }),
             })}
             {isOpen ? (

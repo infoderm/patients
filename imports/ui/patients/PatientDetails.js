@@ -255,7 +255,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={6}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -271,27 +271,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
-							<Grid item xs={12} md={4}>
-								<TagSelector
-									suggestions={allergies}
-									itemToKey={x=>x._id}
-									itemToString={x=>x.name}
-									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
-									inputProps={{
-										label: "Allergies",
-										inputProps: {
-											readOnly: !editing,
-										},
-									}}
-									chipProps={{
-										avatar: <Avatar>Al</Avatar>,
-									}}
-									value={patient.allergies}
-									onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
-									placeholder={placeholder}
-								/>
-							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={6}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -308,7 +288,27 @@ class PatientDetails extends React.Component {
 							/>
 							</Grid>
 
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={12}>
+								<TagSelector
+									suggestions={allergies}
+									itemToKey={x=>x._id}
+									itemToString={x=>x.name}
+									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									readOnly={!editing}
+									TextFieldProps={{
+										label: "Allergies",
+										margin: "normal",
+									}}
+									chipProps={{
+										avatar: <Avatar>Al</Avatar>,
+									}}
+									value={patient.allergies}
+									onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
+									placeholder={placeholder}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -323,7 +323,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={2}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -375,11 +375,10 @@ class PatientDetails extends React.Component {
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
 									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
-									inputProps={{
+									readOnly={!editing}
+									TextFieldProps={{
 										label: "Médecin Traitant",
-										inputProps: {
-											readOnly: !editing,
-										},
+										margin: "normal",
 									}}
 									chipProps={{
 										avatar: <Avatar>Dr</Avatar>,
@@ -395,11 +394,10 @@ class PatientDetails extends React.Component {
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
 									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
-									inputProps={{
+									readOnly={!editing}
+									TextFieldProps={{
 										label: "Mutuelle",
-										inputProps: {
-											readOnly: !editing,
-										},
+										margin: "normal",
 									}}
 									chipProps={{
 										avatar: <Avatar>In</Avatar>,
