@@ -42,10 +42,13 @@ import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentLink from '../attachments/AttachmentLink.js';
 import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
+import TagSelector from '../tags/TagSelector.js';
+
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
 import { Insurances } from '../../api/insurances.js';
 import { Doctors } from '../../api/doctors.js';
+import { Allergies } from '../../api/allergies.js';
 
 const styles = theme => ({
 	photoPlaceHolder: {
@@ -125,7 +128,7 @@ class PatientDetails extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, loading, consultations, insurances, doctors } = this.props ;
+		const { classes, theme, loading, consultations, insurances, doctors, allergies} = this.props ;
 		const { patient , editing , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
@@ -181,9 +184,9 @@ class PatientDetails extends React.Component {
 						</div>
 						}
 						{ !patient.birthdate ? '' :
-						<Typography variant="display1">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
+						<Typography variant="h4">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
 						{ !patient.noshow ? '' :
-						<Typography className={classes.problem} variant="display1">PVPP &gt; 0</Typography> }
+						<Typography className={classes.problem} variant="h4">PVPP &gt; 0</Typography> }
 					</Grid>
 					<Grid item sm={8} md={10}>
 						<form>
@@ -252,7 +255,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={6}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -268,23 +271,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
-							<Grid item xs={12} md={4}>
-							<TextField
-								inputProps={{
-									readOnly: !editing,
-								}}
-								label="Allergies"
-								placeholder={placeholder}
-								multiline
-								rows={minRows}
-								rowsMax={maxRows}
-								className={classes.multiline}
-								value={patient.allergies}
-								onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
-								margin="normal"
-							/>
-							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={6}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -301,7 +288,27 @@ class PatientDetails extends React.Component {
 							/>
 							</Grid>
 
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={12}>
+								<TagSelector
+									suggestions={allergies}
+									itemToKey={x=>x._id}
+									itemToString={x=>x.name}
+									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									readOnly={!editing}
+									TextFieldProps={{
+										label: "Allergies",
+										margin: "normal",
+									}}
+									chipProps={{
+										avatar: <Avatar>Al</Avatar>,
+									}}
+									value={patient.allergies}
+									onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
+									placeholder={placeholder}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -316,7 +323,7 @@ class PatientDetails extends React.Component {
 								margin="normal"
 							/>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							<Grid item xs={12} md={2}>
 							<TextField
 								inputProps={{
 									readOnly: !editing,
@@ -363,43 +370,42 @@ class PatientDetails extends React.Component {
 							/>
 							</Grid>
 							<Grid item xs={12} md={4}>
-							<TextField
-								inputProps={{
-									readOnly: !editing,
-									list: "datalist-for-doctors",
-								}}
-								label="Médecin Traitant"
-								InputProps={{
-									startAdornment: <InputAdornment position="start">Dr</InputAdornment>,
-								}}
-								placeholder={placeholder}
-								rows={1}
-								className={classes.multiline}
-								value={patient.doctor}
-								onChange={e => this.setState({ patient : { ...patient , doctor: e.target.value } } )}
-								margin="normal"
-							/>
-							<datalist id="datalist-for-doctors">
-								{ doctors.map(doctor => ( <option key={doctor._id} value={doctor.name}/> )) }
-							</datalist>
+								<TagSelector
+									suggestions={doctors}
+									itemToKey={x=>x._id}
+									itemToString={x=>x.name}
+									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									readOnly={!editing}
+									TextFieldProps={{
+										label: "Médecin Traitant",
+										margin: "normal",
+									}}
+									chipProps={{
+										avatar: <Avatar>Dr</Avatar>,
+									}}
+									value={patient.doctors}
+									onChange={e => this.setState({ patient : { ...patient , doctors: e.target.value } } )}
+									placeholder={placeholder}
+								/>
 							</Grid>
 							<Grid item xs={12} md={4}>
-							<TextField
-								inputProps={{
-									readOnly: !editing,
-									list: "datalist-for-insurances",
-								}}
-								label="Mutuelle"
-								placeholder={placeholder}
-								rows={1}
-								className={classes.multiline}
-								value={patient.insurance}
-								onChange={e => this.setState({ patient : { ...patient , insurance: e.target.value } } )}
-								margin="normal"
-							/>
-							<datalist id="datalist-for-insurances">
-								{ insurances.map(insurance => ( <option key={insurance._id} value={insurance.name}/> )) }
-							</datalist>
+								<TagSelector
+									suggestions={insurances}
+									itemToKey={x=>x._id}
+									itemToString={x=>x.name}
+									filter={(suggestions, inputValue) => suggestions.filter(suggestion => !inputValue || suggestion.name.toLowerCase().includes(inputValue.toLowerCase()))}
+									readOnly={!editing}
+									TextFieldProps={{
+										label: "Mutuelle",
+										margin: "normal",
+									}}
+									chipProps={{
+										avatar: <Avatar>In</Avatar>,
+									}}
+									value={patient.insurances}
+									onChange={e => this.setState({ patient : { ...patient , insurances: e.target.value } } )}
+									placeholder={placeholder}
+								/>
 							</Grid>
 
 							<Grid item xs={9}>
@@ -460,7 +466,7 @@ class PatientDetails extends React.Component {
 						</Grid>
 					</Grid>
 				</Grid>
-				<Typography variant="display3">Consultations</Typography>
+				<Typography variant="h2">Consultations</Typography>
 				<div className={classes.container}>
 					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${this.props.patient._id}`}>
@@ -469,17 +475,17 @@ class PatientDetails extends React.Component {
 					</Button>
 				</div>
 				{ attachmentsInfo.length === 0 ?
-				<Typography variant="display3">No attachments</Typography> :
-				<Typography variant="display3">All attachments</Typography> }
+				<Typography variant="h2">No attachments</Typography> :
+				<Typography variant="h2">All attachments</Typography> }
 				<div className={classes.container}>
 					<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
 					<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
 				</div>
 				{ false && ( <div>
-				<Typography variant="display3">Prescriptions</Typography>
+				<Typography variant="h2">Prescriptions</Typography>
 				<div className={classes.container}>
 				</div>
-				<Typography variant="display3">Appointments</Typography>
+				<Typography variant="h2">Appointments</Typography>
 				<div className={classes.container}>
 				</div>
 				</div>)}
@@ -500,12 +506,14 @@ export default withTracker(({match}) => {
 	Meteor.subscribe('patient.consultations', _id);
 	Meteor.subscribe('insurances');
 	Meteor.subscribe('doctors');
+	Meteor.subscribe('allergies');
 	if ( handle.ready() ) {
 		const patient = Patients.findOne(_id);
 		const consultations = Consultations.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
 		const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
 		const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
-		return { loading: false, patient, consultations, insurances, doctors } ;
+		const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
+		return { loading: false, patient, consultations, insurances, doctors, allergies } ;
 	}
 	else return { loading: true, consultations: [], insurances: [], doctors: [] } ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );

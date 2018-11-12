@@ -6,46 +6,87 @@ import { Drugs } from '../imports/api/drugs.js';
 import { Consultations } from '../imports/api/consultations.js';
 import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
+import { Allergies , allergies } from '../imports/api/allergies.js';
 import { Books , books } from '../imports/api/books.js';
 
 Meteor.startup(() => {
 
-  // drop all indexes (if the collection is not empty)
-  if (Patients.find().count() !== 0) Patients.rawCollection().dropIndexes();
-  if (Drugs.find().count() !== 0) Drugs.rawCollection().dropIndexes();
-  if (Consultations.find().count() !== 0) Consultations.rawCollection().dropIndexes();
-  if (Insurances.find().count() !== 0) Insurances.rawCollection().dropIndexes();
-  if (Doctors.find().count() !== 0) Doctors.rawCollection().dropIndexes();
-  if (Books.find().count() !== 0) Books.rawCollection().dropIndexes();
-
   // code to run on server at startup
-  Patients.rawCollection().createIndex({
+
+  const collections = [
+    Patients ,
+    Drugs ,
+    Consultations ,
+    Insurances ,
+    Doctors ,
+    Allergies ,
+    Books ,
+  ] ;
+
+  // drop all indexes (if the collection is not empty)
+  for ( const collection of collections ) {
+    if (collection.find().count() !== 0) collection.rawCollection().dropIndexes();
+  }
+
+  // delete all generated entries
+  Insurances.remove({});
+  Doctors.remove({});
+  Allergies.remove({});
+  Books.remove({});
+
+  // reshape doctor, insurance, allergies to arrays
+  Patients.rawCollection().find().snapshot().forEach( patient => {
+
+    if ( patient.doctor !== undefined ) {
+      if (patient.doctor) patient.doctors = [ patient.doctor ] ;
+      delete patient.doctor;
+    }
+
+    if ( patient.insurance !== undefined ) {
+      if (patient.insurance) patient.insurances = [ patient.insurance ] ;
+      delete patient.insurance;
+    }
+
+    if ( patient.allergies instanceof String ) {
+      if (patient.allergies) patient.allergies = [ patient.allergies ] ;
+      else delete patient.allergies;
+    }
+    else if ( ! ( patient.allergies instanceof Array ) ) {
+      delete patient.allergies;
+    }
+
+    Patients.rawCollection().save(patient);
+
+  } ) ;
+
+  // create indexes
+
+  const createSimpleIndex = ( collection , field ) => collection.rawCollection().createIndex({
     owner: 1,
-    niss: 1,
+    [field]: 1,
   },{
     background: true,
   });
 
-  Patients.rawCollection().createIndex({
+  createSimpleIndex(Patients, 'niss');
+  createSimpleIndex(Patients, 'lastname');
+  createSimpleIndex(Patients, 'doctors');
+  createSimpleIndex(Patients, 'insurances');
+  createSimpleIndex(Patients, 'allergies');
+
+
+  const createSimpleUniqueIndex = ( collection , field ) => collection.rawCollection().createIndex({
     owner: 1,
-    lastname: 1,
+    [field]: 1,
   },{
+    unique: true,
     background: true,
   });
 
-  Patients.rawCollection().createIndex({
-    owner: 1,
-    doctor: 1,
-  },{
-    background: true,
-  });
-
-  Patients.rawCollection().createIndex({
-    owner: 1,
-    insurance: 1,
-  },{
-    background: true,
-  });
+  createSimpleUniqueIndex(Insurances, 'name')
+  createSimpleUniqueIndex(Doctors, 'name')
+  createSimpleUniqueIndex(Allergies, 'name')
+  createSimpleUniqueIndex(Books, 'name')
 
   Drugs.rawCollection().createIndex({
     owner: 1,
@@ -84,40 +125,16 @@ Meteor.startup(() => {
     background: true,
   });
 
-  Insurances.remove({});
+  // recreate all generated entries
+  const generateTags = (parent, child, key) => parent.find().map(
+    ( { owner , [key]: tags } ) => tags && tags.forEach(tag=>child.add(owner, tag))
+  );
 
-  Patients.find().map( ( { owner , insurance } ) => insurance && insurances.add(owner, insurance));
-
-  Insurances.rawCollection().createIndex({
-    owner: 1,
-    name: 1,
-  },{
-    unique: true,
-    background: true,
-  });
-
-  Doctors.remove({});
-
-  Patients.find().map( ( { owner , doctor } ) => doctor && doctors.add(owner, doctor));
-
-  Doctors.rawCollection().createIndex({
-    owner: 1,
-    name: 1,
-  },{
-    unique: true,
-    background: true,
-  });
-
-  Books.remove({});
+  generateTags(Patients, insurances, 'insurances');
+  generateTags(Patients, doctors, 'doctors');
+  generateTags(Patients, allergies, 'allergies');
 
   Consultations.find().map( ( { owner , datetime , book } ) => datetime && book && books.add(owner, books.name(datetime, book)));
 
-  Books.rawCollection().createIndex({
-    owner: 1,
-    name: 1,
-  },{
-    unique: true,
-    background: true,
-  });
 
 });

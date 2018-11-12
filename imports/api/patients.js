@@ -2,13 +2,21 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import { list } from '@aureooms/js-itertools' ;
+import { map } from '@aureooms/js-itertools' ;
+
 import { Consultations } from './consultations.js';
 import { Uploads } from './uploads.js';
 
 import { insurances } from './insurances.js';
 import { doctors } from './doctors.js';
+import { allergies } from './allergies.js';
 
 export const Patients = new Mongo.Collection('patients');
+
+insurances.init( Patients ) ;
+doctors.init( Patients ) ;
+allergies.init( Patients ) ;
 
 if (Meteor.isServer) {
 
@@ -21,16 +29,20 @@ if (Meteor.isServer) {
 		return Patients.find({ owner: this.userId , _id });
 	});
 
-	Meteor.publish('patients-of-doctor', function (doctor) {
-		check(doctor, String);
-		return Patients.find({ owner: this.userId , doctor });
-	});
+}
 
-	Meteor.publish('patients-of-insurance', function (insurance) {
-		check(insurance, String);
-		return Patients.find({ owner: this.userId , insurance });
-	});
-
+function updateTags ( userId , fields ) {
+	for ( const [ tagCollection , tagList ] of [
+		[ insurances , fields.insurances ] ,
+		[ doctors , fields.doctors ] ,
+		[ allergies , fields.allergies ] ,
+	] ) {
+		if ( tagList ) {
+			for ( const tag of tagList ) {
+				tagCollection.add(userId, tag) ;
+			}
+		}
+	}
 }
 
 function sanitize ( {
@@ -43,17 +55,17 @@ function sanitize ( {
 	photo,
 
 	antecedents,
-	allergies,
 	ongoing,
 	about,
 
 	municipality,
 	streetandnumber,
 	zip,
-
 	phone,
-	doctor,
-	insurance,
+
+	insurances,
+	doctors,
+	allergies,
 
 	noshow,
 
@@ -67,17 +79,17 @@ function sanitize ( {
 	check(photo, String);
 
 	antecedents === undefined || check(antecedents, String);
-	allergies === undefined || check(allergies, String);
 	ongoing === undefined || check(ongoing, String);
 	about === undefined || check(about, String);
 
 	municipality === undefined || check(municipality, String);
 	streetandnumber === undefined || check(streetandnumber, String);
 	zip === undefined || check(zip, String);
-
 	phone === undefined || check(phone, String);
-	doctor === undefined || check(doctor, String);
-	insurance === undefined || check(insurance, String);
+
+	insurances === undefined || check(insurances, [String]);
+	doctors === undefined || check(doctors, [String]);
+	allergies === undefined || check(allergies, [String]);
 
 	noshow === undefined || check(noshow, Number);
 
@@ -89,17 +101,17 @@ function sanitize ( {
 	photo = photo.replace(/\n/g,'');
 
 	antecedents = antecedents && antecedents.trim();
-	allergies = allergies && allergies.trim();
 	ongoing = ongoing && ongoing.trim();
 	about = about && about.trim();
 
 	municipality = municipality && municipality.trim();
 	streetandnumber = streetandnumber && streetandnumber.trim();
 	zip = zip && zip.trim();
-
 	phone = phone && phone.trim();
-	doctor = doctor && doctor.trim();
-	insurance = insurance && insurance.trim();
+
+	if ( insurances ) insurances = list(map(x=>x.trim(), insurances)) ;
+	if ( doctors ) doctors = list(map(x=>x.trim(), doctors)) ;
+	if ( allergies ) allergies = list(map(x=>x.trim(), allergies)) ;
 
 	return {
 		niss,
@@ -110,17 +122,17 @@ function sanitize ( {
 		photo,
 
 		antecedents,
-		allergies,
 		ongoing,
 		about,
 
 		municipality,
 		streetandnumber,
 		zip,
-
 		phone,
-		doctor,
-		insurance,
+
+		allergies,
+		doctors,
+		insurances,
 
 		noshow,
 
@@ -137,8 +149,7 @@ Meteor.methods({
 
 		const fields = sanitize(patient);
 
-		if ( fields.insurance ) insurances.add(this.userId, fields.insurance) ;
-		if ( fields.doctor ) doctors.add(this.userId, fields.doctor) ;
+		updateTags(this.userId, fields);
 
 		return Patients.insert({
 			...fields,
@@ -158,8 +169,7 @@ Meteor.methods({
 
 		const fields = sanitize(newfields);
 
-		if ( fields.insurance ) insurances.add(this.userId, fields.insurance) ;
-		if ( fields.doctor ) doctors.add(this.userId, fields.doctor) ;
+		updateTags(this.userId, fields);
 
 		return Patients.update(patientId, { $set: fields });
 	},

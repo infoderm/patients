@@ -6,22 +6,22 @@ import TagDetails from '../tags/TagDetails.js';
 import PagedPatientsList from '../patients/PagedPatientsList.js';
 
 import { Patients } from '../../api/patients.js';
-import { doctors } from '../../api/doctors.js';
+import { allergies } from '../../api/allergies.js';
 
-export default function DoctorDetails ( { match , name , page , perpage } ) {
+export default function AllergyDetails ( { match , name , page , perpage } ) {
 
 	name = match && match.params.name || name ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
 
 	return (
 		<TagDetails
-			root="/doctor"
+			root="/allergy"
 			name={name}
 			page={page}
 			perpage={perpage}
 			collection={Patients}
-			subscription={doctors.options.parentPublication}
-			selector={{doctors: name}}
+			subscription={allergies.options.parentPublication}
+			selector={{allergies: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
 		/>
@@ -29,12 +29,12 @@ export default function DoctorDetails ( { match , name , page , perpage } ) {
 
 }
 
-DoctorDetails.defaultProps = {
+AllergyDetails.defaultProps = {
 	page: 0,
 	perpage: 10,
 } ;
 
-DoctorDetails.propTypes = {
+AllergyDetails.propTypes = {
 	page: PropTypes.number.isRequired,
 	perpage: PropTypes.number.isRequired,
 } ;

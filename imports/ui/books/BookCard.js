@@ -40,7 +40,7 @@ function BookCard ( { classes , item } ) {
 			subheader={consultations => `${consultations.length} consultations`}
 			content={
 				consultations => (
-					<Typography variant="body2">
+					<Typography variant="body1">
 						{sum(filter(x => !!x, map(c => c.price, consultations)))} €
 					</Typography>
 				)
