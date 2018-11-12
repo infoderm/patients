@@ -31,6 +31,7 @@ import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
+import MergeTypeIcon from '@material-ui/icons/MergeType';
 
 const drawerWidth = 240;
 
@@ -107,10 +108,26 @@ function NavigationDrawer ( { classes } ) {
           title: "Stats" ,
         } ,
 
+      ] ,
+
+    } ,
+
+    {
+      title: 'issues' ,
+
+      links: [
+
         {
           to: "/issues" ,
           icon: <ReportProblemIcon/> ,
           title: "Issues" ,
+        } ,
+
+        {
+          to: "/merge" ,
+          icon: <MergeTypeIcon/> ,
+          title: "Merge" ,
+          disabled: true ,
         } ,
 
       ] ,
