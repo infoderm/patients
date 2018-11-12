@@ -25,6 +25,7 @@ import BookDetails from './books/BookDetails.js';
 import UnpaidConsultationsList from './consultations/UnpaidConsultationsList.js';
 import Stats from './stats/Stats.js';
 import Issues from './issues/Issues.js';
+import MergePatientsForm from './merge/MergePatientsForm.js';
 
 import DoctorsList from './doctors/DoctorsList.js';
 import DoctorDetails from './doctors/DoctorDetails.js';
@@ -107,7 +108,11 @@ class Main extends React.Component {
 
 					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
 					<Route exact path="/stats" component={Stats}/>
+
 					<Route exact path="/issues" component={Issues}/>
+					<Route exact path="/merge" render={
+						props => ( <MergePatientsForm patients={patients}/> )
+					}/>
 
 					<Route exact path="/doctors" component={DoctorsList}/>
 					<Route exact path="/doctors/page/:page" component={DoctorsList}/>

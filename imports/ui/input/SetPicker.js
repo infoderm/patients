@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import Downshift from 'downshift';
+
+import { all } from '@aureooms/js-itertools' ;
+import { map } from '@aureooms/js-itertools' ;
+import { list } from '@aureooms/js-itertools' ;
+
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -28,7 +33,7 @@ function renderInput(inputProps) {
 
 function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem, itemToString , itemToKey }) {
   const isHighlighted = highlightedIndex === index;
-  const isSelected = (selectedItem || '').indexOf(itemToString(suggestion)) > -1;
+  const isSelected = selectedItem && itemToKey(selectedItem) === itemToKey(suggestion) ;
 
   return (
     <MenuItem
@@ -52,7 +57,7 @@ renderSuggestion.propTypes = {
   suggestion: PropTypes.object.isRequired,
 };
 
-class TagSelector extends React.Component {
+class SetPicker extends React.Component {
 
   state = {
     inputValue: '' ,
@@ -61,11 +66,11 @@ class TagSelector extends React.Component {
 
   handleKeyDown = event => {
     const { inputValue } = this.state;
-    const { value , onChange , readOnly } = this.props;
+    const { value , onChange , readOnly , itemToString , createNewItem } = this.props;
     if ( readOnly ) return ;
     switch(keycode(event)) {
       case 'backspace':
-        if (value && value.length && !inputValue.length) {
+        if (value.length && !inputValue.length) {
           onChange({
             target: {
               value: value.slice(0, value.length - 1) ,
@@ -74,10 +79,11 @@ class TagSelector extends React.Component {
         }
         break;
       case 'enter':
-        if (inputValue.length && this.highlightedIndex === null) {
+        if (inputValue.length && this.highlightedIndex === null && createNewItem) {
+
           const item = inputValue.trim();
-          let newValue = (value||[]).slice();
-          if (newValue.indexOf(item) === -1) newValue.push(item);
+          const newValue = value.slice();
+          if (all(map(x=>x !== item, map(itemToString, value)))) newValue.push(createNewItem(item));
 
           this.setState({
             inputValue: '',
@@ -98,10 +104,10 @@ class TagSelector extends React.Component {
   };
 
   handleChange = item => {
-    const { value , onChange } = this.props;
+    const { value , onChange , itemToString } = this.props;
 
-    const newValue = (value || []).slice();
-    if (newValue.indexOf(item) === -1) newValue.push(item);
+    const newValue = value.slice();
+    if (all(map(x=>x !== itemToString(item), map(itemToString, value)))) newValue.push(item);
 
     this.setState({
       inputValue: '',
@@ -130,10 +136,10 @@ class TagSelector extends React.Component {
     this.highlightedIndex = state.highlightedIndex ;
   } ;
 
-  handleDelete = item => () => {
+  handleDelete = index => () => {
     const { value , onChange } = this.props ;
-    const newValue = (value || []).slice();
-    newValue.splice(newValue.indexOf(item), 1);
+    const newValue = value.slice();
+    newValue.splice(index, 1);
     onChange({
       target: {
         value: newValue ,
@@ -151,7 +157,7 @@ class TagSelector extends React.Component {
         onChange={this.handleChange}
         stateReducer={this.stateReducer}
         onStateChange={this.handleStateChange}
-        selectedItem={value || []}
+        selectedItem={value}
         itemToString={itemToString}
         itemToKey={itemToKey}
       >
@@ -172,14 +178,14 @@ class TagSelector extends React.Component {
                 readOnly,
               },
               InputProps: getInputProps({
-                startAdornment: ( value || [] ).map(item => (
+                startAdornment: value.map((item, index) => (
                   <Chip
                     {...chipProps}
-                    key={item}
+                    key={itemToString(item)}
                     tabIndex={-1}
-                    label={item}
+                    label={itemToString(item)}
                     className={classes.chip}
-                    onDelete={readOnly ? null : this.handleDelete(item)}
+                    onDelete={readOnly ? null : this.handleDelete(index)}
                   />
                 )),
                 onChange: this.handleInputChange,
@@ -194,7 +200,7 @@ class TagSelector extends React.Component {
                   renderSuggestion({
                     suggestion,
                     index,
-                    itemProps: getItemProps({ item: itemToString(suggestion) }),
+                    itemProps: getItemProps({ item: suggestion }),
                     highlightedIndex,
                     selectedItem: selectedItem2,
                     itemToString: itemToString,
@@ -237,13 +243,14 @@ const styles = theme => ({
   },
 });
 
-TagSelector.propTypes = {
+SetPicker.propTypes = {
   classes: PropTypes.object.isRequired,
   filter: PropTypes.func.isRequired,
   suggestions: PropTypes.array.isRequired,
   itemToKey: PropTypes.func.isRequired,
   itemToString: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
+  value: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(TagSelector);
+export default withStyles(styles)(SetPicker);

@@ -76,7 +76,7 @@ function sanitize ( {
 	check(lastname, String);
 	check(birthdate, String);
 	check(sex, String);
-	check(photo, String);
+	photo === undefined || check(photo, String);
 
 	antecedents === undefined || check(antecedents, String);
 	ongoing === undefined || check(ongoing, String);
@@ -98,7 +98,7 @@ function sanitize ( {
 	lastname = lastname.trim();
 	birthdate = birthdate.trim();
 	sex = sex.trim();
-	photo = photo.replace(/\n/g,'');
+	photo = photo ? photo.replace(/\n/g,'') : photo;
 
 	antecedents = antecedents && antecedents.trim();
 	ongoing = ongoing && ongoing.trim();

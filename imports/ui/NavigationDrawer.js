@@ -127,7 +127,6 @@ function NavigationDrawer ( { classes } ) {
           to: "/merge" ,
           icon: <MergeTypeIcon/> ,
           title: "Merge" ,
-          disabled: true ,
         } ,
 
       ] ,
