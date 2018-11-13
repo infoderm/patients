@@ -22,7 +22,7 @@ import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog.j
 
 import PatientSheet from '../patients/PatientSheet.js';
 
-import { Patients } from '../../api/patients.js';
+import { Patients , patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
 
 const styles = theme => ({
@@ -48,16 +48,16 @@ class MergePatientsFormStepPrepare extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, toMerge, onPrevStep , onNextStep , patients , consultations , newPatient , newConsultations } = this.props ;
+		const { classes, theme, toMerge, onPrevStep , onNextStep , error , oldPatients , consultations , newPatient , newConsultations } = this.props ;
 
 		const { merging } = this.state ;
 
 		return (
 
 			<Grid container className={classes.container}>
-				<Grid item sm={12} md={12}>
+				{ !error && <Grid item sm={12} md={12}>
 					<Grid container spacing={24} className={classes.container}>
-						{ patients.map(patient => (
+						{ oldPatients.map(patient => (
 						<div key={patient._id}>
 							<Typography variant="h1">{patient._id}</Typography>
 							<PatientSheet patient={patient} consultations={consultations[patient._id]}/>
@@ -67,13 +67,16 @@ class MergePatientsFormStepPrepare extends React.Component {
 						<Typography variant="h1">New patient information</Typography>
 						<PatientSheet patient={newPatient} consultations={newConsultations}/>
 					</Grid>
-				</Grid>
+				</Grid> }
+				{ error && <Grid item sm={12} md={12}>
+					<span>{error.message}</span>
+				</Grid> }
 				<Grid item sm={12} md={12}>
 					{ onPrevStep && <Button className={classes.button} color="default" onClick={onPrevStep}>
 						<SkipPreviousIcon className={classes.leftIcon}/>
 						Prev
 					</Button> }
-					{ onNextStep && <Button
+					{ !error && onNextStep && <Button
 						variant="contained"
 						className={classes.button}
 						color="primary"
@@ -83,86 +86,20 @@ class MergePatientsFormStepPrepare extends React.Component {
 						<SkipNextIcon className={classes.rightIcon}/>
 					</Button> }
 				</Grid>
-				<Grid item sm={12} md={12}>
+				{ !error && <Grid item sm={12} md={12}>
 					<MergePatientsConfirmationDialog
 						open={merging}
 						onClose={e => this.setState({ merging: false})}
 						toCreate={newPatient}
-						consultationsToAttach={newConsultations}
+						consultationsToAttach={list(map(x=>x._id,newConsultations))}
 						toDelete={toMerge}
 					/>
-				</Grid>
+				</Grid> }
 			</Grid>
 
 		) ;
 
 	}
-
-}
-
-function mergePatients ( patients ) {
-
-	const newPatient = {
-		allergies: [],
-		doctors: [],
-		insurances: [],
-		attachments: [],
-		noshow: 0,
-	} ;
-
-	for ( const oldPatient of patients ) {
-
-		const replaceOne = function ( key ) {
-			if (oldPatient[key]) newPatient[key] = oldPatient[key] ;
-		} ;
-		// This data is from the ID card.
-		// Currently assuming that merge only needs to happen when
-		// someone forgot their ID card the first time.
-		// When that is the case, list entry with ID card last in the UI.
-		// This is not done automatically for the moment.
-		replaceOne('niss');
-		replaceOne('firstname');
-		replaceOne('lastname');
-		replaceOne('birthdate');
-		replaceOne('sex');
-		replaceOne('photo');
-		replaceOne('municipality');
-		replaceOne('streetandnumber');
-		replaceOne('zip');
-
-		const concatParagraphs = function ( x ) {
-			if (oldPatient[x]) newPatient[x] = newPatient[x] ? oldPatient[x] + '\n\n' + newPatient[x] : oldPatient[x]
-		} ;
-
-		concatParagraphs('antecedents') ;
-		concatParagraphs('ongoing') ;
-		concatParagraphs('about') ;
-
-		const concatWords = function ( x ) {
-			if (oldPatient[x]) newPatient[x] = newPatient[x] ? oldPatient[x] + ', ' + newPatient[x] : oldPatient[x]
-		} ;
-
-		concatWords('phone') ;
-
-		const mergeSets = function ( x ) {
-			if (oldPatient[x]) newPatient[x] = oldPatient[x].concat(newPatient[x]) ;
-		} ;
-
-		mergeSets('allergies');
-		mergeSets('doctors');
-		mergeSets('insurances');
-		mergeSets('attachments');
-
-		if (oldPatient.noshow) newPatient.noshow += oldPatient.noshow ;
-
-	}
-
-	newPatient.allergies = list(new Set(newPatient.allergies));
-	newPatient.doctors = list(new Set(newPatient.doctors));
-	newPatient.insurances = list(new Set(newPatient.insurances));
-	newPatient.attachments = list(new Set(newPatient.attachments));
-
-	return newPatient ;
 
 }
 
@@ -175,18 +112,24 @@ MergePatientsFormStepPrepare.propTypes = {
 export default withTracker(({toMerge}) => {
 	Meteor.subscribe('patients');
 	Meteor.subscribe('consultations');
-	const patients = [] ;
+	const oldPatients = [] ;
 	const consultations = {} ;
 	for ( const patientId of toMerge ) {
 		const patient = Patients.findOne(patientId) ;
+		if ( patient === undefined ) {
+			const error = {
+				message : `Cannot merge because patient #${patientId} is missing.`
+			} ;
+			return { error } ;
+		}
 		const consultationsForPatient = Consultations.find({patientId}, {sort: { datetime: -1 }}).fetch();
-		patients.push(patient);
+		oldPatients.push(patient);
 		consultations[patientId] = consultationsForPatient ;
 	}
 	return {
-		patients,
+		oldPatients,
 		consultations,
-		newPatient : mergePatients(patients) ,
+		newPatient : patients.merge(oldPatients) ,
 		newConsultations : list(chain(map(x => consultations[x] || [], toMerge))) ,
 	} ;
 }) ( withStyles(styles, { withTheme: true })(MergePatientsFormStepPrepare) );

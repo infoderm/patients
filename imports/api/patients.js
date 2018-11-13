@@ -14,6 +14,9 @@ import { allergies } from './allergies.js';
 
 export const Patients = new Mongo.Collection('patients');
 
+export const BIRTHDATE_FORMAT = 'YYYY-MM-DD' ;
+export const SEX_ALLOWED = [ '' , 'male' , 'female' , 'other' ]
+
 insurances.init( Patients ) ;
 doctors.init( Patients ) ;
 allergies.init( Patients ) ;
@@ -155,7 +158,6 @@ Meteor.methods({
 			...fields,
 			createdAt: new Date(),
 			owner: this.userId,
-			username: Meteor.users.findOne(this.userId).username,
 		});
 
 	},
@@ -185,6 +187,9 @@ Meteor.methods({
 		if (!upload || upload.userId !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own attachment');
 		}
+		// If needed, use $each modifier to attach multiple documents
+		// simultaneously.
+		// See https://docs.mongodb.com/manual/reference/operator/update/addToSet/#each-modifier
 		return Patients.update(patientId, { $addToSet: { attachments: uploadId } });
 	},
 
@@ -212,4 +217,162 @@ Meteor.methods({
 		return Patients.remove(patientId);
 	},
 
+	'patients.merge'(oldPatientIds, consultationIds, newPatient) {
+
+		// Here is what is done in this method
+		// (1) Check that user is connected
+		// (2) Check that each patient in `oldPatientIds` is owned by the user
+		// (3) Check that each attachment in `newPatient.attachments` is attached to a patient in `oldPatientIds`
+		// (4) Create new patient with attachments
+		// (5) Attach consultations in `consultationIds` to newly created patient
+		// (6) Remove consultations that have not been attached
+		// (7) Remove patients in `oldPatientIds`
+
+		// (1)
+		if (!this.userId) throw new Meteor.Error('not-authorized');
+
+		const allowedAttachments = new Set();
+
+		// (2)
+		for ( const oldPatientId of oldPatientIds ) {
+			const oldPatient = Patients.findOne(oldPatientId);
+			if (!oldPatient || oldPatient.owner !== this.userId) {
+				throw new Meteor.Error('not-authorized', 'user does not own patient');
+			}
+			// build list of allowed attachments to pass on new patient
+			if (oldPatient.attachments) {
+				for ( const uploadId of oldPatient.attachments ) {
+					allowedAttachments.add(uploadId);
+				}
+			}
+		}
+
+		// (3) check that all attachments are allowed
+		// NOTE could filter and warn instead
+		if ( newPatient.attachments ) {
+			for ( const uploadId of newPatient.attachments ) {
+				if ( ! allowedAttachments.has(uploadId) ) {
+					throw new Meteor.Error('not-authorized', `uploadId ${uploadId} is not allowed in merge`);
+				}
+			}
+		}
+
+		// (4)
+		const fields = {
+			...sanitize(newPatient) ,
+			attachments: newPatient.attachments ,
+		} ;
+
+		const newPatientId = Patients.insert({
+			...fields,
+			createdAt: new Date(),
+			owner: this.userId,
+		});
+
+		// not needed to update tags since the merged info should only contain
+		// existing tags
+		//updateTags(this.userId, fields);
+
+		// (5)
+		Consultations.update(
+			{
+				owner: this.userId, // this selector automatically filters out bad consultation ids
+				patientId: { $in: oldPatientIds },
+				_id: { $in: consultationIds },
+			} ,
+			{
+				$set: { patientId : newPatientId } ,
+			} ,
+			{
+				multi: true
+			} ,
+		);
+
+		// (6)
+		Consultations.remove({
+			owner: this.userId ,
+			patientId: { $in: oldPatientIds } ,
+		}) ;
+
+		// (7)
+		Patients.remove({
+			_id: { $in: oldPatientIds } ,
+		}) ;
+
+		return newPatientId ;
+
+	},
+
 });
+
+function mergePatients ( oldPatients ) {
+
+	const newPatient = {
+		allergies: [],
+		doctors: [],
+		insurances: [],
+		attachments: [],
+		noshow: 0,
+	} ;
+
+	for ( const oldPatient of oldPatients ) {
+
+		const replaceOne = function ( key ) {
+			if (oldPatient[key]) newPatient[key] = oldPatient[key] ;
+		} ;
+		// This data is from the ID card.
+		// Currently assuming that merge only needs to happen when
+		// someone forgot their ID card the first time.
+		// When that is the case, list entry with ID card last in the UI.
+		// This is not done automatically for the moment.
+		replaceOne('niss');
+		replaceOne('firstname');
+		replaceOne('lastname');
+		replaceOne('birthdate');
+		replaceOne('sex');
+		replaceOne('photo');
+		replaceOne('municipality');
+		replaceOne('streetandnumber');
+		replaceOne('zip');
+
+		const concatParagraphs = function ( x ) {
+			if (oldPatient[x]) newPatient[x] = newPatient[x] ? oldPatient[x] + '\n\n' + newPatient[x] : oldPatient[x]
+		} ;
+
+		concatParagraphs('antecedents') ;
+		concatParagraphs('ongoing') ;
+		concatParagraphs('about') ;
+
+		const concatWords = function ( x ) {
+			if (oldPatient[x]) newPatient[x] = newPatient[x] ? oldPatient[x] + ', ' + newPatient[x] : oldPatient[x]
+		} ;
+
+		concatWords('phone') ;
+
+		const mergeSets = function ( x ) {
+			if (oldPatient[x]) newPatient[x] = oldPatient[x].concat(newPatient[x]) ;
+		} ;
+
+		mergeSets('allergies');
+		mergeSets('doctors');
+		mergeSets('insurances');
+		mergeSets('attachments');
+
+		if (oldPatient.noshow) newPatient.noshow += oldPatient.noshow ;
+
+	}
+
+	newPatient.allergies = list(new Set(newPatient.allergies));
+	newPatient.doctors = list(new Set(newPatient.doctors));
+	newPatient.insurances = list(new Set(newPatient.insurances));
+	newPatient.attachments = list(new Set(newPatient.attachments));
+
+	return newPatient ;
+
+}
+
+export const patients = {
+
+	merge: mergePatients ,
+
+} ;

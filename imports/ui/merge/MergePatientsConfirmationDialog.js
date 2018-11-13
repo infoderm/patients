@@ -31,16 +31,11 @@ class MergePatientsConfirmationDialog extends React.Component {
 
     const mergePatients = event => {
       event.preventDefault();
-      Meteor.call('patients.insert', toCreate, (err, _id) => {
+      Meteor.call('patients.merge', toDelete , consultationsToAttach , toCreate, (err, _id) => {
 	if ( err ) console.error( err ) ;
 	else {
 	  console.log(`Patient #${_id} created.`)
-	  // TODO
-	  // attach consultations
-	  // attach attachments
-	  // delete source patients
           history.push({pathname: `/patient/${_id}`}) ;
-	  // onClose();
 	}
       });
     };
