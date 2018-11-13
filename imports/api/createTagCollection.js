@@ -7,6 +7,7 @@ export default function createTagCollection ( options ) {
   const {
     collection ,
     publication ,
+    singlePublication , // optional
     parentPublication ,
     key ,
   } = options ;
@@ -17,6 +18,11 @@ export default function createTagCollection ( options ) {
     Meteor.publish(publication, function () {
       return Collection.find({ owner: this.userId });
     });
+    if (singlePublication ) {
+      Meteor.publish(singlePublication, function ( name ) {
+        return Collection.find({ owner: this.userId , name });
+      });
+    }
   }
 
   const operations = {
@@ -105,8 +111,7 @@ export default function createTagCollection ( options ) {
             name: newname,
           };
 
-          Collection.remove(tagId);
-          return Collection.upsert( newfields, { $set: newfields } ) ;
+          return Collection.upsert( oldfields, { $set: newfields } ) ;
 
         },
 

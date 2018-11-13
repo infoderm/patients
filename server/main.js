@@ -28,10 +28,7 @@ Meteor.startup(() => {
     if (collection.find().count() !== 0) collection.rawCollection().dropIndexes();
   }
 
-  // delete all generated entries
-  Insurances.remove({});
-  Doctors.remove({});
-  Allergies.remove({});
+  // delete all generated book entries
   Books.remove({});
 
   // reshape doctor, insurance, allergies to arrays
@@ -126,13 +123,13 @@ Meteor.startup(() => {
   });
 
   // recreate all generated entries
-  const generateTags = (parent, child, key) => parent.find().map(
-    ( { owner , [key]: tags } ) => tags && tags.forEach(tag=>child.add(owner, tag))
-  );
+  //const generateTags = (parent, child, key) => parent.find().map(
+    //( { owner , [key]: tags } ) => tags && tags.forEach(tag=>child.add(owner, tag))
+  //);
 
-  generateTags(Patients, insurances, 'insurances');
-  generateTags(Patients, doctors, 'doctors');
-  generateTags(Patients, allergies, 'allergies');
+  //generateTags(Patients, insurances, 'insurances');
+  //generateTags(Patients, doctors, 'doctors');
+  //generateTags(Patients, allergies, 'allergies');
 
   Consultations.find().map( ( { owner , datetime , book } ) => datetime && book && books.add(owner, books.name(datetime, book)));
 

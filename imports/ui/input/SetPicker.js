@@ -148,8 +148,10 @@ class SetPicker extends React.Component {
   };
 
   render() {
-    const { value , classes , filter , suggestions , itemToString , itemToKey , chipProps , TextFieldProps , placeholder , readOnly } = this.props;
+    const { value , classes , filter , suggestions , itemToString , itemToKey , chip , chipProps , TextFieldProps , placeholder , readOnly } = this.props;
     const { inputValue } = this.state;
+
+    const ChipElement = chip || Chip ;
 
     return (
       <Downshift
@@ -179,7 +181,7 @@ class SetPicker extends React.Component {
               },
               InputProps: getInputProps({
                 startAdornment: value.map((item, index) => (
-                  <Chip
+                  <ChipElement
                     {...chipProps}
                     key={itemToString(item)}
                     tabIndex={-1}

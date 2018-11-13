@@ -49,6 +49,8 @@ import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
 import SetPicker from '../input/SetPicker.js';
 
+import AllergyChip from '../allergies/AllergyChip.js';
+
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
 import { Insurances } from '../../api/insurances.js';
@@ -316,6 +318,7 @@ class PatientDetails extends React.Component {
 										label: "Allergies",
 										margin: "normal",
 									}}
+									chip={AllergyChip}
 									chipProps={{
 										avatar: <Avatar>Al</Avatar>,
 									}}
