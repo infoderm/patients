@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
+import { map } from '@aureooms/js-itertools' ;
 import { list } from '@aureooms/js-itertools' ;
 import { filter } from '@aureooms/js-itertools' ;
 import { take } from '@aureooms/js-itertools' ;
@@ -46,7 +47,7 @@ import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentLink from '../attachments/AttachmentLink.js';
 import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
-import TagSelector from '../tags/TagSelector.js';
+import SetPicker from '../input/SetPicker.js';
 
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
@@ -195,7 +196,7 @@ class PatientDetails extends React.Component {
 							title={`${patient.firstname} ${patient.lastname}`}
 						/> :
 						<div className={classes.photoPlaceHolder}>
-							{patient.firstname[0]}{patient.lastname[0]}
+							{patient.firstname ? patient.firstname[0] : '?'}{patient.lastname ? patient.lastname[0] : '?'}
 						</div>
 						}
 						{ !patient.birthdate ? '' :
@@ -304,10 +305,11 @@ class PatientDetails extends React.Component {
 							</Grid>
 
 							<Grid item xs={12} md={12}>
-								<TagSelector
+								<SetPicker
 									suggestions={allergies}
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
+									createNewItem={name=>({name})}
 									filter={tagFilter(patient.allergies)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -317,8 +319,8 @@ class PatientDetails extends React.Component {
 									chipProps={{
 										avatar: <Avatar>Al</Avatar>,
 									}}
-									value={patient.allergies}
-									onChange={e => this.setState({ patient : { ...patient , allergies: e.target.value } } )}
+									value={list(map(x=>({name: x}), patient.allergies || []))}
+									onChange={e => this.setState({ patient : { ...patient , allergies: list(map(x=>x.name, e.target.value)) } } )}
 									placeholder={placeholder}
 								/>
 							</Grid>
@@ -385,10 +387,11 @@ class PatientDetails extends React.Component {
 							/>
 							</Grid>
 							<Grid item xs={12} md={4}>
-								<TagSelector
+								<SetPicker
 									suggestions={doctors}
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
+									createNewItem={name=>({name})}
 									filter={tagFilter(patient.doctors)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -398,16 +401,17 @@ class PatientDetails extends React.Component {
 									chipProps={{
 										avatar: <Avatar>Dr</Avatar>,
 									}}
-									value={patient.doctors}
-									onChange={e => this.setState({ patient : { ...patient , doctors: e.target.value } } )}
+									value={list(map(x=>({name: x}), patient.doctors || []))}
+									onChange={e => this.setState({ patient : { ...patient , doctors: list(map(x=>x.name, e.target.value)) } } )}
 									placeholder={placeholder}
 								/>
 							</Grid>
 							<Grid item xs={12} md={4}>
-								<TagSelector
+								<SetPicker
 									suggestions={insurances}
 									itemToKey={x=>x._id}
 									itemToString={x=>x.name}
+									createNewItem={name=>({name})}
 									filter={tagFilter(patient.insurances)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -417,8 +421,8 @@ class PatientDetails extends React.Component {
 									chipProps={{
 										avatar: <Avatar>In</Avatar>,
 									}}
-									value={patient.insurances}
-									onChange={e => this.setState({ patient : { ...patient , insurances: e.target.value } } )}
+									value={list(map(x=>({name: x}), patient.insurances || []))}
+									onChange={e => this.setState({ patient : { ...patient , insurances: list(map(x=>x.name, e.target.value)) } } )}
 									placeholder={placeholder}
 								/>
 							</Grid>
@@ -432,6 +436,7 @@ class PatientDetails extends React.Component {
 								placeholder={placeholder}
 								multiline
 								rows={2}
+								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.about}
 								onChange={e => this.setState({ patient : { ...patient , about: e.target.value } } )}
@@ -530,5 +535,5 @@ export default withTracker(({match}) => {
 		const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
 		return { loading: false, patient, consultations, insurances, doctors, allergies } ;
 	}
-	else return { loading: true, consultations: [], insurances: [], doctors: [] } ;
+	else return { loading: true, consultations: [], insurances: [], doctors: [], allergies: [] } ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );
