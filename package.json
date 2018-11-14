@@ -11,7 +11,7 @@
     "@material-ui/icons": "^3.0.1",
     "@vx/axis": "0.0.179",
     "@vx/gradient": "0.0.165",
-    "@vx/grid": "0.0.179",
+    "@vx/grid": "0.0.180",
     "@vx/group": "0.0.170",
     "@vx/legend": "0.0.179",
     "@vx/mock-data": "0.0.179",
