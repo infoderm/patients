@@ -6,6 +6,7 @@ import { Mongo } from 'meteor/mongo';
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
+import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
 import startOfDay from 'date-fns/start_of_day' ;
@@ -17,6 +18,10 @@ import AttachmentCard from './AttachmentCard.js';
 import { Uploads } from '../../api/uploads.js';
 
 const styles = theme => ({
+	item: {
+	} ,
+	card: {
+	} ,
 });
 
 class AttachmentGallery extends React.Component {
@@ -41,11 +46,19 @@ class AttachmentGallery extends React.Component {
 		) ;
 
 		return (
-			<div>
+			<Grid container>
 				{list(map( ( [ k , g ] ) => g.map(
-				attachment => <AttachmentCard key={attachment._id} attachment={attachment} parent={attachmentsParents.get(attachment._id)}/>
+					attachment => (
+						<Grid key={attachment._id} className={classes.item} item sm={12} md={4} xl={3}>
+							<AttachmentCard
+								className={classes.card}
+								attachment={attachment}
+								parent={attachmentsParents.get(attachment._id)}
+							/>
+						</Grid>
+					)
 				) , groups ))}
-			</div>
+			</Grid>
 		);
 	}
 

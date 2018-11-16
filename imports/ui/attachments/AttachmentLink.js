@@ -1,14 +1,23 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
+import Typography from '@material-ui/core/Typography';
+
 import { Uploads } from '../../api/uploads.js';
 
 const link = attachment => `/${attachment.link().split('/').slice(3).join('/')}` ;
 
 const AttachmentLink = ( { loading, attachmentId, attachment , ...rest } ) => {
-  if ( loading ) return (<span {...rest}>{attachmentId}</span>);
+  if ( loading ) return (<Typography variant="body1" {...rest}>{attachmentId}</Typography>);
   else return (
-    <a {...rest} href={link(attachment)} alt={attachment.name}>{attachment.name}</a>
+    <Typography variant="body1">
+      <a
+	{...rest}
+	href={link(attachment)}
+	alt={attachment.name}>
+	{attachment.name}
+      </a>
+    </Typography>
   ) ;
 } ;
 

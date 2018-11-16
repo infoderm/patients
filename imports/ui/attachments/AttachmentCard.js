@@ -32,11 +32,11 @@ import { Uploads } from '../../api/uploads.js';
 
 const styles = theme => ({
 	card: {
-		display: 'inline-block',
+		display: 'block',
 		margin: theme.spacing.unit,
 	},
 	thumbnail: {
-		height: "300px",
+		height: 300,
 	},
 });
 
@@ -117,7 +117,7 @@ class AttachmentCard extends React.Component {
 					</div>
 					}
 				/>
-				<AttachmentThumbnail className={classes.thumbnail} height="300" attachmentId={attachment._id}/>
+				<AttachmentThumbnail className={classes.thumbnail} height="600" attachmentId={attachment._id}/>
 			</Card>
 		);
 	}

@@ -14,6 +14,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 
 import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -177,16 +178,18 @@ class ConsultationCard extends React.Component {
 	    <ListItem>
 	      <Avatar><AttachmentIcon/></Avatar>
 	      <ListItemText
-		primary={`${attachments.length} attachments`}
+		disableTypography={true}
+		primary={<Typography variant="subtitle1">{attachments.length} attachments</Typography>}
 		secondary={
+		(<ul>{
 		  attachments.map(
 		    (attachmentId, i) => (
-		      <React.Fragment key={attachmentId}>
-			{!!i && <span className={classes.linksep}>,</span>}
+		      <li key={attachmentId}>
 			<AttachmentLink className={classes.link} attachmentId={attachmentId}/>
-		      </React.Fragment>
+		      </li>
 		    )
 		  )
+		}</ul>)
 		}
 	      />
 	    </ListItem> }
