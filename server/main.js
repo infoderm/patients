@@ -44,8 +44,9 @@ Meteor.startup(() => {
       delete patient.insurance;
     }
 
-    if ( patient.allergies instanceof String ) {
-      if (patient.allergies) patient.allergies = [ patient.allergies ] ;
+    if ( typeof patient.allergies === 'string' ) {
+      const allergies = patient.allergies.split(/[,\n\r]/).map(s => s.trim()).filter(x=>!!x);
+      if (allergies.length > 0) patient.allergies = allergies ;
       else delete patient.allergies;
     }
     else if ( ! ( patient.allergies instanceof Array ) ) {
