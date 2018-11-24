@@ -36,6 +36,7 @@ import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
+import format from 'date-fns/format';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import startOfToday from 'date-fns/start_of_today';
 
@@ -202,9 +203,11 @@ class PatientDetails extends React.Component {
 						</div>
 						}
 						{ !patient.birthdate ? '' :
-						<Typography variant="h4">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
+						<Typography variant="h5">{format(patient.birthdate,'D MMM YYYY')}</Typography> }
+						{ !patient.birthdate ? '' :
+						<Typography variant="h5">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
 						{ !patient.noshow ? '' :
-						<Typography className={classes.problem} variant="h4">PVPP &gt; 0</Typography> }
+						<Typography className={classes.problem} variant="h4">PVPP = {patient.noshow}</Typography> }
 					</Grid>
 					<Grid item sm={8} md={10}>
 						<form>
