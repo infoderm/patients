@@ -4,7 +4,8 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Prompt } from 'react-router';
 
 import { map } from '@aureooms/js-itertools' ;
 import { list } from '@aureooms/js-itertools' ;
@@ -39,6 +40,9 @@ import MenuItem from '@material-ui/core/MenuItem'
 import format from 'date-fns/format';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import startOfToday from 'date-fns/start_of_today';
+
+import odiff from 'odiff' ;
+import { empty } from '@aureooms/js-cardinality' ;
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
@@ -128,19 +132,27 @@ class PatientDetails extends React.Component {
 		this.state = {
 			patient: props.patient,
 			editing: false,
+			dirty: false,
 			deleting: false,
 		};
 	}
 
 	componentWillReceiveProps ( nextProps ) {
-		this.setState({ patient: nextProps.patient });
+		if ( ! empty(odiff(this.props.patient, nextProps.patient))) {
+			this.setState({
+				patient: nextProps.patient,
+				editing: false,
+				dirty: false,
+				deleting: false,
+			});
+		}
 	}
 
 	saveDetails = event => {
 		Meteor.call('patients.update', this.props.patient._id, this.state.patient , ( err , res ) => {
 			if ( err ) console.error(err);
 			else {
-				this.setState({ editing: false });
+				this.setState({ editing: false, dirty: false });
 			}
 		} ) ;
 	} ;
@@ -148,7 +160,7 @@ class PatientDetails extends React.Component {
 	render ( ) {
 
 		const { classes, theme, loading, consultations, insurances, doctors, allergies} = this.props ;
-		const { patient , editing , deleting } = this.state;
+		const { patient , editing , dirty , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
 		if (!patient) return <div>Error: Patient not found.</div>;
@@ -188,8 +200,24 @@ class PatientDetails extends React.Component {
 		const minRows = 8 ;
 		const maxRows = 100 ;
 
+		const update = (key, f = v => v) => e => {
+			this.setState({
+				patient : {
+					...patient ,
+					[key]: f(e.target.value),
+				},
+				dirty: true,
+			});
+		} ;
+
+		const updateList = key => update(key, v => list(map(x=>x.name, v))) ;
+
 		return (
 			<div>
+				<Prompt
+					when={dirty}
+					message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
+				/>
 				<Grid container className={classes.container}>
 					<Grid item sm={4} md={2}>
 						{ patient.photo ?
@@ -216,7 +244,7 @@ class PatientDetails extends React.Component {
 								<TextField className={classes.formControl}
 									label="NISS"
 									value={patient.niss}
-									onChange={e => this.setState({ patient : { ...patient , niss: e.target.value } } )}
+									onChange={update('niss')}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -227,7 +255,7 @@ class PatientDetails extends React.Component {
 								<TextField className={classes.formControl}
 									label="Last name"
 									value={patient.lastname}
-									onChange={e => this.setState({ patient : { ...patient , lastname: e.target.value } } )}
+									onChange={update('lastname')}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -238,7 +266,7 @@ class PatientDetails extends React.Component {
 								<TextField className={classes.formControl}
 									label="First name"
 									value={patient.firstname}
-									onChange={e => this.setState({ patient : { ...patient , firstname: e.target.value } } )}
+									onChange={update('firstname')}
 									inputProps={{
 										readOnly: !editing,
 									}}
@@ -250,7 +278,7 @@ class PatientDetails extends React.Component {
 								<InputLabel htmlFor="sex">Sex</InputLabel>
 								<Select
 									value={patient.sex}
-									onChange={e => this.setState({ patient : { ...patient , sex: e.target.value } } )}
+									onChange={update('sex')}
 									inputProps={{
 										readOnly: !editing,
 										name: 'sex',
@@ -272,7 +300,7 @@ class PatientDetails extends React.Component {
 								  shrink: true,
 								}}
 								value={patient.birthdate}
-								onChange={e => this.setState({ patient : { ...patient , birthdate: e.target.value } } )}
+								onChange={update('birthdate')}
 								margin="normal"
 							/>
 							</Grid>
@@ -288,7 +316,7 @@ class PatientDetails extends React.Component {
 								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.antecedents}
-								onChange={e => this.setState({ patient : { ...patient , antecedents: e.target.value } } )}
+								onChange={update('antecedents')}
 								margin="normal"
 							/>
 							</Grid>
@@ -304,7 +332,7 @@ class PatientDetails extends React.Component {
 								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.ongoing}
-								onChange={e => this.setState({ patient : { ...patient , ongoing: e.target.value } } )}
+								onChange={update('ongoing')}
 								margin="normal"
 							/>
 							</Grid>
@@ -326,7 +354,7 @@ class PatientDetails extends React.Component {
 										avatar: <Avatar>Al</Avatar>,
 									}}
 									value={list(map(x=>({name: x}), patient.allergies || []))}
-									onChange={e => this.setState({ patient : { ...patient , allergies: list(map(x=>x.name, e.target.value)) } } )}
+									onChange={updateList('allergies')}
 									placeholder={placeholder}
 								/>
 							</Grid>
@@ -342,7 +370,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.streetandnumber}
-								onChange={e => this.setState({ patient : { ...patient , streetandnumber: e.target.value } } )}
+								onChange={update('streetandnumber')}
 								margin="normal"
 							/>
 							</Grid>
@@ -357,7 +385,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.zip}
-								onChange={e => this.setState({ patient : { ...patient , zip: e.target.value } } )}
+								onChange={update('zip')}
 								margin="normal"
 							/>
 							</Grid>
@@ -372,7 +400,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.municipality}
-								onChange={e => this.setState({ patient : { ...patient , municipality: e.target.value } } )}
+								onChange={update('municipality')}
 								margin="normal"
 							/>
 							</Grid>
@@ -388,7 +416,7 @@ class PatientDetails extends React.Component {
 								rows={1}
 								className={classes.multiline}
 								value={patient.phone}
-								onChange={e => this.setState({ patient : { ...patient , phone: e.target.value } } )}
+								onChange={update('phone')}
 								margin="normal"
 							/>
 							</Grid>
@@ -408,7 +436,7 @@ class PatientDetails extends React.Component {
 										avatar: <Avatar>Dr</Avatar>,
 									}}
 									value={list(map(x=>({name: x}), patient.doctors || []))}
-									onChange={e => this.setState({ patient : { ...patient , doctors: list(map(x=>x.name, e.target.value)) } } )}
+									onChange={updateList('doctors')}
 									placeholder={placeholder}
 								/>
 							</Grid>
@@ -428,7 +456,7 @@ class PatientDetails extends React.Component {
 										avatar: <Avatar>In</Avatar>,
 									}}
 									value={list(map(x=>({name: x}), patient.insurances || []))}
-									onChange={e => this.setState({ patient : { ...patient , insurances: list(map(x=>x.name, e.target.value)) } } )}
+									onChange={updateList('insurances')}
 									placeholder={placeholder}
 								/>
 							</Grid>
@@ -445,7 +473,7 @@ class PatientDetails extends React.Component {
 								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.about}
-								onChange={e => this.setState({ patient : { ...patient , about: e.target.value } } )}
+								onChange={update('about')}
 								margin="normal"
 							/>
 							</Grid>
@@ -458,7 +486,7 @@ class PatientDetails extends React.Component {
 								placeholder={placeholder}
 								className={classes.multiline}
 								value={patient.noshow || 0}
-								onChange={e => this.setState({ patient : { ...patient , noshow: e.target.value === '' ? 0 : parseInt(e.target.value,10) } } )}
+								onChange={update('noshow', v => v === '' ? 0 : parseInt(v,10))}
 								margin="normal"
 							/>
 							</Grid>
@@ -473,7 +501,7 @@ class PatientDetails extends React.Component {
 									Save patient details
 									<SaveIcon className={classes.rightIcon}/>
 								</Button>
-								<Button className={classes.button} color="secondary" onClick={e => this.setState({ editing: false, patient: this.props.patient })}>
+								<Button className={classes.button} color="secondary" onClick={e => this.setState({ editing: false, dirty: false, patient: this.props.patient })}>
 									Undo changes
 									<UndoIcon className={classes.rightIcon}/>
 								</Button>

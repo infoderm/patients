@@ -64,6 +64,10 @@ class SetPicker extends React.Component {
     highlightedIndex: null ,
   } ;
 
+  componentWillReceiveProps ( nextProps ) {
+    if ( nextProps.readOnly ) this.setState({inputValue: ''}) ;
+  }
+
   handleKeyDown = event => {
     const { inputValue } = this.state;
     const { value , onChange , readOnly , itemToString , createNewItem } = this.props;
