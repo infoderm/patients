@@ -16,6 +16,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import { normalized } from '../../client/string.js';
+
 const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
@@ -39,7 +41,7 @@ class PatientDeletionDialog extends React.Component {
 
     const deleteThisPatientIfLastNameMatches = event => {
       event.preventDefault();
-      if ( lastname.toLowerCase() === patient.lastname.toLowerCase() ) {
+      if ( normalized(lastname) === normalized(patient.lastname) ) {
 	this.setState({lastnameError: ''});
 	Meteor.call('patients.remove', patient._id, (err, res) => {
 	  if ( err ) console.error( err ) ;

@@ -16,6 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import { normalized } from '../../client/string.js';
 import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoCompleteTextField.js';
 
 const styles = theme => ({
@@ -50,7 +51,7 @@ class TagRenamingDialog extends React.Component {
     const renameThisTagIfNameMatchesAndNewNameNotEmpty = event => {
       event.preventDefault();
       let error = false;
-      if ( oldname.toLowerCase() !== tag.name.toLowerCase() ) {
+      if ( normalized(oldname) !== normalized(tag.name) ) {
 	this.setState({oldnameError: 'Names do not match'});
 	error = true;
       }

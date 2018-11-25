@@ -16,6 +16,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import { normalized } from '../../client/string.js';
+
 const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
@@ -46,7 +48,7 @@ class AttachmentDeletionDialog extends React.Component {
 
     const deleteThisAttachmentIfLastNameMatches = event => {
       event.preventDefault();
-      if ( filename.toLowerCase() === attachment.name.toLowerCase() ) {
+      if ( normalized(filename) === normalized(attachment.name) ) {
 	this.setState({filenameError: ''});
 	Meteor.call(detach, itemId, attachment._id, (err, res) => {
 	  if ( err ) console.error( err ) ;
