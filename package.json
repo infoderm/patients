@@ -19,7 +19,7 @@
     "@vx/scale": "0.0.179",
     "@vx/shape": "0.0.179",
     "@vx/tooltip": "0.0.179",
-    "bcrypt": "^3.0.2",
+    "bcrypt": "3.0.0",
     "color": "^3.1.0",
     "currency-formatter": "^1.5.3",
     "d3-array": "^2.0.2",
