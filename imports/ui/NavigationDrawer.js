@@ -45,7 +45,7 @@ const styles = theme => ({
   drawerHeader: theme.mixins.toolbar,
 });
 
-function NavigationDrawer ( { classes } ) {
+function NavigationDrawer ( { classes, currentUser } ) {
 
   const blocks = [
 
@@ -219,7 +219,7 @@ function NavigationDrawer ( { classes } ) {
           <List>
             {
               links.map( link => (
-                <ListItem key={link.to} disabled={link.disabled} button component={Link} to={link.to}>
+                <ListItem key={link.to} disabled={!currentUser || link.disabled} button component={Link} to={link.to}>
                   <ListItemIcon>{link.icon}</ListItemIcon>
                   <ListItemText primary={link.title}/>
                 </ListItem>

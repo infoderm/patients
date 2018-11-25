@@ -81,13 +81,13 @@ class Header extends React.Component {
 	<Toolbar>
 	  <Typography variant="h6" color="inherit" className={classes.title}>{location.pathname}</Typography>
 	  <div style={{flex:'1 1 auto'}}></div>
-	  <SearchBox
+	  { currentUser && <SearchBox
 	    filter={getSuggestions}
 	    suggestions={suggestions}
 	    itemToString={item => item ? item.label : ''}
 	    onChange={this.handleChange}
 	    stateReducer={this.reduceState}
-	  />
+	  /> }
 	  <AccountsUI currentUser={currentUser}/>
 	</Toolbar>
       </AppBar>

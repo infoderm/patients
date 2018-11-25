@@ -48,7 +48,7 @@ class App extends React.Component {
 					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame}>
 						<Header patients={patients} currentUser={currentUser}/>
-						<NavigationDrawer/>
+						<NavigationDrawer currentUser={currentUser}/>
 						<Router currentUser={currentUser} patients={patients}/>
 					</div>
 				</div>

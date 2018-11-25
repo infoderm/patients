@@ -79,6 +79,12 @@ class Main extends React.Component {
 
 		const { classes, patients, currentUser } = this.props;
 
+		if (!currentUser) return (
+			<main className={classes.main}>
+				<Typography variant="h5">Please sign in</Typography>
+			</main>
+		) ;
+
 		return (
 			<main className={classes.main}>
 				<Switch>
