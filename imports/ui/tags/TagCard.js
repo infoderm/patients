@@ -21,8 +21,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import green from '@material-ui/core/colors/green';
 
-import { myEncodeURIComponent } from '../../client/uri.js';
-
 const styles = theme => ({
 	card: {
 		display: 'flex',
@@ -76,7 +74,7 @@ class TagCard extends React.Component {
 			tag,
 			avatar,
 			subheader,
-			root,
+			url,
 			content,
 			loading,
 			items,
@@ -96,7 +94,7 @@ class TagCard extends React.Component {
 			avatar={avatar}
 			title={tag.name}
 			subheader={loading ? '...' : subheader(items)}
- 			component={Link} to={`${root}/${myEncodeURIComponent(tag.name)}`}
+ 			component={Link} to={url}
 			/>
 			<CardContent className={classes.content}>
 			{loading ? '...' : content(items)}
@@ -127,7 +125,7 @@ TagCard.propTypes = {
 	theme: PropTypes.object.isRequired,
 
 	tag: PropTypes.object.isRequired,
-	root: PropTypes.string.isRequired,
+	url: PropTypes.string.isRequired,
 	avatar: PropTypes.object.isRequired,
 	subheader: PropTypes.func.isRequired,
 	content: PropTypes.func.isRequired,

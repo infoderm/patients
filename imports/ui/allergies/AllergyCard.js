@@ -22,6 +22,8 @@ import { Allergies , allergies } from '../../api/allergies.js';
 import ColorPicker from '../input/ColorPicker' ;
 import debounce from 'debounce' ;
 
+import { myEncodeURIComponent } from '../../client/uri.js';
+
 const styles = theme => ({
 	avatar: {
 		color: '#fff',
@@ -55,7 +57,7 @@ function AllergyCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={allergies.options.parentPublication}
 			selector={{allergies: item.name}}
-			root="/allergy"
+			url={`/allergy/${myEncodeURIComponent(item.name)}`}
 			subheader={patients => `affecte ${patients.length} patients`}
 			content={patients => (
 				<div>

@@ -19,6 +19,8 @@ import DoctorRenamingDialog from './DoctorRenamingDialog.js';
 import { Patients } from '../../api/patients.js';
 import { Doctors, doctors } from '../../api/doctors.js';
 
+import { myEncodeURIComponent } from '../../client/uri.js';
+
 const styles = theme => ({
 	avatar: {
 		color: '#fff',
@@ -40,7 +42,7 @@ function DoctorCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={doctors.options.parentPublication}
 			selector={{doctors: item.name}}
-			root="/doctor"
+			url={`/doctor/${myEncodeURIComponent(item.name)}`}
 			subheader={patients => `soigne ${patients.length} patients`}
 			content={patients => (
 				<div>

@@ -19,6 +19,8 @@ import InsuranceRenamingDialog from './InsuranceRenamingDialog.js';
 import { Patients } from '../../api/patients.js';
 import { Insurances, insurances } from '../../api/insurances.js';
 
+import { myEncodeURIComponent } from '../../client/uri.js';
+
 const styles = theme => ({
 	avatar: {
 		color: '#fff',
@@ -40,7 +42,7 @@ function InsuranceCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={insurances.options.parentPublication}
 			selector={{insurances: item.name}}
-			root="/insurance"
+			url={`/insurance/${myEncodeURIComponent(item.name)}`}
 			subheader={patients => `assure ${patients.length} patients`}
 			content={patients => (
 				<div>

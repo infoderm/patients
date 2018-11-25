@@ -36,7 +36,7 @@ function BookCard ( { classes , item } ) {
 			collection={Consultations}
 			subscription="book.consultations"
 			selector={books.selector(item.name)}
-			root="/book"
+			url={`/book/${item.name}`}
 			subheader={consultations => `${consultations.length} consultations`}
 			content={
 				consultations => (
