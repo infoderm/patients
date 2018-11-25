@@ -8,10 +8,16 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 import { Patients } from '../../api/patients.js';
 import { allergies } from '../../api/allergies.js';
 
+import { AllergyCardWithItem } from './AllergyCard.js';
+
+import { myDecodeURIComponent } from '../../client/uri.js';
+
 export default function AllergyDetails ( { match , name , page , perpage } ) {
 
 	name = match && match.params.name || name ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
+
+	name = myDecodeURIComponent(name);
 
 	return (
 		<TagDetails
@@ -24,6 +30,7 @@ export default function AllergyDetails ( { match , name , page , perpage } ) {
 			selector={{allergies: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
+			Card={AllergyCardWithItem}
 		/>
 	) ;
 

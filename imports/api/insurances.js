@@ -4,6 +4,7 @@ const { Collection : Insurances , operations : insurances } = createTagCollectio
   {
     collection : 'insurances' ,
     publication : 'insurances' ,
+    singlePublication : 'insurance' ,
     parentPublication : 'patients-of-insurance' ,
     key : 'insurances' ,
   }

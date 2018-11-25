@@ -3,11 +3,15 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
 
+import { Link } from 'react-router-dom' ;
+
 import Chip from '@material-ui/core/Chip';
 
 import color from 'color' ;
 
 import { Allergies , allergies } from '../../api/allergies.js' ;
+
+import { myEncodeURIComponent } from '../../client/uri.js';
 
 class AllergyChip extends React.Component {
 
@@ -15,20 +19,31 @@ class AllergyChip extends React.Component {
 
 		const { item , ...rest } = this.props ;
 
-		if ( item && item.color ) {
-			return (
-				<Chip
-					{...rest}
-					style={{
-						backgroundColor: item.color,
-						color: color(item.color).isLight() ? '#111' : '#ddd',
-					}}
-				/>
-			);
+		let style = undefined;
+		let component = undefined;
+		let to = undefined;
+
+		if ( item ) {
+			if (item.color) {
+				style = {
+					backgroundColor: item.color,
+					color: color(item.color).isLight() ? '#111' : '#ddd',
+				} ;
+			}
+			if (!rest.onDelete) {
+				component = Link;
+				to = `/allergy/${myEncodeURIComponent(item.name)}`;
+			}
 		}
-		else {
-			return ( <Chip {...rest}/> ) ;
-		}
+
+		return (
+			<Chip
+				{...rest}
+				style={style}
+				component={component}
+				to={to}
+			/>
+		);
 
 	}
 }

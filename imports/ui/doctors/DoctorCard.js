@@ -10,13 +10,14 @@ import Avatar from '@material-ui/core/Avatar';
 import blue from '@material-ui/core/colors/blue';
 
 import TagCard from '../tags/TagCard.js';
+import withItem from '../tags/withItem.js';
 
 import PatientChip from '../patients/PatientChip.js';
 import DoctorDeletionDialog from './DoctorDeletionDialog.js';
 import DoctorRenamingDialog from './DoctorRenamingDialog.js';
 
 import { Patients } from '../../api/patients.js';
-import { doctors } from '../../api/doctors.js';
+import { Doctors, doctors } from '../../api/doctors.js';
 
 const styles = theme => ({
 	avatar: {
@@ -27,7 +28,11 @@ const styles = theme => ({
 
 const NITEMS = 1;
 
-function DoctorCard ( { classes , item } ) {
+function DoctorCard ( { classes , item , name , loading } ) {
+
+	if (loading) return '...Loading';
+
+	if (item === undefined) return `Doctor ${name} does not exist`;
 
 	return (
 		<TagCard
@@ -55,7 +60,16 @@ DoctorCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 
-	item: PropTypes.object.isRequired,
+	item: PropTypes.object,
 };
 
-export default withStyles(styles, { withTheme: true})(DoctorCard) ;
+const DoctorCardWithoutItem = withStyles(styles, { withTheme: true})(DoctorCard) ;
+
+export default DoctorCardWithoutItem ;
+
+const DoctorCardWithItem = withItem(Doctors, doctors.options.singlePublication)(DoctorCardWithoutItem);
+
+export {
+	DoctorCardWithoutItem,
+	DoctorCardWithItem,
+} ;

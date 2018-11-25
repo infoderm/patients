@@ -1,12 +1,28 @@
 import { Meteor } from 'meteor/meteor' ;
 import { withTracker } from 'meteor/react-meteor-data' ;
 
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-function TagDetails ( { List , root , name , page , perpage , items } ) {
+import { myEncodeURIComponent } from '../../client/uri.js';
+
+function TagDetails ( { Card , List , root , name , page , perpage , items } ) {
 	return (
-		<List root={`${root}/${name}`} page={page} perpage={perpage} items={items}/>
+		<div>
+			{ Card && <div>
+				<div style={{ paddingBottom: 50 , paddingTop: 20 }}>
+					<Grid container spacing={24}>
+						<Grid item sm={12} md={12} lg={3} xl={4}></Grid>
+						<Card name={name}/>
+					</Grid>
+				</div>
+				<Typography variant="h2">Patients</Typography>
+			</div>}
+			<List root={`${root}/${myEncodeURIComponent(name)}`} page={page} perpage={perpage} items={items}/>
+		</div>
 	) ;
 }
 

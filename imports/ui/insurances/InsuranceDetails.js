@@ -8,10 +8,16 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 import { Patients } from '../../api/patients.js';
 import { insurances } from '../../api/insurances.js';
 
+import { InsuranceCardWithItem } from './InsuranceCard.js';
+
+import { myDecodeURIComponent } from '../../client/uri.js';
+
 export default function InsuranceDetails ( { match , name , page , perpage } ) {
 
 	name = match && match.params.name || name ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
+
+	name = myDecodeURIComponent(name);
 
 	return (
 		<TagDetails
@@ -24,6 +30,7 @@ export default function InsuranceDetails ( { match , name , page , perpage } ) {
 			selector={{insurances: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
+			Card={InsuranceCardWithItem}
 		/>
 	) ;
 

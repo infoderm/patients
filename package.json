@@ -2,6 +2,7 @@
   "name": "patients",
   "dependencies": {
     "@aureooms/js-cardinality": "^2.0.0",
+    "@aureooms/js-codec-base64": "^1.0.1",
     "@aureooms/js-compare": "^1.4.5",
     "@aureooms/js-itertools": "^3.4.0",
     "@aureooms/js-mapping": "^3.1.0",

@@ -10,13 +10,14 @@ import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
 import TagCard from '../tags/TagCard.js';
+import withItem from '../tags/withItem.js';
 
 import PatientChip from '../patients/PatientChip.js';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog.js';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog.js';
 
 import { Patients } from '../../api/patients.js';
-import { insurances } from '../../api/insurances.js';
+import { Insurances, insurances } from '../../api/insurances.js';
 
 const styles = theme => ({
 	avatar: {
@@ -27,7 +28,11 @@ const styles = theme => ({
 
 const NITEMS = 1;
 
-function InsuranceCard ( { classes , item } ) {
+function InsuranceCard ( { classes , item , name , loading } ) {
+
+	if (loading) return '...Loading';
+
+	if (item === undefined) return `Insurance ${name} does not exist`;
 
 	return (
 		<TagCard
@@ -55,7 +60,16 @@ InsuranceCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 
-	item: PropTypes.object.isRequired,
+	item: PropTypes.object,
 };
 
-export default withStyles(styles, { withTheme: true})(InsuranceCard) ;
+const InsuranceCardWithoutItem = withStyles(styles, { withTheme: true})(InsuranceCard) ;
+
+export default InsuranceCardWithoutItem ;
+
+const InsuranceCardWithItem = withItem(Insurances, insurances.options.singlePublication)(InsuranceCardWithoutItem);
+
+export {
+	InsuranceCardWithoutItem,
+	InsuranceCardWithItem,
+} ;
