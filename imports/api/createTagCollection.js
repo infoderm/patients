@@ -101,17 +101,20 @@ export default function createTagCollection ( options ) {
             { multi: true } ,
           );
 
-          const oldfields = {
-            owner,
-            name: oldname,
-          };
-
-          const newfields = {
+          const targetfields = {
             owner,
             name: newname,
           };
 
-          return Collection.upsert( oldfields, { $set: newfields } ) ;
+          const newfields = {
+            ...tag,
+            name: newname,
+          };
+
+          delete newfields._id;
+
+          Collection.remove(tagId);
+          return Collection.upsert( targetfields, { $set: newfields } ) ;
 
         },
 
