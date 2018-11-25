@@ -43,7 +43,7 @@ class TagRenamingDialog extends React.Component {
 
   render () {
 
-    const { classes, open, onClose, title, collection, subscription, method, tag } = this.props ;
+    const { classes, open, onClose, onRename, title, collection, subscription, method, tag } = this.props ;
     const { oldname , oldnameError , newname , newnameError , ariaId } = this.state ;
 
     const Title = title[0].toUpperCase() + title.slice(1) ;
@@ -69,7 +69,7 @@ class TagRenamingDialog extends React.Component {
 	  if ( err ) console.error( err ) ;
 	  else {
 	    console.log(`${Title} #${tag._id} rename from ${oldname} to ${name} (using ${method}).`)
-	    onClose();
+	    onRename(name);
 	  }
 	});
       }
@@ -136,6 +136,7 @@ TagRenamingDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onRename: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   collection: PropTypes.object.isRequired,
   subscription: PropTypes.string.isRequired,

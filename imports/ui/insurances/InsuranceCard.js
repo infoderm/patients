@@ -42,7 +42,7 @@ function InsuranceCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={insurances.options.parentPublication}
 			selector={{insurances: item.name}}
-			url={`/insurance/${myEncodeURIComponent(item.name)}`}
+			url={name => `/insurance/${myEncodeURIComponent(name)}`}
 			subheader={patients => `assure ${patients.length} patients`}
 			content={patients => (
 				<div>

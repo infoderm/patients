@@ -5,12 +5,13 @@ import TagRenamingDialog from '../tags/TagRenamingDialog.js';
 
 import { Doctors } from '../../api/doctors.js';
 
-export default function DoctorRenamingDialog ( { open , onClose , tag } ) {
+export default function DoctorRenamingDialog ( { open , onClose , onRename , tag } ) {
 
   return (
     <TagRenamingDialog
       open={open}
       onClose={onClose}
+      onRename={onRename}
       title="doctor"
       collection={Doctors}
       subscription="doctors"
@@ -24,5 +25,6 @@ export default function DoctorRenamingDialog ( { open , onClose , tag } ) {
 DoctorRenamingDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onRename: PropTypes.func.isRequired,
   tag: PropTypes.object.isRequired,
 } ;

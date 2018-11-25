@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor' ;
 import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
+import { withRouter } from 'react-router-dom' ;
 import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
@@ -67,6 +68,22 @@ class TagCard extends React.Component {
 		};
 	}
 
+	openRenamingDialog = e => this.setState({ renaming: true}) ;
+	closeRenamingDialog = e => this.setState({ renaming: false}) ;
+	openDeletionDialog = e => this.setState({ deleting: true}) ;
+	closeDeletionDialog = e => this.setState({ deleting: false}) ;
+
+	onRename = newName => {
+		const { url , tag , history } = this.props;
+		const currentURL = history.location.pathname;
+		const oldURL = url(tag.name);
+		if ( currentURL.startsWith(oldURL) ) {
+			const newURL = url(newName);
+			history.push(newURL)
+		}
+		else return this.closeRenamingDialog();
+	} ;
+
 	render () {
 
 		const {
@@ -94,20 +111,20 @@ class TagCard extends React.Component {
 			avatar={avatar}
 			title={tag.name}
 			subheader={loading ? '...' : subheader(items)}
- 			component={Link} to={url}
+ 			component={Link} to={url(tag.name)}
 			/>
 			<CardContent className={classes.content}>
 			{loading ? '...' : content(items)}
 			</CardContent>
 			<CardActions className={classes.actions} disableActionSpacing>
-			{RenamingDialog && <Button color="primary" onClick={e => this.setState({ renaming: true})}>
+			{RenamingDialog && <Button color="primary" onClick={this.openRenamingDialog}>
 				Rename<EditIcon/>
 			</Button>}
-			{DeletionDialog && <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
+			{DeletionDialog && <Button color="secondary" onClick={this.openDeletionDialog}>
 				Delete<DeleteIcon/>
 			</Button>}
-			{ RenamingDialog && <RenamingDialog open={renaming} onClose={e => this.setState({ renaming: false})} tag={tag}/> }
-			{ DeletionDialog && <DeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} tag={tag}/> }
+			{ RenamingDialog && <RenamingDialog open={renaming} onClose={this.closeRenamingDialog} onRename={this.onRename} tag={tag}/> }
+			{ DeletionDialog && <DeletionDialog open={deleting} onClose={this.closeDeletionDialog} tag={tag}/> }
 			</CardActions>
 			</div>
 			<div className={classes.photoPlaceHolder}>
@@ -123,9 +140,10 @@ class TagCard extends React.Component {
 TagCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 
 	tag: PropTypes.object.isRequired,
-	url: PropTypes.string.isRequired,
+	url: PropTypes.func.isRequired,
 	avatar: PropTypes.object.isRequired,
 	subheader: PropTypes.func.isRequired,
 	content: PropTypes.func.isRequired,
@@ -138,12 +156,14 @@ TagCard.propTypes = {
 	items: PropTypes.array.isRequired,
 };
 
-export default withTracker(({tag, subscription, collection, selector}) => {
-	const name = tag.name;
-	const handle = Meteor.subscribe(subscription, name);
-	if ( handle.ready() ) {
-		const items = collection.find(selector).fetch();
-		return { loading: false, items } ;
-	}
-	else return { loading: true, items: [] } ;
-}) ( withStyles(styles, { withTheme: true})(TagCard) ) ;
+export default withRouter(
+	withTracker(({tag, subscription, collection, selector}) => {
+		const name = tag.name;
+		const handle = Meteor.subscribe(subscription, name);
+		if ( handle.ready() ) {
+			const items = collection.find(selector).fetch();
+			return { loading: false, items } ;
+		}
+		else return { loading: true, items: [] } ;
+	}) ( withStyles(styles, { withTheme: true})(TagCard) )
+) ;

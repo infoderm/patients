@@ -57,7 +57,7 @@ function AllergyCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={allergies.options.parentPublication}
 			selector={{allergies: item.name}}
-			url={`/allergy/${myEncodeURIComponent(item.name)}`}
+			url={name => `/allergy/${myEncodeURIComponent(name)}`}
 			subheader={patients => `affecte ${patients.length} patients`}
 			content={patients => (
 				<div>

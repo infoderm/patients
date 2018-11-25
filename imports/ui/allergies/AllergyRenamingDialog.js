@@ -5,12 +5,13 @@ import TagRenamingDialog from '../tags/TagRenamingDialog.js';
 
 import { Allergies } from '../../api/allergies.js';
 
-export default function AllergyRenamingDialog ( { open , onClose , tag } ) {
+export default function AllergyRenamingDialog ( { open , onClose , onRename , tag } ) {
 
   return (
     <TagRenamingDialog
       open={open}
       onClose={onClose}
+      onRename={onRename}
       title="allergy"
       collection={Allergies}
       subscription="allergies"
@@ -24,5 +25,6 @@ export default function AllergyRenamingDialog ( { open , onClose , tag } ) {
 AllergyRenamingDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onRename: PropTypes.func.isRequired,
   tag: PropTypes.object.isRequired,
 } ;
