@@ -1,7 +1,23 @@
-import { Meteor } from 'meteor/meteor' ;
-import Papa from 'papaparse' ;
+import insertPatient from './insertPatient.js' ;
+import insertDrugs from './insertDrugs.js' ;
 
-import insertFromXML from './insertFromXML.js' ;
+function unpack ( data , item ) {
+
+  if (item.kind === 'file') {
+    const f = item.getAsFile();
+    if (item.type === 'text/csv') return [ 'drugs' , f ] ;
+    else return ['unknown-file', f] ;
+  }
+  else if (item.kind === 'string') {
+    if ( item.type === 'text/plain' ) {
+      const xmlString = data.getData('text/plain');
+      return ['patient', xmlString];
+    }
+  }
+
+  return ['unknown', item];
+
+}
 
 export default function handleDrop ( history ) {
 
@@ -10,27 +26,20 @@ export default function handleDrop ( history ) {
     console.log(data);
 
     for (const item of data.items) {
-      if (item.kind === 'file' && item.type === 'text/csv') {
-        const f = item.getAsFile();
-        let i = 0;
-        Papa.parse(f, {
-          header: true,
-          dynamicTyping: true,
-          chunk: Meteor.bindEnvironment((results, parser) => {
-              Meteor.call('drugs.insertMany', results.data);
-              i += results.data.length;
-          }),
-          complete: () => {
-              console.log(i);
-          }
-        });
-      }
-      else if ( item.type === 'text/plain' ) {
-        const xmlString = data.getData('text/plain');
-        insertFromXML(history, xmlString);
+      const [kind, object] = unpack( data , item ) ;
+      switch ( kind ) {
+        case 'drugs':
+          insertDrugs(object);
+          break;
+        case 'patient':
+          insertPatient(history, object);
+          break;
+        default:
+          console.debug(kind, object);
+          break;
       }
     }
 
-  }
+  } ;
 
 }

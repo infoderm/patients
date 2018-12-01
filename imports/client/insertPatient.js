@@ -3,7 +3,7 @@ import { xml2json } from 'xml-js' ;
 
 import { Patients } from '../api/patients.js' ;
 
-export default function insertFromXML ( history, xmlString ) {
+export default function insertPatient ( history, xmlString ) {
 
   // TODO validate using xsd
   const jsonString = xml2json(xmlString, {compact: true, spaces: 4});
