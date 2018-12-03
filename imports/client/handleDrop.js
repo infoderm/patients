@@ -1,11 +1,13 @@
 import insertPatient from './insertPatient.js' ;
 import insertDrugs from './insertDrugs.js' ;
+import insertHLTReport from './insertHLTReport.js' ;
 
 function unpack ( data , item ) {
 
   if (item.kind === 'file') {
     const f = item.getAsFile();
     if (item.type === 'text/csv') return [ 'drugs' , f ] ;
+    else if (f.name.endsWith('.HLT')) return ['hlt-report', f] ;
     else return ['unknown-file', f] ;
   }
   else if (item.kind === 'string') {
@@ -34,8 +36,11 @@ export default function handleDrop ( history ) {
         case 'patient':
           insertPatient(history, object);
           break;
+        case 'hlt-report':
+          insertHLTReport(history, object);
+          break;
         default:
-          console.debug(kind, object);
+          console.debug('handleDrop-default', kind, object);
           break;
       }
     }
