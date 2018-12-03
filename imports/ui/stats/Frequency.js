@@ -44,7 +44,7 @@ const Chart = ({
 	const data = [];
 
 	for (const key of sorted(increasing, count2count.keys())) {
-		const d = { key : `${key} consultations` } ;
+		const d = { key : `${key}` } ;
 		const sex2count = count2count.get(key);
 		for ( const [ sex , count ] of sex2count.entries() ) {
 			d[sex] = count;
