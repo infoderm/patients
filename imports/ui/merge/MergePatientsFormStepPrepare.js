@@ -24,6 +24,7 @@ import PatientSheet from '../patients/PatientSheet.js';
 
 import { Patients , patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
+import { Documents } from '../../api/documents.js';
 
 const styles = theme => ({
 	container: {
@@ -48,7 +49,20 @@ class MergePatientsFormStepPrepare extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, toMerge, onPrevStep , onNextStep , error , oldPatients , consultations , newPatient , newConsultations } = this.props ;
+		const {
+			classes,
+			theme,
+			toMerge,
+			onPrevStep ,
+			onNextStep ,
+			error ,
+			oldPatients ,
+			consultations ,
+			documents,
+			newPatient ,
+			newConsultations ,
+			newDocuments ,
+		} = this.props ;
 
 		const { merging } = this.state ;
 
@@ -60,12 +74,20 @@ class MergePatientsFormStepPrepare extends React.Component {
 						{ oldPatients.map(patient => (
 						<div key={patient._id}>
 							<Typography variant="h1">{patient._id}</Typography>
-							<PatientSheet patient={patient} consultations={consultations[patient._id]}/>
+							<PatientSheet
+								patient={patient}
+								consultations={consultations[patient._id]}
+								documents={documents[patient._id]}
+							/>
 						</div> )) }
 					</Grid>
 					<Grid container spacing={24} className={classes.container}>
 						<Typography variant="h1">New patient information</Typography>
-						<PatientSheet patient={newPatient} consultations={newConsultations}/>
+						<PatientSheet
+							patient={newPatient}
+							consultations={newConsultations}
+							documents={newDocuments}
+						/>
 					</Grid>
 				</Grid> }
 				{ error && <Grid item sm={12} md={12}>
@@ -92,6 +114,7 @@ class MergePatientsFormStepPrepare extends React.Component {
 						onClose={e => this.setState({ merging: false})}
 						toCreate={newPatient}
 						consultationsToAttach={list(map(x=>x._id,newConsultations))}
+						documentsToAttach={list(map(x=>x._id,newDocuments))}
 						toDelete={toMerge}
 					/>
 				</Grid> }
@@ -112,24 +135,30 @@ MergePatientsFormStepPrepare.propTypes = {
 export default withTracker(({toMerge}) => {
 	Meteor.subscribe('patients');
 	Meteor.subscribe('consultations');
+	Meteor.subscribe('documents');
 	const oldPatients = [] ;
 	const consultations = {} ;
+	const documents = {} ;
 	for ( const patientId of toMerge ) {
 		const patient = Patients.findOne(patientId) ;
 		if ( patient === undefined ) {
 			const error = {
-				message : `Cannot merge because patient #${patientId} is missing.`
+				message : `Cannot merge because patient #${patientId} does not exist in the database.`
 			} ;
 			return { error } ;
 		}
 		const consultationsForPatient = Consultations.find({patientId}, {sort: { datetime: -1 }}).fetch();
+		const documentsForPatient = Documents.find({patientId}, {sort: { createdAt: -1 }}).fetch();
 		oldPatients.push(patient);
 		consultations[patientId] = consultationsForPatient ;
+		documents[patientId] = documentsForPatient ;
 	}
 	return {
 		oldPatients,
 		consultations,
+		documents,
 		newPatient : patients.merge(oldPatients) ,
 		newConsultations : list(chain(map(x => consultations[x] || [], toMerge))) ,
+		newDocuments : list(chain(map(x => documents[x] || [], toMerge))) ,
 	} ;
 }) ( withStyles(styles, { withTheme: true })(MergePatientsFormStepPrepare) );

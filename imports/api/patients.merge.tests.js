@@ -6,6 +6,7 @@ import { Random } from 'meteor/random';
 
 import { Patients , patients } from './patients.mock.js';
 import { Consultations } from './consultations.mock.js';
+import { Documents } from './documents.mock.js';
 import { Uploads } from './uploads.mock.js';
 
 if (Meteor.isServer) {
@@ -17,6 +18,7 @@ if (Meteor.isServer) {
 			beforeEach( () => {
 				Patients.remove({});
 				Consultations.remove({});
+				Documents.remove({});
 				Uploads.collection.remove({});
 			})
 
@@ -47,19 +49,30 @@ if (Meteor.isServer) {
 					owner: userId ,
 				});
 
-				assert.equal(Patients.find().count(), 3);
+				let documentA = Factory.create('document', {
+					owner: userId ,
+					patientId: patientA._id ,
+				});
+
+				const irrellevantDocumentA = Factory.create('document', {
+					owner: userId ,
+				});
+
+				assert.equal(Patients.find().count(), 4);
 
 				let newPatient = patients.merge([patientA, patientB]);
 
 				const oldPatientIds = [ patientA._id , patientB._id ] ;
 				const consultationIds = [ consultationA._id ] ;
+				const documentIds = [ documentA._id ] ;
 
-				const params = [oldPatientIds, consultationIds, newPatient] ;
+				const params = [oldPatientIds, consultationIds, documentIds, newPatient] ;
 
 				const newPatientId = patientsMerge.apply(invocation, params);
 
-				assert.equal(Patients.find().count(), 2);
+				assert.equal(Patients.find().count(), 3);
 				assert.equal(Consultations.find().count(), 2);
+				assert.equal(Documents.find().count(), 2);
 
 				newPatient = Patients.findOne(newPatientId) ;
 
@@ -72,6 +85,10 @@ if (Meteor.isServer) {
 				consultationA = Consultations.findOne(consultationA._id) ;
 
 				assert.equal(consultationA.patientId, newPatientId) ;
+
+				documentA = Documents.findOne(documentA._id) ;
+
+				assert.equal(documentA.patientId, newPatientId) ;
 
 			});
 

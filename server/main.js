@@ -8,7 +8,7 @@ import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
 import { Allergies , allergies } from '../imports/api/allergies.js';
 import { Books , books } from '../imports/api/books.js';
-import { HLTReports } from '../imports/api/hlt-reports.js';
+import { Documents } from '../imports/api/documents.js';
 
 Meteor.startup(() => {
 
@@ -72,7 +72,7 @@ Meteor.startup(() => {
   createSimpleIndex(Patients, 'doctors');
   createSimpleIndex(Patients, 'insurances');
   createSimpleIndex(Patients, 'allergies');
-  createSimpleIndex(HLTReports, 'createdAt');
+  createSimpleIndex(Documents, 'createdAt');
 
 
   const createSimpleUniqueIndex = ( collection , field ) => collection.rawCollection().createIndex({
@@ -121,6 +121,22 @@ Meteor.startup(() => {
     owner: 1,
     book: 1,
     datetime: 1,
+  },{
+    background: true,
+  });
+
+  Documents.rawCollection().createIndex({
+    owner: 1,
+    patientId: 1,
+    datetime: -1,
+  },{
+    background: true,
+  });
+
+  Documents.rawCollection().createIndex({
+    owner: 1,
+    patientId: 1,
+    createdAt: -1,
   },{
     background: true,
   });

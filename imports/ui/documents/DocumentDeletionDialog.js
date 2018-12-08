@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import LinkOffIcon from '@material-ui/icons/LinkOff';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = theme => ({
@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 }) ;
 
-class HLTReportUnlinkingDialog extends React.Component {
+class DocumentDeletionDialog extends React.Component {
 
   constructor ( props ) {
     super( props ) ;
@@ -29,14 +29,14 @@ class HLTReportUnlinkingDialog extends React.Component {
 
   render () {
 
-    const { open , onClose , report, classes } = this.props ;
+    const { open , onClose , document, classes } = this.props ;
 
-    const unlinkThisHLTReport = event => {
+    const deleteThisDocument = event => {
       event.preventDefault();
-      Meteor.call('hlt-reports.remove', report._id, (err, res) => {
+      Meteor.call('documents.remove', document._id, (err, res) => {
 	if ( err ) console.error( err ) ;
 	else {
-	  console.log(`HLT report #${report._id} unlinkd.`)
+	  console.log(`Document #${document._id} deleted.`);
 	  onClose();
 	}
       });
@@ -47,13 +47,13 @@ class HLTReportUnlinkingDialog extends React.Component {
 	  open={open}
 	  onClose={onClose}
 	  component="form"
-	  aria-labelledby="hlt-report-unlinking-dialog-title"
+	  aria-labelledby="document-deletion-dialog-title"
 	>
-	  <DialogTitle id="hlt-report-unlinking-dialog-title">Unlink HLT report {report._id}</DialogTitle>
+	  <DialogTitle id="document-deletion-dialog-title">Delete document {document._id}</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
-	      If you do not want to unlink this HLT report, click cancel.
-	      If you really want to unlink this HLT report from the system, click the unlink button.
+	      If you do not want to delete this document, click cancel.
+	      If you really want to delete this document from the system, click the delete button.
 	    </DialogContentText>
 	  </DialogContent>
 	  <DialogActions>
@@ -61,9 +61,9 @@ class HLTReportUnlinkingDialog extends React.Component {
 	      Cancel
 	      <CancelIcon className={classes.rightIcon}/>
 	    </Button>
-	    <Button onClick={unlinkThisHLTReport} color="secondary">
-	      Unlink
-	      <LinkOffIcon className={classes.rightIcon}/>
+	    <Button onClick={deleteThisDocument} color="secondary">
+	      Delete
+	      <DeleteIcon className={classes.rightIcon}/>
 	    </Button>
 	  </DialogActions>
 	</Dialog>
@@ -72,10 +72,10 @@ class HLTReportUnlinkingDialog extends React.Component {
 
 }
 
-HLTReportUnlinkingDialog.propTypes = {
+DocumentDeletionDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 } ;
 
-export default withStyles(styles)(HLTReportUnlinkingDialog) ;
+export default withStyles(styles)(DocumentDeletionDialog) ;

@@ -27,32 +27,29 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import InfoIcon from '@material-ui/icons/Info';
 import FaceIcon from '@material-ui/icons/Face';
-import DoneIcon from '@material-ui/icons/Done';
-import HourglassFullIcon from '@material-ui/icons/HourglassFull';
-import AlarmIcon from '@material-ui/icons/Alarm';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import BusinessIcon from '@material-ui/icons/Business';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BookIcon from '@material-ui/icons/Book';
 import LinkIcon from '@material-ui/icons/Link';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import TableChartIcon from '@material-ui/icons/TableChart';
+import SubjectIcon from '@material-ui/icons/Subject';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 import format from 'date-fns/format';
 
 import {Patients} from '../../api/patients.js';
 
-import HLTReportDeletionDialog from './HLTReportDeletionDialog.js';
-import HLTReportLinkingDialog from './HLTReportLinkingDialog.js';
-import HLTReportUnlinkingDialog from './HLTReportUnlinkingDialog.js';
-import HLTReportTable from './HLTReportTable.js';
+import DocumentDeletionDialog from './DocumentDeletionDialog.js';
+import DocumentLinkingDialog from './DocumentLinkingDialog.js';
+import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
+import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
+import HealthOneReportContents from './HealthOneReportContents.js';
 
 const styles = theme => ({
 	heading: {
@@ -99,7 +96,7 @@ const styles = theme => ({
 	},
 });
 
-class HLTReportCard extends React.Component {
+class DocumentCard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -115,21 +112,22 @@ class HLTReportCard extends React.Component {
 			classes,
 			loadingPatient,
 			patient,
-			report: {
+			document: {
 				_id,
 				createdAt,
 				patientId,
-				raw,
+				source,
 				parsed,
-				lab,
+				kind,
+				identifier,
 				reference,
 				datetime,
-				subject,
+				patient: subject,
 				anomalies,
 			},
 		} = this.props;
 
-		const { report } = this.props;
+		const { document } = this.props;
 
 		const {
 			linking,
@@ -155,7 +153,7 @@ class HLTReportCard extends React.Component {
 						{ parsed &&
 							<Chip
 								avatar={<Avatar><BusinessIcon/></Avatar>}
-								label={lab}
+								label={identifier}
 								className={classes.chip}
 							/>
 						}
@@ -193,7 +191,7 @@ class HLTReportCard extends React.Component {
 								className={classes.patientchip}
 							/>
 						}
-						{ (parsed && anomalies) &&
+						{ (parsed && kind === 'lab' && anomalies) &&
 							<Chip
 								avatar={<Avatar><ErrorIcon/></Avatar>}
 								label={anomalies}
@@ -205,19 +203,33 @@ class HLTReportCard extends React.Component {
 								avatar={<Avatar><LinkOffIcon/></Avatar>}
 								label="not linked"
 								className={classes.linkoffchip}
+								onClick={e => {
+									e.stopPropagation();
+									this.setState({linking: true});
+								}}
 							/>
 						}
 					</div>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
 				  <List className={classes.list}>
-					{ parsed &&
+					{ (parsed && kind === 'lab') &&
 						<ListItem>
 							<Avatar><TableChartIcon/></Avatar>
 							<ListItemText
 								disableTypography={true}
 								primary={<Typography variant="subtitle1">Results</Typography>}
-								secondary={<HLTReportTable report={report}/>}
+								secondary={<HealthOneLabResultsTable document={document}/>}
+							/>
+						</ListItem>
+					}
+					{ (parsed && kind === 'report') &&
+						<ListItem>
+							<Avatar><SubjectIcon/></Avatar>
+							<ListItemText
+								disableTypography={true}
+								primary={<Typography variant="subtitle1">Contents</Typography>}
+								secondary={<HealthOneReportContents document={document}/>}
 							/>
 						</ListItem>
 					}
@@ -226,11 +238,11 @@ class HLTReportCard extends React.Component {
 							<Avatar><FileCopyIcon/></Avatar>
 							<ListItemText
 								disableTypography={true}
-								primary={<Typography variant="subtitle1">Raw text</Typography>}
+								primary={<Typography variant="subtitle1">Source</Typography>}
 								secondary={
 									<Paper>
 										<pre className={classes.pre}>
-											{raw}
+											{source}
 										</pre>
 									</Paper>
 								}
@@ -252,20 +264,21 @@ class HLTReportCard extends React.Component {
 					<Button color="secondary" onClick={e => this.setState({deleting: true})}>
 						Delete<DeleteIcon/>
 					</Button>
-					<HLTReportDeletionDialog
+					<DocumentLinkingDialog
 						open={linking}
 						onClose={e => this.setState({linking: false})}
-						report={report}
+						document={document}
+						existingLink={patient}
 					/>
-					<HLTReportDeletionDialog
+					<DocumentUnlinkingDialog
 						open={unlinking}
 						onClose={e => this.setState({unlinking: false})}
-						report={report}
+						document={document}
 					/>
-					<HLTReportDeletionDialog
+					<DocumentDeletionDialog
 						open={deleting}
 						onClose={e => this.setState({deleting: false})}
-						report={report}
+						document={document}
 					/>
 				</ExpansionPanelActions>
 			</ExpansionPanel>
@@ -273,13 +286,13 @@ class HLTReportCard extends React.Component {
 	}
 }
 
-HLTReportCard.propTypes = {
+DocumentCard.propTypes = {
 	classes: PropTypes.object.isRequired,
-	report: PropTypes.object.isRequired
+	document: PropTypes.object.isRequired
 };
 
-export default withTracker(({report}) => {
-	const _id = report.patientId;
+export default withTracker(({document}) => {
+	const _id = document.patientId;
 	if (!_id) return {loadingPatient: false};
 	const handle = Meteor.subscribe('patient', _id);
 	if (handle.ready()) {
@@ -287,4 +300,4 @@ export default withTracker(({report}) => {
 		return {loadingPatient: false, patient};
 	}
 	return {loadingPatient: true};
-})(withStyles(styles, {withTheme: true})(HLTReportCard));
+})(withStyles(styles, {withTheme: true})(DocumentCard));

@@ -64,7 +64,7 @@ class MergePatientsForm extends React.Component {
 	render ( ) {
 
 		const { classes, theme, patients } = this.props ;
-		const { step , toMerge , newPatient , newConsultations } = this.state;
+		const { step , toMerge } = this.state;
 
 		switch ( step ) {
 

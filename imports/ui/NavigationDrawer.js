@@ -69,9 +69,9 @@ function NavigationDrawer ( { classes, currentUser } ) {
         } ,
 
         {
-          to: "/hlt-reports" ,
+          to: "/documents" ,
           icon: <LibraryBooksIcon/> ,
-          title: "HLT Reports" ,
+          title: "Documents" ,
         } ,
 
 

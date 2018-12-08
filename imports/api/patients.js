@@ -6,6 +6,7 @@ import { list } from '@aureooms/js-itertools' ;
 import { map } from '@aureooms/js-itertools' ;
 
 import { Consultations } from './consultations.js';
+import { Documents } from './documents.js';
 import { Uploads } from './uploads.js';
 
 import { insurances } from './insurances.js';
@@ -74,11 +75,11 @@ function sanitize ( {
 
 } ) {
 
-	check(niss, String);
-	check(firstname, String);
-	check(lastname, String);
-	check(birthdate, String);
-	check(sex, String);
+	niss === undefined || check(niss, String);
+	firstname === undefined || check(firstname, String);
+	lastname === undefined || check(lastname, String);
+	birthdate === undefined || check(birthdate, String);
+	sex === undefined || check(sex, String);
 	photo === undefined || check(photo, String);
 
 	antecedents === undefined || check(antecedents, String);
@@ -96,12 +97,12 @@ function sanitize ( {
 
 	noshow === undefined || check(noshow, Number);
 
-	niss = niss.trim();
-	firstname = firstname.trim();
-	lastname = lastname.trim();
-	birthdate = birthdate.trim();
-	sex = sex.trim();
-	photo = photo ? photo.replace(/\n/g,'') : photo;
+	niss = niss && niss.trim();
+	firstname = firstname && firstname.trim();
+	lastname = lastname && lastname.trim();
+	birthdate = birthdate && birthdate.trim();
+	sex = sex && sex.trim();
+	photo = photo && photo.replace(/\n/g,'');
 
 	antecedents = antecedents && antecedents.trim();
 	ongoing = ongoing && ongoing.trim();
@@ -214,10 +215,11 @@ Meteor.methods({
 			throw new Meteor.Error('not-authorized');
 		}
 		Consultations.remove({ owner: this.userId , patientId: patientId }) ;
+		Documents.remove({ owner: this.userId , patientId: patientId }) ;
 		return Patients.remove(patientId);
 	},
 
-	'patients.merge'(oldPatientIds, consultationIds, newPatient) {
+	'patients.merge'(oldPatientIds, consultationIds, documentIds, newPatient) {
 
 		// Here is what is done in this method
 		// (1) Check that user is connected
@@ -226,7 +228,9 @@ Meteor.methods({
 		// (4) Create new patient with attachments
 		// (5) Attach consultations in `consultationIds` to newly created patient
 		// (6) Remove consultations that have not been attached
-		// (7) Remove patients in `oldPatientIds`
+		// (7) Attach documents in `documentIds` to newly created patient
+		// (8) Remove documents that have not been attached
+		// (9) Remove patients in `oldPatientIds`
 
 		// (1)
 		if (!this.userId) throw new Meteor.Error('not-authorized');
@@ -295,6 +299,27 @@ Meteor.methods({
 		}) ;
 
 		// (7)
+		Documents.update(
+			{
+				owner: this.userId, // this selector automatically filters out bad document ids
+				patientId: { $in: oldPatientIds },
+				_id: { $in: documentIds },
+			} ,
+			{
+				$set: { patientId : newPatientId } ,
+			} ,
+			{
+				multi: true
+			} ,
+		);
+
+		// (8)
+		Documents.remove({
+			owner: this.userId ,
+			patientId: { $in: oldPatientIds } ,
+		}) ;
+
+		// (9)
 		Patients.remove({
 			_id: { $in: oldPatientIds } ,
 		}) ;

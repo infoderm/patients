@@ -1,16 +1,8 @@
 import faker from 'faker' ;
 
-import { list } from '@aureooms/js-itertools' ;
-import { map } from '@aureooms/js-itertools' ;
-import { range } from '@aureooms/js-itertools' ;
-
-import { format } from 'date-fns' ;
-
 import { Consultations } from './consultations.js' ;
 
 export { Consultations } ;
-
-const AGE_MAX = 130 ;
 
 Factory.define('consultation', Consultations, {
 

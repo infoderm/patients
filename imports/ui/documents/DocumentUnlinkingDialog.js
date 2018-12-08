@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 }) ;
 
-class HLTReportUnlinkingDialog extends React.Component {
+class DocumentUnlinkingDialog extends React.Component {
 
   constructor ( props ) {
     super( props ) ;
@@ -29,14 +29,14 @@ class HLTReportUnlinkingDialog extends React.Component {
 
   render () {
 
-    const { open , onClose , report, classes } = this.props ;
+    const { open , onClose , document, classes } = this.props ;
 
-    const unlinkThisHLTReport = event => {
+    const unlinkThisDocument = event => {
       event.preventDefault();
-      Meteor.call('hlt-reports.remove', report._id, (err, res) => {
+      Meteor.call('documents.unlink', document._id, (err, res) => {
 	if ( err ) console.error( err ) ;
 	else {
-	  console.log(`HLT report #${report._id} unlinkd.`)
+	  console.log(`Document #${document._id} unlinked.`);
 	  onClose();
 	}
       });
@@ -47,13 +47,13 @@ class HLTReportUnlinkingDialog extends React.Component {
 	  open={open}
 	  onClose={onClose}
 	  component="form"
-	  aria-labelledby="hlt-report-unlinking-dialog-title"
+	  aria-labelledby="document-unlinking-dialog-title"
 	>
-	  <DialogTitle id="hlt-report-unlinking-dialog-title">Unlink HLT report {report._id}</DialogTitle>
+	  <DialogTitle id="document-unlinking-dialog-title">Unlink document {document._id}</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
-	      If you do not want to unlink this HLT report, click cancel.
-	      If you really want to unlink this HLT report from the system, click the unlink button.
+	      If you do not want to unlink this document, click cancel.
+	      If you really want to unlink this document from its patient, click the unlink button.
 	    </DialogContentText>
 	  </DialogContent>
 	  <DialogActions>
@@ -61,7 +61,7 @@ class HLTReportUnlinkingDialog extends React.Component {
 	      Cancel
 	      <CancelIcon className={classes.rightIcon}/>
 	    </Button>
-	    <Button onClick={unlinkThisHLTReport} color="secondary">
+	    <Button onClick={unlinkThisDocument} color="secondary">
 	      Unlink
 	      <LinkOffIcon className={classes.rightIcon}/>
 	    </Button>
@@ -72,10 +72,10 @@ class HLTReportUnlinkingDialog extends React.Component {
 
 }
 
-HLTReportUnlinkingDialog.propTypes = {
+DocumentUnlinkingDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 } ;
 
-export default withStyles(styles)(HLTReportUnlinkingDialog) ;
+export default withStyles(styles)(DocumentUnlinkingDialog) ;

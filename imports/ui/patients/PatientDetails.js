@@ -47,6 +47,7 @@ import { empty } from '@aureooms/js-cardinality' ;
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
 import ConsultationCard from '../consultations/ConsultationCard.js';
+import DocumentCard from '../documents/DocumentCard.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentLink from '../attachments/AttachmentLink.js';
@@ -58,6 +59,7 @@ import AllergyChip from '../allergies/AllergyChip.js';
 
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
+import { Documents } from '../../api/documents.js';
 import { Insurances } from '../../api/insurances.js';
 import { Doctors } from '../../api/doctors.js';
 import { Allergies } from '../../api/allergies.js';
@@ -159,7 +161,7 @@ class PatientDetails extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, loading, consultations, insurances, doctors, allergies} = this.props ;
+		const { classes, theme, loading, consultations, documents, insurances, doctors, allergies} = this.props ;
 		const { patient , editing , dirty , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
@@ -277,7 +279,7 @@ class PatientDetails extends React.Component {
 							<FormControl className={classes.formControl}>
 								<InputLabel htmlFor="sex">Sex</InputLabel>
 								<Select
-									value={patient.sex}
+									value={patient.sex || ''}
 									onChange={update('sex')}
 									inputProps={{
 										readOnly: !editing,
@@ -528,6 +530,10 @@ class PatientDetails extends React.Component {
 						<SupervisorAccountIcon className={classes.rightIcon}/>
 					</Button>
 				</div>
+				<Typography variant="h2">Documents</Typography>
+				<div className={classes.container}>
+					{ documents.map(document => ( <DocumentCard key={document._id} document={document}/> )) }
+				</div>
 				{ attachmentsInfo.length === 0 ?
 				<Typography variant="h2">No attachments</Typography> :
 				<Typography variant="h2">All attachments</Typography> }
@@ -558,16 +564,18 @@ export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('patient', _id);
 	Meteor.subscribe('patient.consultations', _id);
+	Meteor.subscribe('patient.documents', _id);
 	Meteor.subscribe('insurances');
 	Meteor.subscribe('doctors');
 	Meteor.subscribe('allergies');
 	if ( handle.ready() ) {
 		const patient = Patients.findOne(_id);
 		const consultations = Consultations.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
+		const documents = Documents.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
 		const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
 		const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
 		const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
-		return { loading: false, patient, consultations, insurances, doctors, allergies } ;
+		return { loading: false, patient, consultations, documents, insurances, doctors, allergies } ;
 	}
-	else return { loading: true, consultations: [], insurances: [], doctors: [], allergies: [] } ;
+	else return { loading: true, consultations: [], documents: [], insurances: [], doctors: [], allergies: [] } ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );

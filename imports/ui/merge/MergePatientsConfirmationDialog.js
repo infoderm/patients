@@ -27,11 +27,20 @@ class MergePatientsConfirmationDialog extends React.Component {
 
   render () {
 
-    const { history , classes , open , onClose , toCreate , consultationsToAttach , toDelete } = this.props ;
+    const {
+      history,
+      classes,
+      open,
+      onClose,
+      toCreate,
+      consultationsToAttach,
+      documentsToAttach,
+      toDelete,
+    } = this.props ;
 
     const mergePatients = event => {
       event.preventDefault();
-      Meteor.call('patients.merge', toDelete , consultationsToAttach , toCreate, (err, _id) => {
+      Meteor.call('patients.merge', toDelete , consultationsToAttach , documentsToAttach , toCreate, (err, _id) => {
 	if ( err ) console.error( err ) ;
 	else {
 	  console.log(`Patient #${_id} created.`)
@@ -50,8 +59,9 @@ class MergePatientsConfirmationDialog extends React.Component {
 	  <DialogTitle id="merge-patients-confirmation-dialog-title">Merge {toDelete.length} patients</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
-	      <b>One new patient</b> will be
-	      created, <b>{consultationsToAttach.length} consultations</b> and <b>{toCreate.attachments.length} attachments</b> will
+	      <b>1 new patient</b> will be
+	      created, <b>{consultationsToAttach.length} consultations</b>, <b>{documentsToAttach.length} documents</b>,
+	      and <b>{toCreate.attachments.length} attachments</b> will
 	      be attached to it, <b>{toDelete.length} patients will be deleted</b>.
 	      If you do not want to merge those patients, click cancel.
 	      If you really want to merge those patients, click the merge button.
@@ -80,6 +90,7 @@ MergePatientsConfirmationDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   toCreate: PropTypes.object.isRequired,
   consultationsToAttach: PropTypes.array.isRequired,
+  documentsToAttach: PropTypes.array.isRequired,
   toDelete: PropTypes.array.isRequired,
 } ;
 
