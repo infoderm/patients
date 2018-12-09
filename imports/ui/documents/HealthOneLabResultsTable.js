@@ -17,10 +17,24 @@ const styles = theme => ({
   table: {
     minWidth: 700,
   },
-  anomaly: {
+  anomalyRow: {
     backgroundColor: '#fa8',
   },
-  comment: {
+  headerRow: {
+    backgroundColor: '#ddd',
+  },
+  subheaderRow: {
+    backgroundColor: '#eee',
+  },
+  endRow: {
+    '& th' : {
+      color: '#666 !important',
+    },
+    '& td' : {
+      color: '#666 !important',
+    },
+  },
+  commentRow: {
     '& th' : {
       color: '#666 !important',
     },
@@ -29,6 +43,9 @@ const styles = theme => ({
     },
   },
   row: {
+  },
+  normalCell: {
+    color: '#444',
   },
 });
 
@@ -39,8 +56,17 @@ function HealthOneLabResultsTable(props) {
 
   for ( const result of document.results ) {
     let className = classes.row;
-    if (result.flag === '*') className = classes.anomaly ;
-    else if (result.flag === 'C') className = classes.comment ;
+    if (result.flag === '*') className = classes.anomalyRow ;
+    else if (result.flag === 'C') className = classes.commentRow ;
+    else if (result.code.startsWith('t_')) {
+      if (result.name.match(/^[A-Z ]*$/)) {
+        className = classes.headerRow ;
+      }
+      else {
+        className = classes.subheaderRow ;
+      }
+    }
+    else if (result.code === 'TEXTEF') className = classes.endRow ;
     rows.push({
       className,
       ...result,
@@ -52,27 +78,43 @@ function HealthOneLabResultsTable(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell numeric>Line</TableCell>
-            <TableCell>Code</TableCell>
+            <TableCell numeric>Code</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Measure</TableCell>
             <TableCell>Unit</TableCell>
-            <TableCell>Normal</TableCell>
+            <TableCell numeric>Measure</TableCell>
+            <TableCell numeric>Normal</TableCell>
             <TableCell>Flag</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row, i) => {
+            const isResult = row.code.match(/^\d+$/);
+            const comment = row.measure.split('\t');
+            comment.pop();
             return (
               <TableRow key={i} className={row.className}>
-                <TableCell numeric>{i}</TableCell>
-                <TableCell>{row.code}</TableCell>
-                <TableCell component="th" scope="row">
+                {isResult && <TableCell numeric>{row.code}</TableCell>}
+                {isResult && <TableCell component="th" scope="row">
+                  {row.name === 'COMMENTAIRES' ? '' : row.name}
+                </TableCell>}
+                {!isResult && <TableCell component="th" scope="row" colSpan={2}>
                   {row.name}
-                </TableCell>
-                <TableCell>{row.measure}</TableCell>
-                <TableCell>{row.unit}</TableCell>
-                <TableCell>{row.normal}</TableCell>
+                </TableCell>}
+                { row.flag === 'C' || row.code === 'TEXTEF' ? comment.length != 3 ?
+                  <TableCell colSpan={3}>{row.measure}</TableCell>
+                  :
+                  <React.Fragment>
+                    <TableCell>{comment[0]}</TableCell>
+                    <TableCell numeric>{comment[1]}</TableCell>
+                    <TableCell numeric>{comment[2]}</TableCell>
+                  </React.Fragment>
+                  :
+                  <React.Fragment>
+                    <TableCell>{row.unit}</TableCell>
+                    <TableCell numeric>{row.measure}</TableCell>
+                    <TableCell className={classes.normalCell} numeric>{row.normal}</TableCell>
+                  </React.Fragment>
+                }
                 <TableCell>{row.flag}</TableCell>
               </TableRow>
             );

@@ -41,7 +41,7 @@ import TableChartIcon from '@material-ui/icons/TableChart';
 import SubjectIcon from '@material-ui/icons/Subject';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 
-import format from 'date-fns/format';
+import dateformat from 'date-fns/format';
 
 import {Patients} from '../../api/patients.js';
 
@@ -118,6 +118,7 @@ class DocumentCard extends React.Component {
 				patientId,
 				source,
 				parsed,
+				format,
 				kind,
 				identifier,
 				reference,
@@ -141,12 +142,12 @@ class DocumentCard extends React.Component {
 					<div className={classes.chips}>
 						{ parsed ?
 							<Chip
-								label={format(datetime,'dddd Do MMMM YYYY')}
+								label={dateformat(datetime,'dddd Do MMMM YYYY')}
 								className={classes.chip}
 							/>
 							:
 							<Chip
-								label={format(createdAt,'dddd Do MMMM YYYY')}
+								label={dateformat(createdAt,'dddd Do MMMM YYYY')}
 								className={classes.chip}
 							/>
 						}
@@ -213,7 +214,7 @@ class DocumentCard extends React.Component {
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
 				  <List className={classes.list}>
-					{ (parsed && kind === 'lab') &&
+					{ (parsed && format === 'healthone' && kind === 'lab') &&
 						<ListItem>
 							<Avatar><TableChartIcon/></Avatar>
 							<ListItemText
@@ -223,7 +224,7 @@ class DocumentCard extends React.Component {
 							/>
 						</ListItem>
 					}
-					{ (parsed && kind === 'report') &&
+					{ (parsed && format === 'healthone' && kind === 'report') &&
 						<ListItem>
 							<Avatar><SubjectIcon/></Avatar>
 							<ListItemText
@@ -233,7 +234,7 @@ class DocumentCard extends React.Component {
 							/>
 						</ListItem>
 					}
-					{ (true) &&
+					{ (!parsed || format !== 'healthone') &&
 						<ListItem>
 							<Avatar><FileCopyIcon/></Avatar>
 							<ListItemText
