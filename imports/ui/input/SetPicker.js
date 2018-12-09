@@ -70,7 +70,14 @@ class SetPicker extends React.Component {
 
   handleKeyDown = event => {
     const { inputValue } = this.state;
-    const { value , onChange , readOnly , itemToString , createNewItem } = this.props;
+    const {
+      value,
+      onChange,
+      readOnly,
+      itemToString,
+      createNewItem,
+      maxCount,
+    } = this.props;
     if ( readOnly ) return ;
     switch(keycode(event)) {
       case 'backspace':
@@ -83,7 +90,7 @@ class SetPicker extends React.Component {
         }
         break;
       case 'enter':
-        if (inputValue.length && this.highlightedIndex === null && createNewItem) {
+        if (inputValue.length && (value.length < maxCount) && this.highlightedIndex === null && createNewItem) {
 
           const item = inputValue.trim();
           const newValue = value.slice();
@@ -104,11 +111,24 @@ class SetPicker extends React.Component {
   };
 
   handleInputChange = event => {
-    this.setState({ inputValue: event.target.value.trimStart() });
+    const {
+      value,
+      maxCount,
+    } = this.props ;
+    if ( value.length < maxCount ) this.setState({ inputValue: event.target.value.trimStart() });
+    else this.setState({ inputValue: ''});
   };
 
   handleChange = item => {
-    const { value , onChange , itemToString } = this.props;
+
+    const {
+      value,
+      onChange,
+      itemToString,
+      maxCount,
+    } = this.props;
+
+    if (value.length >= maxCount) return ;
 
     const newValue = value.slice();
     if (all(map(x=>x !== itemToString(item), map(itemToString, value)))) newValue.push(item);
@@ -152,10 +172,27 @@ class SetPicker extends React.Component {
   };
 
   render() {
-    const { value , classes , filter , suggestions , itemToString , itemToKey , chip , chipProps , TextFieldProps , placeholder , readOnly } = this.props;
+
+    const {
+      value,
+      classes,
+      filter,
+      suggestions,
+      itemToString,
+      itemToKey,
+      chip,
+      chipProps,
+      TextFieldProps,
+      placeholder,
+      readOnly,
+      maxCount,
+    } = this.props;
+
     const { inputValue } = this.state;
 
-    const ChipElement = chip || Chip ;
+    const ChipElement = chip || Chip;
+
+    const full = value.length >= maxCount;
 
     return (
       <Downshift
@@ -181,7 +218,7 @@ class SetPicker extends React.Component {
               fullWidth: true,
               classes,
               inputProps: {
-                readOnly,
+                readOnly: readOnly || full,
               },
               InputProps: getInputProps({
                 startAdornment: value.map((item, index) => (
@@ -249,6 +286,10 @@ const styles = theme => ({
   },
 });
 
+SetPicker.defaultProps = {
+  maxCount: Infinity,
+} ;
+
 SetPicker.propTypes = {
   classes: PropTypes.object.isRequired,
   filter: PropTypes.func.isRequired,
@@ -257,6 +298,7 @@ SetPicker.propTypes = {
   itemToString: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   value: PropTypes.array.isRequired,
+  maxCount: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles)(SetPicker);

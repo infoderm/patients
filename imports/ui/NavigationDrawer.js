@@ -29,6 +29,7 @@ import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
@@ -66,6 +67,13 @@ function NavigationDrawer ( { classes, currentUser } ) {
           icon: <FolderSharedIcon/> ,
           title: "Consultations"
         } ,
+
+        {
+          to: "/documents" ,
+          icon: <LibraryBooksIcon/> ,
+          title: "Documents" ,
+        } ,
+
 
         {
           to: "/calendar" ,

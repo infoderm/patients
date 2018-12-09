@@ -22,6 +22,9 @@ import Calendar from './consultations/Calendar.js';
 import BooksList from './books/BooksList.js';
 import BookDetails from './books/BookDetails.js';
 
+import DocumentsList from './documents/DocumentsList.js';
+import DocumentDetails from './documents/DocumentDetails.js';
+
 import UnpaidConsultationsList from './consultations/UnpaidConsultationsList.js';
 import Stats from './stats/Stats.js';
 import Issues from './issues/Issues.js';
@@ -100,6 +103,10 @@ class Main extends React.Component {
 
 					<Route exact path="/patient/:id" component={PatientDetails}/>
 					<Route exact path="/new/patient" component={NewPatientForm}/>
+
+					<Route exact path="/documents" component={DocumentsList}/>
+					<Route exact path="/documents/page/:page" component={DocumentsList}/>
+					<Route exact path="/document/:id" component={DocumentDetails}/>
 
 					<Route exact path="/calendar" component={Calendar}/>
 					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>

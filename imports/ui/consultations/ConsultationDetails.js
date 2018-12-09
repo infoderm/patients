@@ -15,36 +15,16 @@ const styles = theme => ({
 	},
 });
 
-class ConsultationDetails extends React.Component {
+function ConsultationDetails ( { classes, theme, loading, consultation } ) {
 
-	constructor ( props ) {
-		super(props);
-		this.state = {
-			consultation: props.consultation,
-		};
-	}
+	if (loading) return <div>Loading...</div>;
+	if (!consultation) return <div>Error: Consultation not found.</div>;
 
-	componentWillReceiveProps ( nextProps ) {
-		this.setState({ consultation: nextProps.consultation });
-	}
-
-
-	render ( ) {
-
-		const { classes, theme, loading } = this.props ;
-		const { consultation } = this.state;
-
-		if (loading) return <div>Loading...</div>;
-		if (!consultation) return <div>Error: Consultation not found.</div>;
-
-		return (
-			<div>
-				<div className={classes.container}>
-					<ConsultationCard consultation={consultation} defaultExpanded={true}/>
-				</div>
-			</div>
-		);
-	}
+	return (
+		<div className={classes.container}>
+			<ConsultationCard consultation={consultation} defaultExpanded={true}/>
+		</div>
+	);
 
 }
 

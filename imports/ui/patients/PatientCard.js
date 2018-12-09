@@ -78,7 +78,7 @@ function PatientCard ( { classes, theme, patient } ) {
 						className={classes.header}
 						avatar={
 							<Avatar className={classes[patient.sex]}>
-								{patient.sex.slice(0,1).toUpperCase()}
+								{(patient.sex || 'N').slice(0,1).toUpperCase()}
 							</Avatar>
 						}
 						title={`${patient.lastname.toUpperCase()} ${patient.firstname}`}

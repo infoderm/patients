@@ -18,7 +18,6 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import SetPicker from '../input/SetPicker.js';
@@ -67,7 +66,7 @@ class PatientSheet extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, patient, consultations} = this.props ;
+		const { classes, theme, patient, consultations, documents} = this.props ;
 
 		const minRows = 8 ;
 		const maxRows = 100 ;
@@ -318,6 +317,20 @@ class PatientSheet extends React.Component {
 								<SetPicker
 									suggestions={[]}
 									filter={x=>x}
+									itemToKey={x=>x._id}
+									itemToString={x=>x._id}
+									readOnly={true}
+									TextFieldProps={{
+										label: "Documents",
+										margin: "normal",
+									}}
+									value={documents || []}
+								/>
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<SetPicker
+									suggestions={[]}
+									filter={x=>x}
 									itemToKey={x=>x}
 									itemToString={x=>x}
 									readOnly={true}
@@ -343,6 +356,7 @@ PatientSheet.propTypes = {
 	theme: PropTypes.object.isRequired,
 	patient: PropTypes.object.isRequired,
 	consultations: PropTypes.array.isRequired,
+	documents: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(PatientSheet);

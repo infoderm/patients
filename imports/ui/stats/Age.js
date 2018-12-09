@@ -30,7 +30,7 @@ const Chart = ({
     current = current.filter(gt(fr));
     if ( !at_least(1, current) ) break;
     const interval = current.filter(lt(to));
-    const d = {key: `${fr} à ${to} ans`};
+    const d = {key: `${fr} à ${to}`};
     for ( const sex of [ 'male', 'female', 'other', 'none'] ) {
       d[sex] = count(interval.filter(x => (x.sex || 'none') === sex));
     }
