@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import FaceIcon from '@material-ui/icons/Face';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -54,13 +55,13 @@ class PatientsList extends React.Component {
           { patients.slice(page*perpage, (page+1)*perpage).map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
         </Grid>
         { page === 0 ? '' :
-        <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/patients/page/${page-1}`}>
+        <Fab className={classes.fabprev} color="primary" component={Link} to={`/patients/page/${page-1}`}>
             <NavigateBeforeIcon/>
-        </Button> }
+        </Fab> }
         { page + 1 === Math.ceil(patients.length / perpage) ? '' :
-        <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`/patients/page/${page+1}`}>
+        <Fab className={classes.fabnext} color="primary" component={Link} to={`/patients/page/${page+1}`}>
             <NavigateNextIcon/>
-        </Button> }
+        </Fab> }
       </div>
     ) ;
   }

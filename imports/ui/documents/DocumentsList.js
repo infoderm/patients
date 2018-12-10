@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
@@ -35,13 +35,13 @@ function DocumentsList ( { classes, page , perpage , documents } ) {
         { documents.map(document => ( <DocumentCard key={document._id} document={document}/> )) }
       </div>
       { page === 0 ? null :
-      <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/documents/page/${page-1}`}>
+      <Fab className={classes.fabprev} color="primary" component={Link} to={`/documents/page/${page-1}`}>
           <NavigateBeforeIcon/>
-      </Button> }
+      </Fab> }
       { documents.length < perpage ? null :
-      <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`/documents/page/${page+1}`}>
+      <Fab className={classes.fabnext} color="primary" component={Link} to={`/documents/page/${page+1}`}>
           <NavigateNextIcon/>
-      </Button> }
+      </Fab> }
     </div>
   ) ;
 }

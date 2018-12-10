@@ -13,7 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 class NewPatientForm extends React.Component {
@@ -90,9 +90,9 @@ class NewPatientForm extends React.Component {
 					/>
 				</Grid>
 				<Grid item xs={2}>
-					<Button variant="fab" color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
+					<Fab color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
 						<AddIcon />
-					</Button>
+					</Fab>
 				</Grid>
 			</Grid>
 		);

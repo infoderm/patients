@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
@@ -43,13 +43,13 @@ function PagedPatientsList ( props ) {
         { items.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
       </Grid>
       { page === 0 ? '' :
-      <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
+      <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
         <NavigateBeforeIcon/>
-      </Button> }
+      </Fab> }
       { items.length < perpage ? '' :
-      <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
+      <Fab className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
         <NavigateNextIcon/>
-      </Button> }
+      </Fab> }
     </div>
     ) ;
 }

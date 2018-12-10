@@ -17,7 +17,7 @@ import isBefore from 'date-fns/is_before' ;
 import { count } from '@aureooms/js-cardinality' ;
 
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import Divider from '@material-ui/core/Divider';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -73,12 +73,12 @@ class ConsultationsList extends React.Component {
 				<div className={classes.container}>
 					{ pm.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 				</div> }
-				<Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`/calendar/${dayBefore}`}>
+				<Fab className={classes.fabprev} color="primary" component={Link} to={`/calendar/${dayBefore}`}>
 					<NavigateBeforeIcon/>
-				</Button>
-				<Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`/calendar/${dayAfter}`}>
+				</Fab>
+				<Fab className={classes.fabnext} color="primary" component={Link} to={`/calendar/${dayAfter}`}>
 					<NavigateNextIcon/>
-				</Button>
+				</Fab>
 			</div>
 		);
 	}

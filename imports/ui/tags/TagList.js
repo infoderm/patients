@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
@@ -40,13 +40,13 @@ class TagList extends React.Component {
           { tags.map(tag => ( <Card key={tag._id} item={tag}/> )) }
         </Grid>
         { page === 0 ? '' :
-        <Button variant="fab" className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
+        <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
             <NavigateBeforeIcon/>
-        </Button> }
+        </Fab> }
         { tags.length < perpage ? '' :
-        <Button variant="fab" className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
+        <Fab className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
             <NavigateNextIcon/>
-        </Button> }
+        </Fab> }
       </div>
     ) ;
   }
