@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+
+import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -52,14 +54,20 @@ const styles = theme => ({
 function HealthOneLabResultsTable(props) {
   const { classes , document } = props;
 
+  if (!document.results || document.results.length === 0) {
+    return (
+      <Typography>No results</Typography>
+    ) ;
+  }
+
   const rows = [] ;
 
   for ( const result of document.results ) {
     let className = classes.row;
     if (result.flag === '*') className = classes.anomalyRow ;
     else if (result.flag === 'C') className = classes.commentRow ;
-    else if (result.code.startsWith('t_')) {
-      if (result.name.match(/^[A-Z ]*$/)) {
+    else if (result.code && result.code.startsWith('t_')) {
+      if (result.name && result.name.match(/^[A-Z ]*$/)) {
         className = classes.headerRow ;
       }
       else {
@@ -88,8 +96,8 @@ function HealthOneLabResultsTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, i) => {
-            const isResult = row.code.match(/^\d+$/);
-            const comment = row.measure.split('\t');
+            const isResult = row.code && row.code.match(/^\d+$/);
+            const comment = row.measure ? row.measure.split('\t') : [];
             comment.pop();
             return (
               <TableRow key={i} className={row.className}>

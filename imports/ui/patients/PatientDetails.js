@@ -522,7 +522,11 @@ class PatientDetails extends React.Component {
 						</Grid>
 					</Grid>
 				</Grid>
-				<Typography variant="h2">Consultations</Typography>
+				{ consultations.length === 0 ?
+					<Typography variant="h2">No consultations</Typography>
+					:
+					<Typography variant="h2">All consultations</Typography>
+				}
 				<div className={classes.container}>
 					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
 					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${this.props.patient._id}`}>
@@ -530,13 +534,19 @@ class PatientDetails extends React.Component {
 						<SupervisorAccountIcon className={classes.rightIcon}/>
 					</Button>
 				</div>
-				<Typography variant="h2">Documents</Typography>
+				{ documents.length === 0 ?
+					<Typography variant="h2">No documents</Typography>
+					:
+					<Typography variant="h2">All documents</Typography>
+				}
 				<div className={classes.container}>
 					{ documents.map(document => ( <DocumentCard key={document._id} document={document}/> )) }
 				</div>
 				{ attachmentsInfo.length === 0 ?
-				<Typography variant="h2">No attachments</Typography> :
-				<Typography variant="h2">All attachments</Typography> }
+					<Typography variant="h2">No attachments</Typography>
+					:
+					<Typography variant="h2">All attachments</Typography>
+				}
 				<div className={classes.container}>
 					<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
 					<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>

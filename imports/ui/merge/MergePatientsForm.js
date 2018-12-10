@@ -17,6 +17,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
@@ -70,33 +71,37 @@ class MergePatientsForm extends React.Component {
 
 			case 'select':
 				return (
-					<Grid container className={classes.container}>
-						<Grid item sm={12} md={12}>
-							<SetPicker
-								suggestions={patients}
-								itemToKey={x=>x._id}
-								itemToString={patientToString}
-								filter={tagFilter(toMerge)}
-								TextFieldProps={{
-									label: "Patients to merge",
-									margin: "normal",
-								}}
-								value={toMerge}
-								onChange={e => this.setState({ toMerge : e.target.value })}
-							/>
-						</Grid>
-						<Grid item sm={12} md={12}>
-							<Grid container spacing={24} className={classes.container}>
-							  { toMerge.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+					<div>
+						<Typography variant="h4">Select patients to merge</Typography>
+						<Grid container className={classes.container}>
+							<Grid item sm={12} md={12}>
+								<SetPicker
+									suggestions={patients}
+									itemToKey={x=>x._id}
+									itemToString={patientToString}
+									filter={tagFilter(toMerge)}
+									TextFieldProps={{
+										label: "Patients to merge",
+										margin: "normal",
+									}}
+									value={toMerge}
+									onChange={e => this.setState({ toMerge : e.target.value })}
+									placeholder="Select patients to merge by entering their names here"
+								/>
 							</Grid>
+							<Grid item sm={12} md={12}>
+								<Grid container spacing={24} className={classes.container}>
+								  { toMerge.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+								</Grid>
+							</Grid>
+							{ toMerge.length >= 2 && <Grid item sm={12} md={12}>
+								<Button variant="contained" className={classes.button} color="primary" onClick={()=>this.setState({ step: 'prepare'})}>
+									Next
+									<SkipNextIcon className={classes.rightIcon}/>
+								</Button>
+							</Grid> }
 						</Grid>
-						{ toMerge.length >= 2 && <Grid item sm={12} md={12}>
-							<Button variant="contained" className={classes.button} color="primary" onClick={()=>this.setState({ step: 'prepare'})}>
-								Next
-								<SkipNextIcon className={classes.rightIcon}/>
-							</Button>
-						</Grid> }
-					</Grid>
+					</div>
 				);
 
 			case 'prepare':
