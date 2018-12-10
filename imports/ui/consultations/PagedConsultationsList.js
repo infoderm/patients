@@ -13,11 +13,6 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import ConsultationCard from './ConsultationCard.js';
 
 const styles = theme => ({
-  buttonTile: {
-    minHeight: 200,
-    width: '100%',
-    fontSize: '1rem',
-  },
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
