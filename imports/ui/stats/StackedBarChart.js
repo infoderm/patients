@@ -62,7 +62,7 @@ export default withTooltip(
       nice: true,
       domain: [0, max(totals)],
     });
-    const zScale = scaleOrdinal({
+    const color = scaleOrdinal({
       domain: keys,
       range: [blue[500], pink[500], purple[500], grey[500]],
     });
@@ -72,7 +72,7 @@ export default withTooltip(
     return (
       <div style={{ position: 'relative' }}>
         <svg width={width} height={height}>
-          <rect x={0} y={0} width={width} height={height} fill={`#eaedff`} rx={14} />
+          <rect x={0} y={0} width={width} height={height} fill={'#eaedff'} rx={14} />
           <Grid
             top={margin.top}
             left={margin.left}
@@ -92,7 +92,7 @@ export default withTooltip(
             x={x}
             xScale={xScale}
             yScale={yScale}
-            zScale={zScale}
+            color={color}
             onClick={data => event => {
               if (!events) return;
               alert(`clicked: ${JSON.stringify(data)}`);
@@ -135,7 +135,7 @@ export default withTooltip(
             fontSize: '14px'
           }}
         >
-          <LegendOrdinal scale={zScale} direction="row" labelMargin="0 15px 0 0" />
+          <LegendOrdinal scale={color} direction="row" labelMargin="0 15px 0 0" />
         </div>
         {tooltipOpen && (
           <Tooltip
@@ -147,7 +147,7 @@ export default withTooltip(
               color: 'white'
             }}
           >
-            <div style={{ color: zScale(tooltipData.key) }}>
+            <div style={{ color: color(tooltipData.key) }}>
               <strong>{tooltipData.key}</strong>
             </div>
             <div>{tooltipData.data[tooltipData.key]}</div>

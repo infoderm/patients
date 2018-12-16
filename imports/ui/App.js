@@ -49,7 +49,7 @@ class App extends React.Component {
 					<div className={classes.appFrame}>
 						<Header patients={patients} currentUser={currentUser}/>
 						<NavigationDrawer currentUser={currentUser}/>
-						<Router currentUser={currentUser} patients={patients}/>
+						<Router currentUser={currentUser} history={history} patients={patients}/>
 					</div>
 				</div>
 			</MuiThemeProvider>

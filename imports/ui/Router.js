@@ -1,13 +1,13 @@
 import React from 'react' ;
-import { Switch , Route , Link } from 'react-router-dom'
+import { Switch , Route } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 
-import startOfDay from 'date-fns/start_of_day'
-import parse from 'date-fns/parse'
+import startOfDay from 'date-fns/start_of_day';
+import dateParse from 'date-fns/parse';
 
 import PatientsList from './patients/PatientsList.js';
 import PatientDetails from './patients/PatientDetails.js';
@@ -18,6 +18,8 @@ import ConsultationDetails from './consultations/ConsultationDetails.js';
 import EditConsultationForm from './consultations/EditConsultationForm.js';
 import NewConsultationForm from './consultations/NewConsultationForm.js';
 import Calendar from './consultations/Calendar.js';
+
+import MonthlyPlanner from './planner/MonthlyPlanner.js';
 
 import BooksList from './books/BooksList.js';
 import BookDetails from './books/BookDetails.js';
@@ -69,8 +71,9 @@ const NoMatch = ({ location }) => (
 );
 
 const ConsultationsListFromMatch = ({ match }) => (
-	<ConsultationsList day={startOfDay(parse(match.params.day))}/>
+	<ConsultationsList day={startOfDay(dateParse(match.params.day))}/>
 );
+
 
 class Main extends React.Component {
 
@@ -80,7 +83,7 @@ class Main extends React.Component {
 
 	render(){
 
-		const { classes, patients, currentUser } = this.props;
+		const { classes, patients, currentUser, history } = this.props;
 
 		if (!currentUser) return (
 			<main className={classes.main}>
@@ -110,6 +113,8 @@ class Main extends React.Component {
 
 					<Route exact path="/calendar" component={Calendar}/>
 					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
+					<Route exact path="/calendar/month/:year/:month" component={MonthlyPlanner(history)}/>
+					<Route exact path="/consultations/:day" component={ConsultationsListFromMatch}/>
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
@@ -156,6 +161,7 @@ class Main extends React.Component {
 Main.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true }) (Main) ;

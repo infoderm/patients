@@ -63,7 +63,7 @@ function NavigationDrawer ( { classes, currentUser } ) {
         } ,
 
         {
-          to: `/calendar/${format(startOfToday(), 'YYYY-MM-DD')}` ,
+          to: `/consultations/${format(startOfToday(), 'YYYY-MM-DD')}` ,
           icon: <FolderSharedIcon/> ,
           title: "Consultations"
         } ,
