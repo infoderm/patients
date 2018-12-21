@@ -71,7 +71,7 @@ const styles = theme => ({
   },
 });
 
-function Filter({ filter , suggestions , itemToString , classes , ...rest }) {
+function SearchBox({ filter , suggestions , itemToString , classes , className , ...rest }) {
 
   return (
     <Downshift itemToString={itemToString} {...rest}>
@@ -83,44 +83,46 @@ function Filter({ filter , suggestions , itemToString , classes , ...rest }) {
         selectedItem,
         highlightedIndex,
       }) => (
-        <div className={classes.container}>
-          <div className={classes.adornment}><SearchIcon/></div>
-          {renderInput({
-            classes,
-            InputProps: getInputProps({
-              className: classes.inputInput,
-              placeholder: 'Search a patient…',
-            }),
-          })}
-          {isOpen ? (
-            <Paper square className={classes.suggestions}>
-              {filter(suggestions, inputValue).map((item, index) =>
-                  <MenuItem
-                    key={item._id}
-                    {...getItemProps({
-                      item,
-                      index,
-                      selected: highlightedIndex === index,
-                      style: {
-                        fontWeight: selectedItem === item ? 500 : 400,
-                      },
-                    })}
-                  >
-                    {itemToString(item)}
-                  </MenuItem>
-              )}
-            </Paper>
-          ) : null}
+        <div className={className}>
+          <div className={classes.container}>
+            <div className={classes.adornment}><SearchIcon/></div>
+            {renderInput({
+              classes,
+              InputProps: getInputProps({
+                className: classes.inputInput,
+                placeholder: 'Search a patient…',
+              }),
+            })}
+            {isOpen ? (
+              <Paper square className={classes.suggestions}>
+                {filter(suggestions, inputValue).map((item, index) =>
+                    <MenuItem
+                      key={item._id}
+                      {...getItemProps({
+                        item,
+                        index,
+                        selected: highlightedIndex === index,
+                        style: {
+                          fontWeight: selectedItem === item ? 500 : 400,
+                        },
+                      })}
+                    >
+                      {itemToString(item)}
+                    </MenuItem>
+                )}
+              </Paper>
+            ) : null}
+          </div>
         </div>
       )}
     </Downshift>
   );
 }
 
-Filter.propTypes = {
+SearchBox.propTypes = {
   classes: PropTypes.object.isRequired,
   filter: PropTypes.func.isRequired,
   suggestions: PropTypes.array.isRequired,
 };
 
-export default withStyles(styles)(Filter);
+export default withStyles(styles)(SearchBox);

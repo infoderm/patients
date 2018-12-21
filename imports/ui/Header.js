@@ -21,9 +21,23 @@ const styles = theme => ({
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
   },
+  toolBar: {
+    display: 'flex',
+    flex: 'auto',
+  },
   title: {
-    flex: '0 1 auto',
+    minWidth: 100,
+    flex: 'initial',
     marginLeft: theme.spacing.unit * 3,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  searchBox:{
+    flex: 'none',
+  },
+  accounts:{
+    flex: 'none',
   },
 });
 
@@ -78,17 +92,27 @@ class Header extends React.Component {
 
     return (
       <AppBar className={classes.appBar}>
-	<Toolbar>
-	  <Typography variant="h6" color="inherit" className={classes.title}>{location.pathname}</Typography>
+	<Toolbar className={classes.toolBar}>
+	  <Typography
+	    className={classes.title}
+	    variant="h6"
+	    color="inherit"
+	  >
+	    {location.pathname}
+	  </Typography>
 	  <div style={{flex:'1 1 auto'}}></div>
 	  { currentUser && <SearchBox
+	    className={classes.searchBox}
 	    filter={getSuggestions}
 	    suggestions={suggestions}
 	    itemToString={item => item ? item.label : ''}
 	    onChange={this.handleChange}
 	    stateReducer={this.reduceState}
 	  /> }
-	  <AccountsUI currentUser={currentUser}/>
+	  <AccountsUI
+	    className={classes.accounts}
+	    currentUser={currentUser}
+	  />
 	</Toolbar>
       </AppBar>
       );
