@@ -3,7 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import format from 'date-fns/format' ;
-import parse from 'date-fns/parse';
+import dateParse from 'date-fns/parse';
 import addYears from 'date-fns/add_years';
 
 import { Consultations } from './consultations.js';
@@ -60,7 +60,7 @@ export const books = {
 
     const [ year , book ] = books.split( name ) ;
 
-    const begin = parse(`${year}-01-01`);
+    const begin = dateParse(`${year}-01-01`);
     const end = addYears(begin, 1);
 
     return [ book , begin , end ] ;
