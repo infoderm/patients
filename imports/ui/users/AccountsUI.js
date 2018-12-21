@@ -23,7 +23,7 @@ class AccountsUI extends React.Component {
 
 	render ( ) {
 
-		const { currentUser , classes } = this.props ;
+		const { currentUser , classes , ...rest } = this.props ;
 
 		const { open , message } = this.state ;
 
@@ -37,7 +37,7 @@ class AccountsUI extends React.Component {
 		};
 
 		return (
-			<div>
+			<div {...rest}>
 				{ currentUser ? <Dashboard currentUser={currentUser} feedback={feedback}/> : <SignInForm feedback={feedback}/> }
 				<Snackbar
 					className={classes.snackbar}

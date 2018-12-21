@@ -36,7 +36,7 @@ import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
-import format from 'date-fns/format' ;
+import dateFormat from 'date-fns/format' ;
 
 import Currency from 'currency-formatter' ;
 
@@ -125,8 +125,8 @@ class ConsultationCard extends React.Component {
       <ExpansionPanel defaultExpanded={defaultExpanded}>
 	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
 	  <div className={classes.chips}>
-	    <Chip label={format(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${format(datetime,'YYYY-MM-DD')}`}/>
-	    <Chip label={format(datetime,'hh:mmA')} className={classes.chip}/>
+	    <Chip label={dateFormat(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'YYYY-MM-DD')}`}/>
+	    <Chip label={dateFormat(datetime,'hh:mmA')} className={classes.chip}/>
 	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
 	    { attachments === undefined || attachments.length === 0 ? '' :
 	      <Chip

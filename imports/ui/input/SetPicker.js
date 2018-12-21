@@ -233,10 +233,10 @@ class SetPicker extends React.Component {
                 )),
                 onChange: this.handleInputChange,
                 onKeyDown: this.handleKeyDown,
-                placeholder,
+                placeholder: full ? '' : placeholder,
               }),
             })}
-            {isOpen ? (
+            {isOpen && !full ? (
               <Paper className={classes.paper} square>
                 {filter(suggestions, inputValue2)
                 .map((suggestion, index) =>

@@ -4,6 +4,8 @@ import { check } from 'meteor/check';
 
 import { list } from '@aureooms/js-itertools' ;
 import { map } from '@aureooms/js-itertools' ;
+import { take } from '@aureooms/js-itertools' ;
+import { filter } from '@aureooms/js-itertools' ;
 
 import { Consultations } from './consultations.js';
 import { Documents } from './documents.js';
@@ -396,8 +398,36 @@ function mergePatients ( oldPatients ) {
 
 }
 
+const patientToKey = x => x._id ;
+
+const patientToString = x => `${x.lastname} ${x.firstname} (${x._id})` ;
+
+const patientFilter = (suggestions, inputValue) => {
+
+	const matches = x => !inputValue || patientToString(x).toLowerCase().includes(inputValue.toLowerCase()) ;
+
+	const keep = 5 ;
+
+	return list( take( filter(matches, suggestions) , keep ) ) ;
+
+} ;
+
+function createPatient ( string ) {
+
+	const [ lastname , ...firstnames ] = string.split(' ');
+
+	return {
+		lastname,
+		firstname: firstnames.join(' '),
+		_id: '?',
+	} ;
+
+} ;
+
 export const patients = {
-
+	toString: patientToString ,
+	toKey: patientToKey ,
 	merge: mergePatients ,
-
+	filter: patientFilter ,
+	create: createPatient ,
 } ;

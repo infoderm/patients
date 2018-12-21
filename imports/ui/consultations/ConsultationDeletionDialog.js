@@ -98,10 +98,11 @@ class ConsultationDeletionDialog extends React.Component {
 }
 
 ConsultationDeletionDialog.propTypes = {
+  classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  consultation: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
 } ;
 
 export default withStyles(styles)(ConsultationDeletionDialog) ;

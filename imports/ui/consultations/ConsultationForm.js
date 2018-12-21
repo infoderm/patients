@@ -5,6 +5,7 @@ import React from 'react' ;
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom' ;
+import { Prompt } from 'react-router';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -81,6 +82,7 @@ class ConsultationForm extends React.Component {
 			book: consultation.book,
 
 			syncPaid: true,
+			dirty: false,
 
 		};
 
@@ -130,13 +132,23 @@ class ConsultationForm extends React.Component {
 		if ( consultationId === undefined ) {
 			Meteor.call('consultations.insert', consultation, (err, _id) => {
 				if ( err ) console.error(err) ;
-				else history.push({pathname: `/consultation/${_id}`}) ;
+				else {
+					this.setState({
+						dirty: false,
+					});
+					history.push({pathname: `/consultation/${_id}`}) ;
+				}
 			});
 		}
 		else {
 			Meteor.call('consultations.update', consultationId, consultation, (err, res) => {
 				if ( err ) console.error(err) ;
-				else history.push({pathname: `/consultation/${consultationId}`}) ;
+				else {
+					this.setState({
+						dirty: false,
+					});
+					history.push({pathname: `/consultation/${consultationId}`}) ;
+				}
 			});
 		}
 	}
@@ -145,10 +157,28 @@ class ConsultationForm extends React.Component {
 
 	render(){
 
-		const { classes , consultation : { _id : consultationId }, loadingPatient, patient } = this.props ;
+		const {
+			classes ,
+			consultation : {
+				_id : consultationId
+			},
+			loadingPatient,
+			patient,
+		} = this.props ;
+
+		const update = key => e => {
+			this.setState({
+				[key]: e.target.value,
+				dirty: true,
+			});
+		} ;
 
 		return (
 			<div className={classes.container}>
+				<Prompt
+					when={this.state.dirty}
+					message="You are trying to leave the page without saving your changes. Are you sure you want to continue?"
+				/>
 				<Grid className={classes.header} container spacing={24}>
 					{(loadingPatient || !patient || !patient.photo) ? '' :
 					<Grid item xs={1}>
@@ -186,7 +216,7 @@ class ConsultationForm extends React.Component {
 							  shrink: true,
 							}}
 							value={this.state.date}
-							onChange={e => this.setState({ date: e.target.value})}
+							onChange={update('date')}
 						/>
 					</Grid>
 					<Grid item xs={1}>
@@ -196,7 +226,7 @@ class ConsultationForm extends React.Component {
 								shrink: true,
 							}}
 							value={this.state.time}
-							onChange={e => this.setState({ time: e.target.value})}
+							onChange={update('time')}
 						/>
 					</Grid>
 				</Grid>
@@ -210,7 +240,7 @@ class ConsultationForm extends React.Component {
 							rows={4}
 							className={classes.multiline}
 							value={this.state.reason}
-							onChange={e => this.setState({ reason: e.target.value})}
+							onChange={update('reason')}
 							margin="normal"
 						/>
 					</Grid>
@@ -222,7 +252,7 @@ class ConsultationForm extends React.Component {
 							rows={4}
 							className={classes.multiline}
 							value={this.state.done}
-							onChange={e => this.setState({ done: e.target.value})}
+							onChange={update('done')}
 							margin="normal"
 						/>
 					</Grid>
@@ -234,7 +264,7 @@ class ConsultationForm extends React.Component {
 							rows={4}
 							className={classes.multiline}
 							value={this.state.todo}
-							onChange={e => this.setState({ todo: e.target.value})}
+							onChange={update('todo')}
 							margin="normal"
 						/>
 					</Grid>
@@ -246,7 +276,7 @@ class ConsultationForm extends React.Component {
 							rows={4}
 							className={classes.multiline}
 							value={this.state.treatment}
-							onChange={e => this.setState({ treatment: e.target.value})}
+							onChange={update('treatment')}
 							margin="normal"
 						/>
 					</Grid>
@@ -258,7 +288,7 @@ class ConsultationForm extends React.Component {
 							rows={4}
 							className={classes.multiline}
 							value={this.state.next}
-							onChange={e => this.setState({ next: e.target.value})}
+							onChange={update('next')}
 							margin="normal"
 						/>
 					</Grid>
@@ -270,7 +300,7 @@ class ConsultationForm extends React.Component {
 							rows={4}
 							className={classes.multiline}
 							value={this.state.more}
-							onChange={e => this.setState({ more: e.target.value})}
+							onChange={update('more')}
 							margin="normal"
 						/>
 					</Grid>
@@ -280,7 +310,7 @@ class ConsultationForm extends React.Component {
 							select
 							label="Currency"
 							value={this.state.currency}
-							onChange={e => this.setState({ currency : e.target.value })}
+							onChange={update('currency')}
 							margin="normal"
 						>
 							<MenuItem value="EUR">€</MenuItem>
@@ -290,7 +320,11 @@ class ConsultationForm extends React.Component {
 						<TextField
 							label="Prix"
 							value={this.state.price}
-							onChange={e => this.setState({ price: e.target.value , paid: this.state.syncPaid ? e.target.value : this.state.paid })}
+							onChange={e => this.setState({
+								price: e.target.value ,
+								paid: this.state.syncPaid ? e.target.value : this.state.paid,
+								dirty: true,
+							})}
 							margin="normal"
 						/>
 					</Grid>
@@ -298,7 +332,11 @@ class ConsultationForm extends React.Component {
 						<TextField
 							label="Payé"
 							value={this.state.paid}
-							onChange={e => this.setState({ paid : e.target.value , syncPaid: false })}
+							onChange={e => this.setState({
+								paid : e.target.value ,
+								syncPaid: false ,
+								dirty: true ,
+							})}
 							margin="normal"
 						/>
 					</Grid>
@@ -306,7 +344,7 @@ class ConsultationForm extends React.Component {
 						<TextField
 							label="Carnet"
 							value={this.state.book}
-							onChange={e => this.setState({ book : e.target.value })}
+							onChange={update('book')}
 							margin="normal"
 						/>
 					</Grid>

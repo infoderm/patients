@@ -31,9 +31,18 @@ const styles = theme => ({
 		display: 'flex',
 		flex: 1,
 		flexDirection: 'column',
+		minWidth: 300,
 	},
 	header: {
-		flex: '1 0 auto',
+		flex: 1,
+		'& > div' : {
+			minWidth: 0,
+			'& > span' : {
+				whiteSpace: 'nowrap',
+				overflow: 'hidden',
+				textOverflow: 'ellipsis',
+			} ,
+		} ,
 	},
 	content: {
 		flex: '1 0 auto',
@@ -48,6 +57,7 @@ const styles = theme => ({
 		justifyContent: 'center',
 		color: '#fff',
 		backgroundColor: '#999',
+		flex: 'none',
 	},
 	actions: {
 		display: 'flex',
@@ -107,11 +117,12 @@ class TagCard extends React.Component {
 			<Card className={classes.card}>
 			<div className={classes.details}>
 			<CardHeader
-			className={classes.header}
-			avatar={avatar}
-			title={tag.name}
-			subheader={loading ? '...' : subheader(items)}
- 			component={Link} to={url(tag.name)}
+				className={classes.header}
+				avatar={avatar}
+				title={tag.name}
+				subheader={loading ? '...' : subheader(items)}
+				component={Link}
+				to={url(tag.name)}
 			/>
 			<CardContent className={classes.content}>
 			{loading ? '...' : content(items)}

@@ -4,10 +4,6 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { list } from '@aureooms/js-itertools' ;
-import { take } from '@aureooms/js-itertools' ;
-import { filter } from '@aureooms/js-itertools' ;
-
 import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -20,7 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import { Patients } from '../../api/patients.js';
+import { Patients , patients } from '../../api/patients.js';
 
 import SetPicker from '../input/SetPicker.js';
 
@@ -33,24 +29,12 @@ const styles = theme => ({
   },
 }) ;
 
-const patientToString = x => `${x.lastname} ${x.firstname} (${x._id})` ;
-
-const patientFilter = (suggestions, inputValue) => {
-
-  const matches = x => !inputValue || patientToString(x).toLowerCase().includes(inputValue.toLowerCase()) ;
-
-  const keep = 5 ;
-
-  return list( take( filter(matches, suggestions) , keep ) ) ;
-
-} ;
-
 class DocumentLinkingDialog extends React.Component {
 
   constructor ( props ) {
     super( props ) ;
     this.state = {
-      patients: props.existingLink ? [ props.existingLink ] : [],
+      patient: props.existingLink ? [ props.existingLink ] : [],
     };
   }
 
@@ -58,12 +42,12 @@ class DocumentLinkingDialog extends React.Component {
 
     const { open , onClose , document, classes, allPatients } = this.props ;
 
-    const { patients } = this.state;
+    const { patient } = this.state;
 
     const linkThisDocument = event => {
       event.preventDefault();
       const documentId = document._id;
-      const patientId = patients[0]._id;
+      const patientId = patient[0]._id;
       Meteor.call('documents.link', documentId, patientId, (err, res) => {
 	if ( err ) console.error( err ) ;
 	else {
@@ -94,15 +78,15 @@ class DocumentLinkingDialog extends React.Component {
 	    </DialogContentText>
 	    <SetPicker
 	      suggestions={allPatients}
-	      itemToKey={x=>x._id}
-	      itemToString={patientToString}
-	      filter={patientFilter}
+	      itemToKey={patients.toKey}
+	      itemToString={patients.toString}
+	      filter={patients.filter}
 	      TextFieldProps={{
 		label: "Patient to link document to",
 		margin: "normal",
 	      }}
-	      value={patients}
-	      onChange={e => this.setState({ patients : e.target.value })}
+	      value={patient}
+	      onChange={e => this.setState({ patient : e.target.value })}
 	      maxCount={1}
 	    />
 	  </DialogContent>
@@ -111,7 +95,7 @@ class DocumentLinkingDialog extends React.Component {
 	      Cancel
 	      <CancelIcon className={classes.rightIcon}/>
 	    </Button>
-	    <Button onClick={linkThisDocument} disabled={patients.length === 0} color="secondary">
+	    <Button onClick={linkThisDocument} disabled={patient.length === 0} color="secondary">
 	      Link
 	      <LinkIcon className={classes.rightIcon}/>
 	    </Button>
@@ -126,6 +110,7 @@ DocumentLinkingDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  allPatients: PropTypes.array.isRequired,
 } ;
 
 export default withTracker(() => {
