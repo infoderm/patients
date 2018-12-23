@@ -36,6 +36,7 @@ class MonthlyCalendar extends React.Component {
 			events ,
 			next ,
 			prev ,
+			weekly ,
 			year ,
 			month ,
 			weekStartsOn ,
@@ -48,7 +49,6 @@ class MonthlyCalendar extends React.Component {
 			<div>
 				{ prev &&
 					<Button
-						variant="contained"
 						className={classes.button}
 						color="primary"
 						onClick={prev}
@@ -59,7 +59,6 @@ class MonthlyCalendar extends React.Component {
 				}
 				{ next &&
 					<Button
-						variant="contained"
 						className={classes.button}
 						color="primary"
 						onClick={next}
@@ -68,6 +67,23 @@ class MonthlyCalendar extends React.Component {
 						<SkipNextIcon className={classes.rightIcon}/>
 					</Button>
 				}
+				{ weekly &&
+					<Button
+						className={classes.button}
+						color="primary"
+						onClick={weekly}
+					>
+						Weekly
+					</Button>
+				}
+				<Button
+					disabled
+					className={classes.button}
+					color="primary"
+					onClick={next}
+				>
+					Monthly
+				</Button>
 				<MonthlyCalendarData
 					year={year}
 					month={month}
@@ -91,6 +107,7 @@ MonthlyCalendar.propTypes = {
 	events: PropTypes.array.isRequired,
 	next: PropTypes.func,
 	prev: PropTypes.func,
+	weekly: PropTypes.func,
 	weekStartsOn: PropTypes.number,
 } ;
 

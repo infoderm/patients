@@ -1,9 +1,11 @@
 import "@babel/polyfill";
 import { Meteor } from 'meteor/meteor';
 
+import { Settings } from '../imports/api/settings.js';
 import { Patients } from '../imports/api/patients.js';
 import { Drugs } from '../imports/api/drugs.js';
 import { Consultations } from '../imports/api/consultations.js';
+import { appointments } from '../imports/api/appointments.js';
 import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
 import { Allergies , allergies } from '../imports/api/allergies.js';
@@ -15,6 +17,7 @@ Meteor.startup(() => {
   // code to run on server at startup
 
   const collections = [
+    Settings ,
     Patients ,
     Drugs ,
     Consultations ,
@@ -58,6 +61,24 @@ Meteor.startup(() => {
 
   } ) ;
 
+  // add .isDone field to consultations
+  Consultations.rawCollection().find().snapshot().forEach( consultation => {
+
+    if ( consultation.scheduledAt ) {
+      consultation.createdAt = consultation.scheduledAt ;
+      consultation.datetime = consultation.scheduledDatetime ;
+      consultation.reason = consultation.scheduledReason ;
+      delete consultation.scheduledAt;
+      delete consultation.scheduledDatetime;
+      delete consultation.scheduledReason;
+    }
+
+    if ( consultation.isDone !== false ) consultation.isDone = true ;
+
+    Consultations.rawCollection().save(consultation);
+
+  } ) ;
+
   // create indexes
 
   const createSimpleIndex = ( collection , field ) => collection.rawCollection().createIndex({
@@ -83,10 +104,11 @@ Meteor.startup(() => {
     background: true,
   });
 
-  createSimpleUniqueIndex(Insurances, 'name')
-  createSimpleUniqueIndex(Doctors, 'name')
-  createSimpleUniqueIndex(Allergies, 'name')
-  createSimpleUniqueIndex(Books, 'name')
+  createSimpleUniqueIndex(Settings, 'key');
+  createSimpleUniqueIndex(Insurances, 'name');
+  createSimpleUniqueIndex(Doctors, 'name');
+  createSimpleUniqueIndex(Allergies, 'name');
+  createSimpleUniqueIndex(Books, 'name');
 
   Drugs.rawCollection().createIndex({
     owner: 1,
@@ -104,7 +126,8 @@ Meteor.startup(() => {
 
   Consultations.rawCollection().createIndex({
     owner: 1,
-    datetime: -1,
+    datetime: 1,
+    isDone: 1,
   },{
     background: true,
   });
@@ -112,7 +135,8 @@ Meteor.startup(() => {
   Consultations.rawCollection().createIndex({
     owner: 1,
     patientId: 1,
-    datetime: -1,
+    datetime: 1,
+    isDone: 1,
   },{
     background: true,
   });
@@ -121,6 +145,7 @@ Meteor.startup(() => {
     owner: 1,
     book: 1,
     datetime: 1,
+    isDone: 1,
   },{
     background: true,
   });
@@ -128,7 +153,7 @@ Meteor.startup(() => {
   Documents.rawCollection().createIndex({
     owner: 1,
     patientId: 1,
-    datetime: -1,
+    datetime: 1,
   },{
     background: true,
   });
@@ -136,7 +161,7 @@ Meteor.startup(() => {
   Documents.rawCollection().createIndex({
     owner: 1,
     patientId: 1,
-    createdAt: -1,
+    createdAt: 1,
   },{
     background: true,
   });
@@ -150,7 +175,7 @@ Meteor.startup(() => {
   generateTags(Patients, doctors, 'doctors');
   generateTags(Patients, allergies, 'allergies');
 
-  Consultations.find().map( ( { owner , datetime , book } ) => datetime && book && books.add(owner, books.name(datetime, book)));
+  Consultations.find().map( ( { owner , datetime , book , isDone } ) => isDone && datetime && book && books.add(owner, books.name(datetime, book)));
 
 
 });

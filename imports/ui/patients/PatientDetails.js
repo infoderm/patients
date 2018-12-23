@@ -33,9 +33,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import format from 'date-fns/format';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
@@ -47,6 +47,7 @@ import { empty } from '@aureooms/js-cardinality' ;
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
 import ConsultationCard from '../consultations/ConsultationCard.js';
+import AppointmentCard from '../appointments/AppointmentCard.js';
 import DocumentCard from '../documents/DocumentCard.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
@@ -59,6 +60,7 @@ import AllergyChip from '../allergies/AllergyChip.js';
 
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
+import { Appointments } from '../../api/appointments.js';
 import { Documents } from '../../api/documents.js';
 import { Insurances } from '../../api/insurances.js';
 import { Doctors } from '../../api/doctors.js';
@@ -161,7 +163,18 @@ class PatientDetails extends React.Component {
 
 	render ( ) {
 
-		const { classes, theme, loading, consultations, documents, insurances, doctors, allergies} = this.props ;
+		const {
+			classes,
+			theme,
+			loading,
+			consultations,
+			upcomingAppointments,
+			documents,
+			insurances,
+			doctors,
+			allergies,
+		} = this.props ;
+
 		const { patient , editing , dirty , deleting } = this.state;
 
 		if (loading) return <div>Loading...</div>;
@@ -522,6 +535,14 @@ class PatientDetails extends React.Component {
 						</Grid>
 					</Grid>
 				</Grid>
+				{ upcomingAppointments.length === 0 ?
+					<Typography variant="h2">No upcoming appointments</Typography>
+					:
+					<Typography variant="h2">Upcoming appointments</Typography>
+				}
+				<div className={classes.container}>
+					{ upcomingAppointments.map(appointment => ( <AppointmentCard key={appointment._id} appointment={appointment}/> )) }
+				</div>
 				{ consultations.length === 0 ?
 					<Typography variant="h2">No consultations</Typography>
 					:
@@ -574,18 +595,37 @@ export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('patient', _id);
 	Meteor.subscribe('patient.consultations', _id);
+	Meteor.subscribe('patient.appointments', _id);
 	Meteor.subscribe('patient.documents', _id);
 	Meteor.subscribe('insurances');
 	Meteor.subscribe('doctors');
 	Meteor.subscribe('allergies');
 	if ( handle.ready() ) {
 		const patient = Patients.findOne(_id);
-		const consultations = Consultations.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
+		const consultations = Consultations.find({patientId: _id, isDone: true}, {sort: { datetime: -1 }}).fetch();
+		const upcomingAppointments = Appointments.find({patientId: _id, isDone: false}, {sort: { datetime: 1 }}).fetch();
 		const documents = Documents.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
 		const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
 		const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
 		const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
-		return { loading: false, patient, consultations, documents, insurances, doctors, allergies } ;
+		return {
+			loading: false,
+			patient,
+			consultations,
+			upcomingAppointments,
+			documents,
+			insurances,
+			doctors,
+			allergies,
+		} ;
 	}
-	else return { loading: true, consultations: [], documents: [], insurances: [], doctors: [], allergies: [] } ;
+	else return {
+		loading: true,
+		consultations: [],
+		upcomingAppointments: [],
+		documents: [],
+		insurances: [],
+		doctors: [],
+		allergies: [],
+	} ;
 }) ( withStyles(styles, { withTheme: true })(PatientDetails) );

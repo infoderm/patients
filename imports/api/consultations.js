@@ -9,27 +9,50 @@ export const Consultations = new Mongo.Collection('consultations');
 
 if (Meteor.isServer) {
 
-	Meteor.publish('consultations', function () {
-		return Consultations.find({ owner: this.userId });
-	});
-
 	Meteor.publish('consultation', function (_id) {
 		check(_id, String);
-		return Consultations.find({ owner: this.userId , _id });
+		return Consultations.find({
+			owner: this.userId ,
+			_id ,
+		});
+	});
+
+	Meteor.publish('consultations', function () {
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+		});
+	});
+
+	Meteor.publish('consultationsAndAppointments', function () {
+		return Consultations.find({
+			owner: this.userId ,
+		});
 	});
 
 	Meteor.publish('patient.consultations', function (patientId) {
 		check(patientId, String);
-		return Consultations.find({ owner: this.userId , patientId: patientId });
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+			patientId ,
+		});
 	});
 
 	Meteor.publish('consultations.unpaid', function () {
-		return Consultations.find({ owner: this.userId , $expr:{$ne:[ "$paid", "$price"]} });
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+			$expr: {
+				$ne: [ "$paid", "$price" ] ,
+			} ,
+		});
 	});
 
 	Meteor.publish('book.consultations', function ( name ) {
 		return Consultations.find({
 			owner: this.userId ,
+			isDone: true,
 			...books.selector(name) ,
 		});
 	});
@@ -90,6 +113,7 @@ function sanitize ( {
 		price,
 		paid,
 		book,
+		isDone: true,
 	} ;
 
 }

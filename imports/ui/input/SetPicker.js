@@ -77,6 +77,7 @@ class SetPicker extends React.Component {
       itemToString,
       createNewItem,
       maxCount,
+      multiset,
     } = this.props;
     if ( readOnly ) return ;
     switch(keycode(event)) {
@@ -94,7 +95,9 @@ class SetPicker extends React.Component {
 
           const item = inputValue.trim();
           const newValue = value.slice();
-          if (all(map(x=>x !== item, map(itemToString, value)))) newValue.push(createNewItem(item));
+          if (multiset || all(map(x=>x !== item, map(itemToString, value)))) {
+            newValue.push(createNewItem(item));
+          }
 
           this.setState({
             inputValue: '',
@@ -114,9 +117,18 @@ class SetPicker extends React.Component {
     const {
       value,
       maxCount,
+      inputTransform,
     } = this.props ;
-    if ( value.length < maxCount ) this.setState({ inputValue: event.target.value.trimStart() });
-    else this.setState({ inputValue: ''});
+    if ( value.length < maxCount ) {
+      this.setState({
+        inputValue: inputTransform(event.target.value.trimStart()) ,
+      });
+    }
+    else {
+      this.setState({
+        inputValue: inputTransform('') ,
+      });
+    }
   };
 
   handleChange = item => {
@@ -126,12 +138,15 @@ class SetPicker extends React.Component {
       onChange,
       itemToString,
       maxCount,
+      multiset,
     } = this.props;
 
     if (value.length >= maxCount) return ;
 
     const newValue = value.slice();
-    if (all(map(x=>x !== itemToString(item), map(itemToString, value)))) newValue.push(item);
+    if (multiset || all(map(x=>x !== itemToString(item), map(itemToString, value)))) {
+      newValue.push(item);
+    }
 
     this.setState({
       inputValue: '',
@@ -288,17 +303,22 @@ const styles = theme => ({
 
 SetPicker.defaultProps = {
   maxCount: Infinity,
+  multiset: false,
+  inputTransform: x => x,
 } ;
 
 SetPicker.propTypes = {
   classes: PropTypes.object.isRequired,
-  filter: PropTypes.func.isRequired,
   suggestions: PropTypes.array.isRequired,
+  value: PropTypes.array.isRequired,
+  filter: PropTypes.func.isRequired,
   itemToKey: PropTypes.func.isRequired,
   itemToString: PropTypes.func.isRequired,
+  inputTransform: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  value: PropTypes.array.isRequired,
+  createNewItem: PropTypes.func,
   maxCount: PropTypes.number.isRequired,
+  multiset: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(SetPicker);

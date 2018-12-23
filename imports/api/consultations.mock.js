@@ -20,4 +20,6 @@ Factory.define('consultation', Consultations, {
 	paid: () => 0,
 	book: () => `${faker.random.number(100)}`,
 
+	isDone: () => true,
+
 });

@@ -44,6 +44,8 @@ import AllergyDetails from './allergies/AllergyDetails.js';
 import DrugsSearch from './drugs/DrugsSearch.js';
 import DrugDetails from './drugs/DrugDetails.js';
 
+import Settings from './settings/Settings.js';
+
 const styles = theme => ({
 	main: {
 		backgroundColor: theme.palette.background.default,
@@ -149,6 +151,8 @@ class Main extends React.Component {
 
 					<Route exact path="/drugs" component={DrugsSearch}/>
 					<Route exact path="/drug/:id" component={DrugDetails}/>
+
+					<Route exact path="/settings" component={Settings}/>
 
 					<Route component={NoMatch}/>
 

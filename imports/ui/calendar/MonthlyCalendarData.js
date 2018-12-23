@@ -26,6 +26,8 @@ import {
 	enumerate,
 } from '@aureooms/js-itertools';
 
+import calendarRanges from './ranges.js';
+
 // /calendar/month/2018-10
 
 const styles = theme => ({
@@ -91,7 +93,7 @@ function* generateEventProps ( occupancy , begin , end , maxLines , events ) {
 
 	for ( const event of events ) {
 
-		if (isBefore(event.end, begin) || isAfter(event.begin, end)) continue ;
+		if ((event.end && isBefore(event.end, begin)) || isAfter(event.begin, end)) continue ;
 
 		const day = dateFormat(event.begin, 'YYYYMMDD');
 
@@ -238,11 +240,7 @@ class MonthlyCalendarData extends React.Component {
 			weekStartsOn ,
 		} ;
 
-		const firstDayOfMonth = new Date(year, month - 1, 1);
-		const lastDayOfMonth = startOfDay(endOfMonth(firstDayOfMonth));
-
-		const begin = startOfWeek(firstDayOfMonth, weekOptions); // inclusive
-		const end = addDays(startOfDay(endOfWeek(lastDayOfMonth, weekOptions)), 1); // non-inclusive
+		const [begin, end] = calendarRanges.monthly(year, month, weekOptions);
 
 		const days = differenceInDays(end, begin); // should be a multiple of 7
 
@@ -254,8 +252,6 @@ class MonthlyCalendarData extends React.Component {
 		const occupancy = createOccupancyMap(begin, end);
 		const eventProps = [ ...generateEventProps(occupancy, begin, end, maxLines - 2, events)];
 		const moreProps = [ ...generateMoreProps(occupancy, begin, end, maxLines - 2)];
-
-		console.debug(occupancy, moreProps);
 
 		const gridStyles = {
 			grid: {
@@ -327,23 +323,24 @@ class MonthlyCalendarData extends React.Component {
 		const Grid = withStyles(gridStyles, { withTheme: true })(MonthlyCalendarDataGrid) ;
 
 		return (
-			<div>
-				<div>
-					<div>begin: {begin.toString()}</div>
-					<div>end: {end.toString()}</div>
-					<div>days: {days.toString()}</div>
-					<div>nrows: {nrows.toString()}</div>
-				</div>
-				<Grid
-					days={daysProps}
-					events={eventProps}
-					mores={moreProps}
-					DayHeader={DayHeader}
-					onSlotClick={onSlotClick}
-					onEventClick={onEventClick}
-				/>
-			</div>
+			<Grid
+				days={daysProps}
+				events={eventProps}
+				mores={moreProps}
+				DayHeader={DayHeader}
+				onSlotClick={onSlotClick}
+				onEventClick={onEventClick}
+			/>
 		) ;
+
+			//<div>
+				//<div>
+					//<div>begin: {begin.toString()}</div>
+					//<div>end: {end.toString()}</div>
+					//<div>days: {days.toString()}</div>
+					//<div>nrows: {nrows.toString()}</div>
+				//</div>
+			//</div>
 
 	}
 

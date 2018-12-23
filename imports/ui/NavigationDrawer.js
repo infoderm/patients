@@ -82,10 +82,11 @@ function NavigationDrawer ( { classes, currentUser } ) {
         } ,
 
         {
-          to: "/appointments" ,
+          //to: "/appointments" ,
+          to: `/calendar/month/${format(startOfToday(), 'YYYY/MM')}` ,
           icon: <AccessTimeIcon/> ,
           title: "Appointments" ,
-          disabled: true ,
+          //disabled: true ,
         } ,
 
       ] ,
@@ -201,7 +202,6 @@ function NavigationDrawer ( { classes, currentUser } ) {
           to: "/settings" ,
           icon: <SettingsIcon/> ,
           title: "Settings" ,
-          disabled: true ,
         } ,
 
       ] ,
