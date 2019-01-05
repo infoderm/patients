@@ -48,7 +48,7 @@ function DocumentsList ( { classes, page , perpage , documents } ) {
 
 DocumentsList.defaultProps = {
   page: 0,
-  perpage: 10,
+  perpage: 5,
 } ;
 
 DocumentsList.propTypes = {

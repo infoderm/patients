@@ -82,6 +82,7 @@ class DocumentLinkingDialog extends React.Component {
 	      itemToString={patients.toString}
 	      filter={patients.filter}
 	      TextFieldProps={{
+		autoFocus: true,
 		label: "Patient to link document to",
 		margin: "normal",
 	      }}

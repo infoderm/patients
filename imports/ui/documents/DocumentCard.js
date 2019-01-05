@@ -192,12 +192,14 @@ class DocumentCard extends React.Component {
 								className={classes.patientchip}
 							/>
 						}
-						{ (parsed && kind === 'lab' && anomalies) &&
+						{ (parsed && kind === 'lab' && anomalies) ?
 							<Chip
 								avatar={<Avatar><ErrorIcon/></Avatar>}
 								label={anomalies}
 								className={classes.anomalieschip}
 							/>
+							:
+							null
 						}
 						{ patientId ? null :
 							<Chip
