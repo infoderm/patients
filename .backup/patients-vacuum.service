@@ -1,0 +1,7 @@
+[Unit]
+Description=Run patient's vacuum once
+
+[Service]
+Type=oneshot
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/bash %h/dev/dermatodoc/patients/.backup/vacuum.sh
