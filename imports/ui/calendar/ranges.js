@@ -12,6 +12,15 @@ export function monthly ( year , month , weekOptions ) {
 	return [begin, end];
 }
 
+export function weekly ( year , week , weekOptions ) {
+	const firstDayOfMonth = new Date(year, week - 1, 1);
+	const lastDayOfMonth = startOfDay(endOfMonth(firstDayOfMonth));
+	const begin = startOfWeek(firstDayOfMonth, weekOptions); // inclusive
+	const end = addDays(startOfDay(endOfWeek(lastDayOfMonth, weekOptions)), 1); // non-inclusive
+	return [begin, end];
+}
+
 export default {
 	monthly ,
+	weekly ,
 } ;

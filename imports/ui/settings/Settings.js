@@ -6,16 +6,23 @@ import React from 'react' ;
 
 import Typography from '@material-ui/core/Typography' ;
 
+import TextTransformSetting from './TextTransformSetting.js' ;
+import LanguageSetting from './LanguageSetting.js' ;
 import AppointmentDurationSetting from './AppointmentDurationSetting.js' ;
+import WeekStartsOnSetting from './WeekStartsOnSetting.js' ;
 
 const styles = theme => ({
-
+	setting : {
+		marginBottom: theme.spacing.unit * 3 ,
+	} ,
 }) ;
 
 class Settings extends React.Component {
+
 	render ( ) {
 
 		const {
+			classes ,
 		} = this.props ;
 
 		return (
@@ -25,18 +32,16 @@ class Settings extends React.Component {
 					Global settings for the whole app.
 				</Typography>
 				<div>
-					<Typography variant="h4">Language</Typography>
-				</div>
-				<div>
 					<Typography variant="h4">Currency</Typography>
 				</div>
-				<div>
-					<Typography variant="h4">Capitalize</Typography>
-				</div>
-				<AppointmentDurationSetting/>
+				<TextTransformSetting className={classes.setting}/>
+				<LanguageSetting className={classes.setting}/>
+				<AppointmentDurationSetting className={classes.setting}/>
+				<WeekStartsOnSetting className={classes.setting}/>
 			</div>
 		) ;
 	}
+
 }
 
 let Component = Settings;

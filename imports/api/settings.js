@@ -51,7 +51,10 @@ const methods = {
 } ;
 
 const defaults = {
+  'lang' : 'en' ,
   'appointment-duration' : [ ] ,
+  'week-starts-on' : 1 ,
+  'text-transform' : 'none' ,
 } ;
 
 function get ( key ) {

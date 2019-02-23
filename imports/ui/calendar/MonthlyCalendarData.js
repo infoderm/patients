@@ -21,6 +21,7 @@ import dateFormat from 'date-fns/format';
 
 import {
 	list,
+	take,
 	map,
 	range,
 	enumerate,
@@ -42,6 +43,19 @@ const styles = theme => ({
 	},
 });
 
+
+function ColumnHeader ( { classes , day , row , col } ) {
+	return (
+		<div
+			className={classNames(classes.dayBox,{
+				[classes.columnHeader]: true,
+				[classes[`col${col}`]]: true,
+			})}
+		>
+			{dateFormat(day, 'dddd')}
+		</div>
+	) ;
+}
 
 function DayBox ( { classes , day , row , col , onSlotClick } ) {
 	return (
@@ -171,43 +185,54 @@ class MonthlyCalendarDataGrid extends React.Component {
 		} = this.props ;
 
 		return (
-			<div className={classes.grid}>
-				{days.map((props, key) => (
-					<DayBox
-						classes={classes}
-						key={key}
-						{...props}
-						onSlotClick={onSlotClick}
-					/>
-				))}
-				{days.map((props, key) => (
-					<DayHeader
-						className={classNames(classes.dayHeader,{
-							[classes[`col${props.col}`]]: true,
-							[classes[`row${props.row}`]]: true,
-						})}
-						key={key}
-						{...props}
-					/>
-				))}
-				{events.map((props, key) => (
-					<EventFragment
-						className={classNames(classes.event,{
-							[classes[`day${props.day}slot${props.slot}`]]: true,
-						})}
-						key={key}
-						{...props}
-					/>
-				))}
-				{mores.map((props, key) => (
-					<More
-						className={classNames(classes.more,{
-							[classes[`day${props.day}more`]]: true,
-						})}
-						key={key}
-						{...props}
-					/>
-				))}
+			<div>
+				<div className={classes.header}>
+					{list(take(days, 7)).map((props, key) => (
+						<ColumnHeader
+							classes={classes}
+							key={key}
+							{...props}
+						/>
+					))}
+				</div>
+				<div className={classes.grid}>
+					{days.map((props, key) => (
+						<DayBox
+							classes={classes}
+							key={key}
+							{...props}
+							onSlotClick={onSlotClick}
+						/>
+					))}
+					{days.map((props, key) => (
+						<DayHeader
+							className={classNames(classes.dayHeader,{
+								[classes[`col${props.col}`]]: true,
+								[classes[`row${props.row}`]]: true,
+							})}
+							key={key}
+							{...props}
+						/>
+					))}
+					{events.map((props, key) => (
+						<EventFragment
+							className={classNames(classes.event,{
+								[classes[`day${props.day}slot${props.slot}`]]: true,
+							})}
+							key={key}
+							{...props}
+						/>
+					))}
+					{mores.map((props, key) => (
+						<More
+							className={classNames(classes.more,{
+								[classes[`day${props.day}more`]]: true,
+							})}
+							key={key}
+							{...props}
+						/>
+					))}
+				</div>
 			</div>
 		) ;
 
@@ -253,7 +278,23 @@ class MonthlyCalendarData extends React.Component {
 		const eventProps = [ ...generateEventProps(occupancy, begin, end, maxLines - 2, events)];
 		const moreProps = [ ...generateMoreProps(occupancy, begin, end, maxLines - 2)];
 
+		const headerHeight = 2 ;
+
 		const gridStyles = {
+			header: {
+				display: 'grid',
+				gridTemplateColumns: 'repeat(7, 1fr)',
+				gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
+				backgroundColor: '#aaa',
+				border: '1px solid #aaa',
+				gridGap: '1px',
+			} ,
+			columnHeader: {
+				backgroundColor: '#fff',
+				padding: '5px 5px',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: `span ${headerHeight}`,
+			} ,
 			grid: {
 				display: 'grid',
 				gridTemplateColumns: 'repeat(7, 1fr)',

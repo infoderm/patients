@@ -46,12 +46,13 @@ class AppointmentDurationSetting extends React.Component {
 	render ( ) {
 
 		const {
+			className ,
 			loading ,
 			value ,
 		} = this.props ;
 
 		return (
-			<div>
+			<div className={className}>
 				<Typography variant="h4">Appointment durations</Typography>
 				<SetPicker
 					readOnly={loading}
@@ -93,7 +94,7 @@ Component = withTracker(() => {
 	}
 	else return {
 		loading : true ,
-		value : [] ,
+		value : settings.defaults[KEY] ,
 	} ;
 })(Component) ;
 

@@ -28,6 +28,7 @@ const styles = theme => ({
 		display: 'flex',
 		width: '100%',
 		minHeight: '100vh',
+		textTransform: 'uppercase',
 	},
 });
 
