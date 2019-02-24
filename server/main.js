@@ -162,14 +162,14 @@ Meteor.startup(() => {
 
     for ( const entry of entries ) {
       if (!entry.parsed) return ;
-      Documents.insert({
+      Documents.rawCollection().insert({
           ...entry,
           createdAt,
           owner,
       });
     }
 
-    Documents.remove(_id);
+    Documents.rawCollection().remove(_id);
 
   });
 
