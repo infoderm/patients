@@ -169,7 +169,7 @@ Meteor.startup(() => {
       });
     }
 
-    Documents.rawCollection().remove(_id);
+    Documents.rawCollection().remove({_id});
 
   });
 
