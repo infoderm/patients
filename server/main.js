@@ -22,6 +22,7 @@ Meteor.startup(() => {
     Doctors ,
     Allergies ,
     Books ,
+    Documents ,
   ] ;
 
   // drop all indexes (if the collection is not empty)
@@ -83,18 +84,12 @@ Meteor.startup(() => {
     background: true,
   });
 
-  createSimpleUniqueIndex(Insurances, 'name')
-  createSimpleUniqueIndex(Doctors, 'name')
-  createSimpleUniqueIndex(Allergies, 'name')
-  createSimpleUniqueIndex(Books, 'name')
+  createSimpleUniqueIndex(Insurances, 'name');
+  createSimpleUniqueIndex(Doctors, 'name');
+  createSimpleUniqueIndex(Allergies, 'name');
+  createSimpleUniqueIndex(Books, 'name');
 
-  Drugs.rawCollection().createIndex({
-    owner: 1,
-    mppcv: 1,
-  },{
-    unique: true,
-    background: true,
-  });
+  createSimpleUniqueIndex(Drugs, 'mppcv');
 
   Drugs.rawCollection().createIndex({
     '$**': 'text',
