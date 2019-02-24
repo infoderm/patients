@@ -8,7 +8,7 @@ import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
 import { Allergies , allergies } from '../imports/api/allergies.js';
 import { Books , books } from '../imports/api/books.js';
-import { Documents } from '../imports/api/documents.js';
+import { Documents , documents } from '../imports/api/documents.js';
 
 Meteor.startup(() => {
 
@@ -146,6 +146,32 @@ Meteor.startup(() => {
   generateTags(Patients, allergies, 'allergies');
 
   Consultations.find().map( ( { owner , datetime , book } ) => datetime && book && books.add(owner, books.name(datetime, book)));
+
+  // reparse all documents
+  Documents.rawCollection().find().snapshot().forEach( ({_id, owner, createdAt, patientId, format, source, parsed}) => {
+
+    //if (parsed) return;
+
+    const document = {
+      patientId,
+      format,
+      source,
+    } ;
+
+    const entries = documents.sanitize(document);
+
+    for ( const entry of entries ) {
+      if (!entry.parsed) return ;
+      Documents.insert({
+          ...entry,
+          createdAt,
+          owner,
+      });
+    }
+
+    Documents.remove(_id);
+
+  });
 
 
 });

@@ -138,3 +138,7 @@ Meteor.methods({
 	},
 
 });
+
+export const documents = {
+	sanitize,
+};
