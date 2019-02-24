@@ -8,6 +8,8 @@ import { enumerate } from '@aureooms/js-itertools' ;
 
 import parseHealthOne from 'healthone/lib/parse' ;
 
+import { normalized } from './string.js';
+
 import { Patients } from './patients.js';
 
 export const Documents = new Mongo.Collection('documents');
@@ -76,6 +78,39 @@ function sanitize ( {
 
 }
 
+function normalizedName ( firstname , lastname ) {
+	return normalized(`${lastname} ${firstname}`).split(' ');
+}
+
+function findBestPatientMatch ( owner, entry ) {
+	if (entry.patientId || !entry.patient) return entry.patientId;
+
+	const {
+		nn,
+		firstname,
+		lastname,
+	} = entry.patient ;
+
+	if (nn) {
+		const patient = Patients.findOne({owner, niss: nn});
+		if (patient) return patient._id;
+	}
+
+	if (firstname && lastname) {
+		const [hash1, hash2] = normalizedName(firstname, lastname);
+
+		const patients = Patients.find({owner}).fetch();
+
+		for (const candidate of patients) {
+			const [cHash1, cHash2] = normalizedName(candidate.firstname, candidate.lastname);
+			if (hash1 === cHash1 && hash2 === cHash2) return candidate._id;
+		}
+	}
+
+	return entry.patientId;
+
+}
+
 Meteor.methods({
 
 	'documents.insert'(document) {
@@ -90,8 +125,11 @@ Meteor.methods({
 
 		for ( const entry of entries ) {
 
+			const patientId = findBestPatientMatch(this.userId, entry);
+
 			const _id = Documents.insert({
 				...entry,
+				patientId,
 				createdAt: new Date(),
 				owner: this.userId,
 			});
