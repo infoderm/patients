@@ -2,7 +2,7 @@
 
 > Patients meteor app
 
-## development
+## Development
 
 ### tools
 
@@ -25,7 +25,7 @@
     ncu -a
     meteor npm install
     
-## deployment (first time)
+## Deployment (first time)
 
 ### On the development machine (1)
 
@@ -65,3 +65,20 @@ Remember: `chmod .ssh 700` and `chmod .ssh/authorized_keys 640`.
 #### deploy
 
     mup deploy
+
+## Backup & Restore
+
+Need `rsync` on both machines.
+Need `tar`, `openssl`, and the encryption key at `key/patients` on the production machine.
+
+### backup
+
+Need `mongodump` on production machine and `rclone` on development machine.
+
+    sh .backup/backup.sh
+
+### restore
+
+Need `mongorestore` on production machine.
+
+    sh .backup/restore.sh
