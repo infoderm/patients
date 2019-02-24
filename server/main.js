@@ -171,7 +171,8 @@ Meteor.startup(() => {
       }
 
       Documents.remove(_id);
-    });
+
+    })
 
   );
 
