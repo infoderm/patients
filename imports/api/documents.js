@@ -129,7 +129,7 @@ Meteor.methods({
 	},
 
 	'documents.remove'(documentId){
-		check(documentId, String);
+		//check(documentId, String);
 		const document = Documents.findOne(documentId);
 		if (!document || document.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
