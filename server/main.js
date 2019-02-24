@@ -148,30 +148,32 @@ Meteor.startup(() => {
   Consultations.find().map( ( { owner , datetime , book } ) => datetime && book && books.add(owner, books.name(datetime, book)));
 
   // reparse all documents
-  Documents.rawCollection().find().snapshot().forEach( ({_id, owner, createdAt, patientId, format, source, parsed}) => {
+  Documents.rawCollection().find().snapshot().forEach(
 
-    //if (parsed) return;
+    Meteor.bindEnvironment(({_id, owner, createdAt, patientId, format, source, parsed}) => {
+      //if (parsed) return;
 
-    const document = {
-      patientId,
-      format,
-      source,
-    } ;
+      const document = {
+        patientId,
+        format,
+        source,
+      } ;
 
-    const entries = documents.sanitize(document);
+      const entries = documents.sanitize(document);
 
-    for ( const entry of entries ) {
-      if (!entry.parsed) return ;
-      Documents.rawCollection().insert({
-          ...entry,
-          createdAt,
-          owner,
-      });
-    }
+      for ( const entry of entries ) {
+        if (!entry.parsed) return ;
+        Documents.insert({
+            ...entry,
+            createdAt,
+            owner,
+        });
+      }
 
-    Documents.rawCollection().remove({_id});
+      Documents.remove(_id);
+    });
 
-  });
+  );
 
 
 });
