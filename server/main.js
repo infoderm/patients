@@ -176,5 +176,25 @@ Meteor.startup(() => {
 
   );
 
+  // remove duplicate documents
+  const documentsIndex = {};
+  const documentsToRemove = [];
+  Documents.rawCollection().find().snapshot().forEach(
+    Meteor.bindEnvironment(({_id, owner, patientId, source}) => {
+      if ( documentsIndex[owner] === undefined ) documentsIndex[owner] = {};
+      const keep = documentsIndex[owner][source];
+      if (!keep) {
+        documentsIndex[owner][source] = { _id, patientId } ;
+        return;
+      }
+      if (!keep.patientId) {
+        Documents.remove(keep._id);
+        documentsIndex[owner][source] = {_id, patientId};
+      }
+      else {
+        Documents.remove(_id);
+      }
+    })
+  );
 
 });
