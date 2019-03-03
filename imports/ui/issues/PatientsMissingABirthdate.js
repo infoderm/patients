@@ -1,38 +1,45 @@
 import { Meteor } from 'meteor/meteor';
-import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
-import PatientCard from '../patients/PatientCard.js';
-
 import { Patients } from '../../api/patients.js';
+import PatientCard from '../patients/PatientCard.js';
+import IssueListPreview from './IssueListPreview.js';
 
-const PatientsMissingABirthdate = ( { loading, patients, ...rest }) => {
+const PatientsMissingABirthdate = ( { page, perpage, ...rest }) => {
 
-	if (loading) return <div {...rest}>Loading...</div>;
+	const subscription = 'issues/patients-missing-a-birthdate' ;
+	const collection = Patients ;
+	const query = {
+		$or: [
+			{ birthdate : null } ,
+			{ birthdate : '' } ,
+		] ,
+	};
+	const noIssueMessage = 'All patients have a birthdate :)' ;
+	const createItem = patient => ( <PatientCard key={patient._id} patient={patient}/> ) ;
+	const listPageURL = '/issues/patients-missing-a-birthdate' ;
 
-	if (patients.length === 0) return <div {...rest}>All patients have a birthdate :)</div>;
-
-	return (
-	<Grid container spacing={24} {...rest}>
-		{ patients.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
-	</Grid>
-	);
+	return <IssueListPreview
+		page={page}
+		perpage={perpage}
+		subscription={subscription}
+		collection={collection}
+		query={query}
+		noIssueMessage={noIssueMessage}
+		createItem={createItem}
+		listPageURL={listPageURL}
+		Container={props => (<Grid container spacing={24} {...props}/>)}
+	/> ;
 
 }
 
-export default withTracker(() => {
-	const handle = Meteor.subscribe('patients');
-	if ( !handle.ready()) return { loading: true } ;
-	return {
-		loading: false,
-		patients: Patients.find({
-			$or: [
-				{ birthdate : null } ,
-				{ birthdate : '' } ,
-			] ,
-		}).fetch(),
-	} ;
-}) (PatientsMissingABirthdate) ;
+PatientsMissingABirthdate.propTypes = {
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired,
+} ;
+
+export default PatientsMissingABirthdate;

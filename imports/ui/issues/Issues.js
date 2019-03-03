@@ -18,13 +18,13 @@ const styles = theme => ({
 const Issues = ( { classes } ) => (
 	<div>
 		<Typography variant="h3">Consultations missing a price</Typography>
-		<ConsultationsMissingAPrice className={classes.container}/>
+		<ConsultationsMissingAPrice className={classes.container} page={0} perpage={10}/>
 		<Typography variant="h3">Consultations missing a book</Typography>
-		<ConsultationsMissingABook className={classes.container}/>
+		<ConsultationsMissingABook className={classes.container} page={0} perpage={10}/>
 		<Typography variant="h3">Patients missing a gender</Typography>
-		<PatientsMissingAGender className={classes.container}/>
+		<PatientsMissingAGender className={classes.container} page={0} perpage={10}/>
 		<Typography variant="h3">Patients missing a birthdate</Typography>
-		<PatientsMissingABirthdate className={classes.container}/>
+		<PatientsMissingABirthdate className={classes.container} page={0} perpage={10}/>
 	</div>
 ) ;
 

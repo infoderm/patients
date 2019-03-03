@@ -9,6 +9,7 @@ import { Doctors , doctors } from '../imports/api/doctors.js';
 import { Allergies , allergies } from '../imports/api/allergies.js';
 import { Books , books } from '../imports/api/books.js';
 import { Documents , documents } from '../imports/api/documents.js';
+import '../imports/api/issues.js';
 
 Meteor.startup(() => {
 

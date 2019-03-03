@@ -123,6 +123,11 @@ class Main extends React.Component {
 					<Route exact path="/stats" component={Stats}/>
 
 					<Route exact path="/issues" component={Issues}/>
+					<Route exact path="/issues/consultations-missing-a-price" component={Issues}/>
+					<Route exact path="/issues/consultations-missing-a-book" component={Issues}/>
+					<Route exact path="/issues/patients-missing-a-gender" component={Issues}/>
+					<Route exact path="/issues/patients-missing-a-birthdate" component={Issues}/>
+
 					<Route exact path="/merge" render={
 						props => ( <MergePatientsForm patients={patients}/> )
 					}/>
