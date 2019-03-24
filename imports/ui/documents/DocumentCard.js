@@ -27,7 +27,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FaceIcon from '@material-ui/icons/Face';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import BusinessIcon from '@material-ui/icons/Business';
@@ -73,6 +72,12 @@ const styles = theme => ({
 	patientchip: {
 		marginRight: theme.spacing.unit,
 		backgroundColor: '#88f',
+		color: '#fff',
+		fontWeight: 'bold',
+	},
+	unlinkedpatientchip: {
+		marginRight: theme.spacing.unit,
+		backgroundColor: '#f88',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
@@ -187,19 +192,16 @@ class DocumentCard extends React.Component {
 						}
 						{ (!patientId && parsed) &&
 							<Chip
-								avatar={<Avatar><FaceIcon/></Avatar>}
+								avatar={<Avatar><LinkOffIcon/></Avatar>}
 								label={`${subject.lastname} ${subject.firstname}`}
-								className={classes.patientchip}
+								className={classes.unlinkedpatientchip}
+								onClick={e => {
+									e.stopPropagation();
+									this.setState({linking: true});
+								}}
 							/>
 						}
-						{ (parsed && kind === 'lab' && anomalies) &&
-							<Chip
-								avatar={<Avatar><ErrorIcon/></Avatar>}
-								label={anomalies}
-								className={classes.anomalieschip}
-							/>
-						}
-						{ patientId ? null :
+						{ (!patientId && !parsed) &&
 							<Chip
 								avatar={<Avatar><LinkOffIcon/></Avatar>}
 								label="not linked"
@@ -209,6 +211,15 @@ class DocumentCard extends React.Component {
 									this.setState({linking: true});
 								}}
 							/>
+						}
+						{ (parsed && kind === 'lab' && anomalies) ?
+							<Chip
+								avatar={<Avatar><ErrorIcon/></Avatar>}
+								label={anomalies}
+								className={classes.anomalieschip}
+							/>
+							:
+							null
 						}
 					</div>
 				</ExpansionPanelSummary>

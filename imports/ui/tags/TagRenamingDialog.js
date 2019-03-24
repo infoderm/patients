@@ -16,7 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import { normalized } from '../../client/string.js';
+import { normalized } from '../../api/string.js';
 import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoCompleteTextField.js';
 
 const styles = theme => ({

@@ -1,0 +1,9 @@
+[Unit]
+Description=Run patients vacuum on Sunday at 6PM
+
+[Timer]
+OnCalendar=Sun *-*-* 18:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

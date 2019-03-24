@@ -16,7 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import { normalized } from '../../client/string.js';
+import { normalized } from '../../api/string.js';
 
 const styles = theme => ({
   rightIcon: {

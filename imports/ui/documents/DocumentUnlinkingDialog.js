@@ -49,7 +49,7 @@ class DocumentUnlinkingDialog extends React.Component {
 	  component="form"
 	  aria-labelledby="document-unlinking-dialog-title"
 	>
-	  <DialogTitle id="document-unlinking-dialog-title">Unlink document {document._id}</DialogTitle>
+	  <DialogTitle id="document-unlinking-dialog-title">Unlink document {document._id.toString()}</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
 	      If you do not want to unlink this document, click cancel.

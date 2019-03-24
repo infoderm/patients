@@ -49,7 +49,7 @@ class DocumentDeletionDialog extends React.Component {
 	  component="form"
 	  aria-labelledby="document-deletion-dialog-title"
 	>
-	  <DialogTitle id="document-deletion-dialog-title">Delete document {document._id}</DialogTitle>
+	  <DialogTitle id="document-deletion-dialog-title">Delete document {document._id.toString()}</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
 	      If you do not want to delete this document, click cancel.

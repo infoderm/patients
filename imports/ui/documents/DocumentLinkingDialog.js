@@ -65,7 +65,7 @@ class DocumentLinkingDialog extends React.Component {
 	  component="form"
 	  aria-labelledby="document-linking-dialog-title"
 	>
-	  <DialogTitle id="document-linking-dialog-title">Link document {document._id}</DialogTitle>
+	  <DialogTitle id="document-linking-dialog-title">Link document {document._id.toString()}</DialogTitle>
 	  <DialogContent
 	    className={classes.dialogPaper}
 	  >
@@ -82,6 +82,7 @@ class DocumentLinkingDialog extends React.Component {
 	      itemToString={patients.toString}
 	      filter={patients.filter}
 	      TextFieldProps={{
+		autoFocus: true,
 		label: "Patient to link document to",
 		margin: "normal",
 	      }}

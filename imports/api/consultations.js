@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import { list , map , range } from '@aureooms/js-itertools' ;
+
 import { Uploads } from './uploads.js';
 import { books } from './books.js';
 
@@ -119,6 +121,66 @@ function sanitize ( {
 }
 
 Meteor.methods({
+
+	'books.year.csv'(year) {
+
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+
+		check(year, Number);
+
+		const begin = new Date(`${year}-01-01`);
+		const end = new Date(`${year+1}-01-01`);
+
+		const consultations = Consultations.find({
+			datetime: {
+				$gte : begin ,
+				$lt : end ,
+			},
+			owner: this.userId,
+		}, {
+			sort: {
+				datetime: 1 ,
+			} ,
+		}).fetch();
+
+		const data = {} ;
+
+		for ( const consultation of consultations ) {
+			const { book , price } = consultation ;
+
+			if ( data[book] === undefined ) data[book] = [] ;
+
+			data[book].push(price);
+		}
+
+		const header = list(map(i => ''+i, range(1, 100))) ;
+		const MAX = 60;
+		const lines = [] ;
+
+		for ( const i of range(MAX) ) {
+			const line = [];
+			for ( const book of header ) {
+				if ( data[book] !== undefined  && data[book][i] !== undefined ) {
+					line.push(data[book][i]);
+				}
+				else {
+					line.push('');
+				}
+			}
+			lines.push(line);
+		}
+
+		const table = [ ] ;
+		table.push(header.join(','));
+		for ( const line of lines ) {
+			table.push(line.join(','));
+		}
+
+		return table.join('\n');
+
+	} ,
 
 	'consultations.insert'(consultation) {
 

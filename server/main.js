@@ -10,7 +10,7 @@ import { Insurances , insurances } from '../imports/api/insurances.js';
 import { Doctors , doctors } from '../imports/api/doctors.js';
 import { Allergies , allergies } from '../imports/api/allergies.js';
 import { Books , books } from '../imports/api/books.js';
-import { Documents } from '../imports/api/documents.js';
+import { Documents , documents } from '../imports/api/documents.js';
 
 Meteor.startup(() => {
 
@@ -25,6 +25,7 @@ Meteor.startup(() => {
     Doctors ,
     Allergies ,
     Books ,
+    Documents ,
   ] ;
 
   // drop all indexes (if the collection is not empty)
@@ -110,13 +111,7 @@ Meteor.startup(() => {
   createSimpleUniqueIndex(Allergies, 'name');
   createSimpleUniqueIndex(Books, 'name');
 
-  Drugs.rawCollection().createIndex({
-    owner: 1,
-    mppcv: 1,
-  },{
-    unique: true,
-    background: true,
-  });
+  createSimpleUniqueIndex(Drugs, 'mppcv');
 
   Drugs.rawCollection().createIndex({
     '$**': 'text',
@@ -176,6 +171,35 @@ Meteor.startup(() => {
   generateTags(Patients, allergies, 'allergies');
 
   Consultations.find().map( ( { owner , datetime , book , isDone } ) => isDone && datetime && book && books.add(owner, books.name(datetime, book)));
+
+  // reparse all documents
+  Documents.rawCollection().find().snapshot().forEach(
+
+    Meteor.bindEnvironment(({_id, owner, createdAt, patientId, format, source, parsed}) => {
+      //if (parsed) return;
+
+      const document = {
+        patientId,
+        format,
+        source,
+      } ;
+
+      const entries = documents.sanitize(document);
+
+      for ( const entry of entries ) {
+        if (!entry.parsed) return ;
+        Documents.insert({
+            ...entry,
+            createdAt,
+            owner,
+        });
+      }
+
+      Documents.remove(_id);
+
+    })
+
+  );
 
 
 });
