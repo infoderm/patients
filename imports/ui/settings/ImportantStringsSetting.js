@@ -17,9 +17,9 @@ const styles = theme => ({
 
 }) ;
 
-const KEY = 'appointment-duration' ;
+const KEY = 'important-strings' ;
 
-class AppointmentDurationSetting extends React.Component {
+class ImportantStringsSetting extends React.Component {
 
 	render ( ) {
 
@@ -29,20 +29,17 @@ class AppointmentDurationSetting extends React.Component {
 
 		return (
 			<InputManySetting className={className}
-				title="Appointment durations"
-				label="Durations"
+				title="Important Strings"
+				label="Strings"
 				setting={KEY}
-				itemToString={x=>msToString(x)}
-				createNewItem={x=>parseInt(x,10) * durationUnits.minute}
-				placeholder="Give additional durations in minutes"
-				inputTransform={input => list(filter(x => '0' <= x && x <= '9', input)).join('')}
+				placeholder="Input important strings to highlight"
 			/>
 		) ;
 	}
 
 }
 
-let Component = AppointmentDurationSetting;
+let Component = ImportantStringsSetting;
 
 Component = withStyles( styles , { withTheme: true })(Component)
 

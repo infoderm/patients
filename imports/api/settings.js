@@ -51,8 +51,11 @@ const methods = {
 } ;
 
 const defaults = {
+  'navigation-drawer-is-open' : 'open' ,
+  'currency' : 'EUR',
   'lang' : 'en' ,
-  'appointment-duration' : [ ] ,
+  'appointment-duration' : [ 15 * 60 * 1000 , 30 * 60 * 1000 ] ,
+  'important-strings' : [] ,
   'week-starts-on' : 1 ,
   'text-transform' : 'none' ,
 } ;

@@ -6,9 +6,12 @@ import React from 'react' ;
 
 import Typography from '@material-ui/core/Typography' ;
 
+import CurrencySetting from './CurrencySetting.js' ;
 import TextTransformSetting from './TextTransformSetting.js' ;
 import LanguageSetting from './LanguageSetting.js' ;
+import NavigationDrawerIsOpenSetting from './NavigationDrawerIsOpenSetting.js' ;
 import AppointmentDurationSetting from './AppointmentDurationSetting.js' ;
+import ImportantStringsSetting from './ImportantStringsSetting.js' ;
 import WeekStartsOnSetting from './WeekStartsOnSetting.js' ;
 
 const styles = theme => ({
@@ -31,12 +34,12 @@ class Settings extends React.Component {
 				<Typography>
 					Global settings for the whole app.
 				</Typography>
-				<div>
-					<Typography variant="h4">Currency</Typography>
-				</div>
+				<CurrencySetting className={classes.setting}/>
 				<TextTransformSetting className={classes.setting}/>
 				<LanguageSetting className={classes.setting}/>
+				<NavigationDrawerIsOpenSetting className={classes.setting}/>
 				<AppointmentDurationSetting className={classes.setting}/>
+				<ImportantStringsSetting className={classes.setting}/>
 				<WeekStartsOnSetting className={classes.setting}/>
 			</div>
 		) ;
