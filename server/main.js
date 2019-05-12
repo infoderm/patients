@@ -1,5 +1,6 @@
 import "@babel/polyfill";
 import { Meteor } from 'meteor/meteor';
+import { ObjectId } from 'meteor/mongo';
 
 import { Patients } from '../imports/api/patients.js';
 import { Drugs } from '../imports/api/drugs.js';
@@ -151,7 +152,7 @@ Meteor.startup(() => {
   Documents.rawCollection().find().snapshot().forEach(
 
     Meteor.bindEnvironment(({_id, owner, createdAt, patientId, format, source, parsed}) => {
-      //if (parsed) return;
+      if (!_id.toHexString && parsed) return;
 
       const document = {
         patientId,
@@ -163,14 +164,16 @@ Meteor.startup(() => {
 
       for ( const entry of entries ) {
         if (!entry.parsed) return ;
-        Documents.insert({
+        const inserted = Documents.insert({
             ...entry,
             createdAt,
             owner,
         });
+        console.debug('Inserted new document', inserted);
       }
 
-      Documents.remove(_id);
+      console.debug('Removing old document', _id);
+      Documents.rawCollection().remove({_id});
 
     })
 
@@ -178,7 +181,6 @@ Meteor.startup(() => {
 
   // remove duplicate documents
   const documentsIndex = {};
-  const documentsToRemove = [];
   Documents.rawCollection().find().snapshot().forEach(
     Meteor.bindEnvironment(({_id, owner, patientId, source}) => {
       if ( documentsIndex[owner] === undefined ) documentsIndex[owner] = {};
@@ -188,11 +190,13 @@ Meteor.startup(() => {
         return;
       }
       if (!keep.patientId) {
-        Documents.remove(keep._id);
+        console.debug('Removing previously kept duplicate document', keep._id);
+        Documents.rawCollection().remove({_id: keep._id});
         documentsIndex[owner][source] = {_id, patientId};
       }
       else {
-        Documents.remove(_id);
+        console.debug('Removing current duplicate document', _id);
+        Documents.rawCollection().remove({_id});
       }
     })
   );

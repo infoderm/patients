@@ -27,7 +27,6 @@ if (Meteor.isServer) {
 	});
 
 	Meteor.publish('document', function (_id) {
-		check(_id, String);
 		return Documents.find({ owner: this.userId , _id });
 	});
 
