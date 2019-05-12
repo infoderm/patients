@@ -86,11 +86,11 @@ function HealthOneLabResultsTable(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell numeric>Code</TableCell>
+            <TableCell align="left">Code</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Unit</TableCell>
-            <TableCell numeric>Measure</TableCell>
-            <TableCell numeric>Normal</TableCell>
+            <TableCell align="left">Measure</TableCell>
+            <TableCell align="left">Normal</TableCell>
             <TableCell>Flag</TableCell>
           </TableRow>
         </TableHead>
@@ -101,7 +101,7 @@ function HealthOneLabResultsTable(props) {
             comment.pop();
             return (
               <TableRow key={i} className={row.className}>
-                {isResult && <TableCell numeric>{row.code}</TableCell>}
+                {isResult && <TableCell align="left">{row.code}</TableCell>}
                 {isResult && <TableCell component="th" scope="row">
                   {row.name === 'COMMENTAIRES' ? '' : row.name}
                 </TableCell>}
@@ -113,14 +113,14 @@ function HealthOneLabResultsTable(props) {
                   :
                   <React.Fragment>
                     <TableCell>{comment[0]}</TableCell>
-                    <TableCell numeric>{comment[1]}</TableCell>
-                    <TableCell numeric>{comment[2]}</TableCell>
+                    <TableCell align="left">{comment[1]}</TableCell>
+                    <TableCell align="left">{comment[2]}</TableCell>
                   </React.Fragment>
                   :
                   <React.Fragment>
                     <TableCell>{row.unit}</TableCell>
-                    <TableCell numeric>{row.measure}</TableCell>
-                    <TableCell className={classes.normalCell} numeric>{row.normal}</TableCell>
+                    <TableCell align="left">{row.measure}</TableCell>
+                    <TableCell className={classes.normalCell} align="left">{row.normal}</TableCell>
                   </React.Fragment>
                 }
                 <TableCell>{row.flag}</TableCell>

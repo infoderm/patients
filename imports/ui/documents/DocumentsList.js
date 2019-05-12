@@ -4,16 +4,17 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
+import List from '@material-ui/core/List';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import { Documents } from '../../api/documents.js' ;
 
-import DocumentCard from './DocumentCard.js';
+import DocumentListItem from './DocumentListItem.js';
 
 const styles = theme => ({
   fabprev: {
@@ -31,9 +32,9 @@ const styles = theme => ({
 function DocumentsList ( { classes, page , perpage , documents } ) {
   return (
     <div>
-      <div>
-        { documents.map(document => ( <DocumentCard key={document._id} document={document}/> )) }
-      </div>
+      <List>
+        { documents.map(document => ( <DocumentListItem key={document._id} document={document}/> )) }
+      </List>
       { page === 0 ? null :
       <Fab className={classes.fabprev} color="primary" component={Link} to={`/documents/page/${page-1}`}>
           <NavigateBeforeIcon/>
@@ -48,7 +49,7 @@ function DocumentsList ( { classes, page , perpage , documents } ) {
 
 DocumentsList.defaultProps = {
   page: 0,
-  perpage: 5,
+  perpage: 10,
 } ;
 
 DocumentsList.propTypes = {
@@ -59,10 +60,15 @@ DocumentsList.propTypes = {
 export default withTracker(({match, page, perpage}) => {
   page = (match && match.params.page && parseInt(match.params.page,10)) || page || DocumentsList.defaultProps.page ;
   perpage = perpage || DocumentsList.defaultProps.perpage ;
-  Meteor.subscribe('documents.page', page, perpage);
+  //Meteor.subscribe('documents.page', page, perpage);
+  const handle = Meteor.subscribe('documents');
   return {
     page,
     perpage,
-    documents: Documents.find({}, {sort: { createdAt: -1 }, limit: perpage}).fetch() ,
+    documents: !handle.ready() ? [] : Documents.find({}, {
+      sort: { createdAt: -1 },
+      skip: page*perpage,
+      limit: perpage,
+    }).fetch() ,
   } ;
 }) ( withStyles(styles, { withTheme: true })(DocumentsList) );
