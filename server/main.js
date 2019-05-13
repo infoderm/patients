@@ -1,5 +1,6 @@
 import "@babel/polyfill";
 import { Meteor } from 'meteor/meteor';
+import { ObjectId } from 'meteor/mongo';
 
 import { Settings } from '../imports/api/settings.js';
 import { Patients } from '../imports/api/patients.js';
@@ -161,6 +162,13 @@ Meteor.startup(() => {
     background: true,
   });
 
+  Documents.rawCollection().createIndex({
+    owner: 1,
+    source: 1,
+  },{
+    background: true,
+  });
+
   // recreate all generated entries
   const generateTags = (parent, child, key) => parent.find().map(
     ( { owner , [key]: tags } ) => tags && tags.forEach(tag=>child.add(owner, tag))
@@ -176,7 +184,7 @@ Meteor.startup(() => {
   Documents.rawCollection().find().snapshot().forEach(
 
     Meteor.bindEnvironment(({_id, owner, createdAt, patientId, format, source, parsed}) => {
-      //if (parsed) return;
+      if (!_id.toHexString && parsed) return;
 
       const document = {
         patientId,
@@ -188,18 +196,41 @@ Meteor.startup(() => {
 
       for ( const entry of entries ) {
         if (!entry.parsed) return ;
-        Documents.insert({
+        const inserted = Documents.insert({
             ...entry,
             createdAt,
             owner,
         });
+        console.debug('Inserted new parsed document', inserted);
       }
 
-      Documents.remove(_id);
+      console.debug('Removing old document', _id);
+      Documents.rawCollection().remove({_id});
 
     })
 
   );
 
+  // remove duplicate documents
+  const documentsIndex = {};
+  Documents.rawCollection().find().snapshot().forEach(
+    Meteor.bindEnvironment(({_id, owner, patientId, source}) => {
+      if ( documentsIndex[owner] === undefined ) documentsIndex[owner] = {};
+      const keep = documentsIndex[owner][source];
+      if (!keep) {
+        documentsIndex[owner][source] = { _id, patientId } ;
+        return;
+      }
+      if (!keep.patientId) {
+        console.debug('Removing previously kept duplicate document', keep._id);
+        Documents.rawCollection().remove({_id: keep._id});
+        documentsIndex[owner][source] = {_id, patientId};
+      }
+      else {
+        console.debug('Removing current duplicate document', _id);
+        Documents.rawCollection().remove({_id});
+      }
+    })
+  );
 
 });

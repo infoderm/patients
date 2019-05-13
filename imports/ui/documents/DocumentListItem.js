@@ -8,49 +8,35 @@ import {Link} from 'react-router-dom';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
-
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import BusinessIcon from '@material-ui/icons/Business';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import LinkIcon from '@material-ui/icons/Link';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
-import TableChartIcon from '@material-ui/icons/TableChart';
 import SubjectIcon from '@material-ui/icons/Subject';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 import dateformat from 'date-fns/format';
 
 import {Patients} from '../../api/patients.js';
 
-import DocumentDeletionDialog from './DocumentDeletionDialog.js';
 import DocumentLinkingDialog from './DocumentLinkingDialog.js';
-import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
-import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
-import HealthOneReportContents from './HealthOneReportContents.js';
 
 const styles = theme => ({
 	heading: {
@@ -157,8 +143,8 @@ class DocumentCard extends React.Component {
 		} = this.state;
 
 		return (
-			<ExpansionPanel defaultExpanded={defaultExpanded}>
-				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+			<ListItem>
+				<ListItemText primary={
 					<div className={classes.chips}>
 						{ parsed ?
 							<Chip
@@ -227,6 +213,14 @@ class DocumentCard extends React.Component {
 								}}
 							/>
 						}
+						{ (!patientId) &&
+							<DocumentLinkingDialog
+								open={linking}
+								onClose={e => this.setState({linking: false})}
+								document={document}
+								existingLink={patient}
+							/>
+						}
 						{ (parsed && kind === 'lab' && anomalies) ?
 							<Chip
 								avatar={<Avatar><ErrorIcon/></Avatar>}
@@ -255,78 +249,18 @@ class DocumentCard extends React.Component {
 							null
 						}
 					</div>
-				</ExpansionPanelSummary>
-				<ExpansionPanelDetails>
-				  <List className={classes.list}>
-					{ (parsed && format === 'healthone' && kind === 'lab') &&
-						<ListItem>
-							<Avatar><TableChartIcon/></Avatar>
-							<ListItemText
-								disableTypography={true}
-								primary={<Typography variant="subtitle1">Results</Typography>}
-								secondary={<HealthOneLabResultsTable document={document}/>}
-							/>
-						</ListItem>
-					}
-					{ (parsed && format === 'healthone' && kind === 'report') &&
-						<ListItem>
-							<Avatar><SubjectIcon/></Avatar>
-							<ListItemText
-								disableTypography={true}
-								primary={<Typography variant="subtitle1">Contents</Typography>}
-								secondary={<HealthOneReportContents document={document}/>}
-							/>
-						</ListItem>
-					}
-					{ (!parsed || format !== 'healthone') &&
-						<ListItem>
-							<Avatar><FileCopyIcon/></Avatar>
-							<ListItemText
-								disableTypography={true}
-								primary={<Typography variant="subtitle1">Source</Typography>}
-								secondary={
-									<Paper>
-										<pre className={classes.pre}>
-											{source}
-										</pre>
-									</Paper>
-								}
-							/>
-						</ListItem>
-					}
-				  </List>
-				</ExpansionPanelDetails>
-				<Divider/>
-				<ExpansionPanelActions>
-					<Button color="primary" onClick={e => this.setState({linking: true})}>
-						Link<LinkIcon/>
-					</Button>
-					{ patientId &&
-						<Button color="secondary" onClick={e => this.setState({unlinking: true})}>
-							Unlink<LinkOffIcon/>
-						</Button>
-					}
-					<Button color="secondary" onClick={e => this.setState({deleting: true})}>
-						Delete<DeleteIcon/>
-					</Button>
-					<DocumentLinkingDialog
-						open={linking}
-						onClose={e => this.setState({linking: false})}
-						document={document}
-						existingLink={patient}
-					/>
-					<DocumentUnlinkingDialog
-						open={unlinking}
-						onClose={e => this.setState({unlinking: false})}
-						document={document}
-					/>
-					<DocumentDeletionDialog
-						open={deleting}
-						onClose={e => this.setState({deleting: false})}
-						document={document}
-					/>
-				</ExpansionPanelActions>
-			</ExpansionPanel>
+				} />
+				<ListItemSecondaryAction>
+					<IconButton
+						component={Link}
+						target="_blank"
+						to={`/document/${_id.toHexString ? _id.toHexString() : _id}`}
+						aria-label="Open in New Tab"
+					>
+						<OpenInNewIcon/>
+					</IconButton>
+				</ListItemSecondaryAction>
+			</ListItem>
 		);
 	}
 }

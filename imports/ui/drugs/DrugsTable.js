@@ -289,7 +289,7 @@ class EnhancedTable extends React.Component {
                     <TableCell padding="checkbox">
                       <Checkbox checked={isSelected} />
                     </TableCell>
-                    <TableCell numeric><Link to={`/drug/${n._id}`}>{n.mppcv}</Link></TableCell>
+                    <TableCell align="left"><Link to={`/drug/${n._id}`}>{n.mppcv}</Link></TableCell>
                     <TableCell padding="none">{n.mpp_nl}</TableCell>
                     <TableCell padding="none">{n.mpp_fr}</TableCell>
                     <TableCell padding="none">{n.nvos_}</TableCell>
