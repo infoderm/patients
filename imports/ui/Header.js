@@ -3,10 +3,16 @@ import { withRouter } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+
+import MenuIcon from '@material-ui/icons/Menu';
+
+import { settings } from '../api/settings.js';
 
 import SearchBox from './patients/SearchBox.js';
 import AccountsUI from './users/AccountsUI.js';
@@ -18,8 +24,27 @@ const drawerWidth = 240;
 const styles = theme => ({
   appBar: {
     position: 'fixed',
-    width: `calc(100% - ${drawerWidth}px)`,
+    //width: `calc(100% - ${drawerWidth}px)`,
+    //marginLeft: drawerWidth,
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
     marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: 24,
+  },
+  hide: {
+    display: 'none',
   },
   toolBar: {
     display: 'flex',
@@ -79,9 +104,38 @@ class Header extends React.Component {
     }
   };
 
+  toggleNavigationDrawerIsOpen = e => {
+
+    const {
+      navigationDrawerIsOpen ,
+    } = this.props ;
+
+    const setting = 'navigation-drawer-is-open';
+
+    const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open' ;
+
+    Meteor.call(settings.methods.update, setting, newValue, (err, res) => {
+
+      if ( err ) {
+	console.error(err) ;
+      }
+      else {
+	console.debug('Setting', setting, 'updated to', newValue) ;
+      }
+
+    }) ;
+
+  } ;
+
+
   render(){
 
-    const { classes, patients, currentUser } = this.props;
+    const {
+      classes,
+      patients,
+      currentUser,
+      navigationDrawerIsOpen,
+    } = this.props;
 
     const suggestions = patients.map(
       patient => ({
@@ -91,8 +145,22 @@ class Header extends React.Component {
     ) ;
 
     return (
-      <AppBar className={classes.appBar}>
-	<Toolbar className={classes.toolBar}>
+      <AppBar className={classNames(classes.appBar, {
+	  [classes.appBarShift]: navigationDrawerIsOpen === 'open',
+	})}>
+      <Toolbar
+	className={classes.toolBar}
+      >
+          <IconButton
+            color="inherit"
+            aria-label="Open drawer"
+            onClick={this.toggleNavigationDrawerIsOpen}
+            className={classNames(classes.menuButton, {
+              [classes.hide]: navigationDrawerIsOpen === 'open',
+            })}
+          >
+            <MenuIcon />
+          </IconButton>
 	  <Typography
 	    className={classes.title}
 	    variant="h6"

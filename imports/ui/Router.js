@@ -50,11 +50,12 @@ import Settings from './settings/Settings.js';
 const styles = theme => ({
 	main: {
 		backgroundColor: theme.palette.background.default,
-		width: 'calc(100% - 240px)',
+    	flexGrow: 1,
+		//width: 'calc(100% - 240px)',
 		padding: theme.spacing.unit * 3,
 		height: 'calc(100% - 56px)',
 		marginTop: 56,
-		marginLeft: 240,
+		//marginLeft: 240,
 		[theme.breakpoints.up('sm')]: {
 			height: 'calc(100% - 64px)',
 			marginTop: 64,

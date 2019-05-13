@@ -79,17 +79,10 @@ Component.propTypes = {
 Component = withStyles( styles , { withTheme: true })(Component)
 
 Component = withTracker(({setting}) => {
-	// TODO load options from database?
 	const handle = settings.subscribe(setting) ;
-	if ( handle.ready() ) {
-		return {
-			loading : false ,
-			value : settings.get(setting) ,
-		} ;
-	}
-	else return {
-		loading : true ,
-		value : settings.defaults[setting] ,
+	return {
+		loading : !handle.ready() ,
+		value : settings.get(setting) ,
 	} ;
 })(Component) ;
 

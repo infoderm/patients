@@ -51,13 +51,13 @@ const methods = {
 } ;
 
 const defaults = {
-  'navigation-drawer-is-open' : 'open' ,
+  'navigation-drawer-is-open' : 'closed' ,
   'currency' : 'EUR',
   'lang' : 'en' ,
   'appointment-duration' : [ 15 * 60 * 1000 , 30 * 60 * 1000 ] ,
   'important-strings' : [] ,
   'week-starts-on' : 1 ,
-  'text-transform' : 'none' ,
+  'text-transform' : 'uppercase' ,
 } ;
 
 function get ( key ) {
