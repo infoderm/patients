@@ -124,16 +124,45 @@ Meteor.methods({
 
 		for ( const entry of entries ) {
 
+			// Find best patient match for this document
+
 			const patientId = findBestPatientMatch(this.userId, entry);
 
-			const _id = Documents.insert({
-				...entry,
-				patientId,
-				createdAt: new Date(),
-				owner: this.userId,
+			// Find document with matching source
+
+			const existingDocument = Documents.findOne({
+				owner: this.userId ,
+				source: entry.source ,
 			});
 
-			firstId = firstId || _id ;
+			if ( !existingDocument ) {
+
+				// Only create new document if there is no other document with
+				// matching source
+
+				const _id = Documents.insert({
+					...entry,
+					patientId,
+					createdAt: new Date(),
+					owner: this.userId,
+				});
+
+				firstId = firstId || _id ;
+
+			}
+
+			else {
+
+				// This is the occasion to check if we do not have a match for
+				// the patient.
+				// Maybe this should be tested at patient insertion though.
+
+				if (!existingDocument.patientId) {
+					Documents.update(existingDocument._id, { $set: { patientId } });
+				}
+
+				firstId = firstId || existingDocument._id ;
+			}
 
 		}
 
