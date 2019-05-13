@@ -137,6 +137,13 @@ Meteor.startup(() => {
     background: true,
   });
 
+  Documents.rawCollection().createIndex({
+    owner: 1,
+    source: 1,
+  },{
+    background: true,
+  });
+
   // recreate all generated entries
   const generateTags = (parent, child, key) => parent.find().map(
     ( { owner , [key]: tags } ) => tags && tags.forEach(tag=>child.add(owner, tag))
@@ -169,7 +176,7 @@ Meteor.startup(() => {
             createdAt,
             owner,
         });
-        console.debug('Inserted new document', inserted);
+        console.debug('Inserted new parsed document', inserted);
       }
 
       console.debug('Removing old document', _id);

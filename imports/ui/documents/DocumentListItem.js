@@ -8,15 +8,9 @@ import {Link} from 'react-router-dom';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
-
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -27,19 +21,13 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import BusinessIcon from '@material-ui/icons/Business';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import LinkIcon from '@material-ui/icons/Link';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
-import TableChartIcon from '@material-ui/icons/TableChart';
 import SubjectIcon from '@material-ui/icons/Subject';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -48,11 +36,7 @@ import dateformat from 'date-fns/format';
 
 import {Patients} from '../../api/patients.js';
 
-import DocumentDeletionDialog from './DocumentDeletionDialog.js';
 import DocumentLinkingDialog from './DocumentLinkingDialog.js';
-import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
-import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
-import HealthOneReportContents from './HealthOneReportContents.js';
 
 const styles = theme => ({
 	heading: {
