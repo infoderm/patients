@@ -29,8 +29,6 @@ import NavigationDrawer from './NavigationDrawer.js';
 
 const muitheme = createMuiTheme();
 
-const drawerWidth = 240;
-
 const styles = theme => ({
 	appFrame: {
 		position: 'relative',

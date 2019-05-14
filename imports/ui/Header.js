@@ -24,8 +24,6 @@ const drawerWidth = 240;
 const styles = theme => ({
   appBar: {
     position: 'fixed',
-    //width: `calc(100% - ${drawerWidth}px)`,
-    //marginLeft: drawerWidth,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
