@@ -229,9 +229,16 @@ class ConsultationCard extends React.Component {
 
 }
 
+ConsultationCard.defaultProps = {
+  patientChip: true,
+  defaultExpanded: false,
+} ;
+
 ConsultationCard.propTypes = {
   classes: PropTypes.object.isRequired,
   consultation: PropTypes.object.isRequired,
+  patientChip: PropTypes.bool.isRequired,
+  defaultExpanded: PropTypes.bool.isRequired,
 };
 
 export default withTracker(({consultation}) => {

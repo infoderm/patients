@@ -549,7 +549,15 @@ class PatientDetails extends React.Component {
 					<Typography variant="h2">All consultations</Typography>
 				}
 				<div className={classes.container}>
-					{ consultations.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
+					{ consultations.map((consultation, i) => (
+						<ConsultationCard
+							key={consultation._id}
+							consultation={consultation}
+							patientChip={false}
+							defaultExpanded={!i}
+						/>
+						))
+					}
 					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${this.props.patient._id}`}>
 						Create a new consultation
 						<SupervisorAccountIcon className={classes.rightIcon}/>
