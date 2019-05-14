@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom' ;
 import Grid from '@material-ui/core/Grid';
 
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
@@ -27,11 +29,12 @@ class NewPatientForm extends React.Component {
 			lastname: '',
 			birthdate: '',
 			sex: '',
+			noshow: 0,
 		};
 
 	}
 
-	handleSubmit ( event ) {
+	handleSubmit = event => {
 
 		const { history } = this.props ;
 		const patient = this.state ;
@@ -45,8 +48,6 @@ class NewPatientForm extends React.Component {
 
 	}
 
-
-
 	render(){
 		return (
 			<Grid container spacing={24} style={{ padding: 12 }}>
@@ -59,7 +60,7 @@ class NewPatientForm extends React.Component {
 				<Grid item xs={2}>
 					<TextField label="First name" value={this.state.firstname} onChange={e => this.setState({ firstname: e.target.value})}/>
 				</Grid>
-				<Grid item xs={2}>
+				<Grid item xs={1}>
 					<FormControl>
 						<InputLabel htmlFor="sex-input">Sex</InputLabel>
 						<Select
@@ -89,8 +90,19 @@ class NewPatientForm extends React.Component {
 						onChange={e => this.setState({ birthdate: e.target.value})}
 					/>
 				</Grid>
+				<Grid item xs={1}>
+					<FormControlLabel
+						control={
+							<Checkbox
+								checked={this.state.noshow}
+								onChange={e => this.setState({ noshow: e.target.checked ? 1 : 0})}
+							/>
+						}
+						label="PVPP"
+					/>
+				</Grid>
 				<Grid item xs={2}>
-					<Fab color="primary" aria-label="add" onClick={this.handleSubmit.bind(this)}>
+					<Fab color="primary" aria-label="add" onClick={this.handleSubmit}>
 						<AddIcon />
 					</Fab>
 				</Grid>
