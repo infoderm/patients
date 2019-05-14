@@ -38,7 +38,7 @@ const styles = theme => ({
 		backgroundColor: 'white',
 		position: 'fixed',
 		top: '76px',
-		paddingTop: '1em',
+		paddingTop: '0.4em',
 		zIndex: 10,
 		marginLeft: '-24px',
 		marginRight: '-24px',
