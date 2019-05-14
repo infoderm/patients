@@ -94,6 +94,7 @@ class ConsultationCard extends React.Component {
   render () {
 
     const {
+      patientChip,
       defaultExpanded,
       classes ,
       loadingPatient ,
@@ -127,7 +128,15 @@ class ConsultationCard extends React.Component {
 	  <div className={classes.chips}>
 	    <Chip label={dateFormat(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'YYYY-MM-DD')}`}/>
 	    <Chip label={dateFormat(datetime,'hh:mmA')} className={classes.chip}/>
-	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
+	    { !patientChip ? null :
+	      <Chip
+	      avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null}
+	      label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`}
+	      className={classes.patientchip}
+	      component={Link}
+	      to={`/patient/${patientId}`}
+	      />
+	    }
 	    { attachments === undefined || attachments.length === 0 ? '' :
 	      <Chip
 		avatar={<Avatar><AttachmentIcon/></Avatar>}
