@@ -36,6 +36,7 @@
     "papaparse": "^4.6.2",
     "pdfjs-dist": "^2.0.943",
     "react": "^16.6.3",
+    "react-circular-progressbar": "^2.0.0",
     "react-color": "^2.14.1",
     "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1",

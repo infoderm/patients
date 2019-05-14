@@ -11,7 +11,12 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
+
+import { sum , map } from '@aureooms/js-itertools';
 
 import handleDrop from '../client/handleDrop.js';
 import { settings } from '../api/settings.js';
@@ -33,6 +38,18 @@ const styles = theme => ({
 		width: '100%',
 		minHeight: '100vh',
 	},
+	progressbarContainer: {
+		position: 'relative',
+		display: 'flex',
+		width: '100%',
+		minHeight: '100vh',
+	} ,
+	progressbar: {
+		margin: 'auto',
+		height: 100,
+		width: 100,
+		fontWeight: 'bold',
+	} ,
 });
 
 class App extends React.Component {
@@ -51,12 +68,31 @@ class App extends React.Component {
 			history,
 			textTransform,
 			navigationDrawerIsOpen,
+			progress,
 		} = this.props;
 
 		return (
 			<MuiThemeProvider theme={muitheme}>
+				<CssBaseline/>
+				{ progress < 1 ?
+				<div className={classes.progressbarContainer}>
+				<CircularProgressbar
+					className={classes.progressbar}
+					maxValue={1}
+					value={progress}
+					text={`${(100 * progress) | 0}%`}
+					background
+					backgroundPadding={6}
+					styles={buildStyles({
+						backgroundColor: theme.palette.primary.main,
+						textColor: "#fff",
+						pathColor: "#fff",
+						trailColor: "transparent",
+					})}
+				/>
+				</div>
+				:
 				<div>
-					<CssBaseline/>
 					<WholeWindowDropZone callback={handleDrop(history)}/>
 					<div className={classes.appFrame} style={{textTransform}}>
 						<Header
@@ -76,6 +112,7 @@ class App extends React.Component {
 						/>
 					</div>
 				</div>
+				}
 			</MuiThemeProvider>
 		);
 	}
@@ -89,10 +126,14 @@ App.propTypes = {
 
 export default withRouter(
 	withTracker(() => {
-		Meteor.subscribe('patients');
-		settings.subscribe('text-transform');
-		settings.subscribe('navigation-drawer-is-open');
+		const handles = [
+			{ ready: () => true } ,
+			Meteor.subscribe('patients') ,
+			settings.subscribe('text-transform') ,
+			settings.subscribe('navigation-drawer-is-open') ,
+		] ;
 		return {
+			progress: sum(map(x => x.ready() ? 1 : 0, handles)) / handles.length,
 			textTransform: settings.get('text-transform') ,
 			navigationDrawerIsOpen: settings.get('navigation-drawer-is-open') ,
 			currentUser: Meteor.user() ,
