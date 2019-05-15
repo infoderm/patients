@@ -10,7 +10,7 @@ import startOfDay from 'date-fns/start_of_day';
 import dateParse from 'date-fns/parse';
 
 import PatientsList from './patients/PatientsList.js';
-import PatientDetails from './patients/PatientDetails.js';
+import PatientRecord from './patients/PatientRecord.js';
 import NewPatientForm from './patients/NewPatientForm.js';
 
 import ConsultationsList from './consultations/ConsultationsList.js';
@@ -108,7 +108,7 @@ class Main extends React.Component {
 						)
 					}/>
 
-					<Route exact path="/patient/:id" component={PatientDetails}/>
+					<Route exact path="/patient/:id" component={PatientRecord}/>
 					<Route exact path="/new/patient" component={NewPatientForm}/>
 
 					<Route exact path="/documents" component={DocumentsList}/>

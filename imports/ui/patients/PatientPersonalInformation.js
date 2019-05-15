@@ -47,22 +47,10 @@ import { empty } from '@aureooms/js-cardinality' ;
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
-import ConsultationCard from '../consultations/ConsultationCard.js';
-import AppointmentCard from '../appointments/AppointmentCard.js';
-import DocumentCard from '../documents/DocumentCard.js';
-
-import AttachFileButton from '../attachments/AttachFileButton.js';
-import AttachmentLink from '../attachments/AttachmentLink.js';
-import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
-
 import SetPicker from '../input/SetPicker.js';
 
 import AllergyChip from '../allergies/AllergyChip.js';
 
-import { Patients } from '../../api/patients.js';
-import { Consultations } from '../../api/consultations.js';
-import { Appointments } from '../../api/appointments.js';
-import { Documents } from '../../api/documents.js';
 import { Insurances } from '../../api/insurances.js';
 import { Doctors } from '../../api/doctors.js';
 import { Allergies } from '../../api/allergies.js';
@@ -147,7 +135,7 @@ const tagFilter = set => (suggestions, inputValue) => {
 
 } ;
 
-class PatientDetails extends React.Component {
+class PatientPersonalInformation extends React.Component {
 
 	constructor ( props ) {
 		super(props);
@@ -185,9 +173,6 @@ class PatientDetails extends React.Component {
 			classes,
 			theme,
 			loading,
-			consultations,
-			upcomingAppointments,
-			documents,
 			insurances,
 			doctors,
 			allergies,
@@ -199,36 +184,6 @@ class PatientDetails extends React.Component {
 		if (!patient) return <div>Error: Patient not found.</div>;
 
 		const placeholder = !editing ? "To edit this field you first need to click the edit button" : "Write some information here";
-
-		const attachmentsInfo = [];
-		if ( this.props.patient.attachments ) {
-			Array.prototype.push.apply(
-				attachmentsInfo,
-				this.props.patient.attachments.map(x => [
-					x ,
-					{
-						collection: 'patients' ,
-						_id: this.props.patient._id ,
-					} ,
-				]),
-			);
-		}
-		attachmentsInfo.reverse();
-
-		for ( const consultation of consultations ) {
-			if ( consultation.attachments ) {
-				Array.prototype.push.apply(
-					attachmentsInfo,
-					consultation.attachments.map(x => [
-						x ,
-						{
-							collection: 'consultations' ,
-							_id: consultation._id ,
-						} ,
-					]),
-				);
-			}
-		}
 
 		const minRows = 8 ;
 		const maxRows = 100 ;
@@ -576,105 +531,28 @@ class PatientDetails extends React.Component {
 						</Grid>
 					</Grid>
 				</Grid>
-				{ upcomingAppointments.length === 0 ?
-					<Typography variant="h2">No upcoming appointments</Typography>
-					:
-					<Typography variant="h2">Upcoming appointments</Typography>
-				}
-				<div className={classes.container}>
-					{ upcomingAppointments.map(appointment => ( <AppointmentCard key={appointment._id} appointment={appointment}/> )) }
-				</div>
-				{ consultations.length === 0 ?
-					<Typography variant="h2">No consultations</Typography>
-					:
-					<Typography variant="h2">All consultations</Typography>
-				}
-				<div className={classes.container}>
-					{ consultations.map((consultation, i) => (
-						<ConsultationCard
-							key={consultation._id}
-							consultation={consultation}
-							patientChip={false}
-							defaultExpanded={!i}
-						/>
-						))
-					}
-					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${this.props.patient._id}`}>
-						Create a new consultation
-						<SupervisorAccountIcon className={classes.rightIcon}/>
-					</Button>
-				</div>
-				{ documents.length === 0 ?
-					<Typography variant="h2">No documents</Typography>
-					:
-					<Typography variant="h2">All documents</Typography>
-				}
-				<div className={classes.container}>
-					{ documents.map(document => ( <DocumentCard key={document._id} document={document}/> )) }
-				</div>
-				{ attachmentsInfo.length === 0 ?
-					<Typography variant="h2">No attachments</Typography>
-					:
-					<Typography variant="h2">All attachments</Typography>
-				}
-				<div className={classes.container}>
-					<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
-					<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
-				</div>
-				{ false && ( <div>
-				<Typography variant="h2">Prescriptions</Typography>
-				<div className={classes.container}>
-				</div>
-				<Typography variant="h2">Appointments</Typography>
-				<div className={classes.container}>
-				</div>
-				</div>)}
 			</div>
 		);
 	}
 
 }
 
-PatientDetails.propTypes = {
+PatientPersonalInformation.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
+	patient: PropTypes.object.isRequired,
 };
 
-export default withTracker(({match}) => {
-	const _id = match.params.id;
-	const handle = Meteor.subscribe('patient', _id);
-	Meteor.subscribe('patient.consultations', _id);
-	Meteor.subscribe('patient.appointments', _id);
-	Meteor.subscribe('patient.documents', _id);
+export default withTracker(() => {
 	Meteor.subscribe('insurances');
 	Meteor.subscribe('doctors');
 	Meteor.subscribe('allergies');
-	if ( handle.ready() ) {
-		const patient = Patients.findOne(_id);
-		const consultations = Consultations.find({patientId: _id, isDone: true}, {sort: { datetime: -1 }}).fetch();
-		const upcomingAppointments = Appointments.find({patientId: _id, isDone: false}, {sort: { datetime: 1 }}).fetch();
-		const documents = Documents.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
-		const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
-		const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
-		const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
-		return {
-			loading: false,
-			patient,
-			consultations,
-			upcomingAppointments,
-			documents,
-			insurances,
-			doctors,
-			allergies,
-		} ;
-	}
-	else return {
-		loading: true,
-		consultations: [],
-		upcomingAppointments: [],
-		documents: [],
-		insurances: [],
-		doctors: [],
-		allergies: [],
+	const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
+	const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
+	const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
+	return {
+		insurances,
+		doctors,
+		allergies,
 	} ;
-}) ( withStyles(styles, { withTheme: true })(PatientDetails) );
+}) ( withStyles(styles, { withTheme: true })(PatientPersonalInformation) );
