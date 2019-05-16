@@ -163,8 +163,7 @@ Meteor.startup(() => {
   });
 
   Documents.rawCollection().createIndex({
-    owner: 1,
-    source: 1,
+    source: 'hashed',
   },{
     background: true,
   });
