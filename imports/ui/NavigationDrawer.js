@@ -153,7 +153,7 @@ class NavigationDrawer extends React.Component {
             to: `/calendar/month/${format(startOfToday(), 'YYYY/MM')}` ,
             icon: <AccessTimeIcon/> ,
             title: "Appointments" ,
-            //disabled: true ,
+            disabled: true ,
           } ,
 
         ] ,
@@ -182,6 +182,7 @@ class NavigationDrawer extends React.Component {
             to: "/stats" ,
             icon: <ShowChartIcon/> ,
             title: "Stats" ,
+            disabled: true ,
           } ,
 
         ] ,
@@ -246,6 +247,7 @@ class NavigationDrawer extends React.Component {
             to: "/drugs" ,
             icon: <LocalPharmacyIcon/> ,
             title: "Drugs" ,
+            disabled: true ,
           } ,
 
           {
