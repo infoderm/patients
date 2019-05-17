@@ -8,6 +8,13 @@ const normalized = string => {
   return string ;
 } ;
 
+const onlyLowerCaseASCII = string => {
+  string = string.toLowerCase();
+  string = deburr(string);
+  return string ;
+} ;
+
 export {
   normalized ,
+  onlyLowerCaseASCII ,
 } ;

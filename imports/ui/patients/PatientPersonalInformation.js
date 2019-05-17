@@ -48,12 +48,14 @@ import { empty } from '@aureooms/js-cardinality' ;
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
 import SetPicker from '../input/SetPicker.js';
+import ColorizedTextarea from '../input/ColorizedTextarea.js';
 
 import AllergyChip from '../allergies/AllergyChip.js';
 
 import { Insurances } from '../../api/insurances.js';
 import { Doctors } from '../../api/doctors.js';
 import { Allergies } from '../../api/allergies.js';
+import { settings } from '../../api/settings.js';
 
 const styles = theme => ({
 	header: {
@@ -176,6 +178,7 @@ class PatientPersonalInformation extends React.Component {
 			insurances,
 			doctors,
 			allergies,
+			importantStrings,
 		} = this.props ;
 
 		const { patient , editing , dirty , deleting } = this.state;
@@ -316,35 +319,31 @@ class PatientPersonalInformation extends React.Component {
 							/>
 							</Grid>
 							<Grid item xs={12} md={6}>
-							<TextField
-								inputProps={{
-									readOnly: !editing,
-								}}
+							<ColorizedTextarea
+								readOnly={!editing}
 								label="Antécédents"
 								placeholder={placeholder}
-								multiline
 								rows={minRows}
 								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.antecedents}
 								onChange={update('antecedents')}
 								margin="normal"
+								dict={importantStrings}
 							/>
 							</Grid>
 							<Grid item xs={12} md={6}>
-							<TextField
-								inputProps={{
-									readOnly: !editing,
-								}}
+							<ColorizedTextarea
+								readOnly={!editing}
 								label="Traitement en cours"
 								placeholder={placeholder}
-								multiline
 								rows={minRows}
 								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.ongoing}
 								onChange={update('ongoing')}
 								margin="normal"
+								dict={importantStrings}
 							/>
 							</Grid>
 
@@ -473,19 +472,17 @@ class PatientPersonalInformation extends React.Component {
 							</Grid>
 
 							<Grid item xs={9}>
-							<TextField
-								inputProps={{
-									readOnly: !editing,
-								}}
+							<ColorizedTextarea
+								readOnly={!editing}
 								label="About"
 								placeholder={placeholder}
-								multiline
 								rows={2}
 								rowsMax={maxRows}
 								className={classes.multiline}
 								value={patient.about}
 								onChange={update('about')}
 								margin="normal"
+								dict={importantStrings}
 							/>
 							</Grid>
 							<Grid item xs={3}>
@@ -547,12 +544,16 @@ export default withTracker(() => {
 	Meteor.subscribe('insurances');
 	Meteor.subscribe('doctors');
 	Meteor.subscribe('allergies');
+	settings.subscribe('important-strings');
+
 	const insurances = Insurances.find({}, {sort: { name: 1 }}).fetch();
 	const doctors = Doctors.find({}, {sort: { name: 1 }}).fetch();
 	const allergies = Allergies.find({}, {sort: { name: 1 }}).fetch();
+	const importantStrings = settings.get('important-strings');
 	return {
 		insurances,
 		doctors,
 		allergies,
+		importantStrings,
 	} ;
 }) ( withStyles(styles, { withTheme: true })(PatientPersonalInformation) );
