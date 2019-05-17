@@ -105,8 +105,8 @@ class DocumentCard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			triedToLink: false,
 			linking: false,
-			unlinking: false,
 			deleting: false,
 		};
 	}
@@ -137,8 +137,8 @@ class DocumentCard extends React.Component {
 		const { document } = this.props;
 
 		const {
+			triedToLink,
 			linking,
-			unlinking,
 			deleting,
 		} = this.state;
 
@@ -198,7 +198,7 @@ class DocumentCard extends React.Component {
 								className={classes.unlinkedpatientchip}
 								onClick={e => {
 									e.stopPropagation();
-									this.setState({linking: true});
+									this.setState({linking: true, triedToLink: true});
 								}}
 							/>
 						}
@@ -209,11 +209,11 @@ class DocumentCard extends React.Component {
 								className={classes.linkoffchip}
 								onClick={e => {
 									e.stopPropagation();
-									this.setState({linking: true});
+									this.setState({linking: true, triedToLink: true});
 								}}
 							/>
 						}
-						{ (!patientId) &&
+						{ (!patientId && triedToLink) &&
 							<DocumentLinkingDialog
 								open={linking}
 								onClose={e => this.setState({linking: false})}
