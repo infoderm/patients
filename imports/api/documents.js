@@ -78,11 +78,16 @@ function sanitize ( {
 }
 
 function normalizedName ( firstname , lastname ) {
-	return normalized(`${lastname} ${firstname}`).split(' ');
+	return normalized(`${lastname.replace(' ', '-')} ${firstname}`).split(' ');
 }
 
 function findBestPatientMatch ( owner, entry ) {
-	if (entry.patientId || !entry.patient) return entry.patientId;
+
+	if (entry.patientId) return entry.patientId;
+
+	if (!entry.patient) return undefined;
+
+	const matches = [];
 
 	const {
 		nn,
@@ -102,11 +107,14 @@ function findBestPatientMatch ( owner, entry ) {
 
 		for (const candidate of patients) {
 			const [cHash1, cHash2] = normalizedName(candidate.firstname, candidate.lastname);
-			if (hash1 === cHash1 && hash2 === cHash2) return candidate._id;
+			if (hash1 === cHash1 && hash2 === cHash2) matches.push(candidate._id);
 		}
 	}
 
-	return entry.patientId;
+	if (matches.length === 1) return matches[0];
+
+	// if 0 or more than 1 matches
+	return undefined;
 
 }
 
@@ -157,7 +165,7 @@ Meteor.methods({
 				// the patient.
 				// Maybe this should be tested at patient insertion though.
 
-				if (!existingDocument.patientId) {
+				if (!existingDocument.patientId && patientId) {
 					Documents.update(existingDocument._id, { $set: { patientId } });
 				}
 
