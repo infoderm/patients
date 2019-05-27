@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { enumerate } from '@aureooms/js-itertools';
+
 import { onlyLowerCaseASCII } from '../api/string.js';
 
 function escape ( s ) {
@@ -47,13 +49,13 @@ export default function colorizeText ( dict , text ) {
   }
 
   let result = [];
-  outer: for ( const piece of split(text) ) {
+  outer: for ( const [i, piece] of enumerate(split(text)) ) {
     if (piece.length > 1) {
       const haystack = onlyLowerCaseASCII(piece);
       for ( const needle of needles ) {
         if (haystack.includes(needle)) {
           result.push(
-            <mark>{piece}</mark>
+            <mark key={i}>{piece}</mark>
           );
           continue outer;
         }
