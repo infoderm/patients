@@ -3,8 +3,8 @@
 set -o xtrace
 
 SCRIPTS="${HOME}/.backup"
-CLOUD='db' # dropbox
-BACKUP="${CLOUD}:${DB}-backup"
+DB="patients"
+BACKUP="${HOME}/backup/${DB}"
 
 LIST="$(sh "${SCRIPTS}/list.sh")"
 KEEP="$(python3 "${SCRIPTS}/keep.py" <<< "$LIST")"
@@ -12,5 +12,5 @@ KEEP="$(python3 "${SCRIPTS}/keep.py" <<< "$LIST")"
 DELETE="$(comm -23 <(echo "$LIST") <(echo "$KEEP"))"
 
 for dir in $DELETE ; do
-  rc purge "${BACKUP}/${dir}"
+  trash-put "${BACKUP}/${dir}"
 done

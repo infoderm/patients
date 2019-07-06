@@ -1,0 +1,6 @@
+[Unit]
+Description=Run patient's vacuum once
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash %h/.backup/vacuum.sh
