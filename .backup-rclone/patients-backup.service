@@ -1,0 +1,6 @@
+[Unit]
+Description=Run patient's backup once
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh %h/dev/dermatodoc/patients/.backup-rclone/backup.sh
