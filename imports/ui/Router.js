@@ -19,6 +19,8 @@ import EditConsultationForm from './consultations/EditConsultationForm.js';
 import NewConsultationForm from './consultations/NewConsultationForm.js';
 import Calendar from './consultations/Calendar.js';
 
+import ImportData from './data/ImportData.js';
+
 import MonthlyPlanner from './planner/MonthlyPlanner.js';
 import WeeklyPlanner from './planner/WeeklyPlanner.js';
 
@@ -123,6 +125,10 @@ class Main extends React.Component {
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
+
+					<Route exact path="/import" render={
+						(props) => <ImportData {...props} history={history}/>
+					}/>
 
 					<Route exact path="/books" component={BooksList}/>
 					<Route exact path="/books/page/:page" component={BooksList}/>

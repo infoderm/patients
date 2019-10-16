@@ -39,6 +39,7 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import { settings } from '../api/settings.js';
 
@@ -154,6 +155,12 @@ class NavigationDrawer extends React.Component {
             icon: <AccessTimeIcon/> ,
             title: "Appointments" ,
             disabled: true ,
+          } ,
+
+          {
+            to: '/import' ,
+            icon: <CloudUploadIcon/> ,
+            title: 'Import' ,
           } ,
 
         ] ,
