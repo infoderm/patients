@@ -9,6 +9,7 @@ function unpack ( data , item ) {
     if (item.type === 'text/csv') return [ 'drugs' , f ] ;
     else if (f.name.endsWith('.HLT')) return ['healthone', f] ;
     else if (f.name.endsWith('.LAB')) return ['healthone', f] ;
+    else if (f.name.endsWith('.DAT')) return ['healthone', f] ;
     else return ['unknown-file', f] ;
   }
   else if (item.kind === 'string') {
