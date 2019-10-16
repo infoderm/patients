@@ -27,7 +27,11 @@ import Router from './Router.js';
 import NavigationDrawer from './NavigationDrawer.js';
 
 
-const muitheme = createMuiTheme();
+const muitheme = createMuiTheme({
+	typography: {
+		useNextVariants: true,
+	},
+});
 
 const styles = theme => ({
 	appFrame: {
