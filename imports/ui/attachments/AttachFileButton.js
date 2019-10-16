@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button' ;
-
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+
+import InputFileButton from '../input/InputFileButton.js';
 
 import { Uploads } from '../../api/uploads.js';
 
@@ -16,7 +16,6 @@ class AttachFileButton extends React.Component {
 
     constructor (props) {
         super(props);
-        this._input = null;
     }
 
     upload (event) {
@@ -60,18 +59,9 @@ class AttachFileButton extends React.Component {
     render () {
       const { method , item , ...rest } = this.props ;
       return (
-        <div>
-            <Button { ...rest} onClick={() => this._input.click()}>
-              Attach File<AttachFileIcon/>
-            </Button>
-            <input
-                multiple
-                ref={node => this._input = node}
-                onChange={this.upload.bind(this)}
-                style={{ display: 'none' }}
-                type="file"
-            />
-        </div>
+        <InputFileButton onChange={this.upload.bind(this)} {...rest}>
+            Attach File<AttachFileIcon/>
+        </InputFileButton>
       );
     }
 }
