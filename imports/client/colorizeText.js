@@ -63,7 +63,7 @@ export default function colorizeText ( dict , text ) {
     }
     switch (piece) {
       case '\n':
-        result.push(<br/>);
+        result.push(<br key={i}/>);
         break;
       default:
         result.push(piece);
