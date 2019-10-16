@@ -15,7 +15,11 @@ export default function insertDocument ( history, format, fd ) {
         } ;
         Meteor.call('documents.insert', op , (err, _id) => {
           if ( err ) console.error(err) ;
-          else history.push({pathname: `/document/${_id}`}) ;
+          else {
+            if ( history && history.location.pathname !== '/documents') {
+              history.push({pathname: '/documents'}) ;
+            }
+          }
         });
       } ,
       onStop: err => console.error(err) ,
