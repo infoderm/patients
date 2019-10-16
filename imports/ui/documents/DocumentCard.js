@@ -33,6 +33,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinkIcon from '@material-ui/icons/Link';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
@@ -44,7 +45,9 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 import dateformat from 'date-fns/format';
 
-import {Patients} from '../../api/patients.js';
+import { saveAs } from 'file-saver';
+
+import { Patients } from '../../api/patients.js';
 
 import DocumentDeletionDialog from './DocumentDeletionDialog.js';
 import DocumentLinkingDialog from './DocumentLinkingDialog.js';
@@ -116,6 +119,7 @@ const styles = theme => ({
 });
 
 class DocumentCard extends React.Component {
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -123,6 +127,34 @@ class DocumentCard extends React.Component {
 			unlinking: false,
 			deleting: false,
 		};
+	}
+
+	download = event => {
+
+		const { document } = this.props ;
+
+		const blob = new Blob(
+			[document.source],
+			{type: "text/plain;charset=utf-8"}
+		) ;
+
+		const extensions = {
+			'healthone': 'HLT' ,
+			//'medar' : 'MDR' ,
+			//'medidoc' : 'MDD' ,
+		} ;
+
+		const ext = extensions[document.format] || 'UNK' ;
+
+		const name = document.parsed ?
+			`${document.identifier}-${document.reference}-${document.status}`
+			:
+			`${document._id}` ;
+
+		const filename = `${name}.${ext}`;
+
+		saveAs(blob, filename);
+
 	}
 
 	render() {
@@ -298,6 +330,9 @@ class DocumentCard extends React.Component {
 				</ExpansionPanelDetails>
 				<Divider/>
 				<ExpansionPanelActions>
+					<Button color="primary" onClick={this.download}>
+						Download<CloudDownloadIcon/>
+					</Button>
 					<Button color="primary" onClick={e => this.setState({linking: true})}>
 						Link<LinkIcon/>
 					</Button>
