@@ -6,6 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button' ;
 
 const styles = theme => ({
+    container: {
+        display: 'inline',
+    },
 });
 
 class InputFileButton extends React.Component {
@@ -16,9 +19,13 @@ class InputFileButton extends React.Component {
     }
 
     render () {
-      const { onChange, ...rest } = this.props ;
+        const {
+            classes,
+            onChange,
+            ...rest
+        } = this.props ;
       return (
-        <div>
+        <div className={classes.container}>
             <Button { ...rest} onClick={() => this._input.click()}/>
             <input
                 multiple

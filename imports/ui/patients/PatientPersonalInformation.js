@@ -45,17 +45,19 @@ import startOfToday from 'date-fns/start_of_today';
 import odiff from 'odiff' ;
 import { empty } from '@aureooms/js-cardinality' ;
 
-import PatientDeletionDialog from './PatientDeletionDialog.js';
+import { Insurances } from '../../api/insurances.js';
+import { Doctors } from '../../api/doctors.js';
+import { Allergies } from '../../api/allergies.js';
+import { settings } from '../../api/settings.js';
 
 import SetPicker from '../input/SetPicker.js';
 import ColorizedTextarea from '../input/ColorizedTextarea.js';
 
 import AllergyChip from '../allergies/AllergyChip.js';
 
-import { Insurances } from '../../api/insurances.js';
-import { Doctors } from '../../api/doctors.js';
-import { Allergies } from '../../api/allergies.js';
-import { settings } from '../../api/settings.js';
+import AttachFileButton from '../attachments/AttachFileButton.js';
+
+import PatientDeletionDialog from './PatientDeletionDialog.js';
 
 const styles = theme => ({
 	header: {
@@ -502,7 +504,7 @@ class PatientPersonalInformation extends React.Component {
 						</form>
 					</Grid>
 					<Grid container>
-						<Grid item xs={6}>
+						<Grid item xs={9}>
 							{ editing ?
 							<div>
 								<Button className={classes.button} color="primary" onClick={this.saveDetails}>
@@ -514,12 +516,20 @@ class PatientPersonalInformation extends React.Component {
 									<UndoIcon className={classes.rightIcon}/>
 								</Button>
 							</div>:
-							<Button className={classes.button} color="default" onClick={e => this.setState({ editing: true })}>
-								Edit patient details
-								<EditIcon className={classes.rightIcon}/>
-							</Button> }
+							<div>
+								<Button className={classes.button} color="default" onClick={e => this.setState({ editing: true })}>
+									Edit patient details
+									<EditIcon className={classes.rightIcon}/>
+								</Button>
+								<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
+								<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patient._id}`}>
+									Create a new consultation
+									<SupervisorAccountIcon className={classes.rightIcon}/>
+								</Button>
+							</div>
+							}
 						</Grid>
-						<Grid item xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+						<Grid item xs={3} style={{display: 'flex', flexDirection: 'row-reverse'}}>
 							<Button className={classes.button} color="secondary" onClick={e => this.setState({ deleting: true})}>
 								Delete this patient
 								<DeleteIcon className={classes.rightIcon}/>
