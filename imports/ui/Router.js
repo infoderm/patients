@@ -119,8 +119,12 @@ class Main extends React.Component {
 
 					<Route exact path="/calendar" component={Calendar}/>
 					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
-					<Route exact path="/calendar/month/:year/:month" component={MonthlyPlanner(history)}/>
-					<Route exact path="/calendar/week/:year/:week" component={WeeklyPlanner(history)}/>
+					<Route exact path="/calendar/month/:year/:month" render={
+						props => <MonthlyPlanner {...props} history={history}/>
+					}/>
+					<Route exact path="/calendar/week/:year/:week" render={
+						props => <WeeklyPlanner {...props} history={history}/>
+					}/>
 					<Route exact path="/consultations/:day" component={ConsultationsListFromMatch}/>
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>

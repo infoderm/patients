@@ -120,7 +120,7 @@ class MonthlyPlanner extends React.Component {
 
 } ;
 
-export default history => withTracker(({match}) => {
+export default withTracker(({match, history}) => {
 
 	const year = parseInt(match.params.year, 10);
 	const week = parseInt(match.params.week, 10);
