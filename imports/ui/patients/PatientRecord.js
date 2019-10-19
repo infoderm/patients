@@ -112,17 +112,18 @@ class PatientRecord extends React.Component {
 			}
 		}
 
+		//{ upcomingAppointments.length === 0 ?
+			//<Typography variant="h2">No upcoming appointments</Typography>
+			//:
+			//<Typography variant="h2">Upcoming appointments</Typography>
+		//}
+		//<div className={classes.container}>
+			//{ upcomingAppointments.map(appointment => ( <AppointmentCard key={appointment._id} appointment={appointment}/> )) }
+		//</div>
+
 		return (
 			<div>
 				<PatientPersonalInformation patient={patient}/>
-				{ upcomingAppointments.length === 0 ?
-					<Typography variant="h2">No upcoming appointments</Typography>
-					:
-					<Typography variant="h2">Upcoming appointments</Typography>
-				}
-				<div className={classes.container}>
-					{ upcomingAppointments.map(appointment => ( <AppointmentCard key={appointment._id} appointment={appointment}/> )) }
-				</div>
 				{ consultations.length === 0 ?
 					<Typography variant="h2">No consultations</Typography>
 					:
