@@ -7,6 +7,8 @@ import startOfYear from 'date-fns/start_of_year';
 import endOfYear from 'date-fns/end_of_year';
 import dateFormat from 'date-fns/format' ;
 
+import { saveAs } from 'file-saver';
+
 import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -27,16 +29,14 @@ const styles = theme => ({
 }) ;
 
 function download(filename, text) {
-  const element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
 
-  element.style.display = 'none';
-  document.body.appendChild(element);
+  const blob = new Blob(
+    [text],
+    {type: "text/plain;charset=utf-8"}
+  ) ;
 
-  element.click();
+  saveAs(blob, filename);
 
-  document.body.removeChild(element);
 }
 
 class PatientDeletionDialog extends React.Component {
