@@ -205,7 +205,7 @@ class ConsultationCard extends React.Component {
 	      <Avatar><AccountBalanceWalletIcon/></Avatar>
 	      <ListItemText
 		primary="Méthode de Paiement"
-		secondary={payment_method === 'wire' ? 'Virement.' : 'Espèces.'}
+		secondary={payment_method === 'wire' ? 'Virement' : 'Cash'}
 	      />
 	    </ListItem> }
 	    { book === '' ? '' :
