@@ -33,12 +33,12 @@ const styles = theme => ({
 
 function PagedConsultationsList ( props ) {
 
-  const { classes , root , page , perpage , items } = props;
+  const { classes , root , page , perpage , items , itemProps } = props;
 
   return (
     <div>
     <div className={classes.container}>
-    { items.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }
+    { items.map(consultation => ( <ConsultationCard {...itemProps} key={consultation._id} consultation={consultation}/> )) }
     </div>
     { page === 0 ? '' :
       <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>

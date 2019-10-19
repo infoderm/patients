@@ -77,6 +77,7 @@ class ConsultationForm extends React.Component {
 			more: consultation.more,
 
 			currency: consultation.currency || 'EUR',
+			payment_method: consultation.payment_method || 'cash',
 			price: consultation.price,
 			paid: consultation.paid,
 			book: consultation.book,
@@ -106,6 +107,7 @@ class ConsultationForm extends React.Component {
 			more,
 
 			currency,
+			payment_method,
 			price,
 			paid,
 			book,
@@ -124,6 +126,7 @@ class ConsultationForm extends React.Component {
 			more,
 
 			currency,
+			payment_method,
 			price: parseInt(price,10),
 			paid: parseInt(paid,10),
 			book,
@@ -305,7 +308,7 @@ class ConsultationForm extends React.Component {
 						/>
 					</Grid>
 
-					<Grid item xs={3}>
+					<Grid item xs={1}>
 						<TextField
 							select
 							label="Currency"
@@ -314,6 +317,18 @@ class ConsultationForm extends React.Component {
 							margin="normal"
 						>
 							<MenuItem value="EUR">€</MenuItem>
+						</TextField>
+					</Grid>
+					<Grid item xs={1}>
+						<TextField
+							select
+							label="Payment Method"
+							value={this.state.payment_method}
+							onChange={update('payment_method')}
+							margin="normal"
+						>
+							<MenuItem value="cash">cash</MenuItem>
+							<MenuItem value="wire">wire</MenuItem>
 						</TextField>
 					</Grid>
 					<Grid item xs={3}>

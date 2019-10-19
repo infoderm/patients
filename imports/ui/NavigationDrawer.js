@@ -33,6 +33,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
+import PaymentIcon from '@material-ui/icons/Payment';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
@@ -177,6 +178,12 @@ class NavigationDrawer extends React.Component {
             to: "/books" ,
             icon: <BookIcon/> ,
             title: "Carnets" ,
+          } ,
+
+          {
+            to: "/wired" ,
+            icon: <PaymentIcon/> ,
+            title: "Virements" ,
           } ,
 
           {

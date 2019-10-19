@@ -35,6 +35,7 @@ class NewConsultationForm extends React.Component {
 			next: '',
 			more: '',
 			currency: 'EUR',
+			payment_method: 'cash',
 			price: 0,
 			paid: 0,
 			book: bookPrefill,

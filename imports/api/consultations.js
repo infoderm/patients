@@ -26,6 +26,14 @@ if (Meteor.isServer) {
 		});
 	});
 
+	Meteor.publish('consultations.wired', function () {
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+			payment_method: 'wire',
+		});
+	});
+
 	Meteor.publish('consultationsAndAppointments', function () {
 		return Consultations.find({
 			owner: this.userId ,
@@ -74,6 +82,7 @@ function sanitize ( {
 	price,
 	paid,
 	book,
+	payment_method,
 } ) {
 
 	check(patientId, String);
@@ -90,6 +99,7 @@ function sanitize ( {
 	price === undefined || check(price, Number);
 	paid === undefined || check(paid, Number);
 	book === undefined || check(book, String);
+	payment_method === undefined || check(payment_method, String);
 
 	reason = reason.trim();
 	done = done.trim();
@@ -115,6 +125,7 @@ function sanitize ( {
 		price,
 		paid,
 		book,
+		payment_method,
 		isDone: true,
 	} ;
 

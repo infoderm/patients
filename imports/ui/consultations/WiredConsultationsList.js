@@ -16,7 +16,7 @@ const styles = theme => ({
 	},
 });
 
-class UnpaidConsultationsList extends React.Component {
+class WiredConsultationsList extends React.Component {
 
 	constructor ( props ) {
 		super(props);
@@ -30,14 +30,12 @@ class UnpaidConsultationsList extends React.Component {
 
 		const { consultations } = this.props ;
 
-		const unpaidConsultations = consultations.filter(consultation => consultation.paid !== consultation.price);
-
-		if (unpaidConsultations.length === 0) return <div>All consultations have been paid for :)</div>;
+		if (consultations.length === 0) return <div>No wire transfer</div>;
 
 		return (
 			<div className={classes.container}>
 				{
-					unpaidConsultations.map(
+					consultations.map(
 						consultation => (
 							<ConsultationCard
 								showPrice
@@ -53,16 +51,19 @@ class UnpaidConsultationsList extends React.Component {
 
 }
 
-UnpaidConsultationsList.propTypes = {
+WiredConsultationsList.propTypes = {
 	classes: PropTypes.object.isRequired,
 	theme: PropTypes.object.isRequired,
 };
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations.unpaid');
+	const handle = Meteor.subscribe('consultations.wired');
 	if ( !handle.ready() ) return { loading: true } ;
 	return {
 		loading: false,
-		consultations: Consultations.find({}, {sort: {datetime: 1}}).fetch() ,
+		consultations: Consultations.find({
+			isDone: true,
+			payment_method: 'wire',
+		}, {sort: {datetime: 1}}).fetch() ,
 	} ;
-}) ( withStyles(styles, { withTheme: true })(UnpaidConsultationsList) );
+}) ( withStyles(styles, { withTheme: true })(WiredConsultationsList) );

@@ -28,6 +28,11 @@ export default function BookDetails ( { match , year , book , page , perpage } )
 			selector={books.selector(name)}
 			sort={{datetime: 1}}
 			List={PagedConsultationsList}
+			listProps={{
+				itemProps: {
+					showPrice: true,
+				} ,
+			}}
 		/>
 	) ;
 

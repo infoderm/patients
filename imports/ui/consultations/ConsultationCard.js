@@ -33,6 +33,9 @@ import WarningIcon from '@material-ui/icons/Warning';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+import MoneyIcon from '@material-ui/icons/Money';
+import PaymentIcon from '@material-ui/icons/Payment';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
@@ -73,6 +76,12 @@ const styles = theme => ({
     color: '#fff',
     fontWeight: 'bold',
   },
+  pricechip: {
+    marginRight: theme.spacing.unit,
+    backgroundColor: '#228d57',
+    color: '#e8e9c9',
+    fontWeight: 'bold',
+  },
   debtchip: {
     marginRight: theme.spacing.unit,
     backgroundColor: '#f88',
@@ -95,6 +104,7 @@ class ConsultationCard extends React.Component {
 
     const {
       patientChip,
+      showPrice,
       defaultExpanded,
       classes ,
       loadingPatient ,
@@ -110,6 +120,7 @@ class ConsultationCard extends React.Component {
 	next,
 	more,
 	currency,
+	payment_method,
 	price,
 	paid,
 	book,
@@ -119,7 +130,8 @@ class ConsultationCard extends React.Component {
 
     const { settling , deleting } = this.state;
 
-    const owes = ! (currency === undefined || price === undefined || paid === undefined || paid === price) ;
+    const missingPaymentData = currency === undefined || price === undefined || paid === undefined;
+    const owes = ! (missingPaymentData || paid === price) ;
     const owed = owes ? price - paid : 0 ;
 
     return (
@@ -142,6 +154,13 @@ class ConsultationCard extends React.Component {
 		avatar={<Avatar><AttachmentIcon/></Avatar>}
 		label={attachments.length}
 		className={classes.chip}
+	      />
+	    }
+	    { !missingPaymentData && showPrice &&
+	      <Chip
+		className={classes.pricechip}
+		avatar={<Avatar>{ payment_method === 'wire' ? <PaymentIcon/> : <MoneyIcon/> }</Avatar>}
+		label={Currency.format(price, {code: currency})}
 	      />
 	    }
 	    { owes && <Chip label={`Doit ${Currency.format(owed, {code: currency})}`} className={classes.debtchip}/> }
@@ -173,10 +192,21 @@ class ConsultationCard extends React.Component {
 	      <Avatar><WarningIcon/></Avatar>
 	      <ListItemText primary="Autres remarques" secondary={more}/>
 	    </ListItem>
-	    { currency === undefined || price === undefined  || paid === undefined ? '' :
+	    { missingPaymentData ? '' :
 	    <ListItem>
 	      <Avatar><EuroSymbolIcon/></Avatar>
-	      <ListItemText primary="Paiement" secondary={`À payé ${Currency.format(paid, {code: currency})} de ${Currency.format(price, {code: currency})}.`}/>
+	      <ListItemText
+		primary="Paiement"
+		secondary={`À payé ${Currency.format(paid, {code: currency})} de ${Currency.format(price, {code: currency})}.`}
+	      />
+	    </ListItem> }
+	    { missingPaymentData ? '' :
+	    <ListItem>
+	      <Avatar><AccountBalanceWalletIcon/></Avatar>
+	      <ListItemText
+		primary="Méthode de Paiement"
+		secondary={payment_method === 'wire' ? 'Virement.' : 'Espèces.'}
+	      />
 	    </ListItem> }
 	    { book === '' ? '' :
 	    <ListItem>
@@ -231,6 +261,7 @@ class ConsultationCard extends React.Component {
 
 ConsultationCard.defaultProps = {
   patientChip: true,
+  showPrice: false,
   defaultExpanded: false,
 } ;
 
@@ -238,6 +269,7 @@ ConsultationCard.propTypes = {
   classes: PropTypes.object.isRequired,
   consultation: PropTypes.object.isRequired,
   patientChip: PropTypes.bool.isRequired,
+  showPrice: PropTypes.bool.isRequired,
   defaultExpanded: PropTypes.bool.isRequired,
 };
 

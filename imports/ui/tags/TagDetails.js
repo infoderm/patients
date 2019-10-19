@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import { myEncodeURIComponent } from '../../client/uri.js';
 
-function TagDetails ( { Card , List , root , name , page , perpage , items } ) {
+function TagDetails ( { Card , List , listProps , root , name , page , perpage , items } ) {
 	return (
 		<div>
 			{ Card && <div>
@@ -21,7 +21,7 @@ function TagDetails ( { Card , List , root , name , page , perpage , items } ) {
 				</div>
 				<Typography variant="h2">Patients</Typography>
 			</div>}
-			<List root={`${root}/${myEncodeURIComponent(name)}`} page={page} perpage={perpage} items={items}/>
+			<List {...listProps} root={`${root}/${myEncodeURIComponent(name)}`} page={page} perpage={perpage} items={items}/>
 		</div>
 	) ;
 }
