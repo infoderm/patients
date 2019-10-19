@@ -12,7 +12,15 @@ import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
+import { all } from '@aureooms/js-itertools' ;
+import { map } from '@aureooms/js-itertools' ;
+import { filter } from '@aureooms/js-itertools' ;
+import { take } from '@aureooms/js-itertools' ;
+import { list } from '@aureooms/js-itertools' ;
+
 import { settings } from '../api/settings.js';
+
+import { onlyLowerCaseASCII } from '../api/string.js';
 
 import SearchBox from './patients/SearchBox.js';
 import AccountsUI from './users/AccountsUI.js';
@@ -65,15 +73,24 @@ const styles = theme => ({
 });
 
 function getSuggestions(suggestions, inputValue) {
-  let count = 0;
 
-  return suggestions.filter(suggestion => {
-    const keep = count < 5 && (!inputValue || suggestion.label.toLowerCase().includes(inputValue.toLowerCase()));
+  const needles = onlyLowerCaseASCII(inputValue).split(' ');
 
-    if (keep) ++count;
+  return list(
+    take(
+      filter(
+	suggestion => {
 
-    return keep;
-  });
+	  const haystack = onlyLowerCaseASCII(suggestion.label);
+
+	  return all(map(needle => haystack.includes(needle), needles));
+
+	} ,
+	suggestions
+      ),
+      5
+    )
+  );
 }
 
 class Header extends React.Component {
