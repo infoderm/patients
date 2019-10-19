@@ -7,6 +7,8 @@ import { filter } from '@aureooms/js-itertools' ;
 
 import { msToString , units } from '../../client/duration.js' ;
 
+import { onlyLowerCaseASCII } from '../../api/string.js';
+
 import { settings } from '../../api/settings.js' ;
 
 import InputManySetting from './InputManySetting.js' ;
@@ -33,6 +35,8 @@ class ImportantStringsSetting extends React.Component {
 				label="Strings"
 				setting={KEY}
 				placeholder="Input important strings to highlight"
+				inputTransform={onlyLowerCaseASCII}
+				sort={items => items.sort()}
 			/>
 		) ;
 	}

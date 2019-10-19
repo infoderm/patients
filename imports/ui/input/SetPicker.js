@@ -78,6 +78,7 @@ class SetPicker extends React.Component {
       createNewItem,
       maxCount,
       multiset,
+      sort,
     } = this.props;
     if ( readOnly ) return ;
     switch(keycode(event)) {
@@ -97,6 +98,7 @@ class SetPicker extends React.Component {
           const newValue = value.slice();
           if (multiset || all(map(x=>x !== item, map(itemToString, value)))) {
             newValue.push(createNewItem(item));
+            if (sort) sort(newValue);
           }
 
           this.setState({
@@ -139,6 +141,7 @@ class SetPicker extends React.Component {
       itemToString,
       maxCount,
       multiset,
+      sort,
     } = this.props;
 
     if (value.length >= maxCount) return ;
@@ -146,6 +149,7 @@ class SetPicker extends React.Component {
     const newValue = value.slice();
     if (multiset || all(map(x=>x !== itemToString(item), map(itemToString, value)))) {
       newValue.push(item);
+      if (sort) sort(newValue);
     }
 
     this.setState({
@@ -316,6 +320,7 @@ SetPicker.propTypes = {
   itemToString: PropTypes.func.isRequired,
   inputTransform: PropTypes.func.isRequired,
   onChange: PropTypes.func,
+  sort: PropTypes.func,
   createNewItem: PropTypes.func,
   maxCount: PropTypes.number.isRequired,
   multiset: PropTypes.bool.isRequired,
