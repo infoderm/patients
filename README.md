@@ -69,7 +69,10 @@ Remember: `chmod .ssh 700` and `chmod .ssh/authorized_keys 640`.
 ## Backup & Restore
 
 Need `rsync` on both machines.
-Need `tar`, `openssl`, and the encryption key at `key/patients` on the production machine.
+Need `tar`, `openssl`, `mongodump`, `mongorestore`,
+and the encryption key at `key/patients` on the production machine.
+
+The executables `mongodump` and `mongorestore` can be found at `aur/mongodb-tools-bin` on Arch.
 
 ### backup
 
