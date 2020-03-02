@@ -41,6 +41,7 @@ import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
 import { settings } from '../api/settings.js';
 
@@ -178,6 +179,12 @@ class NavigationDrawer extends React.Component {
             to: "/books" ,
             icon: <BookIcon/> ,
             title: "Carnets" ,
+          } ,
+
+          {
+            to: "/sepa" ,
+            icon: <AccountBalanceIcon/> ,
+            title: "SEPA" ,
           } ,
 
           {

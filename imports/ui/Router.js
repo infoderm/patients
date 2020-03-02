@@ -31,6 +31,7 @@ import DocumentsList from './documents/DocumentsList.js';
 import DocumentDetails from './documents/DocumentDetails.js';
 
 import WiredConsultationsList from './consultations/WiredConsultationsList.js';
+import SEPAPaymentDetails from './payment/SEPAPaymentDetails.js';
 import UnpaidConsultationsList from './consultations/UnpaidConsultationsList.js';
 import Stats from './stats/Stats.js';
 import Issues from './issues/Issues.js';
@@ -141,6 +142,7 @@ class Main extends React.Component {
 					<Route exact path="/book/:year/:book/page/:page" component={BookDetails}/>
 
 					<Route exact path="/wired" component={WiredConsultationsList}/>
+					<Route exact path="/sepa" component={SEPAPaymentDetails}/>
 					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
 					<Route exact path="/stats" component={Stats}/>
 
