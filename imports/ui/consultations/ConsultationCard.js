@@ -38,11 +38,13 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
+import SmartphoneIcon from '@material-ui/icons/Smartphone';
 
 import dateFormat from 'date-fns/format' ;
 
 import Currency from 'currency-formatter' ;
 
+import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
 
@@ -95,6 +97,7 @@ class ConsultationCard extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      paying: false,
       settling: false,
       deleting: false,
     };
@@ -128,7 +131,7 @@ class ConsultationCard extends React.Component {
       } ,
     } = this.props;
 
-    const { settling , deleting } = this.state;
+    const { paying, settling , deleting } = this.state;
 
     const missingPaymentData = currency === undefined || price === undefined || paid === undefined;
     const owes = ! (missingPaymentData || paid === price) ;
@@ -239,6 +242,9 @@ class ConsultationCard extends React.Component {
 	  <Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
 	    Edit<EditIcon/>
 	  </Button>
+	  { owes && <Button color="primary" onClick={e => this.setState({ paying: true})}>
+	    Pay by Phone<SmartphoneIcon/>
+	  </Button> }
 	  { owes && <Button color="primary" onClick={e => this.setState({ settling: true})}>
 	    Settle debt<EuroSymbolIcon/>
 	  </Button> }
@@ -246,7 +252,10 @@ class ConsultationCard extends React.Component {
 	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
 	    Delete<DeleteIcon/>
 	  </Button>
-	  {(loadingPatient || !patient) ? null :
+	  {(!owes || loadingPatient || !patient) ? null :
+	  <ConsultationPaymentDialog open={paying} onClose={e => this.setState({ paying: false})} consultation={this.props.consultation} patient={patient}/>
+	  }
+	  {(!owes || loadingPatient || !patient) ? null :
 	  <ConsultationDebtSettlementDialog open={settling} onClose={e => this.setState({ settling: false})} consultation={this.props.consultation} patient={patient}/>
 	  }
 	  {(loadingPatient || !patient) ? null :

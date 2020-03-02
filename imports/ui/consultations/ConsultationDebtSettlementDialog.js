@@ -24,7 +24,7 @@ const styles = theme => ({
   },
 }) ;
 
-class ConsultationDeletionDialog extends React.Component {
+class ConsultationDebtSettlementDialog extends React.Component {
 
     clearDebtForThisConsultation = (onClose, consultation) => event => {
       event.preventDefault();
@@ -91,11 +91,11 @@ class ConsultationDeletionDialog extends React.Component {
 
 }
 
-ConsultationDeletionDialog.propTypes = {
+ConsultationDebtSettlementDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 } ;
 
-export default withStyles(styles)(ConsultationDeletionDialog) ;
+export default withStyles(styles)(ConsultationDebtSettlementDialog) ;
