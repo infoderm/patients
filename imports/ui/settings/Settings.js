@@ -13,6 +13,8 @@ import NavigationDrawerIsOpenSetting from './NavigationDrawerIsOpenSetting.js' ;
 import AppointmentDurationSetting from './AppointmentDurationSetting.js' ;
 import ImportantStringsSetting from './ImportantStringsSetting.js' ;
 import WeekStartsOnSetting from './WeekStartsOnSetting.js' ;
+import IBANSetting from './IBANSetting.js' ;
+import AccountHolderSetting from './AccountHolderSetting.js' ;
 
 const styles = theme => ({
 	setting : {
@@ -30,17 +32,28 @@ class Settings extends React.Component {
 
 		return (
 			<div>
-				<Typography variant="h3">Settings</Typography>
+				<Typography variant="h2">Settings</Typography>
 				<Typography>
 					Global settings for the whole app.
 				</Typography>
+
+				<Typography variant="h3">Payment Settings</Typography>
+				<AccountHolderSetting className={classes.setting}/>
+				<IBANSetting className={classes.setting}/>
 				<CurrencySetting className={classes.setting}/>
-				<TextTransformSetting className={classes.setting}/>
-				<LanguageSetting className={classes.setting}/>
+
+				<Typography variant="h3">UI Settings</Typography>
 				<NavigationDrawerIsOpenSetting className={classes.setting}/>
-				<AppointmentDurationSetting className={classes.setting}/>
-				<ImportantStringsSetting className={classes.setting}/>
+				<TextTransformSetting className={classes.setting}/>
+
+				<Typography variant="h3">Locale Settings</Typography>
+				<LanguageSetting className={classes.setting}/>
 				<WeekStartsOnSetting className={classes.setting}/>
+
+				<Typography variant="h3">Other Settings</Typography>
+				<ImportantStringsSetting className={classes.setting}/>
+				<AppointmentDurationSetting className={classes.setting}/>
+
 			</div>
 		) ;
 	}

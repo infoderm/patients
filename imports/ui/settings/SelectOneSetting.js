@@ -52,7 +52,7 @@ class SelectOneSetting extends React.Component {
 
 		return (
 			<div className={className}>
-				<Typography variant="h4">{title}</Typography>
+				{title && <Typography variant="h4">{title}</Typography>}
 				<ValuePicker
 					readOnly={loading}
 					options={options}

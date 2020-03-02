@@ -23,7 +23,6 @@ export default class CurrencySetting extends React.Component {
 		return (
 			<SelectOneSetting
 				className={className}
-				title="Currency"
 				label="currency"
 				setting="currency"
 				options={options}

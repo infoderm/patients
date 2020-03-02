@@ -58,6 +58,8 @@ const defaults = {
   'important-strings' : [] ,
   'week-starts-on' : 1 ,
   'text-transform' : 'uppercase' ,
+  'iban': '',
+  'account-holder': '',
 } ;
 
 function get ( key ) {
