@@ -242,7 +242,7 @@ class ConsultationCard extends React.Component {
 	  <Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
 	    Edit<EditIcon/>
 	  </Button>
-	  { owes && <Button color="primary" onClick={e => this.setState({ paying: true})}>
+	  { owes && (payment_method === 'wire') && <Button color="primary" onClick={e => this.setState({ paying: true})}>
 	    Pay by Phone<SmartphoneIcon/>
 	  </Button> }
 	  { owes && <Button color="primary" onClick={e => this.setState({ settling: true})}>
@@ -252,7 +252,7 @@ class ConsultationCard extends React.Component {
 	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
 	    Delete<DeleteIcon/>
 	  </Button>
-	  {(!owes || loadingPatient || !patient) ? null :
+	  {(!owes  || payment_method !== 'wire'|| loadingPatient || !patient) ? null :
 	  <ConsultationPaymentDialog open={paying} onClose={e => this.setState({ paying: false})} consultation={this.props.consultation} patient={patient}/>
 	  }
 	  {(!owes || loadingPatient || !patient) ? null :
