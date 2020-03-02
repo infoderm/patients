@@ -40,6 +40,20 @@ function SEPAPaymentDetails ( props ) {
 		setAmount(parseFloat(e.target.value, 10));
 	}
 
+	const data = {
+		name: accountHolder,
+		iban,
+		currency,
+		amount: isNaN(amount) ? 0 : amount,
+	} ;
+
+	if (unstructuredReference) data.unstructuredReference = unstructuredReference;
+
+	const codeProps = {
+		level: 'H',
+		size: 256,
+	} ;
+
 	return (
 		<div>
 			<Typography variant="h3">SEPA Wire</Typography>
@@ -76,22 +90,13 @@ function SEPAPaymentDetails ( props ) {
 			<TextField
 				label="Reference"
 				value={unstructuredReference}
-				onChange={e => setUnstructuredReference(e.target.value || undefined)}
+				onChange={e => setUnstructuredReference(e.target.value)}
 			/>
 			</div>
 			<div>
 			<SEPAPaymentQRCode
-				data={{
-					name: accountHolder,
-					iban,
-					currency,
-					amount: isNaN(amount) ? 0 : amount,
-					unstructuredReference,
-				}}
-				codeProps={{
-					level: 'H',
-					size: 256,
-				}}
+				data={data}
+				codeProps={codeProps}
 			/>
 			</div>
 		</div>
