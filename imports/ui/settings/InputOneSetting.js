@@ -74,7 +74,7 @@ function InputOneSetting (props) {
 let Component = InputOneSetting;
 
 Component.propTypes = {
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	label: PropTypes.string,
 	sanitize: PropTypes.func.isRequired,
 	validate: PropTypes.func.isRequired,

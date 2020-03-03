@@ -70,7 +70,7 @@ class SelectOneSetting extends React.Component {
 let Component = SelectOneSetting;
 
 Component.propTypes = {
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	label: PropTypes.string,
 	options: PropTypes.array.isRequired,
 	optionToString: PropTypes.func,
