@@ -93,7 +93,7 @@ ConsultationsList.propTypes = {
 
 export default withTracker(({ day }) => {
 	const nextDay = addDays(day, 1);
-	Meteor.subscribe('consultations');
+	Meteor.subscribe('consultations.interval', day, nextDay);
 	return {
 		day,
 		consultations: Consultations.find({ datetime : { $gte : day , $lt : nextDay } }, {sort: {datetime: 1}}).fetch() ,

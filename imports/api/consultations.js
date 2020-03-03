@@ -26,6 +26,17 @@ if (Meteor.isServer) {
 		});
 	});
 
+	Meteor.publish('consultations.interval', function (from, to) {
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+			datetime : {
+				$gte : from ,
+				$lt : to,
+			},
+		});
+	});
+
 	Meteor.publish('consultations.wired', function () {
 		return Consultations.find({
 			owner: this.userId ,
