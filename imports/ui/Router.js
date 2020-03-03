@@ -7,7 +7,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import startOfDay from 'date-fns/start_of_day';
+import startOfToday from 'date-fns/start_of_today' ;
 import dateParse from 'date-fns/parse';
+import dateFormat from 'date-fns/format' ;
 
 import PatientsList from './patients/PatientsList.js';
 import PatientRecord from './patients/PatientRecord.js';
@@ -83,6 +85,20 @@ const ConsultationsListFromMatch = ({ match }) => (
 	<ConsultationsList day={startOfDay(dateParse(match.params.day))}/>
 );
 
+const CurrentMonthlyPlanner = props => {
+	const today = startOfToday();
+	const year = dateFormat(today, 'YYYY');
+	const month = dateFormat(today, 'MM');
+	const match = {
+		params: {
+			year,
+			month,
+		},
+	};
+	return (
+		<MonthlyPlanner match={match} {...props}/>
+	) ;
+}
 
 class Main extends React.Component {
 
@@ -124,6 +140,9 @@ class Main extends React.Component {
 					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
 					<Route exact path="/calendar/month/:year/:month" render={
 						props => <MonthlyPlanner {...props} history={history}/>
+					}/>
+					<Route exact path="/calendar/month/current" render={
+						props => <CurrentMonthlyPlanner history={history}/>
 					}/>
 					<Route exact path="/calendar/week/:year/:week" render={
 						props => <WeeklyPlanner {...props} history={history}/>

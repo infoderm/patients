@@ -15,10 +15,6 @@ import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
-import format from 'date-fns/format' ;
-import startOfToday from 'date-fns/start_of_today' ;
-
-
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import FaceIcon from '@material-ui/icons/Face';
@@ -152,7 +148,7 @@ class NavigationDrawer extends React.Component {
 
           {
             //to: "/appointments" ,
-            to: `/calendar/month/${format(startOfToday(), 'YYYY/MM')}` ,
+            to: '/calendar/month/current' ,
             icon: <AccessTimeIcon/> ,
             title: "Appointments" ,
             disabled: true ,
