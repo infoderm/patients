@@ -133,9 +133,12 @@ MergePatientsFormStepPrepare.propTypes = {
 };
 
 export default withTracker(({toMerge}) => {
-	Meteor.subscribe('patients');
-	Meteor.subscribe('consultations');
-	Meteor.subscribe('documents');
+	for ( const patientId of toMerge ) {
+		Meteor.subscribe('patient', patientId);
+		Meteor.subscribe('patient.consultations', patientId);
+		Meteor.subscribe('patient.appointments', patientId);
+		Meteor.subscribe('patient.documents', patientId);
+	}
 	const oldPatients = [] ;
 	const consultations = {} ;
 	const documents = {} ;

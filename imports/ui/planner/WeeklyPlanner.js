@@ -137,7 +137,7 @@ export default withTracker(({match, history}) => {
 	const firstDayOfPrevMonth = subMonths(firstDayOfMonth, 1);
 	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
 
-	Meteor.subscribe('consultationsAndAppointments');
+	Meteor.subscribe('consultations.interval', begin, end);
 
 	return {
 		year,

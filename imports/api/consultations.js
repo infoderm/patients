@@ -107,6 +107,33 @@ if (Meteor.isServer) {
 			...books.selector(name) ,
 		});
 	});
+
+	Meteor.publish('consultations.missing-a-price', function () {
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+			$expr: {
+				$or: [
+					{ price : { $not: { $type: 1 } } } ,
+					{ price : NaN } ,
+				] ,
+			},
+		});
+	});
+
+	Meteor.publish('consultations.missing-a-book', function () {
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+			$expr: {
+				$or: [
+					{ book : null } ,
+					{ book : '' } ,
+				] ,
+			},
+		});
+	});
+
 }
 
 function sanitize ( {

@@ -22,7 +22,7 @@ const ConsultationsMissingAPrice = ( { loading, consultations, ...rest }) => {
 }
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations');
+	const handle = Meteor.subscribe('consultations.missing-a-price');
 	if ( !handle.ready()) return { loading: true } ;
 	return {
 		loading: false,
