@@ -29,11 +29,29 @@ if (Meteor.isServer) {
 	Meteor.publish('consultations.interval', function (from, to) {
 		return Consultations.find({
 			owner: this.userId ,
+			datetime : {
+				$gte : from ,
+				$lt : to,
+			},
+		});
+	});
+
+	Meteor.publish('consultations.accounted.interval.last', function (from, to) {
+		return Consultations.find({
+			owner: this.userId ,
 			isDone: true,
 			datetime : {
 				$gte : from ,
 				$lt : to,
 			},
+			book : {
+				$ne : '0' ,
+			} ,
+		}, {
+			sort: {
+				datetime: -1 ,
+				limit: 1 ,
+			}
 		});
 	});
 

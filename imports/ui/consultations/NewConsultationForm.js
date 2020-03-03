@@ -47,10 +47,13 @@ class NewConsultationForm extends React.Component {
 }
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations');
+
 	const today = startOfToday();
 	const beginningOfThisYear = startOfYear(today);
 	const beginningOfNextYear = addYears(beginningOfThisYear, 1);
+
+	const handle = Meteor.subscribe('consultations.accounted.interval.last', beginningOfThisYear, beginningOfNextYear);
+
 	if ( handle.ready() ) {
 
 		let bookPrefill = '1' ;
@@ -61,6 +64,7 @@ export default withTracker(() => {
 					$gte : beginningOfThisYear ,
 					$lt : beginningOfNextYear ,
 				} ,
+				isDone: true ,
 				book : {
 					$ne : '0' ,
 				} ,
