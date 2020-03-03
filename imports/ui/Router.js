@@ -14,6 +14,7 @@ import PatientRecord from './patients/PatientRecord.js';
 import NewPatientForm from './patients/NewPatientForm.js';
 
 import ConsultationsList from './consultations/ConsultationsList.js';
+import LastConsultationsList from './consultations/LastConsultationsList.js';
 import ConsultationDetails from './consultations/ConsultationDetails.js';
 import EditConsultationForm from './consultations/EditConsultationForm.js';
 import NewConsultationForm from './consultations/NewConsultationForm.js';
@@ -127,7 +128,7 @@ class Main extends React.Component {
 					<Route exact path="/calendar/week/:year/:week" render={
 						props => <WeeklyPlanner {...props} history={history}/>
 					}/>
-					<Route exact path="/consultations/:day" component={ConsultationsListFromMatch}/>
+					<Route exact path="/consultations/last" component={LastConsultationsList}/>
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>

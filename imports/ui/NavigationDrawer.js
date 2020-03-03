@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { withTracker } from 'meteor/react-meteor-data' ;
 import React from 'react';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
@@ -133,7 +132,7 @@ class NavigationDrawer extends React.Component {
           } ,
 
           {
-            to: `/consultations/${format(startOfToday(), 'YYYY-MM-DD')}` ,
+            to: '/consultations/last' ,
             icon: <FolderSharedIcon/> ,
             title: "Consultations"
           } ,
@@ -348,21 +347,12 @@ class NavigationDrawer extends React.Component {
 
 }
 
-NavigationDrawer.propTypes = {
+let Component = NavigationDrawer;
+
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withTracker(() => {
-  return {};
-    //const appointmentDurationHandle = settings.subscribe('navigation-drawer-is-open') ;
-    //if (appointmentDurationHandle.ready()) {
-      //return {
-        //state: settings.get('navigation-drawer-is-open') ,
-      //} ;
-    //}
-    //else {
-      //return {
-        //state: 'closed' ,
-      //};
-    //}
-}) ( withStyles(styles, { withTheme: true }) (NavigationDrawer) ) ;
+Component = withStyles(styles, { withTheme: true }) (Component) ;
+
+export default Component;

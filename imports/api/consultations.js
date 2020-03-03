@@ -55,6 +55,18 @@ if (Meteor.isServer) {
 		});
 	});
 
+	Meteor.publish('consultations.last', function () {
+		return Consultations.find({
+			owner: this.userId ,
+			isDone: true,
+		}, {
+			sort: {
+				datetime: -1 ,
+				limit: 1 ,
+			}
+		});
+	});
+
 	Meteor.publish('consultations.wired', function () {
 		return Consultations.find({
 			owner: this.userId ,
