@@ -86,7 +86,7 @@ TagList.propTypes = {
 
   name: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.instanceOf(RegExp),
+    PropTypes.object,
   ]),
   sort: PropTypes.object.isRequired,
 
@@ -98,7 +98,6 @@ TagList.propTypes = {
 };
 
 export default withTracker(({subscription, collection, name, sort, page, perpage}) => {
-  console.debug(subscription, name, page)
   const handle = Meteor.subscribe(subscription, name);
   const query = {};
   if (name) query.name = name;
