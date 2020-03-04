@@ -38,7 +38,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
   const _year = parseInt(year, 10);
   const _thisyear = now.getFullYear();
 
-  const query = { name : { $regex: '^' + year, $options: 'i' } } ;
+  const query = { fiscalYear: _year } ;
 
   const end = Math.min(_thisyear, _year + 5) + 1;
   const begin = end - 11;
@@ -62,7 +62,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
         subscription="books"
         url={match.url}
         query={query}
-        sort={{name: -1}}
+        sort={{fiscalYear: 1, bookNumber: -1}}
       />
       <Fab className={classes.saveButton} color="secondary" onClick={e => setDownloading(true)}>
           <SaveIcon/>
