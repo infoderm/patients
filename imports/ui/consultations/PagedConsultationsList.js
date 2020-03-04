@@ -40,7 +40,7 @@ function PagedConsultationsList ( props ) {
     <div className={classes.container}>
     { items.map(consultation => ( <ConsultationCard {...itemProps} key={consultation._id} consultation={consultation}/> )) }
     </div>
-    { page === 0 ? '' :
+    { page === 1 ? '' :
       <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
       <NavigateBeforeIcon/>
       </Fab> }

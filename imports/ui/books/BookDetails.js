@@ -39,7 +39,7 @@ export default function BookDetails ( { match , year , book , page , perpage } )
 }
 
 BookDetails.defaultProps = {
-	page: 0,
+	page: 1,
 	perpage: 100,
 } ;
 

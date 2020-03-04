@@ -37,7 +37,7 @@ export default function AllergyDetails ( { match , name , page , perpage } ) {
 }
 
 AllergyDetails.defaultProps = {
-	page: 0,
+	page: 1,
 	perpage: 10,
 } ;
 

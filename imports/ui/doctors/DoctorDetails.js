@@ -37,7 +37,7 @@ export default function DoctorDetails ( { match , name , page , perpage } ) {
 }
 
 DoctorDetails.defaultProps = {
-	page: 0,
+	page: 1,
 	perpage: 10,
 } ;
 

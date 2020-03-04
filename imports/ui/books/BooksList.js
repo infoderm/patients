@@ -1,9 +1,14 @@
-import React from 'react' ;
+import React, { useState } from 'react' ;
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
+
+import dateFormat from 'date-fns/format';
+
+import { list } from '@aureooms/js-itertools' ;
+import { range } from '@aureooms/js-itertools' ;
 
 import TagList from '../tags/TagList.js';
 
@@ -11,6 +16,8 @@ import BooksDownloadDialog from './BooksDownloadDialog.js';
 
 import BookCard from './BookCard.js';
 import { Books } from '../../api/books.js';
+
+import Jumper from '../navigation/Jumper.js';
 
 const styles = theme => ({
   saveButton: {
@@ -20,48 +27,61 @@ const styles = theme => ({
   },
 });
 
-class BooksList extends React.Component {
+function BooksList ( { classes , match , year , page , perpage } ) {
 
-  constructor ( props ) {
-    super(props);
-    this.state = {
-      downloading: false ,
-    } ;
-  }
+  const [downloading, setDownloading] = useState(false) ;
 
-  render ( ) {
+  const now = new Date();
+  page = match && match.params.page && parseInt(match.params.page,10) || page ;
+  year = match && match.params.year || year || dateFormat(now, 'YYYY');
 
-    let { classes , match , page , perpage } = this.props ;
+  const _year = parseInt(year, 10);
+  const _thisyear = now.getFullYear();
 
-    page = match && match.params.page && parseInt(match.params.page,10) || page ;
+  const name = new RegExp('^' + year) ;
 
-    return (
-      <div>
-        <TagList
-          page={page}
-          perpage={perpage}
-          collection={Books}
-          Card={BookCard}
-          subscription="books"
-          root="/books"
-        />
-        <Fab className={classes.saveButton} color="secondary" onClick={e => this.setState({ downloading: true})}>
-            <SaveIcon/>
-        </Fab>
-        <BooksDownloadDialog open={this.state.downloading} onClose={e => this.setState({ downloading: false})}/>
-      </div>
-    ) ;
+  const end = Math.min(_thisyear, _year + 5) + 1;
+  const begin = end - 11;
 
-  }
+  const years = list(range(begin, end)).map(
+    x => ({
+      key: x,
+      url: `/books/${x}`,
+      disabled: x === _year,
+    })
+  );
+
+  console.debug(match, year, page, name);
+
+  return (
+    <div>
+      <Jumper items={years}/>
+      <TagList
+        page={page}
+        perpage={perpage}
+        collection={Books}
+        Card={BookCard}
+        subscription="books"
+        url={match.url}
+        name={name}
+        sort={{name: -1}}
+      />
+      <Fab className={classes.saveButton} color="secondary" onClick={e => setDownloading(true)}>
+          <SaveIcon/>
+      </Fab>
+      <BooksDownloadDialog initialYear={year} open={downloading} onClose={e => setDownloading(false)}/>
+    </div>
+  ) ;
 
 }
 
 BooksList.defaultProps = {
-  page: 0,
+  page: 1,
   perpage: 10,
 } ;
 
 BooksList.propTypes = {
+  year: PropTypes.string,
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
 } ;

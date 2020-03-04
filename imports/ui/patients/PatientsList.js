@@ -52,13 +52,13 @@ class PatientsList extends React.Component {
               <FaceIcon className={classes.rightIcon}/>
             </Button>
           </Grid>
-          { patients.slice(page*perpage, (page+1)*perpage).map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+          { patients.slice((page-1)*perpage, page*perpage).map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
         </Grid>
-        { page === 0 ? '' :
+        { page === 1 ? '' :
         <Fab className={classes.fabprev} color="primary" component={Link} to={`/patients/page/${page-1}`}>
             <NavigateBeforeIcon/>
         </Fab> }
-        { page + 1 === Math.ceil(patients.length / perpage) ? '' :
+        { page === Math.ceil(patients.length / perpage) ? '' :
         <Fab className={classes.fabnext} color="primary" component={Link} to={`/patients/page/${page+1}`}>
             <NavigateNextIcon/>
         </Fab> }
@@ -69,7 +69,7 @@ class PatientsList extends React.Component {
 }
 
 PatientsList.defaultProps = {
-	page: 0,
+	page: 1,
 	perpage: 10,
 } ;
 

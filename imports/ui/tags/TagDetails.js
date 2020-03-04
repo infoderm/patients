@@ -46,6 +46,6 @@ TagDetails.propTypes = {
 export default withTracker(({subscription, name, collection, selector, sort, page, perpage}) => {
 	Meteor.subscribe(subscription, name);
 	return {
-		items: collection.find(selector, {sort, skip: page*perpage, limit: perpage}).fetch()
+		items: collection.find(selector, {sort, skip: (page-1)*perpage, limit: perpage}).fetch()
 	} ;
 }) ( TagDetails );

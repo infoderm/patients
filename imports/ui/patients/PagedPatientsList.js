@@ -37,7 +37,7 @@ function PagedPatientsList ( props ) {
       <Grid container spacing={24}>
         { items.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
       </Grid>
-      { page === 0 ? '' :
+      { page === 1 ? '' :
       <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
         <NavigateBeforeIcon/>
       </Fab> }
