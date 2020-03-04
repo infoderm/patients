@@ -112,6 +112,14 @@ Meteor.startup(() => {
   createSimpleUniqueIndex(Allergies, 'name');
   createSimpleUniqueIndex(Books, 'name');
 
+  Books.rawCollection().createIndex({
+    owner: 1,
+    fiscalYear: 1,
+    bookNumber: 1,
+  }, {
+    background: true,
+  });
+
   createSimpleUniqueIndex(Drugs, 'mppcv');
 
   Drugs.rawCollection().createIndex({
