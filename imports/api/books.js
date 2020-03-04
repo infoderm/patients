@@ -29,12 +29,21 @@ export const books = {
 
     name = name.trim();
 
-    const fields = {
+    const [fiscalYear, bookNumber] = books.parse(name) ;
+
+    const key = {
       owner,
       name,
     };
 
-    return Books.upsert( fields, { $set: fields } ) ;
+    const fields = {
+      owner,
+      name,
+      fiscalYear,
+      bookNumber,
+    };
+
+    return Books.upsert( key, { $set: fields } ) ;
 
   } ,
 
@@ -58,7 +67,22 @@ export const books = {
 
   name: ( datetime , book ) => books.format(format(datetime, 'YYYY'), book) ,
 
-  split: name => [ name.slice(0,4) , name.slice(5) ] ,
+  split: name => {
+    const pivot = name.indexOf('/') ;
+    return [ name.slice(0,pivot) , name.slice(pivot+1) ] ;
+  } ,
+
+  parse: name => {
+    const [year, book] = books.split( name ) ;
+
+    let fiscalYear = year;
+    let bookNumber = book;
+
+    try { fiscalYear = parseInt(fiscalYear, 10); } catch (e) {}
+    try { bookNumber = parseInt(bookNumber, 10); } catch (e) {}
+
+    return [fiscalYear, bookNumber] ;
+  } ,
 
   range: name => {
 
