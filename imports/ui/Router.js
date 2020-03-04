@@ -4,12 +4,12 @@ import { Switch , Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Typography from '@material-ui/core/Typography';
-
 import startOfDay from 'date-fns/start_of_day';
 import startOfToday from 'date-fns/start_of_today' ;
 import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format' ;
+
+import NoContent from './navigation/NoContent.js';
 
 import PatientsList from './patients/PatientsList.js';
 import PatientRecord from './patients/PatientRecord.js';
@@ -71,14 +71,9 @@ const styles = theme => ({
 });
 
 const NoMatch = ({ location }) => (
-	<div>
-		<Typography variant="h5">
-			No match for <code>{location.pathname}</code>.
-		</Typography>
-		<Typography variant="subtitle1">
-			Work in progress. Come back later.
-		</Typography>
-	</div>
+	<NoContent>
+		No match for <code>{location.pathname}</code>.
+	</NoContent>
 );
 
 const ConsultationsListFromMatch = ({ match }) => (
@@ -112,7 +107,7 @@ class Main extends React.Component {
 
 		if (!currentUser) return (
 			<main className={classes.main}>
-				<Typography variant="h5">Please sign in</Typography>
+				<NoContent>Please sign in</NoContent>
 			</main>
 		) ;
 
