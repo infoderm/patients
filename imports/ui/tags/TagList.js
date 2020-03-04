@@ -8,20 +8,15 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
 
 const styles = theme => ({
-  empty: {
-    textAlign: 'center',
-    margin: '3em 0',
-    color: '#999',
-  },
   fabprev: {
       position: 'fixed',
       bottom: theme.spacing.unit * 3,
@@ -54,7 +49,7 @@ class TagList extends React.Component {
               { tags.map(tag => ( <Card key={tag._id} item={tag}/> )) }
             </Grid>
             :
-            <Typography className={classes.empty} variant="h3">{`Nothing to see on page ${page}.`}</Typography>
+            <NoContent>{`Nothing to see on page ${page}.`}</NoContent>
         }
         { page === 1 ? '' :
         <Fab className={classes.fabprev} color="primary" component={Link} to={`${_root}/page/${page-1}`}>
