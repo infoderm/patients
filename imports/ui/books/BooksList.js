@@ -38,7 +38,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
   const _year = parseInt(year, 10);
   const _thisyear = now.getFullYear();
 
-  const name = { $regex: '^' + year, $options: 'i' } ;
+  const query = { name : { $regex: '^' + year, $options: 'i' } } ;
 
   const end = Math.min(_thisyear, _year + 5) + 1;
   const begin = end - 11;
@@ -61,7 +61,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
         Card={BookCard}
         subscription="books"
         url={match.url}
-        name={name}
+        query={query}
         sort={{name: -1}}
       />
       <Fab className={classes.saveButton} color="secondary" onClick={e => setDownloading(true)}>
