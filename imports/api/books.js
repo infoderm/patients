@@ -11,8 +11,12 @@ import { Consultations } from './consultations.js';
 export const Books = new Mongo.Collection('books');
 
 if (Meteor.isServer) {
-  Meteor.publish('books', function () {
-    return Books.find({ owner: this.userId });
+  Meteor.publish('books', function (name) {
+    const query = {
+      owner: this.userId,
+    };
+    //if (name) query.name = name;
+    return Books.find(query);
   });
 }
 

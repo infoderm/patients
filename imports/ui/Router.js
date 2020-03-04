@@ -157,7 +157,9 @@ class Main extends React.Component {
 					}/>
 
 					<Route exact path="/books" component={BooksList}/>
-					<Route exact path="/books/page/:page" component={BooksList}/>
+					<Route exact path="/books/:year" component={BooksList}/>
+					<Route exact path="/books/:year/page/:page" component={BooksList}/>
+
 					<Route exact path="/book/:year/:book" component={BookDetails}/>
 					<Route exact path="/book/:year/:book/page/:page" component={BookDetails}/>
 
@@ -173,16 +175,25 @@ class Main extends React.Component {
 
 					<Route exact path="/doctors" component={DoctorsList}/>
 					<Route exact path="/doctors/page/:page" component={DoctorsList}/>
+					<Route exact path="/doctors/:prefix" component={DoctorsList}/>
+					<Route exact path="/doctors/:prefix/page/:page" component={DoctorsList}/>
+
 					<Route exact path="/doctor/:name" component={DoctorDetails}/>
 					<Route exact path="/doctor/:name/page/:page" component={DoctorDetails}/>
 
 					<Route exact path="/insurances" component={InsurancesList}/>
 					<Route exact path="/insurances/page/:page" component={InsurancesList}/>
+					<Route exact path="/insurances/:prefix" component={InsurancesList}/>
+					<Route exact path="/insurances/:prefix/page/:page" component={InsurancesList}/>
+
 					<Route exact path="/insurance/:name" component={InsuranceDetails}/>
 					<Route exact path="/insurance/:name/page/:page" component={InsuranceDetails}/>
 
 					<Route exact path="/allergies" component={AllergiesList}/>
 					<Route exact path="/allergies/page/:page" component={AllergiesList}/>
+					<Route exact path="/allergies/:prefix" component={AllergiesList}/>
+					<Route exact path="/allergies/:prefix/page/:page" component={AllergiesList}/>
+
 					<Route exact path="/allergy/:name" component={AllergyDetails}/>
 					<Route exact path="/allergy/:name/page/:page" component={AllergyDetails}/>
 

@@ -45,9 +45,8 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 import dateformat from 'date-fns/format';
 
-import { saveAs } from 'file-saver';
-
 import { Patients } from '../../api/patients.js';
+import saveTextAs from '../../client/saveTextAs.js';
 
 import DocumentDeletionDialog from './DocumentDeletionDialog.js';
 import DocumentLinkingDialog from './DocumentLinkingDialog.js';
@@ -133,11 +132,6 @@ class DocumentCard extends React.Component {
 
 		const { document } = this.props ;
 
-		const blob = new Blob(
-			[document.source],
-			{type: "text/plain;charset=utf-8"}
-		) ;
-
 		const extensions = {
 			'healthone': 'HLT' ,
 			//'medar' : 'MDR' ,
@@ -153,7 +147,7 @@ class DocumentCard extends React.Component {
 
 		const filename = `${name}.${ext}`;
 
-		saveAs(blob, filename);
+		saveTextAs(document.source, filename);
 
 	}
 

@@ -37,7 +37,7 @@ export default function InsuranceDetails ( { match , name , page , perpage } ) {
 }
 
 InsuranceDetails.defaultProps = {
-	page: 0,
+	page: 1,
 	perpage: 10,
 } ;
 

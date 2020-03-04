@@ -35,7 +35,7 @@ function DocumentsList ( { classes, page , perpage , documents } ) {
       <List>
         { documents.map(document => ( <DocumentListItem key={document._id} document={document}/> )) }
       </List>
-      { page === 0 ? null :
+      { page === 1 ? null :
       <Fab className={classes.fabprev} color="primary" component={Link} to={`/documents/page/${page-1}`}>
           <NavigateBeforeIcon/>
       </Fab> }
@@ -48,7 +48,7 @@ function DocumentsList ( { classes, page , perpage , documents } ) {
 }
 
 DocumentsList.defaultProps = {
-  page: 0,
+  page: 1,
   perpage: 10,
 } ;
 
@@ -60,14 +60,13 @@ DocumentsList.propTypes = {
 export default withTracker(({match, page, perpage}) => {
   page = (match && match.params.page && parseInt(match.params.page,10)) || page || DocumentsList.defaultProps.page ;
   perpage = perpage || DocumentsList.defaultProps.perpage ;
-  //Meteor.subscribe('documents.page', page, perpage);
   const handle = Meteor.subscribe('documents');
   return {
     page,
     perpage,
     documents: !handle.ready() ? [] : Documents.find({}, {
       sort: { createdAt: -1 },
-      skip: page*perpage,
+      skip: (page-1)*perpage,
       limit: perpage,
     }).fetch() ,
   } ;
