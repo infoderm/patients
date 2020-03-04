@@ -337,7 +337,7 @@ class ConsultationForm extends React.Component {
 							value={this.state.price}
 							onChange={e => this.setState({
 								price: e.target.value ,
-								paid: this.state.syncPaid ? e.target.value : this.state.paid,
+								paid: this.state.syncPaid && this.state.payment_method !== 'wire' ? e.target.value : this.state.paid,
 								dirty: true,
 							})}
 							margin="normal"
