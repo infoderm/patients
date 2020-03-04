@@ -12,7 +12,7 @@ export default function InsurancesList ( { match , prefix , page , perpage } ) {
   page = match && match.params.page && parseInt(match.params.page,10) || page ;
   prefix = match && match.params.prefix || prefix ;
 
-  const name = prefix && { $regex: '^' + prefix, $options: 'i' } ;
+  const query = prefix ? { name : { $regex: '^' + prefix, $options: 'i' } } : { } ;
 
   return (
     <div>
@@ -24,7 +24,7 @@ export default function InsurancesList ( { match , prefix , page , perpage } ) {
         Card={InsuranceCard}
         subscription="insurances"
         url={match.url}
-        name={name}
+        query={query}
       />
     </div>
   ) ;

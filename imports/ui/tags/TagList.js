@@ -73,6 +73,7 @@ class TagList extends React.Component {
 TagList.defaultProps = {
   page: 1,
   perpage: 10,
+  query: {},
   sort: { name: 1 },
 } ;
 
@@ -86,10 +87,7 @@ TagList.propTypes = {
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
 
-  name: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object,
-  ]),
+  query: PropTypes.object.isRequired,
   sort: PropTypes.object.isRequired,
 
   subscription: PropTypes.string.isRequired,
@@ -99,10 +97,8 @@ TagList.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-export default withTracker(({subscription, collection, name, sort, page, perpage}) => {
-  const handle = Meteor.subscribe(subscription, name);
-  const query = {};
-  if (name) query.name = name;
+export default withTracker(({subscription, collection, query, sort, page, perpage}) => {
+  const handle = Meteor.subscribe(subscription, query);
   return {
     loading: !handle.ready() ,
     tags: collection.find(query, {sort, skip: (page-1)*perpage, limit: perpage}).fetch() ,
