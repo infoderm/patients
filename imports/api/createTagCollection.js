@@ -15,8 +15,10 @@ export default function createTagCollection ( options ) {
   const Collection = new Mongo.Collection(collection);
 
   if (Meteor.isServer) {
-    Meteor.publish(publication, function () {
-      return Collection.find({ owner: this.userId });
+    Meteor.publish(publication, function ( name ) {
+      const query = { owner: this.userId } ;
+      if (name) query.name = name;
+      return Collection.find(query);
     });
     if (singlePublication ) {
       Meteor.publish(singlePublication, function ( name ) {

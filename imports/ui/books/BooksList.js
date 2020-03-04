@@ -38,7 +38,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
   const _year = parseInt(year, 10);
   const _thisyear = now.getFullYear();
 
-  const name = new RegExp('^' + year) ;
+  const name = { $regex: '^' + year, $options: 'i' } ;
 
   const end = Math.min(_thisyear, _year + 5) + 1;
   const begin = end - 11;
@@ -50,8 +50,6 @@ function BooksList ( { classes , match , year , page , perpage } ) {
       disabled: x === _year,
     })
   );
-
-  console.debug(match, year, page, name);
 
   return (
     <div>

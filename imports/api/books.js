@@ -15,7 +15,7 @@ if (Meteor.isServer) {
     const query = {
       owner: this.userId,
     };
-    //if (name) query.name = name;
+    if (name) query.name = name;
     return Books.find(query);
   });
 }

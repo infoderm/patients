@@ -12,7 +12,7 @@ export default function InsurancesList ( { match , prefix , page , perpage } ) {
   page = match && match.params.page && parseInt(match.params.page,10) || page ;
   prefix = match && match.params.prefix || prefix ;
 
-  const name = prefix && new RegExp('^' + prefix, 'i') ;
+  const name = prefix && { $regex: '^' + prefix, $options: 'i' } ;
 
   return (
     <div>
