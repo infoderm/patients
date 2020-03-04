@@ -14,6 +14,8 @@ import Fab from '@material-ui/core/Fab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
+import Loading from '../navigation/Loading.js';
+
 const styles = theme => ({
   empty: {
     textAlign: 'center',
@@ -46,7 +48,7 @@ class TagList extends React.Component {
     return (
       <div>
         { loading ?
-            <Typography className={classes.empty} variant="h3">{`Loading page ${page} ...`}</Typography>
+            <Loading/>
             : tags.length ?
             <Grid container spacing={24}>
               { tags.map(tag => ( <Card key={tag._id} item={tag}/> )) }
