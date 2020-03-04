@@ -177,7 +177,13 @@ Meteor.startup(() => {
   generateTags(Patients, doctors, 'doctors');
   generateTags(Patients, allergies, 'allergies');
 
-  Consultations.find().map( ( { owner , datetime , book , isDone } ) => isDone && datetime && book && books.add(owner, books.name(datetime, book)));
+  Consultations.find().map(
+    ( { owner , datetime , book , isDone } ) => {
+      if (isDone && datetime && book) {
+        books.add(owner, books.name(datetime, book));
+      }
+    }
+  );
 
   // reparse all documents
   Documents.rawCollection().find().snapshot().forEach(
