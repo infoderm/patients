@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor' ;
 import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
-import ReactLoading from 'react-loading';
 import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
@@ -26,6 +25,8 @@ import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentLink from '../attachments/AttachmentLink.js';
 import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
+import Loading from '../navigation/Loading.js';
+
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
 import { Appointments } from '../../api/appointments.js';
@@ -43,9 +44,6 @@ const styles = theme => ({
 	},
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
-	},
-	loadingAnimation: {
-		margin: 'auto',
 	},
 });
 
@@ -67,18 +65,7 @@ class PatientRecord extends React.Component {
 			documents,
 		} = this.props ;
 
-		if (loading) return (
-			<div>
-				<ReactLoading
-					className={classes.loadingAnimation}
-					type="bubbles"
-					color={theme.palette.primary.main}
-					height={200}
-					width={400}
-					delay={250}
-				/>
-			</div>
-		) ;
+		if (loading) return ( <Loading/> ) ;
 
 		if (!patient) return <div>Error: Patient not found.</div>;
 
