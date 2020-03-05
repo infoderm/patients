@@ -8,6 +8,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import ConsultationCard from './ConsultationCard.js';
 
+import Loading from '../navigation/Loading.js' ;
+import NoContent from '../navigation/NoContent.js' ;
+
 import { Consultations } from '../../api/consultations.js';
 
 const styles = theme => ({
@@ -26,13 +29,13 @@ class UnpaidConsultationsList extends React.Component {
 
 		const { classes, loading } = this.props ;
 
-		if (loading) return <div>Loading...</div>;
+		if (loading) return <Loading/>;
 
 		const { consultations } = this.props ;
 
 		const unpaidConsultations = consultations.filter(consultation => consultation.paid !== consultation.price);
 
-		if (unpaidConsultations.length === 0) return <div>All consultations have been paid for :)</div>;
+		if (unpaidConsultations.length === 0) return <NoContent>All consultations have been paid for :)</NoContent>;
 
 		return (
 			<div className={classes.container}>

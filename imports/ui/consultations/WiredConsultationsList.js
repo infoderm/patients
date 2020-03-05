@@ -8,6 +8,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import ConsultationCard from './ConsultationCard.js';
 
+import Loading from '../navigation/Loading.js' ;
+import NoContent from '../navigation/NoContent.js' ;
+
 import { Consultations } from '../../api/consultations.js';
 
 const styles = theme => ({
@@ -26,11 +29,11 @@ class WiredConsultationsList extends React.Component {
 
 		const { classes, loading } = this.props ;
 
-		if (loading) return <div>Loading...</div>;
+		if (loading) return <Loading/>;
 
 		const { consultations } = this.props ;
 
-		if (consultations.length === 0) return <div>No wire transfer</div>;
+		if (consultations.length === 0) return <NoContent>No wire transfer</NoContent>;
 
 		return (
 			<div className={classes.container}>

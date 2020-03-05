@@ -8,9 +8,15 @@ import startOfDay from 'date-fns/startOfDay';
 
 import { Consultations } from '../../api/consultations.js' ;
 
+import Loading from '../navigation/Loading.js' ;
+
 import ConsultationsList from './ConsultationsList.js' ;
 
-function LastConsultationsList ( { lastConsultation } ) {
+function LastConsultationsList ( { loading , lastConsultation } ) {
+
+    if (loading) return (
+        <Loading/>
+    ) ;
 
     const lastConsultationDate = lastConsultation && lastConsultation.datetime ? startOfDay(lastConsultation.datetime) : startOfToday();
 
@@ -25,7 +31,9 @@ let Component = LastConsultationsList;
 Component = withTracker(() => {
     const handle = Meteor.subscribe('consultations.last');
 
-    if ( !handle.ready() ) return {};
+    if ( !handle.ready() ) return {
+        loading: true,
+    };
 
     const lastConsultation = Consultations.findOne(
         {
@@ -40,6 +48,7 @@ Component = withTracker(() => {
     ) ;
 
     return {
+        loading: false,
         lastConsultation,
     } ;
 }) ( Component ) ;

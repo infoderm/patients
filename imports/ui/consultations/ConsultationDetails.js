@@ -7,6 +7,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { Consultations } from '../../api/consultations.js';
 
+import Loading from '../navigation/Loading.js' ;
+import NoContent from '../navigation/NoContent.js' ;
+
 import ConsultationCard from './ConsultationCard.js';
 
 const styles = theme => ({
@@ -17,8 +20,8 @@ const styles = theme => ({
 
 function ConsultationDetails ( { classes, theme, loading, consultation } ) {
 
-	if (loading) return <div>Loading...</div>;
-	if (!consultation) return <div>Error: Consultation not found.</div>;
+	if (loading) return <Loading/>;
+	if (!consultation) return <NoContent>Error: Consultation not found.</NoContent>;
 
 	return (
 		<div className={classes.container}>
