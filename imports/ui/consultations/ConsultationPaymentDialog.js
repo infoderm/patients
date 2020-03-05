@@ -26,7 +26,7 @@ import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   } ,
   code: {
     display: 'block',
@@ -45,7 +45,7 @@ function ConsultationPaymentDialog ( props ) {
 
     const owed = price - paid ;
 
-    const unstructuredReference = dateFormat(datetime, 'YYYY-MM-DD') ;
+    const unstructuredReference = dateFormat(datetime, 'yyyy-MM-dd') ;
 
     const data = {
       name: accountHolder,

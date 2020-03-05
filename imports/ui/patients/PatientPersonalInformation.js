@@ -38,9 +38,10 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import format from 'date-fns/format';
-import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
-import startOfToday from 'date-fns/start_of_today';
+import dateFormat from 'date-fns/format';
+import formatDistanceStrict from 'date-fns/formatDistanceStrict';
+import startOfToday from 'date-fns/startOfToday';
+import dateParseISO from 'date-fns/parseISO' ;
 
 import odiff from 'odiff' ;
 import { empty } from '@aureooms/js-cardinality' ;
@@ -85,43 +86,43 @@ const styles = theme => ({
 		color: '#fff',
 		backgroundColor: '#999',
 		verticalAlign: 'top',
-		marginRight: theme.spacing.unit * 2,
+		marginRight: theme.spacing(2),
 	},
 	photo: {
 		width: 140,
 		height: 200,
 		verticalAlign: 'top',
-		marginRight: theme.spacing.unit * 2,
+		marginRight: theme.spacing(2),
 	},
 	formControl: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		overflow: 'auto',
 		'& input, & div' : {
 			color: 'black !important',
 		} ,
 	},
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 	details: {
 		paddingTop: 80,
 	},
 	multiline: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing.unit*2}px)`,
+		width: `calc(100% - ${theme.spacing(2)}px)`,
 		'& textarea' : {
 			color: 'black !important',
 		} ,
 	},
 	button: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 	},
 	leftIcon: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 	},
 	rightIcon: {
-		marginLeft: theme.spacing.unit,
+		marginLeft: theme.spacing(1),
 	},
 	problem:{
 		color: 'red',
@@ -151,7 +152,7 @@ class PatientPersonalInformation extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps ( nextProps ) {
+	UNSAFE_componentWillReceiveProps ( nextProps ) {
 		if ( ! empty(odiff(this.props.patient, nextProps.patient))) {
 			this.setState({
 				patient: nextProps.patient,
@@ -205,13 +206,15 @@ class PatientPersonalInformation extends React.Component {
 
 		const updateList = key => update(key, v => list(map(x=>x.name, v))) ;
 
+		const _birthdate = dateParseISO(patient.birthdate) ;
+
 		return (
 			<div>
 				<Prompt
 					when={dirty}
 					message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
 				/>
-				<Grid className={classes.header} container spacing={24}>
+				<Grid className={classes.header} container spacing={3}>
 					{(!patient.photo) ? '' :
 					<Grid item xs={1}>
 					<Avatar
@@ -247,9 +250,9 @@ class PatientPersonalInformation extends React.Component {
 						</div>
 						}
 						{ !patient.birthdate ? '' :
-						<Typography variant="h5">{format(patient.birthdate,'D MMM YYYY')}</Typography> }
+						<Typography variant="h5">{dateFormat(_birthdate,'d MMM yyyy')}</Typography> }
 						{ !patient.birthdate ? '' :
-						<Typography variant="h5">{distanceInWordsStrict(patient.birthdate,startOfToday())}</Typography> }
+						<Typography variant="h5">{formatDistanceStrict(_birthdate,startOfToday())}</Typography> }
 						{ !patient.noshow ? '' :
 						<Typography className={classes.problem} variant="h4">PVPP = {patient.noshow}</Typography> }
 					</Grid>

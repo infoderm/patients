@@ -5,7 +5,16 @@ import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom'
 
-import 'typeface-roboto';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
+
+import WebFont from 'webfontloader';
+
+WebFont.load({
+  google: {
+    families: ['Roboto:300,400,500']
+  }
+});
 
 import '../imports/startup/accounts-config.js';
 import App from '../imports/ui/App.js';
@@ -16,9 +25,11 @@ import App from '../imports/ui/App.js';
 Meteor.startup(
   () => render(
     (
-      <BrowserRouter>
-        <App/>
-      </BrowserRouter>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <BrowserRouter>
+          <App/>
+        </BrowserRouter>
+      </MuiPickersUtilsProvider>
     ) ,
     document.getElementById('render-target')
   )

@@ -21,7 +21,7 @@ import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoComplete
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
 }) ;
 

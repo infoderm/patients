@@ -3,8 +3,8 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
 
-import startOfToday from 'date-fns/start_of_today' ;
-import startOfDay from 'date-fns/start_of_day';
+import startOfToday from 'date-fns/startOfToday' ;
+import startOfDay from 'date-fns/startOfDay';
 
 import { Consultations } from '../../api/consultations.js' ;
 

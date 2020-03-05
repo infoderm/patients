@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Chip from '@material-ui/core/Chip';
@@ -64,28 +65,28 @@ const styles = theme => ({
     flexWrap: 'wrap',
   } ,
   chip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   linksep: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   link: {
     fontWeight: 'bold',
   },
   patientchip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#88f',
     color: '#fff',
     fontWeight: 'bold',
   },
   pricechip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#228d57',
     color: '#e8e9c9',
     fontWeight: 'bold',
   },
   debtchip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#f88',
     color: '#fff',
     fontWeight: 'bold',
@@ -141,8 +142,8 @@ class ConsultationCard extends React.Component {
       <ExpansionPanel defaultExpanded={defaultExpanded}>
 	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
 	  <div className={classes.chips}>
-	    <Chip label={dateFormat(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'YYYY-MM-DD')}`}/>
-	    <Chip label={dateFormat(datetime,'hh:mmA')} className={classes.chip}/>
+	    <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
+	    <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
 	    { !patientChip ? null :
 	      <Chip
 	      avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null}
@@ -172,32 +173,32 @@ class ConsultationCard extends React.Component {
 	<ExpansionPanelDetails>
 	  <List>
 	    <ListItem>
-	      <Avatar><InfoIcon/></Avatar>
+	      <ListItemAvatar><Avatar><InfoIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="Motif de la consultation" secondary={reason}/>
 	    </ListItem>
 	    <ListItem>
-	      <Avatar><DoneIcon/></Avatar>
+	      <ListItemAvatar><Avatar><DoneIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="Examens déjà réalisés" secondary={done}/>
 	    </ListItem>
 	    <ListItem>
-	      <Avatar><HourglassFullIcon/></Avatar>
+	      <ListItemAvatar><Avatar><HourglassFullIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="Examens à réaliser" secondary={todo}/>
 	    </ListItem>
 	    <ListItem>
-	      <Avatar><EditIcon/></Avatar>
+	      <ListItemAvatar><Avatar><EditIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="Traitement" secondary={treatment}/>
 	    </ListItem>
 	    <ListItem>
-	      <Avatar><AlarmIcon/></Avatar>
+	      <ListItemAvatar><Avatar><AlarmIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="À revoir" secondary={next}/>
 	    </ListItem>
 	    <ListItem>
-	      <Avatar><WarningIcon/></Avatar>
+	      <ListItemAvatar><Avatar><WarningIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="Autres remarques" secondary={more}/>
 	    </ListItem>
 	    { missingPaymentData ? '' :
 	    <ListItem>
-	      <Avatar><EuroSymbolIcon/></Avatar>
+	      <ListItemAvatar><Avatar><EuroSymbolIcon/></Avatar></ListItemAvatar>
 	      <ListItemText
 		primary="Paiement"
 		secondary={`À payé ${Currency.format(paid, {code: currency})} de ${Currency.format(price, {code: currency})}.`}
@@ -205,7 +206,7 @@ class ConsultationCard extends React.Component {
 	    </ListItem> }
 	    { missingPaymentData ? '' :
 	    <ListItem>
-	      <Avatar><AccountBalanceWalletIcon/></Avatar>
+	      <ListItemAvatar><Avatar><AccountBalanceWalletIcon/></Avatar></ListItemAvatar>
 	      <ListItemText
 		primary="Méthode de Paiement"
 		secondary={payment_method === 'wire' ? 'Virement' : 'Cash'}
@@ -213,12 +214,12 @@ class ConsultationCard extends React.Component {
 	    </ListItem> }
 	    { book === '' ? '' :
 	    <ListItem>
-	      <Avatar><BookIcon/></Avatar>
+	      <ListItemAvatar><Avatar><BookIcon/></Avatar></ListItemAvatar>
 	      <ListItemText primary="Carnet" secondary={book}/>
 	    </ListItem> }
 	    { attachments === undefined || attachments.length === 0 ? '' :
 	    <ListItem>
-	      <Avatar><AttachmentIcon/></Avatar>
+	      <ListItemAvatar><Avatar><AttachmentIcon/></Avatar></ListItemAvatar>
 	      <ListItemText
 		disableTypography={true}
 		primary={<Typography variant="subtitle1">{attachments.length} attachments</Typography>}

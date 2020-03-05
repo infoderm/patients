@@ -21,17 +21,17 @@ const styles = theme => ({
     fontSize: '1rem',
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
   fabprev: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 12,
+      bottom: theme.spacing(3),
+      right: theme.spacing(12),
   },
   fabnext: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 3,
+      bottom: theme.spacing(3),
+      right: theme.spacing(3),
   },
 });
 
@@ -45,7 +45,7 @@ class PatientsList extends React.Component {
     const { patients , classes , page , perpage } = this.props;
     return (
       <div>
-        <Grid container spacing={24}>
+        <Grid container spacing={3}>
           <Grid item sm={12} md={12} lg={6} xl={4}>
             <Button variant="contained" className={classes.buttonTile} component={Link} to="/new/patient">
               Add a new patient

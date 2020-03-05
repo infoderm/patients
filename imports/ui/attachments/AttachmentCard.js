@@ -33,7 +33,7 @@ import { Uploads } from '../../api/uploads.js';
 const styles = theme => ({
 	card: {
 		display: 'block',
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 	},
 	thumbnail: {
 		height: 300,
@@ -88,7 +88,7 @@ class AttachmentCard extends React.Component {
 						<AttachmentIcon/>}
 					</Avatar>}
 					title={attachment.name}
-					subheader={format(attachment.meta.createdAt, 'YYYY-MM-DD')}
+					subheader={format(attachment.meta.createdAt, 'yyyy-MM-dd')}
 					action={
 					<div>
 						<IconButton

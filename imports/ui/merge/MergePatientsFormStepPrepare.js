@@ -28,16 +28,16 @@ import { Documents } from '../../api/documents.js';
 
 const styles = theme => ({
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 	button: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 	},
 	leftIcon: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 	},
 	rightIcon: {
-		marginLeft: theme.spacing.unit,
+		marginLeft: theme.spacing(1),
 	},
 });
 
@@ -70,7 +70,7 @@ class MergePatientsFormStepPrepare extends React.Component {
 
 			<Grid container className={classes.container}>
 				{ !error && <Grid item sm={12} md={12}>
-					<Grid container spacing={24} className={classes.container}>
+					<Grid container spacing={3} className={classes.container}>
 						{ oldPatients.map(patient => (
 						<div key={patient._id}>
 							<Typography variant="h1">{patient._id}</Typography>
@@ -81,7 +81,7 @@ class MergePatientsFormStepPrepare extends React.Component {
 							/>
 						</div> )) }
 					</Grid>
-					<Grid container spacing={24} className={classes.container}>
+					<Grid container spacing={3} className={classes.container}>
 						<Typography variant="h1">New patient information</Typography>
 						<PatientSheet
 							patient={newPatient}

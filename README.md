@@ -22,7 +22,7 @@
 ### dependency management
 
     meteor update
-    ncu -a
+    ncu -u
     meteor npm install
     
 ## Deployment (first time)

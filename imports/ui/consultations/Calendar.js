@@ -18,7 +18,7 @@ class Calendar extends React.Component {
 	constructor ( props ) {
 		super(props);
 		this.state = {
-			day: format( new Date(), 'YYYY-MM-DD' ) ,
+			day: format( new Date(), 'yyyy-MM-dd' ) ,
 		};
 	}
 

@@ -15,7 +15,7 @@ const styles = theme => ({
 	},
 	row: {
 		display: 'block',
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		width: 200,
 	},
 	form: {

@@ -19,7 +19,7 @@ class AttachmentThumbnail extends React.Component {
     } ;
   }
 
-  componentWillReceiveProps ( nextProps ) {
+  UNSAFE_componentWillReceiveProps ( nextProps ) {
 
     const { loading, attachmentId, attachment , width , height } = nextProps ;
 

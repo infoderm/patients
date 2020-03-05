@@ -33,8 +33,8 @@ function renderInput(inputProps) {
 const styles = theme => ({
   container: {
     position: 'relative',
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(2),
     borderRadius: 2,
     background: fade(theme.palette.common.white, 0.15),
     '&:hover': {
@@ -47,7 +47,7 @@ const styles = theme => ({
   },
   adornment: {
     display: 'inline-flex',
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'relative',
     pointerEvents: 'none',
@@ -56,9 +56,9 @@ const styles = theme => ({
     verticalAlign: 'middle',
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     transition: theme.transitions.create('width'),
     width: '100%',
     color: 'white',

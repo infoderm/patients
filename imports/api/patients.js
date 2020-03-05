@@ -17,7 +17,7 @@ import { allergies } from './allergies.js';
 
 export const Patients = new Mongo.Collection('patients');
 
-export const BIRTHDATE_FORMAT = 'YYYY-MM-DD' ;
+export const BIRTHDATE_FORMAT = 'yyyy-MM-dd' ;
 export const SEX_ALLOWED = [ '' , 'male' , 'female' , 'other' ]
 
 insurances.init( Patients ) ;

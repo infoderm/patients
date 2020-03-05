@@ -34,28 +34,28 @@ const styles = theme => ({
 		color: '#fff',
 		backgroundColor: '#999',
 		verticalAlign: 'top',
-		marginRight: theme.spacing.unit * 2,
+		marginRight: theme.spacing(2),
 	},
 	photo: {
 		width: 140,
 		height: 200,
 		verticalAlign: 'top',
-		marginRight: theme.spacing.unit * 2,
+		marginRight: theme.spacing(2),
 	},
 	formControl: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		overflow: 'auto',
 		'& input, & div' : {
 			color: 'black !important',
 		} ,
 	},
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 	multiline: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing.unit*2}px)`,
+		width: `calc(100% - ${theme.spacing(2)}px)`,
 		'& textarea' : {
 			color: 'black !important',
 		} ,

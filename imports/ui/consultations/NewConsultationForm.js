@@ -3,9 +3,9 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
 
-import startOfYear from 'date-fns/start_of_year';
-import startOfToday from 'date-fns/start_of_today';
-import addYears from 'date-fns/add_years';
+import startOfYear from 'date-fns/startOfYear';
+import startOfToday from 'date-fns/startOfToday';
+import addYears from 'date-fns/addYears';
 
 import ConsultationForm from './ConsultationForm.js' ;
 

@@ -14,7 +14,7 @@ function TagDetails ( { Card , List , listProps , root , name , page , perpage ,
 		<div>
 			{ Card && <div>
 				<div style={{ paddingBottom: 50 , paddingTop: 20 }}>
-					<Grid container spacing={24}>
+					<Grid container spacing={3}>
 						<Grid item sm={12} md={12} lg={3} xl={4}></Grid>
 						<Card name={name}/>
 					</Grid>

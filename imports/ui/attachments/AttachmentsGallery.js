@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
-import startOfDay from 'date-fns/start_of_day' ;
+import startOfDay from 'date-fns/startOfDay' ;
 
 import { list , map , groupby } from '@aureooms/js-itertools' ;
 

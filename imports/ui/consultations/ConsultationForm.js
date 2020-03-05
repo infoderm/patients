@@ -30,9 +30,9 @@ const styles = theme => ({
 		paddingBottom: '5em',
 	},
 	multiline: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing.unit*2}px)`,
+		width: `calc(100% - ${theme.spacing(2)}px)`,
 	},
 	header: {
 		backgroundColor: 'white',
@@ -53,8 +53,8 @@ const styles = theme => ({
 	},
 	fab: {
 		position: 'fixed',
-		bottom: theme.spacing.unit * 3,
-		right: theme.spacing.unit * 3,
+		bottom: theme.spacing(3),
+		right: theme.spacing(3),
 	},
 });
 
@@ -67,7 +67,7 @@ class ConsultationForm extends React.Component {
 
 		this.state = {
 			patientId: consultation.patientId,
-			date: format(consultation.datetime, 'YYYY-MM-DD'),
+			date: format(consultation.datetime, 'yyyy-MM-dd'),
 			time: format(consultation.datetime, 'HH:mm'),
 			reason: consultation.reason,
 			done: consultation.done,
@@ -182,7 +182,7 @@ class ConsultationForm extends React.Component {
 					when={this.state.dirty}
 					message="You are trying to leave the page without saving your changes. Are you sure you want to continue?"
 				/>
-				<Grid className={classes.header} container spacing={24}>
+				<Grid className={classes.header} container spacing={3}>
 					{(loadingPatient || !patient || !patient.photo) ? '' :
 					<Grid item xs={1}>
 					<Avatar
@@ -233,7 +233,7 @@ class ConsultationForm extends React.Component {
 						/>
 					</Grid>
 				</Grid>
-				<Grid className={classes.form} container spacing={24}>
+				<Grid className={classes.form} container spacing={3}>
 					<Grid item xs={12}>
 						<TextField
 							autoFocus

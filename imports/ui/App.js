@@ -54,70 +54,63 @@ const styles = theme => ({
 	} ,
 });
 
-class App extends React.Component {
+function App ( props ) {
 
-	constructor(props){
-		super(props);
-	}
+	const {
+		classes,
+		theme,
+		currentUser,
+		patients,
+		history,
+		textTransform,
+		navigationDrawerIsOpen,
+		progress,
+	} = props;
 
-	render(){
-
-		const {
-			classes,
-			theme,
-			currentUser,
-			patients,
-			history,
-			textTransform,
-			navigationDrawerIsOpen,
-			progress,
-		} = this.props;
-
-		return (
-			<MuiThemeProvider theme={muitheme}>
-				<CssBaseline/>
-				{ progress < 1 ?
-				<div className={classes.progressbarContainer}>
-				<CircularProgressbar
-					className={classes.progressbar}
-					maxValue={1}
-					value={progress}
-					text={`${(100 * progress) | 0}%`}
-					background
-					backgroundPadding={6}
-					styles={buildStyles({
-						backgroundColor: theme.palette.primary.main,
-						textColor: "#fff",
-						pathColor: "#fff",
-						trailColor: "transparent",
-					})}
-				/>
+	return (
+		<MuiThemeProvider theme={muitheme}>
+			<CssBaseline/>
+			{ progress < 1 ?
+			<div className={classes.progressbarContainer}>
+			<CircularProgressbar
+				className={classes.progressbar}
+				maxValue={1}
+				value={progress}
+				text={`${(100 * progress) | 0}%`}
+				background
+				backgroundPadding={6}
+				styles={buildStyles({
+					backgroundColor: theme.palette.primary.main,
+					textColor: "#fff",
+					pathColor: "#fff",
+					trailColor: "transparent",
+				})}
+			/>
+			</div>
+			:
+			<div>
+				<WholeWindowDropZone callback={handleDrop(history)}/>
+				<div className={classes.appFrame} style={{textTransform}}>
+					<Header
+						navigationDrawerIsOpen={navigationDrawerIsOpen}
+						patients={patients}
+						currentUser={currentUser}
+					/>
+					<NavigationDrawer
+						navigationDrawerIsOpen={navigationDrawerIsOpen}
+						currentUser={currentUser}
+					/>
+					<Router
+						navigationDrawerIsOpen={navigationDrawerIsOpen}
+						currentUser={currentUser}
+						history={history}
+						patients={patients}
+					/>
 				</div>
-				:
-				<div>
-					<WholeWindowDropZone callback={handleDrop(history)}/>
-					<div className={classes.appFrame} style={{textTransform}}>
-						<Header
-							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							patients={patients}
-							currentUser={currentUser}
-						/>
-						<NavigationDrawer
-							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							currentUser={currentUser}
-						/>
-						<Router
-							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							currentUser={currentUser}
-							history={history}
-							patients={patients}
-						/>
-					</div>
-				</div>
-				}
-			</MuiThemeProvider>
-		);
-	}
+			</div>
+			}
+		</MuiThemeProvider>
+	);
 }
 
 App.propTypes = {

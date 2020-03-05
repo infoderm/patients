@@ -59,7 +59,7 @@ const styles = theme => ({
   title: {
     minWidth: 100,
     flex: 'initial',
-    marginLeft: theme.spacing.unit * 3,
+    marginLeft: theme.spacing(3),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',

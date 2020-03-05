@@ -23,6 +23,6 @@ export default function AlphabetJumper ( { current , toURL } ) {
 }
 
 AlphabetJumper.propTypes = {
-  current: PropTypes.string.isRequired,
+  current: PropTypes.string,
   toURL: PropTypes.func.isRequired,
 } ;

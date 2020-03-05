@@ -7,11 +7,11 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   buttons: {
-    paddingBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing(3),
     textAlign: 'center',
   },
   button: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
   },
 });
 
