@@ -48,7 +48,7 @@
     "react-router-dom": "^5.1.2",
     "recompose": "^0.30.0",
     "sepa-payment-qr-code": "^1.0.0",
-    "typeface-roboto": "0.0.54",
+    "webfontloader": "^1.6.28",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
