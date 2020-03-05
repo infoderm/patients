@@ -142,7 +142,7 @@ class Main extends React.Component {
 					<Route exact path="/calendar/week/:year/:week" render={
 						props => <WeeklyPlanner {...props} history={history}/>
 					}/>
-					<Route exact path="/consultations/last" component={LastConsultationsList}/>
+					<Route exact path="/consultations" component={LastConsultationsList}/>
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>

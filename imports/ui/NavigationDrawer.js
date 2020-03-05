@@ -128,7 +128,7 @@ class NavigationDrawer extends React.Component {
           } ,
 
           {
-            to: '/consultations/last' ,
+            to: '/consultations' ,
             icon: <FolderSharedIcon/> ,
             title: "Consultations"
           } ,
