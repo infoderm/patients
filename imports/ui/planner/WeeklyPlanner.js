@@ -7,11 +7,11 @@ import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import isSameDay from 'date-fns/is_same_day';
-import startOfMonth from 'date-fns/start_of_month';
+import isSameDay from 'date-fns/isSameDay';
+import startOfMonth from 'date-fns/startOfMonth';
 import dateFormat from 'date-fns/format';
-import addMonths from 'date-fns/add_months';
-import subMonths from 'date-fns/sub_months';
+import addMonths from 'date-fns/addMonths';
+import subMonths from 'date-fns/subMonths';
 
 import { Consultations } from '../../api/consultations.js';
 
@@ -28,7 +28,7 @@ function DayHeader ( { className , day , row , col } ) {
 	return (
 		<div className={className}>
 			<Link
-				to={`/calendar/day/${dateFormat(day, 'YYYY-MM-DD')}`}
+				to={`/calendar/day/${dateFormat(day, 'yyyy-MM-dd')}`}
 			>
 				{dateFormat(day, displayFormat)}
 			</Link>
@@ -76,9 +76,9 @@ class MonthlyPlanner extends React.Component {
 			selectedSlot,
 		} = this.state ;
 
-		const prevMonth = dateFormat(firstDayOfPrevMonth, 'YYYY/MM');
-		const nextMonth = dateFormat(firstDayOfNextMonth, 'YYYY/MM');
-		const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'YYYY/WW');
+		const prevMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
+		const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
+		const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/WW');
 
 		console.debug(consultations);
 

@@ -10,7 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
 	chip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#aaa',
 		color: '#fff',
 	},

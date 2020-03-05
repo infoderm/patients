@@ -11,7 +11,7 @@ import ConsultationCard from './ConsultationCard.js';
 
 const styles = theme => ({
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 });
 

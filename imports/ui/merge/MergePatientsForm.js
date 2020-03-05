@@ -31,13 +31,13 @@ import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
 
 const styles = theme => ({
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 	button: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 	},
 	rightIcon: {
-		marginLeft: theme.spacing.unit,
+		marginLeft: theme.spacing(1),
 	},
 });
 
@@ -90,7 +90,7 @@ class MergePatientsForm extends React.Component {
 								/>
 							</Grid>
 							<Grid item sm={12} md={12}>
-								<Grid container spacing={24} className={classes.container}>
+								<Grid container spacing={3} className={classes.container}>
 								  { toMerge.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
 								</Grid>
 							</Grid>

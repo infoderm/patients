@@ -19,13 +19,13 @@ import NoContent from '../navigation/NoContent.js';
 const styles = theme => ({
   fabprev: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 12,
+      bottom: theme.spacing(3),
+      right: theme.spacing(12),
   },
   fabnext: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 3,
+      bottom: theme.spacing(3),
+      right: theme.spacing(3),
   },
 });
 
@@ -45,7 +45,7 @@ class TagList extends React.Component {
         { loading ?
             <Loading/>
             : tags.length ?
-            <Grid container spacing={24}>
+            <Grid container spacing={3}>
               { tags.map(tag => ( <Card key={tag._id} item={tag}/> )) }
             </Grid>
             :

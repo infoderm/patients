@@ -19,13 +19,13 @@ import DocumentListItem from './DocumentListItem.js';
 const styles = theme => ({
   fabprev: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 12,
+      bottom: theme.spacing(3),
+      right: theme.spacing(12),
   },
   fabnext: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 3,
+      bottom: theme.spacing(3),
+      right: theme.spacing(3),
   },
 });
 

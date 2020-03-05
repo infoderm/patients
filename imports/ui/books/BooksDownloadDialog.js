@@ -3,8 +3,8 @@ import { Meteor } from 'meteor/meteor' ;
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-import startOfYear from 'date-fns/start_of_year';
-import endOfYear from 'date-fns/end_of_year';
+import startOfYear from 'date-fns/startOfYear';
+import endOfYear from 'date-fns/endOfYear';
 import dateFormat from 'date-fns/format' ;
 
 import { withStyles } from '@material-ui/core/styles';
@@ -24,7 +24,7 @@ import saveTextAs from '../../client/saveTextAs.js';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
 }) ;
 
@@ -85,7 +85,7 @@ function BooksDownloadDialog ( { classes, open, onClose, initialYear } ) {
 }
 
 BooksDownloadDialog.defaultProps = {
-    initialYear: dateFormat(new Date(), 'YYYY'),
+    initialYear: dateFormat(new Date(), 'yyyy'),
 } ;
 
 BooksDownloadDialog.propTypes = {

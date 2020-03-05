@@ -14,20 +14,20 @@ import ConsultationCard from './ConsultationCard.js';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
   fabprev: {
     position: 'fixed',
-    bottom: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 12,
+    bottom: theme.spacing(3),
+    right: theme.spacing(12),
   },
   fabnext: {
     position: 'fixed',
-    bottom: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 3,
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
   },
   container: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
   },
 });
 

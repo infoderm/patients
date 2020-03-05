@@ -37,8 +37,8 @@ import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import dateFormat from 'date-fns/format' ;
-import startOfDay from 'date-fns/start_of_day' ;
-import isBefore from 'date-fns/is_before' ;
+import startOfDay from 'date-fns/startOfDay' ;
+import isBefore from 'date-fns/isBefore' ;
 
 import { Patients } from '../../api/patients.js';
 import { msToString } from '../../client/duration.js' ;
@@ -56,22 +56,22 @@ const styles = theme => ({
     flexWrap: 'wrap',
   } ,
   chip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   linksep: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   link: {
     fontWeight: 'bold',
   },
   patientchip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#88f',
     color: '#fff',
     fontWeight: 'bold',
   },
   debtchip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#f88',
     color: '#fff',
     fontWeight: 'bold',
@@ -111,8 +111,8 @@ class AppointmentCard extends React.Component {
       <ExpansionPanel defaultExpanded={defaultExpanded}>
 	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
 	  <div className={classes.chips}>
-	    <Chip label={dateFormat(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'YYYY-MM-DD')}`}/>
-	    <Chip label={dateFormat(datetime,'hh:mmA')} className={classes.chip}/>
+	    <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
+	    <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
 	    {duration && <Chip label={msToString(duration)} className={classes.chip}/>}
 	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
 	  </div>

@@ -3,8 +3,8 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import format from 'date-fns/format' ;
-import dateParse from 'date-fns/parse';
-import addYears from 'date-fns/add_years';
+import dateParseISO from 'date-fns/parseISO';
+import addYears from 'date-fns/addYears';
 
 import { Consultations } from './consultations.js';
 
@@ -65,7 +65,7 @@ export const books = {
 
   format: ( year , book ) => `${year}/${book}` ,
 
-  name: ( datetime , book ) => books.format(format(datetime, 'YYYY'), book) ,
+  name: ( datetime , book ) => books.format(format(datetime, 'yyyy'), book) ,
 
   split: name => {
     const pivot = name.indexOf('/') ;
@@ -88,7 +88,7 @@ export const books = {
 
     const [ year , book ] = books.split( name ) ;
 
-    const begin = dateParse(`${year}-01-01`);
+    const begin = dateParseISO(`${year}-01-01`);
     const end = addYears(begin, 1);
 
     return [ book , begin , end ] ;

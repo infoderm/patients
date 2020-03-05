@@ -61,7 +61,7 @@ const styles = theme => ({
 	},
 	actions: {
 		display: 'flex',
-		paddingLeft: theme.spacing.unit * 2,
+		paddingLeft: theme.spacing(2),
 	},
 	name: {
 		display: 'flex',
@@ -127,7 +127,7 @@ class TagCard extends React.Component {
 			<CardContent className={classes.content}>
 			{loading ? '...' : content(items)}
 			</CardContent>
-			<CardActions className={classes.actions} disableActionSpacing>
+			<CardActions className={classes.actions} disableSpacing>
 			{RenamingDialog && <Button color="primary" onClick={this.openRenamingDialog}>
 				Rename<EditIcon/>
 			</Button>}

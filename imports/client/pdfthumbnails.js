@@ -4,7 +4,7 @@ import pdfjs from 'pdfjs-dist';
 
 function createContext ( page, desiredWidth, desiredHeight ) {
 
-    const viewport = page.getViewport(1);
+    const viewport = page.getViewport({scale:1});
 
     let scale = 1;
 
@@ -16,7 +16,7 @@ function createContext ( page, desiredWidth, desiredHeight ) {
       scale = desiredHeight / viewport.height;
     }
 
-    const scaledViewport = page.getViewport(scale);
+    const scaledViewport = page.getViewport({scale});
 
     const canvas = document.createElement('canvas');
     canvas.width = desiredWidth || scaledViewport.width;
@@ -35,11 +35,11 @@ function createContext ( page, desiredWidth, desiredHeight ) {
 export function thumbnail ( file , { page = 1 , width , height , type , encoderOptions } = {} ) {
 
   // A Promise
-  return pdfjs.getDocument( file )
+  return pdfjs.getDocument( file ).promise
     .then( doc => doc.getPage(page) )
     .then( thepage => {
       const renderContext = createContext(thepage, width, height);
-      return thepage.render(renderContext).then( () => renderContext ) ;
+      return thepage.render(renderContext).promise.then( () => renderContext ) ;
     })
     .then( renderContext => {
       const canvas = renderContext.canvasContext.canvas;

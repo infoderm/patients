@@ -16,7 +16,7 @@ const PatientsMissingAGender = ( { loading, patients, ...rest }) => {
 	if (patients.length === 0) return <div {...rest}>All patients have a gender :)</div>;
 
 	return (
-		<Grid container spacing={24} {...rest}>
+		<Grid container spacing={3} {...rest}>
 			{ patients.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
 		</Grid>
 	);

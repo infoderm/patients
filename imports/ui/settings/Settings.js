@@ -18,7 +18,7 @@ import AccountHolderSetting from './AccountHolderSetting.js' ;
 
 const styles = theme => ({
 	setting : {
-		marginBottom: theme.spacing.unit * 3 ,
+		marginBottom: theme.spacing(3) ,
 	} ,
 }) ;
 

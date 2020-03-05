@@ -14,17 +14,17 @@ import PatientCard from './PatientCard.js';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
   fabprev: {
     position: 'fixed',
-    bottom: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 12,
+    bottom: theme.spacing(3),
+    right: theme.spacing(12),
   },
   fabnext: {
     position: 'fixed',
-    bottom: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 3,
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
   },
 });
 
@@ -34,7 +34,7 @@ function PagedPatientsList ( props ) {
 
   return (
     <div>
-      <Grid container spacing={24}>
+      <Grid container spacing={3}>
         { items.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
       </Grid>
       { page === 1 ? '' :

@@ -22,8 +22,8 @@ import Jumper from '../navigation/Jumper.js';
 const styles = theme => ({
   saveButton: {
       position: 'fixed',
-      bottom: theme.spacing.unit * 3,
-      right: theme.spacing.unit * 21,
+      bottom: theme.spacing(3),
+      right: theme.spacing(21),
   },
 });
 
@@ -33,7 +33,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
 
   const now = new Date();
   page = match && match.params.page && parseInt(match.params.page,10) || page ;
-  year = match && match.params.year || year || dateFormat(now, 'YYYY');
+  year = match && match.params.year || year || dateFormat(now, 'yyyy');
 
   const _year = parseInt(year, 10);
   const _thisyear = now.getFullYear();

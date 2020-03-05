@@ -30,7 +30,7 @@ const styles = theme => ({
 		backgroundColor: green[500],
 	},
 	chip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 	},
 });
 

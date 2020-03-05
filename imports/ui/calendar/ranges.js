@@ -1,8 +1,8 @@
-import startOfDay from 'date-fns/start_of_day';
-import startOfWeek from 'date-fns/start_of_week';
-import endOfWeek from 'date-fns/end_of_week';
-import endOfMonth from 'date-fns/end_of_month';
-import addDays from 'date-fns/add_days';
+import startOfDay from 'date-fns/startOfDay';
+import startOfWeek from 'date-fns/startOfWeek';
+import endOfWeek from 'date-fns/endOfWeek';
+import endOfMonth from 'date-fns/endOfMonth';
+import addDays from 'date-fns/addDays';
 
 export function monthly ( year , month , weekOptions ) {
 	const firstDayOfMonth = new Date(year, month - 1, 1);

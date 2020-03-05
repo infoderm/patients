@@ -9,10 +9,10 @@ import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 
 import { format } from 'date-fns' ;
-import addDays from 'date-fns/add_days' ;
-import subDays from 'date-fns/sub_days' ;
-import addHours from 'date-fns/add_hours' ;
-import isBefore from 'date-fns/is_before' ;
+import addDays from 'date-fns/addDays' ;
+import subDays from 'date-fns/subDays' ;
+import addHours from 'date-fns/addHours' ;
+import isBefore from 'date-fns/isBefore' ;
 
 import { count } from '@aureooms/js-cardinality' ;
 
@@ -28,17 +28,17 @@ import { Consultations } from '../../api/consultations.js';
 
 const styles = theme => ({
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 	fabprev: {
 		position: 'fixed',
-		bottom: theme.spacing.unit * 3,
-		right: theme.spacing.unit * 12,
+		bottom: theme.spacing(3),
+		right: theme.spacing(12),
 	},
 	fabnext: {
 		position: 'fixed',
-		bottom: theme.spacing.unit * 3,
-		right: theme.spacing.unit * 3,
+		bottom: theme.spacing(3),
+		right: theme.spacing(3),
 	},
 });
 
@@ -52,8 +52,8 @@ class ConsultationsList extends React.Component {
 
 		const { classes, day, consultations } = this.props ;
 
-		const dayBefore = format( subDays(day, 1), 'YYYY-MM-DD' ) ;
-		const dayAfter = format( addDays(day, 1), 'YYYY-MM-DD' ) ;
+		const dayBefore = format( subDays(day, 1), 'yyyy-MM-dd' ) ;
+		const dayAfter = format( addDays(day, 1), 'yyyy-MM-dd' ) ;
 
 		const pause = addHours(day, 15);
 		const am = consultations.filter(c => isBefore(c.datetime, pause));
@@ -63,7 +63,7 @@ class ConsultationsList extends React.Component {
 
 		return (
 			<div>
-				<Typography variant="h3">{`${format(day, 'dddd Do MMMM YYYY')} (AM: ${cam}, PM: ${cpm})`}</Typography>
+				<Typography variant="h3">{`${format(day, 'iiii do MMMM yyyy')} (AM: ${cam}, PM: ${cpm})`}</Typography>
 				{ cam === 0 ? '' :
 				<div className={classes.container}>
 					{ am.map(consultation => ( <ConsultationCard key={consultation._id} consultation={consultation}/> )) }

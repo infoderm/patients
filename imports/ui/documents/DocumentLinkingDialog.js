@@ -22,7 +22,7 @@ import SetPicker from '../input/SetPicker.js';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
   dialogPaper: {
       overflow: "visible"

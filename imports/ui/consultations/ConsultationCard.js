@@ -64,28 +64,28 @@ const styles = theme => ({
     flexWrap: 'wrap',
   } ,
   chip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   linksep: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   link: {
     fontWeight: 'bold',
   },
   patientchip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#88f',
     color: '#fff',
     fontWeight: 'bold',
   },
   pricechip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#228d57',
     color: '#e8e9c9',
     fontWeight: 'bold',
   },
   debtchip: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     backgroundColor: '#f88',
     color: '#fff',
     fontWeight: 'bold',
@@ -141,8 +141,8 @@ class ConsultationCard extends React.Component {
       <ExpansionPanel defaultExpanded={defaultExpanded}>
 	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
 	  <div className={classes.chips}>
-	    <Chip label={dateFormat(datetime,'dddd Do MMMM YYYY')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'YYYY-MM-DD')}`}/>
-	    <Chip label={dateFormat(datetime,'hh:mmA')} className={classes.chip}/>
+	    <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
+	    <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
 	    { !patientChip ? null :
 	      <Chip
 	      avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null}

@@ -7,16 +7,16 @@ import Button from '@material-ui/core/Button';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import startOfDay from 'date-fns/start_of_day';
-import startOfWeek from 'date-fns/start_of_week';
-import endOfWeek from 'date-fns/end_of_week';
-import startOfMonth from 'date-fns/start_of_month';
-import endOfMonth from 'date-fns/end_of_month';
-import differenceInDays from 'date-fns/difference_in_days';
-import addDays from 'date-fns/add_days';
-import isSameDay from 'date-fns/is_same_day';
-import isBefore from 'date-fns/is_before';
-import isAfter from 'date-fns/is_after';
+import startOfDay from 'date-fns/startOfDay';
+import startOfWeek from 'date-fns/startOfWeek';
+import endOfWeek from 'date-fns/endOfWeek';
+import startOfMonth from 'date-fns/startOfMonth';
+import endOfMonth from 'date-fns/endOfMonth';
+import differenceInDays from 'date-fns/differenceInDays';
+import addDays from 'date-fns/addDays';
+import isSameDay from 'date-fns/isSameDay';
+import isBefore from 'date-fns/isBefore';
+import isAfter from 'date-fns/isAfter';
 import dateFormat from 'date-fns/format';
 
 import {
@@ -33,13 +33,13 @@ import calendarRanges from './ranges.js';
 
 const styles = theme => ({
 	button: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 	},
 	leftIcon: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 	},
 	rightIcon: {
-		marginLeft: theme.spacing.unit,
+		marginLeft: theme.spacing(1),
 	},
 });
 
@@ -52,7 +52,7 @@ function ColumnHeader ( { classes , day , row , col } ) {
 				[classes[`col${col}`]]: true,
 			})}
 		>
-			{dateFormat(day, 'dddd')}
+			{dateFormat(day, 'iiii')}
 		</div>
 	) ;
 }
@@ -96,7 +96,7 @@ function createOccupancyMap ( begin , end ) {
 	const occupancy = new Map();
 
 	for (const day of generateDays(begin, end)) {
-		occupancy.set(dateFormat(day, 'YYYYMMDD'), 0);
+		occupancy.set(dateFormat(day, 'yyyyMMdd'), 0);
 	}
 
 	return occupancy;
@@ -109,7 +109,7 @@ function* generateEventProps ( occupancy , begin , end , maxLines , events ) {
 
 		if ((event.end && isBefore(event.end, begin)) || isAfter(event.begin, end)) continue ;
 
-		const day = dateFormat(event.begin, 'YYYYMMDD');
+		const day = dateFormat(event.begin, 'yyyyMMdd');
 
 		const slot = occupancy.get(day) + 1;
 
@@ -129,7 +129,7 @@ function* generateEventProps ( occupancy , begin , end , maxLines , events ) {
 
 function* generateMoreProps ( occupancy , begin , end , maxLines ) {
 	for ( const day of generateDays(begin, end) ) {
-		const key = dateFormat(day, 'YYYYMMDD');
+		const key = dateFormat(day, 'yyyyMMdd');
 		const count = occupancy.get(key) - maxLines;
 		if ( count > 0 ) yield {
 			day: key,
@@ -348,7 +348,7 @@ class MonthlyCalendarData extends React.Component {
 		}
 
 		for ( const { day , row , col } of daysProps ) {
-			const dayId = dateFormat(day, 'YYYYMMDD');
+			const dayId = dateFormat(day, 'yyyyMMdd');
 			for ( const j of range(1, maxLines) ) {
 				gridStyles[`day${dayId}slot${j}`] = {
 					gridColumnStart: col,

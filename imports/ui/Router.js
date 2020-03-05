@@ -4,9 +4,9 @@ import { Switch , Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import startOfDay from 'date-fns/start_of_day';
-import startOfToday from 'date-fns/start_of_today' ;
-import dateParse from 'date-fns/parse';
+import startOfDay from 'date-fns/startOfDay';
+import startOfToday from 'date-fns/startOfToday' ;
+import dateParseISO from 'date-fns/parseISO';
 import dateFormat from 'date-fns/format' ;
 
 import NoContent from './navigation/NoContent.js';
@@ -59,7 +59,7 @@ const styles = theme => ({
 		backgroundColor: theme.palette.background.default,
     	flexGrow: 1,
 		//width: 'calc(100% - 240px)',
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 		height: 'calc(100% - 56px)',
 		marginTop: 56,
 		//marginLeft: 240,
@@ -77,12 +77,12 @@ const NoMatch = ({ location }) => (
 );
 
 const ConsultationsListFromMatch = ({ match }) => (
-	<ConsultationsList day={startOfDay(dateParse(match.params.day))}/>
+	<ConsultationsList day={startOfDay(dateParseISO(match.params.day))}/>
 );
 
 const CurrentMonthlyPlanner = props => {
 	const today = startOfToday();
-	const year = dateFormat(today, 'YYYY');
+	const year = dateFormat(today, 'yyyy');
 	const month = dateFormat(today, 'MM');
 	const match = {
 		params: {

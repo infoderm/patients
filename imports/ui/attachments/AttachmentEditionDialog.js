@@ -18,7 +18,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
 }) ;
 

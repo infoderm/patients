@@ -9,7 +9,7 @@ import { Drugs } from '../../api/drugs.js';
 
 const styles = theme => ({
 	container: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 	},
 });
 
@@ -22,7 +22,7 @@ class DrugDetails extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps ( nextProps ) {
+	UNSAFE_componentWillReceiveProps ( nextProps ) {
 		this.setState({ drug: nextProps.drug });
 	}
 

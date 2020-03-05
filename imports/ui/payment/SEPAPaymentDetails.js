@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography' ;
 import TextField from '@material-ui/core/TextField' ;
 
 import format from 'date-fns/format' ;
-import startOfToday from 'date-fns/start_of_today' ;
+import startOfToday from 'date-fns/startOfToday' ;
 
 import { settings } from '../../api/settings.js';
 
@@ -16,7 +16,7 @@ import SEPAPaymentQRCode from './SEPAPaymentQRCode.js';
 
 const styles = theme => ({
 	setting : {
-		marginBottom: theme.spacing.unit * 3 ,
+		marginBottom: theme.spacing(3) ,
 	} ,
 }) ;
 
@@ -29,7 +29,7 @@ function SEPAPaymentDetails ( props ) {
 		currency,
 	} = props ;
 
-	const defaultReference = format(startOfToday(), 'YYYY-MM-DD');
+	const defaultReference = format(startOfToday(), 'yyyy-MM-dd');
 
 	const [amount, setAmount] = useState(0.01);
 	const [amountString, setAmountString] = useState(amount.toString());

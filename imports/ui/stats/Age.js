@@ -3,9 +3,9 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react';
 
-import startOfToday from 'date-fns/start_of_today';
-import subYears from 'date-fns/sub_years';
-import isAfter from 'date-fns/is_after';
+import startOfToday from 'date-fns/startOfToday';
+import subYears from 'date-fns/subYears';
+import isAfter from 'date-fns/isAfter';
 
 import { at_least , count } from '@aureooms/js-cardinality';
 

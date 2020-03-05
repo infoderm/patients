@@ -49,51 +49,51 @@ const styles = theme => ({
 		flexWrap: 'wrap',
 	},
 	chip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 	},
 	linksep: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 	},
 	link: {
 		fontWeight: 'bold',
 	},
 	patientchip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#88f',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
 	unlinkedpatientchip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
 	linkoffchip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
 		color: '#fff',
 	},
 	anomalieschip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#fa8',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
 	partialchip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#fa8',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
 	completechip: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing(1),
 		backgroundColor: '#8fa',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
 	pre: {
-		padding: theme.spacing.unit * 3,
+		padding: theme.spacing(3),
 		overflowX: 'auto',
 	},
 	list: {
@@ -148,12 +148,12 @@ class DocumentCard extends React.Component {
 					<div className={classes.chips}>
 						{ parsed ?
 							<Chip
-								label={dateformat(datetime,'dddd Do MMMM YYYY')}
+								label={dateformat(datetime,'iii do MMMM yyyy')}
 								className={classes.chip}
 							/>
 							:
 							<Chip
-								label={dateformat(createdAt,'dddd Do MMMM YYYY')}
+								label={dateformat(createdAt,'iii do MMMM yyyy')}
 								className={classes.chip}
 							/>
 						}

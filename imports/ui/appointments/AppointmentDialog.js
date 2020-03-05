@@ -34,7 +34,7 @@ import SetPicker from '../input/SetPicker.js';
 
 const styles = theme => ({
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
   },
   dialogPaper: {
     overflow: 'visible',
@@ -50,7 +50,7 @@ class AppointmentDialog extends React.Component {
   constructor ( props ) {
     super( props ) ;
     this.state = {
-      date: dateFormat(props.initialDatetime, 'YYYY-MM-DD'),
+      date: dateFormat(props.initialDatetime, 'yyyy-MM-dd'),
       time: dateFormat(props.initialDatetime, 'HH:mm'),
       duration: props.appointmentDuration.length > 0 ? props.appointmentDuration[0] : 0,
       patient: props.initialPatient ? [ props.initialPatient ] : [ ],
@@ -61,10 +61,10 @@ class AppointmentDialog extends React.Component {
     };
   }
 
-  componentWillReceiveProps ( props ) {
+  UNSAFE_componentWillReceiveProps ( props ) {
 
     const fields = {
-      date: dateFormat(props.initialDatetime, 'YYYY-MM-DD'),
+      date: dateFormat(props.initialDatetime, 'yyyy-MM-dd'),
       time: dateFormat(props.initialDatetime, 'HH:mm'),
     } ;
 

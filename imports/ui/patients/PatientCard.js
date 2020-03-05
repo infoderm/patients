@@ -53,7 +53,7 @@ const styles = theme => ({
 	},
 	actions: {
 		display: 'flex',
-		paddingLeft: theme.spacing.unit * 2,
+		paddingLeft: theme.spacing(2),
 	},
 	male: {
 		color: '#fff',
@@ -86,7 +86,7 @@ function PatientCard ( { classes, theme, patient } ) {
 					/>
 					<CardContent className={classes.content}>
 					</CardContent>
-					<CardActions className={classes.actions} disableActionSpacing>
+					<CardActions className={classes.actions} disableSpacing>
 						<Chip label={patient.niss}/>
 					</CardActions>
 				</div>
