@@ -7,9 +7,6 @@ import SaveIcon from '@material-ui/icons/Save';
 
 import dateFormat from 'date-fns/format';
 
-import { list } from '@aureooms/js-itertools' ;
-import { range } from '@aureooms/js-itertools' ;
-
 import TagList from '../tags/TagList.js';
 
 import BooksDownloadDialog from './BooksDownloadDialog.js';
@@ -17,7 +14,7 @@ import BooksDownloadDialog from './BooksDownloadDialog.js';
 import BookCard from './BookCard.js';
 import { Books } from '../../api/books.js';
 
-import Jumper from '../navigation/Jumper.js';
+import YearJumper from '../navigation/YearJumper.js';
 
 const styles = theme => ({
   saveButton: {
@@ -36,24 +33,12 @@ function BooksList ( { classes , match , year , page , perpage } ) {
   year = match && match.params.year || year || dateFormat(now, 'yyyy');
 
   const _year = parseInt(year, 10);
-  const _thisyear = now.getFullYear();
 
   const query = { fiscalYear: _year } ;
 
-  const end = Math.min(_thisyear, _year + 5) + 1;
-  const begin = end - 11;
-
-  const years = list(range(begin, end)).map(
-    x => ({
-      key: x,
-      url: `/books/${x}`,
-      disabled: x === _year,
-    })
-  );
-
   return (
     <div>
-      <Jumper items={years}/>
+      <YearJumper current={_year} toURL={x => `/books/${x}`}/>
       <TagList
         page={page}
         perpage={perpage}
