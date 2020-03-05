@@ -13,7 +13,7 @@
 
     git clone gh:dermatodoc/patients
     cd patients
-    meteor npm install
+    meteor npm ci
     
 ### test server
     
@@ -23,7 +23,7 @@
 
     meteor update
     ncu -u
-    meteor npm install
+    meteor npm ci
     
 ## Deployment (first time)
 
