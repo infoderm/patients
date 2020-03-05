@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor' ;
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -24,25 +24,27 @@ const styles = theme => ({
   },
 }) ;
 
-class ConsultationDeletionDialog extends React.Component {
+function ConsultationDeletionDialog (props) {
 
-  constructor ( props ) {
-    super( props ) ;
-    this.state = {
-      lastname: '',
-      lastnameError: '',
-    };
-  }
+    const { open , onClose , patient , consultation, classes } = props ;
 
-  render () {
+    const [lastname, setLastname] = useState('');
+    const [lastnameError, setLastnameError] = useState('');
+    const [triedToOpen, setTriedToOpen] = useState(false);
 
-    const { open , onClose , patient , consultation, classes } = this.props ;
-    const { lastname , lastnameError } = this.state ;
+    useEffect(
+      () => {
+	if (open && !triedToOpen) setTriedToOpen(true);
+      } ,
+      [open || triedToOpen]
+    ) ;
+
+    if (!triedToOpen) return null;
 
     const deleteThisConsultationIfPatientsLastNameMatches = event => {
       event.preventDefault();
       if ( normalized(lastname) === normalized(patient.lastname) ) {
-	this.setState({lastnameError: ''});
+	setLastnameError('');
 	Meteor.call('consultations.remove', consultation._id, (err, res) => {
 	  if ( err ) console.error( err ) ;
 	  else {
@@ -52,7 +54,7 @@ class ConsultationDeletionDialog extends React.Component {
 	});
       }
       else {
-	this.setState({lastnameError: 'Last names do not match'});
+	setLastnameError('Last names do not match');
       }
     };
 
@@ -76,7 +78,7 @@ class ConsultationDeletionDialog extends React.Component {
 	      label="Patient's last name"
 	      fullWidth
 	      value={lastname}
-	      onChange={e => this.setState({lastname: e.target.value})}
+	      onChange={e => setLastname(e.target.value)}
 	      helperText={lastnameError}
 	      error={!!lastnameError}
 	    />
@@ -93,7 +95,6 @@ class ConsultationDeletionDialog extends React.Component {
 	  </DialogActions>
 	</Dialog>
     );
-  }
 
 }
 
