@@ -525,7 +525,7 @@ class PatientPersonalInformation extends React.Component {
 									<EditIcon className={classes.rightIcon}/>
 								</Button>
 								<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
-								<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patient._id}`}>
+								<Button className={classes.button} color="primary" component={Link} to={`/new/consultation/for/${patient._id}`}>
 									Create a new consultation
 									<SupervisorAccountIcon className={classes.rightIcon}/>
 								</Button>
