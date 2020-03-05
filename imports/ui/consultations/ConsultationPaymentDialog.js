@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
+import Dialog from '../modal/OptimizedDialog.js';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -36,10 +36,10 @@ const styles = theme => ({
 
 function ConsultationPaymentDialog ( props ) {
 
-  const { open , onClose , patient , consultation, classes,
-    accountHolder,
-    iban,
-  } = props ;
+    const { open , onClose , patient , consultation, classes,
+      accountHolder,
+      iban,
+    } = props ;
 
     const { currency , price , paid, datetime } = consultation ;
 
@@ -56,9 +56,9 @@ function ConsultationPaymentDialog ( props ) {
     } ;
 
     const codeProps = {
-	    className: classes.code,
-	    level: 'H',
-	    size: 256,
+      className: classes.code,
+      level: 'H',
+      size: 256,
     } ;
 
     return (
