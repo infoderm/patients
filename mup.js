@@ -14,7 +14,7 @@ module.exports = {
       one: {}
     },
     docker: {
-      image: 'abernix/meteord:node-8.15.1-base'
+      image: 'abernix/meteord:node-12.16.1-base'
     },
     buildOptions: {
       serverOnly: true
