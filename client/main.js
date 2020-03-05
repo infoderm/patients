@@ -25,9 +25,11 @@ import App from '../imports/ui/App.js';
 Meteor.startup(
   () => render(
     (
-      <BrowserRouter>
-        <App/>
-      </BrowserRouter>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <BrowserRouter>
+          <App/>
+        </BrowserRouter>
+      </MuiPickersUtilsProvider>
     ) ,
     document.getElementById('render-target')
   )
