@@ -1,7 +1,7 @@
 module.exports = {
   servers: {
     one: {
-      host: 'dermatodoc.be',
+      host: 'dermatodoc.local',
       username: 'meteorapp',
       pem: '~/.ssh/meteorapp'
     }
