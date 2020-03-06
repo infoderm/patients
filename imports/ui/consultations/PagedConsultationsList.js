@@ -1,64 +1,69 @@
 import React from 'react' ;
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom' ;
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-import ConsultationCard from './ConsultationCard.js';
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
 
-const styles = theme => ({
-  rightIcon: {
-    marginLeft: theme.spacing(1),
-  },
-  fabprev: {
-    position: 'fixed',
-    bottom: theme.spacing(3),
-    right: theme.spacing(12),
-  },
-  fabnext: {
-    position: 'fixed',
-    bottom: theme.spacing(3),
-    right: theme.spacing(3),
-  },
-  container: {
-    padding: theme.spacing(3),
-  },
-});
+import ConsultationsList from './ConsultationsList.js';
 
-function PagedConsultationsList ( props ) {
+const useStyles = makeStyles(
+  theme => ({
+    fabprev: {
+      position: 'fixed',
+      bottom: theme.spacing(3),
+      right: theme.spacing(12),
+    },
+    fabnext: {
+      position: 'fixed',
+      bottom: theme.spacing(3),
+      right: theme.spacing(3),
+    },
+  })
+);
 
-  const { classes , root , page , perpage , items , itemProps } = props;
+export default function PagedConsultationsList ( props ) {
+
+  const { root , loading , page , perpage , items , itemProps } = props;
+
+  const classes = useStyles();
 
   return (
     <div>
-    <div className={classes.container}>
-    { items.map(consultation => ( <ConsultationCard {...itemProps} key={consultation._id} consultation={consultation}/> )) }
-    </div>
-    { page === 1 ? '' :
-      <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
-      <NavigateBeforeIcon/>
-      </Fab> }
-    { items.length < perpage ? '' :
-        <Fab className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
-        <NavigateNextIcon/>
+      { loading ?
+          <Loading/>
+          : items.length ?
+          <ConsultationsList items={items} itemProps={itemProps}/>
+          :
+          <NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+      }
+      { page === 1 ? '' :
+        <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
+        <NavigateBeforeIcon/>
         </Fab> }
+      { items.length < perpage ? '' :
+          <Fab className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
+          <NavigateNextIcon/>
+          </Fab> }
     </div>
   ) ;
 }
 
+PagedConsultationsList.defaultProps = {
+  loading: false,
+} ;
+
 PagedConsultationsList.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired,
   root: PropTypes.string.isRequired,
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
   items: PropTypes.array.isRequired,
 };
-
-export default withStyles(styles, { withTheme: true }) (PagedConsultationsList) ;

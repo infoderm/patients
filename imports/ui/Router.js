@@ -15,8 +15,8 @@ import PatientsList from './patients/PatientsList.js';
 import PatientRecord from './patients/PatientRecord.js';
 import NewPatientForm from './patients/NewPatientForm.js';
 
-import ConsultationsList from './consultations/ConsultationsList.js';
-import LastConsultationsList from './consultations/LastConsultationsList.js';
+import ConsultationsOfTheDay from './consultations/ConsultationsOfTheDay.js';
+import LastDayOfConsultations from './consultations/LastDayOfConsultations.js';
 import ConsultationDetails from './consultations/ConsultationDetails.js';
 import EditConsultationForm from './consultations/EditConsultationForm.js';
 import NewConsultationForm from './consultations/NewConsultationForm.js';
@@ -76,8 +76,8 @@ const NoMatch = ({ location }) => (
 	</NoContent>
 );
 
-const ConsultationsListFromMatch = ({ match }) => (
-	<ConsultationsList day={startOfDay(dateParseISO(match.params.day))}/>
+const ConsultationsOfTheDayFromMatch = ({ match }) => (
+	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))}/>
 );
 
 const CurrentMonthlyPlanner = props => {
@@ -132,7 +132,7 @@ class Main extends React.Component {
 					<Route exact path="/document/:id" component={DocumentDetails}/>
 
 					<Route exact path="/calendar" component={Calendar}/>
-					<Route exact path="/calendar/:day" component={ConsultationsListFromMatch}/>
+					<Route exact path="/calendar/:day" component={ConsultationsOfTheDayFromMatch}/>
 					<Route exact path="/calendar/month/:year/:month" render={
 						props => <MonthlyPlanner {...props} history={history}/>
 					}/>
@@ -142,7 +142,7 @@ class Main extends React.Component {
 					<Route exact path="/calendar/week/:year/:week" render={
 						props => <WeeklyPlanner {...props} history={history}/>
 					}/>
-					<Route exact path="/consultations" component={LastConsultationsList}/>
+					<Route exact path="/consultations" component={LastDayOfConsultations}/>
 					<Route exact path="/consultation/:id" component={ConsultationDetails}/>
 					<Route exact path="/edit/consultation/:id" component={EditConsultationForm}/>
 					<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
@@ -158,10 +158,13 @@ class Main extends React.Component {
 					<Route exact path="/book/:year/:book" component={BookDetails}/>
 					<Route exact path="/book/:year/:book/page/:page" component={BookDetails}/>
 
-					<Route exact path="/wired" component={WiredConsultationsList}/>
-					<Route exact path="/sepa" component={SEPAPaymentDetails}/>
+					<Route exact path="/wires" component={WiredConsultationsList}/>
+					<Route exact path="/wires/:year" component={WiredConsultationsList}/>
+					<Route exact path="/wires/:year/page/:page" component={WiredConsultationsList}/>
+
 					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
 					<Route exact path="/stats" component={Stats}/>
+					<Route exact path="/sepa" component={SEPAPaymentDetails}/>
 
 					<Route exact path="/issues" component={Issues}/>
 					<Route exact path="/merge" render={

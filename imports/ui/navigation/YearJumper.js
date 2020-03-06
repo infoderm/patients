@@ -29,6 +29,6 @@ export default function YearJumper ( { current , toURL } ) {
 }
 
 YearJumper.propTypes = {
-  current: PropTypes.string,
+  current: PropTypes.number.isRequired,
   toURL: PropTypes.func.isRequired,
 } ;

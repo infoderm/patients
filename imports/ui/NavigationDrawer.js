@@ -177,13 +177,7 @@ class NavigationDrawer extends React.Component {
           } ,
 
           {
-            to: "/sepa" ,
-            icon: <AccountBalanceIcon/> ,
-            title: "SEPA" ,
-          } ,
-
-          {
-            to: "/wired" ,
+            to: "/wires" ,
             icon: <PaymentIcon/> ,
             title: "Virements" ,
           } ,
@@ -192,6 +186,12 @@ class NavigationDrawer extends React.Component {
             to: "/unpaid" ,
             icon: <MoneyOffIcon/> ,
             title: "Unpaid" ,
+          } ,
+
+          {
+            to: "/sepa" ,
+            icon: <AccountBalanceIcon/> ,
+            title: "SEPA" ,
           } ,
 
           {

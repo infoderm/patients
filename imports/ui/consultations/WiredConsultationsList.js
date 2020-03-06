@@ -1,72 +1,56 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
-
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
+import dateFormat from 'date-fns/format' ;
 
-import ConsultationCard from './ConsultationCard.js';
+import ConsultationsPager from './ConsultationsPager.js';
 
-import Loading from '../navigation/Loading.js' ;
-import NoContent from '../navigation/NoContent.js' ;
+import YearJumper from '../navigation/YearJumper.js' ;
 
-import { Consultations } from '../../api/consultations.js';
+export default function WiredConsultationsList ( { match , year , page , perpage } ) {
 
-const styles = theme => ({
-	container: {
-		padding: theme.spacing(3),
-	},
-});
+	const now = new Date();
+	page = match && match.params.page && parseInt(match.params.page,10) || page ;
+	year = match && match.params.year || year || dateFormat(now, 'yyyy');
 
-class WiredConsultationsList extends React.Component {
+	const current = parseInt(year, 10);
 
-	constructor ( props ) {
-		super(props);
-	}
+	const begin = new Date(`${current}-01-01`);
+	const end = new Date(`${current+1}-01-01`);
 
-	render ( ) {
+	const query = {
+	  isDone: true,
+	  payment_method: 'wire',
+	  datetime: {
+	    $gte : begin ,
+	    $lt : end ,
+	  },
+	} ;
 
-		const { classes, loading } = this.props ;
+	const sort = {datetime: -1} ;
 
-		if (loading) return <Loading/>;
-
-		const { consultations } = this.props ;
-
-		if (consultations.length === 0) return <NoContent>No wire transfer</NoContent>;
-
-		return (
-			<div className={classes.container}>
-				{
-					consultations.map(
-						consultation => (
-							<ConsultationCard
-								showPrice
-								key={consultation._id}
-								consultation={consultation}
-							/>
-						)
-					)
-				}
-			</div>
-		);
-	}
-
+	return (
+		<div>
+			<YearJumper current={current} toURL={x => `/wires/${x}`}/>
+			<ConsultationsPager
+				root={`/wires/${year}`}
+				url={match.url}
+				page={page}
+				perpage={perpage}
+				query={query}
+				sort={sort}
+				itemProps={{showPrice: true}}
+			/>
+		</div>
+	);
 }
 
-WiredConsultationsList.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
-};
+WiredConsultationsList.defaultProps = {
+  page: 1,
+  perpage: 10,
+} ;
 
-export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations.wired');
-	if ( !handle.ready() ) return { loading: true } ;
-	return {
-		loading: false,
-		consultations: Consultations.find({
-			isDone: true,
-			payment_method: 'wire',
-		}, {sort: {datetime: 1}}).fetch() ,
-	} ;
-}) ( withStyles(styles, { withTheme: true })(WiredConsultationsList) );
+WiredConsultationsList.propTypes = {
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired,
+};

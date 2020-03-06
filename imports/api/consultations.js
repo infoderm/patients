@@ -19,10 +19,11 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('consultations', function () {
+	Meteor.publish('consultations', function (args = {}) {
 		return Consultations.find({
 			owner: this.userId ,
 			isDone: true,
+			...args,
 		});
 	});
 

@@ -10,9 +10,9 @@ import { Consultations } from '../../api/consultations.js' ;
 
 import Loading from '../navigation/Loading.js' ;
 
-import ConsultationsList from './ConsultationsList.js' ;
+import ConsultationsOfTheDay from './ConsultationsOfTheDay.js' ;
 
-function LastConsultationsList ( { loading , lastConsultation } ) {
+function LastDayOfConsultations ( { loading , lastConsultation } ) {
 
     if (loading) return (
         <Loading/>
@@ -21,12 +21,12 @@ function LastConsultationsList ( { loading , lastConsultation } ) {
     const lastConsultationDate = lastConsultation && lastConsultation.datetime ? startOfDay(lastConsultation.datetime) : startOfToday();
 
     return (
-        <ConsultationsList day={lastConsultationDate}/>
+        <ConsultationsOfTheDay day={lastConsultationDate}/>
     ) ;
 
 }
 
-let Component = LastConsultationsList;
+let Component = LastDayOfConsultations;
 
 Component = withTracker(() => {
     const handle = Meteor.subscribe('consultations.last');
