@@ -21,6 +21,8 @@ import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
+import { makeIndex } from '../../api/string.js';
+
 import SetPicker from '../input/SetPicker.js';
 
 import PatientCard from '../patients/PatientCard.js';
@@ -46,11 +48,22 @@ const patientToString = x => `${x.lastname} ${x.firstname} (${x._id})` ;
 const tagFilter = set => (suggestions, inputValue) => {
 
 	const notInSet = x => all(map(y=>x._id !== y._id, set)) ;
-	const matches = x => !inputValue || patientToString(x).toLowerCase().includes(inputValue.toLowerCase()) ;
+	const matches = makeIndex(inputValue);
 
 	const keep = 5 ;
 
-	return list( take( filter(notInSet, filter(matches, suggestions) ) , keep ) ) ;
+	return list(
+		take(
+			filter(
+				notInSet,
+				filter(
+					x => matches(patientToString(x)),
+					suggestions
+				)
+			) ,
+			keep
+		)
+	) ;
 
 } ;
 

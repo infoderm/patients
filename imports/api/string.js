@@ -1,5 +1,8 @@
 import deburr from 'lodash.deburr';
 
+import { all } from '@aureooms/js-itertools' ;
+import { map } from '@aureooms/js-itertools' ;
+
 const normalized = string => {
   string = string.toLowerCase();
   string = string.trim();
@@ -14,7 +17,17 @@ const onlyLowerCaseASCII = string => {
   return string ;
 } ;
 
+
+const makeIndex = data => {
+  const needles = onlyLowerCaseASCII(data).split(' ');
+  return query => {
+      const haystack = onlyLowerCaseASCII(query);
+      return all(map(needle => haystack.includes(needle), needles));
+  } ;
+} ;
+
 export {
   normalized ,
   onlyLowerCaseASCII ,
+  makeIndex ,
 } ;
