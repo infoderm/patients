@@ -29,40 +29,33 @@ const styles = theme => ({
   },
 });
 
-class TagList extends React.Component {
+function TagList ( props ) {
 
-  constructor(props){
-    super(props);
-  }
+  const { loading , tags , classes , page , perpage , collection , Card , root , url } = props;
 
-  render() {
-    const { loading , tags , classes , page , perpage , collection , Card , root , url } = this.props;
+  const _root = root || url.split('/page/')[0];
 
-    const _root = root || url.split('/page/')[0];
-
-    return (
-      <div>
-        { loading ?
-            <Loading/>
-            : tags.length ?
-            <Grid container spacing={3}>
-              { tags.map(tag => ( <Card key={tag._id} item={tag}/> )) }
-            </Grid>
-            :
-            <NoContent>{`Nothing to see on page ${page}.`}</NoContent>
-        }
-        { page === 1 ? '' :
-        <Fab className={classes.fabprev} color="primary" component={Link} to={`${_root}/page/${page-1}`}>
-            <NavigateBeforeIcon/>
-        </Fab> }
-        { tags.length < perpage ? '' :
-        <Fab className={classes.fabnext} color="primary" component={Link} to={`${_root}/page/${page+1}`}>
-            <NavigateNextIcon/>
-        </Fab> }
-      </div>
-    ) ;
-  }
-
+  return (
+    <div>
+      { loading ?
+          <Loading/>
+          : tags.length ?
+          <Grid container spacing={3}>
+            { tags.map(tag => ( <Card key={tag._id} item={tag}/> )) }
+          </Grid>
+          :
+          <NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+      }
+      { page === 1 ? '' :
+      <Fab className={classes.fabprev} color="primary" component={Link} to={`${_root}/page/${page-1}`}>
+          <NavigateBeforeIcon/>
+      </Fab> }
+      { tags.length < perpage ? '' :
+      <Fab className={classes.fabnext} color="primary" component={Link} to={`${_root}/page/${page+1}`}>
+          <NavigateNextIcon/>
+      </Fab> }
+    </div>
+  ) ;
 }
 
 TagList.defaultProps = {
