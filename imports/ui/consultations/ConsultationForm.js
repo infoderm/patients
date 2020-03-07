@@ -341,6 +341,7 @@ class ConsultationForm extends React.Component {
 								dirty: true,
 							})}
 							margin="normal"
+							error={!/^\d+$/.test(this.state.price)}
 						/>
 					</Grid>
 					<Grid item xs={3}>
@@ -353,6 +354,7 @@ class ConsultationForm extends React.Component {
 								dirty: true ,
 							})}
 							margin="normal"
+							error={!/^\d+$/.test(this.state.paid)}
 						/>
 					</Grid>
 					<Grid item xs={3}>
