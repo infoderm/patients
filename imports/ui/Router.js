@@ -152,6 +152,7 @@ class Main extends React.Component {
 					}/>
 
 					<Route exact path="/books" component={BooksList}/>
+					<Route exact path="/books/page/:page" component={BooksList}/>
 					<Route exact path="/books/:year" component={BooksList}/>
 					<Route exact path="/books/:year/page/:page" component={BooksList}/>
 
