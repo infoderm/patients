@@ -109,5 +109,8 @@ export const books = {
   } ,
 
   MAX_CONSULTATIONS: 50 ,
+  DOWNLOAD_FIRST_BOOK: 1,
+  DOWNLOAD_LAST_BOOK: 99,
+  DOWNLOAD_MAX_ROWS: 60,
 
 } ;

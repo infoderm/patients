@@ -36,6 +36,8 @@ function BooksList ( { classes , match , year , page , perpage } ) {
 
   const query = { fiscalYear: _year } ;
 
+  const initialBegin = new Date(_year, 0, 1);
+
   return (
     <div>
       <YearJumper current={_year} toURL={x => `/books/${x}`}/>
@@ -52,7 +54,7 @@ function BooksList ( { classes , match , year , page , perpage } ) {
       <Fab className={classes.saveButton} color="secondary" onClick={e => setDownloading(true)}>
           <SaveIcon/>
       </Fab>
-      <BooksDownloadDialog initialYear={year} open={downloading} onClose={e => setDownloading(false)}/>
+      <BooksDownloadDialog initialBegin={initialBegin} open={downloading} onClose={e => setDownloading(false)}/>
     </div>
   ) ;
 

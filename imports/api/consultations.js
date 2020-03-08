@@ -205,19 +205,20 @@ function sanitize ( {
 
 Meteor.methods({
 
-	'books.year.csv'(year) {
+	'books.interval.csv'(begin, end, firstBook, lastBook, maxRows) {
 
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		check(year, Number);
+		check(begin, Date);
+		check(end, Date);
+		check(firstBook, Number);
+		check(lastBook, Number);
+		check(maxRows, Number);
 
-		const begin = new Date(`${year}-01-01`);
-		const end = new Date(`${year+1}-01-01`);
-		const beginBook = 1;
-		const endBook = 100;
-		const maxEntries = 60;
+		const beginBook = firstBook;
+		const endBook = lastBook + 1;
 
 		const consultations = Consultations.find({
 			datetime: {
@@ -255,7 +256,7 @@ Meteor.methods({
 		const header = list(map(([year, book]) => books.format(year, book), product([range(beginYear, endYear), range(beginBook, endBook)]))) ;
 		const lines = [] ;
 
-		for ( const i of range(maxEntries) ) {
+		for ( const i of range(maxRows) ) {
 			const line = [];
 			for ( const bookSlug of header ) {
 				if ( data[bookSlug] !== undefined  && data[bookSlug][i] !== undefined ) {
