@@ -5,7 +5,7 @@ set -o xtrace
 DB="patients"
 #CRYPTO="-pbkdf2"
 #KEY="file:key/${DB}"
-KEYFILE="file:key/${DB}.txt"
+KEYFILE="key/${DB}.txt"
 PUBKEY="$(grep 'public key' "$KEYFILE" | cut -d' ' -f4)"
 DUMP="dump/${DB}"
 BACKUP="backup/${DB}"
