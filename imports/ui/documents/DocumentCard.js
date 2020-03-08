@@ -147,7 +147,7 @@ class DocumentCard extends React.Component {
 
 		const filename = `${name}.${ext}`;
 
-		saveTextAs(document.source, filename);
+		saveTextAs(document.decoded || document.source, filename);
 
 	}
 
@@ -162,6 +162,8 @@ class DocumentCard extends React.Component {
 				createdAt,
 				patientId,
 				source,
+				encoding,
+				decoded,
 				parsed,
 				format,
 				kind,
@@ -313,7 +315,7 @@ class DocumentCard extends React.Component {
 								secondary={
 									<Paper>
 										<pre className={classes.pre}>
-											{source}
+											{decoded || source}
 										</pre>
 									</Paper>
 								}
