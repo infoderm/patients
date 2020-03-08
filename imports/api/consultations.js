@@ -2,7 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
-import { list , map , range } from '@aureooms/js-itertools' ;
+import isAfter from 'date-fns/isAfter' ;
+import isBefore from 'date-fns/isBefore' ;
+
+import { list , map , range , product } from '@aureooms/js-itertools' ;
 
 import { Uploads } from './uploads.js';
 import { books } from './books.js';
@@ -212,6 +215,9 @@ Meteor.methods({
 
 		const begin = new Date(`${year}-01-01`);
 		const end = new Date(`${year+1}-01-01`);
+		const beginBook = 1;
+		const endBook = 100;
+		const maxEntries = 60;
 
 		const consultations = Consultations.find({
 			datetime: {
@@ -227,23 +233,33 @@ Meteor.methods({
 
 		const data = {} ;
 
+		let minDatetime = end;
+		let maxDatetime = begin;
+
 		for ( const consultation of consultations ) {
-			const { book , price } = consultation ;
+			const { datetime , book , price } = consultation ;
 
-			if ( data[book] === undefined ) data[book] = [] ;
+			if (isBefore(datetime, minDatetime)) minDatetime = datetime;
+			if (isAfter(datetime, maxDatetime)) maxDatetime = datetime;
 
-			data[book].push(price);
+			const bookSlug = books.name(datetime, book) ;
+
+			if ( data[bookSlug] === undefined ) data[bookSlug] = [] ;
+
+			data[bookSlug].push(price);
 		}
 
-		const header = list(map(i => ''+i, range(1, 100))) ;
-		const MAX = 60;
+		const beginYear = minDatetime.getFullYear();
+		const endYear = maxDatetime.getFullYear() + 1;
+
+		const header = list(map(([year, book]) => books.format(year, book), product([range(beginYear, endYear), range(beginBook, endBook)]))) ;
 		const lines = [] ;
 
-		for ( const i of range(MAX) ) {
+		for ( const i of range(maxEntries) ) {
 			const line = [];
-			for ( const book of header ) {
-				if ( data[book] !== undefined  && data[book][i] !== undefined ) {
-					line.push(data[book][i]);
+			for ( const bookSlug of header ) {
+				if ( data[bookSlug] !== undefined  && data[bookSlug][i] !== undefined ) {
+					line.push(data[bookSlug][i]);
 				}
 				else {
 					line.push('');

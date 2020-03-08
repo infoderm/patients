@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
-import format from 'date-fns/format' ;
 import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
@@ -65,7 +64,7 @@ export const books = {
 
   format: ( year , book ) => `${year}/${book}` ,
 
-  name: ( datetime , book ) => books.format(format(datetime, 'yyyy'), book) ,
+  name: ( datetime , book ) => books.format(datetime.getFullYear(), book) ,
 
   split: name => {
     const pivot = name.indexOf('/') ;
