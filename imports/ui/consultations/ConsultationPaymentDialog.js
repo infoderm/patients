@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Currency from 'currency-formatter' ;
+import dateFormat from 'date-fns/format' ;
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,11 +17,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import dateFormat from 'date-fns/format' ;
+import CloseIcon from '@material-ui/icons/Close';
+
+import { onlyASCII } from '../../api/string.js';
 
 import { settings } from '../../api/settings.js';
-
-import CloseIcon from '@material-ui/icons/Close';
 
 import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
 
@@ -45,14 +46,17 @@ function ConsultationPaymentDialog ( props ) {
 
     const owed = price - paid ;
 
-    const unstructuredReference = dateFormat(datetime, 'yyyy-MM-dd') ;
+    const _date = dateFormat(datetime, 'yyyy-MM-dd');
+    const _lastname = onlyASCII(patient.lastname);
+    const _firstname = onlyASCII(patient.firstname);
+    const unstructuredReference = `${_date} ${_lastname} ${_firstname}` ;
 
     const data = {
-      name: accountHolder,
+      name: accountHolder.slice(0,70),
       iban,
       currency,
       amount: owed,
-      unstructuredReference,
+      unstructuredReference: unstructuredReference.slice(0,140),
     } ;
 
     const codeProps = {

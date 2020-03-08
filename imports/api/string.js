@@ -11,6 +11,11 @@ const normalized = string => {
   return string ;
 } ;
 
+const onlyASCII = string => {
+  string = deburr(string);
+  return string ;
+} ;
+
 const onlyLowerCaseASCII = string => {
   string = string.toLowerCase();
   string = deburr(string);
@@ -28,6 +33,7 @@ const makeIndex = data => {
 
 export {
   normalized ,
+  onlyASCII ,
   onlyLowerCaseASCII ,
   makeIndex ,
 } ;
