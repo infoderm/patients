@@ -3,9 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom' ;
 
+import dateFormat from 'date-fns/format' ;
+
 import { map } from '@aureooms/js-itertools' ;
 import { filter } from '@aureooms/js-itertools' ;
 import { sum } from '@aureooms/js-itertools' ;
+import { min } from '@aureooms/js-itertools' ;
+import { max } from '@aureooms/js-itertools' ;
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -39,11 +43,18 @@ function BookCard ( { classes , item } ) {
 			url={name => `/book/${name}`}
 			subheader={consultations => `${consultations.length} consultations`}
 			content={
-				consultations => (
-					<Typography variant="body1">
-						{sum(filter(x => !!x, map(c => c.price, consultations)))} €
-					</Typography>
-				)
+				consultations => {
+					const total = sum(filter(x => !!x, map(c => c.price, consultations)));
+					const first = min((a, b) => a - b, map(c => c.datetime, consultations));
+					const last = max((a, b) => a - b, map(c => c.datetime, consultations));
+					const fmt = 'MMM do, yyyy';
+					return (
+						<Typography variant="body1">
+							Total {total} € <br/>
+							From {dateFormat(first, fmt)} to {dateFormat(last,fmt)}.
+						</Typography>
+					) ;
+				}
 			}
 			avatar={<Avatar className={classes.avatar}>Bk</Avatar>}
 			abbr={`/${book}`}
