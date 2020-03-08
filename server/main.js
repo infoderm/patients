@@ -199,10 +199,12 @@ Meteor.startup(() => {
     Meteor.bindEnvironment(({_id, owner, createdAt, patientId, format, source, parsed}) => {
       if (!_id.toHexString && parsed) return;
 
+      const array = (new TextEncoder()).encode(source);
+
       const document = {
         patientId,
         format,
-        source,
+        array,
       } ;
 
       const entries = documents.sanitize(document);

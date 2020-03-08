@@ -7,16 +7,17 @@ export default function insertDocument ( history, format, fd ) {
   const reader = new FileReader();
   reader.onload = function (event) {
     const buffer = event.target.result;
+    const array = new Uint8Array(buffer);
     Meteor.subscribe('documents', {
       onReady: () => {
         const op = {
           format,
-          buffer,
+          array,
         } ;
         Meteor.call('documents.insert', op , (err, result) => {
           if ( err ) console.error(err) ;
           else {
-            console.debug(result);
+            console.debug('Inserted/updated', result.length, 'documents.');
             if ( history && history.location.pathname !== '/documents') {
               history.push({pathname: '/documents'}) ;
             }
@@ -28,5 +29,5 @@ export default function insertDocument ( history, format, fd ) {
   };
   //const encoding = '???' ; // We cannot guess that before we read...
   //reader.readAsText(fd, encoding);
-  reader.readAsArrayBuffer(fd)
+  reader.readAsArrayBuffer(fd);
 }

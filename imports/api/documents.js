@@ -1,7 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+//import { Binary } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import iconv from 'iconv-lite' ;
+
+import { zip } from '@aureooms/js-itertools' ;
 import { list } from '@aureooms/js-itertools' ;
 import { map } from '@aureooms/js-itertools' ;
 import { enumerate } from '@aureooms/js-itertools' ;
@@ -47,22 +51,38 @@ if (Meteor.isServer) {
 
 }
 
+//const utfLabelToEncoding = {
+	//'iso-8859-1': 'windows-1252',
+//} ;
+
 function sanitize ( {
 	patientId,
 	format,
-	buffer,
+	array,
 } ) {
 
 	patientId === undefined || check(patientId, String);
 	check(format, String);
-	check(buffer, ArrayBuffer);
+	check(array, Uint8Array);
+
+	console.debug('Starting to sanitize');
+
+	const mangled = (new TextDecoder('utf-8', {fatal: false})).decode(array.buffer, {stream: false});
 
 	try {
 
-		const encoding = chardet.detect(buffer).toLowerCase();
-		const mangled = (new TextDecoder('utf-8', {fatal: true})).decode(buffer, {stream: false});
-		const decoder = new TextDecoder(encoding, {fatal: true});
-		const decoded = decoder.decode(buffer, {stream: false});
+		console.debug('trying to detect encoding...');
+		//const utfLabel = chardet.detect(array).toLowerCase();
+		//const encoding = utfLabelToEncoding[utfLabel] || utfLabel;
+		const encoding = chardet.detect(array).toLowerCase();
+		console.debug('encoding', encoding);
+		//console.debug('constructing decoder');
+		//const decoder = new TextDecoder(encoding, {fatal: true});
+		//console.debug('trying to decode with', decoder, '...');
+		//const decoded = decoder.decode(array.buffer, {stream: false});
+		console.debug('trying to decode with iconv...');
+		const decoded = iconv.decode(array, encoding);
+		console.debug('worked!');
 
 		if (format === 'healthone') {
 			try {
@@ -72,14 +92,18 @@ function sanitize ( {
 				if (mangledDocuments.length !== documents.length) {
 					throw new Error('Number of entries do not match.');
 				}
-				for ( const [document, mangled] of zip(documents, mangled) ) {
+				for ( const [document, mangledDocument] of zip(documents, mangledDocuments) ) {
+					//const utf8_array = (new TextEncoder()).encode(decoded);
+					//const utf8_buffer = utf8_array.buffer;
+					//const utf8_binary = Binary(utf8_buffer);
 					const entry = {
 						...document,
 						patientId,
 						format,
-						source: mangled.source.join('\n'),
+						source: mangledDocument.source.join('\n'),
 						encoding,
 						decoded: document.source.join('\n'),
+						//binary: utf8_binary,
 						parsed: true,
 					} ;
 					entries.push(entry);
@@ -94,9 +118,9 @@ function sanitize ( {
 		return [ {
 			patientId,
 			format,
-			buffer,
 			parsed: false,
 			source: mangled,
+			//binary: Binary(buffer),
 			encoding,
 			decoded,
 		} ] ;
@@ -111,8 +135,9 @@ function sanitize ( {
 	return [ {
 		patientId,
 		format,
-		buffer,
+		source: mangled,
 		parsed: false,
+		//binary: Binary(buffer),
 	} ] ;
 
 }
@@ -210,13 +235,23 @@ Meteor.methods({
 					Documents.update(existingDocument._id, { $set: { patientId } });
 				}
 
+				// We update the document if it did not have a binary field before.
+
+				//if (!existingDocument.binary) {
+					//Documents.update(existingDocument._id, {
+						//$set: {
+							//binary: entry.binary,
+						//}
+					//});
+				//}
+
 				// We update the document if it had not been properly decoded before.
 
-				if (existingDocument.parsed && !existingDocument.decoded) {
+				if (existingDocument.parsed && existingDocument.decoded !== entry.decoded) {
 					Documents.update(existingDocument._id, {
 						$set: {
-							encoding: entry.encoding,
-							decoded: entry.decoded,
+							...entry,
+							patientId,
 						}
 					});
 				}
