@@ -257,7 +257,7 @@ class SetPicker extends React.Component {
             })}
             {isOpen && !full ? (
               <Paper className={classes.paper} square>
-                {filter(suggestions, inputValue2)
+                {filter(suggestions, inputValue2, itemToString)
                 .map((suggestion, index) =>
                   renderSuggestion({
                     suggestion,

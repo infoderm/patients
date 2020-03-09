@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { list } from '@aureooms/js-itertools' ;
 import { range } from '@aureooms/js-itertools' ;
 
-import Jumper from './Jumper.js';
+import TabJumper from './TabJumper.js';
 
-export default function YearJumper ( { current , toURL } ) {
+export default function YearJumper ( { current , ...rest } ) {
 
   const now = new Date();
   const thisyear = now.getFullYear();
@@ -14,21 +14,14 @@ export default function YearJumper ( { current , toURL } ) {
   const begin = end - 11;
 
   const years = range(begin, end);
-  const items = list(years).map(
-    x => ({
-      key: x,
-      url: toURL(x),
-      disabled: x === current,
-    })
-  );
+  const tabs = list(years);
 
   return (
-      <Jumper items={items}/>
+      <TabJumper tabs={tabs} current={current} {...rest}/>
   ) ;
 
 }
 
 YearJumper.propTypes = {
   current: PropTypes.number.isRequired,
-  toURL: PropTypes.func.isRequired,
 } ;

@@ -1,49 +1,39 @@
-import React from 'react' ;
+import React, {Fragment} from 'react' ;
 
 import { Link } from 'react-router-dom'
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import FaceIcon from '@material-ui/icons/Face';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+
+import Paginator from '../navigation/Paginator.js';
 
 import PatientCard from './PatientCard.js';
 
-const styles = theme => ({
-  buttonTile: {
-    minHeight: 200,
-    width: '100%',
-    fontSize: '1rem',
-  },
-  rightIcon: {
-    marginLeft: theme.spacing(1),
-  },
-  fabprev: {
-      position: 'fixed',
-      bottom: theme.spacing(3),
-      right: theme.spacing(12),
-  },
-  fabnext: {
-      position: 'fixed',
-      bottom: theme.spacing(3),
-      right: theme.spacing(3),
-  },
-});
+const useStyles = makeStyles(
+  theme => ({
+    buttonTile: {
+      minHeight: 200,
+      width: '100%',
+      fontSize: '1rem',
+    },
+    rightIcon: {
+      marginLeft: theme.spacing(1),
+    },
+  })
+);
 
-class PatientsList extends React.Component {
+export default function PatientsList ( props ) {
 
-  constructor(props){
-    super(props);
-  }
+  const classes = useStyles() ;
 
-  render() {
-    const { patients , classes , page , perpage } = this.props;
-    return (
+  const { patients , page , perpage } = props;
+
+  return (
+    <Fragment>
       <div>
         <Grid container spacing={3}>
           <Grid item sm={12} md={12} lg={6} xl={4}>
@@ -54,31 +44,19 @@ class PatientsList extends React.Component {
           </Grid>
           { patients.slice((page-1)*perpage, page*perpage).map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
         </Grid>
-        { page === 1 ? '' :
-        <Fab className={classes.fabprev} color="primary" component={Link} to={`/patients/page/${page-1}`}>
-            <NavigateBeforeIcon/>
-        </Fab> }
-        { page === Math.ceil(patients.length / perpage) ? '' :
-        <Fab className={classes.fabnext} color="primary" component={Link} to={`/patients/page/${page+1}`}>
-            <NavigateNextIcon/>
-        </Fab> }
       </div>
-    ) ;
-  }
-
+      <Paginator page={page} end={page === Math.ceil(patients.length / perpage)} root="/patients"/>
+    </Fragment>
+  ) ;
 }
 
 PatientsList.defaultProps = {
-	page: 1,
-	perpage: 10,
+  page: 1,
+  perpage: 10,
 } ;
 
 PatientsList.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
   patients: PropTypes.array.isRequired,
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
 };
-
-export default withStyles(styles, { withTheme: true }) (PatientsList) ;

@@ -1,21 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom'
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
-  buttons: {
-    paddingBottom: theme.spacing(3),
-    textAlign: 'center',
-  },
-  button: {
-      margin: theme.spacing(1),
-  },
-});
+const useStyles = makeStyles(
+  theme => ({
+    buttons: {
+      paddingBottom: theme.spacing(3),
+      textAlign: 'center',
+    },
+    button: {
+	margin: theme.spacing(1),
+    },
+  })
+);
 
-function Jumper ( { classes , items } ) {
+export default function Jumper ( { items } ) {
+
+	const classes = useStyles();
 
 	return (
         <div className={classes.buttons}>
@@ -33,4 +38,6 @@ function Jumper ( { classes , items } ) {
 
 }
 
-export default withStyles(styles, { withTheme: true })(Jumper);
+Jumper.propTypes = {
+  items: PropTypes.array.isRequired,
+};

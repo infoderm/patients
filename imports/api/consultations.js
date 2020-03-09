@@ -85,13 +85,13 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('patient.consultations', function (patientId) {
+	Meteor.publish('patient.consultations', function (patientId, options) {
 		check(patientId, String);
 		return Consultations.find({
 			owner: this.userId ,
 			isDone: true,
 			patientId ,
-		});
+		}, options);
 	});
 
 	Meteor.publish('consultations.unpaid', function () {

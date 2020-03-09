@@ -9,9 +9,9 @@ import { Consultations } from '../../api/consultations.js';
 
 import PagedConsultationsList from './PagedConsultationsList.js';
 
-function ConsultationPager ( props ) {
+function ConsultationsPager ( props ) {
 
-  const { loading , page , perpage , root , url , items , itemProps } = props;
+  const { loading , page , perpage , root , url , items , itemProps , ...rest } = props;
 
   const _root = root || url.split('/page/')[0];
 
@@ -23,17 +23,18 @@ function ConsultationPager ( props ) {
       perpage={perpage}
       items={items}
       itemProps={itemProps}
+      {...rest}
     />
   ) ;
 }
 
-ConsultationPager.defaultProps = {
+ConsultationsPager.defaultProps = {
   page: 1,
   perpage: 10,
   query: {},
 } ;
 
-ConsultationPager.propTypes = {
+ConsultationsPager.propTypes = {
 
   root: PropTypes.string,
   url: PropTypes.string,
@@ -55,4 +56,4 @@ export default withTracker(({query, sort, page, perpage}) => {
     loading: !handle.ready() ,
     items: Consultations.find(query, {sort, skip: (page-1)*perpage, limit: perpage}).fetch() ,
   } ;
-}) ( ConsultationPager );
+}) ( ConsultationsPager );

@@ -95,7 +95,7 @@ function SearchBox({ filter , suggestions , itemToString , classes , className ,
             })}
             {isOpen ? (
               <Paper square className={classes.suggestions}>
-                {filter(suggestions, inputValue).map((item, index) =>
+                {filter(suggestions, inputValue, itemToString).map((item, index) =>
                     <MenuItem
                       key={item._id}
                       {...getItemProps({
@@ -123,6 +123,7 @@ SearchBox.propTypes = {
   classes: PropTypes.object.isRequired,
   filter: PropTypes.func.isRequired,
   suggestions: PropTypes.array.isRequired,
+  itemToString: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(SearchBox);

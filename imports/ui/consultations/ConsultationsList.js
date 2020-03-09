@@ -1,4 +1,5 @@
 import React from 'react' ;
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ConsultationCard from './ConsultationCard.js';
@@ -11,7 +12,7 @@ const useStyles = makeStyles(
 	})
 );
 
-export default function ConsultationsList ( { items , itemProps } ) {
+export default function ConsultationsList ( { items , itemProps , defaultExpandedFirst } ) {
 
 	const classes = useStyles();
 
@@ -19,10 +20,11 @@ export default function ConsultationsList ( { items , itemProps } ) {
 		<div className={classes.container}>
 			{
 				items.map(
-					consultation => (
+					(consultation, i) => (
 						<ConsultationCard
 							key={consultation._id}
 							consultation={consultation}
+							defaultExpanded={i === 0 && defaultExpandedFirst}
 							{...itemProps}
 						/>
 					)
@@ -32,3 +34,13 @@ export default function ConsultationsList ( { items , itemProps } ) {
 	) ;
 
 }
+
+ConsultationsList.defaultProps = {
+	defaultExpandedFirst: false,
+} ;
+
+ConsultationsList.propTypes = {
+	items: PropTypes.array.isRequired,
+	itemProps: PropTypes.object,
+	defaultExpandedFirst: PropTypes.bool.isRequired,
+};

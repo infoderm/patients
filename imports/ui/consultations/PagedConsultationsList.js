@@ -1,57 +1,28 @@
 import React from 'react' ;
 
-import { Link } from 'react-router-dom' ;
-
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Fab from '@material-ui/core/Fab';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-
 import Loading from '../navigation/Loading.js';
+import Paginator from '../navigation/Paginator.js';
 import NoContent from '../navigation/NoContent.js';
 
 import ConsultationsList from './ConsultationsList.js';
 
-const useStyles = makeStyles(
-  theme => ({
-    fabprev: {
-      position: 'fixed',
-      bottom: theme.spacing(3),
-      right: theme.spacing(12),
-    },
-    fabnext: {
-      position: 'fixed',
-      bottom: theme.spacing(3),
-      right: theme.spacing(3),
-    },
-  })
-);
-
 export default function PagedConsultationsList ( props ) {
 
-  const { root , loading , page , perpage , items , itemProps } = props;
-
-  const classes = useStyles();
+  const { root , loading , page , perpage , items , itemProps , ...rest } = props;
 
   return (
     <div>
       { loading ?
           <Loading/>
           : items.length ?
-          <ConsultationsList items={items} itemProps={itemProps}/>
+          <ConsultationsList items={items} itemProps={itemProps} {...rest}/>
           :
           <NoContent>{`Nothing to see on page ${page}.`}</NoContent>
       }
-      { page === 1 ? '' :
-        <Fab className={classes.fabprev} color="primary" component={Link} to={`${root}/page/${page-1}`}>
-        <NavigateBeforeIcon/>
-        </Fab> }
-      { items.length < perpage ? '' :
-          <Fab className={classes.fabnext} color="primary" component={Link} to={`${root}/page/${page+1}`}>
-          <NavigateNextIcon/>
-          </Fab> }
+      <Paginator page={page} end={items.length < perpage} root={root}/>
     </div>
   ) ;
 }

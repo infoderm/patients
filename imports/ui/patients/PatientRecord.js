@@ -4,192 +4,94 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { withStyles } from '@material-ui/core/styles';
+import TabJumper from '../navigation/TabJumper.js';
+import NoMatch from '../navigation/NoMatch.js';
 
-import Grid from '@material-ui/core/Grid';
-
-import Typography from '@material-ui/core/Typography';
-
-import Button from '@material-ui/core/Button';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-
+import PatientHeader from './PatientHeader.js';
 import PatientPersonalInformation from './PatientPersonalInformation.js';
 
-import ConsultationCard from '../consultations/ConsultationCard.js';
-import AppointmentCard from '../appointments/AppointmentCard.js';
-import DocumentCard from '../documents/DocumentCard.js';
+import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
+//import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
+import DocumentsForPatient from '../documents/DocumentsForPatient.js';
+import AttachmentsForPatient from '../attachments/AttachmentsForPatient.js';
 
-import AttachFileButton from '../attachments/AttachFileButton.js';
-import AttachmentLink from '../attachments/AttachmentLink.js';
-import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
+const useStyles = makeStyles(
+	theme => ({
+		root: {
+			paddingTop: 80,
+			paddingBottom: 80,
+		},
+		container: {
+			padding: theme.spacing(3),
+		},
+		button: {
+			margin: theme.spacing(1),
+		},
+		leftIcon: {
+			marginRight: theme.spacing(1),
+		},
+		rightIcon: {
+			marginLeft: theme.spacing(1),
+		},
+	})
+);
 
-import Loading from '../navigation/Loading.js';
+function PatientRecord ( props ) {
 
-import { Patients } from '../../api/patients.js';
-import { Consultations } from '../../api/consultations.js';
-import { Appointments } from '../../api/appointments.js';
-import { Documents } from '../../api/documents.js';
+	const classes = useStyles();
 
-const styles = theme => ({
-	container: {
-		padding: theme.spacing(3),
-	},
-	button: {
-		margin: theme.spacing(1),
-	},
-	leftIcon: {
-		marginRight: theme.spacing(1),
-	},
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-});
+	const {
+		location,
+		patientId,
+		tab,
+		page,
+		perpage,
+	} = props ;
 
-class PatientRecord extends React.Component {
+	const tabs = ['information', 'consultations', 'documents', 'attachments'] ;
 
-	constructor ( props ) {
-		super(props);
-	}
+	//const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
+	//{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 
-	render ( ) {
-
-		const {
-			classes,
-			theme,
-			loading,
-			patient,
-			consultations,
-			upcomingAppointments,
-			documents,
-		} = this.props ;
-
-		if (loading) return ( <Loading/> ) ;
-
-		if (!patient) return <div>Error: Patient not found.</div>;
-
-		const attachmentsInfo = [];
-		if ( patient.attachments ) {
-			Array.prototype.push.apply(
-				attachmentsInfo,
-				patient.attachments.map(x => [
-					x ,
-					{
-						collection: 'patients' ,
-						_id: patient._id ,
-					} ,
-				]),
-			);
-		}
-		attachmentsInfo.reverse();
-
-		for ( const consultation of consultations ) {
-			if ( consultation.attachments ) {
-				Array.prototype.push.apply(
-					attachmentsInfo,
-					consultation.attachments.map(x => [
-						x ,
-						{
-							collection: 'consultations' ,
-							_id: consultation._id ,
-						} ,
-					]),
-				);
-			}
-		}
-
-		//{ upcomingAppointments.length === 0 ?
-			//<Typography variant="h2">No upcoming appointments</Typography>
-			//:
-			//<Typography variant="h2">Upcoming appointments</Typography>
-		//}
-		//<div className={classes.container}>
-			//{ upcomingAppointments.map(appointment => ( <AppointmentCard key={appointment._id} appointment={appointment}/> )) }
-		//</div>
-
-		return (
-			<div>
-				<PatientPersonalInformation patient={patient}/>
-				{ consultations.length === 0 ?
-					<Typography variant="h2">No consultations</Typography>
-					:
-					<Typography variant="h2">All consultations</Typography>
-				}
-				<div className={classes.container}>
-					{ consultations.map((consultation, i) => (
-						<ConsultationCard
-							key={consultation._id}
-							consultation={consultation}
-							patientChip={false}
-							defaultExpanded={!i}
-						/>
-						))
-					}
-					<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patient._id}`}>
-						Create a new consultation
-						<SupervisorAccountIcon className={classes.rightIcon}/>
-					</Button>
-				</div>
-				{ documents.length === 0 ?
-					<Typography variant="h2">No documents</Typography>
-					:
-					<Typography variant="h2">All documents</Typography>
-				}
-				<div className={classes.container}>
-					{ documents.map(document => ( <DocumentCard key={document._id} document={document}/> )) }
-				</div>
-				{ attachmentsInfo.length === 0 ?
-					<Typography variant="h2">No attachments</Typography>
-					:
-					<Typography variant="h2">All attachments</Typography>
-				}
-				<div className={classes.container}>
-					<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
-					<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
-				</div>
-				{ false && ( <div>
-				<Typography variant="h2">Prescriptions</Typography>
-				<div className={classes.container}>
-				</div>
-				<Typography variant="h2">Appointments</Typography>
-				<div className={classes.container}>
-				</div>
-				</div>)}
-			</div>
-		);
-	}
-
+	return (
+		<div className={classes.root}>
+			<PatientHeader patientId={patientId}/>
+			<TabJumper tabs={tabs} current={tab} toURL={tab => `/patient/${patientId}/${tab}`}/>
+			{(tab === 'information' && <PatientPersonalInformation patientId={patientId}/>)}
+			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
+			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
+			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
+			{tabs.indexOf(tab) === -1 && <NoMatch location={location}/>}
+		</div>
+	);
 }
 
-PatientRecord.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
-};
+PatientRecord.defaultProps = {
+	tab: 'information',
+	page: 1,
+	perpage: 5,
+} ;
 
-export default withTracker(({match}) => {
-	const _id = match.params.id;
-	const handle = Meteor.subscribe('patient', _id);
-	Meteor.subscribe('patient.consultations', _id);
-	Meteor.subscribe('patient.appointments', _id);
-	Meteor.subscribe('patient.documents', _id);
-	if ( handle.ready() ) {
-		const patient = Patients.findOne(_id);
-		const consultations = Consultations.find({patientId: _id, isDone: true}, {sort: { datetime: -1 }}).fetch();
-		const upcomingAppointments = Appointments.find({patientId: _id, isDone: false}, {sort: { datetime: 1 }}).fetch();
-		const documents = Documents.find({patientId: _id}, {sort: { datetime: -1 }}).fetch();
-		return {
-			loading: false,
-			patient,
-			consultations,
-			upcomingAppointments,
-			documents,
-		} ;
-	}
-	else return {
-		loading: true,
-		consultations: [],
-		upcomingAppointments: [],
-		documents: [],
+PatientRecord.propTypes = {
+	patientId: PropTypes.string.isRequired,
+	tab: PropTypes.string.isRequired,
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired,
+} ;
+
+export default withTracker(({match, location, patientId, tab, page, perpage}) => {
+	patientId = patientId || match.params.id;
+	tab = tab || match.params.tab || PatientRecord.defaultProps.tab;
+	page = page || parseInt(match.params.page, 10) || PatientRecord.defaultProps.page;
+	perpage = perpage || PatientRecord.defaultProps.perpage;
+
+	return {
+		location,
+		patientId,
+		tab,
+		page,
+		perpage,
 	} ;
-}) ( withStyles(styles, { withTheme: true })(PatientRecord) );
+}) ( PatientRecord );
