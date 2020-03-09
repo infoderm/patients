@@ -15,6 +15,8 @@ import { insurances } from './insurances.js';
 import { doctors } from './doctors.js';
 import { allergies } from './allergies.js';
 
+import { makeIndex } from './string.js';
+
 export const Patients = new Mongo.Collection('patients');
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd' ;
@@ -417,13 +419,21 @@ const patientToKey = x => x._id ;
 
 const patientToString = x => `${x.lastname} ${x.firstname} (${x._id})` ;
 
-const patientFilter = (suggestions, inputValue) => {
+const patientFilter = (suggestions, inputValue, transform = v => v) => {
 
-	const matches = x => !inputValue || patientToString(x).toLowerCase().includes(inputValue.toLowerCase()) ;
+	const matches = makeIndex(inputValue);
 
 	const keep = 5 ;
 
-	return list( take( filter(matches, suggestions) , keep ) ) ;
+	return list(
+		take(
+			filter(
+				x => matches(transform(x)),
+				suggestions
+			),
+			keep
+		)
+	);
 
 } ;
 

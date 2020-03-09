@@ -12,13 +12,9 @@ import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { filter } from '@aureooms/js-itertools' ;
-import { take } from '@aureooms/js-itertools' ;
-import { list } from '@aureooms/js-itertools' ;
-
 import { settings } from '../api/settings.js';
 
-import { makeIndex } from '../api/string.js';
+import { patients } from '../api/patients.js';
 
 import SearchBox from './patients/SearchBox.js';
 import AccountsUI from './users/AccountsUI.js';
@@ -26,6 +22,7 @@ import AccountsUI from './users/AccountsUI.js';
 import Downshift from 'downshift';
 
 const drawerWidth = 240;
+const patientFilter = patients.filter;
 
 const styles = theme => ({
   appBar: {
@@ -69,24 +66,6 @@ const styles = theme => ({
     flex: 'none',
   },
 });
-
-function getSuggestions(suggestions, inputValue) {
-
-  const matches = makeIndex(inputValue);
-
-  const keep = 5 ;
-
-  return list(
-    take(
-      filter(
-	x => matches(x.label),
-	suggestions
-      ),
-      keep
-    )
-  );
-
-}
 
 class Header extends React.Component {
 
@@ -181,7 +160,7 @@ class Header extends React.Component {
 	  <div style={{flex:'1 1 auto'}}></div>
 	  { currentUser && <SearchBox
 	    className={classes.searchBox}
-	    filter={getSuggestions}
+	    filter={patientFilter}
 	    suggestions={suggestions}
 	    itemToString={item => item ? item.label : ''}
 	    onChange={this.handleChange}
