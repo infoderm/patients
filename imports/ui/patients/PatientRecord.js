@@ -13,7 +13,7 @@ import PatientHeader from './PatientHeader.js';
 import PatientPersonalInformation from './PatientPersonalInformation.js';
 
 import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
-import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
+//import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
 import DocumentsForPatient from '../documents/DocumentsForPatient.js';
 import AttachmentsForPatient from '../attachments/AttachmentsForPatient.js';
 
@@ -49,14 +49,16 @@ function PatientRecord ( props ) {
 		perpage,
 	} = props ;
 
-	const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
+	const tabs = ['information', 'consultations', 'documents', 'attachments'] ;
+
+	//const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
+	//{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 
 	return (
 		<div className={classes.root}>
 			<PatientHeader patientId={patientId}/>
 			<TabJumper tabs={tabs} current={tab} toURL={tab => `/patient/${patientId}/${tab}`}/>
 			{(tab === 'information' && <PatientPersonalInformation patientId={patientId}/>)}
-			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
