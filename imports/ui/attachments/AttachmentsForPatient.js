@@ -3,13 +3,13 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 
 import React from 'react' ;
 
+import { Patients } from '../../api/patients.js';
+import { Consultations } from '../../api/consultations.js';
+
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
 import AttachmentsForPatientStatic from '../attachments/AttachmentsForPatientStatic.js';
-
-import { Patients } from '../../api/patients.js';
-import { Consultations } from '../../api/consultations.js';
 
 function PatientRecord ( props ) {
 
