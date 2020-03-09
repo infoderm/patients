@@ -61,7 +61,7 @@ function ConsultationsForPatient ( props ) {
 				sort={sort}
 				itemProps={{patientChip: false}}
 				defaultExpandedFirst={page === 1}
-			/> ;
+			/>
 			<Fab className={classes.createButton} color="primary" component={Link} to={`/new/consultation/for/${patientId}`}>
 				<SupervisorAccountIcon/>
 			</Fab>
