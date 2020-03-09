@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
-export default function AttachmentsForPatientStatic ( { classes , patient , attachmentsInfo , ...rest } ) {
+export default function AttachmentsForPatientStatic ( { classes , patientId , attachmentsInfo , ...rest } ) {
 
 	return (
 		<Fragment>
@@ -17,7 +17,7 @@ export default function AttachmentsForPatientStatic ( { classes , patient , atta
 			}
 			<div {...rest}>
 				<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
-				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
+				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patientId}/>
 			</div>
 		</Fragment>
 	) ;
@@ -25,6 +25,6 @@ export default function AttachmentsForPatientStatic ( { classes , patient , atta
 
 AttachmentsForPatientStatic.propTypes = {
 	classes: PropTypes.object.isRequired,
-	patient: PropTypes.object.isRequired,
+	patientId: PropTypes.string.isRequired,
 	attachmentsInfo: PropTypes.array.isRequired,
 };

@@ -4,15 +4,9 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
 
-import Grid from '@material-ui/core/Grid';
-
 import TabJumper from '../navigation/TabJumper.js';
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
 import NoMatch from '../navigation/NoMatch.js';
 
 import PatientHeader from './PatientHeader.js';
@@ -21,10 +15,7 @@ import PatientPersonalInformation from './PatientPersonalInformation.js';
 import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
 import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
 import DocumentsForPatient from '../documents/DocumentsForPatient.js';
-import AttachmentsForPatient from '../attachments/AttachmentsForPatientStatic.js';
-
-import { Patients } from '../../api/patients.js';
-import { Consultations } from '../../api/consultations.js';
+import AttachmentsForPatient from '../attachments/AttachmentsForPatient.js';
 
 const useStyles = makeStyles(
 	theme => ({
@@ -56,45 +47,7 @@ function PatientRecord ( props ) {
 		tab,
 		page,
 		perpage,
-		loading,
-		limit,
-		patient,
-		consultations,
 	} = props ;
-
-	if (loading) return ( <Loading/> ) ;
-
-	if (!patient) return <NoContent>Error: Patient not found.</NoContent>;
-
-	const attachmentsInfo = [];
-	if ( patient.attachments ) {
-		Array.prototype.push.apply(
-			attachmentsInfo,
-			patient.attachments.map(x => [
-				x ,
-				{
-					collection: 'patients' ,
-					_id: patient._id ,
-				} ,
-			]),
-		);
-	}
-	attachmentsInfo.reverse();
-
-	for ( const consultation of consultations ) {
-		if ( consultation.attachments ) {
-			Array.prototype.push.apply(
-				attachmentsInfo,
-				consultation.attachments.map(x => [
-					x ,
-					{
-						collection: 'consultations' ,
-						_id: consultation._id ,
-					} ,
-				]),
-			);
-		}
-	}
 
 	const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
 
@@ -106,7 +59,7 @@ function PatientRecord ( props ) {
 			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId}/>)}
 			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
-			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patient={patient} attachmentsInfo={attachmentsInfo} page={page} perpage={perpage}/>)}
+			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
 			{tabs.indexOf(tab) === -1 && <NoMatch location={location}/>}
 		</div>
 	);
@@ -126,49 +79,16 @@ PatientRecord.propTypes = {
 } ;
 
 export default withTracker(({match, location, patientId, tab, page, perpage}) => {
-
-	const limit = 5;
-	const order = (chronology, limit) => ({ sort: { datetime: chronology } , limit });
-	const lastFew = order(-1, 5);
-	const firstFew = order(1, 5);
-
-	const _id = patientId || match.params.id;
+	patientId = patientId || match.params.id;
 	tab = tab || match.params.tab || PatientRecord.defaultProps.tab;
 	page = page || match.params.page || PatientRecord.defaultProps.page;
 	perpage = perpage || match.params.perpage || PatientRecord.defaultProps.perpage;
 
-	const handle = Meteor.subscribe('patient', _id);
-	Meteor.subscribe('patient.consultations', _id, lastFew);
-	if ( handle.ready() ) {
-
-		const patient = Patients.findOne(_id);
-
-		const consultations = Consultations.find({
-			patientId: _id,
-			isDone: true,
-		}, lastFew).fetch();
-
-		return {
-			location,
-			patientId: _id,
-			tab,
-			page,
-			perpage,
-			loading: false,
-			limit,
-			patient,
-			consultations,
-		} ;
-
-	}
-	else return {
+	return {
 		location,
-		patientId: _id,
+		patientId,
 		tab,
 		page,
 		perpage,
-		loading: true,
-		limit,
-		consultations: [],
 	} ;
 }) ( PatientRecord );
