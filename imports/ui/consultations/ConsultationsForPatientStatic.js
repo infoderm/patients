@@ -9,7 +9,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 import ConsultationCard from '../consultations/ConsultationCard.js';
 
-export default function ConsultationsForPatientStatic ( { classes , patient , consultations , ...rest } ) {
+export default function ConsultationsForPatientStatic ( { classes , patientId , consultations , ...rest } ) {
 
 	return (
 		<Fragment>
@@ -28,7 +28,7 @@ export default function ConsultationsForPatientStatic ( { classes , patient , co
 					/>
 					))
 				}
-				<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patient._id}`}>
+				<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patientId}`}>
 					Create a new consultation
 					<SupervisorAccountIcon className={classes.rightIcon}/>
 				</Button>
@@ -39,6 +39,6 @@ export default function ConsultationsForPatientStatic ( { classes , patient , co
 
 ConsultationsForPatientStatic.propTypes = {
 	classes: PropTypes.object.isRequired,
-	patient: PropTypes.object.isRequired,
+	patientId: PropTypes.string.isRequired,
 	consultations: PropTypes.array.isRequired,
 };

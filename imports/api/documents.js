@@ -46,18 +46,6 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('documents.page', function (page, perpage) {
-		check(page, Number);
-		check(perpage, Number);
-		return Documents.find({
-			owner: this.userId
-		}, {
-			sort: { createdAt: -1 },
-			skip: page*perpage,
-			limit: perpage
-		});
-	});
-
 	Meteor.publish('document', function (_id) {
 		return Documents.find({ owner: this.userId , _id });
 	});
