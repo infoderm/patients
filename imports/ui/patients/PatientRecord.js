@@ -19,7 +19,7 @@ import PatientHeader from './PatientHeader.js';
 import PatientPersonalInformation from './PatientPersonalInformation.js';
 
 import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
-import AppointmentsForPatient from '../appointments/AppointmentsForPatientStatic.js';
+import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
 import DocumentsForPatient from '../documents/DocumentsForPatientStatic.js';
 import AttachmentsForPatient from '../attachments/AttachmentsForPatientStatic.js';
 
@@ -107,7 +107,7 @@ function PatientRecord ( props ) {
 			<PatientHeader patientId={patientId}/>
 			<TabJumper tabs={tabs} current={tab} toURL={tab => `/patient/${patientId}/${tab}`}/>
 			{(tab === 'information' && <PatientPersonalInformation patientId={patientId}/>)}
-			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patient={patient} appointments={upcomingAppointments} page={page} perpage={perpage}/>)}
+			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId}/>)}
 			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patient={patient} documents={documents} page={page} perpage={perpage}/>)}
 			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patient={patient} attachmentsInfo={attachmentsInfo} page={page} perpage={perpage}/>)}

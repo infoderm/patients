@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import AppointmentCard from '../appointments/AppointmentCard.js';
 
-export default function AppointmentsForPatientStatic ( { patient , appointments , ...rest } ) {
+export default function AppointmentsForPatientStatic ( { patientId , appointments , ...rest } ) {
 
 	return (
 		<Fragment>
@@ -30,6 +30,5 @@ export default function AppointmentsForPatientStatic ( { patient , appointments 
 }
 
 AppointmentsForPatientStatic.propTypes = {
-	patient: PropTypes.object.isRequired,
 	appointments: PropTypes.array.isRequired,
 };
