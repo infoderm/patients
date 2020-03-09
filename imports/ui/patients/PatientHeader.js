@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 
+import FaceIcon from '@material-ui/icons/Face';
+
 import { Patients } from '../../api/patients.js';
 
 const useStyles = makeStyles(
@@ -37,15 +39,17 @@ function PatientHeader ( { patientId , loading , patient } ) {
 
 	return (
 		<Grid className={classes.header} container spacing={3}>
-			{(!patient || !patient.photo) ? '' :
 			<Grid item xs={1}>
-			<Avatar
-				alt={`${patient.firstname} ${patient.lastname}`}
-				src={`data:image/png;base64,${patient.photo}`}
-				className={classes.avatar}
+			{(!patient || !patient.photo) ?
+				<Avatar className={classes.avatar}><FaceIcon/></Avatar>
+				:
+				<Avatar
+					alt={`${patient.firstname} ${patient.lastname}`}
+					src={`data:image/png;base64,${patient.photo}`}
+					className={classes.avatar}
 				/>
-			</Grid>
 			}
+			</Grid>
 			<Grid item xs={2}>
 				<TextField inputProps={{readOnly: true}} label="Lastname" value={!patient ? '?' : patient.lastname}/>
 			</Grid>
