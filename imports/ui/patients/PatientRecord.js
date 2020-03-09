@@ -20,13 +20,11 @@ import PatientPersonalInformation from './PatientPersonalInformation.js';
 
 import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
 import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
-import DocumentsForPatient from '../documents/DocumentsForPatientStatic.js';
+import DocumentsForPatient from '../documents/DocumentsForPatient.js';
 import AttachmentsForPatient from '../attachments/AttachmentsForPatientStatic.js';
 
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
-import { Appointments } from '../../api/appointments.js';
-import { Documents } from '../../api/documents.js';
 
 const useStyles = makeStyles(
 	theme => ({
@@ -62,8 +60,6 @@ function PatientRecord ( props ) {
 		limit,
 		patient,
 		consultations,
-		upcomingAppointments,
-		documents,
 	} = props ;
 
 	if (loading) return ( <Loading/> ) ;
@@ -109,7 +105,7 @@ function PatientRecord ( props ) {
 			{(tab === 'information' && <PatientPersonalInformation patientId={patientId}/>)}
 			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId}/>)}
 			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
-			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patient={patient} documents={documents} page={page} perpage={perpage}/>)}
+			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patient={patient} attachmentsInfo={attachmentsInfo} page={page} perpage={perpage}/>)}
 			{tabs.indexOf(tab) === -1 && <NoMatch location={location}/>}
 		</div>
@@ -143,8 +139,6 @@ export default withTracker(({match, location, patientId, tab, page, perpage}) =>
 
 	const handle = Meteor.subscribe('patient', _id);
 	Meteor.subscribe('patient.consultations', _id, lastFew);
-	Meteor.subscribe('patient.appointments', _id, firstFew);
-	Meteor.subscribe('patient.documents', _id, lastFew);
 	if ( handle.ready() ) {
 
 		const patient = Patients.findOne(_id);
@@ -152,15 +146,6 @@ export default withTracker(({match, location, patientId, tab, page, perpage}) =>
 		const consultations = Consultations.find({
 			patientId: _id,
 			isDone: true,
-		}, lastFew).fetch();
-
-		const upcomingAppointments = Appointments.find({
-			patientId: _id,
-			isDone: false,
-		}, firstFew).fetch();
-
-		const documents = Documents.find({
-			patientId: _id,
 		}, lastFew).fetch();
 
 		return {
@@ -173,8 +158,6 @@ export default withTracker(({match, location, patientId, tab, page, perpage}) =>
 			limit,
 			patient,
 			consultations,
-			upcomingAppointments,
-			documents,
 		} ;
 
 	}
@@ -187,7 +170,5 @@ export default withTracker(({match, location, patientId, tab, page, perpage}) =>
 		loading: true,
 		limit,
 		consultations: [],
-		upcomingAppointments: [],
-		documents: [],
 	} ;
 }) ( PatientRecord );

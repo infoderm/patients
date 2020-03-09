@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import DocumentCard from '../documents/DocumentCard.js';
 
-export default function DocumentsForPatientStatic ( { patient , documents , ...rest } ) {
+export default function DocumentsForPatientStatic ( { patientId , documents , ...rest } ) {
 
 	return (
 		<Fragment>
@@ -30,6 +30,5 @@ export default function DocumentsForPatientStatic ( { patient , documents , ...r
 }
 
 DocumentsForPatientStatic.propTypes = {
-	patient: PropTypes.object.isRequired,
 	documents: PropTypes.array.isRequired,
 };
