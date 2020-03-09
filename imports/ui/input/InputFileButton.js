@@ -22,6 +22,7 @@ class InputFileButton extends React.Component {
         const {
             classes,
             onChange,
+            Button,
             ...rest
         } = this.props ;
       return (
@@ -38,6 +39,10 @@ class InputFileButton extends React.Component {
       );
     }
 }
+
+InputFileButton.defaultProps = {
+    Button,
+} ;
 
 InputFileButton.propTypes = {
 	classes: PropTypes.object.isRequired,

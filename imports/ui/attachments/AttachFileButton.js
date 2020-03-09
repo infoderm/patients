@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -57,10 +57,10 @@ class AttachFileButton extends React.Component {
     }
 
     render () {
-      const { method , item , ...rest } = this.props ;
+      const { method , item , children , ...rest } = this.props ;
       return (
         <InputFileButton onChange={this.upload.bind(this)} {...rest}>
-            Attach File<AttachFileIcon/>
+            { children || <Fragment>Attach File<AttachFileIcon/></Fragment>}
         </InputFileButton>
       );
     }
