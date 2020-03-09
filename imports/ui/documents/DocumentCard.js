@@ -375,9 +375,9 @@ DocumentCard.propTypes = {
 	defaultExpanded: PropTypes.bool.isRequired,
 };
 
-export default withTracker(({document}) => {
+export default withTracker(({document, patientChip}) => {
 	const _id = document.patientId;
-	if (!_id) return {loadingPatient: false};
+	if (!_id || !patientChip) return {loadingPatient: false};
 	const handle = Meteor.subscribe('patient', _id);
 	if (handle.ready()) {
 		const patient = Patients.findOne(_id);
