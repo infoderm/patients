@@ -7,16 +7,16 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
+import NoContent from '../navigation/NoContent.js';
+
 import ConsultationCard from '../consultations/ConsultationCard.js';
 
-export default function ConsultationsForPatientStatic ( { classes , patientId , consultations , ...rest } ) {
+export default function ConsultationsForPatientStatic ( { classes , patientId , consultations , page , ...rest } ) {
 
 	return (
 		<Fragment>
-			{ consultations.length === 0 ?
-				<Typography variant="h2">No consultations</Typography>
-				:
-				<Typography variant="h2">Last consultations</Typography>
+			{ consultations.length === 0 &&
+        		<NoContent>Nothing to see on page {page}.</NoContent>
 			}
 			<div {...rest}>
 				{ consultations.map((consultation, i) => (
@@ -41,4 +41,5 @@ ConsultationsForPatientStatic.propTypes = {
 	classes: PropTypes.object.isRequired,
 	patientId: PropTypes.string.isRequired,
 	consultations: PropTypes.array.isRequired,
+	page: PropTypes.number.isRequired,
 };

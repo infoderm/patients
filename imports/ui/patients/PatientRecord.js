@@ -56,7 +56,7 @@ function PatientRecord ( props ) {
 			<PatientHeader patientId={patientId}/>
 			<TabJumper tabs={tabs} current={tab} toURL={tab => `/patient/${patientId}/${tab}`}/>
 			{(tab === 'information' && <PatientPersonalInformation patientId={patientId}/>)}
-			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId}/>)}
+			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 			{(tab === 'attachments' && <AttachmentsForPatient className={classes.container} classes={classes} patientId={patientId} page={page} perpage={perpage}/>)}
@@ -68,7 +68,7 @@ function PatientRecord ( props ) {
 PatientRecord.defaultProps = {
 	tab: 'information',
 	page: 1,
-	perpage: 10,
+	perpage: 2,
 } ;
 
 PatientRecord.propTypes = {

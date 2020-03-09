@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 
+import NoContent from '../navigation/NoContent.js';
+
 import AppointmentCard from '../appointments/AppointmentCard.js';
 
-export default function AppointmentsForPatientStatic ( { patientId , appointments , ...rest } ) {
+export default function AppointmentsForPatientStatic ( { patientId , appointments , page , ...rest } ) {
 
 	return (
 		<Fragment>
-			{ appointments.length === 0 ?
-				<Typography variant="h2">No upcoming appointments</Typography>
-				:
-				<Typography variant="h2">Upcoming appointments</Typography>
+			{ appointments.length === 0 &&
+        		<NoContent>Nothing to see on page {page}.</NoContent>
 			}
 			<div {...rest}>
 				{ appointments.map((appointment, i) => (
@@ -31,4 +31,5 @@ export default function AppointmentsForPatientStatic ( { patientId , appointment
 
 AppointmentsForPatientStatic.propTypes = {
 	appointments: PropTypes.array.isRequired,
+	page: PropTypes.number.isRequired,
 };

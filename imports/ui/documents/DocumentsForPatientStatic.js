@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 
+import NoContent from '../navigation/NoContent.js';
+
 import DocumentCard from '../documents/DocumentCard.js';
 
-export default function DocumentsForPatientStatic ( { patientId , documents , ...rest } ) {
+export default function DocumentsForPatientStatic ( { patientId , documents , page , ...rest } ) {
 
 	return (
 		<Fragment>
-			{ documents.length === 0 ?
-				<Typography variant="h2">No documents</Typography>
-				:
-				<Typography variant="h2">Last documents</Typography>
+			{ documents.length === 0 &&
+        		<NoContent>Nothing to see on page {page}.</NoContent>
 			}
 			<div {...rest}>
 				{ documents.map((document, i) => (
@@ -31,4 +31,5 @@ export default function DocumentsForPatientStatic ( { patientId , documents , ..
 
 DocumentsForPatientStatic.propTypes = {
 	documents: PropTypes.array.isRequired,
+	page: PropTypes.number.isRequired,
 };
