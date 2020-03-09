@@ -1,30 +1,51 @@
 import React, {Fragment} from 'react' ;
 import PropTypes from 'prop-types';
 
+import { makeStyles } from '@material-ui/core/styles';
+
 import Typography from '@material-ui/core/Typography';
+import Fab from '@material-ui/core/Fab';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import NoContent from '../navigation/NoContent.js';
+import Paginator from '../navigation/Paginator.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
-export default function AttachmentsForPatientStatic ( { classes , patientId , attachmentsInfo , ...rest } ) {
+const useStyles = makeStyles(
+  theme => ({
+    attachButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(21),
+    },
+  })
+);
+
+export default function AttachmentsForPatientStatic ( { patientId , attachmentsInfo , page , perpage , ...rest } ) {
+
+	const classes = useStyles();
+
+	const attachmentsInfoSlice = attachmentsInfo.slice((page-1)*perpage, page*perpage);
 
 	return (
 		<Fragment>
-			{ attachmentsInfo.length === 0 &&
+			{ attachmentsInfoSlice.length === 0 &&
         		<NoContent>Nothing to see on page {page}.</NoContent>
 			}
 			<div {...rest}>
-				<AttachmentsGallery attachmentsInfo={attachmentsInfo}/>
-				<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patientId}/>
+				<AttachmentsGallery attachmentsInfo={attachmentsInfoSlice}/>
 			</div>
+			<AttachFileButton Button={Fab} className={classes.attachButton} color="default" method="patients.attach" item={patientId}>
+				<AttachFileIcon/>
+			</AttachFileButton>
+			<Paginator page={page} end={attachmentsInfoSlice.length < perpage} root={`/patient/${patientId}/attachments`}/>
 		</Fragment>
 	) ;
 }
 
 AttachmentsForPatientStatic.propTypes = {
-	classes: PropTypes.object.isRequired,
 	patientId: PropTypes.string.isRequired,
 	attachmentsInfo: PropTypes.array.isRequired,
 	page: PropTypes.number.isRequired,
