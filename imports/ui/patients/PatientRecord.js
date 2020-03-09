@@ -21,6 +21,7 @@ const useStyles = makeStyles(
 	theme => ({
 		root: {
 			paddingTop: 80,
+			paddingBottom: 80,
 		},
 		container: {
 			padding: theme.spacing(3),
