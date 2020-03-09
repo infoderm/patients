@@ -81,8 +81,8 @@ PatientRecord.propTypes = {
 export default withTracker(({match, location, patientId, tab, page, perpage}) => {
 	patientId = patientId || match.params.id;
 	tab = tab || match.params.tab || PatientRecord.defaultProps.tab;
-	page = page || match.params.page || PatientRecord.defaultProps.page;
-	perpage = perpage || match.params.perpage || PatientRecord.defaultProps.perpage;
+	page = page || parseInt(match.params.page, 10) || PatientRecord.defaultProps.page;
+	perpage = perpage || PatientRecord.defaultProps.perpage;
 
 	return {
 		location,
