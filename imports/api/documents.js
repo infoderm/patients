@@ -62,12 +62,12 @@ if (Meteor.isServer) {
 		return Documents.find({ owner: this.userId , _id });
 	});
 
-	Meteor.publish('patient.documents', function (patientId) {
+	Meteor.publish('patient.documents', function (patientId, options) {
 		check(patientId, String);
 		return Documents.find({
 			owner: this.userId ,
 			patientId: patientId
-		});
+		}, options);
 	});
 
 }

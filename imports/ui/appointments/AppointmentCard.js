@@ -90,6 +90,7 @@ class AppointmentCard extends React.Component {
   render () {
 
     const {
+      patientChip,
       defaultExpanded,
       classes ,
       loadingPatient ,
@@ -114,7 +115,9 @@ class AppointmentCard extends React.Component {
 	    <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
 	    <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
 	    {duration && <Chip label={msToString(duration)} className={classes.chip}/>}
+	    { !patientChip ? null :
 	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
+	    }
 	  </div>
 	</ExpansionPanelSummary>
 	<ExpansionPanelDetails>
@@ -142,9 +145,16 @@ class AppointmentCard extends React.Component {
 
 }
 
+AppointmentCard.defaultProps = {
+  patientChip: true,
+  defaultExpanded: false,
+};
+
 AppointmentCard.propTypes = {
   classes: PropTypes.object.isRequired,
   appointment: PropTypes.object.isRequired,
+  patientChip: PropTypes.bool.isRequired,
+  defaultExpanded: PropTypes.bool.isRequired,
 };
 
 export default withTracker(({appointment}) => {

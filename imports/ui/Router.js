@@ -10,6 +10,7 @@ import dateParseISO from 'date-fns/parseISO';
 import dateFormat from 'date-fns/format' ;
 
 import NoContent from './navigation/NoContent.js';
+import NoMatch from './navigation/NoMatch.js';
 
 import PatientsList from './patients/PatientsList.js';
 import PatientRecord from './patients/PatientRecord.js';
@@ -70,12 +71,6 @@ const styles = theme => ({
 	},
 });
 
-const NoMatch = ({ location }) => (
-	<NoContent>
-		No match for <code>{location.pathname}</code>.
-	</NoContent>
-);
-
 const ConsultationsOfTheDayFromMatch = ({ match }) => (
 	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))}/>
 );
@@ -125,6 +120,8 @@ class Main extends React.Component {
 					}/>
 
 					<Route exact path="/patient/:id" component={PatientRecord}/>
+					<Route exact path="/patient/:id/:tab" component={PatientRecord}/>
+					<Route exact path="/patient/:id/:tab/page/:page" component={PatientRecord}/>
 					<Route exact path="/new/patient" component={NewPatientForm}/>
 
 					<Route exact path="/documents" component={DocumentsList}/>

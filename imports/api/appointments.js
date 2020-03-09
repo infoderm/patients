@@ -15,13 +15,13 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('patient.appointments', function (patientId) {
+	Meteor.publish('patient.appointments', function (patientId, options) {
 		check(patientId, String);
 		return Consultations.find({
 			owner: this.userId ,
 			isDone: false,
 			patientId ,
-		});
+		}, options);
 	});
 
 	Meteor.publish('patient.appointmentsAfter', function (patientId, datetime) {

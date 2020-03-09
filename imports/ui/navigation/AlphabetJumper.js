@@ -1,28 +1,16 @@
 import React from 'react' ;
-import PropTypes from 'prop-types';
 
 import { list } from '@aureooms/js-itertools' ;
 
-import Jumper from './Jumper.js';
+import TabJumper from './TabJumper.js';
 
-export default function AlphabetJumper ( { current , toURL } ) {
+export default function AlphabetJumper ( props ) {
 
   const alphabet = 'abcdefghijklmnopqrstuvwxyz' ;
-  const items = list(alphabet).map(
-    x => ({
-      key: x,
-      url: toURL(x),
-      disabled: x === current,
-    })
-  );
+  const tabs = list(alphabet) ;
 
   return (
-      <Jumper items={items}/>
+      <TabJumper tabs={tabs} {...props}/>
   ) ;
 
 }
-
-AlphabetJumper.propTypes = {
-  current: PropTypes.string,
-  toURL: PropTypes.func.isRequired,
-} ;

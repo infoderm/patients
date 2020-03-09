@@ -153,6 +153,7 @@ class DocumentCard extends React.Component {
 
 	render() {
 		const {
+			patientChip,
 			defaultExpanded,
 			classes,
 			loadingPatient,
@@ -220,7 +221,7 @@ class DocumentCard extends React.Component {
 								className={classes.chip}
 							/>
 						}
-						{ patientId &&
+						{ (patientChip && patientId) &&
 							<Chip
 								avatar={(!loadingPatient && patient && patient.photo) ?
 									<Avatar src={`data:image/png;base64,${patient.photo}`}/>
@@ -233,7 +234,7 @@ class DocumentCard extends React.Component {
 								to={`/patient/${patientId}`}
 							/>
 						}
-						{ (!patientId && parsed) &&
+						{ (patientChip && !patientId && parsed) &&
 							<Chip
 								avatar={<Avatar><LinkOffIcon/></Avatar>}
 								label={`${subject.lastname} ${subject.firstname}`}
@@ -362,9 +363,16 @@ class DocumentCard extends React.Component {
 	}
 }
 
+DocumentCard.defaultProps = {
+	patientChip: true,
+	defaultExpanded: false,
+};
+
 DocumentCard.propTypes = {
 	classes: PropTypes.object.isRequired,
-	document: PropTypes.object.isRequired
+	document: PropTypes.object.isRequired,
+	patientChip: PropTypes.bool.isRequired,
+	defaultExpanded: PropTypes.bool.isRequired,
 };
 
 export default withTracker(({document}) => {
