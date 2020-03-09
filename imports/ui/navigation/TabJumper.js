@@ -21,6 +21,5 @@ export default function TabJumper ( { tabs , current , toURL } ) {
 
 TabJumper.propTypes = {
   tabs: PropTypes.array.isRequired,
-  current: PropTypes.string,
   toURL: PropTypes.func.isRequired,
 } ;
