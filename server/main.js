@@ -171,6 +171,22 @@ Meteor.startup(() => {
   });
 
   Documents.rawCollection().createIndex({
+    owner: 1,
+    createdAt: 1,
+    parsed: 1,
+  },{
+    background: true,
+  });
+
+  Documents.rawCollection().createIndex({
+    owner: 1,
+    createdAt: 1,
+    encoding: 1,
+  },{
+    background: true,
+  });
+
+  Documents.rawCollection().createIndex({
     source: 'hashed',
   },{
     background: true,

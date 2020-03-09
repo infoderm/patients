@@ -32,6 +32,20 @@ if (Meteor.isServer) {
 		});
 	});
 
+	Meteor.publish('documents.unparsed', function () {
+		return Documents.find({
+			owner: this.userId,
+			parsed: false,
+		});
+	});
+
+	Meteor.publish('documents.mangled', function () {
+		return Documents.find({
+			owner: this.userId,
+			encoding: null,
+		});
+	});
+
 	Meteor.publish('documents.page', function (page, perpage) {
 		check(page, Number);
 		check(perpage, Number);
@@ -254,7 +268,7 @@ Meteor.methods({
 
 				// We update the document if it had not been properly decoded before.
 
-				if (existingDocument.parsed && existingDocument.decoded !== entry.decoded) {
+				if (existingDocument.parsed && (existingDocument.encoding !== entry.encoding || existingDocument.decoded !== entry.decoded)) {
 					Documents.update(existingDocument._id, {
 						$set: {
 							...entry,
