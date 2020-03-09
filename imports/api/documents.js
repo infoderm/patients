@@ -25,6 +25,13 @@ if (Meteor.isServer) {
 		return Documents.find({ owner: this.userId });
 	});
 
+	Meteor.publish('documents.unlinked', function () {
+		return Documents.find({
+			owner: this.userId,
+			patientId: null,
+		});
+	});
+
 	Meteor.publish('documents.page', function (page, perpage) {
 		check(page, Number);
 		check(perpage, Number);
