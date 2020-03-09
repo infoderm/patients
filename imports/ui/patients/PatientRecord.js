@@ -71,7 +71,7 @@ function PatientRecord ( props ) {
 PatientRecord.defaultProps = {
 	tab: 'information',
 	page: 1,
-	perpage: 2,
+	perpage: 5,
 } ;
 
 PatientRecord.propTypes = {
