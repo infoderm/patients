@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor' ;
 import { withTracker } from 'meteor/react-meteor-data' ;
 
-import React from 'react' ;
+import React, {Fragment} from 'react' ;
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -20,6 +20,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -29,6 +30,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
@@ -103,15 +105,39 @@ const styles = theme => ({
 	button: {
 		margin: theme.spacing(1),
 	},
-	leftIcon: {
-		marginRight: theme.spacing(1),
-	},
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
 	problem:{
 		color: 'red',
 	},
+    editButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(3),
+    },
+    saveButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(3),
+    },
+    undoButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(12),
+    },
+    attachButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(12),
+    },
+    consultationButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(21),
+    },
+    deleteButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(30),
+    },
 });
 
 const tagFilter = set => (suggestions, inputValue) => {
@@ -468,41 +494,34 @@ class PatientPersonalInformation extends React.Component {
 						</Grid>
 						</form>
 					</Grid>
-					<Grid container>
-						<Grid item xs={9}>
-							{ editing ?
-							<div>
-								<Button className={classes.button} color="primary" onClick={this.saveDetails}>
-									Save patient details
-									<SaveIcon className={classes.rightIcon}/>
-								</Button>
-								<Button className={classes.button} color="secondary" onClick={e => this.setState({ editing: false, dirty: false, patient: this.props.patient })}>
-									Undo changes
-									<UndoIcon className={classes.rightIcon}/>
-								</Button>
-							</div>:
-							<div>
-								<Button className={classes.button} color="default" onClick={e => this.setState({ editing: true })}>
-									Edit patient details
-									<EditIcon className={classes.rightIcon}/>
-								</Button>
-								<AttachFileButton className={classes.button} color="default" method="patients.attach" item={patient._id}/>
-								<Button className={classes.button} color="primary" component={Link} to={`/new/consultation/for/${patient._id}`}>
-									Create a new consultation
-									<SupervisorAccountIcon className={classes.rightIcon}/>
-								</Button>
-							</div>
-							}
-						</Grid>
-						<Grid item xs={3} style={{display: 'flex', flexDirection: 'row-reverse'}}>
-							<Button className={classes.button} color="secondary" onClick={e => this.setState({ deleting: true})}>
-								Delete this patient
-								<DeleteIcon className={classes.rightIcon}/>
-							</Button>
-							<PatientDeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} patient={this.props.patient}/>
-						</Grid>
-					</Grid>
 				</Grid>
+				<Fragment>
+					{ editing ?
+					<Fragment>
+						<Fab className={classes.saveButton} color="primary" disabled={!dirty} onClick={this.saveDetails}>
+							<SaveIcon/>
+						</Fab>
+						<Fab className={classes.undoButton} color={dirty ? 'secondary' : 'default'} onClick={e => this.setState({ editing: false, dirty: false, patient: this.props.patient })}>
+							<UndoIcon/>
+						</Fab>
+					</Fragment>:
+					<Fragment>
+						<Fab className={classes.editButton} color="default" onClick={e => this.setState({ editing: true })}>
+							<EditIcon/>
+						</Fab>
+						<AttachFileButton Button={Fab} className={classes.attachButton} color="default" method="patients.attach" item={patient._id}>
+							<AttachFileIcon/>
+						</AttachFileButton>
+						<Fab className={classes.consultationButton} color="primary" component={Link} to={`/new/consultation/for/${patient._id}`}>
+							<SupervisorAccountIcon/>
+						</Fab>
+						<Fab className={classes.deleteButton} color="secondary" onClick={e => this.setState({ deleting: true})}>
+							<DeleteIcon/>
+						</Fab>
+					</Fragment>
+					}
+					<PatientDeletionDialog open={deleting} onClose={e => this.setState({ deleting: false})} patient={this.props.patient}/>
+				</Fragment>
 			</div>
 		);
 	}
