@@ -1,10 +1,16 @@
+import { Meteor } from 'meteor/meteor' ;
+import { withTracker } from 'meteor/react-meteor-data' ;
+
 import React from 'react' ;
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
+
+import { Patients } from '../../api/patients.js';
 
 const useStyles = makeStyles(
 	theme => ({
@@ -25,13 +31,13 @@ const useStyles = makeStyles(
 	})
 );
 
-export default function PatientHeader ( { patient } ) {
+function PatientHeader ( { patientId , loading , patient } ) {
 
 	const classes = useStyles();
 
 	return (
 		<Grid className={classes.header} container spacing={3}>
-			{(!patient.photo) ? '' :
+			{(!patient || !patient.photo) ? '' :
 			<Grid item xs={1}>
 			<Avatar
 				alt={`${patient.firstname} ${patient.lastname}`}
@@ -41,18 +47,36 @@ export default function PatientHeader ( { patient } ) {
 			</Grid>
 			}
 			<Grid item xs={2}>
-				<TextField inputProps={{readOnly: true}} label="Lastname" value={patient.lastname}/>
+				<TextField inputProps={{readOnly: true}} label="Lastname" value={!patient ? '?' : patient.lastname}/>
 			</Grid>
 			<Grid item xs={2}>
-				<TextField inputProps={{readOnly: true}} label="Firstname" value={patient.firstname}/>
+				<TextField inputProps={{readOnly: true}} label="Firstname" value={!patient ? '?' : patient.firstname}/>
 			</Grid>
 			<Grid item xs={2}>
-				<TextField inputProps={{readOnly: true}} label="NISS" value={patient.niss}/>
+				<TextField inputProps={{readOnly: true}} label="NISS" value={!patient ? '?' : patient.niss}/>
 			</Grid>
 			<Grid item xs={2}>
-				<TextField inputProps={{readOnly: true}} label="Patient id" value={patient._id}/>
+				<TextField inputProps={{readOnly: true}} label="Patient id" value={patientId} error={!loading && !patient}/>
 			</Grid>
 		</Grid>
 	) ;
 
 }
+
+PatientHeader.propTypes = {
+	patientId: PropTypes.string.isRequired,
+	loading: PropTypes.bool.isRequired,
+	patient: PropTypes.object,
+} ;
+
+export default withTracker(({patientId}) => {
+
+	const handle = Meteor.subscribe('patient', patientId);
+
+	if (handle.ready()) {
+		const patient = Patients.findOne(patientId);
+		return { patientId , loading: false , patient } ;
+	}
+	else return { patientId , loading: true } ;
+
+}) (PatientHeader) ;

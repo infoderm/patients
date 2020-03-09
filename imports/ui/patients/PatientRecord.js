@@ -104,9 +104,9 @@ function PatientRecord ( props ) {
 
 	return (
 		<div className={classes.root}>
-			<PatientHeader patient={patient}/>
+			<PatientHeader patientId={patientId}/>
 			<TabJumper tabs={tabs} current={tab} toURL={tab => `/patient/${patientId}/${tab}`}/>
-			{(tab === 'information' && <PatientPersonalInformation patient={patient}/>)}
+			{(tab === 'information' && <PatientPersonalInformation patientId={patientId}/>)}
 			{(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patient={patient} appointments={upcomingAppointments} page={page} perpage={perpage}/>)}
 			{(tab === 'consultations' && <ConsultationsForPatient className={classes.container} classes={classes} patient={patient} consultations={consultations} page={page} perpage={perpage}/>)}
 			{(tab === 'documents' && <DocumentsForPatient className={classes.container} patient={patient} documents={documents} page={page} perpage={perpage}/>)}
