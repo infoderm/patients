@@ -31,7 +31,7 @@ const useStyles = makeStyles(
 
 export default function PagedConsultationsList ( props ) {
 
-  const { root , loading , page , perpage , items , itemProps } = props;
+  const { root , loading , page , perpage , items , itemProps , ...rest } = props;
 
   const classes = useStyles();
 
@@ -40,7 +40,7 @@ export default function PagedConsultationsList ( props ) {
       { loading ?
           <Loading/>
           : items.length ?
-          <ConsultationsList items={items} itemProps={itemProps}/>
+          <ConsultationsList items={items} itemProps={itemProps} {...rest}/>
           :
           <NoContent>{`Nothing to see on page ${page}.`}</NoContent>
       }

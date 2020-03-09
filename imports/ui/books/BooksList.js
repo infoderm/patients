@@ -1,7 +1,7 @@
 import React, { useState } from 'react' ;
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 
@@ -16,15 +16,19 @@ import { Books } from '../../api/books.js';
 
 import YearJumper from '../navigation/YearJumper.js';
 
-const styles = theme => ({
-  saveButton: {
-      position: 'fixed',
-      bottom: theme.spacing(3),
-      right: theme.spacing(21),
-  },
-});
+const useStyles = makeStyles(
+  theme => ({
+    saveButton: {
+        position: 'fixed',
+        bottom: theme.spacing(3),
+        right: theme.spacing(21),
+    },
+  })
+);
 
-function BooksList ( { classes , match , year , page , perpage } ) {
+export default function BooksList ( { match , year , page , perpage } ) {
+
+  const classes = useStyles();
 
   const [downloading, setDownloading] = useState(false) ;
 
@@ -70,5 +74,3 @@ BooksList.propTypes = {
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
 } ;
-
-export default withStyles(styles, { withTheme: true })(BooksList);
