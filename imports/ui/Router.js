@@ -32,6 +32,7 @@ import BooksList from './books/BooksList.js';
 import BookDetails from './books/BookDetails.js';
 
 import DocumentsList from './documents/DocumentsList.js';
+import DocumentVersionsList from './documents/DocumentVersionsList.js';
 import DocumentDetails from './documents/DocumentDetails.js';
 
 import WiredConsultationsList from './consultations/WiredConsultationsList.js';
@@ -127,6 +128,8 @@ class Main extends React.Component {
 					<Route exact path="/documents" component={DocumentsList}/>
 					<Route exact path="/documents/page/:page" component={DocumentsList}/>
 					<Route exact path="/document/:id" component={DocumentDetails}/>
+					<Route exact path="/document/versions/:identifier/:reference" component={DocumentVersionsList}/>
+					<Route exact path="/document/versions/:identifier/:reference/page/:page" component={DocumentVersionsList}/>
 
 					<Route exact path="/calendar" component={Calendar}/>
 					<Route exact path="/calendar/:day" component={ConsultationsOfTheDayFromMatch}/>

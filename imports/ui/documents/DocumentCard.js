@@ -42,13 +42,19 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import HistoryIcon from '@material-ui/icons/History';
+import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import dateformat from 'date-fns/format';
 
+import { Documents } from '../../api/documents.js';
 import { Patients } from '../../api/patients.js';
 import saveTextAs from '../../client/saveTextAs.js';
 
 import DocumentDeletionDialog from './DocumentDeletionDialog.js';
+import DocumentSuperDeletionDialog from './DocumentSuperDeletionDialog.js';
+import DocumentRestorationDialog from './DocumentRestorationDialog.js';
 import DocumentLinkingDialog from './DocumentLinkingDialog.js';
 import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
 import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
@@ -125,6 +131,8 @@ class DocumentCard extends React.Component {
 			linking: false,
 			unlinking: false,
 			deleting: false,
+			restoring: false,
+			superdeleting: false,
 		};
 	}
 
@@ -154,10 +162,13 @@ class DocumentCard extends React.Component {
 	render() {
 		const {
 			patientChip,
+			versionsButton,
 			defaultExpanded,
 			classes,
 			loadingPatient,
+			loadingVersions,
 			patient,
+			versions,
 			document: {
 				_id,
 				createdAt,
@@ -172,6 +183,8 @@ class DocumentCard extends React.Component {
 				reference,
 				status,
 				datetime,
+				deleted,
+				lastVersion,
 				patient: subject,
 				anomalies,
 			},
@@ -183,6 +196,8 @@ class DocumentCard extends React.Component {
 			linking,
 			unlinking,
 			deleting,
+			restoring,
+			superdeleting,
 		} = this.state;
 
 		return (
@@ -283,6 +298,20 @@ class DocumentCard extends React.Component {
 							:
 							null
 						}
+						{ deleted &&
+							<Chip
+								avatar={<Avatar><DeleteIcon/></Avatar>}
+								label="deleted"
+								className={classes.chip}
+							/>
+						}
+						{ (!deleted && !lastVersion) &&
+							<Chip
+								avatar={<Avatar><HistoryIcon/></Avatar>}
+								label="old version"
+								className={classes.chip}
+							/>
+						}
 					</div>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
@@ -327,6 +356,11 @@ class DocumentCard extends React.Component {
 				</ExpansionPanelDetails>
 				<Divider/>
 				<ExpansionPanelActions>
+					{ versionsButton && !loadingVersions && versions.length >= 2 &&
+						<Button color="primary" component={Link} to={`/document/versions/${identifier}/${reference}`}>
+							{versions.length} versions<HistoryIcon/>
+						</Button>
+					}
 					<Button color="primary" onClick={this.download}>
 						Download<CloudDownloadIcon/>
 					</Button>
@@ -338,9 +372,21 @@ class DocumentCard extends React.Component {
 							Unlink<LinkOffIcon/>
 						</Button>
 					}
-					<Button color="secondary" onClick={e => this.setState({deleting: true})}>
-						Delete<DeleteIcon/>
-					</Button>
+					{ deleted &&
+						<Button color="primary" onClick={e => this.setState({restoring: true})}>
+							Restore<RestoreFromTrashIcon/>
+						</Button>
+					}
+					{ deleted &&
+						<Button color="secondary" onClick={e => this.setState({superdeleting: true})}>
+							Delete forever<DeleteForeverIcon/>
+						</Button>
+					}
+					{ !deleted &&
+						<Button color="secondary" onClick={e => this.setState({deleting: true})}>
+							Delete<DeleteIcon/>
+						</Button>
+					}
 					<DocumentLinkingDialog
 						open={linking}
 						onClose={e => this.setState({linking: false})}
@@ -357,6 +403,16 @@ class DocumentCard extends React.Component {
 						onClose={e => this.setState({deleting: false})}
 						document={document}
 					/>
+					<DocumentRestorationDialog
+						open={restoring}
+						onClose={e => this.setState({restoring: false})}
+						document={document}
+					/>
+					<DocumentSuperDeletionDialog
+						open={superdeleting}
+						onClose={e => this.setState({superdeleting: false})}
+						document={document}
+					/>
 				</ExpansionPanelActions>
 			</ExpansionPanel>
 		);
@@ -364,7 +420,6 @@ class DocumentCard extends React.Component {
 }
 
 DocumentCard.defaultProps = {
-	patientChip: true,
 	defaultExpanded: false,
 };
 
@@ -372,16 +427,52 @@ DocumentCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	patientChip: PropTypes.bool.isRequired,
+	versionsButton: PropTypes.bool.isRequired,
 	defaultExpanded: PropTypes.bool.isRequired,
 };
 
-export default withTracker(({document, patientChip}) => {
-	const _id = document.patientId;
-	if (!_id || !patientChip) return {loadingPatient: false};
-	const handle = Meteor.subscribe('patient', _id);
-	if (handle.ready()) {
-		const patient = Patients.findOne(_id);
-		return {loadingPatient: false, patient};
+const component = withTracker(({document, patientChip, versionsButton}) => {
+	const additionalProps = {
+		loadingPatient: false,
+		loadingVersions: false,
+	} ;
+	const { patientId , parsed , identifier , reference } = document ;
+
+	if (patientId && patientChip) {
+		const handle = Meteor.subscribe('patient', patientId);
+		if (handle.ready()) {
+			const patient = Patients.findOne(patientId);
+			additionalProps.patient = patient ;
+		}
+		else {
+			additionalProps.loadingPatient = true ;
+		}
 	}
-	return {loadingPatient: true};
+
+	if (versionsButton) {
+		if (!parsed) additionalProps.versions = [ document ] ;
+		else {
+			const options = {
+			  sort: { datetime: -1 },
+			} ;
+			const handle = Meteor.subscribe('documents.versions', identifier, reference, options);
+			if (handle.ready()) {
+				const versions = Documents.find({identifier, reference}, options).fetch();
+				additionalProps.versions = versions ;
+			}
+			else {
+				additionalProps.loadingVersions = true ;
+			}
+		}
+	}
+
+	return additionalProps ;
+
 })(withStyles(styles, {withTheme: true})(DocumentCard));
+
+component.defaultProps = {
+	patientChip: true,
+	versionsButton: true,
+};
+
+export default component ;

@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = theme => ({
@@ -31,12 +31,12 @@ class DocumentDeletionDialog extends React.Component {
 
     const { open , onClose , document, classes } = this.props ;
 
-    const deleteThisDocument = event => {
+    const deleteThisDocumentForever = event => {
       event.preventDefault();
-      Meteor.call('documents.delete', document._id, (err, res) => {
+      Meteor.call('documents.superdelete', document._id, (err, res) => {
 	if ( err ) console.error( err ) ;
 	else {
-	  console.log(`Document #${document._id} deleted.`);
+	  console.log(`Document #${document._id} deleted forever.`);
 	  onClose();
 	}
       });
@@ -47,13 +47,13 @@ class DocumentDeletionDialog extends React.Component {
 	  open={open}
 	  onClose={onClose}
 	  component="form"
-	  aria-labelledby="document-deletion-dialog-title"
+	  aria-labelledby="document-super-deletion-dialog-title"
 	>
-	  <DialogTitle id="document-deletion-dialog-title">Delete document {document._id.toString()}</DialogTitle>
+	  <DialogTitle id="document-super-deletion-dialog-title">Delete document {document._id.toString()} forever</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
-	      If you do not want to delete this document, click cancel.
-	      If you really want to delete this document from the system, click the delete button.
+	      If you do not want to delete this document forever, click cancel.
+	      If you really want to delete this document from the system forever, click the delete button.
 	    </DialogContentText>
 	  </DialogContent>
 	  <DialogActions>
@@ -61,9 +61,9 @@ class DocumentDeletionDialog extends React.Component {
 	      Cancel
 	      <CancelIcon className={classes.rightIcon}/>
 	    </Button>
-	    <Button onClick={deleteThisDocument} color="secondary">
-	      Delete
-	      <DeleteIcon className={classes.rightIcon}/>
+	    <Button onClick={deleteThisDocumentForever} color="secondary">
+	      Delete forever
+	      <DeleteForeverIcon className={classes.rightIcon}/>
 	    </Button>
 	  </DialogActions>
 	</Dialog>

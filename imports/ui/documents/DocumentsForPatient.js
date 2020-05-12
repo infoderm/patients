@@ -40,6 +40,8 @@ export default withTracker(({patientId, page, perpage}) => {
 
 	const documents = loading ? [ ] : Documents.find({
 		patientId,
+		deleted: false,
+		lastVersion: true,
 	}, {
 			sort: { datetime: -1 },
 			skip: (page-1)*perpage,

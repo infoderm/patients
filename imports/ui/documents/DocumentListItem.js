@@ -31,6 +31,8 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import DeleteIcon from '@material-ui/icons/Delete';
+import HistoryIcon from '@material-ui/icons/History';
 
 import dateformat from 'date-fns/format';
 
@@ -131,6 +133,8 @@ class DocumentCard extends React.Component {
 				datetime,
 				patient: subject,
 				anomalies,
+				deleted,
+				lastVersion,
 			},
 		} = this.props;
 
@@ -247,6 +251,20 @@ class DocumentCard extends React.Component {
 							/>
 							:
 							null
+						}
+						{ deleted &&
+							<Chip
+								avatar={<Avatar><DeleteIcon/></Avatar>}
+								label="deleted"
+								className={classes.chip}
+							/>
+						}
+						{ (!deleted && !lastVersion) &&
+							<Chip
+								avatar={<Avatar><HistoryIcon/></Avatar>}
+								label="old version"
+								className={classes.chip}
+							/>
 						}
 					</div>
 				} />

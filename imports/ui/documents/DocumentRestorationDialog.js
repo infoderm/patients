@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import DeleteIcon from '@material-ui/icons/Delete';
+import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = theme => ({
@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 }) ;
 
-class DocumentDeletionDialog extends React.Component {
+class DocumentRestorationDialog extends React.Component {
 
   constructor ( props ) {
     super( props ) ;
@@ -31,12 +31,12 @@ class DocumentDeletionDialog extends React.Component {
 
     const { open , onClose , document, classes } = this.props ;
 
-    const deleteThisDocument = event => {
+    const restoreThisDocument = event => {
       event.preventDefault();
-      Meteor.call('documents.delete', document._id, (err, res) => {
+      Meteor.call('documents.restore', document._id, (err, res) => {
 	if ( err ) console.error( err ) ;
 	else {
-	  console.log(`Document #${document._id} deleted.`);
+	  console.log(`Document #${document._id} restored.`);
 	  onClose();
 	}
       });
@@ -47,13 +47,13 @@ class DocumentDeletionDialog extends React.Component {
 	  open={open}
 	  onClose={onClose}
 	  component="form"
-	  aria-labelledby="document-deletion-dialog-title"
+	  aria-labelledby="document-restoration-dialog-title"
 	>
-	  <DialogTitle id="document-deletion-dialog-title">Delete document {document._id.toString()}</DialogTitle>
+	  <DialogTitle id="document-restoration-dialog-title">Restore document {document._id.toString()}</DialogTitle>
 	  <DialogContent>
 	    <DialogContentText>
-	      If you do not want to delete this document, click cancel.
-	      If you really want to delete this document from the system, click the delete button.
+	      If you do not want to restore this document, click cancel.
+	      If you really want to restore this document from the system, click the restore button.
 	    </DialogContentText>
 	  </DialogContent>
 	  <DialogActions>
@@ -61,9 +61,9 @@ class DocumentDeletionDialog extends React.Component {
 	      Cancel
 	      <CancelIcon className={classes.rightIcon}/>
 	    </Button>
-	    <Button onClick={deleteThisDocument} color="secondary">
-	      Delete
-	      <DeleteIcon className={classes.rightIcon}/>
+	    <Button onClick={restoreThisDocument} color="primary">
+	      Restore
+	      <RestoreFromTrashIcon className={classes.rightIcon}/>
 	    </Button>
 	  </DialogActions>
 	</Dialog>
@@ -72,10 +72,10 @@ class DocumentDeletionDialog extends React.Component {
 
 }
 
-DocumentDeletionDialog.propTypes = {
+DocumentRestorationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 } ;
 
-export default withStyles(styles)(DocumentDeletionDialog) ;
+export default withStyles(styles)(DocumentRestorationDialog) ;

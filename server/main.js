@@ -158,6 +158,9 @@ Meteor.startup(() => {
     owner: 1,
     patientId: 1,
     datetime: 1,
+    status: 1,
+    lastVersion: 1,
+    deleted: 1,
   },{
     background: true,
   });
@@ -261,6 +264,20 @@ Meteor.startup(() => {
         console.debug('Removing current duplicate document', _id);
         Documents.rawCollection().remove({_id});
       }
+    })
+  );
+
+  // add missing deleted flag
+  Documents.rawCollection().find().snapshot().forEach(
+    Meteor.bindEnvironment(({_id, deleted}) => {
+      if (deleted !== true && deleted !== false) Documents.update(_id, { $set: { deleted: false } } ) ;
+    })
+  );
+
+  // add missing lastVersion flag
+  Documents.rawCollection().find().snapshot().forEach(
+    Meteor.bindEnvironment(({owner, parsed, identifier, reference, datetime}) => {
+      documents.updateLastVersionFlags(owner, { parsed , identifier , reference , datetime }) ;
     })
   );
 

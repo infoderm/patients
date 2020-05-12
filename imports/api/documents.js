@@ -54,7 +54,25 @@ if (Meteor.isServer) {
 		check(patientId, String);
 		return Documents.find({
 			owner: this.userId ,
-			patientId: patientId
+			patientId: patientId,
+			lastVersion: true,
+			deleted: false,
+		}, options);
+	});
+
+	Meteor.publish('patient.documents.all', function (patientId, options) {
+		check(patientId, String);
+		return Documents.find({
+			owner: this.userId ,
+			patientId: patientId,
+		}, options);
+	});
+
+	Meteor.publish('documents.versions', function (identifier, reference, options) {
+		return Documents.find({
+			owner: this.userId ,
+			identifier ,
+			reference ,
 		}, options);
 	});
 
@@ -132,6 +150,7 @@ function sanitize ( {
 			//binary: Binary(buffer),
 			encoding,
 			decoded,
+			lastVersion: true,
 		} ] ;
 
 	}
@@ -146,6 +165,7 @@ function sanitize ( {
 		format,
 		source: mangled,
 		parsed: false,
+		lastVersion: true,
 		//binary: Binary(buffer),
 	} ] ;
 
@@ -192,6 +212,45 @@ function findBestPatientMatch ( owner, entry ) {
 
 }
 
+function updateLastVersionFlags ( owner , document ) {
+
+	if ( !document.parsed ) return ;
+
+	const { identifier , reference , datetime } = document ;
+
+	const latest = Documents.findOne({
+		owner,
+		identifier,
+		reference,
+		deleted: false,
+	}, {
+		sort: {
+			status: 1, // complete < partial
+			datetime: -1,
+		}
+	}) ;
+
+	if (latest === undefined) return ;
+
+	Documents.update(latest._id, { $set: {lastVersion: true} }) ;
+
+	Documents.update({
+		owner ,
+		identifier ,
+		reference ,
+		lastVersion: true ,
+		_id: { $ne : latest._id } ,
+	}, {
+		$set: {
+			lastVersion: false ,
+		}
+	} , {
+		multi: true ,
+	} ,
+	) ;
+
+}
+
 Meteor.methods({
 
 	'documents.insert'(document) {
@@ -225,6 +284,7 @@ Meteor.methods({
 				const _id = Documents.insert({
 					...entry,
 					patientId,
+					deleted: false,
 					createdAt: new Date(),
 					owner: this.userId,
 				});
@@ -265,9 +325,15 @@ Meteor.methods({
 					});
 				}
 
+				if (!existingDocument.parsed && !existingDocument.lastVersion) {
+					Documents.update(existingDocument._id, { $set: { lastVersion: true } });
+				}
+
 				result.push(existingDocument._id);
 
 			}
+
+			updateLastVersionFlags( owner , entry ) ;
 
 		}
 
@@ -304,7 +370,8 @@ Meteor.methods({
 		if (!document || document.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		return Documents.update(documentId, { $set: { deleted: true } });
+		Documents.update(documentId, { $set: { deleted: true } });
+		updateLastVersionFlags(this.userId, document);
 	},
 
 	'documents.restore'(documentId){
@@ -313,7 +380,8 @@ Meteor.methods({
 		if (!document || document.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		return Documents.update(documentId, { $set: { deleted: false } });
+		Documents.update(documentId, { $set: { deleted: false } });
+		updateLastVersionFlags(this.userId, document);
 	},
 
 	'documents.superdelete'(documentId){
@@ -322,11 +390,13 @@ Meteor.methods({
 		if (!document || document.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		return Documents.remove(documentId);
+		Documents.remove(documentId);
+		updateLastVersionFlags(this.userId, document);
 	},
 
 });
 
 export const documents = {
 	sanitize,
+	updateLastVersionFlags,
 };
