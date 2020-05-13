@@ -10,18 +10,17 @@ import { insurances } from '../../api/insurances.js';
 
 import { InsuranceCardWithItem } from './InsuranceCard.js';
 
+import { myEncodeURIComponent } from '../../client/uri.js';
 import { myDecodeURIComponent } from '../../client/uri.js';
 
 export default function InsuranceDetails ( { match , name , page , perpage } ) {
 
-	name = match && match.params.name || name ;
+	name = match && myDecodeURIComponent(match.params.name) || name ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
-
-	name = myDecodeURIComponent(name);
 
 	return (
 		<TagDetails
-			root="/insurance"
+			root={`/insurance/${myEncodeURIComponent(name)}`}
 			name={name}
 			page={page}
 			perpage={perpage}

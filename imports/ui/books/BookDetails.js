@@ -9,17 +9,20 @@ import { Consultations } from '../../api/consultations.js';
 
 import { books } from '../../api/books.js';
 
+import { myEncodeURIComponent } from '../../client/uri.js';
+import { myDecodeURIComponent } from '../../client/uri.js';
+
 export default function BookDetails ( { match , year , book , page , perpage } ) {
 
 	year = match && match.params.year || year ;
-	book = match && match.params.book || book ;
+	book = match && myDecodeURIComponent(match.params.book) || book ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
 
 	const name = books.format( year , book ) ;
 
 	return (
 		<TagDetails
-			root="/book"
+			root={`/book/${year}/${myEncodeURIComponent(book)}`}
 			name={name}
 			page={page}
 			perpage={perpage}

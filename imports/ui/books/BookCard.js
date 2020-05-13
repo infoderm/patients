@@ -23,6 +23,8 @@ import { Consultations } from '../../api/consultations.js';
 
 import { books } from '../../api/books.js';
 
+import { myEncodeURIComponent } from '../../client/uri.js';
+
 const styles = theme => ({
 	avatar: {
 		color: '#fff',
@@ -40,7 +42,7 @@ function BookCard ( { classes , item } ) {
 			collection={Consultations}
 			subscription="book.consultations"
 			selector={books.selector(item.name)}
-			url={name => `/book/${name}`}
+			url={name => `/book/${year}/${myEncodeURIComponent(book)}`}
 			subheader={consultations => `${consultations.length} consultations`}
 			content={
 				consultations => {

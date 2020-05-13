@@ -10,18 +10,17 @@ import { doctors } from '../../api/doctors.js';
 
 import { DoctorCardWithItem } from './DoctorCard.js';
 
+import { myEncodeURIComponent } from '../../client/uri.js';
 import { myDecodeURIComponent } from '../../client/uri.js';
 
 export default function DoctorDetails ( { match , name , page , perpage } ) {
 
-	name = match && match.params.name || name ;
+	name = match && myDecodeURIComponent(match.params.name) || name ;
 	page = match && match.params.page && parseInt(match.params.page,10) || page ;
-
-	name = myDecodeURIComponent(name);
 
 	return (
 		<TagDetails
-			root="/doctor"
+			root={`/doctor/${myEncodeURIComponent(name)}`}
 			name={name}
 			page={page}
 			perpage={perpage}

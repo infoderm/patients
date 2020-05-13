@@ -7,8 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react' ;
 import PropTypes from 'prop-types';
 
-import { myEncodeURIComponent } from '../../client/uri.js';
-
 function TagDetails ( { Card , List , listProps , root , name , page , perpage , items } ) {
 	return (
 		<div>
@@ -21,7 +19,7 @@ function TagDetails ( { Card , List , listProps , root , name , page , perpage ,
 				</div>
 				<Typography variant="h2">Patients</Typography>
 			</div>}
-			<List {...listProps} root={`${root}/${myEncodeURIComponent(name)}`} page={page} perpage={perpage} items={items}/>
+			<List {...listProps} root={root} page={page} perpage={perpage} items={items}/>
 		</div>
 	) ;
 }
