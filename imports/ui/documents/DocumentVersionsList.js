@@ -6,12 +6,15 @@ import PropTypes from 'prop-types';
 
 import { Documents } from '../../api/documents.js' ;
 
+import { myDecodeURIComponent } from '../../client/uri.js';
+
 import StaticDocumentList from './StaticDocumentList.js';
 
 const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
   page = (match && match.params.page && parseInt(match.params.page,10)) || page || DocumentsVersionsList.defaultProps.page ;
   perpage = perpage || DocumentsVersionsList.defaultProps.perpage ;
-  const {identifier, reference} = match.params ;
+  const identifier = myDecodeURIComponent(match.params.identifier) ;
+  const reference = myDecodeURIComponent(match.params.reference) ;
   const sort = {
     status: 1,
     datetime: -1,
@@ -23,10 +26,13 @@ const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
     text: 0,
   } ;
   const handle = Meteor.subscribe('documents.versions', identifier, reference, { sort , fields });
+  const loading = !handle.ready();
   return {
     page,
     perpage,
-    documents: !handle.ready() ? [] : Documents.find({
+    root: `/document/versions/${match.params.identifier}/${match.params.reference}`,
+    loading,
+    documents: loading ? [] : Documents.find({
       identifier,
       reference,
     }, {

@@ -51,6 +51,7 @@ import dateformat from 'date-fns/format';
 import { Documents } from '../../api/documents.js';
 import { Patients } from '../../api/patients.js';
 import saveTextAs from '../../client/saveTextAs.js';
+import { myEncodeURIComponent } from '../../client/uri.js';
 
 import DocumentDeletionDialog from './DocumentDeletionDialog.js';
 import DocumentSuperDeletionDialog from './DocumentSuperDeletionDialog.js';
@@ -318,7 +319,7 @@ class DocumentCard extends React.Component {
 								label="old version"
 								className={classes.versionschip}
 								component={Link}
-								to={`/document/versions/${identifier}/${reference}`}
+								to={`/document/versions/${myEncodeURIComponent(identifier)}/${myEncodeURIComponent(reference)}`}
 							/>
 						}
 						{ (!deleted && lastVersion && versionsChip && !loadingVersions && versions.length >= 2) &&
@@ -327,7 +328,7 @@ class DocumentCard extends React.Component {
 								label={`${versions.length} versions`}
 								className={classes.versionschip}
 								component={Link}
-								to={`/document/versions/${identifier}/${reference}`}
+								to={`/document/versions/${myEncodeURIComponent(identifier)}/${myEncodeURIComponent(reference)}`}
 							/>
 						}
 					</div>
@@ -375,7 +376,10 @@ class DocumentCard extends React.Component {
 				<Divider/>
 				<ExpansionPanelActions>
 					{ versionsButton && !loadingVersions && versions.length >= 2 &&
-						<Button color="primary" component={Link} to={`/document/versions/${identifier}/${reference}`}>
+					<Button color="primary"
+						component={Link}
+						to={`/document/versions/${myEncodeURIComponent(identifier)}/${myEncodeURIComponent(reference)}`}
+					>
 							{versions.length} versions<HistoryIcon/>
 						</Button>
 					}

@@ -24,6 +24,7 @@ const DocumentsList = withTracker(({match, page, perpage}) => {
   return {
     page,
     perpage,
+    root: '/documents',
     documents: !handle.ready() ? [] : Documents.find({}, {
       sort,
       fields,
