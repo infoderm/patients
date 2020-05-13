@@ -11,12 +11,22 @@ import StaticDocumentList from './StaticDocumentList.js';
 const DocumentsList = withTracker(({match, page, perpage}) => {
   page = (match && match.params.page && parseInt(match.params.page,10)) || page || DocumentsList.defaultProps.page ;
   perpage = perpage || DocumentsList.defaultProps.perpage ;
-  const handle = Meteor.subscribe('documents');
+  const sort = {
+    createdAt: -1,
+  } ;
+  const fields = {
+    source: 0,
+    decoded: 0,
+    results: 0,
+    text: 0,
+  } ;
+  const handle = Meteor.subscribe('documents', { sort , fields });
   return {
     page,
     perpage,
     documents: !handle.ready() ? [] : Documents.find({}, {
-      sort: { createdAt: -1 },
+      sort,
+      fields,
       skip: (page-1)*perpage,
       limit: perpage,
     }).fetch() ,

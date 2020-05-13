@@ -472,7 +472,8 @@ const component = withTracker(({document, patientChip, versionsButton, versionsC
 		if (!parsed) additionalProps.versions = [ document ] ;
 		else {
 			const options = {
-			  sort: { datetime: -1 },
+			  sort: { status: 1, datetime: -1 },
+			  fields: { identifier: 1, reference: 1, status: 1, datetime: 1 },
 			} ;
 			const handle = Meteor.subscribe('documents.versions', identifier, reference, options);
 			if (handle.ready()) {

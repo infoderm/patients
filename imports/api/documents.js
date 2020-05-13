@@ -21,29 +21,29 @@ export const Documents = new Mongo.Collection('documents');
 
 if (Meteor.isServer) {
 
-	Meteor.publish('documents', function () {
-		return Documents.find({ owner: this.userId });
+	Meteor.publish('documents', function (options) {
+		return Documents.find({ owner: this.userId }, options);
 	});
 
-	Meteor.publish('documents.unlinked', function () {
+	Meteor.publish('documents.unlinked', function (options) {
 		return Documents.find({
 			owner: this.userId,
 			patientId: null,
-		});
+		}, options);
 	});
 
-	Meteor.publish('documents.unparsed', function () {
+	Meteor.publish('documents.unparsed', function (options) {
 		return Documents.find({
 			owner: this.userId,
 			parsed: false,
-		});
+		}, options);
 	});
 
-	Meteor.publish('documents.mangled', function () {
+	Meteor.publish('documents.mangled', function (options) {
 		return Documents.find({
 			owner: this.userId,
 			encoding: null,
-		});
+		}, options);
 	});
 
 	Meteor.publish('document', function (_id) {

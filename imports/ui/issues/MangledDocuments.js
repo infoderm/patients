@@ -22,16 +22,23 @@ const MangledDocuments = ( { loading, documents, ...rest } ) => {
 }
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('documents.mangled');
+	const options = {
+		sort: {
+			createdAt: 1,
+		},
+		fields: {
+			source: 0,
+			decoded: 0,
+			results: 0,
+			text: 0,
+		},
+	};
+	const handle = Meteor.subscribe('documents.mangled', options);
 	if ( !handle.ready()) return { loading: true } ;
 	return {
 		loading: false,
 		documents: Documents.find({
 			encoding: null,
-		}, {
-			sort: {
-				createdAt: 1,
-			} ,
-		}).fetch(),
+		}, options).fetch(),
 	} ;
 }) (MangledDocuments) ;

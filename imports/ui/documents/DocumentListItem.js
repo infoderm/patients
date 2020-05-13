@@ -123,7 +123,6 @@ class DocumentCard extends React.Component {
 				_id,
 				createdAt,
 				patientId,
-				source,
 				parsed,
 				format,
 				kind,

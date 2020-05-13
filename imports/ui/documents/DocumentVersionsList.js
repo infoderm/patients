@@ -12,8 +12,17 @@ const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
   page = (match && match.params.page && parseInt(match.params.page,10)) || page || DocumentsVersionsList.defaultProps.page ;
   perpage = perpage || DocumentsVersionsList.defaultProps.perpage ;
   const {identifier, reference} = match.params ;
-  const sort = { datetime: -1 } ;
-  const handle = Meteor.subscribe('documents.versions', identifier, reference, { sort });
+  const sort = {
+    status: 1,
+    datetime: -1,
+  } ;
+  const fields = {
+    source: 0,
+    decoded: 0,
+    results: 0,
+    text: 0,
+  } ;
+  const handle = Meteor.subscribe('documents.versions', identifier, reference, { sort , fields });
   return {
     page,
     perpage,
@@ -22,6 +31,7 @@ const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
       reference,
     }, {
       sort,
+      fields,
       skip: (page-1)*perpage,
       limit: perpage,
     }).fetch() ,
