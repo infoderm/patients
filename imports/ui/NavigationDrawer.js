@@ -37,6 +37,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 import { settings } from '../api/settings.js';
 
@@ -180,6 +181,12 @@ class NavigationDrawer extends React.Component {
             to: "/wires" ,
             icon: <PaymentIcon/> ,
             title: "Virements" ,
+          } ,
+
+          {
+            to: "/third-party" ,
+            icon: <AccountBalanceWalletIcon/> ,
+            title: "Tiers Payant" ,
           } ,
 
           {

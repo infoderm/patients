@@ -36,6 +36,7 @@ import DocumentVersionsList from './documents/DocumentVersionsList.js';
 import DocumentDetails from './documents/DocumentDetails.js';
 
 import WiredConsultationsList from './consultations/WiredConsultationsList.js';
+import ThirdPartyConsultationsList from './consultations/ThirdPartyConsultationsList.js';
 import SEPAPaymentDetails from './payment/SEPAPaymentDetails.js';
 import UnpaidConsultationsList from './consultations/UnpaidConsultationsList.js';
 import Stats from './stats/Stats.js';
@@ -162,6 +163,10 @@ class Main extends React.Component {
 					<Route exact path="/wires" component={WiredConsultationsList}/>
 					<Route exact path="/wires/:year" component={WiredConsultationsList}/>
 					<Route exact path="/wires/:year/page/:page" component={WiredConsultationsList}/>
+
+					<Route exact path="/third-party" component={ThirdPartyConsultationsList}/>
+					<Route exact path="/third-party/:year" component={ThirdPartyConsultationsList}/>
+					<Route exact path="/third-party/:year/page/:page" component={ThirdPartyConsultationsList}/>
 
 					<Route exact path="/unpaid" component={UnpaidConsultationsList}/>
 					<Route exact path="/stats" component={Stats}/>

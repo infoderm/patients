@@ -328,7 +328,8 @@ class ConsultationForm extends React.Component {
 							margin="normal"
 						>
 							<MenuItem value="cash">cash</MenuItem>
-							<MenuItem value="wire">wire</MenuItem>
+							<MenuItem value="wire">virement</MenuItem>
+							<MenuItem value="third-party">tiers payant</MenuItem>
 						</TextField>
 					</Grid>
 					<Grid item xs={3}>
@@ -337,7 +338,7 @@ class ConsultationForm extends React.Component {
 							value={this.state.price}
 							onChange={e => this.setState({
 								price: e.target.value ,
-								paid: this.state.syncPaid && this.state.payment_method !== 'wire' ? e.target.value : this.state.paid,
+								paid: this.state.syncPaid && this.state.payment_method === 'cash' ? e.target.value : this.state.paid,
 								dirty: true,
 							})}
 							margin="normal"

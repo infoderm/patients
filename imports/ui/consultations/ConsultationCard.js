@@ -95,6 +95,24 @@ const useStyles = makeStyles(
   })
 );
 
+function paymentMethodString ( payment_method ) {
+  switch ( payment_method ) {
+    case 'wire': return 'Virement' ;
+    case 'third-party': return 'Tiers Payant' ;
+    case 'cash':
+    default: return 'Cash' ;
+  }
+}
+
+function paymentMethodIcon ( payment_method ) {
+  switch ( payment_method ) {
+    case 'wire': return <PaymentIcon/> ;
+    case 'third-party': return <AccountBalanceWalletIcon/> ;
+    case 'cash':
+    default: return <MoneyIcon/> ;
+  }
+}
+
 function ConsultationCard ( props ) {
 
   const classes = useStyles();
@@ -157,7 +175,7 @@ function ConsultationCard ( props ) {
 	  { !missingPaymentData && showPrice &&
 	    <Chip
 	      className={classes.pricechip}
-	      avatar={<Avatar>{ payment_method === 'wire' ? <PaymentIcon/> : <MoneyIcon/> }</Avatar>}
+	      avatar={<Avatar>{paymentMethodIcon(payment_method)}</Avatar>}
 	      label={Currency.format(price, {code: currency})}
 	    />
 	  }
@@ -203,7 +221,7 @@ function ConsultationCard ( props ) {
 	    <ListItemAvatar><Avatar><AccountBalanceWalletIcon/></Avatar></ListItemAvatar>
 	    <ListItemText
 	      primary="Méthode de Paiement"
-	      secondary={payment_method === 'wire' ? 'Virement' : 'Cash'}
+	      secondary={paymentMethodString(payment_method)}
 	    />
 	  </ListItem> }
 	  { book === '' ? '' :
