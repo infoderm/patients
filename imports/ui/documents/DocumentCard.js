@@ -114,6 +114,12 @@ const styles = theme => ({
 		color: '#fff',
 		fontWeight: 'bold',
 	},
+	versionschip: {
+		marginRight: theme.spacing(1),
+		backgroundColor: '#666',
+		color: '#fff',
+		fontWeight: 'bold',
+	},
 	pre: {
 		padding: theme.spacing(3),
 		overflowX: 'auto',
@@ -163,6 +169,7 @@ class DocumentCard extends React.Component {
 		const {
 			patientChip,
 			versionsButton,
+			versionsChip,
 			defaultExpanded,
 			classes,
 			loadingPatient,
@@ -305,11 +312,22 @@ class DocumentCard extends React.Component {
 								className={classes.chip}
 							/>
 						}
-						{ (!deleted && !lastVersion) &&
+						{ (!deleted && !lastVersion && versionsChip) &&
 							<Chip
 								avatar={<Avatar><HistoryIcon/></Avatar>}
 								label="old version"
-								className={classes.chip}
+								className={classes.versionschip}
+								component={Link}
+								to={`/document/versions/${identifier}/${reference}`}
+							/>
+						}
+						{ (!deleted && lastVersion && versionsChip && !loadingVersions && versions.length >= 2) &&
+							<Chip
+								avatar={<Avatar><HistoryIcon/></Avatar>}
+								label={`${versions.length} versions`}
+								className={classes.versionschip}
+								component={Link}
+								to={`/document/versions/${identifier}/${reference}`}
 							/>
 						}
 					</div>
@@ -428,10 +446,11 @@ DocumentCard.propTypes = {
 	document: PropTypes.object.isRequired,
 	patientChip: PropTypes.bool.isRequired,
 	versionsButton: PropTypes.bool.isRequired,
+	versionsChip: PropTypes.bool.isRequired,
 	defaultExpanded: PropTypes.bool.isRequired,
 };
 
-const component = withTracker(({document, patientChip, versionsButton}) => {
+const component = withTracker(({document, patientChip, versionsButton, versionsChip}) => {
 	const additionalProps = {
 		loadingPatient: false,
 		loadingVersions: false,
@@ -449,7 +468,7 @@ const component = withTracker(({document, patientChip, versionsButton}) => {
 		}
 	}
 
-	if (versionsButton) {
+	if (versionsButton || versionsChip) {
 		if (!parsed) additionalProps.versions = [ document ] ;
 		else {
 			const options = {
@@ -473,6 +492,7 @@ const component = withTracker(({document, patientChip, versionsButton}) => {
 component.defaultProps = {
 	patientChip: true,
 	versionsButton: true,
+	versionsChip: true,
 };
 
 export default component ;
