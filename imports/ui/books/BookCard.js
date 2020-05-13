@@ -57,7 +57,7 @@ function BookCard ( { classes , item } ) {
 				}
 			}
 			avatar={<Avatar className={classes.avatar}>Bk</Avatar>}
-			abbr={`/${book}`}
+			abbr={`/${book.slice(0,2)}`}
 		/>
 	) ;
 
