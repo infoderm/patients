@@ -21,11 +21,13 @@ const DocumentsList = withTracker(({match, page, perpage}) => {
     text: 0,
   } ;
   const handle = Meteor.subscribe('documents', { sort , fields });
+  const loading = !handle.ready();
   return {
     page,
     perpage,
     root: '/documents',
-    documents: !handle.ready() ? [] : Documents.find({}, {
+    loading,
+    documents: loading ? [] : Documents.find({}, {
       sort,
       fields,
       skip: (page-1)*perpage,
