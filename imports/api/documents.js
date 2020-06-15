@@ -333,7 +333,7 @@ Meteor.methods({
 
 			}
 
-			updateLastVersionFlags( owner , entry ) ;
+			updateLastVersionFlags( this.userId , entry ) ;
 
 		}
 
