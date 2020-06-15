@@ -34,7 +34,7 @@
     "healthone": "3.0.0",
     "iban": "0.0.14",
     "iconv-lite": "^0.5.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "keycode": "^2.2.0",
     "lodash.deburr": "^4.1.0",
     "meteor-node-stubs": "^1.0.0",
