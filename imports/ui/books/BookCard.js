@@ -46,6 +46,7 @@ function BookCard ( { classes , item } ) {
 			subheader={consultations => `${consultations.length} consultations`}
 			content={
 				consultations => {
+					if (consultations.length === 0) return null;
 					const total = sum(filter(x => !!x, map(c => c.price, consultations)));
 					const first = min((a, b) => a - b, map(c => c.datetime, consultations));
 					const last = max((a, b) => a - b, map(c => c.datetime, consultations));
