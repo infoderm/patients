@@ -22,6 +22,9 @@ const styles = theme => ({
   anomalyRow: {
     backgroundColor: '#fa8',
   },
+  unknownFlagRow: {
+    backgroundColor: '#f8a',
+  },
   headerRow: {
     backgroundColor: '#ddd',
   },
@@ -65,7 +68,12 @@ function HealthOneLabResultsTable(props) {
   for ( const result of document.results ) {
     let className = classes.row;
     if (result.flag === '*') className = classes.anomalyRow ;
+    else if (result.flag === '+') className = classes.anomalyRow ;
+    else if (result.flag === '++') className = classes.anomalyRow ;
+    else if (result.flag === '-') className = classes.anomalyRow ;
+    else if (result.flag === '--') className = classes.anomalyRow ;
     else if (result.flag === 'C') className = classes.commentRow ;
+    else if (result.flag !== '') className = classes.unknownFlagRow ;
     else if (result.code && result.code.startsWith('t_')) {
       if (result.name && result.name.match(/^[A-Z ]*$/)) {
         className = classes.headerRow ;
@@ -73,6 +81,11 @@ function HealthOneLabResultsTable(props) {
       else {
         className = classes.subheaderRow ;
       }
+    }
+    else if (result.code === 'CORCOP') className = classes.commentRow ;
+    else if (result.code === 'TITRE') {
+      if ( result.name === '' ) continue ;
+      className = classes.headerRow ;
     }
     else if (result.code === 'TEXTEF') className = classes.endRow ;
     rows.push({
