@@ -9,8 +9,9 @@ import isAfter from 'date-fns/isAfter';
 
 import { at_least , count } from '@aureooms/js-cardinality';
 
-import StackedBarChart from './StackedBarChart.js';
+import eidParseBirthdate from '../../client/eidParseBirthdate.js';
 import { Patients } from '../../api/patients.js';
+import StackedBarChart from './StackedBarChart.js';
 
 const Chart = ({
     width,
@@ -19,8 +20,8 @@ const Chart = ({
   }) => {
 
   const today = startOfToday();
-  const lt = years => patient => isAfter(patient.birthdate, subYears(today, years));
-  const gt = years => patient => !isAfter(patient.birthdate, subYears(today, years));
+  const lt = years => patient => isAfter(eidParseBirthdate(patient.birthdate), subYears(today, years));
+  const gt = years => patient => !isAfter(eidParseBirthdate(patient.birthdate), subYears(today, years));
   const data = [];
   let current = patients.filter(patient => !!patient.birthdate) ;
   const incrementYears = 10;

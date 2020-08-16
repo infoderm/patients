@@ -43,7 +43,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import dateFormat from 'date-fns/format';
 import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 import startOfToday from 'date-fns/startOfToday';
-import dateParseISO from 'date-fns/parseISO' ;
 
 import odiff from 'odiff' ;
 import { empty } from '@aureooms/js-cardinality' ;
@@ -52,6 +51,8 @@ import { Insurances } from '../../api/insurances.js';
 import { Doctors } from '../../api/doctors.js';
 import { Allergies } from '../../api/allergies.js';
 import { settings } from '../../api/settings.js';
+
+import eidParseBirthdate from '../../client/eidParseBirthdate.js';
 
 import SetPicker from '../input/SetPicker.js';
 import ColorizedTextarea from '../input/ColorizedTextarea.js';
@@ -217,7 +218,7 @@ class PatientPersonalInformation extends React.Component {
 
 		const updateList = key => update(key, v => list(map(x=>x.name, v))) ;
 
-		const _birthdate = dateParseISO(patient.birthdate) ;
+		const _birthdate = eidParseBirthdate(patient.birthdate) ;
 
 		return (
 			<div>
@@ -306,7 +307,7 @@ class PatientPersonalInformation extends React.Component {
 								InputLabelProps={{
 								  shrink: true,
 								}}
-								value={patient.birthdate}
+								value={dateFormat(_birthdate, 'yyyy-MM-dd')}
 								onChange={update('birthdate')}
 								margin="normal"
 							/>

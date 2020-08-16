@@ -20,6 +20,8 @@ import Chip from '@material-ui/core/Chip';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 
+import eidFormatBirthdate from '../../client/eidFormatBirthdate.js' ;
+
 const styles = theme => ({
 	card: {
 		display: 'flex',
@@ -82,7 +84,7 @@ function PatientCard ( { classes, theme, patient } ) {
 							</Avatar>
 						}
 						title={`${patient.lastname.toUpperCase()} ${patient.firstname}`}
-						subheader={new Date(patient.birthdate).toDateString()}
+						subheader={eidFormatBirthdate(patient.birthdate)}
 					/>
 					<CardContent className={classes.content}>
 					</CardContent>

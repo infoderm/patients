@@ -26,7 +26,6 @@ import { makeIndex } from '../../api/string.js';
 import SetPicker from '../input/SetPicker.js';
 
 import PatientCard from '../patients/PatientCard.js';
-import PatientDetailsPicker from '../patients/PatientDetailsPicker.js';
 import PatientSheet from '../patients/PatientSheet.js';
 
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
