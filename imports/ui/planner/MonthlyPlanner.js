@@ -20,7 +20,7 @@ import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
 
 function DayHeader ( { className , day , row , col } ) {
 	const firstDayOfMonth = startOfMonth(day);
-	const displayFormat = isSameDay(day, firstDayOfMonth) ? 'MMM D' : 'D' ;
+	const displayFormat = isSameDay(day, firstDayOfMonth) ? 'MMM d' : 'd' ;
 	return (
 		<div className={className}>
 			<Link
@@ -50,7 +50,7 @@ function MonthlyPlanner ( props ) {
 
 	const prevMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
 	const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
-	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/WW');
+	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/ww');
 
 	const onSlotClick = slot => {
 		console.debug(slot);
