@@ -23,8 +23,9 @@ import { settings } from '../api/settings.js';
 
 import WholeWindowDropZone from './input/WholeWindowDropZone.js';
 import Header from './Header.js';
-import Router from './Router.js';
+import Content from './Content.js';
 import NavigationDrawer from './NavigationDrawer.js';
+import ErrorBoundary from './ErrorBoundary.js';
 
 
 const muitheme = createMuiTheme({
@@ -70,45 +71,47 @@ function App ( props ) {
 	return (
 		<MuiThemeProvider theme={muitheme}>
 			<CssBaseline/>
-			{ progress < 1 ?
-			<div className={classes.progressbarContainer}>
-			<CircularProgressbar
-				className={classes.progressbar}
-				maxValue={1}
-				value={progress}
-				text={`${(100 * progress) | 0}%`}
-				background
-				backgroundPadding={6}
-				styles={buildStyles({
-					backgroundColor: theme.palette.primary.main,
-					textColor: "#fff",
-					pathColor: "#fff",
-					trailColor: "transparent",
-				})}
-			/>
-			</div>
-			:
-			<div>
-				<WholeWindowDropZone callback={handleDrop(history)}/>
-				<div className={classes.appFrame} style={{textTransform}}>
-					<Header
-						navigationDrawerIsOpen={navigationDrawerIsOpen}
-						patients={patients}
-						currentUser={currentUser}
-					/>
-					<NavigationDrawer
-						navigationDrawerIsOpen={navigationDrawerIsOpen}
-						currentUser={currentUser}
-					/>
-					<Router
-						navigationDrawerIsOpen={navigationDrawerIsOpen}
-						currentUser={currentUser}
-						history={history}
-						patients={patients}
-					/>
+			<ErrorBoundary>
+				{ progress < 1 ?
+				<div className={classes.progressbarContainer}>
+				<CircularProgressbar
+					className={classes.progressbar}
+					maxValue={1}
+					value={progress}
+					text={`${(100 * progress) | 0}%`}
+					background
+					backgroundPadding={6}
+					styles={buildStyles({
+						backgroundColor: theme.palette.primary.main,
+						textColor: "#fff",
+						pathColor: "#fff",
+						trailColor: "transparent",
+					})}
+				/>
 				</div>
-			</div>
-			}
+				:
+				<div>
+					<WholeWindowDropZone callback={handleDrop(history)}/>
+					<div className={classes.appFrame} style={{textTransform}}>
+						<Header
+							navigationDrawerIsOpen={navigationDrawerIsOpen}
+							patients={patients}
+							currentUser={currentUser}
+						/>
+						<NavigationDrawer
+							navigationDrawerIsOpen={navigationDrawerIsOpen}
+							currentUser={currentUser}
+						/>
+						<Content
+							navigationDrawerIsOpen={navigationDrawerIsOpen}
+							currentUser={currentUser}
+							history={history}
+							patients={patients}
+						/>
+					</div>
+				</div>
+				}
+			</ErrorBoundary>
 		</MuiThemeProvider>
 	);
 }
