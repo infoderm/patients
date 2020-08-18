@@ -1,11 +1,9 @@
 import { Meteor } from 'meteor/meteor' ;
 import { withTracker } from 'meteor/react-meteor-data' ;
 
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Link } from 'react-router-dom';
-
-import { withStyles } from '@material-ui/core/styles';
+import { Link , useHistory } from 'react-router-dom';
 
 import isSameDay from 'date-fns/isSameDay';
 import startOfMonth from 'date-fns/startOfMonth';
@@ -19,8 +17,6 @@ import MonthlyCalendar from '../calendar/MonthlyCalendar.js';
 import calendarRanges from '../calendar/ranges.js';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
-
-const styles = themes => ({});
 
 function DayHeader ( { className , day , row , col } ) {
 	const firstDayOfMonth = startOfMonth(day);
@@ -36,91 +32,75 @@ function DayHeader ( { className , day , row , col } ) {
 	) ;
 }
 
-class MonthlyPlanner extends React.Component {
+function MonthlyPlanner ( props ) {
 
-	constructor ( props ) {
-		super(props);
-		this.state = {
-			selectedSlot: new Date(),
-			creatingAppointment: false,
-		} ;
-	}
+	const {
+		year,
+		month,
+		weekOptions,
+		firstDayOfMonth,
+		firstDayOfNextMonth,
+		firstDayOfPrevMonth,
+		consultations,
+	} = props ;
 
-	onSlotClick = slot => {
+	const [selectedSlot, setSelectedSlot] = useState(new Date());
+	const [creatingAppointment, setCreatingAppointment] = useState(false);
+	const history = useHistory();
+
+	const prevMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
+	const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
+	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/WW');
+
+	const onSlotClick = slot => {
 		console.debug(slot);
-		this.setState({
-			selectedSlot: slot ,
-			creatingAppointment: true ,
-		});
-	}
+		setSelectedSlot(slot);
+		setCreatingAppointment(true);
+	};
 
-	onEventClick = event => {
+	const onEventClick = event => {
 		console.debug(event);
+	};
+
+	console.debug(consultations);
+
+	const events = [];
+
+	for ( const consultation of consultations ) {
+		const event = {
+			begin: consultation.datetime ,
+			title: consultation._id ,
+		} ;
+		events.push(event);
 	}
 
-	render ( ) {
+	console.debug(events);
 
-		const {
-			history,
-			year,
-			month,
-			weekOptions,
-			firstDayOfMonth,
-			firstDayOfNextMonth,
-			firstDayOfPrevMonth,
-			consultations,
-		} = this.props ;
+	return (
+		<div>
+			<MonthlyCalendar
+				year={year}
+				month={month}
+				prev={ e => history.push(`/calendar/month/${prevMonth}`) }
+				next={ e => history.push(`/calendar/month/${nextMonth}`) }
+				weekly={ e => history.push(`/calendar/week/${firstWeekOfMonth}`) }
+				events={events}
+				DayHeader={DayHeader}
+				onSlotClick={onSlotClick}
+				onEventClick={onEventClick}
+				{...weekOptions}
+			/>
+			<NewAppointmentDialog
+				initialDatetime={selectedSlot}
+				open={creatingAppointment}
+				onClose={e => setCreatingAppointment(false)}
+			/>
+		</div>
+	);
 
-		const {
-			creatingAppointment,
-			selectedSlot,
-		} = this.state ;
+}
 
-		const prevMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
-		const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
-		const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/WW');
-
-		console.debug(consultations);
-
-		const events = [];
-
-		for ( const consultation of consultations ) {
-			const event = {
-				begin: consultation.datetime ,
-				title: consultation._id ,
-			} ;
-			events.push(event);
-		}
-
-		console.debug(events);
-
-		return (
-			<div>
-				<MonthlyCalendar
-					year={year}
-					month={month}
-					prev={ e => history.push(`/calendar/month/${prevMonth}`) }
-					next={ e => history.push(`/calendar/month/${nextMonth}`) }
-					weekly={ e => history.push(`/calendar/week/${firstWeekOfMonth}`) }
-					events={events}
-					DayHeader={DayHeader}
-					onSlotClick={this.onSlotClick}
-					onEventClick={this.onEventClick}
-					{...weekOptions}
-				/>
-				<NewAppointmentDialog
-					initialDatetime={selectedSlot}
-					open={creatingAppointment}
-					onClose={e => this.setState({creatingAppointment: false})}
-				/>
-			</div>
-		);
-
-	}
-
-} ;
-
-export default withTracker(({ match , history }) => {
+export default withTracker(({ match }) => {
 
 	const year = parseInt(match.params.year, 10);
 	const month = parseInt(match.params.month, 10);
@@ -146,7 +126,6 @@ export default withTracker(({ match , history }) => {
 		firstDayOfMonth,
 		firstDayOfNextMonth,
 		firstDayOfPrevMonth,
-		history,
 		consultations: Consultations.find(
 			{
 				datetime : {
@@ -162,4 +141,4 @@ export default withTracker(({ match , history }) => {
 		).fetch() ,
 	} ;
 
-}) ( withStyles(styles, { withTheme: true })(MonthlyPlanner) );
+}) (MonthlyPlanner) ;

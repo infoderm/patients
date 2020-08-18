@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom' ;
 
 import Typography from '@material-ui/core/Typography' ;
 
@@ -10,11 +10,9 @@ import insertDocument from '../../client/insertDocument.js' ;
 
 import InputFileButton from '../input/InputFileButton.js';
 
-export default function ImportData ( props ) {
+export default function ImportData ( ) {
 
-	const {
-		history ,
-	} = props ;
+	const history = useHistory();
 
 	const onImportHealthOne = event => {
 		event.persist();
@@ -39,7 +37,3 @@ export default function ImportData ( props ) {
 		</div>
 	) ;
 }
-
-ImportData.propTypes = {
-	history: PropTypes.object.isRequired,
-};

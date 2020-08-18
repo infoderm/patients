@@ -1,8 +1,6 @@
 import React from 'react' ;
 import { Switch , Route } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-
 import startOfDay from 'date-fns/startOfDay';
 import startOfToday from 'date-fns/startOfToday' ;
 import dateParseISO from 'date-fns/parseISO';
@@ -74,7 +72,7 @@ const CurrentMonthlyPlanner = props => {
 	) ;
 }
 
-export default function Router ( { patients, history } ) {
+export default function Router ( { patients } ) {
 
 	return (
 		<Switch>
@@ -102,13 +100,13 @@ export default function Router ( { patients, history } ) {
 			<Route exact path="/calendar" component={Calendar}/>
 			<Route exact path="/calendar/:day" component={ConsultationsOfTheDayFromMatch}/>
 			<Route exact path="/calendar/month/:year/:month" render={
-				props => <MonthlyPlanner {...props} history={history}/>
+				props => <MonthlyPlanner {...props}/>
 			}/>
 			<Route exact path="/calendar/month/current" render={
-				props => <CurrentMonthlyPlanner history={history}/>
+				props => <CurrentMonthlyPlanner/>
 			}/>
 			<Route exact path="/calendar/week/:year/:week" render={
-				props => <WeeklyPlanner {...props} history={history}/>
+				props => <WeeklyPlanner {...props}/>
 			}/>
 			<Route exact path="/consultations" component={LastDayOfConsultations}/>
 			<Route exact path="/consultation/:id" component={ConsultationDetails}/>
@@ -116,7 +114,7 @@ export default function Router ( { patients, history } ) {
 			<Route exact path="/new/consultation/for/:id" component={NewConsultationForm}/>
 
 			<Route exact path="/import" render={
-				(props) => <ImportData {...props} history={history}/>
+				(props) => <ImportData {...props}/>
 			}/>
 
 			<Route exact path="/books" component={BooksList}/>
@@ -178,7 +176,3 @@ export default function Router ( { patients, history } ) {
 		</Switch>
 	);
 }
-
-Router.propTypes = {
-	history: PropTypes.object.isRequired,
-};

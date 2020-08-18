@@ -1,12 +1,11 @@
 import React from 'react' ;
-import PropTypes from 'prop-types';
 
 import useStyles from './styles/main.js';
 import NoContent from './navigation/NoContent.js';
 import Router from './Router.js';
 import ErrorBoundary from './ErrorBoundary.js';
 
-export default function Content ( { patients, currentUser, history } ) {
+export default function Content ( { patients, currentUser } ) {
 
 	const classes = useStyles();
 
@@ -19,12 +18,8 @@ export default function Content ( { patients, currentUser, history } ) {
 	return (
 		<main className={classes.main}>
 			<ErrorBoundary>
-				<Router patients={patients} history={history}/>
+				<Router patients={patients}/>
 			</ErrorBoundary>
 		</main>
 	);
 }
-
-Content.propTypes = {
-	history: PropTypes.object.isRequired,
-};

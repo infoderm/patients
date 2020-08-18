@@ -1,8 +1,7 @@
 import React from 'react' ;
-import { withRouter } from 'react-router-dom' ;
+import { useHistory } from 'react-router-dom' ;
 
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -24,80 +23,77 @@ import Downshift from 'downshift';
 const drawerWidth = 240;
 const patientFilter = patients.filter;
 
-const styles = theme => ({
-  appBar: {
-    position: 'fixed',
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 24,
-  },
-  hide: {
-    display: 'none',
-  },
-  toolBar: {
-    display: 'flex',
-    flex: 'auto',
-  },
-  title: {
-    minWidth: 100,
-    flex: 'initial',
-    marginLeft: theme.spacing(3),
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  searchBox:{
-    flex: 'none',
-  },
-  accounts:{
-    flex: 'none',
-  },
-});
+const useStyles = makeStyles(
+  theme => ({
+    appBar: {
+      position: 'fixed',
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+	easing: theme.transitions.easing.sharp,
+	duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+	easing: theme.transitions.easing.sharp,
+	duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    menuButton: {
+      marginRight: 24,
+    },
+    hide: {
+      display: 'none',
+    },
+    toolBar: {
+      display: 'flex',
+      flex: 'auto',
+    },
+    title: {
+      minWidth: 100,
+      flex: 'initial',
+      marginLeft: theme.spacing(3),
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
+    searchBox:{
+      flex: 'none',
+    },
+    accounts:{
+      flex: 'none',
+    },
+  })
+);
 
-class Header extends React.Component {
 
-  constructor(props){
-    super(props);
+const reduceState = (state, changes) => {
+  switch (changes.type) {
+    case Downshift.stateChangeTypes.keyDownEnter:
+    case Downshift.stateChangeTypes.clickItem:
+      return {
+	...changes,
+	inputValue: '',
+      };
+    default:
+      return changes;
   }
+};
 
-  handleChange = (selectedItem, downshiftState) => {
+export default function Header ( { currentUser , navigationDrawerIsOpen , patients } ) {
+
+  const history = useHistory();
+  const classes = useStyles();
+
+  const handleChange = (selectedItem, downshiftState) => {
     if ( selectedItem ) {
-      const { history } = this.props;
       history.push(`/patient/${selectedItem._id}`);
     }
   };
 
-  reduceState = (state, changes) => {
-    switch (changes.type) {
-      case Downshift.stateChangeTypes.keyDownEnter:
-      case Downshift.stateChangeTypes.clickItem:
-	return {
-	  ...changes,
-	  inputValue: '',
-	};
-      default:
-	return changes;
-    }
-  };
-
-  toggleNavigationDrawerIsOpen = e => {
-
-    const {
-      navigationDrawerIsOpen ,
-    } = this.props ;
+  const toggleNavigationDrawerIsOpen = e => {
 
     const setting = 'navigation-drawer-is-open';
 
@@ -116,70 +112,51 @@ class Header extends React.Component {
 
   } ;
 
+  const suggestions = patients.map(
+    patient => ({
+      label : `${patient.lastname} ${patient.firstname}` ,
+      _id : patient._id ,
+    })
+  ) ;
 
-  render(){
-
-    const {
-      classes,
-      patients,
-      currentUser,
-      navigationDrawerIsOpen,
-    } = this.props;
-
-    const suggestions = patients.map(
-      patient => ({
-	label : `${patient.lastname} ${patient.firstname}` ,
-	_id : patient._id ,
-      })
-    ) ;
-
-    return (
-      <AppBar className={classNames(classes.appBar, {
-	  [classes.appBarShift]: navigationDrawerIsOpen === 'open',
-	})}>
+  return (
+    <AppBar className={classNames(classes.appBar, {
+      [classes.appBarShift]: navigationDrawerIsOpen === 'open',
+      })}>
       <Toolbar
 	className={classes.toolBar}
       >
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={this.toggleNavigationDrawerIsOpen}
-            className={classNames(classes.menuButton, {
-              [classes.hide]: navigationDrawerIsOpen === 'open',
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-	  <Typography
-	    className={classes.title}
-	    variant="h6"
-	    color="inherit"
-	  >
-	    {location.pathname}
-	  </Typography>
-	  <div style={{flex:'1 1 auto'}}></div>
-	  { currentUser && <SearchBox
-	    className={classes.searchBox}
-	    filter={patientFilter}
-	    suggestions={suggestions}
-	    itemToString={item => item ? item.label : ''}
-	    onChange={this.handleChange}
-	    stateReducer={this.reduceState}
-	  /> }
-	  <AccountsUI
-	    className={classes.accounts}
-	    currentUser={currentUser}
-	  />
-	</Toolbar>
-      </AppBar>
-      );
+	<IconButton
+	  color="inherit"
+	  aria-label="Open drawer"
+	  onClick={toggleNavigationDrawerIsOpen}
+	  className={classNames(classes.menuButton, {
+	  [classes.hide]: navigationDrawerIsOpen === 'open',
+	  })}
+	>
+	  <MenuIcon />
+	</IconButton>
+	<Typography
+	  className={classes.title}
+	  variant="h6"
+	  color="inherit"
+	>
+	  {location.pathname}
+	</Typography>
+	<div style={{flex:'1 1 auto'}}></div>
+	{ currentUser && <SearchBox
+	  className={classes.searchBox}
+	  filter={patientFilter}
+	  suggestions={suggestions}
+	  itemToString={item => item ? item.label : ''}
+	  onChange={handleChange}
+	  stateReducer={reduceState}
+	/> }
+	<AccountsUI
+	  className={classes.accounts}
+	  currentUser={currentUser}
+	/>
+      </Toolbar>
+    </AppBar>
+    );
 }
-}
-
-Header.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-};
-
-export default withRouter( withStyles(styles, { withTheme: true }) (Header) ) ;
