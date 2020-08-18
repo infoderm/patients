@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import AddCommentIcon from '@material-ui/icons/AddComment';
 
 import { Patients } from '../../api/patients.js';
 import { Consultations } from '../../api/consultations.js';
@@ -63,7 +63,7 @@ function ConsultationsForPatient ( props ) {
 				defaultExpandedFirst={page === 1}
 			/>
 			<Fab className={classes.createButton} color="primary" component={Link} to={`/new/consultation/for/${patientId}`}>
-				<SupervisorAccountIcon/>
+				<AddCommentIcon/>
 			</Fab>
 		</Fragment>
 	) ;

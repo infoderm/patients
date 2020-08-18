@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import AddCommentIcon from '@material-ui/icons/AddComment';
 
 import NoContent from '../navigation/NoContent.js';
 
@@ -30,7 +30,7 @@ export default function ConsultationsForPatientStatic ( { classes , patientId , 
 				}
 				<Button className={classes.button} color="default" component={Link} to={`/new/consultation/for/${patientId}`}>
 					Create a new consultation
-					<SupervisorAccountIcon className={classes.rightIcon}/>
+					<AddCommentIcon className={classes.rightIcon}/>
 				</Button>
 			</div>
 		</Fragment>

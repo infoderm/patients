@@ -21,7 +21,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import AddCommentIcon from '@material-ui/icons/AddComment';
 
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -514,7 +514,7 @@ class PatientPersonalInformation extends React.Component {
 							<AttachFileIcon/>
 						</AttachFileButton>
 						<Fab className={classes.consultationButton} color="primary" component={Link} to={`/new/consultation/for/${patient._id}`}>
-							<SupervisorAccountIcon/>
+							<AddCommentIcon/>
 						</Fab>
 						<Fab className={classes.deleteButton} color="secondary" onClick={e => this.setState({ deleting: true})}>
 							<DeleteIcon/>
