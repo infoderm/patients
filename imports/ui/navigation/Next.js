@@ -18,12 +18,12 @@ const useStyles = makeStyles(
   })
 );
 
-export default function Next ( { to } ) {
+export default function Next ( { to , ...rest } ) {
 
   const classes = useStyles();
 
   return (
-    <Fab className={classes.fabnext} color="primary" component={Link} to={to}>
+    <Fab className={classes.fabnext} color="primary" component={Link} to={to} {...rest}>
       <NavigateNextIcon/>
     </Fab>
   ) ;

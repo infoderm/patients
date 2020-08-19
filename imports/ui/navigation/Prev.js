@@ -18,12 +18,12 @@ const useStyles = makeStyles(
   })
 );
 
-export default function Prev ( { to } ) {
+export default function Prev ( { to , ...rest } ) {
 
   const classes = useStyles();
 
   return (
-    <Fab className={classes.fabprev} color="primary" component={Link} to={to}>
+    <Fab className={classes.fabprev} color="primary" component={Link} to={to} {...rest}>
       <NavigateBeforeIcon/>
     </Fab>
   ) ;
