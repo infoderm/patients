@@ -48,7 +48,7 @@ import Currency from 'currency-formatter' ;
 import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentLink from '../attachments/AttachmentLink.js';
 
-import PatientChip from '../patients/PatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip.js';
 
 import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
@@ -157,7 +157,7 @@ function ConsultationCard ( props ) {
 	  <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
 	  <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
 	  { !patientChip ? null :
-	    <PatientChip
+	    <StaticPatientChip
 	      className={classes.patientchip}
 	      loading={loadingPatient}
 	      exists={!!patient}
@@ -295,7 +295,7 @@ export default withTracker(({consultation}) => {
   const _id = consultation.patientId;
   const options = {
     fields: {
-      ...PatientChip.projection ,
+      ...StaticPatientChip.projection ,
       ...ConsultationPaymentDialog.projection ,
       ...ConsultationDebtSettlementDialog.projection ,
       ...ConsultationDeletionDialog.projection ,

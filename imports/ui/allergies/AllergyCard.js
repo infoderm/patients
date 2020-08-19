@@ -34,8 +34,6 @@ const styles = theme => ({
 	},
 });
 
-const NITEMS = 1;
-
 function AllergyCard ( { classes , item , name , loading } ) {
 
 	if (loading) return '...Loading';
@@ -57,12 +55,14 @@ function AllergyCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={allergies.options.parentPublication}
 			selector={{allergies: item.name}}
+			options={{fields: PatientChip.projection}}
+			limit={1}
 			url={name => `/allergy/${myEncodeURIComponent(name)}`}
-			subheader={patients => `affecte ${patients.length} patients`}
-			content={patients => (
+			subheader={count => `affecte ${count} patients`}
+			content={(count, patients) => (
 				<div>
-					{patients.slice(0,NITEMS).map(patient => <PatientChip key={patient._id} patient={patient}/>)}
-					{patients.length > NITEMS && <Chip className={classes.chip} label={`+ ${patients.length - NITEMS}`}/> }
+					{patients.map(patient => <PatientChip key={patient._id} patient={patient}/>)}
+					{count > patients.length && <Chip className={classes.chip} label={`+ ${count - patients.length}`}/> }
 					<ColorPicker
 					  name='color'
 					  defaultValue={item.color || '#e0e0e0'}

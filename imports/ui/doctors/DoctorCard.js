@@ -28,8 +28,6 @@ const styles = theme => ({
 	},
 });
 
-const NITEMS = 1;
-
 function DoctorCard ( { classes , item , name , loading } ) {
 
 	if (loading) return '...Loading';
@@ -42,12 +40,14 @@ function DoctorCard ( { classes , item , name , loading } ) {
 			collection={Patients}
 			subscription={doctors.options.parentPublication}
 			selector={{doctors: item.name}}
+			options={{fields: PatientChip.projection}}
+			limit={1}
 			url={name => `/doctor/${myEncodeURIComponent(name)}`}
-			subheader={patients => `soigne ${patients.length} patients`}
-			content={patients => (
+			subheader={count => `soigne ${count} patients`}
+			content={(count, patients) => (
 				<div>
-					{patients.slice(0,NITEMS).map(patient => <PatientChip key={patient._id} patient={patient}/>)}
-					{patients.length > NITEMS && <Chip label={`+ ${patients.length - NITEMS}`}/> }
+					{patients.map(patient => <PatientChip key={patient._id} patient={patient}/>)}
+					{count > patients.length && <Chip label={`+ ${count - patients.length}`}/> }
 				</div>
 			)}
 			avatar={<Avatar className={classes.avatar}>Dr</Avatar>}

@@ -104,12 +104,24 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('book.consultations', function ( name ) {
-		return Consultations.find({
+	Meteor.publish('book.consultations', function ( name , options = {} ) {
+		const query = {
 			owner: this.userId ,
 			isDone: true,
 			...books.selector(name) ,
-		});
+		} ;
+		if (options.field) {
+			const { fields , ...rest } = options ;
+			const _options = {
+				...rest,
+				fields: {
+					...fields,
+				}
+			};
+			for ( const key of Object.keys(query) ) _options.fields[key] = 1;
+			return Consultations.find(query, _options);
+		}
+		else return Consultations.find(query, options);
 	});
 
 	Meteor.publish('consultations.missing-a-price', function () {

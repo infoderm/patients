@@ -104,6 +104,7 @@ class TagCard extends React.Component {
 			url,
 			content,
 			loading,
+			count,
 			items,
 			RenamingDialog,
 			DeletionDialog,
@@ -120,12 +121,12 @@ class TagCard extends React.Component {
 				className={classes.header}
 				avatar={avatar}
 				title={tag.name}
-				subheader={loading ? '...' : subheader(items)}
+				subheader={loading ? '...' : subheader(count, items)}
 				component={Link}
 				to={url(tag.name)}
 			/>
 			<CardContent className={classes.content}>
-			{loading ? '...' : content(items)}
+			{loading ? '...' : content(count, items)}
 			</CardContent>
 			<CardActions className={classes.actions} disableSpacing>
 			{RenamingDialog && <Button color="primary" onClick={this.openRenamingDialog}>
@@ -162,19 +163,23 @@ TagCard.propTypes = {
 	subscription: PropTypes.string.isRequired,
 	collection: PropTypes.object.isRequired,
 	selector: PropTypes.object.isRequired,
+	options: PropTypes.object,
+	limit: PropTypes.number.isRequired,
 
 	loading: PropTypes.bool.isRequired,
+	count: PropTypes.number.isRequired,
 	items: PropTypes.array.isRequired,
 };
 
 export default withRouter(
-	withTracker(({tag, subscription, collection, selector}) => {
+	withTracker(({tag, subscription, collection, selector, options, limit}) => {
 		const name = tag.name;
-		const handle = Meteor.subscribe(subscription, name);
+		const handle = Meteor.subscribe(subscription, name, options);
 		if ( handle.ready() ) {
-			const items = collection.find(selector).fetch();
-			return { loading: false, items } ;
+			const items = collection.find(selector, {...options, limit}).fetch();
+			const count = collection.find(selector, options).count();
+			return { loading: false, items, count } ;
 		}
-		else return { loading: true, items: [] } ;
+		else return { loading: true, items: [], count: 0 } ;
 	}) ( withStyles(styles, { withTheme: true})(TagCard) )
 ) ;

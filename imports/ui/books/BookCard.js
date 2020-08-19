@@ -42,11 +42,13 @@ function BookCard ( { classes , item } ) {
 			collection={Consultations}
 			subscription="book.consultations"
 			selector={books.selector(item.name)}
+			options={{fields: {price: 1, datetime: 1}}}
+			limit={0}
 			url={name => `/book/${year}/${myEncodeURIComponent(book)}`}
-			subheader={consultations => `${consultations.length} consultations`}
+			subheader={count => `${count} consultations`}
 			content={
-				consultations => {
-					if (consultations.length === 0) return null;
+				(count, consultations) => {
+					if (count === 0) return null;
 					const total = sum(filter(x => !!x, map(c => c.price, consultations)));
 					const first = min((a, b) => a - b, map(c => c.datetime, consultations));
 					const last = max((a, b) => a - b, map(c => c.datetime, consultations));

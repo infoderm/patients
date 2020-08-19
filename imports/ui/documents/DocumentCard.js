@@ -53,6 +53,8 @@ import { Patients } from '../../api/patients.js';
 import saveTextAs from '../../client/saveTextAs.js';
 import { myEncodeURIComponent } from '../../client/uri.js';
 
+import StaticPatientChip from '../patients/StaticPatientChip.js';
+
 import DocumentDeletionDialog from './DocumentDeletionDialog.js';
 import DocumentSuperDeletionDialog from './DocumentSuperDeletionDialog.js';
 import DocumentRestorationDialog from './DocumentRestorationDialog.js';
@@ -245,16 +247,11 @@ class DocumentCard extends React.Component {
 							/>
 						}
 						{ (patientChip && patientId) &&
-							<Chip
-								avatar={(!loadingPatient && patient && patient.photo) ?
-									<Avatar src={`data:image/png;base64,${patient.photo}`}/>
-									:
-									null
-								}
-								label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`}
+							<StaticPatientChip
 								className={classes.patientchip}
-								component={Link}
-								to={`/patient/${patientId}`}
+								loading={loadingPatient}
+								exists={!!patient}
+								patient={patient || {_id: patientId}}
 							/>
 						}
 						{ (patientChip && !patientId && parsed) &&

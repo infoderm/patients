@@ -1,54 +1,31 @@
+import { Meteor } from 'meteor/meteor' ;
+import { withTracker } from 'meteor/react-meteor-data' ;
+
 import React from 'react' ;
-import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
+import StaticPatientChip from './StaticPatientChip.js';
 
-import { Link } from 'react-router-dom'
+import { Patients } from '../../api/patients.js';
 
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-
-const useStyles = makeStyles(
-	theme => ({
-		chip: {
-			marginRight: theme.spacing(1),
-			backgroundColor: '#aaa',
-			color: '#fff',
-		},
-	})
-);
-
-export default function PatientChip ( { className , loading , exists , patient } ) {
-
-	const classes = useStyles();
-
-	return (
-		<Chip
-			key={patient._id}
-			avatar={(!loading && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null}
-			label={loading ? patient._id : !exists ? 'Not found' : `${patient.lastname} ${patient.firstname}`}
-			className={classNames(classes.chip, className)}
-			component={Link}
-			to={`/patient/${patient._id}`}
-		/>
-	) ;
+function PatientChip ( props ) {
+	return <StaticPatientChip {...props}/> ;
 }
 
 PatientChip.projection = {
-	firstname: 1,
-	lastname: 1,
-	photo: 1,
+	_id: 1,
 } ;
 
-PatientChip.defaultProps = {
-	loading: false,
-	exists: true,
-} ;
+export default withTracker(({ patient }) => {
 
-PatientChip.propTypes = {
-	className: PropTypes.string,
-	loading: PropTypes.bool.isRequired,
-	exists: PropTypes.bool.isRequired,
-	patient: PropTypes.object.isRequired,
-} ;
+	const patientId = patient._id ;
+	const options = { fields: StaticPatientChip.projection } ;
+	const handle = Meteor.subscribe('patient', patientId, options);
+
+	if ( handle.ready() ) {
+		const _patient = Patients.findOne(patientId, options);
+		const exists = !!_patient;
+		return { loading: false, exists, patient: _patient } ;
+	}
+	else return { loading: true, patient } ;
+
+}) ( PatientChip ) ;
