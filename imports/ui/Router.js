@@ -81,12 +81,6 @@ export default function Router ( ) {
 				props => ( <NoContent>Bonjour maman!</NoContent> )
 			}/>
 
-			<Route exact path="/patients/page/:page" render={
-				( { match } ) => (
-					<PatientsList page={parseInt(match.params.page,10)}/>
-				)
-			}/>
-
 			<Route exact path="/patient/:id" component={PatientRecord}/>
 			<Route exact path="/patient/:id/:tab" component={PatientRecord}/>
 			<Route exact path="/patient/:id/:tab/page/:page" component={PatientRecord}/>
