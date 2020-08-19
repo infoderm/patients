@@ -4,7 +4,6 @@ import { withTracker } from 'meteor/react-meteor-data' ;
 import { Patients } from '../api/patients.js';
 
 import React from 'react' ;
-import { useHistory } from 'react-router-dom' ;
 
 import { useTheme , makeStyles } from '@material-ui/core/styles';
 
@@ -17,10 +16,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { sum , map } from '@aureooms/js-itertools';
 
-import handleDrop from '../client/handleDrop.js';
 import { settings } from '../api/settings.js';
 
-import WholeWindowDropZone from './input/WholeWindowDropZone.js';
+import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone.js';
 import Header from './Header.js';
 import Content from './Content.js';
 import NavigationDrawer from './NavigationDrawer.js';
@@ -68,7 +66,6 @@ function App ( props ) {
 
 	const theme = useTheme();
 	const classes = useStyles();
-	const history = useHistory();
 
 	return (
 		<MuiThemeProvider theme={muitheme}>
@@ -93,7 +90,7 @@ function App ( props ) {
 				</div>
 				:
 				<div>
-					<WholeWindowDropZone callback={handleDrop(history)}/>
+					<CustomWholeWindowDropZone/>
 					<div className={classes.appFrame} style={{textTransform}}>
 						<Header
 							navigationDrawerIsOpen={navigationDrawerIsOpen}
