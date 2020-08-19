@@ -24,7 +24,7 @@ const PatientsList = withTracker(({match, page, perpage}) => {
     perpage,
     root: '/patients',
     loading,
-    patients: loading ? [] : Patients.find({}, {
+    patients: loading ? [] : Patients.find(query, {
       sort,
       fields,
       skip: (page-1)*perpage,
