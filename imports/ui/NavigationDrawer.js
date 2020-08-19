@@ -17,7 +17,6 @@ import IconButton from '@material-ui/core/IconButton';
 
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import FaceIcon from '@material-ui/icons/Face';
 import AddIcon from '@material-ui/icons/Add';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import BusinessIcon from '@material-ui/icons/Business';
@@ -121,12 +120,6 @@ class NavigationDrawer extends React.Component {
         title : 'main' ,
 
         links : [
-
-          {
-            to: "/" ,
-            icon: <FaceIcon/> ,
-            title: "Patients"
-          } ,
 
           {
             to: '/consultations' ,
