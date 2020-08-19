@@ -7,7 +7,7 @@ import Downshift from 'downshift';
 import { patients } from '../../api/patients.js';
 const patientFilter = patients.filter;
 
-import SearchBox from '../input/SearchBox.js';
+import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions.js';
 
 const reduceState = (state, changes) => {
   switch (changes.type) {
@@ -40,10 +40,11 @@ export default function PatientsSearchBox ( { patients } ) {
   ) ;
 
   return (
-    <SearchBox
+    <SearchBoxWithSuggestions
       filter={patientFilter}
       suggestions={suggestions}
       itemToString={item => item ? item.label : ''}
+      itemToKey={item => item._id}
       onChange={handleChange}
       stateReducer={reduceState}
       placeholder="Search a patient…"
