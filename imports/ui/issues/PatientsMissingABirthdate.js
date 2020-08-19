@@ -24,15 +24,16 @@ const PatientsMissingABirthdate = ( { loading, patients, ...rest }) => {
 }
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('patients');
+	const query = {
+		$or: [
+			{ birthdate : null } ,
+			{ birthdate : '' } ,
+		] ,
+	} ;
+	const handle = Meteor.subscribe('patients', query);
 	if ( !handle.ready()) return { loading: true } ;
 	return {
 		loading: false,
-		patients: Patients.find({
-			$or: [
-				{ birthdate : null } ,
-				{ birthdate : '' } ,
-			] ,
-		}).fetch(),
+		patients: Patients.find(query).fetch(),
 	} ;
 }) (PatientsMissingABirthdate) ;

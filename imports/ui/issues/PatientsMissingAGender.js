@@ -24,15 +24,16 @@ const PatientsMissingAGender = ( { loading, patients, ...rest }) => {
 }
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('patients');
+	const query = {
+		$or: [
+			{ sex : null } ,
+			{ sex : '' } ,
+		] ,
+	} ;
+	const handle = Meteor.subscribe('patients', query);
 	if ( !handle.ready()) return { loading: true } ;
 	return {
 		loading: false,
-		patients: Patients.find({
-			$or: [
-				{ sex : null } ,
-				{ sex : '' } ,
-			] ,
-		}).fetch(),
+		patients: Patients.find(query).fetch(),
 	} ;
 }) (PatientsMissingAGender) ;
