@@ -117,6 +117,17 @@ Meteor.startup(() => {
   createSimpleIndex(Patients, 'allergies');
   createSimpleIndex(Documents, 'createdAt');
 
+  Patients.rawCollection().createIndex({
+    firstname: 'text',
+    lastname: 'text',
+  },{
+    background: true,
+    weights: {
+       firstname: 3,
+       lastname: 2,
+    },
+  });
+
 
   const createSimpleUniqueIndex = ( collection , field ) => collection.rawCollection().createIndex({
     owner: 1,
