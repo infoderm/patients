@@ -3,7 +3,7 @@ import React from 'react';
 import Downshift from 'downshift';
 
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
@@ -30,48 +30,52 @@ function renderInput(inputProps) {
   );
 }
 
-const styles = theme => ({
-  container: {
-    position: 'relative',
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(2),
-    borderRadius: 2,
-    background: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      background: fade(theme.palette.common.white, 0.25),
-    },
-  },
-  suggestions: {
-    position: 'absolute',
-    width: '100%',
-  },
-  adornment: {
-    display: 'inline-flex',
-    width: theme.spacing(9),
-    height: '100%',
-    position: 'relative',
-    pointerEvents: 'none',
-    alignItems: 'center',
-    justifyContent: 'center',
-    verticalAlign: 'middle',
-  },
-  inputInput: {
-    paddingTop: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    color: 'white',
-    [theme.breakpoints.up('sm')]: {
-      width: 220,
-      '&:focus': {
-        width: 320,
+const useStyles = makeStyles(
+  theme => ({
+    container: {
+      position: 'relative',
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(2),
+      borderRadius: 2,
+      background: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        background: fade(theme.palette.common.white, 0.25),
       },
     },
-  },
-});
+    suggestions: {
+      position: 'absolute',
+      width: '100%',
+    },
+    adornment: {
+      display: 'inline-flex',
+      width: theme.spacing(9),
+      height: '100%',
+      position: 'relative',
+      pointerEvents: 'none',
+      alignItems: 'center',
+      justifyContent: 'center',
+      verticalAlign: 'middle',
+    },
+    inputInput: {
+      paddingTop: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      color: 'white',
+      [theme.breakpoints.up('sm')]: {
+        width: 220,
+        '&:focus': {
+          width: 320,
+        },
+      },
+    },
+  })
+);
 
-function SearchBox({ filter , suggestions , itemToString , classes , className , ...rest }) {
+export default function SearchBox({ filter , suggestions , itemToString , placeholder , className , ...rest }) {
+
+  const classes = useStyles();
 
   return (
     <Downshift itemToString={itemToString} {...rest}>
@@ -90,7 +94,7 @@ function SearchBox({ filter , suggestions , itemToString , classes , className ,
               classes,
               InputProps: getInputProps({
                 className: classes.inputInput,
-                placeholder: 'Search a patient…',
+                placeholder,
               }),
             })}
             {isOpen ? (
@@ -120,10 +124,7 @@ function SearchBox({ filter , suggestions , itemToString , classes , className ,
 }
 
 SearchBox.propTypes = {
-  classes: PropTypes.object.isRequired,
   filter: PropTypes.func.isRequired,
   suggestions: PropTypes.array.isRequired,
   itemToString: PropTypes.func.isRequired,
 };
-
-export default withStyles(styles)(SearchBox);

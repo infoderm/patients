@@ -1,5 +1,4 @@
 import React from 'react' ;
-import { useHistory } from 'react-router-dom' ;
 
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -13,15 +12,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import { settings } from '../api/settings.js';
 
-import { patients } from '../api/patients.js';
-
-import SearchBox from './patients/SearchBox.js';
+import PatientsSearchBox from './patients/PatientsSearchBox.js';
 import AccountsUI from './users/AccountsUI.js';
 
-import Downshift from 'downshift';
-
 const drawerWidth = 240;
-const patientFilter = patients.filter;
 
 const useStyles = makeStyles(
   theme => ({
@@ -69,29 +63,9 @@ const useStyles = makeStyles(
 );
 
 
-const reduceState = (state, changes) => {
-  switch (changes.type) {
-    case Downshift.stateChangeTypes.keyDownEnter:
-    case Downshift.stateChangeTypes.clickItem:
-      return {
-	...changes,
-	inputValue: '',
-      };
-    default:
-      return changes;
-  }
-};
-
 export default function Header ( { currentUser , navigationDrawerIsOpen , patients } ) {
 
-  const history = useHistory();
   const classes = useStyles();
-
-  const handleChange = (selectedItem, downshiftState) => {
-    if ( selectedItem ) {
-      history.push(`/patient/${selectedItem._id}`);
-    }
-  };
 
   const toggleNavigationDrawerIsOpen = e => {
 
@@ -111,13 +85,6 @@ export default function Header ( { currentUser , navigationDrawerIsOpen , patien
     }) ;
 
   } ;
-
-  const suggestions = patients.map(
-    patient => ({
-      label : `${patient.lastname} ${patient.firstname}` ,
-      _id : patient._id ,
-    })
-  ) ;
 
   return (
     <AppBar className={classNames(classes.appBar, {
@@ -144,13 +111,9 @@ export default function Header ( { currentUser , navigationDrawerIsOpen , patien
 	  {location.pathname}
 	</Typography>
 	<div style={{flex:'1 1 auto'}}></div>
-	{ currentUser && <SearchBox
+	{ currentUser && <PatientsSearchBox
 	  className={classes.searchBox}
-	  filter={patientFilter}
-	  suggestions={suggestions}
-	  itemToString={item => item ? item.label : ''}
-	  onChange={handleChange}
-	  stateReducer={reduceState}
+	  patients={patients}
 	/> }
 	<AccountsUI
 	  className={classes.accounts}
