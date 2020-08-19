@@ -45,12 +45,14 @@ import dateFormat from 'date-fns/format' ;
 
 import Currency from 'currency-formatter' ;
 
+import AttachFileButton from '../attachments/AttachFileButton.js';
+import AttachmentLink from '../attachments/AttachmentLink.js';
+
+import PatientChip from '../patients/PatientChip.js';
+
 import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
-
-import AttachFileButton from '../attachments/AttachFileButton.js';
-import AttachmentLink from '../attachments/AttachmentLink.js';
 
 import { Patients } from '../../api/patients.js';
 
@@ -75,9 +77,7 @@ const useStyles = makeStyles(
       fontWeight: 'bold',
     },
     patientchip: {
-      marginRight: theme.spacing(1),
       backgroundColor: '#88f',
-      color: '#fff',
       fontWeight: 'bold',
     },
     pricechip: {
@@ -157,12 +157,11 @@ function ConsultationCard ( props ) {
 	  <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
 	  <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
 	  { !patientChip ? null :
-	    <Chip
-	    avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null}
-	    label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`}
-	    className={classes.patientchip}
-	    component={Link}
-	    to={`/patient/${patientId}`}
+	    <PatientChip
+	      className={classes.patientchip}
+	      loading={loadingPatient}
+	      exists={!!patient}
+	      patient={patient || {_id: patientId}}
 	    />
 	  }
 	  { attachments === undefined || attachments.length === 0 ? '' :
@@ -293,11 +292,19 @@ ConsultationCard.propTypes = {
 };
 
 export default withTracker(({consultation}) => {
-	const _id = consultation.patientId;
-	const handle = Meteor.subscribe('patient', _id);
-	if ( handle.ready() ) {
-		const patient = Patients.findOne(_id);
-		return { loadingPatient: false, patient } ;
-	}
-	else return { loadingPatient: true } ;
+  const _id = consultation.patientId;
+  const options = {
+    fields: {
+      ...PatientChip.projection ,
+      ...ConsultationPaymentDialog.projection ,
+      ...ConsultationDebtSettlementDialog.projection ,
+      ...ConsultationDeletionDialog.projection ,
+    }
+  } ;
+  const handle = Meteor.subscribe('patient', _id, options);
+  if ( handle.ready() ) {
+    const patient = Patients.findOne(_id, options);
+    return { loadingPatient: false, patient } ;
+  }
+  else return { loadingPatient: true } ;
 }) ( ConsultationCard ) ;

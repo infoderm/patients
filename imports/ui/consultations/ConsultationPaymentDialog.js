@@ -97,6 +97,11 @@ function ConsultationPaymentDialog ( props ) {
     );
 }
 
+ConsultationPaymentDialog.projection = {
+  firstname: 1,
+  lastname: 1,
+} ;
+
 ConsultationPaymentDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

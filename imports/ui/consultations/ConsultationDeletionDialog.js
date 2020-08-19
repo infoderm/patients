@@ -98,6 +98,11 @@ function ConsultationDeletionDialog (props) {
 
 }
 
+ConsultationDeletionDialog.projection = {
+  firstname: 1,
+  lastname: 1,
+} ;
+
 ConsultationDeletionDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,

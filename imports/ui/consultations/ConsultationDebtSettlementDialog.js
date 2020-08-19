@@ -91,6 +91,11 @@ class ConsultationDebtSettlementDialog extends React.Component {
 
 }
 
+ConsultationDebtSettlementDialog.projection = {
+  firstname: 1,
+  lastname: 1,
+} ;
+
 ConsultationDebtSettlementDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
