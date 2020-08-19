@@ -12,8 +12,8 @@ export const Books = new Mongo.Collection('books');
 if (Meteor.isServer) {
   Meteor.publish('books', function (args) {
     const query = {
-      owner: this.userId,
       ...args,
+      owner: this.userId,
     };
     return Books.find(query);
   });
