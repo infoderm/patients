@@ -13,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import { settings } from '../api/settings.js';
 
-import PatientsSearchBox from './patients/PatientsSearchBox.js';
+import FullTextSearchInput from './search/FullTextSearchInput.js';
 import AccountsUI from './users/AccountsUI.js';
 
 const drawerWidth = 240;
@@ -64,7 +64,7 @@ const useStyles = makeStyles(
 );
 
 
-export default function Header ( { currentUser , navigationDrawerIsOpen , patients } ) {
+export default function Header ( { currentUser , navigationDrawerIsOpen } ) {
 
   const classes = useStyles();
   const location = useLocation();
@@ -113,9 +113,8 @@ export default function Header ( { currentUser , navigationDrawerIsOpen , patien
 	  {location.pathname}
 	</Typography>
 	<div style={{flex:'1 1 auto'}}></div>
-	{ currentUser && <PatientsSearchBox
+	{ currentUser && <FullTextSearchInput
 	  className={classes.searchBox}
-	  patients={patients}
 	/> }
 	<AccountsUI
 	  className={classes.accounts}

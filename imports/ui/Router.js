@@ -9,7 +9,8 @@ import dateFormat from 'date-fns/format' ;
 import NoContent from './navigation/NoContent.js';
 import NoMatch from './navigation/NoMatch.js';
 
-import PatientsList from './patients/PatientsList.js';
+import FullTextSearchResults from './search/FullTextSearchResults';
+
 import PatientRecord from './patients/PatientRecord.js';
 import NewPatientForm from './patients/NewPatientForm.js';
 
@@ -80,6 +81,9 @@ export default function Router ( ) {
 			<Route exact path="/" render={
 				props => ( <NoContent>Bonjour maman!</NoContent> )
 			}/>
+
+			<Route exact path="/search/:query" component={FullTextSearchResults}/>
+			<Route exact path="/search/:query/page/:page" component={FullTextSearchResults}/>
 
 			<Route exact path="/patient/:id" component={PatientRecord}/>
 			<Route exact path="/patient/:id/:tab" component={PatientRecord}/>

@@ -1,8 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data' ;
 
-import { Patients } from '../api/patients.js';
-
 import React from 'react' ;
 
 import { useTheme , makeStyles } from '@material-ui/core/styles';
@@ -58,7 +56,6 @@ function App ( props ) {
 
 	const {
 		currentUser,
-		patients,
 		textTransform,
 		navigationDrawerIsOpen,
 		progress,
@@ -94,7 +91,6 @@ function App ( props ) {
 					<div className={classes.appFrame} style={{textTransform}}>
 						<Header
 							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							patients={patients}
 							currentUser={currentUser}
 						/>
 						<NavigationDrawer
@@ -116,7 +112,6 @@ function App ( props ) {
 export default withTracker(() => {
 	const handles = [
 		{ ready: () => true } ,
-		Meteor.subscribe('patients') ,
 		settings.subscribe('text-transform') ,
 		settings.subscribe('navigation-drawer-is-open') ,
 	] ;
@@ -125,6 +120,5 @@ export default withTracker(() => {
 		textTransform: settings.get('text-transform') ,
 		navigationDrawerIsOpen: settings.get('navigation-drawer-is-open') ,
 		currentUser: Meteor.user() ,
-		patients: Patients.find({}, { sort: { lastname: 1 } }).fetch() ,
 	};
 }) ( App ) ;
