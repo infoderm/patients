@@ -7,43 +7,36 @@ import startOfYear from 'date-fns/startOfYear';
 import startOfToday from 'date-fns/startOfToday';
 import addYears from 'date-fns/addYears';
 
+import Loading from '../navigation/Loading.js';
+
 import ConsultationForm from './ConsultationForm.js' ;
 
 import { Consultations } from '../../api/consultations.js';
 import { books } from '../../api/books.js';
 
-class NewConsultationForm extends React.Component {
+function NewConsultationForm ( { match , loading , bookPrefill } ){
 
-	constructor(props){
-		super(props);
-	}
+	if ( loading ) return <Loading/> ;
 
-	render(){
+	const consultation = {
+		_id: undefined,
+		patientId: match.params.id,
+		datetime: new Date(),
+		reason: '',
+		done: '',
+		todo: '',
+		treatment: '',
+		next: '',
+		more: '',
+		currency: 'EUR',
+		payment_method: 'cash',
+		price: 0,
+		paid: 0,
+		book: bookPrefill,
+	};
 
-		const { match , loading , bookPrefill } = this.props ;
+	return <ConsultationForm consultation={consultation}/> ;
 
-		if ( loading ) return 'Loading...' ;
-
-		const consultation = {
-			_id: undefined,
-			patientId: match.params.id,
-			datetime: new Date(),
-			reason: '',
-			done: '',
-			todo: '',
-			treatment: '',
-			next: '',
-			more: '',
-			currency: 'EUR',
-			payment_method: 'cash',
-			price: 0,
-			paid: 0,
-			book: bookPrefill,
-		};
-
-		return <ConsultationForm consultation={consultation}/> ;
-
-	}
 }
 
 export default withTracker(() => {
