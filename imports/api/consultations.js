@@ -66,8 +66,8 @@ if (Meteor.isServer) {
 		}, {
 			sort: {
 				datetime: -1 ,
-				limit: 1 ,
-			}
+			},
+			limit: 1
 		});
 	});
 
