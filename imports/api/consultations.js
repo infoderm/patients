@@ -110,7 +110,7 @@ if (Meteor.isServer) {
 			isDone: true,
 			...books.selector(name) ,
 		} ;
-		if (options.field) {
+		if (options.fields) {
 			const { fields , ...rest } = options ;
 			const _options = {
 				...rest,
