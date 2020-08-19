@@ -104,7 +104,6 @@ function App ( props ) {
 						<Content
 							navigationDrawerIsOpen={navigationDrawerIsOpen}
 							currentUser={currentUser}
-							patients={patients}
 						/>
 					</div>
 				</div>

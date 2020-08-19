@@ -8,9 +8,7 @@ import Paginator from '../navigation/Paginator.js';
 
 import PatientCard from './PatientCard.js';
 
-export default function PagedPatientsList ( props ) {
-
-  const { root , page , perpage , items } = props;
+export default function PagedPatientsList ( { root , page , perpage , items } ) {
 
   return (
     <Fragment>

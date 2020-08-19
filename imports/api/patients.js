@@ -28,8 +28,8 @@ allergies.init( Patients ) ;
 
 if (Meteor.isServer) {
 
-	Meteor.publish('patients', function () {
-		return Patients.find({ owner: this.userId });
+	Meteor.publish('patients', function (options) {
+		return Patients.find({ owner: this.userId }, options);
 	});
 
 	Meteor.publish('patient', function (_id) {

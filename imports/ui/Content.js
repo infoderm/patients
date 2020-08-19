@@ -5,7 +5,7 @@ import NoContent from './navigation/NoContent.js';
 import Router from './Router.js';
 import ErrorBoundary from './ErrorBoundary.js';
 
-export default function Content ( { patients, currentUser } ) {
+export default function Content ( { currentUser } ) {
 
 	const classes = useStyles();
 
@@ -18,7 +18,7 @@ export default function Content ( { patients, currentUser } ) {
 	return (
 		<main className={classes.main}>
 			<ErrorBoundary>
-				<Router patients={patients}/>
+				<Router/>
 			</ErrorBoundary>
 		</main>
 	);
