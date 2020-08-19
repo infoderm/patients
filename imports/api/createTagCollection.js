@@ -68,7 +68,7 @@ export default function createTagCollection ( options ) {
         Meteor.publish(parentPublication, function (tag, options = {}) {
           check(tag, String);
           const query = { owner: this.userId , [key]: tag } ;
-          if (options.field) {
+          if (options.fields) {
               const { fields , ...rest } = options ;
               const _options = {
                   ...rest,
