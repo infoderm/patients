@@ -6,7 +6,7 @@ import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment.js' ;
 import SearchBoxInternalsInput from './SearchBoxInternalsInput.js' ;
 import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions.js' ;
 
-export default function SearchBoxInternals ( props ) {
+export default function SearchBoxWithSuggestionsInternals ( props ) {
 
   const {
     filter ,
@@ -40,7 +40,7 @@ export default function SearchBoxInternals ( props ) {
   );
 }
 
-SearchBoxInternals.propTypes = {
+SearchBoxWithSuggestionsInternals.propTypes = {
   suggestions: PropTypes.array.isRequired,
   filter: PropTypes.func.isRequired,
   itemToString: PropTypes.func.isRequired,
