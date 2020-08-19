@@ -27,6 +27,7 @@ export default withTracker(() => {
 	return {
 		loading: false,
 		consultations: Consultations.find({
+			isDone: true,
 			$or: [
 				{ price : { $not: { $type: 1 } } } ,
 				{ price : NaN } ,

@@ -128,25 +128,9 @@ if (Meteor.isServer) {
 		return Consultations.find({
 			owner: this.userId ,
 			isDone: true,
-			$expr: {
-				$or: [
-					{ price : { $not: { $type: 1 } } } ,
-					{ price : NaN } ,
-				] ,
-			},
-		});
-	});
-
-	Meteor.publish('consultations.missing-a-book', function () {
-		return Consultations.find({
-			owner: this.userId ,
-			isDone: true,
-			$expr: {
-				$or: [
-					{ book : null } ,
-					{ book : '' } ,
-				] ,
-			},
+			// true > 0
+			// '' >= 0
+			price : { $not: { $gt: 1 } } ,
 		});
 	});
 

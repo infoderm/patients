@@ -22,15 +22,17 @@ const ConsultationsMissingABook = ( { loading, consultations, ...rest } ) => {
 }
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations.missing-a-book');
+	const query = {
+		isDone: true,
+		$or: [
+			{ book : null } ,
+			{ book : '' } ,
+		] ,
+	} ;
+	const handle = Meteor.subscribe('consultations', query);
 	if ( !handle.ready()) return { loading: true } ;
 	return {
 		loading: false,
-		consultations: Consultations.find({
-			$or: [
-				{ book : null } ,
-				{ book : '' } ,
-			] ,
-		}).fetch(),
+		consultations: Consultations.find(query).fetch(),
 	} ;
 }) (ConsultationsMissingABook) ;
