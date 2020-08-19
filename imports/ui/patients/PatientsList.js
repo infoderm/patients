@@ -16,7 +16,8 @@ const PatientsList = withTracker(({match, page, perpage}) => {
   } ;
   const fields = {
   } ;
-  const handle = Meteor.subscribe('patients', { sort , fields });
+  const query = {};
+  const handle = Meteor.subscribe('patients', query, { sort , fields });
   const loading = !handle.ready();
   return {
     page,
