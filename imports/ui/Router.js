@@ -6,6 +6,7 @@ import startOfToday from 'date-fns/startOfToday' ;
 import dateParseISO from 'date-fns/parseISO';
 import dateFormat from 'date-fns/format' ;
 
+import NoContent from './navigation/NoContent.js';
 import NoMatch from './navigation/NoMatch.js';
 
 import PatientsList from './patients/PatientsList.js';
@@ -72,17 +73,17 @@ const CurrentMonthlyPlanner = props => {
 	) ;
 }
 
-export default function Router ( { patients } ) {
+export default function Router ( ) {
 
 	return (
 		<Switch>
 			<Route exact path="/" render={
-				props => ( <PatientsList patients={patients}/> )
+				props => ( <NoContent>Bonjour maman!</NoContent> )
 			}/>
 
 			<Route exact path="/patients/page/:page" render={
 				( { match } ) => (
-					<PatientsList patients={patients} page={parseInt(match.params.page,10)}/>
+					<PatientsList page={parseInt(match.params.page,10)}/>
 				)
 			}/>
 
