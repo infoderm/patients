@@ -32,9 +32,9 @@ if (Meteor.isServer) {
 		return Patients.find({ ...query, owner: this.userId }, options);
 	});
 
-	Meteor.publish('patient', function (_id) {
+	Meteor.publish('patient', function (_id, options) {
 		check(_id, String);
-		return Patients.find({ owner: this.userId , _id });
+		return Patients.find({ owner: this.userId , _id }, options);
 	});
 
 }

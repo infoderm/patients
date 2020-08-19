@@ -137,10 +137,18 @@ MergePatientsForm.propTypes = {
 };
 
 export default withTracker(() => {
-	const handle = Meteor.subscribe('patients');
+	const query = {};
+	const options = {
+		sort: { lastname: 1 },
+		fields: {
+			firstname: 1,
+			lastname: 1,
+		}
+	};
+	const handle = Meteor.subscribe('patients', query, options);
 	const loading = !handle.ready();
 	return {
 		loading,
-		patients: loading ? [] : Patients.find({}, { sort: { lastname: 1 } }).fetch() ,
+		patients: loading ? [] : Patients.find(query, options).fetch() ,
 	};
 }) ( MergePatientsForm ) ;

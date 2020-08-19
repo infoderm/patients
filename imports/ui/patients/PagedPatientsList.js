@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 import Paginator from '../navigation/Paginator.js';
 
-import PatientCard from './PatientCard.js';
+import StaticPatientCard from './StaticPatientCard.js';
 
 export default function PagedPatientsList ( { root , page , perpage , items } ) {
 
@@ -14,7 +14,7 @@ export default function PagedPatientsList ( { root , page , perpage , items } ) 
     <Fragment>
       <div>
         <Grid container spacing={3}>
-          { items.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+          { items.map(patient => ( <StaticPatientCard key={patient._id} patient={patient}/> )) }
         </Grid>
       </div>
       <Paginator page={page} end={items.length < perpage} root={root}/>

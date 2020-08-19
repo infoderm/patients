@@ -4,7 +4,7 @@ import PropTypes from 'prop-types' ;
 
 import Grid from '@material-ui/core/Grid' ;
 
-import PatientCard from './PatientCard.js' ;
+import StaticPatientCard from './StaticPatientCard.js' ;
 import NewPatientCard from './NewPatientCard.js' ;
 
 export default function PatientsPage ( { patients } ) {
@@ -13,7 +13,7 @@ export default function PatientsPage ( { patients } ) {
       <div>
         <Grid container spacing={3}>
           <NewPatientCard/>
-          { patients.map(patient => ( <PatientCard key={patient._id} patient={patient}/> )) }
+          { patients.map(patient => ( <StaticPatientCard key={patient._id} patient={patient}/> )) }
         </Grid>
       </div>
   ) ;
