@@ -1,3 +1,6 @@
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data' ;
+
 import React, { useState } from 'react' ;
 import PropTypes from 'prop-types';
 
@@ -16,8 +19,12 @@ import Typography from '@material-ui/core/Typography';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
 import { makeIndex } from '../../api/string.js';
+import { Patients } from '../../api/patients.js';
 
 import SetPicker from '../input/SetPicker.js';
+
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
 
 import PatientCard from '../patients/PatientCard.js';
 import PatientSheet from '../patients/PatientSheet.js';
@@ -62,7 +69,11 @@ const tagFilter = set => (suggestions, inputValue) => {
 
 } ;
 
-export default function MergePatientsForm ( { patients } ) {
+function MergePatientsForm ( { loading , patients } ) {
+
+	if ( loading ) return <Loading/> ;
+
+	if ( patients.length < 2 ) return <NoContent>There is nothing to merge</NoContent> ;
 
 	const [step, setStep] = useState('select');
 	const [toMerge, setToMerge] = useState([]);
@@ -124,3 +135,12 @@ export default function MergePatientsForm ( { patients } ) {
 MergePatientsForm.propTypes = {
 	patients: PropTypes.array.isRequired,
 };
+
+export default withTracker(() => {
+	const handle = Meteor.subscribe('patients');
+	const loading = !handle.ready();
+	return {
+		loading,
+		patients: loading ? [] : Patients.find({}, { sort: { lastname: 1 } }).fetch() ,
+	};
+}) ( MergePatientsForm ) ;

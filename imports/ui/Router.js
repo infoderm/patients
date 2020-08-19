@@ -138,9 +138,7 @@ export default function Router ( { patients } ) {
 			<Route exact path="/sepa" component={SEPAPaymentDetails}/>
 
 			<Route exact path="/issues" component={Issues}/>
-			<Route exact path="/merge" render={
-				props => ( <MergePatientsForm patients={patients}/> )
-			}/>
+			<Route exact path="/merge" component={MergePatientsForm}/>
 
 			<Route exact path="/doctors" component={DoctorsList}/>
 			<Route exact path="/doctors/page/:page" component={DoctorsList}/>
