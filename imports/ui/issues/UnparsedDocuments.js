@@ -27,10 +27,8 @@ export default withTracker(() => {
 			createdAt: 1,
 		},
 		fields: {
-			source: 0,
-			decoded: 0,
-			results: 0,
-			text: 0,
+			...DocumentsPage.projection,
+			parsed: 1,
 		},
 	};
 	const handle = Meteor.subscribe('documents.unparsed', options);
