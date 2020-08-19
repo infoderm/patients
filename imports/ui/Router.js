@@ -6,7 +6,7 @@ import startOfToday from 'date-fns/startOfToday' ;
 import dateParseISO from 'date-fns/parseISO';
 import dateFormat from 'date-fns/format' ;
 
-import NoContent from './navigation/NoContent.js';
+import Greetings from './navigation/Greetings.js';
 import NoMatch from './navigation/NoMatch.js';
 
 import FullTextSearchResults from './search/FullTextSearchResults';
@@ -78,9 +78,7 @@ export default function Router ( ) {
 
 	return (
 		<Switch>
-			<Route exact path="/" render={
-				props => ( <NoContent>Bonjour maman!</NoContent> )
-			}/>
+			<Route exact path="/" component={Greetings}/>
 
 			<Route exact path="/search/:query" component={FullTextSearchResults}/>
 			<Route exact path="/search/:query/page/:page" component={FullTextSearchResults}/>

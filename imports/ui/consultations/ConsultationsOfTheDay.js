@@ -17,6 +17,8 @@ import { count } from '@aureooms/js-cardinality' ;
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
+import { TIME_BREAK } from '../../client/constants.js' ;
+
 import Prev from '../navigation/Prev.js'
 import Next from '../navigation/Next.js'
 
@@ -41,7 +43,7 @@ function ConsultationsOfTheDay ( props ) {
 	const dayBefore = format( subDays(day, 1), 'yyyy-MM-dd' ) ;
 	const dayAfter = format( addDays(day, 1), 'yyyy-MM-dd' ) ;
 
-	const pause = addHours(day, 15);
+	const pause = addHours(day, TIME_BREAK);
 	const am = consultations.filter(c => isBefore(c.datetime, pause));
 	const pm = consultations.filter(c => !isBefore(c.datetime, pause));
 	const cam = count(am);
