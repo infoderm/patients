@@ -22,11 +22,11 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('consultations', function (args = {}) {
+	Meteor.publish('consultations', function (query = {}) {
 		return Consultations.find({
-			owner: this.userId ,
 			isDone: true,
-			...args,
+			...query,
+			owner: this.userId ,
 		});
 	});
 
