@@ -37,6 +37,8 @@ export default function StaticPatientsList ( { page , perpage , loading , patien
   ) ;
 }
 
+StaticPatientsList.projection = PatientsPage.projection ;
+
 StaticPatientsList.defaultProps = {
   loading: false,
 } ;

@@ -19,6 +19,8 @@ export default function PatientsPage ( { patients } ) {
   ) ;
 }
 
+PatientsPage.projection = StaticPatientCard.projection ;
+
 PatientsPage.propTypes = {
   patients: PropTypes.array.isRequired,
 } ;

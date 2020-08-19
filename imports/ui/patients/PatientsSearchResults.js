@@ -17,7 +17,8 @@ const PatientsSearchResults = withTracker(({match, page, perpage, ...rest}) => {
     score: { $meta: "textScore" }
   } ;
   const fields = {
-    score: { $meta: "textScore" }
+    score: { $meta: "textScore" } ,
+    ...StaticPatientsList.projection ,
   } ;
   const query = { $text : { $search : myDecodeURIComponent(match.params.query) } } ;
   const handle = Meteor.subscribe('patients', query, { sort , fields });
@@ -29,6 +30,7 @@ const PatientsSearchResults = withTracker(({match, page, perpage, ...rest}) => {
     loading,
     patients: loading ? [] : Patients.find({}, {
       sort,
+      fields: StaticPatientsList.projection,
       skip: (page-1)*perpage,
       limit: perpage,
     }).fetch() ,
