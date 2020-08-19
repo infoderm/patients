@@ -13,17 +13,8 @@ function PatientCard ( { patient } ) {
 
 export default withTracker(({ patient }) => {
 
-	const patientId = patient._id;
-	const options = {
-		fields: {
-			firstname: 1,
-			lastname: 1,
-			birthdate: 1,
-			sex: 1,
-			niss: 1,
-			photo: 1,
-		}
-	} ;
+	const patientId = patient._id ;
+	const options = { fields: StaticPatientCard.projection } ;
 	const handle = Meteor.subscribe('patient', patientId, options);
 
 	if ( handle.ready() ) {

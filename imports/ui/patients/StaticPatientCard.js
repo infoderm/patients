@@ -107,3 +107,12 @@ export default function StaticPatientCard ( { patient } ) {
 		</Grid>
 	);
 }
+
+StaticPatientCard.projection = {
+	firstname: 1,
+	lastname: 1,
+	birthdate: 1,
+	sex: 1,
+	niss: 1,
+	photo: 1,
+} ;
