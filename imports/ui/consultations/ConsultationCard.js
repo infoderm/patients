@@ -156,7 +156,7 @@ function ConsultationCard ( props ) {
 	<div className={classes.chips}>
 	  <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
 	  <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
-	  { !patientChip ? null :
+	  { !patientChip || !patientId ? null :
 	    <StaticPatientChip
 	      className={classes.patientchip}
 	      loading={loadingPatient}
@@ -293,6 +293,7 @@ ConsultationCard.propTypes = {
 
 export default withTracker(({consultation}) => {
   const _id = consultation.patientId;
+  if (_id === undefined) return { loadingPatient: true } ;
   const options = {
     fields: {
       ...StaticPatientChip.projection ,

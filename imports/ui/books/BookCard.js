@@ -11,7 +11,7 @@ import { sum } from '@aureooms/js-itertools' ;
 import { min } from '@aureooms/js-itertools' ;
 import { max } from '@aureooms/js-itertools' ;
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -25,14 +25,18 @@ import { books } from '../../api/books.js';
 
 import { myEncodeURIComponent } from '../../client/uri.js';
 
-const styles = theme => ({
-	avatar: {
-		color: '#fff',
-		backgroundColor: orange[500],
-	},
-});
+const useStyles = makeStyles(
+	theme => ({
+		avatar: {
+			color: '#fff',
+			backgroundColor: orange[500],
+		},
+	})
+);
 
-function BookCard ( { classes , item } ) {
+export default function BookCard ( { item } ) {
+
+	const classes = useStyles();
 
 	const [ year , book ] = books.split(item.name) ;
 
@@ -69,10 +73,5 @@ function BookCard ( { classes , item } ) {
 }
 
 BookCard.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
-
 	item: PropTypes.object.isRequired,
 };
-
-export default withStyles(styles, { withTheme: true})(BookCard) ;

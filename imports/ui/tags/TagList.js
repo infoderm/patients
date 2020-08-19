@@ -46,7 +46,7 @@ TagList.defaultProps = {
 
 TagList.propTypes = {
 
-  Card: PropTypes.func.isRequired,
+  Card: PropTypes.elementType.isRequired,
   root: PropTypes.string,
   url: PropTypes.string,
   page: PropTypes.number.isRequired,
