@@ -25,6 +25,8 @@ export default function StaticDocumentList ( { page , perpage , loading , docume
   ) ;
 }
 
+StaticDocumentList.projection = DocumentsPage.projection ;
+
 StaticDocumentList.defaultProps = {
   loading: false,
 } ;

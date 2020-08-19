@@ -103,7 +103,7 @@ const styles = theme => ({
 	},
 });
 
-class DocumentCard extends React.Component {
+class DocumentListItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -282,12 +282,12 @@ class DocumentCard extends React.Component {
 	}
 }
 
-DocumentCard.propTypes = {
+DocumentListItem.propTypes = {
 	classes: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired
 };
 
-export default withTracker(({document}) => {
+const Component = withTracker(({document}) => {
 	const _id = document.patientId;
 	if (!_id) return {loadingPatient: false};
 	const handle = Meteor.subscribe('patient', _id);
@@ -296,4 +296,24 @@ export default withTracker(({document}) => {
 		return {loadingPatient: false, patient};
 	}
 	return {loadingPatient: true};
-})(withStyles(styles, {withTheme: true})(DocumentCard));
+})(withStyles(styles, {withTheme: true})(DocumentListItem));
+
+Component.projection = {
+	...DocumentLinkingDialog.projection,
+	_id: 1,
+	createdAt: 1,
+	patientId: 1,
+	parsed: 1,
+	format: 1,
+	kind: 1,
+	identifier: 1,
+	reference: 1,
+	status: 1,
+	datetime: 1,
+	patient: 1,
+	anomalies: 1,
+	deleted: 1,
+	lastVersion: 1,
+} ;
+
+export default Component ;

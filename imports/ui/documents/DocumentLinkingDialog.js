@@ -114,9 +114,15 @@ DocumentLinkingDialog.propTypes = {
   allPatients: PropTypes.array.isRequired,
 } ;
 
-export default withTracker(() => {
+const Component = withTracker(() => {
   Meteor.subscribe('patients');
   return {
     allPatients: Patients.find({}, { sort: { lastname: 1 } }).fetch() ,
   };
 }) ( withStyles(styles, { withTheme: true }) (DocumentLinkingDialog) ) ;
+
+Component.projection = {
+  _id: 1,
+} ;
+
+export default Component ;

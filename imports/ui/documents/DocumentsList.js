@@ -14,12 +14,7 @@ const DocumentsList = withTracker(({match, page, perpage}) => {
   const sort = {
     createdAt: -1,
   } ;
-  const fields = {
-    source: 0,
-    decoded: 0,
-    results: 0,
-    text: 0,
-  } ;
+  const fields = StaticDocumentList.projection ;
   const handle = Meteor.subscribe('documents', { sort , fields });
   const loading = !handle.ready();
   return {
