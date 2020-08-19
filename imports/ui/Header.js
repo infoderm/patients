@@ -1,4 +1,5 @@
 import React from 'react' ;
+import { useLocation } from 'react-router-dom' ;
 
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -66,6 +67,7 @@ const useStyles = makeStyles(
 export default function Header ( { currentUser , navigationDrawerIsOpen , patients } ) {
 
   const classes = useStyles();
+  const location = useLocation();
 
   const toggleNavigationDrawerIsOpen = e => {
 
