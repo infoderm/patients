@@ -10,11 +10,11 @@ import Paginator from '../navigation/Paginator.js' ;
 import PatientsPage from './PatientsPage.js';
 import NewPatientCard from './NewPatientCard.js' ;
 
-export default function StaticPatientsList ( { page , perpage , loading , patients , root } ) {
+export default function StaticPatientsList ( { page , perpage , loading , patients , root , ...rest } ) {
 
   return (
     <Fragment>
-      <div>
+      <div {...rest}>
         { loading ?
           <Loading/>
           : patients.length ?
