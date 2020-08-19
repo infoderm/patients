@@ -22,7 +22,7 @@ const reduceState = (state, changes) => {
   }
 };
 
-export default function PatientsSearchBox ( { patients } ) {
+export default function PatientsSearchBox ( { patients , className } ) {
 
   const history = useHistory();
 
@@ -40,15 +40,17 @@ export default function PatientsSearchBox ( { patients } ) {
   ) ;
 
   return (
-    <SearchBoxWithSuggestions
-      filter={patientFilter}
-      suggestions={suggestions}
-      itemToString={item => item ? item.label : ''}
-      itemToKey={item => item._id}
-      onChange={handleChange}
-      stateReducer={reduceState}
-      placeholder="Search a patient…"
-    />
+    <div className={className}>
+      <SearchBoxWithSuggestions
+	filter={patientFilter}
+	suggestions={suggestions}
+	itemToString={item => item ? item.label : ''}
+	itemToKey={item => item._id}
+	onChange={handleChange}
+	stateReducer={reduceState}
+	placeholder="Search a patient…"
+      />
+    </div>
   );
 }
 
