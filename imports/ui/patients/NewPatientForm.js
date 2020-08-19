@@ -94,7 +94,7 @@ class NewPatientForm extends React.Component {
 					<FormControlLabel
 						control={
 							<Checkbox
-								checked={this.state.noshow}
+								checked={!!this.state.noshow}
 								onChange={e => this.setState({ noshow: e.target.checked ? 1 : 0})}
 							/>
 						}
