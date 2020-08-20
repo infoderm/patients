@@ -38,11 +38,7 @@ Calendar.defaultProps = {
 
 const CalendarFromMatch = ( { match } ) => {
 
-	return (
-		<Calendar
-			...match
-		/>
-	) ;
+	return <Calendar {...match}/> ;
 
 } ;
 
