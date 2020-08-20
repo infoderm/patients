@@ -299,21 +299,29 @@ const Component = withTracker(({document}) => {
 })(withStyles(styles, {withTheme: true})(DocumentListItem));
 
 Component.projection = {
-	...DocumentLinkingDialog.projection,
-	_id: 1,
-	createdAt: 1,
-	patientId: 1,
-	parsed: 1,
-	format: 1,
-	kind: 1,
-	identifier: 1,
-	reference: 1,
-	status: 1,
-	datetime: 1,
-	patient: 1,
-	anomalies: 1,
-	deleted: 1,
-	lastVersion: 1,
+
+	//...DocumentLinkingDialog.projection,
+
+	//_id: 1,
+	//createdAt: 1,
+	//patientId: 1,
+	//parsed: 1,
+	//format: 1,
+	//kind: 1,
+	//identifier: 1,
+	//reference: 1,
+	//status: 1,
+	//datetime: 1,
+	//patient: 1,
+	//anomalies: 1,
+	//deleted: 1,
+	//lastVersion: 1,
+
+	source: 0,
+	decoded: 0,
+	results: 0,
+	text: 0,
+
 } ;
 
 export default Component ;

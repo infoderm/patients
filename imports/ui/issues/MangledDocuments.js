@@ -28,7 +28,7 @@ export default withTracker(() => {
 		},
 		fields: {
 			...DocumentsPage.projection,
-			encoding: 1,
+			//encoding: 1,
 		},
 	};
 	const handle = Meteor.subscribe('documents.mangled', options);

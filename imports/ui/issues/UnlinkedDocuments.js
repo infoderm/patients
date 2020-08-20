@@ -50,7 +50,7 @@ export default withTracker(() => {
 		},
 		fields: {
 			...DocumentsPage.projection,
-			patientId: 1,
+			//patientId: 1,
 		},
 	};
 	const handle = Meteor.subscribe('documents.unlinked', options);

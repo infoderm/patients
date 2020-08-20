@@ -28,7 +28,7 @@ export default withTracker(() => {
 		},
 		fields: {
 			...DocumentsPage.projection,
-			parsed: 1,
+			//parsed: 1,
 		},
 	};
 	const handle = Meteor.subscribe('documents.unparsed', options);
