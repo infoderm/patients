@@ -6,6 +6,7 @@ import React from 'react' ;
 import { useTheme , makeStyles } from '@material-ui/core/styles';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { SnackbarProvider } from 'notistack';
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -67,44 +68,46 @@ function App ( props ) {
 	return (
 		<MuiThemeProvider theme={muitheme}>
 			<CssBaseline/>
-			<ErrorBoundary>
-				{ progress < 1 ?
-				<div className={classes.progressbarContainer}>
-				<CircularProgressbar
-					className={classes.progressbar}
-					maxValue={1}
-					value={progress}
-					text={`${(100 * progress) | 0}%`}
-					background
-					backgroundPadding={6}
-					styles={buildStyles({
-						backgroundColor: theme.palette.primary.main,
-						textColor: "#fff",
-						pathColor: "#fff",
-						trailColor: "transparent",
-					})}
-				/>
-				</div>
-				:
-				<div>
-					<CustomWholeWindowDropZone/>
-					<div className={classes.appFrame} style={{textTransform}}>
-						<Header
-							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							currentUser={currentUser}
-						/>
-						<NavigationDrawer
-							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							currentUser={currentUser}
-						/>
-						<Content
-							navigationDrawerIsOpen={navigationDrawerIsOpen}
-							currentUser={currentUser}
-						/>
+			<SnackbarProvider>
+				<ErrorBoundary>
+					{ progress < 1 ?
+					<div className={classes.progressbarContainer}>
+					<CircularProgressbar
+						className={classes.progressbar}
+						maxValue={1}
+						value={progress}
+						text={`${(100 * progress) | 0}%`}
+						background
+						backgroundPadding={6}
+						styles={buildStyles({
+							backgroundColor: theme.palette.primary.main,
+							textColor: "#fff",
+							pathColor: "#fff",
+							trailColor: "transparent",
+						})}
+					/>
 					</div>
-				</div>
-				}
-			</ErrorBoundary>
+					:
+					<div>
+						<CustomWholeWindowDropZone/>
+						<div className={classes.appFrame} style={{textTransform}}>
+							<Header
+								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								currentUser={currentUser}
+							/>
+							<NavigationDrawer
+								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								currentUser={currentUser}
+							/>
+							<Content
+								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								currentUser={currentUser}
+							/>
+						</div>
+					</div>
+					}
+				</ErrorBoundary>
+			</SnackbarProvider>
 		</MuiThemeProvider>
 	);
 }
