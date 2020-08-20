@@ -8,10 +8,10 @@ import {Link} from 'react-router-dom';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionActions from '@material-ui/core/AccordionActions';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -211,8 +211,8 @@ class DocumentCard extends React.Component {
 		} = this.state;
 
 		return (
-			<ExpansionPanel defaultExpanded={defaultExpanded}>
-				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+			<Accordion defaultExpanded={defaultExpanded}>
+				<AccordionSummary expandIcon={<ExpandMoreIcon/>}>
 					<div className={classes.chips}>
 						{ parsed ?
 							<Chip
@@ -329,8 +329,8 @@ class DocumentCard extends React.Component {
 							/>
 						}
 					</div>
-				</ExpansionPanelSummary>
-				<ExpansionPanelDetails>
+				</AccordionSummary>
+				<AccordionDetails>
 				  <List className={classes.list}>
 					{ (parsed && format === 'healthone' && kind === 'lab') &&
 						<ListItem>
@@ -369,9 +369,9 @@ class DocumentCard extends React.Component {
 						</ListItem>
 					}
 				  </List>
-				</ExpansionPanelDetails>
+				</AccordionDetails>
 				<Divider/>
-				<ExpansionPanelActions>
+				<AccordionActions>
 					{ versionsButton && !loadingVersions && versions.length >= 2 &&
 					<Button color="primary"
 						component={Link}
@@ -432,8 +432,8 @@ class DocumentCard extends React.Component {
 						onClose={e => this.setState({superdeleting: false})}
 						document={document}
 					/>
-				</ExpansionPanelActions>
-			</ExpansionPanel>
+				</AccordionActions>
+			</Accordion>
 		);
 	}
 }

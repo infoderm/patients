@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom'
 
 import { withStyles } from '@material-ui/core/styles';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionActions from '@material-ui/core/AccordionActions';
 
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
@@ -109,8 +109,8 @@ class AppointmentCard extends React.Component {
     } = this.state;
 
     return (
-      <ExpansionPanel defaultExpanded={defaultExpanded}>
-	<ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+      <Accordion defaultExpanded={defaultExpanded}>
+	<AccordionSummary expandIcon={<ExpandMoreIcon/>}>
 	  <div className={classes.chips}>
 	    <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
 	    <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
@@ -119,17 +119,17 @@ class AppointmentCard extends React.Component {
 	    <Chip avatar={(!loadingPatient && patient && patient.photo) ? <Avatar src={`data:image/png;base64,${patient.photo}`}/> : null} label={loadingPatient ? patientId : !patient ? 'Not found' : `${patient.lastname} ${patient.firstname}`} className={classes.patientchip} component={Link} to={`/patient/${patientId}`}/>
 	    }
 	  </div>
-	</ExpansionPanelSummary>
-	<ExpansionPanelDetails>
+	</AccordionSummary>
+	<AccordionDetails>
 	  <List>
 	    <ListItem>
 	      <Avatar><InfoIcon/></Avatar>
 	      <ListItemText primary="Motif du rendez-vous" secondary={reason}/>
 	    </ListItem>
 	  </List>
-	</ExpansionPanelDetails>
+	</AccordionDetails>
 	    <Divider/>
-	<ExpansionPanelActions>
+	<AccordionActions>
 	  <Button color="secondary" onClick={e => this.setState({ deleting: true})}>
 	    Delete<DeleteIcon/>
 	  </Button>
@@ -138,8 +138,8 @@ class AppointmentCard extends React.Component {
 	    onClose={e => this.setState({ deleting: false})}
 	    appointment={this.props.appointment}
 	  />
-	</ExpansionPanelActions>
-      </ExpansionPanel>
+	</AccordionActions>
+      </Accordion>
     );
   }
 

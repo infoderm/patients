@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionActions from '@material-ui/core/AccordionActions';
 
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
@@ -151,8 +151,8 @@ function ConsultationCard ( props ) {
   const owed = owes ? price - paid : 0 ;
 
   return (
-    <ExpansionPanel defaultExpanded={defaultExpanded}>
-      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+    <Accordion defaultExpanded={defaultExpanded}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
 	<div className={classes.chips}>
 	  <Chip label={dateFormat(datetime,'iii do MMMM yyyy')} className={classes.chip} component={Link} to={`/calendar/${dateFormat(datetime,'yyyy-MM-dd')}`}/>
 	  <Chip label={dateFormat(datetime,'hh:mma')} className={classes.chip}/>
@@ -180,8 +180,8 @@ function ConsultationCard ( props ) {
 	  }
 	  { owes && <Chip label={`Doit ${Currency.format(owed, {code: currency})}`} className={classes.debtchip}/> }
 	</div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      </AccordionSummary>
+      <AccordionDetails>
 	<List>
 	  <ListItem>
 	    <ListItemAvatar><Avatar><InfoIcon/></Avatar></ListItemAvatar>
@@ -248,9 +248,9 @@ function ConsultationCard ( props ) {
 	    />
 	  </ListItem> }
 	</List>
-      </ExpansionPanelDetails>
+      </AccordionDetails>
 	  <Divider/>
-      <ExpansionPanelActions>
+      <AccordionActions>
 	<Button color="primary" component={Link} to={`/edit/consultation/${_id}`}>
 	  Edit<EditIcon/>
 	</Button>
@@ -273,8 +273,8 @@ function ConsultationCard ( props ) {
 	{(loadingPatient || !patient) ? null :
 	<ConsultationDeletionDialog open={deleting} onClose={e => setDeleting(false)} consultation={props.consultation} patient={patient}/>
 	}
-      </ExpansionPanelActions>
-    </ExpansionPanel>
+      </AccordionActions>
+    </Accordion>
   );
 }
 
