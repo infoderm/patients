@@ -33,6 +33,17 @@ const styles = (theme) => ({
 		display: 'block',
 		margin: theme.spacing(1)
 	},
+	headerContent: {
+		overflow: 'hidden'
+	},
+	headerContentTitle: {
+		overflow: 'hidden',
+		textOverflow: 'ellipsis'
+	},
+	headerContentSubheader: {
+		overflow: 'hidden',
+		textOverflow: 'ellipsis'
+	},
 	thumbnail: {
 		height: 300
 	}
@@ -76,9 +87,21 @@ class AttachmentCard extends React.Component {
 
 		const {menu, editing, deleting} = this.state;
 
+		const headerClasses = {
+			content: classes.headerContent,
+			title: classes.headerContentTitle,
+			subheader: classes.headerContentSubheader
+		};
+
 		return (
-			<Card className={classes.card} component="a" href={link(attachment)}>
+			<Card
+				className={classes.card}
+				component="a"
+				href={link(attachment)}
+				target="_blank"
+			>
 				<CardHeader
+					classes={headerClasses}
 					avatar={
 						<Avatar>
 							{attachment.isImage ? (
