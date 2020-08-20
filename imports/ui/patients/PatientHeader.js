@@ -54,21 +54,21 @@ const PatientHeader = ({patientId, loading, patient}) => {
 				<TextField
 					inputProps={{readOnly: true}}
 					label="Lastname"
-					value={!patient ? '?' : patient.lastname}
+					value={!patient ? '?' : patient.lastname || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<TextField
 					inputProps={{readOnly: true}}
 					label="Firstname"
-					value={!patient ? '?' : patient.firstname}
+					value={!patient ? '?' : patient.firstname || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<TextField
 					inputProps={{readOnly: true}}
 					label="NISS"
-					value={!patient ? '?' : patient.niss}
+					value={!patient ? '?' : patient.niss || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
