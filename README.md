@@ -1,4 +1,4 @@
-# patients
+# patients [![Build](https://img.shields.io/travis/dermatodoc/patients/master.svg)](https://travis-ci.org/dermatodoc/patients/branches)
 
 > Patients meteor app
 
