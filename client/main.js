@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom'
 
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { LocalizationProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
 
 import WebFont from 'webfontloader';
@@ -25,11 +25,11 @@ import App from '../imports/ui/App.js';
 Meteor.startup(
   () => render(
     (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <LocalizationProvider dateAdapter={DateFnsUtils}>
         <BrowserRouter>
           <App/>
         </BrowserRouter>
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     ) ,
     document.getElementById('render-target')
   )
