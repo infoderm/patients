@@ -30,7 +30,7 @@ class PatientDetailsPicker extends React.Component {
 				onError(patientId);
 			}
 
-			return <div>Error: Patient not found.</div>;
+			return <div>Patient not found.</div>;
 		}
 
 		if (onLoad) {

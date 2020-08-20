@@ -196,7 +196,7 @@ class PatientPersonalInformation extends React.Component {
 		}
 
 		if (!patient) {
-			return <div>Error: Patient not found.</div>;
+			return <div>Patient not found.</div>;
 		}
 
 		const placeholder = !editing

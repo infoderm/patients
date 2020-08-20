@@ -19,7 +19,7 @@ const DocumentsForPatient = (props) => {
 	}
 
 	if (!patient) {
-		return <NoContent>Error: Patient not found.</NoContent>;
+		return <NoContent>Patient not found.</NoContent>;
 	}
 
 	return <DocumentsForPatientStatic {...rest} />;

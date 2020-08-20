@@ -17,7 +17,7 @@ const PatientPersonalInformation = ({loading, patient}) => {
 	}
 
 	if (!patient) {
-		return <NoContent>Error: Patient not found.</NoContent>;
+		return <NoContent>Patient not found.</NoContent>;
 	}
 
 	return <PatientPersonalInformationStatic patient={patient} />;
