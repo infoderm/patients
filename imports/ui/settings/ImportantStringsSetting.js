@@ -1,50 +1,27 @@
-import { withStyles } from '@material-ui/core/styles' ;
+import React from 'react';
 
-import React from 'react' ;
+import {onlyLowerCaseASCII} from '../../api/string.js';
 
-import { list } from '@aureooms/js-itertools' ;
-import { filter } from '@aureooms/js-itertools' ;
+// import {settings} from '../../api/settings.js';
 
-import { msToString , units } from '../../client/duration.js' ;
+import InputManySetting from './InputManySetting.js';
 
-import { onlyLowerCaseASCII } from '../../api/string.js';
+const KEY = 'important-strings';
 
-import { settings } from '../../api/settings.js' ;
-
-import InputManySetting from './InputManySetting.js' ;
-
-const durationUnits = units ;
-
-const styles = theme => ({
-
-}) ;
-
-const KEY = 'important-strings' ;
-
-class ImportantStringsSetting extends React.Component {
-
-	render ( ) {
-
-		const {
-			className ,
-		} = this.props ;
+export default class ImportantStringsSetting extends React.Component {
+	render() {
+		const {className} = this.props;
 
 		return (
-			<InputManySetting className={className}
+			<InputManySetting
+				className={className}
 				title="Important Strings"
 				label="Strings"
 				setting={KEY}
 				placeholder="Input important strings to highlight"
 				inputTransform={onlyLowerCaseASCII}
-				sort={items => items.sort()}
+				sort={(items) => items.sort()}
 			/>
-		) ;
+		);
 	}
-
 }
-
-let Component = ImportantStringsSetting;
-
-Component = withStyles( styles , { withTheme: true })(Component)
-
-export default Component ;

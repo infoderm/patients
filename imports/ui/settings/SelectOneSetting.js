@@ -1,54 +1,40 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
-import { withStyles } from '@material-ui/core/styles' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import Typography from '@material-ui/core/Typography' ;
+import Typography from '@material-ui/core/Typography';
 
-import { settings } from '../../api/settings.js' ;
+import {settings} from '../../api/settings.js';
 
-import ValuePicker from '../input/ValuePicker.js' ;
-
-const styles = theme => ({
-
-}) ;
+import ValuePicker from '../input/ValuePicker.js';
 
 class SelectOneSetting extends React.Component {
+	onChange = (e) => {
+		const {setting} = this.props;
 
-	onChange = e => {
+		const newValue = e.target.value;
 
-		const {
-			setting ,
-		} = this.props ;
-
-		const newValue = e.target.value ;
-
-		Meteor.call(settings.methods.update, setting, newValue, (err, res) => {
-
-			if ( err ) {
-				console.error(err) ;
+		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
+			if (err) {
+				console.error(err);
+			} else {
+				console.debug('Setting', setting, 'updated to', newValue);
 			}
-			else {
-				console.debug('Setting', setting, 'updated to', newValue) ;
-			}
+		});
+	};
 
-		}) ;
-
-	} ;
-
-	render ( ) {
-
+	render() {
 		const {
-			className ,
-			loading ,
-			value ,
-			options ,
-			optionToString ,
-			label ,
-			title ,
-		} = this.props ;
+			className,
+			loading,
+			value,
+			options,
+			optionToString,
+			label,
+			title
+		} = this.props;
 
 		return (
 			<div className={className}>
@@ -57,37 +43,32 @@ class SelectOneSetting extends React.Component {
 					readOnly={loading}
 					options={options}
 					optionToString={optionToString}
-					onChange={this.onChange}
 					label={label}
 					value={value}
+					onChange={this.onChange}
 				/>
 			</div>
-		) ;
+		);
 	}
 
+	static propTypes = {
+		title: PropTypes.string,
+		label: PropTypes.string,
+		options: PropTypes.array.isRequired,
+		optionToString: PropTypes.func
+	};
 }
 
-let Component = SelectOneSetting;
-
-Component.propTypes = {
-	title: PropTypes.string,
-	label: PropTypes.string,
-	options: PropTypes.array.isRequired,
-	optionToString: PropTypes.func,
-} ;
-
-Component = withStyles( styles , { withTheme: true })(Component)
-
-Component = withTracker(({setting}) => {
-	const handle = settings.subscribe(setting) ;
+const Component = withTracker(({setting}) => {
+	const handle = settings.subscribe(setting);
 	return {
-		loading : !handle.ready() ,
-		value : settings.get(setting) ,
-	} ;
-})(Component) ;
+		loading: !handle.ready(),
+		value: settings.get(setting)
+	};
+})(SelectOneSetting);
 
 Component.propTypes = {
-	setting: PropTypes.string.isRequired,
-} ;
+	setting: PropTypes.string.isRequired
+};
 
-export default Component ;
+export default Component;

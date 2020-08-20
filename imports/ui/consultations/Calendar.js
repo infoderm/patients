@@ -1,19 +1,18 @@
-import React, { useState } from 'react' ;
+import React, {useState} from 'react';
 
-import { useHistory } from 'react-router-dom' ;
+import {useHistory} from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-import { format } from 'date-fns' ;
+import {format} from 'date-fns';
 
-export default function Calendar ( ) {
-
-	const [day, setDay] = useState(format( new Date(), 'yyyy-MM-dd' ));
+export default function Calendar() {
+	const [day, setDay] = useState(format(new Date(), 'yyyy-MM-dd'));
 	const history = useHistory();
 
-	const onDayClick = e => {
-		const day = e.target.value ;
+	const onDayClick = (event) => {
+		const day = event.target.value;
 		setDay(day);
 		history.push(`calendar/${day}`);
 	};
@@ -21,11 +20,12 @@ export default function Calendar ( ) {
 	return (
 		<Grid container>
 			<Grid item xs={2}>
-				<TextField type="date"
+				<TextField
+					type="date"
 					s={2}
 					label="Day"
 					InputLabelProps={{
-					  shrink: true,
+						shrink: true
 					}}
 					value={day}
 					onChange={onDayClick}

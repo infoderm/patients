@@ -1,16 +1,18 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
-const withItem = (collection, singlePublication) => withTracker(({name}) => {
-	const handle = Meteor.subscribe(singlePublication, name);
-	if ( handle.ready() ) {
-		const item = collection.findOne({name});
-		return {
-			loading: false,
-			item,
-		} ;
-	}
-	else return { loading: true } ;
-}) ;
+const withItem = (collection, singlePublication) =>
+	withTracker(({name}) => {
+		const handle = Meteor.subscribe(singlePublication, name);
+		if (handle.ready()) {
+			const item = collection.findOne({name});
+			return {
+				loading: false,
+				item
+			};
+		}
 
-export default withItem ;
+		return {loading: true};
+	});
+
+export default withItem;

@@ -1,23 +1,18 @@
-import { Meteor } from 'meteor/meteor';
+import {Meteor} from 'meteor/meteor';
 import React from 'react';
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import classNames from 'classnames';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import {useTheme, makeStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import AddIcon from '@material-ui/icons/Add';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import BusinessIcon from '@material-ui/icons/Business';
 import BugReportIcon from '@material-ui/icons/BugReport';
@@ -38,292 +33,274 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import { settings } from '../api/settings.js';
+import {settings} from '../api/settings.js';
 
 const drawerWidthOpen = 240;
 
-const useStyles = makeStyles(
-  theme => ({
-    drawerPaper: {
-      position: 'fixed',
-      height: '100vh',
-      overflowY: 'scroll',
-    },
-    drawerOpen: {
-        width: drawerWidthOpen,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerClosed: {
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        overflowX: 'hidden',
-        width: theme.spacing(7) + 1,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9) + 1,
-        },
-    },
-    drawer: {
-      width: drawerWidthOpen,
-      flexShrink: 0,
-      whiteSpace: 'nowrap',
-    },
-    drawerHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: '0 8px',
-      ...theme.mixins.toolbar,
-    },
-  })
-);
+const useStyles = makeStyles((theme) => ({
+	drawerPaper: {
+		position: 'fixed',
+		height: '100vh',
+		overflowY: 'scroll'
+	},
+	drawerOpen: {
+		width: drawerWidthOpen,
+		transition: theme.transitions.create('width', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.enteringScreen
+		})
+	},
+	drawerClosed: {
+		transition: theme.transitions.create('width', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen
+		}),
+		overflowX: 'hidden',
+		width: theme.spacing(7) + 1,
+		[theme.breakpoints.up('sm')]: {
+			width: theme.spacing(9) + 1
+		}
+	},
+	drawer: {
+		width: drawerWidthOpen,
+		flexShrink: 0,
+		whiteSpace: 'nowrap'
+	},
+	drawerHeader: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		padding: '0 8px',
+		...theme.mixins.toolbar
+	}
+}));
 
-export default function NavigationDrawer ( { currentUser , navigationDrawerIsOpen } ) {
+export default function NavigationDrawer({
+	currentUser,
+	navigationDrawerIsOpen
+}) {
+	const theme = useTheme();
+	const classes = useStyles();
 
-  const theme = useTheme();
-  const classes = useStyles();
+	const toggleNavigationDrawerIsOpen = () => {
+		const setting = 'navigation-drawer-is-open';
 
-  const toggleNavigationDrawerIsOpen = e => {
+		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
 
-    const setting = 'navigation-drawer-is-open';
+		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
+			if (err) {
+				console.error(err);
+			} else {
+				console.debug('Setting', setting, 'updated to', newValue);
+			}
+		});
+	};
 
-    const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open' ;
+	const blocks = [
+		{
+			title: 'main',
 
-    Meteor.call(settings.methods.update, setting, newValue, (err, res) => {
-      if ( err ) console.error(err) ;
-      else console.debug('Setting', setting, 'updated to', newValue) ;
-    }) ;
+			links: [
+				{
+					to: '/consultations',
+					icon: <FolderSharedIcon />,
+					title: 'Consultations'
+				},
 
-  } ;
+				{
+					to: '/documents',
+					icon: <LibraryBooksIcon />,
+					title: 'Documents'
+				},
 
-  const blocks = [
+				{
+					to: '/calendar',
+					icon: <TodayIcon />,
+					title: 'Calendar'
+				},
 
-    {
+				{
+					// To: "/appointments" ,
+					to: '/calendar/month/current',
+					icon: <AccessTimeIcon />,
+					title: 'Appointments',
+					disabled: true
+				},
 
-      title : 'main' ,
+				{
+					to: '/import',
+					icon: <CloudUploadIcon />,
+					title: 'Import'
+				}
+			]
+		},
 
-      links : [
+		{
+			title: 'management',
 
-        {
-          to: '/consultations' ,
-          icon: <FolderSharedIcon/> ,
-          title: "Consultations"
-        } ,
+			links: [
+				{
+					to: '/books',
+					icon: <BookIcon />,
+					title: 'Carnets'
+				},
 
-        {
-          to: "/documents" ,
-          icon: <LibraryBooksIcon/> ,
-          title: "Documents" ,
-        } ,
+				{
+					to: '/wires',
+					icon: <PaymentIcon />,
+					title: 'Virements'
+				},
 
+				{
+					to: '/third-party',
+					icon: <AccountBalanceWalletIcon />,
+					title: 'Tiers Payant'
+				},
 
-        {
-          to: "/calendar" ,
-          icon: <TodayIcon/> ,
-          title: "Calendar" ,
-        } ,
+				{
+					to: '/unpaid',
+					icon: <MoneyOffIcon />,
+					title: 'Unpaid'
+				},
 
-        {
-          //to: "/appointments" ,
-          to: '/calendar/month/current' ,
-          icon: <AccessTimeIcon/> ,
-          title: "Appointments" ,
-          disabled: true ,
-        } ,
+				{
+					to: '/sepa',
+					icon: <AccountBalanceIcon />,
+					title: 'SEPA'
+				},
 
-        {
-          to: '/import' ,
-          icon: <CloudUploadIcon/> ,
-          title: 'Import' ,
-        } ,
+				{
+					to: '/stats',
+					icon: <ShowChartIcon />,
+					title: 'Stats',
+					disabled: true
+				}
+			]
+		},
 
-      ] ,
+		{
+			title: 'issues',
 
-    } ,
+			links: [
+				{
+					to: '/issues',
+					icon: <ReportProblemIcon />,
+					title: 'Issues'
+				},
 
-    {
+				{
+					to: '/merge',
+					icon: <MergeTypeIcon />,
+					title: 'Merge'
+				}
+			]
+		},
 
-      title: 'management' ,
+		{
+			title: 'tags',
 
-      links: [
+			links: [
+				{
+					to: '/doctors',
+					icon: <SupervisorAccountIcon />,
+					title: 'Doctors'
+				},
 
-        {
-          to: "/books" ,
-          icon: <BookIcon/> ,
-          title: "Carnets" ,
-        } ,
+				{
+					to: '/insurances',
+					icon: <BusinessIcon />,
+					title: 'Insurances'
+				},
 
-        {
-          to: "/wires" ,
-          icon: <PaymentIcon/> ,
-          title: "Virements" ,
-        } ,
+				{
+					to: '/allergies',
+					icon: <BugReportIcon />,
+					title: 'Allergies'
+				}
+			]
+		},
 
-        {
-          to: "/third-party" ,
-          icon: <AccountBalanceWalletIcon/> ,
-          title: "Tiers Payant" ,
-        } ,
+		{
+			title: 'external',
 
-        {
-          to: "/unpaid" ,
-          icon: <MoneyOffIcon/> ,
-          title: "Unpaid" ,
-        } ,
+			links: [
+				{
+					to: '/drugs',
+					icon: <LocalPharmacyIcon />,
+					title: 'Drugs',
+					disabled: true
+				},
 
-        {
-          to: "/sepa" ,
-          icon: <AccountBalanceIcon/> ,
-          title: "SEPA" ,
-        } ,
+				{
+					to: '/hospitals',
+					icon: <LocalHospitalIcon />,
+					title: 'Hospitals',
+					disabled: true
+				}
+			]
+		},
 
-        {
-          to: "/stats" ,
-          icon: <ShowChartIcon/> ,
-          title: "Stats" ,
-          disabled: true ,
-        } ,
+		{
+			title: 'app',
 
-      ] ,
+			links: [
+				{
+					to: '/settings',
+					icon: <SettingsIcon />,
+					title: 'Settings'
+				}
+			]
+		}
+	];
 
-    } ,
+	return (
+		<Drawer
+			open={navigationDrawerIsOpen === 'open'}
+			variant="permanent"
+			className={classNames({
+				[classes.drawerOpen]: navigationDrawerIsOpen === 'open',
+				[classes.drawerClosed]: navigationDrawerIsOpen === 'closed'
+			})}
+			classes={{
+				paper: classNames({
+					[classes.drawerOpen]: navigationDrawerIsOpen === 'open',
+					[classes.drawerClosed]: navigationDrawerIsOpen === 'closed'
+				})
+			}}
+			anchor="left"
+		>
+			<div className={classes.drawerHeader}>
+				<IconButton onClick={toggleNavigationDrawerIsOpen}>
+					{theme.direction === 'rtl' ? (
+						<ChevronRightIcon />
+					) : (
+						<ChevronLeftIcon />
+					)}
+				</IconButton>
+			</div>
+			<Divider />
 
-    {
-      title: 'issues' ,
-
-      links: [
-
-        {
-          to: "/issues" ,
-          icon: <ReportProblemIcon/> ,
-          title: "Issues" ,
-        } ,
-
-        {
-          to: "/merge" ,
-          icon: <MergeTypeIcon/> ,
-          title: "Merge" ,
-        } ,
-
-      ] ,
-
-    } ,
-
-    {
-
-      title: 'tags' ,
-
-      links: [
-
-        {
-          to: "/doctors" ,
-          icon: <SupervisorAccountIcon/> ,
-          title: "Doctors" ,
-        } ,
-
-        {
-          to: "/insurances" ,
-          icon: <BusinessIcon/> ,
-          title: "Insurances" ,
-        } ,
-
-        {
-          to: "/allergies" ,
-          icon: <BugReportIcon/> ,
-          title: "Allergies" ,
-        } ,
-
-      ] ,
-
-    } ,
-
-    {
-
-      title: 'external' ,
-
-      links: [
-        {
-          to: "/drugs" ,
-          icon: <LocalPharmacyIcon/> ,
-          title: "Drugs" ,
-          disabled: true ,
-        } ,
-
-        {
-          to: "/hospitals" ,
-          icon: <LocalHospitalIcon/> ,
-          title: "Hospitals" ,
-          disabled: true ,
-        } ,
-
-      ] ,
-
-    } ,
-
-    {
-
-      title: 'app' ,
-
-      links: [
-
-        {
-          to: "/settings" ,
-          icon: <SettingsIcon/> ,
-          title: "Settings" ,
-        } ,
-
-      ] ,
-
-    } ,
-
-  ] ;
-
-  return (
-    <Drawer
-      open={navigationDrawerIsOpen === 'open'}
-      variant="permanent"
-      className={
-        classNames({
-          [classes.drawerOpen]: navigationDrawerIsOpen === 'open',
-          [classes.drawerClosed]: navigationDrawerIsOpen === 'closed',
-        })
-      }
-      classes={{
-        paper: classNames({
-          [classes.drawerOpen]: navigationDrawerIsOpen === 'open',
-          [classes.drawerClosed]: navigationDrawerIsOpen === 'closed',
-        })
-      }}
-      anchor="left"
-    >
-      <div className={classes.drawerHeader}>
-          <IconButton onClick={toggleNavigationDrawerIsOpen}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-      </div>
-      <Divider/>
-
-      {
-        blocks.map( ({ title , links }) => (
-        <div key={title}>
-          <List>
-            {
-              links.map( link => (
-                <ListItem key={link.to} disabled={!currentUser || link.disabled} button component={Link} to={link.to}>
-                  <ListItemIcon>{link.icon}</ListItemIcon>
-                  { navigationDrawerIsOpen === 'open' ? <ListItemText primary={link.title}/> : null }
-                </ListItem>
-              ) )
-            }
-          </List>
-          <Divider/>
-        </div>
-        ) )
-      }
-    </Drawer>
-    );
+			{blocks.map(({title, links}) => (
+				<div key={title}>
+					<List>
+						{links.map((link) => (
+							<ListItem
+								key={link.to}
+								button
+								disabled={!currentUser || link.disabled}
+								component={Link}
+								to={link.to}
+							>
+								<ListItemIcon>{link.icon}</ListItemIcon>
+								{navigationDrawerIsOpen === 'open' ? (
+									<ListItemText primary={link.title} />
+								) : null}
+							</ListItem>
+						))}
+					</List>
+					<Divider />
+				</div>
+			))}
+		</Drawer>
+	);
 }

@@ -1,29 +1,30 @@
-import React from 'react' ;
+import React from 'react';
 import ReactLoading from 'react-loading';
 
-import { withStyles } from '@material-ui/core/styles';
+import {useTheme, makeStyles} from '@material-ui/core/styles';
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
 	loadingAnimation: {
-		margin: 'auto',
-	},
-});
+		margin: 'auto'
+	}
+}));
 
-function Loading ( { classes , theme , ...props } ) {
+const Loading = (props) => {
+	const theme = useTheme();
+	const classes = useStyles();
+	return (
+		<div>
+			<ReactLoading
+				className={classes.loadingAnimation}
+				type="bubbles"
+				color={theme.palette.primary.main}
+				height={200}
+				width={400}
+				delay={250}
+				{...props}
+			/>
+		</div>
+	);
+};
 
-  return (
-    <div>
-      <ReactLoading
-	className={classes.loadingAnimation}
-	type="bubbles"
-	color={theme.palette.primary.main}
-	height={200}
-	width={400}
-	delay={250}
-	{...props}
-      />
-    </div>
-  );
-}
-
-export default withStyles(styles, { withTheme: true })(Loading) ;
+export default Loading;

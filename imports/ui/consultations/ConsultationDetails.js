@@ -1,47 +1,47 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react' ;
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 
-import { Consultations } from '../../api/consultations.js';
+import {Consultations} from '../../api/consultations.js';
 
-import Loading from '../navigation/Loading.js' ;
-import NoContent from '../navigation/NoContent.js' ;
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
 
 import ConsultationCard from './ConsultationCard.js';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: theme.spacing(3),
-	},
-});
+		padding: theme.spacing(3)
+	}
+}));
 
-function ConsultationDetails ( { classes, theme, loading, consultation } ) {
+const ConsultationDetails = ({loading, consultation}) => {
+	const classes = useStyles();
 
-	if (loading) return <Loading/>;
-	if (!consultation) return <NoContent>Error: Consultation not found.</NoContent>;
+	if (loading) {
+		return <Loading />;
+	}
+
+	if (!consultation) {
+		return <NoContent>Error: Consultation not found.</NoContent>;
+	}
 
 	return (
 		<div className={classes.container}>
-			<ConsultationCard consultation={consultation} defaultExpanded={true}/>
+			<ConsultationCard defaultExpanded consultation={consultation} />
 		</div>
 	);
-
-}
-
-ConsultationDetails.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
 };
 
 export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('consultation', _id);
-	if ( handle.ready() ) {
+	if (handle.ready()) {
 		const consultation = Consultations.findOne(_id);
-		return { loading: false, consultation } ;
+		return {loading: false, consultation};
 	}
-	else return { loading: true } ;
-}) ( withStyles(styles, { withTheme: true })(ConsultationDetails) );
+
+	return {loading: true};
+})(ConsultationDetails);

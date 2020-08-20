@@ -1,39 +1,41 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
-import { Drugs } from '../../api/drugs.js';
+import {Drugs} from '../../api/drugs.js';
 
-const styles = theme => ({
+const styles = (theme) => ({
 	container: {
-		padding: theme.spacing(3),
-	},
+		padding: theme.spacing(3)
+	}
 });
 
 class DrugDetails extends React.Component {
-
-	constructor ( props ) {
+	constructor(props) {
 		super(props);
 		this.state = {
-			drug: props.drug,
+			drug: props.drug
 		};
 	}
 
-	UNSAFE_componentWillReceiveProps ( nextProps ) {
-		this.setState({ drug: nextProps.drug });
+	UNSAFE_componentWillReceiveProps(nextProps) {
+		this.setState({drug: nextProps.drug});
 	}
 
+	render() {
+		const {classes, loading} = this.props;
+		const {drug} = this.state;
 
-	render ( ) {
+		if (loading) {
+			return <div>Loading...</div>;
+		}
 
-		const { classes, theme, loading } = this.props ;
-		const { drug } = this.state;
-
-		if (loading) return <div>Loading...</div>;
-		if (!drug) return <div>Error: Drug not found.</div>;
+		if (!drug) {
+			return <div>Error: Drug not found.</div>;
+		}
 
 		return (
 			<div>
@@ -43,20 +45,19 @@ class DrugDetails extends React.Component {
 			</div>
 		);
 	}
-
 }
 
 DrugDetails.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired
 };
 
 export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('drug', _id);
-	if ( handle.ready() ) {
+	if (handle.ready()) {
 		const drug = Drugs.findOne(_id);
-		return { loading: false, drug } ;
+		return {loading: false, drug};
 	}
-	else return { loading: true } ;
-}) ( withStyles(styles, { withTheme: true })(DrugDetails) );
+
+	return {loading: true};
+})(withStyles(styles, {withTheme: true})(DrugDetails));

@@ -1,11 +1,10 @@
-import faker from 'faker' ;
+import faker from 'faker';
 
-import { Consultations } from './consultations.js' ;
+import {Consultations} from './consultations.js';
 
-export { Consultations } ;
+export {Consultations};
 
 Factory.define('consultation', Consultations, {
-
 	patientId: Factory.get('patient'),
 	datetime: () => faker.date.past(20),
 	reason: () => faker.lorem.sentence(),
@@ -20,6 +19,5 @@ Factory.define('consultation', Consultations, {
 	paid: () => 0,
 	book: () => `${faker.random.number(100)}`,
 
-	isDone: () => true,
-
+	isDone: () => true
 });

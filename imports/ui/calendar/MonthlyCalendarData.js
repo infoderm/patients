@@ -1,98 +1,80 @@
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+import {withStyles} from '@material-ui/core/styles';
 
-import startOfDay from 'date-fns/startOfDay';
-import startOfWeek from 'date-fns/startOfWeek';
-import endOfWeek from 'date-fns/endOfWeek';
-import startOfMonth from 'date-fns/startOfMonth';
-import endOfMonth from 'date-fns/endOfMonth';
 import differenceInDays from 'date-fns/differenceInDays';
 import addDays from 'date-fns/addDays';
-import isSameDay from 'date-fns/isSameDay';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import dateFormat from 'date-fns/format';
 
-import {
-	list,
-	take,
-	map,
-	range,
-	enumerate,
-} from '@aureooms/js-itertools';
+import {list, take, range, enumerate} from '@aureooms/js-itertools';
 
 import calendarRanges from './ranges.js';
 
 // /calendar/month/2018-10
 
-const styles = theme => ({
+const styles = (theme) => ({
 	button: {
-		margin: theme.spacing(1),
+		margin: theme.spacing(1)
 	},
 	leftIcon: {
-		marginRight: theme.spacing(1),
+		marginRight: theme.spacing(1)
 	},
 	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
+		marginLeft: theme.spacing(1)
+	}
 });
 
-
-function ColumnHeader ( { classes , day , row , col } ) {
+const ColumnHeader = ({classes, day, col}) => {
 	return (
 		<div
-			className={classNames(classes.dayBox,{
+			className={classNames(classes.dayBox, {
 				[classes.columnHeader]: true,
-				[classes[`col${col}`]]: true,
+				[classes[`col${col}`]]: true
 			})}
 		>
 			{dateFormat(day, 'iiii')}
 		</div>
-	) ;
-}
+	);
+};
 
-function DayBox ( { classes , day , row , col , onSlotClick } ) {
+const DayBox = ({classes, day, row, col, onSlotClick}) => {
 	return (
 		<div
-			className={classNames(classes.dayBox,{
+			className={classNames(classes.dayBox, {
 				[classes[`col${col}`]]: true,
-				[classes[`row${row}`]]: true,
+				[classes[`row${row}`]]: true
 			})}
-			onClick={e => onSlotClick && onSlotClick(day)}
-		>
-		</div>
-	) ;
-}
+			onClick={() => onSlotClick && onSlotClick(day)}
+		/>
+	);
+};
 
-function* generateDays ( begin , end ) {
-	let current = begin ;
-	while ( current < end ) {
+function* generateDays(begin, end) {
+	let current = begin;
+	while (current < end) {
 		yield current;
 		current = addDays(current, 1);
 	}
 }
 
-function* generateDaysProps ( rowSize , begin , end ) {
+function* generateDaysProps(rowSize, begin, end) {
 	const days = generateDays(begin, end);
-	for ( const [ith, day] of enumerate(days)) {
+	for (const [ith, day] of enumerate(days)) {
 		const col = (ith % rowSize) + 1;
-		const row = ((ith - col + 1) / rowSize) + 1;
+		const row = (ith - col + 1) / rowSize + 1;
 		yield {
 			day,
 			row,
-			col,
-		}
+			col
+		};
 	}
 }
 
-function createOccupancyMap ( begin , end ) {
-
+function createOccupancyMap(begin, end) {
 	const occupancy = new Map();
 
 	for (const day of generateDays(begin, end)) {
@@ -100,14 +82,16 @@ function createOccupancyMap ( begin , end ) {
 	}
 
 	return occupancy;
-
 }
 
-function* generateEventProps ( occupancy , begin , end , maxLines , events ) {
-
-	for ( const event of events ) {
-
-		if ((event.end && isBefore(event.end, begin)) || isAfter(event.begin, end)) continue ;
+function* generateEventProps(occupancy, begin, end, maxLines, events) {
+	for (const event of events) {
+		if (
+			(event.end && isBefore(event.end, begin)) ||
+			isAfter(event.begin, end)
+		) {
+			continue;
+		}
 
 		const day = dateFormat(event.begin, 'yyyyMMdd');
 
@@ -117,168 +101,133 @@ function* generateEventProps ( occupancy , begin , end , maxLines , events ) {
 			yield {
 				event,
 				day,
-				slot,
+				slot
 			};
 		}
 
 		occupancy.set(day, slot);
-
 	}
-
 }
 
-function* generateMoreProps ( occupancy , begin , end , maxLines ) {
-	for ( const day of generateDays(begin, end) ) {
+function* generateMoreProps(occupancy, begin, end, maxLines) {
+	for (const day of generateDays(begin, end)) {
 		const key = dateFormat(day, 'yyyyMMdd');
 		const count = occupancy.get(key) - maxLines;
-		if ( count > 0 ) yield {
-			day: key,
-			count,
-		} ;
+		if (count > 0) {
+			yield {
+				day: key,
+				count
+			};
+		}
 	}
 }
 
-function EventFragment ( props ) {
-	const {
-		className,
-		event,
-	} = props ;
+const EventFragment = (props) => {
+	const {className, event} = props;
 
 	return (
 		<div className={className}>
 			{dateFormat(event.begin, 'HH:mm')} {event.title}
 		</div>
-	) ;
-}
+	);
+};
 
-function More ( props ) {
+const More = (props) => {
+	const {className, count} = props;
 
-	const {
-		className,
-		count,
-	} = props ;
-
-	return (
-		<div className={className}>
-			{count} more
-		</div>
-	) ;
-
-}
+	return <div className={className}>{count} more</div>;
+};
 
 class MonthlyCalendarDataGrid extends React.Component {
-
-	constructor ( props ) {
-		super(props);
-	}
-
-	render ( ) {
-
-		const {
-			classes ,
-			days ,
-			events ,
-			mores ,
-			DayHeader ,
-			onSlotClick ,
-			onEventClick ,
-		} = this.props ;
+	render() {
+		const {classes, days, events, mores, DayHeader, onSlotClick} = this.props;
 
 		return (
 			<div>
 				<div className={classes.header}>
 					{list(take(days, 7)).map((props, key) => (
-						<ColumnHeader
-							classes={classes}
-							key={key}
-							{...props}
-						/>
+						<ColumnHeader key={key} classes={classes} {...props} />
 					))}
 				</div>
 				<div className={classes.grid}>
 					{days.map((props, key) => (
 						<DayBox
-							classes={classes}
 							key={key}
+							classes={classes}
 							{...props}
 							onSlotClick={onSlotClick}
 						/>
 					))}
 					{days.map((props, key) => (
 						<DayHeader
-							className={classNames(classes.dayHeader,{
-								[classes[`col${props.col}`]]: true,
-								[classes[`row${props.row}`]]: true,
-							})}
 							key={key}
+							className={classNames(classes.dayHeader, {
+								[classes[`col${props.col}`]]: true,
+								[classes[`row${props.row}`]]: true
+							})}
 							{...props}
 						/>
 					))}
 					{events.map((props, key) => (
 						<EventFragment
-							className={classNames(classes.event,{
-								[classes[`day${props.day}slot${props.slot}`]]: true,
-							})}
 							key={key}
+							className={classNames(classes.event, {
+								[classes[`day${props.day}slot${props.slot}`]]: true
+							})}
 							{...props}
 						/>
 					))}
 					{mores.map((props, key) => (
 						<More
-							className={classNames(classes.more,{
-								[classes[`day${props.day}more`]]: true,
-							})}
 							key={key}
+							className={classNames(classes.more, {
+								[classes[`day${props.day}more`]]: true
+							})}
 							{...props}
 						/>
 					))}
 				</div>
 			</div>
-		) ;
-
+		);
 	}
-
 }
 
 class MonthlyCalendarData extends React.Component {
-
-	constructor ( props ) {
-		super(props);
-	}
-
-	render ( ) {
-
+	render() {
 		const {
-			classes ,
-			events ,
-			year ,
-			month ,
-			weekStartsOn ,
+			events,
+			year,
+			month,
+			weekStartsOn,
 			lineHeight,
 			maxLines,
 			DayHeader,
 			onSlotClick,
-			onEventClick,
-		} = this.props ;
+			onEventClick
+		} = this.props;
 
 		const weekOptions = {
-			weekStartsOn ,
-		} ;
+			weekStartsOn
+		};
 
 		const [begin, end] = calendarRanges.monthly(year, month, weekOptions);
 
-		const days = differenceInDays(end, begin); // should be a multiple of 7
+		const days = differenceInDays(end, begin); // Should be a multiple of 7
 
-		const rowSize = 7 ;
-		const nrows = days / rowSize ;
+		const rowSize = 7;
+		const nrows = days / rowSize;
 
-		const daysProps = [ ...generateDaysProps(rowSize, begin, end)];
+		const daysProps = [...generateDaysProps(rowSize, begin, end)];
 
 		const occupancy = createOccupancyMap(begin, end);
-		const eventProps = [ ...generateEventProps(occupancy, begin, end, maxLines - 2, events)];
-		const moreProps = [ ...generateMoreProps(occupancy, begin, end, maxLines - 2)];
+		const eventProps = [
+			...generateEventProps(occupancy, begin, end, maxLines - 2, events)
+		];
+		const moreProps = [
+			...generateMoreProps(occupancy, begin, end, maxLines - 2)
+		];
 
-		const headerHeight = 2 ;
+		const headerHeight = 2;
 
 		const gridStyles = {
 			header: {
@@ -287,33 +236,33 @@ class MonthlyCalendarData extends React.Component {
 				gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
 				backgroundColor: '#aaa',
 				border: '1px solid #aaa',
-				gridGap: '1px',
-			} ,
+				gridGap: '1px'
+			},
 			columnHeader: {
 				backgroundColor: '#fff',
 				padding: '5px 5px',
 				gridColumnEnd: 'span 1',
-				gridRowEnd: `span ${headerHeight}`,
-			} ,
+				gridRowEnd: `span ${headerHeight}`
+			},
 			grid: {
 				display: 'grid',
 				gridTemplateColumns: 'repeat(7, 1fr)',
 				gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
 				backgroundColor: '#aaa',
 				border: '1px solid #aaa',
-				gridGap: '1px',
+				gridGap: '1px'
 			},
 			dayHeader: {
 				padding: '5px 10px',
 				gridColumnEnd: 'span 1',
-				gridRowEnd: 'span 1',
+				gridRowEnd: 'span 1'
 			},
 			dayBox: {
 				backgroundColor: '#fff',
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${maxLines}`,
 				'&:hover': {
-					backgroundColor: '#ddd',
+					backgroundColor: '#ddd'
 				}
 			},
 			event: {
@@ -322,7 +271,7 @@ class MonthlyCalendarData extends React.Component {
 				textOverflow: 'ellipsis',
 				whiteSpace: 'nowrap',
 				overflow: 'hidden',
-				paddingLeft: '10px',
+				paddingLeft: '10px'
 			},
 			more: {
 				gridColumnEnd: 'span 1',
@@ -331,37 +280,40 @@ class MonthlyCalendarData extends React.Component {
 				whiteSpace: 'nowrap',
 				overflow: 'hidden',
 				paddingLeft: '10px',
-				fontWeight: 'bold',
-			},
-		} ;
+				fontWeight: 'bold'
+			}
+		};
 
-		for ( const i of range(1, rowSize+1) ) {
+		for (const i of range(1, rowSize + 1)) {
 			gridStyles[`col${i}`] = {
-				gridColumnStart: i,
-			} ;
+				gridColumnStart: i
+			};
 		}
 
-		for ( const i of range(1, nrows+1) ) {
+		for (const i of range(1, nrows + 1)) {
 			gridStyles[`row${i}`] = {
-				gridRowStart: (i-1) * maxLines + 1,
-			} ;
+				gridRowStart: (i - 1) * maxLines + 1
+			};
 		}
 
-		for ( const { day , row , col } of daysProps ) {
+		for (const {day, row, col} of daysProps) {
 			const dayId = dateFormat(day, 'yyyyMMdd');
-			for ( const j of range(1, maxLines) ) {
+			for (const j of range(1, maxLines)) {
 				gridStyles[`day${dayId}slot${j}`] = {
 					gridColumnStart: col,
-					gridRowStart: (row-1) * maxLines + 1 + j,
-				} ;
+					gridRowStart: (row - 1) * maxLines + 1 + j
+				};
 			}
+
 			gridStyles[`day${dayId}more`] = {
 				gridColumnStart: col,
-				gridRowStart: row * maxLines,
-			} ;
+				gridRowStart: row * maxLines
+			};
 		}
 
-		const Grid = withStyles(gridStyles, { withTheme: true })(MonthlyCalendarDataGrid) ;
+		const Grid = withStyles(gridStyles, {withTheme: true})(
+			MonthlyCalendarDataGrid
+		);
 
 		return (
 			<Grid
@@ -372,33 +324,31 @@ class MonthlyCalendarData extends React.Component {
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
 			/>
-		) ;
+		);
 
-			//<div>
-				//<div>
-					//<div>begin: {begin.toString()}</div>
-					//<div>end: {end.toString()}</div>
-					//<div>days: {days.toString()}</div>
-					//<div>nrows: {nrows.toString()}</div>
-				//</div>
-			//</div>
-
+		// <div>
+		// <div>
+		// <div>begin: {begin.toString()}</div>
+		// <div>end: {end.toString()}</div>
+		// <div>days: {days.toString()}</div>
+		// <div>nrows: {nrows.toString()}</div>
+		// </div>
+		// </div>
 	}
-
 }
 
 MonthlyCalendarData.defaultProps = {
 	lineHeight: '25px',
-	maxLines: 6,
-} ;
+	maxLines: 6
+};
 
 MonthlyCalendarData.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
 	year: PropTypes.number.isRequired,
 	month: PropTypes.number.isRequired,
 	events: PropTypes.array.isRequired,
 	weekStartsOn: PropTypes.number,
-} ;
+	maxLines: PropTypes.number,
+	lineHeight: PropTypes.any
+};
 
-export default withStyles(styles, { withTheme: true })(MonthlyCalendarData);
+export default withStyles(styles, {withTheme: true})(MonthlyCalendarData);

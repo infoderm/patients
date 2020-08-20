@@ -1,38 +1,33 @@
-import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
+import {Meteor} from 'meteor/meteor';
+import {check} from 'meteor/check';
 
-import createTagCollection from './createTagCollection.js' ;
+import createTagCollection from './createTagCollection.js';
 
-const { Collection : Allergies , operations : allergies } = createTagCollection(
-  {
-    collection : 'allergies' ,
-    publication : 'allergies' ,
-    singlePublication : 'allergy' ,
-    parentPublication : 'patients-of-allergy' ,
-    key : 'allergies' ,
-  }
-) ;
+const {Collection: Allergies, operations: allergies} = createTagCollection({
+	collection: 'allergies',
+	publication: 'allergies',
+	singlePublication: 'allergy',
+	parentPublication: 'patients-of-allergy',
+	key: 'allergies'
+});
 
-export {
-  Allergies ,
-  allergies ,
-} ;
+export {Allergies, allergies};
 
 Meteor.methods({
+	'allergies.changeColor'(tagId, newColor) {
+		check(tagId, String);
+		check(newColor, String);
 
-  'allergies.changeColor': function (tagId, newColor){
+		const tag = Allergies.findOne(tagId);
+		if (!tag) {
+			throw new Meteor.Error('not-authorized');
+		}
 
-    check(tagId, String);
-    check(newColor, String);
+		const owner = tag.owner;
+		if (owner !== this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
 
-    const tag = Allergies.findOne(tagId);
-    if (!tag) throw new Meteor.Error('not-authorized');
-
-    const owner = tag.owner ;
-    if (owner !== this.userId) throw new Meteor.Error('not-authorized');
-
-    return Allergies.update( tagId, { $set: { color: newColor } } ) ;
-
-  } ,
-
+		return Allergies.update(tagId, {$set: {color: newColor}});
+	}
 });

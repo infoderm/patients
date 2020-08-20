@@ -1,19 +1,12 @@
-import React from 'react' ;
+import React from 'react';
 
-import SelectOneSetting from './SelectOneSetting.js' ;
+import SelectOneSetting from './SelectOneSetting.js';
 
 export default class TextTransformSetting extends React.Component {
+	render() {
+		const {className} = this.props;
 
-	render ( ) {
-
-		const {
-			className ,
-		} = this.props ;
-
-		const options = [
-			'none' ,
-			'uppercase' ,
-		] ;
+		const options = ['none', 'uppercase'];
 
 		return (
 			<SelectOneSetting
@@ -23,7 +16,6 @@ export default class TextTransformSetting extends React.Component {
 				setting="text-transform"
 				options={options}
 			/>
-		) ;
+		);
 	}
-
 }

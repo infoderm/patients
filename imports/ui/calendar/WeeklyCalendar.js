@@ -1,44 +1,27 @@
-import React from 'react' ;
+// import React from 'react';
 
 // /calendar/week/2018-47
 
-class Calendar extends React.Component {
+// class Calendar extends React.Component {
+// constructor(props) {}
 
-	constructor ( props ) {
+// handleNext() {}
 
-	}
+// handlePrev() {}
 
-	handleNext ( ) {
+// render() {
+// const {classes} = this.props;
 
-	}
+// return (
+// <div>
+// <WeeklyCalendarData />
+// </div>
+// );
+// }
+// }
 
-	handlePrev ( ) {
+// Calendar.defaultProps = {};
 
-	}
-
-
-	render ( ) {
-		const {
-			classes ,
-		} = this.props ;
-
-		return (
-			<div>
-				<WeeklyCalendarData
-				/>
-			</div>
-		) ;
-	}
-
-}
-
-Calendar.defaultProps = {
-
-} ;
-
-const CalendarFromMatch = ( { match } ) => {
-
-	return <Calendar {...match}/> ;
-
-} ;
-
+// const CalendarFromMatch = ({match}) => {
+// return <Calendar {...match} />;
+// };

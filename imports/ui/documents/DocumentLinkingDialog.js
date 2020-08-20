@@ -1,10 +1,10 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '../modal/OptimizedDialog.js';
@@ -16,113 +16,115 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import { Patients , patients } from '../../api/patients.js';
+import {Patients, patients} from '../../api/patients.js';
 
 import SetPicker from '../input/SetPicker.js';
 
-const styles = theme => ({
-  rightIcon: {
-    marginLeft: theme.spacing(1),
-  },
-  dialogPaper: {
-      overflow: "visible"
-  },
-}) ;
+const styles = (theme) => ({
+	rightIcon: {
+		marginLeft: theme.spacing(1)
+	},
+	dialogPaper: {
+		overflow: 'visible'
+	}
+});
 
 class DocumentLinkingDialog extends React.Component {
-
-  constructor ( props ) {
-    super( props ) ;
-    this.state = {
-      patient: props.existingLink ? [ props.existingLink ] : [],
-    };
-  }
-
-  render () {
-
-    const { open , onClose , document, classes, allPatients } = this.props ;
-
-    const { patient } = this.state;
-
-    const linkThisDocument = event => {
-      event.preventDefault();
-      const documentId = document._id;
-      const patientId = patient[0]._id;
-      Meteor.call('documents.link', documentId, patientId, (err, res) => {
-	if ( err ) console.error( err ) ;
-	else {
-	  console.log(`Document #${documentId} linked to patient #${patientId}.`)
-	  onClose();
+	constructor(props) {
+		super(props);
+		this.state = {
+			patient: props.existingLink ? [props.existingLink] : []
+		};
 	}
-      });
-    };
 
-    return (
-	<Dialog
-	  classes={{paper: classes.dialogPaper}}
-	  open={open}
-	  onClose={onClose}
-	  component="form"
-	  aria-labelledby="document-linking-dialog-title"
-	>
-	  <DialogTitle id="document-linking-dialog-title">Link document {document._id.toString()}</DialogTitle>
-	  <DialogContent
-	    className={classes.dialogPaper}
-	  >
-	    <DialogContentText>
-	      If you do not want to link this document, click cancel.
-	      If you really want to link this document,
-	      enter the name of the patient to link it to
-	      and
-	      click the link button.
-	    </DialogContentText>
-	    <SetPicker
-	      suggestions={allPatients}
-	      itemToKey={patients.toKey}
-	      itemToString={patients.toString}
-	      filter={patients.filter}
-	      TextFieldProps={{
-		autoFocus: true,
-		label: "Patient to link document to",
-		margin: "normal",
-	      }}
-	      value={patient}
-	      onChange={e => this.setState({ patient : e.target.value })}
-	      maxCount={1}
-	    />
-	  </DialogContent>
-	  <DialogActions>
-	    <Button type="submit" onClick={onClose} color="default">
-	      Cancel
-	      <CancelIcon className={classes.rightIcon}/>
-	    </Button>
-	    <Button onClick={linkThisDocument} disabled={patient.length === 0} color="secondary">
-	      Link
-	      <LinkIcon className={classes.rightIcon}/>
-	    </Button>
-	  </DialogActions>
-	</Dialog>
-    );
-  }
+	render() {
+		const {open, onClose, document, classes, allPatients} = this.props;
 
+		const {patient} = this.state;
+
+		const linkThisDocument = (event) => {
+			event.preventDefault();
+			const documentId = document._id;
+			const patientId = patient[0]._id;
+			Meteor.call('documents.link', documentId, patientId, (err, _res) => {
+				if (err) {
+					console.error(err);
+				} else {
+					console.log(
+						`Document #${documentId} linked to patient #${patientId}.`
+					);
+					onClose();
+				}
+			});
+		};
+
+		return (
+			<Dialog
+				classes={{paper: classes.dialogPaper}}
+				open={open}
+				component="form"
+				aria-labelledby="document-linking-dialog-title"
+				onClose={onClose}
+			>
+				<DialogTitle id="document-linking-dialog-title">
+					Link document {document._id.toString()}
+				</DialogTitle>
+				<DialogContent className={classes.dialogPaper}>
+					<DialogContentText>
+						If you do not want to link this document, click cancel. If you
+						really want to link this document, enter the name of the patient to
+						link it to and click the link button.
+					</DialogContentText>
+					<SetPicker
+						suggestions={allPatients}
+						itemToKey={patients.toKey}
+						itemToString={patients.toString}
+						filter={patients.filter}
+						TextFieldProps={{
+							autoFocus: true,
+							label: 'Patient to link document to',
+							margin: 'normal'
+						}}
+						value={patient}
+						maxCount={1}
+						onChange={(e) => this.setState({patient: e.target.value})}
+					/>
+				</DialogContent>
+				<DialogActions>
+					<Button type="submit" color="default" onClick={onClose}>
+						Cancel
+						<CancelIcon className={classes.rightIcon} />
+					</Button>
+					<Button
+						disabled={patient.length === 0}
+						color="secondary"
+						onClick={linkThisDocument}
+					>
+						Link
+						<LinkIcon className={classes.rightIcon} />
+					</Button>
+				</DialogActions>
+			</Dialog>
+		);
+	}
+
+	static propTypes = {
+		open: PropTypes.bool.isRequired,
+		onClose: PropTypes.func.isRequired,
+		classes: PropTypes.object.isRequired,
+		allPatients: PropTypes.array.isRequired
+	};
 }
 
-DocumentLinkingDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
-  allPatients: PropTypes.array.isRequired,
-} ;
-
 const Component = withTracker(() => {
-  Meteor.subscribe('patients');
-  return {
-    allPatients: Patients.find({}, { sort: { lastname: 1 } }).fetch() ,
-  };
-}) ( withStyles(styles, { withTheme: true }) (DocumentLinkingDialog) ) ;
+	Meteor.subscribe('patients');
+	return {
+		allPatients: Patients.find({}, {sort: {lastname: 1}}).fetch()
+	};
+})(withStyles(styles, {withTheme: true})(DocumentLinkingDialog));
 
 Component.projection = {
-  _id: 1,
-} ;
+	_id: 1
+};
 
-export default Component ;
+export default Component;

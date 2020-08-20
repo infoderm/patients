@@ -1,11 +1,11 @@
-import { Meteor } from 'meteor/meteor' ;
+import {Meteor} from 'meteor/meteor';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useHistory } from 'react-router-dom' ;
+import {useHistory} from 'react-router-dom';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '../modal/OptimizedDialog.js';
@@ -17,76 +17,84 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-const useStyles = makeStyles(
-  theme => ({
-    rightIcon: {
-      marginLeft: theme.spacing(1),
-    },
-  })
-);
+const useStyles = makeStyles((theme) => ({
+	rightIcon: {
+		marginLeft: theme.spacing(1)
+	}
+}));
 
-export default function MergePatientsConfirmationDialog ( props ) {
+export default function MergePatientsConfirmationDialog(props) {
+	const {
+		open,
+		onClose,
+		toCreate,
+		consultationsToAttach,
+		documentsToAttach,
+		toDelete
+	} = props;
 
-  const {
-    open,
-    onClose,
-    toCreate,
-    consultationsToAttach,
-    documentsToAttach,
-    toDelete,
-  } = props ;
+	const classes = useStyles();
+	const history = useHistory();
 
-  const classes = useStyles();
-  const history = useHistory();
+	const mergePatients = (event) => {
+		event.preventDefault();
+		Meteor.call(
+			'patients.merge',
+			toDelete,
+			consultationsToAttach,
+			documentsToAttach,
+			toCreate,
+			(err, _id) => {
+				if (err) {
+					console.error(err);
+				} else {
+					console.log(`Patient #${_id} created.`);
+					history.push({pathname: `/patient/${_id}`});
+				}
+			}
+		);
+	};
 
-  const mergePatients = event => {
-    event.preventDefault();
-    Meteor.call('patients.merge', toDelete , consultationsToAttach , documentsToAttach , toCreate, (err, _id) => {
-      if ( err ) console.error( err ) ;
-      else {
-	console.log(`Patient #${_id} created.`)
-	history.push({pathname: `/patient/${_id}`}) ;
-      }
-    });
-  };
-
-  return (
-      <Dialog
-	open={open}
-	onClose={onClose}
-	component="form"
-	aria-labelledby="merge-patients-confirmation-dialog-title"
-      >
-	<DialogTitle id="merge-patients-confirmation-dialog-title">Merge {toDelete.length} patients</DialogTitle>
-	<DialogContent>
-	  <DialogContentText>
-	    <b>1 new patient</b> will be
-	    created, <b>{consultationsToAttach.length} consultations</b>, <b>{documentsToAttach.length} documents</b>,
-	    and <b>{toCreate.attachments.length} attachments</b> will
-	    be attached to it, <b>{toDelete.length} patients will be deleted</b>.
-	    If you do not want to merge those patients, click cancel.
-	    If you really want to merge those patients, click the merge button.
-	  </DialogContentText>
-	</DialogContent>
-	<DialogActions>
-	  <Button type="submit" onClick={onClose} color="default">
-	    Cancel
-	    <CancelIcon className={classes.rightIcon}/>
-	  </Button>
-	  <Button onClick={mergePatients} color="secondary">
-	    Merge
-	    <MergeTypeIcon className={classes.rightIcon}/>
-	  </Button>
-	</DialogActions>
-      </Dialog>
-  );
+	return (
+		<Dialog
+			open={open}
+			component="form"
+			aria-labelledby="merge-patients-confirmation-dialog-title"
+			onClose={onClose}
+		>
+			<DialogTitle id="merge-patients-confirmation-dialog-title">
+				Merge {toDelete.length} patients
+			</DialogTitle>
+			<DialogContent>
+				<DialogContentText>
+					<b>1 new patient</b> will be created,{' '}
+					<b>{consultationsToAttach.length} consultations</b>,{' '}
+					<b>{documentsToAttach.length} documents</b>, and{' '}
+					<b>{toCreate.attachments.length} attachments</b> will be attached to
+					it, <b>{toDelete.length} patients will be deleted</b>. If you do not
+					want to merge those patients, click cancel. If you really want to
+					merge those patients, click the merge button.
+				</DialogContentText>
+			</DialogContent>
+			<DialogActions>
+				<Button type="submit" color="default" onClick={onClose}>
+					Cancel
+					<CancelIcon className={classes.rightIcon} />
+				</Button>
+				<Button color="secondary" onClick={mergePatients}>
+					Merge
+					<MergeTypeIcon className={classes.rightIcon} />
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
 }
 
 MergePatientsConfirmationDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  toCreate: PropTypes.object.isRequired,
-  consultationsToAttach: PropTypes.array.isRequired,
-  documentsToAttach: PropTypes.array.isRequired,
-  toDelete: PropTypes.array.isRequired,
-} ;
+	open: PropTypes.bool.isRequired,
+	onClose: PropTypes.func.isRequired,
+	toCreate: PropTypes.object.isRequired,
+	consultationsToAttach: PropTypes.array.isRequired,
+	documentsToAttach: PropTypes.array.isRequired,
+	toDelete: PropTypes.array.isRequired
+};

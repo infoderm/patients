@@ -1,27 +1,24 @@
-import React from 'react' ;
+import React from 'react';
 
-import { list } from '@aureooms/js-itertools' ;
-import { range } from '@aureooms/js-itertools' ;
+import {list, range} from '@aureooms/js-itertools';
 
-import SelectOneSetting from './SelectOneSetting.js' ;
+import SelectOneSetting from './SelectOneSetting.js';
 
 export default class WeekStartsOnSetting extends React.Component {
-
-	render ( ) {
-
-		const options = list(range(7)) ;
+	render() {
+		const options = list(range(7));
 
 		const DAYS = [
-			'Sunday' ,
-			'Monday' ,
-			'Tuesday' ,
-			'Wednesday' ,
-			'Thursday' ,
-			'Friday' ,
-			'Saturday' ,
-		] ;
+			'Sunday',
+			'Monday',
+			'Tuesday',
+			'Wednesday',
+			'Thursday',
+			'Friday',
+			'Saturday'
+		];
 
-		const optionToString = x => DAYS[x] ;
+		const optionToString = (x) => DAYS[x];
 
 		return (
 			<SelectOneSetting
@@ -32,7 +29,6 @@ export default class WeekStartsOnSetting extends React.Component {
 				optionToString={optionToString}
 				defaultValue={1}
 			/>
-		) ;
+		);
 	}
-
 }

@@ -1,26 +1,20 @@
-import React from 'react' ;
+import React from 'react';
 
-import SelectOneSetting from './SelectOneSetting.js' ;
+import SelectOneSetting from './SelectOneSetting.js';
 
 export default class LanguageSetting extends React.Component {
-
-	render ( ) {
-
-		const {
-			className ,
-		} = this.props ;
+	render() {
+		const {className} = this.props;
 
 		const LANGUAGES = {
-			'en' : 'English' ,
-			'fr' : 'Français' ,
-			'nl' : 'Nederlands' ,
-		} ;
+			en: 'English',
+			fr: 'Français',
+			nl: 'Nederlands'
+		};
 
-		const options = [ ] ;
+		const options = [...Object.keys(LANGUAGES)];
 
-		for ( const lang in LANGUAGES ) options.push(lang) ;
-
-		const optionToString = x => LANGUAGES[x] ;
+		const optionToString = (x) => LANGUAGES[x];
 
 		return (
 			<SelectOneSetting
@@ -31,7 +25,6 @@ export default class LanguageSetting extends React.Component {
 				options={options}
 				optionToString={optionToString}
 			/>
-		) ;
+		);
 	}
-
 }

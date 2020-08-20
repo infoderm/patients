@@ -1,22 +1,23 @@
-import React from 'react' ;
+import React from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
-  empty: {
-    textAlign: 'center',
-    margin: '3em 0',
-    color: '#999',
-  },
-});
+const useStyles = makeStyles(() => ({
+	empty: {
+		textAlign: 'center',
+		margin: '3em 0',
+		color: '#999'
+	}
+}));
 
-function NoContent ( { classes , children , ...props } ) {
+const NoContent = ({children, ...props}) => {
+	const classes = useStyles();
+	return (
+		<Typography className={classes.empty} variant="h3" {...props}>
+			{children}
+		</Typography>
+	);
+};
 
-  return (
-    <Typography className={classes.empty} variant="h3" {...props}>{children}</Typography>
-  ) ;
-
-}
-
-export default withStyles(styles, { withTheme: true })(NoContent) ;
+export default NoContent;

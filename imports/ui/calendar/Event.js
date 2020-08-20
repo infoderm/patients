@@ -1,5 +1,1 @@
-import React from 'react' ;
-
-export default function Event ( props ) {
-
-} ;
+export default function Event() {}

@@ -1,46 +1,42 @@
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import ConsultationCard from './ConsultationCard.js';
 
-const useStyles = makeStyles(
-	theme => ({
-		container: {
-			padding: theme.spacing(3),
-		},
-	})
-);
+const useStyles = makeStyles((theme) => ({
+	container: {
+		padding: theme.spacing(3)
+	}
+}));
 
-export default function ConsultationsList ( { items , itemProps , defaultExpandedFirst } ) {
-
+export default function ConsultationsList({
+	items,
+	itemProps,
+	defaultExpandedFirst
+}) {
 	const classes = useStyles();
 
 	return (
 		<div className={classes.container}>
-			{
-				items.map(
-					(consultation, i) => (
-						<ConsultationCard
-							key={consultation._id}
-							consultation={consultation}
-							defaultExpanded={i === 0 && defaultExpandedFirst}
-							{...itemProps}
-						/>
-					)
-				)
-			}
+			{items.map((consultation, i) => (
+				<ConsultationCard
+					key={consultation._id}
+					consultation={consultation}
+					defaultExpanded={i === 0 && defaultExpandedFirst}
+					{...itemProps}
+				/>
+			))}
 		</div>
-	) ;
-
+	);
 }
 
 ConsultationsList.defaultProps = {
-	defaultExpandedFirst: false,
-} ;
+	defaultExpandedFirst: false
+};
 
 ConsultationsList.propTypes = {
 	items: PropTypes.array.isRequired,
 	itemProps: PropTypes.object,
-	defaultExpandedFirst: PropTypes.bool.isRequired,
+	defaultExpandedFirst: PropTypes.bool
 };

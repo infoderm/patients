@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react' ;
+import React from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -8,24 +8,24 @@ import Paginator from '../navigation/Paginator.js';
 
 import StaticPatientCard from './StaticPatientCard.js';
 
-export default function PagedPatientsList ( { root , page , perpage , items } ) {
-
-  return (
-    <Fragment>
-      <div>
-        <Grid container spacing={3}>
-          { items.map(patient => ( <StaticPatientCard key={patient._id} patient={patient}/> )) }
-        </Grid>
-      </div>
-      <Paginator page={page} end={items.length < perpage} root={root}/>
-    </Fragment>
-  ) ;
-
+export default function PagedPatientsList({root, page, perpage, items}) {
+	return (
+		<>
+			<div>
+				<Grid container spacing={3}>
+					{items.map((patient) => (
+						<StaticPatientCard key={patient._id} patient={patient} />
+					))}
+				</Grid>
+			</div>
+			<Paginator page={page} end={items.length < perpage} root={root} />
+		</>
+	);
 }
 
 PagedPatientsList.propTypes = {
-  root: PropTypes.string.isRequired,
-  page: PropTypes.number.isRequired,
-  perpage: PropTypes.number.isRequired,
-  items: PropTypes.array.isRequired,
+	root: PropTypes.string.isRequired,
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired,
+	items: PropTypes.array.isRequired
 };

@@ -1,24 +1,23 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import {Meteor} from 'meteor/meteor';
+import {Mongo} from 'meteor/mongo';
+import {check} from 'meteor/check';
 
-import isAfter from 'date-fns/isAfter' ;
-import isBefore from 'date-fns/isBefore' ;
+import isAfter from 'date-fns/isAfter';
+import isBefore from 'date-fns/isBefore';
 
-import { list , map , range , product } from '@aureooms/js-itertools' ;
+import {list, map, range, product} from '@aureooms/js-itertools';
 
-import { Uploads } from './uploads.js';
-import { books } from './books.js';
+import {Uploads} from './uploads.js';
+import {books} from './books.js';
 
 export const Consultations = new Mongo.Collection('consultations');
 
 if (Meteor.isServer) {
-
 	Meteor.publish('consultation', function (_id) {
 		check(_id, String);
 		return Consultations.find({
-			owner: this.userId ,
-			_id ,
+			owner: this.userId,
+			_id
 		});
 	});
 
@@ -26,117 +25,129 @@ if (Meteor.isServer) {
 		return Consultations.find({
 			isDone: true,
 			...query,
-			owner: this.userId ,
+			owner: this.userId
 		});
 	});
 
 	Meteor.publish('consultations.interval', function (from, to) {
 		return Consultations.find({
-			owner: this.userId ,
-			datetime : {
-				$gte : from ,
-				$lt : to,
-			},
-		});
-	});
-
-	Meteor.publish('consultations.accounted.interval.last', function (from, to) {
-		return Consultations.find({
-			owner: this.userId ,
-			isDone: true,
-			datetime : {
-				$gte : from ,
-				$lt : to,
-			},
-			book : {
-				$ne : '0' ,
-			} ,
-		}, {
-			sort: {
-				datetime: -1 ,
-				limit: 1 ,
+			owner: this.userId,
+			datetime: {
+				$gte: from,
+				$lt: to
 			}
 		});
 	});
 
-	Meteor.publish('consultations.last', function () {
-		return Consultations.find({
-			owner: this.userId ,
-			isDone: true,
-		}, {
-			sort: {
-				datetime: -1 ,
+	Meteor.publish('consultations.accounted.interval.last', function (from, to) {
+		return Consultations.find(
+			{
+				owner: this.userId,
+				isDone: true,
+				datetime: {
+					$gte: from,
+					$lt: to
+				},
+				book: {
+					$ne: '0'
+				}
 			},
-			limit: 1
-		});
+			{
+				sort: {
+					datetime: -1,
+					limit: 1
+				}
+			}
+		);
+	});
+
+	Meteor.publish('consultations.last', function () {
+		return Consultations.find(
+			{
+				owner: this.userId,
+				isDone: true
+			},
+			{
+				sort: {
+					datetime: -1
+				},
+				limit: 1
+			}
+		);
 	});
 
 	Meteor.publish('consultations.wired', function () {
 		return Consultations.find({
-			owner: this.userId ,
+			owner: this.userId,
 			isDone: true,
-			payment_method: 'wire',
+			payment_method: 'wire'
 		});
 	});
 
 	Meteor.publish('consultationsAndAppointments', function () {
 		return Consultations.find({
-			owner: this.userId ,
+			owner: this.userId
 		});
 	});
 
 	Meteor.publish('patient.consultations', function (patientId, options) {
 		check(patientId, String);
-		return Consultations.find({
-			owner: this.userId ,
-			isDone: true,
-			patientId ,
-		}, options);
+		return Consultations.find(
+			{
+				owner: this.userId,
+				isDone: true,
+				patientId
+			},
+			options
+		);
 	});
 
 	Meteor.publish('consultations.unpaid', function () {
 		return Consultations.find({
-			owner: this.userId ,
+			owner: this.userId,
 			isDone: true,
 			$expr: {
-				$ne: [ "$paid", "$price" ] ,
-			} ,
+				$ne: ['$paid', '$price']
+			}
 		});
 	});
 
-	Meteor.publish('book.consultations', function ( name , options = {} ) {
+	Meteor.publish('book.consultations', function (name, options = {}) {
 		const query = {
-			owner: this.userId ,
+			owner: this.userId,
 			isDone: true,
-			...books.selector(name) ,
-		} ;
+			...books.selector(name)
+		};
 		if (options.fields) {
-			const { fields , ...rest } = options ;
+			const {fields, ...rest} = options;
 			const _options = {
 				...rest,
 				fields: {
-					...fields,
+					...fields
 				}
 			};
-			for ( const key of Object.keys(query) ) _options.fields[key] = 1;
+			for (const key of Object.keys(query)) {
+				_options.fields[key] = 1;
+			}
+
 			return Consultations.find(query, _options);
 		}
-		else return Consultations.find(query, options);
+
+		return Consultations.find(query, options);
 	});
 
 	Meteor.publish('consultations.missing-a-price', function () {
 		return Consultations.find({
-			owner: this.userId ,
+			owner: this.userId,
 			isDone: true,
-			// true > 0
+			// True > 0
 			// '' >= 0
-			price : { $not: { $gt: 1 } } ,
+			price: {$not: {$gt: 1}}
 		});
 	});
-
 }
 
-function sanitize ( {
+function sanitize({
 	patientId,
 	datetime,
 	reason,
@@ -150,9 +161,8 @@ function sanitize ( {
 	price,
 	paid,
 	book,
-	payment_method,
-} ) {
-
+	payment_method
+}) {
 	check(patientId, String);
 	check(datetime, Date);
 
@@ -161,13 +171,13 @@ function sanitize ( {
 	check(todo, String);
 	check(treatment, String);
 	check(next, String);
-	more === undefined || check(more, String);
+	if (more !== undefined) check(more, String);
 
-	currency === undefined || check(currency, String);
-	price === undefined || check(price, Number);
-	paid === undefined || check(paid, Number);
-	book === undefined || check(book, String);
-	payment_method === undefined || check(payment_method, String);
+	if (currency !== undefined) check(currency, String);
+	if (price !== undefined) check(price, Number);
+	if (paid !== undefined) check(paid, Number);
+	if (book !== undefined) check(book, String);
+	if (payment_method !== undefined) check(payment_method, String);
 
 	reason = reason.trim();
 	done = done.trim();
@@ -176,7 +186,7 @@ function sanitize ( {
 	next = next.trim();
 	more = more && more.trim();
 
-	currency = currency && currency.trim().toUpperCase()
+	currency = currency && currency.trim().toUpperCase();
 	book = book && book.trim();
 
 	return {
@@ -194,15 +204,12 @@ function sanitize ( {
 		paid,
 		book,
 		payment_method,
-		isDone: true,
-	} ;
-
+		isDone: true
+	};
 }
 
 Meteor.methods({
-
 	'books.interval.csv'(begin, end, firstBook, lastBook, maxRows) {
-
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -216,32 +223,42 @@ Meteor.methods({
 		const beginBook = firstBook;
 		const endBook = lastBook + 1;
 
-		const consultations = Consultations.find({
-			datetime: {
-				$gte : begin ,
-				$lt : end ,
+		const consultations = Consultations.find(
+			{
+				datetime: {
+					$gte: begin,
+					$lt: end
+				},
+				owner: this.userId
 			},
-			owner: this.userId,
-		}, {
-			sort: {
-				datetime: 1 ,
-			} ,
-		}).fetch();
+			{
+				sort: {
+					datetime: 1
+				}
+			}
+		).fetch();
 
-		const data = {} ;
+		const data = {};
 
 		let minDatetime = end;
 		let maxDatetime = begin;
 
-		for ( const consultation of consultations ) {
-			const { datetime , book , price } = consultation ;
+		for (const consultation of consultations) {
+			const {datetime, book, price} = consultation;
 
-			if (isBefore(datetime, minDatetime)) minDatetime = datetime;
-			if (isAfter(datetime, maxDatetime)) maxDatetime = datetime;
+			if (isBefore(datetime, minDatetime)) {
+				minDatetime = datetime;
+			}
 
-			const bookSlug = books.name(datetime, book) ;
+			if (isAfter(datetime, maxDatetime)) {
+				maxDatetime = datetime;
+			}
 
-			if ( data[bookSlug] === undefined ) data[bookSlug] = [] ;
+			const bookSlug = books.name(datetime, book);
+
+			if (data[bookSlug] === undefined) {
+				data[bookSlug] = [];
+			}
 
 			data[bookSlug].push(price);
 		}
@@ -249,48 +266,52 @@ Meteor.methods({
 		const beginYear = minDatetime.getFullYear();
 		const endYear = maxDatetime.getFullYear() + 1;
 
-		const header = list(map(([year, book]) => books.format(year, book), product([range(beginYear, endYear), range(beginBook, endBook)]))) ;
-		const lines = [] ;
+		const header = list(
+			map(
+				([year, book]) => books.format(year, book),
+				product([range(beginYear, endYear), range(beginBook, endBook)])
+			)
+		);
+		const lines = [];
 
-		for ( const i of range(maxRows) ) {
+		for (const i of range(maxRows)) {
 			const line = [];
-			for ( const bookSlug of header ) {
-				if ( data[bookSlug] !== undefined  && data[bookSlug][i] !== undefined ) {
+			for (const bookSlug of header) {
+				if (data[bookSlug] !== undefined && data[bookSlug][i] !== undefined) {
 					line.push(data[bookSlug][i]);
-				}
-				else {
+				} else {
 					line.push('');
 				}
 			}
+
 			lines.push(line);
 		}
 
-		const table = [ ] ;
+		const table = [];
 		table.push(header.join(','));
-		for ( const line of lines ) {
+		for (const line of lines) {
 			table.push(line.join(','));
 		}
 
 		return table.join('\n');
-
-	} ,
+	},
 
 	'consultations.insert'(consultation) {
-
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
 		const fields = sanitize(consultation);
 
-		if ( fields.datetime && fields.book ) books.add(this.userId, books.name(fields.datetime, fields.book)) ;
+		if (fields.datetime && fields.book) {
+			books.add(this.userId, books.name(fields.datetime, fields.book));
+		}
 
 		return Consultations.insert({
 			...fields,
 			createdAt: new Date(),
-			owner: this.userId,
+			owner: this.userId
 		});
-
 	},
 
 	'consultations.update'(consultationId, newfields) {
@@ -301,9 +322,11 @@ Meteor.methods({
 		}
 
 		const fields = sanitize(newfields);
-		if ( fields.datetime && fields.book ) books.add(this.userId, books.name(fields.datetime, fields.book)) ;
+		if (fields.datetime && fields.book) {
+			books.add(this.userId, books.name(fields.datetime, fields.book));
+		}
 
-		return Consultations.update(consultationId, { $set: fields });
+		return Consultations.update(consultationId, {$set: fields});
 	},
 
 	'consultations.attach'(consultationId, uploadId) {
@@ -312,12 +335,19 @@ Meteor.methods({
 		const consultation = Consultations.findOne(consultationId);
 		const upload = Uploads.findOne(uploadId);
 		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own consultation');
+			throw new Meteor.Error(
+				'not-authorized',
+				'user does not own consultation'
+			);
 		}
+
 		if (!upload || upload.userId !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own attachment');
 		}
-		return Consultations.update(consultationId, { $addToSet: { attachments: uploadId } });
+
+		return Consultations.update(consultationId, {
+			$addToSet: {attachments: uploadId}
+		});
 	},
 
 	'consultations.detach'(consultationId, uploadId) {
@@ -326,21 +356,28 @@ Meteor.methods({
 		const consultation = Consultations.findOne(consultationId);
 		const upload = Uploads.findOne(uploadId);
 		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own consultation');
+			throw new Meteor.Error(
+				'not-authorized',
+				'user does not own consultation'
+			);
 		}
+
 		if (!upload || upload.userId !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own attachment');
 		}
-		return Consultations.update(consultationId, { $pull: { attachments: uploadId } });
+
+		return Consultations.update(consultationId, {
+			$pull: {attachments: uploadId}
+		});
 	},
 
-	'consultations.remove'(consultationId){
+	'consultations.remove'(consultationId) {
 		check(consultationId, String);
 		const consultation = Consultations.findOne(consultationId);
 		if (!consultation || consultation.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		return Consultations.remove(consultationId);
-	},
 
+		return Consultations.remove(consultationId);
+	}
 });

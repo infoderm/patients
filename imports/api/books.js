@@ -1,116 +1,109 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import {Meteor} from 'meteor/meteor';
+import {Mongo} from 'meteor/mongo';
+import {check} from 'meteor/check';
 
 import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
-import { Consultations } from './consultations.js';
-
 export const Books = new Mongo.Collection('books');
 
 if (Meteor.isServer) {
-  Meteor.publish('books', function (args) {
-    const query = {
-      ...args,
-      owner: this.userId,
-    };
-    return Books.find(query);
-  });
+	Meteor.publish('books', function (args) {
+		const query = {
+			...args,
+			owner: this.userId
+		};
+		return Books.find(query);
+	});
 }
 
 export const books = {
+	add: (owner, name) => {
+		check(owner, String);
+		check(name, String);
 
-  add: ( owner , name ) => {
+		name = name.trim();
 
-    check(owner, String);
-    check(name, String);
+		const [fiscalYear, bookNumber] = books.parse(name);
 
-    name = name.trim();
+		const key = {
+			owner,
+			name
+		};
 
-    const [fiscalYear, bookNumber] = books.parse(name) ;
+		const fields = {
+			owner,
+			name,
+			fiscalYear,
+			bookNumber
+		};
 
-    const key = {
-      owner,
-      name,
-    };
+		return Books.upsert(key, {$set: fields});
+	},
 
-    const fields = {
-      owner,
-      name,
-      fiscalYear,
-      bookNumber,
-    };
+	remove: (owner, name) => {
+		check(owner, String);
+		check(name, String);
 
-    return Books.upsert( key, { $set: fields } ) ;
+		name = name.trim();
 
-  } ,
+		const fields = {
+			owner,
+			name
+		};
 
-  remove: ( owner , name ) => {
+		return Books.remove(fields);
+	},
 
-    check(owner, String);
-    check(name, String);
+	format: (year, book) => `${year}/${book}`,
 
-    name = name.trim();
+	name: (datetime, book) => books.format(datetime.getFullYear(), book),
 
-    const fields = {
-      owner,
-      name,
-    };
+	split: (name) => {
+		const pivot = name.indexOf('/');
+		return [name.slice(0, pivot), name.slice(pivot + 1)];
+	},
 
-    return Books.remove( fields ) ;
+	parse: (name) => {
+		const [year, book] = books.split(name);
 
-  } ,
+		let fiscalYear = year;
+		let bookNumber = book;
 
-  format: ( year , book ) => `${year}/${book}` ,
+		try {
+			fiscalYear = Number.parseInt(fiscalYear, 10);
+		} catch {}
 
-  name: ( datetime , book ) => books.format(datetime.getFullYear(), book) ,
+		try {
+			bookNumber = Number.parseInt(bookNumber, 10);
+		} catch {}
 
-  split: name => {
-    const pivot = name.indexOf('/') ;
-    return [ name.slice(0,pivot) , name.slice(pivot+1) ] ;
-  } ,
+		return [fiscalYear, bookNumber];
+	},
 
-  parse: name => {
-    const [year, book] = books.split( name ) ;
+	range: (name) => {
+		const [year, book] = books.split(name);
 
-    let fiscalYear = year;
-    let bookNumber = book;
+		const begin = dateParseISO(`${year}-01-01`);
+		const end = addYears(begin, 1);
 
-    try { fiscalYear = parseInt(fiscalYear, 10); } catch (e) {}
-    try { bookNumber = parseInt(bookNumber, 10); } catch (e) {}
+		return [book, begin, end];
+	},
 
-    return [fiscalYear, bookNumber] ;
-  } ,
+	selector: (name) => {
+		const [book, begin, end] = books.range(name);
 
-  range: name => {
+		return {
+			book,
+			datetime: {
+				$gte: begin,
+				$lt: end
+			}
+		};
+	},
 
-    const [ year , book ] = books.split( name ) ;
-
-    const begin = dateParseISO(`${year}-01-01`);
-    const end = addYears(begin, 1);
-
-    return [ book , begin , end ] ;
-
-  } ,
-
-  selector: name => {
-
-    const [ book , begin , end ] = books.range( name ) ;
-
-    return {
-        book,
-        datetime : {
-            $gte : begin ,
-            $lt : end ,
-        }
-    } ;
-
-  } ,
-
-  MAX_CONSULTATIONS: 50 ,
-  DOWNLOAD_FIRST_BOOK: 1,
-  DOWNLOAD_LAST_BOOK: 99,
-  DOWNLOAD_MAX_ROWS: 60,
-
-} ;
+	MAX_CONSULTATIONS: 50,
+	DOWNLOAD_FIRST_BOOK: 1,
+	DOWNLOAD_LAST_BOOK: 99,
+	DOWNLOAD_MAX_ROWS: 60
+};

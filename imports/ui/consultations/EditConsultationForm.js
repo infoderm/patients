@@ -1,38 +1,32 @@
-import { Meteor } from 'meteor/meteor';
+import {Meteor} from 'meteor/meteor';
 
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react' ;
+import React from 'react';
 
-import ConsultationForm from './ConsultationForm.js' ;
+import ConsultationForm from './ConsultationForm.js';
 
-import { Consultations } from '../../api/consultations.js';
+import {Consultations} from '../../api/consultations.js';
 
-class EditConsultationForm extends React.Component {
-
-	constructor ( props ) {
-		super(props);
+const EditConsultationForm = ({loading, consultation}) => {
+	if (loading) {
+		return <div>Loading...</div>;
 	}
 
-	render(){
-
-		const { loading } = this.props ;
-		if (loading) return <div>Loading...</div>;
-
-		const { consultation } = this.props ;
-		if (!consultation) return <div>Error: Consultation not found.</div>;
-
-		return <ConsultationForm consultation={consultation}/> ;
-
+	if (!consultation) {
+		return <div>Error: Consultation not found.</div>;
 	}
-}
+
+	return <ConsultationForm consultation={consultation} />;
+};
 
 export default withTracker(({match}) => {
 	const _id = match.params.id;
 	const handle = Meteor.subscribe('consultation', _id);
-	if ( handle.ready() ) {
+	if (handle.ready()) {
 		const consultation = Consultations.findOne(_id);
-		return { loading: false, consultation } ;
+		return {loading: false, consultation};
 	}
-	else return { loading: true } ;
-}) ( EditConsultationForm );
+
+	return {loading: true};
+})(EditConsultationForm);

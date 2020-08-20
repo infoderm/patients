@@ -1,60 +1,54 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import {Meteor} from 'meteor/meteor';
+import {Mongo} from 'meteor/mongo';
+import {check} from 'meteor/check';
 
-import { list } from '@aureooms/js-itertools' ;
-import { map } from '@aureooms/js-itertools' ;
-import { take } from '@aureooms/js-itertools' ;
-import { filter } from '@aureooms/js-itertools' ;
+import {list, map, take, filter} from '@aureooms/js-itertools';
 
-import { Consultations } from './consultations.js';
-import { Documents } from './documents.js';
-import { Uploads } from './uploads.js';
+import {Consultations} from './consultations.js';
+import {Documents} from './documents.js';
+import {Uploads} from './uploads.js';
 
-import { insurances } from './insurances.js';
-import { doctors } from './doctors.js';
-import { allergies } from './allergies.js';
+import {insurances} from './insurances.js';
+import {doctors} from './doctors.js';
+import {allergies} from './allergies.js';
 
-import { makeIndex } from './string.js';
+import {makeIndex} from './string.js';
 
 export const Patients = new Mongo.Collection('patients');
 
-export const BIRTHDATE_FORMAT = 'yyyy-MM-dd' ;
-export const SEX_ALLOWED = [ '' , 'male' , 'female' , 'other' ]
+export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
+export const SEX_ALLOWED = ['', 'male', 'female', 'other'];
 
-insurances.init( Patients ) ;
-doctors.init( Patients ) ;
-allergies.init( Patients ) ;
+insurances.init(Patients);
+doctors.init(Patients);
+allergies.init(Patients);
 
 if (Meteor.isServer) {
-
 	Meteor.publish('patients', function (query, options) {
-		return Patients.find({ ...query, owner: this.userId }, options);
+		return Patients.find({...query, owner: this.userId}, options);
 	});
 
 	Meteor.publish('patient', function (_id, options) {
 		check(_id, String);
-		return Patients.find({ owner: this.userId , _id }, options);
+		return Patients.find({owner: this.userId, _id}, options);
 	});
-
 }
 
-function updateTags ( userId , fields ) {
-	for ( const [ tagCollection , tagList ] of [
-		[ insurances , fields.insurances ] ,
-		[ doctors , fields.doctors ] ,
-		[ allergies , fields.allergies ] ,
-	] ) {
-		if ( tagList ) {
-			for ( const tag of tagList ) {
-				tagCollection.add(userId, tag) ;
+function updateTags(userId, fields) {
+	for (const [tagCollection, tagList] of [
+		[insurances, fields.insurances],
+		[doctors, fields.doctors],
+		[allergies, fields.allergies]
+	]) {
+		if (tagList) {
+			for (const tag of tagList) {
+				tagCollection.add(userId, tag);
 			}
 		}
 	}
 }
 
-function sanitize ( {
-
+function sanitize({
 	niss,
 	firstname,
 	lastname,
@@ -75,38 +69,36 @@ function sanitize ( {
 	doctors,
 	allergies,
 
-	noshow,
+	noshow
+}) {
+	if (niss !== undefined) check(niss, String);
+	if (firstname !== undefined) check(firstname, String);
+	if (lastname !== undefined) check(lastname, String);
+	if (birthdate !== undefined) check(birthdate, String);
+	if (sex !== undefined) check(sex, String);
+	if (photo !== undefined) check(photo, String);
 
-} ) {
+	if (antecedents !== undefined) check(antecedents, String);
+	if (ongoing !== undefined) check(ongoing, String);
+	if (about !== undefined) check(about, String);
 
-	niss === undefined || check(niss, String);
-	firstname === undefined || check(firstname, String);
-	lastname === undefined || check(lastname, String);
-	birthdate === undefined || check(birthdate, String);
-	sex === undefined || check(sex, String);
-	photo === undefined || check(photo, String);
+	if (municipality !== undefined) check(municipality, String);
+	if (streetandnumber !== undefined) check(streetandnumber, String);
+	if (zip !== undefined) check(zip, String);
+	if (phone !== undefined) check(phone, String);
 
-	antecedents === undefined || check(antecedents, String);
-	ongoing === undefined || check(ongoing, String);
-	about === undefined || check(about, String);
+	if (insurances !== undefined) check(insurances, [String]);
+	if (doctors !== undefined) check(doctors, [String]);
+	if (allergies !== undefined) check(allergies, [String]);
 
-	municipality === undefined || check(municipality, String);
-	streetandnumber === undefined || check(streetandnumber, String);
-	zip === undefined || check(zip, String);
-	phone === undefined || check(phone, String);
-
-	insurances === undefined || check(insurances, [String]);
-	doctors === undefined || check(doctors, [String]);
-	allergies === undefined || check(allergies, [String]);
-
-	noshow === undefined || check(noshow, Number);
+	if (noshow !== undefined) check(noshow, Number);
 
 	niss = niss && niss.trim();
 	firstname = firstname && firstname.trim();
 	lastname = lastname && lastname.trim();
 	birthdate = birthdate && birthdate.trim();
 	sex = sex && sex.trim();
-	photo = photo && photo.replace(/\n/g,'');
+	photo = photo && photo.replace(/\n/g, '');
 
 	antecedents = antecedents && antecedents.trim();
 	ongoing = ongoing && ongoing.trim();
@@ -117,9 +109,17 @@ function sanitize ( {
 	zip = zip && zip.trim();
 	phone = phone && phone.trim();
 
-	if ( insurances ) insurances = list(map(x=>x.trim(), insurances)) ;
-	if ( doctors ) doctors = list(map(x=>x.trim(), doctors)) ;
-	if ( allergies ) allergies = list(map(x=>x.trim(), allergies)) ;
+	if (insurances) {
+		insurances = list(map((x) => x.trim(), insurances));
+	}
+
+	if (doctors) {
+		doctors = list(map((x) => x.trim(), doctors));
+	}
+
+	if (allergies) {
+		allergies = list(map((x) => x.trim(), allergies));
+	}
 
 	return {
 		niss,
@@ -142,15 +142,12 @@ function sanitize ( {
 		doctors,
 		insurances,
 
-		noshow,
-
-	} ;
-
+		noshow
+	};
 }
 
 Meteor.methods({
-	'patients.insert'( patient ) {
-
+	'patients.insert'(patient) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -162,9 +159,8 @@ Meteor.methods({
 		return Patients.insert({
 			...fields,
 			createdAt: new Date(),
-			owner: this.userId,
+			owner: this.userId
 		});
-
 	},
 
 	'patients.update'(patientId, newfields) {
@@ -178,7 +174,7 @@ Meteor.methods({
 
 		updateTags(this.userId, fields);
 
-		return Patients.update(patientId, { $set: fields });
+		return Patients.update(patientId, {$set: fields});
 	},
 
 	'patients.attach'(patientId, uploadId) {
@@ -189,13 +185,15 @@ Meteor.methods({
 		if (!patient || patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own patient');
 		}
+
 		if (!upload || upload.userId !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own attachment');
 		}
+
 		// If needed, use $each modifier to attach multiple documents
 		// simultaneously.
 		// See https://docs.mongodb.com/manual/reference/operator/update/addToSet/#each-modifier
-		return Patients.update(patientId, { $addToSet: { attachments: uploadId } });
+		return Patients.update(patientId, {$addToSet: {attachments: uploadId}});
 	},
 
 	'patients.detach'(patientId, uploadId) {
@@ -206,32 +204,37 @@ Meteor.methods({
 		if (!patient || patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own patient');
 		}
+
 		if (!upload || upload.userId !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own attachment');
 		}
-		return Patients.update(patientId, { $pull: { attachments: uploadId } });
+
+		return Patients.update(patientId, {$pull: {attachments: uploadId}});
 	},
 
-	'patients.remove'(patientId){
+	'patients.remove'(patientId) {
 		check(patientId, String);
 		const patient = Patients.findOne(patientId);
 		if (patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
-		Consultations.remove({ owner: this.userId , patientId: patientId }) ;
-		Documents.update({
-			owner: this.userId ,
-			patientId: patientId
-		}, {
-			$set: {
-				deleted: true
+
+		Consultations.remove({owner: this.userId, patientId});
+		Documents.update(
+			{
+				owner: this.userId,
+				patientId
+			},
+			{
+				$set: {
+					deleted: true
+				}
 			}
-		}) ;
+		);
 		return Patients.remove(patientId);
 	},
 
 	'patients.merge'(oldPatientIds, consultationIds, documentIds, newPatient) {
-
 		// Here is what is done in this method
 		// (1) Check that user is connected
 		// (2) Check that each patient in `oldPatientIds` is owned by the user
@@ -244,19 +247,22 @@ Meteor.methods({
 		// (9) Remove patients in `oldPatientIds`
 
 		// (1)
-		if (!this.userId) throw new Meteor.Error('not-authorized');
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
 
 		const allowedAttachments = new Set();
 
 		// (2)
-		for ( const oldPatientId of oldPatientIds ) {
+		for (const oldPatientId of oldPatientIds) {
 			const oldPatient = Patients.findOne(oldPatientId);
 			if (!oldPatient || oldPatient.owner !== this.userId) {
 				throw new Meteor.Error('not-authorized', 'user does not own patient');
 			}
-			// build list of allowed attachments to pass on new patient
+
+			// Build list of allowed attachments to pass on new patient
 			if (oldPatient.attachments) {
-				for ( const uploadId of oldPatient.attachments ) {
+				for (const uploadId of oldPatient.attachments) {
 					allowedAttachments.add(uploadId);
 				}
 			}
@@ -264,106 +270,108 @@ Meteor.methods({
 
 		// (3) check that all attachments are allowed
 		// NOTE could filter and warn instead
-		if ( newPatient.attachments ) {
-			for ( const uploadId of newPatient.attachments ) {
-				if ( ! allowedAttachments.has(uploadId) ) {
-					throw new Meteor.Error('not-authorized', `uploadId ${uploadId} is not allowed in merge`);
+		if (newPatient.attachments) {
+			for (const uploadId of newPatient.attachments) {
+				if (!allowedAttachments.has(uploadId)) {
+					throw new Meteor.Error(
+						'not-authorized',
+						`uploadId ${uploadId} is not allowed in merge`
+					);
 				}
 			}
 		}
 
 		// (4)
 		const fields = {
-			...sanitize(newPatient) ,
-			attachments: newPatient.attachments ,
-		} ;
+			...sanitize(newPatient),
+			attachments: newPatient.attachments
+		};
 
 		const newPatientId = Patients.insert({
 			...fields,
 			createdAt: new Date(),
-			owner: this.userId,
+			owner: this.userId
 		});
 
-		// not needed to update tags since the merged info should only contain
+		// Not needed to update tags since the merged info should only contain
 		// existing tags
-		//updateTags(this.userId, fields);
+		// updateTags(this.userId, fields);
 
 		// (5)
 		Consultations.update(
 			{
-				owner: this.userId, // this selector automatically filters out bad consultation ids
-				patientId: { $in: oldPatientIds },
-				_id: { $in: consultationIds },
-			} ,
+				owner: this.userId, // This selector automatically filters out bad consultation ids
+				patientId: {$in: oldPatientIds},
+				_id: {$in: consultationIds}
+			},
 			{
-				$set: { patientId : newPatientId } ,
-			} ,
+				$set: {patientId: newPatientId}
+			},
 			{
 				multi: true
-			} ,
+			}
 		);
 
 		// (6)
 		Consultations.remove({
-			owner: this.userId ,
-			patientId: { $in: oldPatientIds } ,
-		}) ;
+			owner: this.userId,
+			patientId: {$in: oldPatientIds}
+		});
 
 		// (7)
 		Documents.update(
 			{
-				owner: this.userId, // this selector automatically filters out bad document ids
-				patientId: { $in: oldPatientIds },
-				_id: { $in: documentIds },
-			} ,
+				owner: this.userId, // This selector automatically filters out bad document ids
+				patientId: {$in: oldPatientIds},
+				_id: {$in: documentIds}
+			},
 			{
-				$set: { patientId : newPatientId } ,
-			} ,
+				$set: {patientId: newPatientId}
+			},
 			{
 				multi: true
-			} ,
+			}
 		);
 
 		// (8)
 		Documents.update(
 			{
-				owner: this.userId ,
-				patientId: { $in: oldPatientIds } ,
+				owner: this.userId,
+				patientId: {$in: oldPatientIds}
 			},
 			{
-				$set: { deleted: true } ,
+				$set: {deleted: true}
 			},
 			{
 				multi: true
 			}
-		) ;
+		);
 
 		// (9)
 		Patients.remove({
-			_id: { $in: oldPatientIds } ,
-		}) ;
+			_id: {$in: oldPatientIds}
+		});
 
-		return newPatientId ;
-
-	},
-
+		return newPatientId;
+	}
 });
 
-function mergePatients ( oldPatients ) {
-
+function mergePatients(oldPatients) {
 	const newPatient = {
 		allergies: [],
 		doctors: [],
 		insurances: [],
 		attachments: [],
-		noshow: 0,
-	} ;
+		noshow: 0
+	};
 
-	for ( const oldPatient of oldPatients ) {
+	for (const oldPatient of oldPatients) {
+		const replaceOne = function (key) {
+			if (oldPatient[key]) {
+				newPatient[key] = oldPatient[key];
+			}
+		};
 
-		const replaceOne = function ( key ) {
-			if (oldPatient[key]) newPatient[key] = oldPatient[key] ;
-		} ;
 		// This data is from the ID card.
 		// Currently assuming that merge only needs to happen when
 		// someone forgot their ID card the first time.
@@ -379,31 +387,42 @@ function mergePatients ( oldPatients ) {
 		replaceOne('streetandnumber');
 		replaceOne('zip');
 
-		const concatParagraphs = function ( x ) {
-			if (oldPatient[x]) newPatient[x] = newPatient[x] ? oldPatient[x] + '\n\n' + newPatient[x] : oldPatient[x]
-		} ;
+		const concatParagraphs = function (x) {
+			if (oldPatient[x]) {
+				newPatient[x] = newPatient[x]
+					? oldPatient[x] + '\n\n' + newPatient[x]
+					: oldPatient[x];
+			}
+		};
 
-		concatParagraphs('antecedents') ;
-		concatParagraphs('ongoing') ;
-		concatParagraphs('about') ;
+		concatParagraphs('antecedents');
+		concatParagraphs('ongoing');
+		concatParagraphs('about');
 
-		const concatWords = function ( x ) {
-			if (oldPatient[x]) newPatient[x] = newPatient[x] ? oldPatient[x] + ', ' + newPatient[x] : oldPatient[x]
-		} ;
+		const concatWords = function (x) {
+			if (oldPatient[x]) {
+				newPatient[x] = newPatient[x]
+					? oldPatient[x] + ', ' + newPatient[x]
+					: oldPatient[x];
+			}
+		};
 
-		concatWords('phone') ;
+		concatWords('phone');
 
-		const mergeSets = function ( x ) {
-			if (oldPatient[x]) newPatient[x] = oldPatient[x].concat(newPatient[x]) ;
-		} ;
+		const mergeSets = function (x) {
+			if (oldPatient[x]) {
+				newPatient[x] = oldPatient[x].concat(newPatient[x]);
+			}
+		};
 
 		mergeSets('allergies');
 		mergeSets('doctors');
 		mergeSets('insurances');
 		mergeSets('attachments');
 
-		if (oldPatient.noshow) newPatient.noshow += oldPatient.noshow ;
-
+		if (oldPatient.noshow) {
+			newPatient.noshow += oldPatient.noshow;
+		}
 	}
 
 	newPatient.allergies = list(new Set(newPatient.allergies));
@@ -411,48 +430,40 @@ function mergePatients ( oldPatients ) {
 	newPatient.insurances = list(new Set(newPatient.insurances));
 	newPatient.attachments = list(new Set(newPatient.attachments));
 
-	return newPatient ;
-
+	return newPatient;
 }
 
-const patientToKey = x => x._id ;
+const patientToKey = (x) => x._id;
 
-const patientToString = x => `${x.lastname} ${x.firstname} (${x._id})` ;
+const patientToString = (x) => `${x.lastname} ${x.firstname} (${x._id})`;
 
-const patientFilter = (suggestions, inputValue, transform = v => v) => {
-
+const patientFilter = (suggestions, inputValue, transform = (v) => v) => {
 	const matches = makeIndex(inputValue);
 
-	const keep = 5 ;
+	const keep = 5;
 
 	return list(
 		take(
-			filter(
-				x => matches(transform(x)),
-				suggestions
-			),
+			filter((x) => matches(transform(x)), suggestions),
 			keep
 		)
 	);
+};
 
-} ;
-
-function createPatient ( string ) {
-
-	const [ lastname , ...firstnames ] = string.split(' ');
+function createPatient(string) {
+	const [lastname, ...firstnames] = string.split(' ');
 
 	return {
 		lastname,
 		firstname: firstnames.join(' '),
-		_id: '?',
-	} ;
-
-} ;
+		_id: '?'
+	};
+}
 
 export const patients = {
-	toString: patientToString ,
-	toKey: patientToKey ,
-	merge: mergePatients ,
-	filter: patientFilter ,
-	create: createPatient ,
-} ;
+	toString: patientToString,
+	toKey: patientToKey,
+	merge: mergePatients,
+	filter: patientFilter,
+	create: createPatient
+};

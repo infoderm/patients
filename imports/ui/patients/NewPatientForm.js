@@ -1,9 +1,9 @@
-import { Meteor } from 'meteor/meteor';
+import {Meteor} from 'meteor/meteor';
 
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withRouter } from 'react-router-dom' ;
+import {withRouter} from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -19,60 +19,69 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 class NewPatientForm extends React.Component {
+	state = {
+		niss: '',
+		firstname: '',
+		lastname: '',
+		birthdate: '',
+		sex: '',
+		noshow: 0
+	};
 
-	constructor(props){
-		super(props);
-
-		this.state = {
-			niss: '',
-			firstname: '',
-			lastname: '',
-			birthdate: '',
-			sex: '',
-			noshow: 0,
-		};
-
-	}
-
-	handleSubmit = event => {
-
-		const { history } = this.props ;
-		const patient = this.state ;
+	handleSubmit = (event) => {
+		const {history} = this.props;
+		const patient = this.state;
 
 		event.preventDefault();
 
 		Meteor.call('patients.insert', patient, (err, _id) => {
-			if ( err ) console.error(err) ;
-			else history.push({pathname: `/patient/${_id}`}) ;
+			if (err) {
+				console.error(err);
+			} else {
+				history.push({pathname: `/patient/${_id}`});
+			}
 		});
+	};
 
-	}
-
-	render(){
+	render() {
 		return (
-			<Grid container spacing={3} style={{ padding: 12 }}>
+			<Grid container spacing={3} style={{padding: 12}}>
 				<Grid item xs={2}>
-					<TextField label="NISS" value={this.state.niss} onChange={e => this.setState({ niss: e.target.value})}/>
+					<TextField
+						label="NISS"
+						value={this.state.niss}
+						onChange={(e) => this.setState({niss: e.target.value})}
+					/>
 				</Grid>
 				<Grid item xs={2}>
-					<TextField label="Last name" value={this.state.lastname} onChange={e => this.setState({ lastname: e.target.value})}/>
+					<TextField
+						label="Last name"
+						value={this.state.lastname}
+						onChange={(e) => this.setState({lastname: e.target.value})}
+					/>
 				</Grid>
 				<Grid item xs={2}>
-					<TextField label="First name" value={this.state.firstname} onChange={e => this.setState({ firstname: e.target.value})}/>
+					<TextField
+						label="First name"
+						value={this.state.firstname}
+						onChange={(e) => this.setState({firstname: e.target.value})}
+					/>
 				</Grid>
 				<Grid item xs={1}>
 					<FormControl>
 						<InputLabel htmlFor="sex-input">Sex</InputLabel>
 						<Select
 							value={this.state.sex}
-							onChange={e => this.setState({ sex: e.target.value})}
 							input={<Input id="sex-input" />}
 							inputProps={{
 								name: 'sex',
-								id: 'sex-input',
+								id: 'sex-input'
 							}}
+							onChange={(e) => this.setState({sex: e.target.value})}
 						>
-							<MenuItem value=""><em>None</em></MenuItem>
+							<MenuItem value="">
+								<em>None</em>
+							</MenuItem>
 							<MenuItem value="female">Female</MenuItem>
 							<MenuItem value="male">Male</MenuItem>
 							<MenuItem value="other">Other</MenuItem>
@@ -80,22 +89,25 @@ class NewPatientForm extends React.Component {
 					</FormControl>
 				</Grid>
 				<Grid item xs={2}>
-					<TextField type="date"
+					<TextField
+						type="date"
 						s={2}
 						label="Birth date"
 						InputLabelProps={{
-						  shrink: true,
+							shrink: true
 						}}
 						value={this.state.birthdate}
-						onChange={e => this.setState({ birthdate: e.target.value})}
+						onChange={(e) => this.setState({birthdate: e.target.value})}
 					/>
 				</Grid>
 				<Grid item xs={1}>
 					<FormControlLabel
 						control={
 							<Checkbox
-								checked={!!this.state.noshow}
-								onChange={e => this.setState({ noshow: e.target.checked ? 1 : 0})}
+								checked={Boolean(this.state.noshow)}
+								onChange={(e) =>
+									this.setState({noshow: e.target.checked ? 1 : 0})
+								}
 							/>
 						}
 						label="PVPP"
@@ -109,11 +121,10 @@ class NewPatientForm extends React.Component {
 			</Grid>
 		);
 	}
+
+	static propTypes = {
+		history: PropTypes.object.isRequired
+	};
 }
-
-NewPatientForm.propTypes = {
-	history: PropTypes.object.isRequired,
-};
-
 
 export default withRouter(NewPatientForm);

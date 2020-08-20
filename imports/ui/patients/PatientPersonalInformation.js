@@ -1,7 +1,7 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../navigation/Loading.js';
@@ -9,32 +9,32 @@ import NoContent from '../navigation/NoContent.js';
 
 import PatientPersonalInformationStatic from './PatientPersonalInformationStatic.js';
 
-import { Patients } from '../../api/patients.js';
+import {Patients} from '../../api/patients.js';
 
-function PatientPersonalInformation ( { loading , patient } ) {
+const PatientPersonalInformation = ({loading, patient}) => {
+	if (loading) {
+		return <Loading />;
+	}
 
-	if (loading) return <Loading/> ;
+	if (!patient) {
+		return <NoContent>Error: Patient not found.</NoContent>;
+	}
 
-	if (!patient) return <NoContent>Error: Patient not found.</NoContent> ;
-
-	return <PatientPersonalInformationStatic patient={patient}/> ;
-
-
-}
+	return <PatientPersonalInformationStatic patient={patient} />;
+};
 
 PatientPersonalInformation.propTypes = {
 	loading: PropTypes.bool.isRequired,
-	patient: PropTypes.object,
-} ;
+	patient: PropTypes.object
+};
 
-export default withTracker(({ patientId }) => {
-
+export default withTracker(({patientId}) => {
 	const handle = Meteor.subscribe('patient', patientId);
 
-	if ( handle.ready() ) {
+	if (handle.ready()) {
 		const patient = Patients.findOne(patientId);
-		return { loading: false, patient, } ;
+		return {loading: false, patient};
 	}
-	else return { loading: true, } ;
 
-}) ( PatientPersonalInformation );
+	return {loading: true};
+})(PatientPersonalInformation);

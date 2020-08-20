@@ -1,36 +1,39 @@
-import "regenerator-runtime/runtime.js";
+// eslint-disable-next-line import/no-unassigned-import
+import 'regenerator-runtime/runtime.js';
 import React from 'react';
 
-import { Meteor } from 'meteor/meteor';
-import { render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'
+import {Meteor} from 'meteor/meteor';
+import {render} from 'react-dom';
+import {BrowserRouter} from 'react-router-dom';
 
-import { LocalizationProvider } from '@material-ui/pickers';
+import {LocalizationProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
 
 import WebFont from 'webfontloader';
 
 WebFont.load({
-  google: {
-    families: ['Roboto:300,400,500']
-  }
+	google: {
+		families: ['Roboto:300,400,500']
+	}
 });
 
+// eslint-disable-next-line import/no-unassigned-import
 import '../imports/startup/accounts-config.js';
 import App from '../imports/ui/App.js';
 
-// required for pdfjs to work
-(typeof window !== 'undefined' ? window : {}).pdfjsWorker = require('pdfjs-dist/build/pdf.worker.js');
+// Required for pdfjs to work
+(typeof window !== 'undefined'
+	? window
+	: {}
+).pdfjsWorker = require('pdfjs-dist/build/pdf.worker.js');
 
-Meteor.startup(
-  () => render(
-    (
-      <LocalizationProvider dateAdapter={DateFnsUtils}>
-        <BrowserRouter>
-          <App/>
-        </BrowserRouter>
-      </LocalizationProvider>
-    ) ,
-    document.getElementById('render-target')
-  )
+Meteor.startup(() =>
+	render(
+		<LocalizationProvider dateAdapter={DateFnsUtils}>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</LocalizationProvider>,
+		document.querySelector('#render-target')
+	)
 );

@@ -1,16 +1,12 @@
-import React from 'react' ;
+import React from 'react';
 
-import SelectOneSetting from './SelectOneSetting.js' ;
+import SelectOneSetting from './SelectOneSetting.js';
 
 export default class NavigationDrawerIsOpenSetting extends React.Component {
+	render() {
+		const {className} = this.props;
 
-	render ( ) {
-
-		const {
-			className ,
-		} = this.props ;
-
-		const options = [ 'open' , 'closed' ] ;
+		const options = ['open', 'closed'];
 
 		return (
 			<SelectOneSetting
@@ -20,7 +16,6 @@ export default class NavigationDrawerIsOpenSetting extends React.Component {
 				setting="navigation-drawer-is-open"
 				options={options}
 			/>
-		) ;
+		);
 	}
-
 }

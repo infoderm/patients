@@ -1,38 +1,34 @@
-import { Meteor } from 'meteor/meteor';
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withRouter } from 'react-router-dom' ;
-import { Prompt } from 'react-router';
+import {withRouter} from 'react-router-dom';
+import {Prompt} from 'react-router';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar'
+import Avatar from '@material-ui/core/Avatar';
 
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { format } from 'date-fns' ;
+import {format} from 'date-fns';
 
-import { Patients } from '../../api/patients.js';
+import {Patients} from '../../api/patients.js';
 
-const styles = theme => ({
+const styles = (theme) => ({
 	container: {
-		paddingBottom: '5em',
+		paddingBottom: '5em'
 	},
 	multiline: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing(2)}px)`,
+		width: `calc(100% - ${theme.spacing(2)}px)`
 	},
 	header: {
 		backgroundColor: 'white',
@@ -42,28 +38,28 @@ const styles = theme => ({
 		zIndex: 10,
 		marginLeft: '-24px',
 		marginRight: '-24px',
-		boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
+		boxShadow:
+			'0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)'
 	},
 	form: {
-		marginTop: '64px',
+		marginTop: '64px'
 	},
 	avatar: {
 		width: '48px',
-		height: '48px',
+		height: '48px'
 	},
 	fab: {
 		position: 'fixed',
 		bottom: theme.spacing(3),
-		right: theme.spacing(3),
-	},
+		right: theme.spacing(3)
+	}
 });
 
 class ConsultationForm extends React.Component {
-
-	constructor(props){
+	constructor(props) {
 		super(props);
 
-		const { consultation } = props ;
+		const {consultation} = props;
 
 		this.state = {
 			patientId: consultation.patientId,
@@ -83,17 +79,17 @@ class ConsultationForm extends React.Component {
 			book: consultation.book,
 
 			syncPaid: true,
-			dirty: false,
-
+			dirty: false
 		};
-
 	}
 
-	handleSubmit ( event ) {
-
+	handleSubmit = (event) => {
 		event.preventDefault();
 
-		const { history , consultation : { _id : consultationId } } = this.props ;
+		const {
+			history,
+			consultation: {_id: consultationId}
+		} = this.props;
 
 		const {
 			patientId,
@@ -110,8 +106,8 @@ class ConsultationForm extends React.Component {
 			payment_method,
 			price,
 			paid,
-			book,
-		} = this.state ;
+			book
+		} = this.state;
 
 		const datetime = new Date(`${date}T${time}`);
 
@@ -127,54 +123,55 @@ class ConsultationForm extends React.Component {
 
 			currency,
 			payment_method,
-			price: parseInt(price,10),
-			paid: parseInt(paid,10),
-			book,
-		} ;
+			price: Number.parseInt(price, 10),
+			paid: Number.parseInt(paid, 10),
+			book
+		};
 
-		if ( consultationId === undefined ) {
+		if (consultationId === undefined) {
 			Meteor.call('consultations.insert', consultation, (err, _id) => {
-				if ( err ) console.error(err) ;
-				else {
+				if (err) {
+					console.error(err);
+				} else {
 					this.setState({
-						dirty: false,
+						dirty: false
 					});
-					history.push({pathname: `/consultation/${_id}`}) ;
+					history.push({pathname: `/consultation/${_id}`});
 				}
 			});
-		}
-		else {
-			Meteor.call('consultations.update', consultationId, consultation, (err, res) => {
-				if ( err ) console.error(err) ;
-				else {
-					this.setState({
-						dirty: false,
-					});
-					history.push({pathname: `/consultation/${consultationId}`}) ;
+		} else {
+			Meteor.call(
+				'consultations.update',
+				consultationId,
+				consultation,
+				(err, _res) => {
+					if (err) {
+						console.error(err);
+					} else {
+						this.setState({
+							dirty: false
+						});
+						history.push({pathname: `/consultation/${consultationId}`});
+					}
 				}
-			});
+			);
 		}
-	}
+	};
 
-
-
-	render(){
-
+	render() {
 		const {
-			classes ,
-			consultation : {
-				_id : consultationId
-			},
+			classes,
+			// consultation: {_id: consultationId},
 			loadingPatient,
-			patient,
-		} = this.props ;
+			patient
+		} = this.props;
 
-		const update = key => e => {
+		const update = (key) => (e) => {
 			this.setState({
 				[key]: e.target.value,
-				dirty: true,
+				dirty: true
 			});
-		} ;
+		};
 
 		return (
 			<div className={classes.container}>
@@ -182,129 +179,157 @@ class ConsultationForm extends React.Component {
 					when={this.state.dirty}
 					message="You are trying to leave the page without saving your changes. Are you sure you want to continue?"
 				/>
-				<Grid className={classes.header} container spacing={3}>
-					{(loadingPatient || !patient || !patient.photo) ? '' :
-					<Grid item xs={1}>
-					<Avatar
-						alt={`${patient.firstname} ${patient.lastname}`}
-						src={`data:image/png;base64,${patient.photo}`}
-						className={classes.avatar}
-						/>
-					</Grid>
-					}
-					{(loadingPatient || !patient) ? '' :
+				<Grid container className={classes.header} spacing={3}>
+					{loadingPatient || !patient || !patient.photo ? (
+						''
+					) : (
+						<Grid item xs={1}>
+							<Avatar
+								alt={`${patient.firstname} ${patient.lastname}`}
+								src={`data:image/png;base64,${patient.photo}`}
+								className={classes.avatar}
+							/>
+						</Grid>
+					)}
+					{loadingPatient || !patient ? (
+						''
+					) : (
+						<Grid item xs={2}>
+							<TextField
+								inputProps={{readOnly: true}}
+								label="Lastname"
+								value={patient.lastname}
+							/>
+						</Grid>
+					)}
+					{loadingPatient || !patient ? (
+						''
+					) : (
+						<Grid item xs={2}>
+							<TextField
+								inputProps={{readOnly: true}}
+								label="Firstname"
+								value={patient.firstname}
+							/>
+						</Grid>
+					)}
+					{loadingPatient || !patient ? (
+						''
+					) : (
+						<Grid item xs={2}>
+							<TextField
+								inputProps={{readOnly: true}}
+								label="NISS"
+								value={patient.niss}
+							/>
+						</Grid>
+					)}
+					{!loadingPatient && patient ? (
+						''
+					) : (
+						<Grid item xs={2}>
+							<TextField
+								disabled
+								label="Patient id"
+								value={this.state.patientId}
+							/>
+						</Grid>
+					)}
 					<Grid item xs={2}>
-						<TextField inputProps={{readOnly: true}} label="Lastname" value={patient.lastname}/>
-					</Grid>
-					}
-					{(loadingPatient || !patient) ? '' :
-					<Grid item xs={2}>
-						<TextField inputProps={{readOnly: true}} label="Firstname" value={patient.firstname}/>
-					</Grid>
-					}
-					{(loadingPatient || !patient) ? '' :
-					<Grid item xs={2}>
-						<TextField inputProps={{readOnly: true}} label="NISS" value={patient.niss}/>
-					</Grid>
-					}
-					{(!loadingPatient && patient) ? '' :
-					<Grid item xs={2}>
-						<TextField disabled={true} label="Patient id" value={this.state.patientId}/>
-					</Grid>
-					}
-					<Grid item xs={2}>
-						<TextField type="date"
+						<TextField
+							type="date"
 							label="Date"
 							InputLabelProps={{
-							  shrink: true,
+								shrink: true
 							}}
 							value={this.state.date}
 							onChange={update('date')}
 						/>
 					</Grid>
 					<Grid item xs={1}>
-						<TextField type="time"
+						<TextField
+							type="time"
 							label="Time"
 							InputLabelProps={{
-								shrink: true,
+								shrink: true
 							}}
 							value={this.state.time}
 							onChange={update('time')}
 						/>
 					</Grid>
 				</Grid>
-				<Grid className={classes.form} container spacing={3}>
+				<Grid container className={classes.form} spacing={3}>
 					<Grid item xs={12}>
 						<TextField
 							autoFocus
+							multiline
 							label="Motif de la visite"
 							placeholder="Motif de la visite"
-							multiline
 							rows={4}
 							className={classes.multiline}
 							value={this.state.reason}
-							onChange={update('reason')}
 							margin="normal"
+							onChange={update('reason')}
 						/>
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
+							multiline
 							label="Examens déjà réalisés"
 							placeholder="Examens déjà réalisés"
-							multiline
 							rows={4}
 							className={classes.multiline}
 							value={this.state.done}
-							onChange={update('done')}
 							margin="normal"
+							onChange={update('done')}
 						/>
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
+							multiline
 							label="Examens à réaliser"
 							placeholder="Examens à réaliser"
-							multiline
 							rows={4}
 							className={classes.multiline}
 							value={this.state.todo}
-							onChange={update('todo')}
 							margin="normal"
+							onChange={update('todo')}
 						/>
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
+							multiline
 							label="Traitement"
 							placeholder="Traitement"
-							multiline
 							rows={4}
 							className={classes.multiline}
 							value={this.state.treatment}
-							onChange={update('treatment')}
 							margin="normal"
+							onChange={update('treatment')}
 						/>
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
+							multiline
 							label="À revoir"
 							placeholder="À revoir"
-							multiline
 							rows={4}
 							className={classes.multiline}
 							value={this.state.next}
-							onChange={update('next')}
 							margin="normal"
+							onChange={update('next')}
 						/>
 					</Grid>
 					<Grid item xs={12}>
 						<TextField
+							multiline
 							label="Autres remarques"
 							placeholder="Write some additional information about the consultation here"
-							multiline
 							rows={4}
 							className={classes.multiline}
 							value={this.state.more}
-							onChange={update('more')}
 							margin="normal"
+							onChange={update('more')}
 						/>
 					</Grid>
 
@@ -313,8 +338,8 @@ class ConsultationForm extends React.Component {
 							select
 							label="Currency"
 							value={this.state.currency}
-							onChange={update('currency')}
 							margin="normal"
+							onChange={update('currency')}
 						>
 							<MenuItem value="EUR">€</MenuItem>
 						</TextField>
@@ -324,8 +349,8 @@ class ConsultationForm extends React.Component {
 							select
 							label="Payment Method"
 							value={this.state.payment_method}
-							onChange={update('payment_method')}
 							margin="normal"
+							onChange={update('payment_method')}
 						>
 							<MenuItem value="cash">cash</MenuItem>
 							<MenuItem value="wire">virement</MenuItem>
@@ -336,39 +361,52 @@ class ConsultationForm extends React.Component {
 						<TextField
 							label="Prix"
 							value={this.state.price}
-							onChange={e => this.setState({
-								price: e.target.value ,
-								paid: this.state.syncPaid && this.state.payment_method === 'cash' ? e.target.value : this.state.paid,
-								dirty: true,
-							})}
 							margin="normal"
 							error={!/^\d+$/.test(this.state.price)}
+							onChange={(e) => {
+								const price = e.target.value;
+								this.setState((state) => ({
+									price,
+									paid:
+										state.syncPaid && state.payment_method === 'cash'
+											? price
+											: state.paid,
+									dirty: true
+								}));
+							}}
 						/>
 					</Grid>
 					<Grid item xs={3}>
 						<TextField
 							label="Payé"
 							value={this.state.paid}
-							onChange={e => this.setState({
-								paid : e.target.value ,
-								syncPaid: false ,
-								dirty: true ,
-							})}
 							margin="normal"
 							error={!/^\d+$/.test(this.state.paid)}
+							onChange={(e) =>
+								this.setState({
+									paid: e.target.value,
+									syncPaid: false,
+									dirty: true
+								})
+							}
 						/>
 					</Grid>
 					<Grid item xs={3}>
 						<TextField
 							label="Carnet"
 							value={this.state.book}
-							onChange={update('book')}
 							margin="normal"
+							onChange={update('book')}
 						/>
 					</Grid>
 				</Grid>
-				<Fab className={classes.fab} color="primary" aria-label="save" onClick={this.handleSubmit.bind(this)}>
-					<SaveIcon/>
+				<Fab
+					className={classes.fab}
+					color="primary"
+					aria-label="save"
+					onClick={this.handleSubmit}
+				>
+					<SaveIcon />
 				</Fab>
 			</div>
 		);
@@ -377,15 +415,18 @@ class ConsultationForm extends React.Component {
 
 ConsultationForm.propTypes = {
 	classes: PropTypes.object.isRequired,
-	history: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired
 };
 
-export default withRouter(withTracker(({consultation}) => {
-	const _id = consultation.patientId;
-	const handle = Meteor.subscribe('patient', _id);
-	if ( handle.ready() ) {
-		const patient = Patients.findOne(_id);
-		return { loadingPatient: false, patient } ;
-	}
-	else return { loadingPatient: true } ;
-}) ( withStyles(styles, { withTheme: true})(ConsultationForm) ) ) ;
+export default withRouter(
+	withTracker(({consultation}) => {
+		const _id = consultation.patientId;
+		const handle = Meteor.subscribe('patient', _id);
+		if (handle.ready()) {
+			const patient = Patients.findOne(_id);
+			return {loadingPatient: false, patient};
+		}
+
+		return {loadingPatient: true};
+	})(withStyles(styles, {withTheme: true})(ConsultationForm))
+);

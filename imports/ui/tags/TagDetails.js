@@ -1,31 +1,47 @@
-import { Meteor } from 'meteor/meteor' ;
-import { withTracker } from 'meteor/react-meteor-data' ;
+import {Meteor} from 'meteor/meteor';
+import {withTracker} from 'meteor/react-meteor-data';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 
-function TagDetails ( { Card , List , listProps , root , name , page , perpage , items } ) {
+const TagDetails = ({
+	Card,
+	List,
+	listProps,
+	root,
+	name,
+	page,
+	perpage,
+	items
+}) => {
 	return (
 		<div>
-			{ Card && <div>
-				<div style={{ paddingBottom: 50 , paddingTop: 20 }}>
-					<Grid container spacing={3}>
-						<Grid item sm={12} md={12} lg={3} xl={4}></Grid>
-						<Card name={name}/>
-					</Grid>
+			{Card && (
+				<div>
+					<div style={{paddingBottom: 50, paddingTop: 20}}>
+						<Grid container spacing={3}>
+							<Grid item sm={12} md={12} lg={3} xl={4} />
+							<Card name={name} />
+						</Grid>
+					</div>
+					<Typography variant="h2">Patients</Typography>
 				</div>
-				<Typography variant="h2">Patients</Typography>
-			</div>}
-			<List {...listProps} root={root} page={page} perpage={perpage} items={items}/>
+			)}
+			<List
+				{...listProps}
+				root={root}
+				page={page}
+				perpage={perpage}
+				items={items}
+			/>
 		</div>
-	) ;
-}
+	);
+};
 
 TagDetails.propTypes = {
-
 	List: PropTypes.func.isRequired,
 	root: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
@@ -37,13 +53,16 @@ TagDetails.propTypes = {
 	selector: PropTypes.object.isRequired,
 	sort: PropTypes.object.isRequired,
 
-	items: PropTypes.array.isRequired,
+	items: PropTypes.array.isRequired
+};
 
-} ;
-
-export default withTracker(({subscription, name, collection, selector, sort, page, perpage}) => {
-	Meteor.subscribe(subscription, name);
-	return {
-		items: collection.find(selector, {sort, skip: (page-1)*perpage, limit: perpage}).fetch()
-	} ;
-}) ( TagDetails );
+export default withTracker(
+	({subscription, name, collection, selector, sort, page, perpage}) => {
+		Meteor.subscribe(subscription, name);
+		return {
+			items: collection
+				.find(selector, {sort, skip: (page - 1) * perpage, limit: perpage})
+				.fetch()
+		};
+	}
+)(TagDetails);

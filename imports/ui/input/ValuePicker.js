@@ -1,4 +1,4 @@
-import React from 'react' ;
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import FormControl from '@material-ui/core/FormControl';
@@ -7,74 +7,65 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const MAGIC = '8204932840' ;
-let nextId = 0 ;
+const MAGIC = '8204932840';
+let nextId = 0;
 
 class ValuePicker extends React.Component {
+	render() {
+		const {
+			label,
+			name,
+			value,
+			onChange,
+			options,
+			optionToString,
+			pairToKey,
+			...rest
+		} = this.props;
 
-    render ( ) {
+		let {id} = this.props;
 
-        const {
-            label ,
-            name ,
-            value ,
-            onChange ,
-            options ,
-            optionToString ,
-            pairToKey ,
-            ...rest
-        } = this.props ;
+		if (id === undefined && label) {
+			id = `value-picker-${MAGIC}-${nextId++}`;
+		}
 
-        let {
-            id ,
-        } = this.props ;
+		const input = <Input id={id} />;
 
-        if ( id === undefined && label ) {
-            id = `value-picker-${MAGIC}-${nextId++}` ;
-        }
+		const inputProps = {
+			name,
+			id
+		};
 
-        const input = ( <Input id={id}/> ) ;
-
-        const inputProps = {
-            name,
-            id,
-        } ;
-
-        return (
-            <FormControl>
-                {label && <InputLabel htmlFor={id}>{label}</InputLabel>}
-                <Select
-                    value={value}
-                    onChange={onChange}
-                    input={input}
-                    inputProps={inputProps}
-                    {...rest}
-                >
-                    {options.map( ( option , index ) => (
-                        <MenuItem
-                            key={pairToKey(option, index)}
-                            value={option}
-                        >
-                            {optionToString(option)}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        ) ;
-
-    }
-
+		return (
+			<FormControl>
+				{label && <InputLabel htmlFor={id}>{label}</InputLabel>}
+				<Select
+					value={value}
+					input={input}
+					inputProps={inputProps}
+					onChange={onChange}
+					{...rest}
+				>
+					{options.map((option, index) => (
+						<MenuItem key={pairToKey(option, index)} value={option}>
+							{optionToString(option)}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+		);
+	}
 }
 
 ValuePicker.defaultProps = {
-    optionToString : x => x.toString() ,
-    pairToKey : ( option , index ) => option ,
-} ;
+	optionToString: (x) => x.toString(),
+	pairToKey: (option, _index) => option
+};
 
 ValuePicker.propTypes = {
-    options: PropTypes.array.isRequired ,
-    optionToString: PropTypes.func.isRequired ,
-    pairToKey: PropTypes.func.isRequired ,
-} ;
+	options: PropTypes.array.isRequired,
+	optionToString: PropTypes.func,
+	pairToKey: PropTypes.func
+};
 
-export default ValuePicker ;
+export default ValuePicker;

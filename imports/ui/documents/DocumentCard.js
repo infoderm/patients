@@ -14,7 +14,6 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionActions from '@material-ui/core/AccordionActions';
 
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
@@ -27,10 +26,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import BusinessIcon from '@material-ui/icons/Business';
-import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinkIcon from '@material-ui/icons/Link';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -48,10 +45,10 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import dateformat from 'date-fns/format';
 
-import { Documents } from '../../api/documents.js';
-import { Patients } from '../../api/patients.js';
+import {Documents} from '../../api/documents.js';
+import {Patients} from '../../api/patients.js';
 import saveTextAs from '../../client/saveTextAs.js';
-import { myEncodeURIComponent } from '../../client/uri.js';
+import {myEncodeURIComponent} from '../../client/uri.js';
 
 import StaticPatientChip from '../patients/StaticPatientChip.js';
 
@@ -63,7 +60,7 @@ import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
 import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
 import HealthOneReportContents from './HealthOneReportContents.js';
 
-const styles = theme => ({
+const styles = (theme) => ({
 	heading: {
 		fontSize: theme.typography.pxToRem(15),
 		fontWeight: theme.typography.fontWeightRegular
@@ -71,69 +68,68 @@ const styles = theme => ({
 	chips: {
 		display: 'flex',
 		justifyContent: 'center',
-		flexWrap: 'wrap',
+		flexWrap: 'wrap'
 	},
 	chip: {
-		marginRight: theme.spacing(1),
+		marginRight: theme.spacing(1)
 	},
 	linksep: {
-		marginRight: theme.spacing(1),
+		marginRight: theme.spacing(1)
 	},
 	link: {
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	patientchip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#88f',
 		color: '#fff',
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	unlinkedpatientchip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
 		color: '#fff',
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	linkoffchip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
-		color: '#fff',
+		color: '#fff'
 	},
 	anomalieschip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#fa8',
 		color: '#fff',
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	partialchip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#fa8',
 		color: '#fff',
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	completechip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#8fa',
 		color: '#fff',
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	versionschip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#666',
 		color: '#fff',
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	pre: {
 		padding: theme.spacing(3),
-		overflowX: 'auto',
+		overflowX: 'auto'
 	},
 	list: {
-		maxWidth: '100%',
-	},
+		maxWidth: '100%'
+	}
 });
 
 class DocumentCard extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -141,32 +137,29 @@ class DocumentCard extends React.Component {
 			unlinking: false,
 			deleting: false,
 			restoring: false,
-			superdeleting: false,
+			superdeleting: false
 		};
 	}
 
-	download = event => {
-
-		const { document } = this.props ;
+	download = (_event) => {
+		const {document} = this.props;
 
 		const extensions = {
-			'healthone': 'HLT' ,
-			//'medar' : 'MDR' ,
-			//'medidoc' : 'MDD' ,
-		} ;
+			healthone: 'HLT'
+			// 'medar' : 'MDR' ,
+			// 'medidoc' : 'MDD' ,
+		};
 
-		const ext = extensions[document.format] || 'UNK' ;
+		const ext = extensions[document.format] || 'UNK';
 
-		const name = document.parsed ?
-			`${document.identifier}-${document.reference}-${document.status}`
-			:
-			`${document._id}` ;
+		const name = document.parsed
+			? `${document.identifier}-${document.reference}-${document.status}`
+			: `${document._id}`;
 
 		const filename = `${name}.${ext}`;
 
 		saveTextAs(document.decoded || document.source, filename);
-
-	}
+	};
 
 	render() {
 		const {
@@ -180,11 +173,9 @@ class DocumentCard extends React.Component {
 			patient,
 			versions,
 			document: {
-				_id,
 				createdAt,
 				patientId,
 				source,
-				encoding,
 				decoded,
 				parsed,
 				format,
@@ -196,241 +187,312 @@ class DocumentCard extends React.Component {
 				deleted,
 				lastVersion,
 				patient: subject,
-				anomalies,
-			},
+				anomalies
+			}
 		} = this.props;
 
-		const { document } = this.props;
+		const {document} = this.props;
 
-		const {
-			linking,
-			unlinking,
-			deleting,
-			restoring,
-			superdeleting,
-		} = this.state;
+		const {linking, unlinking, deleting, restoring, superdeleting} = this.state;
 
 		return (
 			<Accordion defaultExpanded={defaultExpanded}>
-				<AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+				<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 					<div className={classes.chips}>
-						{ parsed ?
+						{parsed ? (
 							<Chip
-								label={dateformat(datetime,'iii do MMMM yyyy')}
+								label={dateformat(datetime, 'iii do MMMM yyyy')}
 								className={classes.chip}
 							/>
-							:
+						) : (
 							<Chip
-								label={dateformat(createdAt,'iii do MMMM yyyy')}
+								label={dateformat(createdAt, 'iii do MMMM yyyy')}
 								className={classes.chip}
 							/>
-						}
-						{ parsed &&
+						)}
+						{parsed && (
 							<Chip
-								avatar={<Avatar><BusinessIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<BusinessIcon />
+									</Avatar>
+								}
 								label={identifier}
 								className={classes.chip}
 							/>
-						}
-						{ parsed &&
+						)}
+						{parsed && (
 							<Chip
-								avatar={<Avatar><ConfirmationNumberIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<ConfirmationNumberIcon />
+									</Avatar>
+								}
 								label={reference}
 								className={classes.chip}
 							/>
-						}
-						{ parsed ? null :
+						)}
+						{parsed ? null : (
 							<Chip
-								avatar={<Avatar><BugReportIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<BugReportIcon />
+									</Avatar>
+								}
 								label="parsing error"
 								className={classes.chip}
 							/>
-						}
-						{ (patientChip && patientId) &&
+						)}
+						{patientChip && patientId && (
 							<StaticPatientChip
 								className={classes.patientchip}
 								loading={loadingPatient}
-								exists={!!patient}
+								exists={Boolean(patient)}
 								patient={patient || {_id: patientId}}
 							/>
-						}
-						{ (patientChip && !patientId && parsed) &&
+						)}
+						{patientChip && !patientId && parsed && (
 							<Chip
-								avatar={<Avatar><LinkOffIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<LinkOffIcon />
+									</Avatar>
+								}
 								label={`${subject.lastname} ${subject.firstname}`}
 								className={classes.unlinkedpatientchip}
-								onClick={e => {
+								onClick={(e) => {
 									e.stopPropagation();
 									this.setState({linking: true});
 								}}
 							/>
-						}
-						{ (!patientId && !parsed) &&
+						)}
+						{!patientId && !parsed && (
 							<Chip
-								avatar={<Avatar><LinkOffIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<LinkOffIcon />
+									</Avatar>
+								}
 								label="not linked"
 								className={classes.linkoffchip}
-								onClick={e => {
+								onClick={(e) => {
 									e.stopPropagation();
 									this.setState({linking: true});
 								}}
 							/>
-						}
-						{ (parsed && kind === 'lab' && anomalies) ?
+						)}
+						{parsed && kind === 'lab' && anomalies ? (
 							<Chip
-								avatar={<Avatar><ErrorIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<ErrorIcon />
+									</Avatar>
+								}
 								label={anomalies}
 								className={classes.anomalieschip}
 							/>
-							:
-							null
-						}
-						{ (parsed && status && status === 'partial' ) ?
+						) : null}
+						{parsed && status && status === 'partial' ? (
 							<Chip
-								avatar={<Avatar><HourglassEmptyIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<HourglassEmptyIcon />
+									</Avatar>
+								}
 								label={status}
 								className={classes.partialchip}
 							/>
-							:
-							null
-						}
-						{ (parsed && status && status === 'complete' ) ?
+						) : null}
+						{parsed && status && status === 'complete' ? (
 							<Chip
-								avatar={<Avatar><DoneIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<DoneIcon />
+									</Avatar>
+								}
 								label={status}
 								className={classes.completechip}
 							/>
-							:
-							null
-						}
-						{ deleted &&
+						) : null}
+						{deleted && (
 							<Chip
-								avatar={<Avatar><DeleteIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<DeleteIcon />
+									</Avatar>
+								}
 								label="deleted"
 								className={classes.chip}
 							/>
-						}
-						{ (!deleted && !lastVersion && versionsChip) &&
+						)}
+						{!deleted && !lastVersion && versionsChip && (
 							<Chip
-								avatar={<Avatar><HistoryIcon/></Avatar>}
+								avatar={
+									<Avatar>
+										<HistoryIcon />
+									</Avatar>
+								}
 								label="old version"
 								className={classes.versionschip}
 								component={Link}
-								to={`/document/versions/${myEncodeURIComponent(identifier)}/${myEncodeURIComponent(reference)}`}
+								to={`/document/versions/${myEncodeURIComponent(
+									identifier
+								)}/${myEncodeURIComponent(reference)}`}
 							/>
-						}
-						{ (!deleted && lastVersion && versionsChip && !loadingVersions && versions.length >= 2) &&
-							<Chip
-								avatar={<Avatar><HistoryIcon/></Avatar>}
-								label={`${versions.length} versions`}
-								className={classes.versionschip}
-								component={Link}
-								to={`/document/versions/${myEncodeURIComponent(identifier)}/${myEncodeURIComponent(reference)}`}
-							/>
-						}
+						)}
+						{!deleted &&
+							lastVersion &&
+							versionsChip &&
+							!loadingVersions &&
+							versions.length >= 2 && (
+								<Chip
+									avatar={
+										<Avatar>
+											<HistoryIcon />
+										</Avatar>
+									}
+									label={`${versions.length} versions`}
+									className={classes.versionschip}
+									component={Link}
+									to={`/document/versions/${myEncodeURIComponent(
+										identifier
+									)}/${myEncodeURIComponent(reference)}`}
+								/>
+							)}
 					</div>
 				</AccordionSummary>
 				<AccordionDetails>
-				  <List className={classes.list}>
-					{ (parsed && format === 'healthone' && kind === 'lab') &&
-						<ListItem>
-							<Avatar><TableChartIcon/></Avatar>
-							<ListItemText
-								disableTypography={true}
-								primary={<Typography variant="subtitle1">Results</Typography>}
-								secondary={<HealthOneLabResultsTable document={document}/>}
-							/>
-						</ListItem>
-					}
-					{ (parsed && format === 'healthone' && kind === 'report') &&
-						<ListItem>
-							<Avatar><SubjectIcon/></Avatar>
-							<ListItemText
-								disableTypography={true}
-								primary={<Typography variant="subtitle1">Contents</Typography>}
-								secondary={<HealthOneReportContents document={document}/>}
-							/>
-						</ListItem>
-					}
-					{ (!parsed || format !== 'healthone') &&
-						<ListItem>
-							<Avatar><FileCopyIcon/></Avatar>
-							<ListItemText
-								disableTypography={true}
-								primary={<Typography variant="subtitle1">Source</Typography>}
-								secondary={
-									<Paper>
-										<pre className={classes.pre}>
-											{decoded || source}
-										</pre>
-									</Paper>
-								}
-							/>
-						</ListItem>
-					}
-				  </List>
+					<List className={classes.list}>
+						{parsed && format === 'healthone' && kind === 'lab' && (
+							<ListItem>
+								<Avatar>
+									<TableChartIcon />
+								</Avatar>
+								<ListItemText
+									disableTypography
+									primary={<Typography variant="subtitle1">Results</Typography>}
+									secondary={<HealthOneLabResultsTable document={document} />}
+								/>
+							</ListItem>
+						)}
+						{parsed && format === 'healthone' && kind === 'report' && (
+							<ListItem>
+								<Avatar>
+									<SubjectIcon />
+								</Avatar>
+								<ListItemText
+									disableTypography
+									primary={
+										<Typography variant="subtitle1">Contents</Typography>
+									}
+									secondary={<HealthOneReportContents document={document} />}
+								/>
+							</ListItem>
+						)}
+						{(!parsed || format !== 'healthone') && (
+							<ListItem>
+								<Avatar>
+									<FileCopyIcon />
+								</Avatar>
+								<ListItemText
+									disableTypography
+									primary={<Typography variant="subtitle1">Source</Typography>}
+									secondary={
+										<Paper>
+											<pre className={classes.pre}>{decoded || source}</pre>
+										</Paper>
+									}
+								/>
+							</ListItem>
+						)}
+					</List>
 				</AccordionDetails>
-				<Divider/>
+				<Divider />
 				<AccordionActions>
-					{ versionsButton && !loadingVersions && versions.length >= 2 &&
-					<Button color="primary"
-						component={Link}
-						to={`/document/versions/${myEncodeURIComponent(identifier)}/${myEncodeURIComponent(reference)}`}
-					>
-							{versions.length} versions<HistoryIcon/>
+					{versionsButton && !loadingVersions && versions.length >= 2 && (
+						<Button
+							color="primary"
+							component={Link}
+							to={`/document/versions/${myEncodeURIComponent(
+								identifier
+							)}/${myEncodeURIComponent(reference)}`}
+						>
+							{versions.length} versions
+							<HistoryIcon />
 						</Button>
-					}
+					)}
 					<Button color="primary" onClick={this.download}>
-						Download<CloudDownloadIcon/>
+						Download
+						<CloudDownloadIcon />
 					</Button>
-					<Button color="primary" onClick={e => this.setState({linking: true})}>
-						Link<LinkIcon/>
+					<Button
+						color="primary"
+						onClick={() => this.setState({linking: true})}
+					>
+						Link
+						<LinkIcon />
 					</Button>
-					{ patientId &&
-						<Button color="secondary" onClick={e => this.setState({unlinking: true})}>
-							Unlink<LinkOffIcon/>
+					{patientId && (
+						<Button
+							color="secondary"
+							onClick={() => this.setState({unlinking: true})}
+						>
+							Unlink
+							<LinkOffIcon />
 						</Button>
-					}
-					{ deleted &&
-						<Button color="primary" onClick={e => this.setState({restoring: true})}>
-							Restore<RestoreFromTrashIcon/>
+					)}
+					{deleted && (
+						<Button
+							color="primary"
+							onClick={() => this.setState({restoring: true})}
+						>
+							Restore
+							<RestoreFromTrashIcon />
 						</Button>
-					}
-					{ deleted &&
-						<Button color="secondary" onClick={e => this.setState({superdeleting: true})}>
-							Delete forever<DeleteForeverIcon/>
+					)}
+					{deleted && (
+						<Button
+							color="secondary"
+							onClick={() => this.setState({superdeleting: true})}
+						>
+							Delete forever
+							<DeleteForeverIcon />
 						</Button>
-					}
-					{ !deleted &&
-						<Button color="secondary" onClick={e => this.setState({deleting: true})}>
-							Delete<DeleteIcon/>
+					)}
+					{!deleted && (
+						<Button
+							color="secondary"
+							onClick={() => this.setState({deleting: true})}
+						>
+							Delete
+							<DeleteIcon />
 						</Button>
-					}
+					)}
 					<DocumentLinkingDialog
 						open={linking}
-						onClose={e => this.setState({linking: false})}
 						document={document}
 						existingLink={patient}
+						onClose={() => this.setState({linking: false})}
 					/>
 					<DocumentUnlinkingDialog
 						open={unlinking}
-						onClose={e => this.setState({unlinking: false})}
 						document={document}
+						onClose={() => this.setState({unlinking: false})}
 					/>
 					<DocumentDeletionDialog
 						open={deleting}
-						onClose={e => this.setState({deleting: false})}
 						document={document}
+						onClose={() => this.setState({deleting: false})}
 					/>
 					<DocumentRestorationDialog
 						open={restoring}
-						onClose={e => this.setState({restoring: false})}
 						document={document}
+						onClose={() => this.setState({restoring: false})}
 					/>
 					<DocumentSuperDeletionDialog
 						open={superdeleting}
-						onClose={e => this.setState({superdeleting: false})}
 						document={document}
+						onClose={() => this.setState({superdeleting: false})}
 					/>
 				</AccordionActions>
 			</Accordion>
@@ -439,7 +501,7 @@ class DocumentCard extends React.Component {
 }
 
 DocumentCard.defaultProps = {
-	defaultExpanded: false,
+	defaultExpanded: false
 };
 
 DocumentCard.propTypes = {
@@ -448,53 +510,61 @@ DocumentCard.propTypes = {
 	patientChip: PropTypes.bool.isRequired,
 	versionsButton: PropTypes.bool.isRequired,
 	versionsChip: PropTypes.bool.isRequired,
-	defaultExpanded: PropTypes.bool.isRequired,
+	defaultExpanded: PropTypes.bool
 };
 
-const component = withTracker(({document, patientChip, versionsButton, versionsChip}) => {
-	const additionalProps = {
-		loadingPatient: false,
-		loadingVersions: false,
-	} ;
-	const { patientId , parsed , identifier , reference } = document ;
+const component = withTracker(
+	({document, patientChip, versionsButton, versionsChip}) => {
+		const additionalProps = {
+			loadingPatient: false,
+			loadingVersions: false
+		};
+		const {patientId, parsed, identifier, reference} = document;
 
-	if (patientId && patientChip) {
-		const handle = Meteor.subscribe('patient', patientId);
-		if (handle.ready()) {
-			const patient = Patients.findOne(patientId);
-			additionalProps.patient = patient ;
-		}
-		else {
-			additionalProps.loadingPatient = true ;
-		}
-	}
-
-	if (versionsButton || versionsChip) {
-		if (!parsed) additionalProps.versions = [ document ] ;
-		else {
-			const options = {
-			  sort: { status: 1, datetime: -1 },
-			  fields: { identifier: 1, reference: 1, status: 1, datetime: 1 },
-			} ;
-			const handle = Meteor.subscribe('documents.versions', identifier, reference, options);
+		if (patientId && patientChip) {
+			const handle = Meteor.subscribe('patient', patientId);
 			if (handle.ready()) {
-				const versions = Documents.find({identifier, reference}, options).fetch();
-				additionalProps.versions = versions ;
-			}
-			else {
-				additionalProps.loadingVersions = true ;
+				const patient = Patients.findOne(patientId);
+				additionalProps.patient = patient;
+			} else {
+				additionalProps.loadingPatient = true;
 			}
 		}
+
+		if (versionsButton || versionsChip) {
+			if (!parsed) {
+				additionalProps.versions = [document];
+			} else {
+				const options = {
+					sort: {status: 1, datetime: -1},
+					fields: {identifier: 1, reference: 1, status: 1, datetime: 1}
+				};
+				const handle = Meteor.subscribe(
+					'documents.versions',
+					identifier,
+					reference,
+					options
+				);
+				if (handle.ready()) {
+					const versions = Documents.find(
+						{identifier, reference},
+						options
+					).fetch();
+					additionalProps.versions = versions;
+				} else {
+					additionalProps.loadingVersions = true;
+				}
+			}
+		}
+
+		return additionalProps;
 	}
-
-	return additionalProps ;
-
-})(withStyles(styles, {withTheme: true})(DocumentCard));
+)(withStyles(styles, {withTheme: true})(DocumentCard));
 
 component.defaultProps = {
 	patientChip: true,
 	versionsButton: true,
-	versionsChip: true,
+	versionsChip: true
 };
 
-export default component ;
+export default component;

@@ -1,74 +1,69 @@
-import React, {Fragment} from 'react';
-import PropTypes from 'prop-types';
-
-import { withStyles } from '@material-ui/core/styles';
+import {Meteor} from 'meteor/meteor';
+import React from 'react';
 
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import InputFileButton from '../input/InputFileButton.js';
 
-import { Uploads } from '../../api/uploads.js';
+import {Uploads} from '../../api/uploads.js';
 
-const styles = theme => ({
-});
+export default class AttachFileButton extends React.Component {
+	upload = (event) => {
+		const itemId = this.props.item;
+		const method = this.props.method;
+		const files = event.target.files;
 
-class AttachFileButton extends React.Component {
+		for (const file of files) {
+			const upload = Uploads.insert(
+				{
+					file,
+					streams: 'dynamic',
+					chunkSize: 'dynamic',
+					meta: {
+						createdAt: new Date()
+					}
+				},
+				false
+			);
 
-    constructor (props) {
-        super(props);
-    }
+			upload.on('start', () => {
+				console.log('[Upload] started');
+			});
 
-    upload (event) {
+			upload.on('end', (err, fileObject) => {
+				if (err) {
+					console.error(`[Upload] Error during upload: ${err}`);
+				} else {
+					console.log(
+						`[Upload] File "${fileObject.name} (${fileObject._id})" successfully uploaded`
+					);
+					Meteor.call(method, itemId, fileObject._id, (err, _res) => {
+						if (err) {
+							console.error(err);
+						} else {
+							console.log(
+								`[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method}".`
+							);
+						}
+					});
+				}
+			});
 
-      const itemId = this.props.item;
-      const method = this.props.method;
-      const files = event.target.files ;
+			upload.start();
+		}
+	};
 
-      for ( const file of files ) {
-
-        const upload = Uploads.insert({
-            file ,
-            streams: 'dynamic',
-            chunkSize: 'dynamic',
-            meta: {
-                createdAt: new Date(),
-            },
-        }, false);
-
-        upload.on('start', function () {
-            console.log(`[Upload] started`);
-        });
-
-        upload.on('end', function (err, fileObj) {
-            if (err) {
-                console.error(`[Upload] Error during upload: ${err}`);
-            }
-            else {
-                console.log(`[Upload] File "${fileObj.name} (${fileObj._id})" successfully uploaded`);
-                Meteor.call(method, itemId, fileObj._id, (err, res) => {
-                  if ( err ) console.error(err) ;
-                  else console.log(`[Attach] File "${fileObj.name} (${fileObj._id})" successfully attached to item "${itemId}" using method "${method}".`) ;
-                });
-            }
-        });
-
-        upload.start();
-      }
-    }
-
-    render () {
-      const { method , item , children , ...rest } = this.props ;
-      return (
-        <InputFileButton onChange={this.upload.bind(this)} {...rest}>
-            { children || <Fragment>Attach File<AttachFileIcon/></Fragment>}
-        </InputFileButton>
-      );
-    }
+	render() {
+		const {method, item, children, ...rest} = this.props;
+		return (
+			<InputFileButton onChange={this.upload} {...rest}>
+				{children || (
+					<>
+						Attach File
+						<AttachFileIcon />
+					</>
+				)}
+			</InputFileButton>
+		);
+	}
 }
-
-AttachFileButton.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(AttachFileButton);
