@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import "regenerator-runtime/runtime.js";
 import { assert } from 'chai';
 
 import { Meteor } from 'meteor/meteor';

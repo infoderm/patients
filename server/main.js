@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import "regenerator-runtime/runtime.js";
 import { Meteor } from 'meteor/meteor';
 import { ObjectId } from 'meteor/mongo';
 

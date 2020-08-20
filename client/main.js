@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import "regenerator-runtime/runtime.js";
 import React from 'react';
 
 import { Meteor } from 'meteor/meteor';
