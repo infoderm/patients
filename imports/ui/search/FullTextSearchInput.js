@@ -3,31 +3,31 @@ import PropTypes from 'prop-types' ;
 
 import { useHistory } from 'react-router-dom' ;
 
-import debounce from 'debounce' ;
-
 import { myEncodeURIComponent } from '../../client/uri.js';
 
 import SearchBox from '../input/SearchBox.js' ;
 
-const THRESHOLD_HISTORY_PUSH = 3000 ; // 3 seconds
-const DEBOUNCE_HISTORY_UPDATE = 500 ; // 500 ms
+const THRESHOLD_HISTORY_PUSH = 2000 ; // 2 seconds
+const DEBOUNCE_HISTORY_UPDATE = 300 ; // 300 ms
 
 export default function FullTextSearchInput ( { className } ) {
 
   const history = useHistory();
-  const [lastChange, setLastHistoryUpdate] = useState(0);
+  const [lastHistoryUpdate, setLastHistoryUpdate] = useState(0);
   const [value, setValue] = useState('');
+  const [pending, setPending] = useState(undefined);
 
-  const _updateHistory = newValue => {
-    const url = `/search/${myEncodeURIComponent(newValue)}` ;
-    const now = new Date();
-    const timeSinceLastHistoryUpdate = now - lastChange;
-    if ( timeSinceLastHistoryUpdate >= THRESHOLD_HISTORY_PUSH ) history.push(url);
-    else history.replace(url);
-    setLastHistoryUpdate(now);
+  const updateHistory = newValue => {
+    clearTimeout(pending);
+    setPending(setTimeout(() => {
+      const url = `/search/${myEncodeURIComponent(newValue)}` ;
+      const now = new Date();
+      const timeSinceLastHistoryUpdate = now - lastHistoryUpdate;
+      if ( timeSinceLastHistoryUpdate >= THRESHOLD_HISTORY_PUSH ) history.push(url);
+      else history.replace(url);
+      setLastHistoryUpdate(now);
+    }, DEBOUNCE_HISTORY_UPDATE));
   };
-
-  const updateHistory = debounce(_updateHistory, DEBOUNCE_HISTORY_UPDATE);
 
   const onChange = e => {
     setValue(e.target.value);
