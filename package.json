@@ -64,8 +64,8 @@
   },
   "private": true,
   "scripts": {
-    "start": "meteor run",
     "lint": "xo",
+    "start": "meteor run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
   },
   "xo": {
@@ -95,13 +95,25 @@
     },
     "overrides": [
       {
-        "files": [ "client/*.js", "imports/ui/**/*.js", "imports/client/*.js" ] ,
+        "files": [
+          "client/*.js",
+          "imports/ui/**/*.js",
+          "imports/client/*.js"
+        ],
         "env": "browser"
       },
       {
-        "files": [ "imports/api/*.mock.js" , "imports/api/*.tests.js" ] ,
-        "env": ["meteor", "mocha"],
-        "globals": [ "Factory"]
+        "files": [
+          "imports/api/*.mock.js",
+          "imports/api/*.tests.js"
+        ],
+        "env": [
+          "meteor",
+          "mocha"
+        ],
+        "globals": [
+          "Factory"
+        ]
       }
     ]
   }
