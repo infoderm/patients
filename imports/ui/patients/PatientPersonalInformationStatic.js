@@ -11,6 +11,7 @@ import {Prompt} from 'react-router';
 import {map, list, filter, take} from '@aureooms/js-itertools';
 
 import {withStyles} from '@material-ui/core/styles';
+import {withSnackbar} from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -165,18 +166,25 @@ class PatientPersonalInformation extends React.Component {
 	}
 
 	saveDetails = (_event) => {
-		Meteor.call(
-			'patients.update',
-			this.props.patient._id,
-			this.state.patient,
-			(err, _res) => {
-				if (err) {
-					console.error(err);
-				} else {
-					this.setState({editing: false, dirty: false});
-				}
+		const {
+			patient: {_id},
+			enqueueSnackbar,
+			closeSnackbar
+		} = this.props;
+		const key = enqueueSnackbar('Processing...', {variant: 'info'});
+		const fields = this.state.patient;
+		Meteor.call('patients.update', _id, fields, (err, _res) => {
+			closeSnackbar(key);
+			if (err) {
+				console.error(err);
+				enqueueSnackbar(err.message, {variant: 'error'});
+			} else {
+				const message = `Patient #${_id} updated.`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				this.setState({editing: false, dirty: false});
 			}
-		);
+		});
 	};
 
 	render() {
@@ -619,4 +627,8 @@ export default withTracker(() => {
 		allergies,
 		importantStrings
 	};
-})(withStyles(styles, {withTheme: true})(PatientPersonalInformation));
+})(
+	withStyles(styles, {withTheme: true})(
+		withSnackbar(PatientPersonalInformation)
+	)
+);

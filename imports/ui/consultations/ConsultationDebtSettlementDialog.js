@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 
 import Currency from 'currency-formatter';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
+import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '../modal/OptimizedDialog.js';
@@ -17,14 +18,23 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	}
-});
+}));
 
-class ConsultationDebtSettlementDialog extends React.Component {
-	clearDebtForThisConsultation = (onClose, consultation) => (event) => {
+export default function ConsultationDebtSettlementDialog(props) {
+	const {open, onClose, patient, consultation} = props;
+
+	const {currency, price, paid} = consultation;
+
+	const owed = price - paid;
+
+	const classes = useStyles();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+	const clearDebtForThisConsultation = (onClose, consultation) => (event) => {
 		event.preventDefault();
 
 		const fields = {
@@ -32,83 +42,77 @@ class ConsultationDebtSettlementDialog extends React.Component {
 			paid: consultation.price
 		};
 
+		const key = enqueueSnackbar('Processing...', {variant: 'info'});
 		Meteor.call(
 			'consultations.update',
 			consultation._id,
 			fields,
 			(err, _res) => {
+				closeSnackbar(key);
 				if (err) {
 					console.error(err);
+					enqueueSnackbar(err.message, {variant: 'error'});
 				} else {
-					console.log(`Consultation #${consultation._id} updated.`);
+					const message = `Consultation #${consultation._id} updated.`;
+					console.log(message);
+					enqueueSnackbar(message, {variant: 'success'});
 					onClose();
 				}
 			}
 		);
 	};
 
-	render() {
-		const {open, onClose, patient, consultation, classes} = this.props;
-
-		const {currency, price, paid} = consultation;
-
-		const owed = price - paid;
-
-		return (
-			<Dialog
-				open={open}
-				component="form"
-				aria-labelledby="consultation-debt-settling-dialog-title"
-				onClose={onClose}
-			>
-				<DialogTitle id="consultation-debt-settling-dialog-title">
-					Clear debt of consultation for patient {patient.firstname}{' '}
-					{patient.lastname}
-				</DialogTitle>
-				<DialogContent>
-					<DialogContentText>
-						Before settlement, the patient had paid{' '}
-						<b>{Currency.format(paid, {code: currency})}</b> out of{' '}
-						<b>{Currency.format(price, {code: currency})}</b>. The patient thus{' '}
-						<b>owed {Currency.format(owed, {code: currency})}</b> for this
-						consultation.{' '}
-						<b>
-							Once settled, the patient will owe{' '}
-							{Currency.format(0, {code: currency})} for this consultation.
-						</b>{' '}
-						If you do not want to settle debt for this consultation, click
-						cancel. If you really want to settle debt for this consultation,
-						click clear debt.
-					</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button type="submit" color="default" onClick={onClose}>
-						Cancel
-						<CancelIcon className={classes.rightIcon} />
-					</Button>
-					<Button
-						color="primary"
-						onClick={this.clearDebtForThisConsultation(onClose, consultation)}
-					>
-						Clear debt ({Currency.format(owed, {code: currency})})
-						<CheckIcon className={classes.rightIcon} />
-					</Button>
-				</DialogActions>
-			</Dialog>
-		);
-	}
-
-	static propTypes = {
-		open: PropTypes.bool.isRequired,
-		onClose: PropTypes.func.isRequired,
-		patient: PropTypes.object.isRequired,
-		classes: PropTypes.object.isRequired
-	};
+	return (
+		<Dialog
+			open={open}
+			component="form"
+			aria-labelledby="consultation-debt-settling-dialog-title"
+			onClose={onClose}
+		>
+			<DialogTitle id="consultation-debt-settling-dialog-title">
+				Clear debt of consultation for patient {patient.firstname}{' '}
+				{patient.lastname}
+			</DialogTitle>
+			<DialogContent>
+				<DialogContentText>
+					Before settlement, the patient had paid{' '}
+					<b>{Currency.format(paid, {code: currency})}</b> out of{' '}
+					<b>{Currency.format(price, {code: currency})}</b>. The patient thus{' '}
+					<b>owed {Currency.format(owed, {code: currency})}</b> for this
+					consultation.{' '}
+					<b>
+						Once settled, the patient will owe{' '}
+						{Currency.format(0, {code: currency})} for this consultation.
+					</b>{' '}
+					If you do not want to settle debt for this consultation, click cancel.
+					If you really want to settle debt for this consultation, click clear
+					debt.
+				</DialogContentText>
+			</DialogContent>
+			<DialogActions>
+				<Button type="submit" color="default" onClick={onClose}>
+					Cancel
+					<CancelIcon className={classes.rightIcon} />
+				</Button>
+				<Button
+					color="primary"
+					onClick={clearDebtForThisConsultation(onClose, consultation)}
+				>
+					Clear debt ({Currency.format(owed, {code: currency})})
+					<CheckIcon className={classes.rightIcon} />
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
 }
+
+ConsultationDebtSettlementDialog.propTypes = {
+	open: PropTypes.bool.isRequired,
+	onClose: PropTypes.func.isRequired,
+	patient: PropTypes.object.isRequired
+};
 
 ConsultationDebtSettlementDialog.projection = {
 	firstname: 1,
 	lastname: 1
 };
-
-export default withStyles(styles)(ConsultationDebtSettlementDialog);

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {useHistory} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
+import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '../modal/OptimizedDialog.js';
@@ -35,9 +36,11 @@ export default function MergePatientsConfirmationDialog(props) {
 
 	const classes = useStyles();
 	const history = useHistory();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const mergePatients = (event) => {
 		event.preventDefault();
+		const key = enqueueSnackbar('Processing...', {variant: 'info'});
 		Meteor.call(
 			'patients.merge',
 			toDelete,
@@ -45,10 +48,14 @@ export default function MergePatientsConfirmationDialog(props) {
 			documentsToAttach,
 			toCreate,
 			(err, _id) => {
+				closeSnackbar(key);
 				if (err) {
 					console.error(err);
+					enqueueSnackbar(err.message, {variant: 'error'});
 				} else {
-					console.log(`Patient #${_id} created.`);
+					const message = `Merged. Patient #${_id} created.`;
+					console.log(message);
+					enqueueSnackbar(message, {variant: 'success'});
 					history.push({pathname: `/patient/${_id}`});
 				}
 			}
