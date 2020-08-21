@@ -64,7 +64,7 @@ const App = (props) => {
 	return (
 		<MuiThemeProvider theme={muitheme}>
 			<CssBaseline />
-			<SnackbarProvider maxSnack={10}>
+			<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
 				<ErrorBoundary>
 					{progress < 1 ? (
 						<div className={classes.progressbarContainer}>
