@@ -20,7 +20,10 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 
 	const login = (event) => {
 		event.preventDefault();
-		const key = enqueueSnackbar('Logging in...', {variant: 'info'});
+		const key = enqueueSnackbar('Logging in...', {
+			variant: 'info',
+			persist: true
+		});
 		Meteor.loginWithPassword(username, password, (err) => {
 			closeSnackbar(key);
 			if (err) {

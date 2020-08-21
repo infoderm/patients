@@ -20,7 +20,10 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 
 	const register = (event) => {
 		event.preventDefault();
-		const key = enqueueSnackbar('Logging in...', {variant: 'info'});
+		const key = enqueueSnackbar('Creating account...', {
+			variant: 'info',
+			persist: true
+		});
 		Accounts.createUser({username, password}, (err) => {
 			closeSnackbar(key);
 			if (err) {

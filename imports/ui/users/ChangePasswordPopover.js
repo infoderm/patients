@@ -20,7 +20,10 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 
 	const changePassword = (event) => {
 		event.preventDefault();
-		const key = enqueueSnackbar('Changing password...', {variant: 'info'});
+		const key = enqueueSnackbar('Changing password...', {
+			variant: 'info',
+			persist: true
+		});
 		Accounts.changePassword(oldPassword, newPassword, (err) => {
 			closeSnackbar(key);
 			if (err) {
