@@ -6,22 +6,35 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '../modal/OptimizedDialog.js';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+
+import Button from '@material-ui/core/Button';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+
+import AttachmentThumbnail from './AttachmentThumbnail.js';
 
 import {normalized} from '../../api/string.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
+	},
+	thumbnail: {
+		height: 300
 	}
 }));
 
@@ -45,7 +58,7 @@ export default function AttachmentDeletionDialog(props) {
 		});
 	};
 
-	const deleteThisAttachmentIfLastNameMatches = (event) => {
+	const deleteThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
 		if (normalized(filename) === normalized(attachment.name)) {
 			setFilenameError('');
@@ -64,7 +77,7 @@ export default function AttachmentDeletionDialog(props) {
 				}
 			});
 		} else {
-			setFilenameError('Last names do not match');
+			setFilenameError('Attachment names do not match');
 		}
 	};
 
@@ -84,16 +97,39 @@ export default function AttachmentDeletionDialog(props) {
 					really want to delete this attachment from the system, enter its
 					filename below and click the delete button.
 				</DialogContentText>
-				<TextField
-					autoFocus
-					fullWidth
-					margin="dense"
-					label="Attachment's filename"
-					value={filename}
-					helperText={filenameError}
-					error={Boolean(filenameError)}
-					onChange={(e) => setFilename(e.target.value)}
+				<AttachmentThumbnail
+					className={classes.thumbnail}
+					height="300"
+					attachmentId={attachment._id}
 				/>
+				<FormControl fullWidth margin="dense">
+					<InputLabel error={Boolean(filenameError)}>
+						Attachment&apos;s filename
+					</InputLabel>
+					<Input
+						autoFocus
+						value={filename}
+						error={Boolean(filenameError)}
+						endAdornment={
+							<InputAdornment position="end">
+								<IconButton
+									aria-label="autofill filename check"
+									onClick={() => {
+										setFilename(attachment.name);
+										setFilenameError('');
+									}}
+									onMouseDown={(e) => e.preventDefault()}
+								>
+									<AssignmentIcon />
+								</IconButton>
+							</InputAdornment>
+						}
+						onChange={(e) => setFilename(e.target.value)}
+					/>
+					<FormHelperText error={Boolean(filenameError)}>
+						{filenameError}
+					</FormHelperText>
+				</FormControl>
 			</DialogContent>
 			<DialogActions>
 				<Button type="submit" color="default" onClick={onClose}>
@@ -102,7 +138,7 @@ export default function AttachmentDeletionDialog(props) {
 				</Button>
 				<Button
 					color="secondary"
-					onClick={deleteThisAttachmentIfLastNameMatches}
+					onClick={deleteThisAttachmentIfAttachmentNameMatches}
 				>
 					Delete
 					<DeleteIcon className={classes.rightIcon} />
