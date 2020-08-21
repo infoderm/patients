@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import addYears from 'date-fns/addYears';
 
 import {makeStyles} from '@material-ui/core/styles';
+import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -39,6 +40,7 @@ export default function BooksDownloadDialog({
 	initialEnd
 }) {
 	const classes = useStyles();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [advancedFunctionality, setAdvancedFunctionality] = useState(
 		initialAdvancedFunctionality
@@ -70,6 +72,10 @@ export default function BooksDownloadDialog({
 		const _firstBook = Number.parseInt(firstBook, 10);
 		const _lastBook = Number.parseInt(lastBook, 10);
 		const _maxRows = Number.parseInt(maxRows, 10);
+		const key = enqueueSnackbar('Creating report...', {
+			variant: 'info',
+			persist: true
+		});
 		Meteor.call(
 			'books.interval.csv',
 			begin,
@@ -78,9 +84,12 @@ export default function BooksDownloadDialog({
 			_lastBook,
 			_maxRows,
 			(err, res) => {
+				closeSnackbar(key);
 				if (err) {
 					console.error(err);
+					enqueueSnackbar(err.message, {variant: 'error'});
 				} else {
+					enqueueSnackbar('Report ready!', {variant: 'success'});
 					const filename = advancedFunctionality
 						? 'carnets.csv'
 						: `carnets-${begin.getFullYear()}.csv`;
