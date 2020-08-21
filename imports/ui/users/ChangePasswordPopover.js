@@ -1,119 +1,103 @@
 import {Accounts} from 'meteor/accounts-base';
 
-import React from 'react';
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import {useStyles} from './Popover.js';
+import {useSnackbar} from 'notistack';
 
-const styles = (theme) => ({
-	popover: {
-		display: 'flex'
-	},
-	row: {
-		display: 'block',
-		margin: theme.spacing(1),
-		width: 200
-	},
-	form: {
-		display: 'block'
-	}
-});
+const ChangePasswordPopover = ({anchorEl, handleClose}) => {
+	const classes = useStyles();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [oldPassword, setOldPassword] = useState('');
+	const [newPassword, setNewPassword] = useState('');
+	const [errorOldPassword, setErrorOldPassword] = useState('');
+	const [errorNewPassword, setErrorNewPassword] = useState('');
 
-class ChangePasswordPopover extends React.Component {
-	state = {
-		oldPassword: '',
-		newPassword: '',
-		errorOldPassword: '',
-		errorNewPassword: ''
-	};
-
-	render() {
-		const {classes, anchorEl, handleClose, feedback} = this.props;
-
-		const {
-			oldPassword,
-			newPassword,
-			errorOldPassword,
-			errorNewPassword
-		} = this.state;
-
-		const changePassword = (event) => {
-			event.preventDefault();
-			Accounts.changePassword(oldPassword, newPassword, (err) => {
-				if (err) {
-					const {message, reason} = err;
-					feedback(message);
-					if (reason === 'Incorrect password') {
-						this.setState({errorOldPassword: reason, errorNewPassword: ''});
-					} else if (reason === 'Password may not be empty') {
-						this.setState({errorOldPassword: '', errorNewPassword: reason});
-					} else {
-						this.setState({errorOldPassword: '', errorNewPassword: ''});
-					}
+	const changePassword = (event) => {
+		event.preventDefault();
+		const key = enqueueSnackbar('Changing password...', {variant: 'info'});
+		Accounts.changePassword(oldPassword, newPassword, (err) => {
+			closeSnackbar(key);
+			if (err) {
+				const {message, reason} = err;
+				enqueueSnackbar(message, {variant: 'error'});
+				if (reason === 'Incorrect password' || reason === 'Match failed') {
+					setErrorOldPassword('Incorrect password');
+					setErrorNewPassword('');
+				} else if (reason === 'Password may not be empty') {
+					setErrorOldPassword('');
+					setErrorNewPassword(reason);
 				} else {
-					feedback('Password changed successfully!');
-					this.setState({errorOldPassword: '', errorNewPassword: ''});
-					handleClose();
+					setErrorOldPassword('');
+					setErrorNewPassword('');
 				}
-			});
-		};
-
-		return (
-			<Popover
-				className={classes.popover}
-				id="dashboard-change-password"
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'right'
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'right'
-				}}
-				onClose={handleClose}
-			>
-				<form className={classes.form} autoComplete="off">
-					<TextField
-						autoFocus
-						error={Boolean(errorOldPassword)}
-						helperText={errorOldPassword}
-						className={classes.row}
-						label="Old password"
-						type="password"
-						value={oldPassword}
-						onChange={(e) => this.setState({oldPassword: e.target.value})}
-					/>
-					<TextField
-						error={Boolean(errorNewPassword)}
-						helperText={errorNewPassword}
-						className={classes.row}
-						label="New password"
-						type="password"
-						value={newPassword}
-						onChange={(e) => this.setState({newPassword: e.target.value})}
-					/>
-					<Button
-						type="submit"
-						color="secondary"
-						className={classes.row}
-						onClick={changePassword}
-					>
-						Change password
-					</Button>
-				</form>
-			</Popover>
-		);
-	}
-
-	static propTypes = {
-		classes: PropTypes.object.isRequired
+			} else {
+				const message = 'Password changed successfully!';
+				enqueueSnackbar(message, {variant: 'success'});
+				setErrorOldPassword('');
+				setErrorNewPassword('');
+				handleClose();
+			}
+		});
 	};
-}
 
-export default withStyles(styles)(ChangePasswordPopover);
+	return (
+		<Popover
+			className={classes.popover}
+			id="dashboard-change-password"
+			anchorEl={anchorEl}
+			open={Boolean(anchorEl)}
+			anchorOrigin={{
+				vertical: 'bottom',
+				horizontal: 'right'
+			}}
+			transformOrigin={{
+				vertical: 'top',
+				horizontal: 'right'
+			}}
+			onClose={handleClose}
+		>
+			<form className={classes.form} autoComplete="off">
+				<TextField
+					autoFocus
+					error={Boolean(errorOldPassword)}
+					helperText={errorOldPassword}
+					className={classes.row}
+					label="Old password"
+					type="password"
+					value={oldPassword}
+					onChange={(e) => setOldPassword(e.target.value)}
+				/>
+				<TextField
+					error={Boolean(errorNewPassword)}
+					helperText={errorNewPassword}
+					className={classes.row}
+					label="New password"
+					type="password"
+					value={newPassword}
+					onChange={(e) => setNewPassword(e.target.value)}
+				/>
+				<Button
+					type="submit"
+					color="secondary"
+					className={classes.row}
+					onClick={changePassword}
+				>
+					Change password
+				</Button>
+			</form>
+		</Popover>
+	);
+};
+
+ChangePasswordPopover.propTypes = {
+	anchorEl: PropTypes.object,
+	handleClose: PropTypes.func.isRequired
+};
+
+export default ChangePasswordPopover;

@@ -1,34 +1,39 @@
 import {Meteor} from 'meteor/meteor';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
+import {useSnackbar} from 'notistack';
 
 import ChangePasswordPopover from './ChangePasswordPopover.js';
 
-class Logout extends React.Component {
-	render() {
-		const {feedback} = this.props;
+const Logout = () => {
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-		const logout = () => {
-			Meteor.logout((err) => {
-				feedback(err ? err.message : 'See you soon!');
-			});
-		};
+	const logout = () => {
+		const key = enqueueSnackbar('Logging out...', {variant: 'info'});
+		Meteor.logout((err) => {
+			closeSnackbar(key);
+			if (err) {
+				enqueueSnackbar(err.message, {variant: 'error'});
+			} else {
+				enqueueSnackbar('See you soon!', {variant: 'success'});
+			}
+		});
+	};
 
-		return <MenuItem onClick={logout}>Logout</MenuItem>;
-	}
-}
+	return <MenuItem onClick={logout}>Logout</MenuItem>;
+};
 
 class OptionsPopover extends React.Component {
 	render() {
-		const {anchorEl, handleClose, changeMode, feedback} = this.props;
+		const {anchorEl, handleClose, changeMode} = this.props;
 
 		const handleModeChangePassword = () => {
 			changeMode('change-password');
@@ -42,9 +47,7 @@ class OptionsPopover extends React.Component {
 				onClose={handleClose}
 			>
 				<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
-				<Logout feedback={feedback} onClick={handleClose}>
-					Logout
-				</Logout>
+				<Logout />
 			</Menu>
 		);
 	}
@@ -67,7 +70,7 @@ class Dashboard extends React.Component {
 
 	render() {
 		const {anchorEl, mode} = this.state;
-		const {classes, currentUser, feedback} = this.props;
+		const {classes, currentUser} = this.props;
 
 		const handleClick = (event) => {
 			this.setState({mode: 'options', anchorEl: event.currentTarget});
@@ -103,13 +106,11 @@ class Dashboard extends React.Component {
 						anchorEl={anchorEl}
 						handleClose={handleClose}
 						changeMode={changeMode}
-						feedback={feedback}
 					/>
 				) : (
 					<ChangePasswordPopover
 						anchorEl={anchorEl}
 						handleClose={handleClose}
-						feedback={feedback}
 					/>
 				)}
 			</div>

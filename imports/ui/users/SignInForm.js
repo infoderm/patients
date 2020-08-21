@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -9,76 +8,62 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LoginPopover from './LoginPopover.js';
 import RegisterPopover from './RegisterPopover.js';
 
-class SignInForm extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			anchorEl: null,
-			mode: 'choice'
-		};
-	}
-
-	render() {
-		const {classes, feedback} = this.props;
-		const {anchorEl, mode} = this.state;
-
-		const handleClick = (event) => {
-			this.setState({mode: 'login', anchorEl: event.currentTarget});
-		};
-
-		const handleClose = () => {
-			this.setState({anchorEl: null});
-		};
-
-		const changeMode = (newmode) => {
-			this.setState({mode: newmode});
-		};
-
-		return (
-			<div>
-				<Button
-					aria-owns={
-						anchorEl
-							? mode === 'login'
-								? 'login-popover'
-								: 'register-popover'
-							: null
-					}
-					aria-haspopup="true"
-					style={{color: 'inherit'}}
-					onClick={handleClick}
-				>
-					Sign in
-					<AccountCircleIcon className={classes.rightIcon} />
-				</Button>
-				{mode === 'login' ? (
-					<LoginPopover
-						anchorEl={anchorEl}
-						handleClose={handleClose}
-						changeMode={changeMode}
-						feedback={feedback}
-					/>
-				) : (
-					<RegisterPopover
-						anchorEl={anchorEl}
-						handleClose={handleClose}
-						changeMode={changeMode}
-						feedback={feedback}
-					/>
-				)}
-			</div>
-		);
-	}
-}
-
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	}
-});
+}));
 
-SignInForm.propTypes = {
-	classes: PropTypes.object.isRequired
+const SignInForm = () => {
+	const classes = useStyles();
+	const [anchorEl, setAnchorEl] = useState(null);
+	const [mode, setMode] = useState('choice');
+
+	const handleClick = (event) => {
+		setMode('login');
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const changeMode = (newmode) => {
+		setMode(newmode);
+	};
+
+	return (
+		<div>
+			<Button
+				aria-owns={
+					anchorEl
+						? mode === 'login'
+							? 'login-popover'
+							: 'register-popover'
+						: null
+				}
+				aria-haspopup="true"
+				style={{color: 'inherit'}}
+				onClick={handleClick}
+			>
+				Sign in
+				<AccountCircleIcon className={classes.rightIcon} />
+			</Button>
+			{mode === 'login' ? (
+				<LoginPopover
+					anchorEl={anchorEl}
+					handleClose={handleClose}
+					changeMode={changeMode}
+				/>
+			) : (
+				<RegisterPopover
+					anchorEl={anchorEl}
+					handleClose={handleClose}
+					changeMode={changeMode}
+				/>
+			)}
+		</div>
+	);
 };
 
-export default withStyles(styles)(SignInForm);
+export default SignInForm;

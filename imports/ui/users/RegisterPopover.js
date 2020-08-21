@@ -1,126 +1,109 @@
 import {Accounts} from 'meteor/accounts-base';
 
-import React from 'react';
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import {useStyles} from './Popover.js';
+import {useSnackbar} from 'notistack';
 
-const styles = (theme) => ({
-	popover: {
-		display: 'flex'
-	},
-	row: {
-		display: 'block',
-		margin: theme.spacing(1),
-		width: 200
-	},
-	form: {
-		display: 'block'
-	}
-});
+const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
+	const classes = useStyles();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const [errorUsername, setErrorUsername] = useState('');
+	const [errorPassword, setErrorPassword] = useState('');
 
-class RegisterPopover extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			username: '',
-			password: '',
-			errorUsername: '',
-			errorPassword: ''
-		};
-	}
-
-	render() {
-		const {classes, anchorEl, handleClose, changeMode, feedback} = this.props;
-
-		const {username, password, errorUsername, errorPassword} = this.state;
-
-		const register = (event) => {
-			event.preventDefault();
-			Accounts.createUser({username, password}, (err) => {
-				if (err) {
-					const {message, reason} = err;
-					feedback(message);
-					if (reason === 'Need to set a username or email') {
-						this.setState({
-							errorUsername: 'Please enter a username',
-							errorPassword: ''
-						});
-					} else if (reason === 'Username already exists.') {
-						this.setState({errorUsername: reason, errorPassword: ''});
-					} else if (reason === 'Password may not be empty') {
-						this.setState({errorUsername: '', errorPassword: reason});
-					} else {
-						this.setState({errorUsername: '', errorPassword: ''});
-					}
+	const register = (event) => {
+		event.preventDefault();
+		const key = enqueueSnackbar('Logging in...', {variant: 'info'});
+		Accounts.createUser({username, password}, (err) => {
+			closeSnackbar(key);
+			if (err) {
+				const {message, reason} = err;
+				enqueueSnackbar(message, {variant: 'error'});
+				if (reason === 'Need to set a username or email') {
+					setErrorUsername('Please enter a username');
+					setErrorPassword('');
+				} else if (reason === 'Username already exists.') {
+					setErrorUsername(reason);
+					setErrorPassword('');
+				} else if (reason === 'Password may not be empty') {
+					setErrorUsername('');
+					setErrorPassword(reason);
 				} else {
-					feedback('Welcome!');
+					setErrorUsername('');
+					setErrorPassword('');
 				}
-			});
-		};
+			} else {
+				enqueueSnackbar('Welcome!', {variant: 'success'});
+			}
+		});
+	};
 
-		return (
-			<Popover
-				className={classes.popover}
-				id="register-popover"
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'right'
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'right'
-				}}
-				onClose={handleClose}
-			>
-				<form className={classes.form} autoComplete="off">
-					<TextField
-						autoFocus
-						error={Boolean(errorUsername)}
-						helperText={errorUsername}
-						className={classes.row}
-						label="Username"
-						value={username}
-						onChange={(e) => this.setState({username: e.target.value})}
-					/>
-					<TextField
-						error={Boolean(errorPassword)}
-						helperText={errorPassword}
-						className={classes.row}
-						label="Password"
-						type="password"
-						value={password}
-						onChange={(e) => this.setState({password: e.target.value})}
-					/>
-					<Button
-						type="submit"
-						color="primary"
-						className={classes.row}
-						onClick={register}
-					>
-						Register
-					</Button>
-					<Button
-						color="secondary"
-						className={classes.row}
-						onClick={() => changeMode('login')}
-					>
-						Already registered?
-					</Button>
-				</form>
-			</Popover>
-		);
-	}
-}
-
-RegisterPopover.propTypes = {
-	classes: PropTypes.object.isRequired
+	return (
+		<Popover
+			className={classes.popover}
+			id="register-popover"
+			anchorEl={anchorEl}
+			open={Boolean(anchorEl)}
+			anchorOrigin={{
+				vertical: 'bottom',
+				horizontal: 'right'
+			}}
+			transformOrigin={{
+				vertical: 'top',
+				horizontal: 'right'
+			}}
+			onClose={handleClose}
+		>
+			<form className={classes.form} autoComplete="off">
+				<TextField
+					autoFocus
+					error={Boolean(errorUsername)}
+					helperText={errorUsername}
+					className={classes.row}
+					label="Username"
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
+				/>
+				<TextField
+					error={Boolean(errorPassword)}
+					helperText={errorPassword}
+					className={classes.row}
+					label="Password"
+					type="password"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+				<Button
+					type="submit"
+					color="primary"
+					className={classes.row}
+					onClick={register}
+				>
+					Register
+				</Button>
+				<Button
+					color="secondary"
+					className={classes.row}
+					onClick={() => changeMode('login')}
+				>
+					Already registered?
+				</Button>
+			</form>
+		</Popover>
+	);
 };
 
-export default withStyles(styles)(RegisterPopover);
+RegisterPopover.propTypes = {
+	anchorEl: PropTypes.object,
+	handleClose: PropTypes.func.isRequired,
+	changeMode: PropTypes.func.isRequired
+};
+
+export default RegisterPopover;
