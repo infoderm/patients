@@ -35,7 +35,10 @@ export default function PatientDeletionDialog({open, onClose, patient}) {
 		event.preventDefault();
 		if (normalized(lastname) === normalized(patient.lastname || '')) {
 			setLastnameError('');
-			const key = enqueueSnackbar('Processing...', {variant: 'info'});
+			const key = enqueueSnackbar('Processing...', {
+				variant: 'info',
+				persist: true
+			});
 			Meteor.call('patients.remove', patient._id, (err, _res) => {
 				closeSnackbar(key);
 				if (err) {
