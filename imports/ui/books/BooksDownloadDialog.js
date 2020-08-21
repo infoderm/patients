@@ -110,6 +110,7 @@ export default function BooksDownloadDialog({
 					<>
 						<div>
 							<DatePicker
+								renderInput={(props) => <TextField {...props} />}
 								label="Begin"
 								value={begin}
 								onChange={(date) => setBegin(date)}
@@ -117,6 +118,7 @@ export default function BooksDownloadDialog({
 						</div>
 						<div>
 							<DatePicker
+								renderInput={(props) => <TextField {...props} />}
 								label="End"
 								value={end}
 								onChange={(date) => setEnd(date)}
@@ -150,6 +152,7 @@ export default function BooksDownloadDialog({
 				) : (
 					<div>
 						<DatePicker
+							renderInput={(props) => <TextField {...props} />}
 							views={['year']}
 							label="Year"
 							value={begin}
