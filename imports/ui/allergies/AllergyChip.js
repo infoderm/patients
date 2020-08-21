@@ -17,21 +17,20 @@ class AllergyChip extends React.Component {
 	render() {
 		const {item, ...rest} = this.props;
 
-		let style;
+		const style = {};
 		let component;
 		let to;
 
 		if (item) {
 			if (item.color) {
-				style = {
-					backgroundColor: item.color,
-					color: color(item.color).isLight() ? '#111' : '#ddd'
-				};
+				style.backgroundColor = item.color;
+				style.color = color(item.color).isLight() ? '#111' : '#ddd';
 			}
 
 			if (!rest.onDelete) {
 				component = Link;
 				to = `/allergy/${myEncodeURIComponent(item.name)}`;
+				style.cursor = 'pointer';
 			}
 		}
 

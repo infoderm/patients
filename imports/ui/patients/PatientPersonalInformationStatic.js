@@ -51,6 +51,8 @@ import SetPicker from '../input/SetPicker.js';
 import ColorizedTextarea from '../input/ColorizedTextarea.js';
 
 import AllergyChip from '../allergies/AllergyChip.js';
+import DoctorChip from '../doctors/DoctorChip.js';
+import InsuranceChip from '../insurances/InsuranceChip.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
@@ -476,6 +478,7 @@ class PatientPersonalInformation extends React.Component {
 											label: 'Médecin Traitant',
 											margin: 'normal'
 										}}
+										chip={DoctorChip}
 										chipProps={{
 											avatar: <Avatar>Dr</Avatar>
 										}}
@@ -496,6 +499,7 @@ class PatientPersonalInformation extends React.Component {
 											label: 'Mutuelle',
 											margin: 'normal'
 										}}
+										chip={InsuranceChip}
 										chipProps={{
 											avatar: <Avatar>In</Avatar>
 										}}
