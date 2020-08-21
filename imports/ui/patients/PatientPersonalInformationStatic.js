@@ -171,7 +171,10 @@ class PatientPersonalInformation extends React.Component {
 			enqueueSnackbar,
 			closeSnackbar
 		} = this.props;
-		const key = enqueueSnackbar('Processing...', {variant: 'info'});
+		const key = enqueueSnackbar('Processing...', {
+			variant: 'info',
+			persist: true
+		});
 		const fields = this.state.patient;
 		Meteor.call('patients.update', _id, fields, (err, _res) => {
 			closeSnackbar(key);
