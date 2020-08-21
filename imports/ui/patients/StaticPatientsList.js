@@ -43,7 +43,12 @@ export default function StaticPatientsList({
 					<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 				)}
 			</div>
-			<Paginator page={page} end={patients.length < perpage} root={root} />
+			<Paginator
+				disabled={loading}
+				page={page}
+				end={patients.length < perpage}
+				root={root}
+			/>
 		</>
 	);
 }

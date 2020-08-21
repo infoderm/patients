@@ -5,25 +5,27 @@ import PropTypes from 'prop-types';
 import Prev from './Prev.js';
 import Next from './Next.js';
 
-export default function Paginator({root, page, end}) {
+export default function Paginator({root, page, end, disabled}) {
 	if (page === 1 && end) {
 		return null;
 	}
 
 	return (
 		<>
-			<Prev to={`${root}/page/${page - 1}`} disabled={page === 1} />
-			<Next to={`${root}/page/${page + 1}`} disabled={end} />
+			<Prev to={`${root}/page/${page - 1}`} disabled={disabled || page === 1} />
+			<Next to={`${root}/page/${page + 1}`} disabled={disabled || end} />
 		</>
 	);
 }
 
 Paginator.defaultProps = {
-	end: false
+	end: false,
+	disabled: false
 };
 
 Paginator.propTypes = {
 	page: PropTypes.number.isRequired,
 	end: PropTypes.bool,
+	disabled: PropTypes.bool,
 	root: PropTypes.string.isRequired
 };
