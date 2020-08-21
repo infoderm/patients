@@ -266,11 +266,17 @@ export default withTracker((props) => {
 	};
 
 	if (!initialPatient) {
-		Meteor.subscribe('patients');
-		additionalProps.allPatients = Patients.find(
-			{},
-			{sort: {lastname: 1}}
-		).fetch();
+		const query = {};
+		const options = {
+			sort: {lastname: 1},
+			fields: {
+				_id: 1,
+				firstname: 1,
+				lastname: 1
+			}
+		};
+		Meteor.subscribe('patients', query, options);
+		additionalProps.allPatients = Patients.find(query, options).fetch();
 	}
 
 	if (appointmentDurationHandle.ready()) {

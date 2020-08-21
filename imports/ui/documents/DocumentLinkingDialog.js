@@ -117,9 +117,18 @@ class DocumentLinkingDialog extends React.Component {
 }
 
 const Component = withTracker(() => {
-	Meteor.subscribe('patients');
+	const query = {};
+	const options = {
+		sort: {lastname: 1},
+		fields: {
+			_id: 1,
+			firstname: 1,
+			lastname: 1
+		}
+	};
+	Meteor.subscribe('patients', query, options);
 	return {
-		allPatients: Patients.find({}, {sort: {lastname: 1}}).fetch()
+		allPatients: Patients.find(query, options).fetch()
 	};
 })(withStyles(styles, {withTheme: true})(DocumentLinkingDialog));
 
