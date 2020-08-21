@@ -70,39 +70,41 @@ const useStyles = makeStyles((theme) => ({
 export default function StaticPatientCard({patient}) {
 	const classes = useStyles();
 
+	const {_id, birthdate, photo, niss} = patient;
+
+	const firstname = patient.firstname || '?';
+	const lastname = patient.lastname || '?';
+	const sex = patient.sex || 'N';
+
 	return (
 		<Grid item sm={12} md={12} lg={6} xl={4}>
-			<Card
-				className={classes.card}
-				component={Link}
-				to={`/patient/${patient._id}`}
-			>
+			<Card className={classes.card} component={Link} to={`/patient/${_id}`}>
 				<div className={classes.details}>
 					<CardHeader
 						className={classes.header}
 						avatar={
-							<Avatar className={classes[patient.sex]}>
-								{(patient.sex || 'N').slice(0, 1).toUpperCase()}
+							<Avatar className={classes[sex]}>
+								{sex.slice(0, 1).toUpperCase()}
 							</Avatar>
 						}
-						title={`${patient.lastname.toUpperCase()} ${patient.firstname}`}
-						subheader={eidFormatBirthdate(patient.birthdate)}
+						title={`${lastname.toUpperCase()} ${firstname}`}
+						subheader={eidFormatBirthdate(birthdate)}
 					/>
 					<CardContent className={classes.content} />
 					<CardActions disableSpacing className={classes.actions}>
-						<Chip label={patient.niss || '?'} />
+						<Chip label={niss || '?'} />
 					</CardActions>
 				</div>
-				{patient.photo ? (
+				{photo ? (
 					<CardMedia
 						className={classes.photo}
-						image={`data:image/png;base64,${patient.photo}`}
-						title={`${patient.firstname} ${patient.lastname}`}
+						image={`data:image/png;base64,${photo}`}
+						title={`${firstname} ${lastname}`}
 					/>
 				) : (
 					<div className={classes.photoPlaceHolder}>
-						{patient.firstname[0]}
-						{patient.lastname[0]}
+						{firstname[0]}
+						{lastname[0]}
 					</div>
 				)}
 			</Card>
