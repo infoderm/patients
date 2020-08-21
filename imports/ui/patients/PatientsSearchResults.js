@@ -1,49 +1,81 @@
 import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
 
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
+import {useSnackbar} from 'notistack';
 import {myDecodeURIComponent} from '../../client/uri.js';
-
-import {Patients} from '../../api/patients.js';
 
 import StaticPatientsList from './StaticPatientsList.js';
 
-const PatientsSearchResults = withTracker(({match, page, perpage, ...rest}) => {
+const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 	page =
 		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
 		page ||
 		PatientsSearchResults.defaultProps.page;
 	perpage = perpage || PatientsSearchResults.defaultProps.perpage;
-	const sort = {
-		score: {$meta: 'textScore'}
-	};
-	const fields = {
-		score: {$meta: 'textScore'},
-		...StaticPatientsList.projection
-	};
-	const query = {$text: {$search: myDecodeURIComponent(match.params.query)}};
-	const handle = Meteor.subscribe('patients', query, {sort, fields});
-	const loading = !handle.ready();
-	return {
-		page,
-		perpage,
-		root: `/search/${match.params.query}`,
-		loading,
-		patients: loading
-			? []
-			: Patients.find(
-					{},
-					{
-						sort,
-						fields: StaticPatientsList.projection,
-						skip: (page - 1) * perpage,
-						limit: perpage
-					}
-			  ).fetch(),
-		...rest
-	};
-})(StaticPatientsList);
+
+	const {enqueueSnackbar} = useSnackbar();
+	const [loading, setLoading] = useState(true);
+	const [patients, setPatients] = useState([]);
+	const [abortPrevious, setAbortPrevious] = useState(null);
+
+	const $search = myDecodeURIComponent(match.params.query);
+
+	useEffect(() => {
+		if (abortPrevious) abortPrevious();
+
+		const query = {$text: {$search}};
+
+		const options = {
+			fields: {
+				score: {$meta: 'textScore'},
+				...StaticPatientsList.projection
+			},
+			sort: {
+				score: {$meta: 'textScore'}
+			},
+			skip: (page - 1) * perpage,
+			limit: perpage
+		};
+
+		setLoading(true);
+		let cancelled = false;
+		const abort = () => {
+			cancelled = true;
+			// enqueueSnackbar(`Aborted query: ${$search}.`, {variant: 'warning'});
+		};
+
+		setAbortPrevious(() => abort);
+		Meteor.call('patients.find', query, options, (err, res) => {
+			if (!cancelled) {
+				setAbortPrevious(null); // GC
+				setLoading(false);
+				if (err) {
+					console.log('err', err);
+					enqueueSnackbar(`${err.message} (query: ${$search})`, {
+						variant: 'error'
+					});
+				} else {
+					setPatients(res);
+				}
+			}
+		});
+	}, [$search, page, perpage]);
+
+	const root = `/search/${match.params.query}`;
+
+	return (
+		<StaticPatientsList
+			page={page}
+			perpage={perpage}
+			loading={loading}
+			patients={patients}
+			root={root}
+			{...rest}
+		/>
+	);
+};
 
 PatientsSearchResults.defaultProps = {
 	page: 1,
@@ -51,8 +83,8 @@ PatientsSearchResults.defaultProps = {
 };
 
 PatientsSearchResults.propTypes = {
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired
+	page: PropTypes.number,
+	perpage: PropTypes.number
 };
 
 export default PatientsSearchResults;

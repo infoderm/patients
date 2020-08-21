@@ -353,6 +353,11 @@ Meteor.methods({
 		});
 
 		return newPatientId;
+	},
+
+	'patients.find'(query, options) {
+		if (!Meteor.isServer) return undefined;
+		return Patients.find({...query, owner: this.userId}, options).fetch();
 	}
 });
 

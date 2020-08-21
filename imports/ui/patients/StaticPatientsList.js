@@ -18,12 +18,17 @@ export default function StaticPatientsList({
 	root,
 	...rest
 }) {
+	if (loading && patients.length === 0) return <Loading />;
+
+	const style = {
+		transition: 'opacity 200ms ease-out'
+	};
+	if (loading) style.opacity = 0.4;
+
 	return (
 		<>
-			<div {...rest}>
-				{loading ? (
-					<Loading />
-				) : patients.length > 0 ? (
+			<div style={style} {...rest}>
+				{patients.length > 0 ? (
 					<PatientsPage patients={patients} />
 				) : page === 1 ? (
 					<div>
