@@ -78,7 +78,6 @@ AttachmentsGallery.propTypes = {
 };
 
 export default withTracker(({attachmentsInfo}) => {
-
 	if (attachmentsInfo.length === 0) return {loading: false, attachments: []};
 
 	const handle = Meteor.subscribe('uploads');
