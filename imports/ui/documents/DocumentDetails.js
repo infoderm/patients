@@ -4,17 +4,20 @@ import {Mongo} from 'meteor/mongo';
 
 import React from 'react';
 
-import {Documents} from '../../api/documents.js';
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
 
 import DocumentCard from './DocumentCard.js';
 
+import {Documents} from '../../api/documents.js';
+
 const DocumentDetails = ({documentId, loading, document}) => {
 	if (loading) {
-		return <div>Loading document #{documentId.toString()}...</div>;
+		return <Loading />;
 	}
 
 	if (!document) {
-		return <div>Error: document #{documentId.toString()} not found.</div>;
+		return <NoContent>Document #{documentId.toString()} not found.</NoContent>;
 	}
 
 	return (

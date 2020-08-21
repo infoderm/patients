@@ -5,6 +5,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
+
 import {Drugs} from '../../api/drugs.js';
 
 const styles = (theme) => ({
@@ -30,11 +33,11 @@ class DrugDetails extends React.Component {
 		const {drug} = this.state;
 
 		if (loading) {
-			return <div>Loading...</div>;
+			return <Loading />;
 		}
 
 		if (!drug) {
-			return <div>Error: Drug not found.</div>;
+			return <NoContent>Drug not found.</NoContent>;
 		}
 
 		return (
