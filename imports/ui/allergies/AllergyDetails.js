@@ -8,7 +8,8 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 import {Patients} from '../../api/patients.js';
 import {allergies} from '../../api/allergies.js';
 
-import {AllergyCardWithItem} from './AllergyCard.js';
+import {AllergyCardWithoutItem} from './AllergyCard.js';
+import useAllergy from './useAllergy.js';
 
 import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 
@@ -29,7 +30,8 @@ export default function AllergyDetails({match, name, page, perpage}) {
 			selector={{allergies: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
-			Card={AllergyCardWithItem}
+			Card={AllergyCardWithoutItem}
+			useItem={useAllergy}
 		/>
 	);
 }

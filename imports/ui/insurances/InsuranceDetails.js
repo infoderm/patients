@@ -8,7 +8,8 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 import {Patients} from '../../api/patients.js';
 import {insurances} from '../../api/insurances.js';
 
-import {InsuranceCardWithItem} from './InsuranceCard.js';
+import {InsuranceCardWithoutItem} from './InsuranceCard.js';
+import useInsurance from './useInsurance.js';
 
 import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 
@@ -29,7 +30,8 @@ export default function InsuranceDetails({match, name, page, perpage}) {
 			selector={{insurances: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
-			Card={InsuranceCardWithItem}
+			Card={InsuranceCardWithoutItem}
+			useItem={useInsurance}
 		/>
 	);
 }

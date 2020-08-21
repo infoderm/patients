@@ -8,7 +8,8 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 import {Patients} from '../../api/patients.js';
 import {doctors} from '../../api/doctors.js';
 
-import {DoctorCardWithItem} from './DoctorCard.js';
+import {DoctorCardWithoutItem} from './DoctorCard.js';
+import useDoctor from './useDoctor.js';
 
 import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 
@@ -29,7 +30,8 @@ export default function DoctorDetails({match, name, page, perpage}) {
 			selector={{doctors: name}}
 			sort={{lastname: 1}}
 			List={PagedPatientsList}
-			Card={DoctorCardWithItem}
+			Card={DoctorCardWithoutItem}
+			useItem={useDoctor}
 		/>
 	);
 }

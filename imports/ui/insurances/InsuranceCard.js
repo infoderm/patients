@@ -8,14 +8,15 @@ import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
 import TagCard from '../tags/TagCard.js';
-import withItem from '../tags/withItem.js';
 
 import PatientChip from '../patients/PatientChip.js';
+
+import withInsurance from './withInsurance.js';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog.js';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog.js';
 
 import {Patients} from '../../api/patients.js';
-import {Insurances, insurances} from '../../api/insurances.js';
+import {insurances} from '../../api/insurances.js';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
 
@@ -26,14 +27,9 @@ const styles = () => ({
 	}
 });
 
-const InsuranceCard = ({classes, item, name, loading}) => {
-	if (loading) {
-		return '...Loading';
-	}
-
-	if (item === undefined) {
-		return `Insurance ${name} does not exist`;
-	}
+const InsuranceCard = ({classes, item, loading}) => {
+	if (loading) return null;
+	if (item === undefined) return null;
 
 	return (
 		<TagCard
@@ -62,9 +58,14 @@ const InsuranceCard = ({classes, item, name, loading}) => {
 	);
 };
 
+InsuranceCard.defaultProps = {
+	loading: false
+};
+
 InsuranceCard.propTypes = {
 	classes: PropTypes.object.isRequired,
-	item: PropTypes.object
+	item: PropTypes.object,
+	loading: PropTypes.bool
 };
 
 const InsuranceCardWithoutItem = withStyles(styles, {withTheme: true})(
@@ -73,9 +74,6 @@ const InsuranceCardWithoutItem = withStyles(styles, {withTheme: true})(
 
 export default InsuranceCardWithoutItem;
 
-const InsuranceCardWithItem = withItem(
-	Insurances,
-	insurances.options.singlePublication
-)(InsuranceCardWithoutItem);
+const InsuranceCardWithItem = withInsurance(InsuranceCardWithoutItem);
 
 export {InsuranceCardWithoutItem, InsuranceCardWithItem};

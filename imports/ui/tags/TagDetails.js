@@ -7,16 +7,28 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TagDetails = ({
-	Card,
-	List,
-	listProps,
-	root,
-	name,
-	page,
-	perpage,
-	items
-}) => {
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
+
+const ListWithHeader = (props) => {
+	const {
+		name,
+		Card,
+		List,
+		useItem,
+		listProps,
+		root,
+		page,
+		perpage,
+		items
+	} = props;
+
+	const {loading, item} = useItem(name);
+
+	if (loading) return <Loading />;
+
+	if (!item) return <NoContent>No item named {name}</NoContent>;
+
 	return (
 		<div>
 			{Card && (
@@ -24,7 +36,7 @@ const TagDetails = ({
 					<div style={{paddingBottom: 50, paddingTop: 20}}>
 						<Grid container spacing={3}>
 							<Grid item sm={12} md={12} lg={3} xl={4} />
-							<Card name={name} />
+							<Card loading={loading} item={item} />
 						</Grid>
 					</div>
 					<Typography variant="h2">Patients</Typography>
@@ -41,8 +53,29 @@ const TagDetails = ({
 	);
 };
 
+const TagDetails = (props) => {
+	const {Card, List, useItem, listProps, root, page, perpage, items} = props;
+
+	if (!Card)
+		return (
+			<List
+				{...listProps}
+				root={root}
+				page={page}
+				perpage={perpage}
+				items={items}
+			/>
+		);
+
+	if (!useItem) throw new Error('useItem must be given if Card is given');
+
+	return <ListWithHeader {...props} />;
+};
+
 TagDetails.propTypes = {
-	List: PropTypes.func.isRequired,
+	List: PropTypes.elementType.isRequired,
+	Card: PropTypes.elementType,
+	useItem: PropTypes.func,
 	root: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	page: PropTypes.number.isRequired,

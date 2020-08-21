@@ -9,14 +9,15 @@ import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 
 import TagCard from '../tags/TagCard.js';
-import withItem from '../tags/withItem.js';
 
 import PatientChip from '../patients/PatientChip.js';
+
 import AllergyDeletionDialog from './AllergyDeletionDialog.js';
 import AllergyRenamingDialog from './AllergyRenamingDialog.js';
+import withAllergy from './withAllergy.js';
 
 import {Patients} from '../../api/patients.js';
-import {Allergies, allergies} from '../../api/allergies.js';
+import {allergies} from '../../api/allergies.js';
 
 import ColorPicker from '../input/ColorPicker';
 import debounce from 'debounce';
@@ -33,16 +34,11 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const AllergyCard = ({item, name, loading}) => {
+const AllergyCard = ({item, loading}) => {
 	const classes = useStyles();
 
-	if (loading) {
-		return '...Loading';
-	}
-
-	if (item === undefined) {
-		return `Allergy ${name} does not exist`;
-	}
+	if (loading) return null;
+	if (item === undefined) return null;
 
 	const onChange = (color) => {
 		if (color !== item.color) {
@@ -99,9 +95,6 @@ const AllergyCardWithoutItem = AllergyCard;
 
 export default AllergyCardWithoutItem;
 
-const AllergyCardWithItem = withItem(
-	Allergies,
-	allergies.options.singlePublication
-)(AllergyCardWithoutItem);
+const AllergyCardWithItem = withAllergy(AllergyCardWithoutItem);
 
 export {AllergyCardWithoutItem, AllergyCardWithItem};
