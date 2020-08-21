@@ -82,7 +82,6 @@ class TagCard extends React.Component {
 		const {url, tag, history} = this.props;
 		const currentURL = history.location.pathname.replaceAll(' ', '%20');
 		const oldURL = url(tag.name);
-		console.debug(currentURL, oldURL, newName);
 		if (currentURL === oldURL) {
 			const newURL = url(newName);
 			history.push(newURL);
