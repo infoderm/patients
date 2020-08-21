@@ -29,6 +29,7 @@ export default function DoctorDetails({match, name, page, perpage}) {
 			subscription={doctors.options.parentPublication}
 			selector={{doctors: name}}
 			sort={{lastname: 1}}
+			fields={PagedPatientsList.projection}
 			List={PagedPatientsList}
 			Card={DoctorCardWithoutItem}
 			useItem={useDoctor}

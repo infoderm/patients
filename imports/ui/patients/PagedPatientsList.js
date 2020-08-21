@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 import Paginator from '../navigation/Paginator.js';
 
-import StaticPatientCard from './StaticPatientCard.js';
+import PatientCard from './PatientCard.js';
 
 export default function PagedPatientsList({root, page, perpage, items}) {
 	return (
@@ -14,7 +14,7 @@ export default function PagedPatientsList({root, page, perpage, items}) {
 			<div>
 				<Grid container spacing={3}>
 					{items.map((patient) => (
-						<StaticPatientCard key={patient._id} patient={patient} />
+						<PatientCard key={patient._id} patient={patient} />
 					))}
 				</Grid>
 			</div>
@@ -22,6 +22,14 @@ export default function PagedPatientsList({root, page, perpage, items}) {
 		</>
 	);
 }
+
+PagedPatientsList.projection = {
+	firstname: 1,
+	lastname: 1,
+	birthdate: 1,
+	sex: 1,
+	niss: 1
+};
 
 PagedPatientsList.propTypes = {
 	root: PropTypes.string.isRequired,

@@ -29,6 +29,7 @@ export default function AllergyDetails({match, name, page, perpage}) {
 			subscription={allergies.options.parentPublication}
 			selector={{allergies: name}}
 			sort={{lastname: 1}}
+			fields={PagedPatientsList.projection}
 			List={PagedPatientsList}
 			Card={AllergyCardWithoutItem}
 			useItem={useAllergy}

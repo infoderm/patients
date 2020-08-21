@@ -29,6 +29,7 @@ export default function InsuranceDetails({match, name, page, perpage}) {
 			subscription={insurances.options.parentPublication}
 			selector={{insurances: name}}
 			sort={{lastname: 1}}
+			fields={PagedPatientsList.projection}
 			List={PagedPatientsList}
 			Card={InsuranceCardWithoutItem}
 			useItem={useInsurance}

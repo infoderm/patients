@@ -85,16 +85,22 @@ TagDetails.propTypes = {
 	collection: PropTypes.object.isRequired,
 	selector: PropTypes.object.isRequired,
 	sort: PropTypes.object.isRequired,
+	fields: PropTypes.object,
 
 	items: PropTypes.array.isRequired
 };
 
 export default withTracker(
-	({subscription, name, collection, selector, sort, page, perpage}) => {
-		Meteor.subscribe(subscription, name);
+	({subscription, name, collection, selector, sort, fields, page, perpage}) => {
+		Meteor.subscribe(subscription, name, {sort, fields});
 		return {
 			items: collection
-				.find(selector, {sort, skip: (page - 1) * perpage, limit: perpage})
+				.find(selector, {
+					sort,
+					fields,
+					skip: (page - 1) * perpage,
+					limit: perpage
+				})
 				.fetch()
 		};
 	}
