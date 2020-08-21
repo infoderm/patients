@@ -38,11 +38,13 @@ const styles = (theme) => ({
 	},
 	headerContentTitle: {
 		overflow: 'hidden',
-		textOverflow: 'ellipsis'
+		textOverflow: 'ellipsis',
+		whiteSpace: 'nowrap'
 	},
 	headerContentSubheader: {
 		overflow: 'hidden',
-		textOverflow: 'ellipsis'
+		textOverflow: 'ellipsis',
+		whiteSpace: 'nowrap'
 	},
 	thumbnail: {
 		height: 300
