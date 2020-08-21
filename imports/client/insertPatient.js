@@ -26,9 +26,11 @@ export default function insertPatient(history, xmlString) {
 		zip: address.zip._text
 	};
 
-	Meteor.subscribe('patients', {
+	const query = {niss: op.niss};
+	const options = {fields: {_id: 1, niss: 1}};
+	Meteor.subscribe('patients', query, options, {
 		onReady: () => {
-			const patient = Patients.findOne({niss: op.niss});
+			const patient = Patients.findOne(query, options);
 			if (patient) {
 				Meteor.call('patients.update', patient._id, op, (err, _res) => {
 					if (err) {
