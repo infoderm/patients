@@ -4,15 +4,16 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
+import PatientGridItem from '../patients/PatientGridItem.js';
 import StaticPatientCard from './StaticPatientCard.js';
 
 export default function PatientsPage({patients, Card, NewCard}) {
 	return (
 		<div>
 			<Grid container spacing={3}>
-				{NewCard && <NewCard />}
+				{NewCard && <PatientGridItem Card={NewCard} />}
 				{patients.map((patient) => (
-					<Card key={patient._id} patient={patient} />
+					<PatientGridItem key={patient._id} Card={Card} patient={patient} />
 				))}
 			</Grid>
 		</div>

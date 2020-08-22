@@ -22,7 +22,8 @@ import SetPicker from '../input/SetPicker.js';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import PatientCard from '../patients/PatientCard.js';
+import PatientGridItem from '../patients/PatientGridItem.js';
+import ReactivePatientCard from '../patients/ReactivePatientCard.js';
 
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
 
@@ -95,7 +96,11 @@ const MergePatientsForm = ({loading, patients}) => {
 						<Grid item sm={12} md={12}>
 							<Grid container spacing={3} className={classes.container}>
 								{toMerge.map((patient) => (
-									<PatientCard key={patient._id} patient={patient} />
+									<PatientGridItem
+										key={patient._id}
+										Card={ReactivePatientCard}
+										patient={patient}
+									/>
 								))}
 							</Grid>
 						</Grid>

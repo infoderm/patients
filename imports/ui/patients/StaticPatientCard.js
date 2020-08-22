@@ -6,7 +6,6 @@ import {useTransition, animated} from 'react-spring';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -22,9 +21,11 @@ import pink from '@material-ui/core/colors/pink';
 import eidFormatBirthdate from '../../client/eidFormatBirthdate.js';
 
 const useStyles = makeStyles((theme) => ({
-	container: {
+	card: {
 		position: 'relative',
-		transition: 'opacity 500ms ease-out'
+		transition: 'opacity 500ms ease-out',
+		display: 'flex',
+		minHeight: 200
 	},
 	veil: {
 		position: 'absolute',
@@ -37,11 +38,6 @@ const useStyles = makeStyles((theme) => ({
 		right: 0,
 		zIndex: 1,
 		fontSize: '2rem'
-	},
-	card: {
-		position: 'relative',
-		display: 'flex',
-		minHeight: 200
 	},
 	details: {
 		display: 'flex',
@@ -103,59 +99,54 @@ export default function StaticPatientCard({loading, found, patient}) {
 
 	const deleted = !loading && !found;
 
-	const containerOpacity = {opacity: deleted ? 0.4 : 1};
+	const cardOpacity = {opacity: deleted ? 0.4 : 1};
 
 	return (
-		<Grid
-			item
-			className={classes.container}
-			sm={12}
-			md={12}
-			lg={6}
-			xl={4}
-			style={containerOpacity}
+		<Card
+			className={classes.card}
+			component={Link}
+			to={`/patient/${_id}`}
+			style={cardOpacity}
 		>
 			{deleted && <div className={classes.veil}>DELETED</div>}
-			<Card className={classes.card} component={Link} to={`/patient/${_id}`}>
-				<div className={classes.details}>
-					<CardHeader
-						className={classes.header}
-						avatar={
-							<Avatar className={classes[sex]}>
-								{sex.slice(0, 1).toUpperCase()}
-							</Avatar>
-						}
-						title={`${lastname.toUpperCase()} ${firstname}`}
-						subheader={eidFormatBirthdate(birthdate)}
+			<div className={classes.details}>
+				<CardHeader
+					className={classes.header}
+					avatar={
+						<Avatar className={classes[sex]}>
+							{sex.slice(0, 1).toUpperCase()}
+						</Avatar>
+					}
+					title={`${lastname.toUpperCase()} ${firstname}`}
+					subheader={eidFormatBirthdate(birthdate)}
+				/>
+				<CardContent className={classes.content} />
+				<CardActions disableSpacing className={classes.actions}>
+					<Chip label={niss || '?'} />
+				</CardActions>
+			</div>
+			{photoTransitions.map(({item, props, key}) =>
+				item ? (
+					<CardMedia
+						key={key}
+						component={animated.div}
+						className={classes.photo}
+						image={`data:image/png;base64,${item}`}
+						title={`${firstname} ${lastname}`}
+						style={props}
 					/>
-					<CardContent className={classes.content} />
-					<CardActions disableSpacing className={classes.actions}>
-						<Chip label={niss || '?'} />
-					</CardActions>
-				</div>
-				{photoTransitions.map(({item, props, key}) =>
-					item ? (
-						<CardMedia
-							key={key}
-							component={animated.div}
-							className={classes.photo}
-							image={`data:image/png;base64,${item}`}
-							title={`${firstname} ${lastname}`}
-							style={props}
-						/>
-					) : (
-						<animated.div
-							key={key}
-							className={classes.photoPlaceHolder}
-							style={props}
-						>
-							{firstname[0]}
-							{lastname[0]}
-						</animated.div>
-					)
-				)}
-			</Card>
-		</Grid>
+				) : (
+					<animated.div
+						key={key}
+						className={classes.photoPlaceHolder}
+						style={props}
+					>
+						{firstname[0]}
+						{lastname[0]}
+					</animated.div>
+				)
+			)}
+		</Card>
 	);
 }
 

@@ -1,19 +1,11 @@
 import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react';
-
 import StaticPatientCard from './StaticPatientCard.js';
 
 import {Patients} from '../../api/patients.js';
 
-const PatientCard = ({loading, found, patient}) => {
-	return (
-		<StaticPatientCard loading={loading} found={found} patient={patient} />
-	);
-};
-
-export default withTracker(({patient}) => {
+const ReactivePatientCard = withTracker(({patient}) => {
 	const patientId = patient._id;
 	// The options fields key selects fields whose updates we want to subscribe
 	// to. Here we subscribe to everything needed to display a
@@ -51,4 +43,6 @@ export default withTracker(({patient}) => {
 	}
 
 	return {loading: true, patient};
-})(PatientCard);
+})(StaticPatientCard);
+
+export default ReactivePatientCard;

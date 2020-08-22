@@ -8,6 +8,7 @@ import NoContent from '../navigation/NoContent.js';
 import Paginator from '../navigation/Paginator.js';
 
 import PatientsPage from './PatientsPage.js';
+import PatientGridItem from '../patients/PatientGridItem.js';
 import NewPatientCard from './NewPatientCard.js';
 
 export default function StaticPatientsList({
@@ -40,7 +41,7 @@ export default function StaticPatientsList({
 						<NoContent>No patients match the current query.</NoContent>
 						<Grid container spacing={3}>
 							<Grid item sm="auto" md="auto" lg={3} xl={4} />
-							<NewPatientCard />
+							<PatientGridItem Card={NewPatientCard} />
 							<Grid item sm="auto" md="auto" lg={3} xl={4} />
 						</Grid>
 					</div>

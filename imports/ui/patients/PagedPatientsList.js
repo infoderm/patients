@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 
 import Paginator from '../navigation/Paginator.js';
 
-import PatientCard from './PatientCard.js';
+import ReactivePatientCard from './ReactivePatientCard.js';
 import PatientsPage from './PatientsPage.js';
 
 export default function PagedPatientsList({root, page, perpage, items}) {
 	return (
 		<>
-			<PatientsPage patients={items} Card={PatientCard} />
+			<PatientsPage patients={items} Card={ReactivePatientCard} />
 			<Paginator page={page} end={items.length < perpage} root={root} />
 		</>
 	);

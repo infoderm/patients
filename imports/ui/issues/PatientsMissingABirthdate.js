@@ -5,6 +5,7 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
+import PatientGridItem from '../patients/PatientGridItem.js';
 import StaticPatientCard from '../patients/StaticPatientCard.js';
 
 import {Patients} from '../../api/patients.js';
@@ -21,7 +22,11 @@ const PatientsMissingABirthdate = ({loading, patients, ...rest}) => {
 	return (
 		<Grid container spacing={3} {...rest}>
 			{patients.map((patient) => (
-				<StaticPatientCard key={patient._id} patient={patient} />
+				<PatientGridItem
+					key={patient._id}
+					Card={StaticPatientCard}
+					patient={patient}
+				/>
 			))}
 		</Grid>
 	);

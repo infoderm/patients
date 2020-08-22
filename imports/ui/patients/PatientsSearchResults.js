@@ -7,7 +7,7 @@ import {useSnackbar} from 'notistack';
 import {myDecodeURIComponent} from '../../client/uri.js';
 
 import StaticPatientsList from './StaticPatientsList.js';
-import PatientCard from './PatientCard.js';
+import ReactivePatientCard from './ReactivePatientCard.js';
 
 const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 	page =
@@ -78,7 +78,7 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 			loading={loading}
 			patients={patients}
 			root={root}
-			Card={PatientCard}
+			Card={ReactivePatientCard}
 			{...rest}
 		/>
 	);
