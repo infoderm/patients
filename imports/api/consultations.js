@@ -120,9 +120,9 @@ if (Meteor.isServer) {
 		options = {}
 	) {
 		const query = {
+			...books.selector(name),
 			owner: this.userId,
-			isDone: true,
-			...books.selector(name)
+			isDone: true
 		};
 		if (options.fields) {
 			const {fields, ...rest} = options;
