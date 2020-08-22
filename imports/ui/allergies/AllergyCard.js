@@ -56,17 +56,17 @@ const AllergyCard = ({item, loading}) => {
 		<TagCard
 			tag={item}
 			collection={Patients}
-			countCollection={allergies.cache.Counts}
+			statsCollection={allergies.cache.Stats}
 			subscription={allergies.options.parentPublication}
-			countSubscription={allergies.options.parentPublicationCount}
+			statsSubscription={allergies.options.parentPublicationStats}
 			selector={{allergies: item.name}}
 			options={{fields: PatientChip.projection}}
 			limit={1}
 			url={(name) => `/allergy/${myEncodeURIComponent(name)}`}
-			subheader={(count) =>
+			subheader={({count}) =>
 				count === undefined ? '...' : `affecte ${count} patients`
 			}
-			content={(count, patients) =>
+			content={({count}, patients) =>
 				patients === undefined ? (
 					'...'
 				) : (

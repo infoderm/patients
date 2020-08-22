@@ -99,7 +99,7 @@ class TagCard extends React.Component {
 			url,
 			content,
 			actions,
-			count,
+			stats,
 			items,
 			RenamingDialog,
 			DeletionDialog,
@@ -116,12 +116,12 @@ class TagCard extends React.Component {
 							className={classes.header}
 							avatar={avatar}
 							title={tag.name}
-							subheader={subheader(count, items)}
+							subheader={subheader(stats, items)}
 							component={Link}
 							to={url(tag.name)}
 						/>
 						<CardContent className={classes.content}>
-							{content(count, items)}
+							{content(stats, items)}
 						</CardContent>
 						<CardActions disableSpacing className={classes.actions}>
 							{RenamingDialog && (
@@ -151,7 +151,7 @@ class TagCard extends React.Component {
 									onClose={this.closeDeletionDialog}
 								/>
 							)}
-							{actions(count, items)}
+							{actions(stats, items)}
 						</CardActions>
 					</div>
 					<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
@@ -163,7 +163,7 @@ class TagCard extends React.Component {
 
 TagCard.defaultProps = {
 	actions: () => null,
-	count: undefined,
+	stats: {},
 	items: undefined
 };
 
@@ -178,7 +178,7 @@ TagCard.propTypes = {
 	content: PropTypes.func.isRequired,
 	actions: PropTypes.func,
 
-	count: PropTypes.number,
+	stats: PropTypes.object,
 	items: PropTypes.array
 };
 
@@ -187,27 +187,29 @@ const ReactiveTagCard = withRouter(
 		({
 			tag,
 			subscription,
-			countSubscription,
+			statsSubscription,
 			collection,
-			countCollection,
+			statsCollection,
 			selector,
 			options,
 			limit
 		}) => {
 			const name = tag.name;
-			const handle = Meteor.subscribe(subscription, name, {...options, limit});
-			const countHandle = Meteor.subscribe(countSubscription, name);
+			const handle = subscription
+				? Meteor.subscribe(subscription, name, {...options, limit})
+				: {ready: () => false};
+			const statsHandle = Meteor.subscribe(statsSubscription, name);
 			const result = {
 				items: undefined,
-				count: undefined
+				stats: undefined
 			};
 
 			if (handle.ready()) {
 				result.items = collection.find(selector, {...options, limit}).fetch();
 			}
 
-			if (countHandle.ready()) {
-				result.count = countCollection.findOne(name).count;
+			if (statsHandle.ready()) {
+				result.stats = statsCollection.findOne(name);
 			}
 
 			return result;
@@ -215,11 +217,18 @@ const ReactiveTagCard = withRouter(
 	)(withStyles(styles, {withTheme: true})(TagCard))
 );
 
+ReactiveTagCard.defaultProps = {
+	subscription: undefined,
+	collection: {
+		find: () => () => []
+	}
+};
+
 ReactiveTagCard.PropTypes = {
-	subscription: PropTypes.string.isRequired,
-	countSubscription: PropTypes.string.isRequired,
-	collection: PropTypes.object.isRequired,
-	countCollection: PropTypes.object.isRequired,
+	subscription: PropTypes.string,
+	statsSubscription: PropTypes.string.isRequired,
+	collection: PropTypes.object,
+	statsCollection: PropTypes.object.isRequired,
 	selector: PropTypes.object.isRequired,
 	options: PropTypes.object,
 	limit: PropTypes.number.isRequired

@@ -39,17 +39,17 @@ const DoctorCard = ({classes, item, name, loading}) => {
 		<TagCard
 			tag={item}
 			collection={Patients}
-			countCollection={doctors.cache.Counts}
+			statsCollection={doctors.cache.Stats}
 			subscription={doctors.options.parentPublication}
-			countSubscription={doctors.options.parentPublicationCount}
+			statsSubscription={doctors.options.parentPublicationStats}
 			selector={{doctors: item.name}}
 			options={{fields: PatientChip.projection}}
 			limit={1}
 			url={(name) => `/doctor/${myEncodeURIComponent(name)}`}
-			subheader={(count) =>
+			subheader={({count}) =>
 				count === undefined ? '...' : `soigne ${count} patients`
 			}
-			content={(count, patients) =>
+			content={({count}, patients) =>
 				patients === undefined ? (
 					'...'
 				) : (

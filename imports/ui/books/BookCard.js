@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import dateFormat from 'date-fns/format';
 
-import {map, filter, sum, min, max} from '@aureooms/js-itertools';
-
 import {makeStyles} from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
@@ -12,8 +10,6 @@ import Avatar from '@material-ui/core/Avatar';
 import orange from '@material-ui/core/colors/orange';
 
 import TagCard from '../tags/TagCard.js';
-
-import {Consultations} from '../../api/consultations.js';
 
 import {books} from '../../api/books.js';
 
@@ -34,32 +30,21 @@ export default function BookCard({item}) {
 	return (
 		<TagCard
 			tag={item}
-			collection={Consultations}
-			subscription="book.consultations"
+			statsCollection={books.cache.Stats}
+			statsSubscription={books.options.parentPublicationStats}
 			selector={books.selector(item.name)}
 			options={{fields: {price: 1, datetime: 1}}}
 			limit={0}
 			url={(_name) => `/book/${year}/${myEncodeURIComponent(book)}`}
-			subheader={(count) => `${count} consultations`}
-			content={(count, consultations) => {
+			subheader={({count}) =>
+				count === undefined ? '...' : `${count} consultations`
+			}
+			content={({count, total, first, last}) => {
+				if (count === undefined) return '...';
 				if (count === 0) {
 					return null;
 				}
 
-				const total = sum(
-					filter(
-						(x) => Boolean(x),
-						map((c) => c.price, consultations)
-					)
-				);
-				const first = min(
-					(a, b) => a - b,
-					map((c) => c.datetime, consultations)
-				);
-				const last = max(
-					(a, b) => a - b,
-					map((c) => c.datetime, consultations)
-				);
 				const fmt = 'MMM do, yyyy';
 				return (
 					<Typography variant="body1">

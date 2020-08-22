@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-const COUNT_SUFFIX = '.count';
+const STATS_SUFFIX = '.stats';
 
 export default function createTagCollection(options) {
 	const {
@@ -13,11 +13,11 @@ export default function createTagCollection(options) {
 		key
 	} = options;
 
-	const counts = collection + COUNT_SUFFIX;
-	const parentPublicationCount = parentPublication + COUNT_SUFFIX;
+	const stats = collection + STATS_SUFFIX;
+	const parentPublicationStats = parentPublication + STATS_SUFFIX;
 
 	const Collection = new Mongo.Collection(collection);
-	const Counts = new Mongo.Collection(counts);
+	const Stats = new Mongo.Collection(stats);
 
 	if (Meteor.isServer) {
 		Meteor.publish(publication, function (args) {
@@ -34,11 +34,11 @@ export default function createTagCollection(options) {
 	const operations = {
 		options: {
 			...options,
-			counts,
-			parentPublicationCount
+			stats,
+			parentPublicationStats
 		},
 
-		cache: {Counts},
+		cache: {Stats},
 
 		add: (owner, name) => {
 			check(owner, String);
@@ -92,7 +92,7 @@ export default function createTagCollection(options) {
 				});
 
 				// Publish the current size of a collection.
-				Meteor.publish(parentPublicationCount, function (tag) {
+				Meteor.publish(parentPublicationStats, function (tag) {
 					check(tag, String);
 					const query = {[key]: tag, owner: this.userId};
 					// We only include relevant fields
@@ -109,13 +109,13 @@ export default function createTagCollection(options) {
 							count += 1;
 
 							if (!initializing) {
-								this.changed(counts, tag, {count});
+								this.changed(stats, tag, {count});
 							}
 						},
 
 						removed: (_id) => {
 							count -= 1;
-							this.changed(counts, tag, {count});
+							this.changed(stats, tag, {count});
 						}
 
 						// We don't care about `changed` events.
@@ -124,7 +124,7 @@ export default function createTagCollection(options) {
 					// Instead, we'll send one `added` message right after `observeChanges` has
 					// returned, and mark the subscription as ready.
 					initializing = false;
-					this.added(counts, tag, {count});
+					this.added(stats, tag, {count});
 					this.ready();
 
 					// Stop observing the cursor when the client unsubscribes. Stopping a

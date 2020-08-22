@@ -2,6 +2,9 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
+import PairingHeap from '@aureooms/js-pairing-heap';
+import {increasing, decreasing} from '@aureooms/js-compare';
+
 import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
 
@@ -112,7 +115,10 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('book.consultations', function (name, options = {}) {
+	Meteor.publish(books.options.parentPublication, function (
+		name,
+		options = {}
+	) {
 		const query = {
 			owner: this.userId,
 			isDone: true,
@@ -134,6 +140,89 @@ if (Meteor.isServer) {
 		}
 
 		return Consultations.find(query, options);
+	});
+
+	Meteor.publish(books.options.parentPublicationStats, function (name) {
+		check(name, String);
+
+		const query = {
+			...books.selector(name),
+			owner: this.userId,
+			isDone: true
+		};
+		const options = {fields: {_id: 1, price: 1, datetime: 1}};
+		for (const key of Object.keys(query)) options.fields[key] = 1;
+
+		const minHeap = new PairingHeap(increasing);
+		const maxHeap = new PairingHeap(decreasing);
+		const refs = new Map();
+		let count = 0;
+		let total = 0;
+		let initializing = true;
+
+		const state = () => ({
+			count,
+			total,
+			first: minHeap.head(),
+			last: maxHeap.head()
+		});
+
+		// `observeChanges` only returns after the initial `added` callbacks have run.
+		// Until then, we don't want to send a lot of `changed` messages—hence
+		// tracking the `initializing` state.
+		const handle = Consultations.find(query, options).observeChanges({
+			added: (_id, {price, datetime}) => {
+				count += 1;
+				if (price) total += price;
+				const minRef = minHeap.push(datetime);
+				const maxRef = maxHeap.push(datetime);
+				refs.set(_id, [price, minRef, maxRef]);
+
+				if (!initializing) {
+					this.changed(books.options.stats, name, state());
+				}
+			},
+
+			changed: (_id, fields) => {
+				const [oldPrice, minRef, maxRef] = refs.get(_id);
+				let newPrice = oldPrice;
+				if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
+					newPrice = fields.price;
+					if (oldPrice) total -= oldPrice;
+					if (newPrice) total += newPrice;
+					refs.set(_id, [newPrice, minRef, maxRef]);
+				}
+
+				if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
+					const datetime = fields.datetime;
+					minHeap.update(minRef, datetime);
+					maxHeap.update(maxRef, datetime);
+				}
+
+				this.changed(books.options.stats, name, state());
+			},
+
+			removed: (_id) => {
+				count -= 1;
+				const [price, minRef, maxRef] = refs.get(_id);
+				if (price) total -= price;
+				minHeap.delete(minRef);
+				maxHeap.delete(maxRef);
+				refs.delete(_id);
+				this.changed(books.options.stats, name, state());
+			}
+		});
+
+		// Instead, we'll send one `added` message right after `observeChanges` has
+		// returned, and mark the subscription as ready.
+		initializing = false;
+		this.added(books.options.stats, name, state());
+		this.ready();
+
+		// Stop observing the cursor when the client unsubscribes. Stopping a
+		// subscription automatically takes care of sending the client any `removed`
+		// messages.
+		this.onStop(() => handle.stop());
 	});
 
 	Meteor.publish('consultations.missing-a-price', function () {

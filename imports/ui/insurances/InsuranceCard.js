@@ -35,17 +35,17 @@ const InsuranceCard = ({classes, item, loading}) => {
 		<TagCard
 			tag={item}
 			collection={Patients}
-			countCollection={insurances.cache.Counts}
+			statsCollection={insurances.cache.Stats}
 			subscription={insurances.options.parentPublication}
-			countSubscription={insurances.options.parentPublicationCount}
+			statsSubscription={insurances.options.parentPublicationStats}
 			selector={{insurances: item.name}}
 			options={{fields: PatientChip.projection}}
 			limit={1}
 			url={(name) => `/insurance/${myEncodeURIComponent(name)}`}
-			subheader={(count) =>
+			subheader={({count}) =>
 				count === undefined ? '...' : `assure ${count} patients`
 			}
-			content={(count, patients) =>
+			content={({count}, patients) =>
 				patients === undefined ? (
 					'...'
 				) : (

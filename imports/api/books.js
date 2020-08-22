@@ -5,10 +5,15 @@ import {check} from 'meteor/check';
 import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
-export const Books = new Mongo.Collection('books');
+const collection = 'books';
+const publication = 'books';
+const stats = 'books.stats';
+
+export const Books = new Mongo.Collection(collection);
+const Stats = new Mongo.Collection(stats);
 
 if (Meteor.isServer) {
-	Meteor.publish('books', function (args) {
+	Meteor.publish(publication, function (args) {
 		const query = {
 			...args,
 			owner: this.userId
@@ -18,6 +23,14 @@ if (Meteor.isServer) {
 }
 
 export const books = {
+	options: {
+		collection,
+		publication,
+		stats,
+		parentPublication: 'book.consultations',
+		parentPublicationStats: 'book.stats'
+	},
+	cache: {Stats},
 	add: (owner, name) => {
 		check(owner, String);
 		check(name, String);
