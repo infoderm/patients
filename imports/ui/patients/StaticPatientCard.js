@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
+import {useTransition, animated} from 'react-spring';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -20,7 +22,24 @@ import pink from '@material-ui/core/colors/pink';
 import eidFormatBirthdate from '../../client/eidFormatBirthdate.js';
 
 const useStyles = makeStyles((theme) => ({
+	container: {
+		position: 'relative',
+		transition: 'opacity 500ms ease-out'
+	},
+	veil: {
+		position: 'absolute',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		zIndex: 1,
+		fontSize: '2rem'
+	},
 	card: {
+		position: 'relative',
 		display: 'flex',
 		minHeight: 200
 	},
@@ -67,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function StaticPatientCard({patient}) {
+export default function StaticPatientCard({loading, found, patient}) {
 	const classes = useStyles();
 
 	const {_id, birthdate, photo, niss} = patient;
@@ -76,8 +95,27 @@ export default function StaticPatientCard({patient}) {
 	const lastname = patient.lastname || '?';
 	const sex = patient.sex || 'N';
 
+	const photoTransitions = useTransition(photo, null, {
+		from: {position: 'absolute', right: 0, top: 0, opacity: 0},
+		enter: {opacity: 1},
+		leave: {opacity: 0}
+	});
+
+	const deleted = !loading && !found;
+
+	const containerOpacity = {opacity: deleted ? 0.4 : 1};
+
 	return (
-		<Grid item sm={12} md={12} lg={6} xl={4}>
+		<Grid
+			item
+			className={classes.container}
+			sm={12}
+			md={12}
+			lg={6}
+			xl={4}
+			style={containerOpacity}
+		>
+			{deleted && <div className={classes.veil}>DELETED</div>}
 			<Card className={classes.card} component={Link} to={`/patient/${_id}`}>
 				<div className={classes.details}>
 					<CardHeader
@@ -95,17 +133,26 @@ export default function StaticPatientCard({patient}) {
 						<Chip label={niss || '?'} />
 					</CardActions>
 				</div>
-				{photo ? (
-					<CardMedia
-						className={classes.photo}
-						image={`data:image/png;base64,${photo}`}
-						title={`${firstname} ${lastname}`}
-					/>
-				) : (
-					<div className={classes.photoPlaceHolder}>
-						{firstname[0]}
-						{lastname[0]}
-					</div>
+				{photoTransitions.map(({item, props, key}) =>
+					item ? (
+						<CardMedia
+							key={key}
+							component={animated.div}
+							className={classes.photo}
+							image={`data:image/png;base64,${item}`}
+							title={`${firstname} ${lastname}`}
+							style={props}
+						/>
+					) : (
+						<animated.div
+							key={key}
+							className={classes.photoPlaceHolder}
+							style={props}
+						>
+							{firstname[0]}
+							{lastname[0]}
+						</animated.div>
+					)
 				)}
 			</Card>
 		</Grid>
@@ -119,4 +166,15 @@ StaticPatientCard.projection = {
 	sex: 1,
 	niss: 1,
 	photo: 1
+};
+
+StaticPatientCard.defaultProps = {
+	loading: false,
+	found: true
+};
+
+StaticPatientCard.propTypes = {
+	loading: PropTypes.bool,
+	found: PropTypes.bool,
+	patient: PropTypes.object.isRequired
 };

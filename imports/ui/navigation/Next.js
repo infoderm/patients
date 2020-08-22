@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 	fabnext: {
 		position: 'fixed',
 		bottom: theme.spacing(3),
-		right: theme.spacing(3)
+		right: theme.spacing(12)
 	}
 }));
 

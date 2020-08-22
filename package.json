@@ -48,6 +48,7 @@
     "react-dom": "^16.13.1",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",
+    "react-spring": "^8.0.27",
     "recompose": "^0.30.0",
     "regenerator-runtime": "^0.13.7",
     "sepa-payment-qr-code": "^1.0.0",

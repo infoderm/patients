@@ -7,6 +7,7 @@ import {useSnackbar} from 'notistack';
 import {myDecodeURIComponent} from '../../client/uri.js';
 
 import StaticPatientsList from './StaticPatientsList.js';
+import PatientCard from './PatientCard.js';
 
 const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 	page =
@@ -27,14 +28,19 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 
 		const query = {$text: {$search}};
 
+		const sort = {
+			score: {$meta: 'textScore'}
+		};
+		const fields = {
+			...sort,
+			...StaticPatientsList.projection
+		};
+		// We fetch the picture through a dedicated subscription to get live
+		// updates while avoiding double loading on init.
+		delete fields.photo;
 		const options = {
-			fields: {
-				score: {$meta: 'textScore'},
-				...StaticPatientsList.projection
-			},
-			sort: {
-				score: {$meta: 'textScore'}
-			},
+			fields,
+			sort,
 			skip: (page - 1) * perpage,
 			limit: perpage
 		};
@@ -72,6 +78,7 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 			loading={loading}
 			patients={patients}
 			root={root}
+			Card={PatientCard}
 			{...rest}
 		/>
 	);

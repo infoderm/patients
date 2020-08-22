@@ -16,6 +16,7 @@ export default function StaticPatientsList({
 	loading,
 	patients,
 	root,
+	Card,
 	...rest
 }) {
 	if (loading && patients.length === 0) return <Loading />;
@@ -29,7 +30,11 @@ export default function StaticPatientsList({
 		<>
 			<div style={style} {...rest}>
 				{patients.length > 0 ? (
-					<PatientsPage patients={patients} NewCard={NewPatientCard} />
+					<PatientsPage
+						patients={patients}
+						Card={Card}
+						NewCard={NewPatientCard}
+					/>
 				) : page === 1 ? (
 					<div>
 						<NoContent>No patients match the current query.</NoContent>
@@ -64,5 +69,6 @@ StaticPatientsList.propTypes = {
 	perpage: PropTypes.number.isRequired,
 	loading: PropTypes.bool,
 	patients: PropTypes.array.isRequired,
-	root: PropTypes.string.isRequired
+	root: PropTypes.string.isRequired,
+	Card: PropTypes.elementType
 };
