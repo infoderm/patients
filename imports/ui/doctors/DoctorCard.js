@@ -39,22 +39,30 @@ const DoctorCard = ({classes, item, name, loading}) => {
 		<TagCard
 			tag={item}
 			collection={Patients}
+			countCollection={doctors.cache.Counts}
 			subscription={doctors.options.parentPublication}
+			countSubscription={doctors.options.parentPublicationCount}
 			selector={{doctors: item.name}}
 			options={{fields: PatientChip.projection}}
 			limit={1}
 			url={(name) => `/doctor/${myEncodeURIComponent(name)}`}
-			subheader={(count) => `soigne ${count} patients`}
-			content={(count, patients) => (
-				<div>
-					{patients.map((patient) => (
-						<PatientChip key={patient._id} patient={patient} />
-					))}
-					{count > patients.length && (
-						<Chip label={`+ ${count - patients.length}`} />
-					)}
-				</div>
-			)}
+			subheader={(count) =>
+				count === undefined ? '...' : `soigne ${count} patients`
+			}
+			content={(count, patients) =>
+				patients === undefined ? (
+					'...'
+				) : (
+					<div>
+						{patients.map((patient) => (
+							<PatientChip key={patient._id} patient={patient} />
+						))}
+						{count > patients.length && (
+							<Chip label={`+ ${count - patients.length}`} />
+						)}
+					</div>
+				)
+			}
 			avatar={<Avatar className={classes.avatar}>Dr</Avatar>}
 			DeletionDialog={DoctorDeletionDialog}
 			RenamingDialog={DoctorRenamingDialog}

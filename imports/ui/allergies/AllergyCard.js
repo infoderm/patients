@@ -56,29 +56,39 @@ const AllergyCard = ({item, loading}) => {
 		<TagCard
 			tag={item}
 			collection={Patients}
+			countCollection={allergies.cache.Counts}
 			subscription={allergies.options.parentPublication}
+			countSubscription={allergies.options.parentPublicationCount}
 			selector={{allergies: item.name}}
 			options={{fields: PatientChip.projection}}
 			limit={1}
 			url={(name) => `/allergy/${myEncodeURIComponent(name)}`}
-			subheader={(count) => `affecte ${count} patients`}
-			content={(count, patients) => (
-				<div>
-					{patients.map((patient) => (
-						<PatientChip key={patient._id} patient={patient} />
-					))}
-					{count > patients.length && (
-						<Chip
-							className={classes.chip}
-							label={`+ ${count - patients.length}`}
-						/>
-					)}
-					<ColorPicker
-						name="color"
-						defaultValue={item.color || '#e0e0e0'}
-						onChange={debounce(onChange, 1000)}
-					/>
-				</div>
+			subheader={(count) =>
+				count === undefined ? '...' : `affecte ${count} patients`
+			}
+			content={(count, patients) =>
+				patients === undefined ? (
+					'...'
+				) : (
+					<div>
+						{patients.map((patient) => (
+							<PatientChip key={patient._id} patient={patient} />
+						))}
+						{count !== undefined && count > patients.length && (
+							<Chip
+								className={classes.chip}
+								label={`+ ${count - patients.length}`}
+							/>
+						)}
+					</div>
+				)
+			}
+			actions={() => (
+				<ColorPicker
+					name="color"
+					defaultValue={item.color || '#e0e0e0'}
+					onChange={debounce(onChange, 1000)}
+				/>
 			)}
 			avatar={<Avatar className={classes.avatar}>Al</Avatar>}
 			DeletionDialog={AllergyDeletionDialog}

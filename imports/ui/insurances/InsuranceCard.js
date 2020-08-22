@@ -35,22 +35,30 @@ const InsuranceCard = ({classes, item, loading}) => {
 		<TagCard
 			tag={item}
 			collection={Patients}
+			countCollection={insurances.cache.Counts}
 			subscription={insurances.options.parentPublication}
+			countSubscription={insurances.options.parentPublicationCount}
 			selector={{insurances: item.name}}
 			options={{fields: PatientChip.projection}}
 			limit={1}
 			url={(name) => `/insurance/${myEncodeURIComponent(name)}`}
-			subheader={(count) => `assure ${count} patients`}
-			content={(count, patients) => (
-				<div>
-					{patients.map((patient) => (
-						<PatientChip key={patient._id} patient={patient} />
-					))}
-					{count > patients.length && (
-						<Chip label={`+ ${count - patients.length}`} />
-					)}
-				</div>
-			)}
+			subheader={(count) =>
+				count === undefined ? '...' : `assure ${count} patients`
+			}
+			content={(count, patients) =>
+				patients === undefined ? (
+					'...'
+				) : (
+					<div>
+						{patients.map((patient) => (
+							<PatientChip key={patient._id} patient={patient} />
+						))}
+						{count > patients.length && (
+							<Chip label={`+ ${count - patients.length}`} />
+						)}
+					</div>
+				)
+			}
 			avatar={<Avatar className={classes.avatar}>In</Avatar>}
 			DeletionDialog={InsuranceDeletionDialog}
 			RenamingDialog={InsuranceRenamingDialog}

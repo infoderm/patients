@@ -98,7 +98,7 @@ class TagCard extends React.Component {
 			subheader,
 			url,
 			content,
-			loading,
+			actions,
 			count,
 			items,
 			RenamingDialog,
@@ -116,12 +116,12 @@ class TagCard extends React.Component {
 							className={classes.header}
 							avatar={avatar}
 							title={tag.name}
-							subheader={loading ? '...' : subheader(count, items)}
+							subheader={subheader(count, items)}
 							component={Link}
 							to={url(tag.name)}
 						/>
 						<CardContent className={classes.content}>
-							{loading ? '...' : content(count, items)}
+							{content(count, items)}
 						</CardContent>
 						<CardActions disableSpacing className={classes.actions}>
 							{RenamingDialog && (
@@ -151,6 +151,7 @@ class TagCard extends React.Component {
 									onClose={this.closeDeletionDialog}
 								/>
 							)}
+							{actions(count, items)}
 						</CardActions>
 					</div>
 					<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
@@ -159,6 +160,12 @@ class TagCard extends React.Component {
 		);
 	}
 }
+
+TagCard.defaultProps = {
+	actions: () => null,
+	count: undefined,
+	items: undefined
+};
 
 TagCard.propTypes = {
 	classes: PropTypes.object.isRequired,
@@ -169,28 +176,53 @@ TagCard.propTypes = {
 	avatar: PropTypes.object.isRequired,
 	subheader: PropTypes.func.isRequired,
 	content: PropTypes.func.isRequired,
+	actions: PropTypes.func,
 
-	// subscription: PropTypes.string.isRequired,
-	// collection: PropTypes.object.isRequired,
-	// selector: PropTypes.object.isRequired,
-	// options: PropTypes.object,
-	// limit: PropTypes.number.isRequired,
-
-	loading: PropTypes.bool.isRequired,
-	count: PropTypes.number.isRequired,
-	items: PropTypes.array.isRequired
+	count: PropTypes.number,
+	items: PropTypes.array
 };
 
-export default withRouter(
-	withTracker(({tag, subscription, collection, selector, options, limit}) => {
-		const name = tag.name;
-		const handle = Meteor.subscribe(subscription, name, options);
-		if (handle.ready()) {
-			const items = collection.find(selector, {...options, limit}).fetch();
-			const count = collection.find(selector, options).count();
-			return {loading: false, items, count};
-		}
+const ReactiveTagCard = withRouter(
+	withTracker(
+		({
+			tag,
+			subscription,
+			countSubscription,
+			collection,
+			countCollection,
+			selector,
+			options,
+			limit
+		}) => {
+			const name = tag.name;
+			const handle = Meteor.subscribe(subscription, name, {...options, limit});
+			const countHandle = Meteor.subscribe(countSubscription, name);
+			const result = {
+				items: undefined,
+				count: undefined
+			};
 
-		return {loading: true, items: [], count: 0};
-	})(withStyles(styles, {withTheme: true})(TagCard))
+			if (handle.ready()) {
+				result.items = collection.find(selector, {...options, limit}).fetch();
+			}
+
+			if (countHandle.ready()) {
+				result.count = countCollection.findOne(name).count;
+			}
+
+			return result;
+		}
+	)(withStyles(styles, {withTheme: true})(TagCard))
 );
+
+ReactiveTagCard.PropTypes = {
+	subscription: PropTypes.string.isRequired,
+	countSubscription: PropTypes.string.isRequired,
+	collection: PropTypes.object.isRequired,
+	countCollection: PropTypes.object.isRequired,
+	selector: PropTypes.object.isRequired,
+	options: PropTypes.object,
+	limit: PropTypes.number.isRequired
+};
+
+export default ReactiveTagCard;
