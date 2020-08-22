@@ -29,7 +29,7 @@ export default function StaticPatientsList({
 		<>
 			<div style={style} {...rest}>
 				{patients.length > 0 ? (
-					<PatientsPage patients={patients} />
+					<PatientsPage patients={patients} NewCard={NewPatientCard} />
 				) : page === 1 ? (
 					<div>
 						<NoContent>No patients match the current query.</NoContent>

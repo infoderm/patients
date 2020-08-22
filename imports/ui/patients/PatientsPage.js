@@ -5,15 +5,14 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 import StaticPatientCard from './StaticPatientCard.js';
-import NewPatientCard from './NewPatientCard.js';
 
-export default function PatientsPage({patients}) {
+export default function PatientsPage({patients, Card, NewCard}) {
 	return (
 		<div>
 			<Grid container spacing={3}>
-				<NewPatientCard />
+				{NewCard && <NewCard />}
 				{patients.map((patient) => (
-					<StaticPatientCard key={patient._id} patient={patient} />
+					<Card key={patient._id} patient={patient} />
 				))}
 			</Grid>
 		</div>
@@ -22,6 +21,13 @@ export default function PatientsPage({patients}) {
 
 PatientsPage.projection = StaticPatientCard.projection;
 
+PatientsPage.defaultProps = {
+	Card: StaticPatientCard,
+	NewCard: undefined
+};
+
 PatientsPage.propTypes = {
-	patients: PropTypes.array.isRequired
+	patients: PropTypes.array.isRequired,
+	Card: PropTypes.elementType,
+	NewCard: PropTypes.elementType
 };
