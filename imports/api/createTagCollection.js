@@ -60,7 +60,7 @@ export default function createTagCollection(options) {
 			if (Meteor.isServer) {
 				Meteor.publish(parentPublication, function (tag, options = {}) {
 					check(tag, String);
-					const query = {owner: this.userId, [key]: tag};
+					const query = {[key]: tag, owner: this.userId};
 					if (options.fields) {
 						const {fields, ...rest} = options;
 						const _options = {
@@ -96,7 +96,7 @@ export default function createTagCollection(options) {
 					newname = newname.trim();
 
 					Parent.update(
-						{owner, [key]: oldname},
+						{[key]: oldname, owner},
 						{
 							$addToSet: {[key]: newname}
 						},
@@ -104,7 +104,7 @@ export default function createTagCollection(options) {
 					);
 
 					Parent.update(
-						{owner, [key]: newname},
+						{[key]: newname, owner},
 						{
 							$pull: {[key]: oldname}
 						},
@@ -138,7 +138,7 @@ export default function createTagCollection(options) {
 					}
 
 					Parent.update(
-						{owner, [key]: tag.name},
+						{[key]: tag.name, owner},
 						{$pull: {[key]: tag.name}},
 						{multi: true}
 					);
