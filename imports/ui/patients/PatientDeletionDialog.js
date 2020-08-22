@@ -17,6 +17,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import StaticPatientCard from './StaticPatientCard.js';
+
 import {normalized} from '../../api/string.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +74,7 @@ export default function PatientDeletionDialog({open, onClose, patient}) {
 					want to delete this patient from the system, enter its last name below
 					and click the delete button.
 				</DialogContentText>
+				<StaticPatientCard patient={patient} />
 				<TextField
 					autoFocus
 					fullWidth
