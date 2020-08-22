@@ -6,15 +6,18 @@ import React from 'react';
 
 import ConsultationForm from './ConsultationForm.js';
 
+import Loading from '../navigation/Loading.js';
+import NoContent from '../navigation/NoContent.js';
+
 import {Consultations} from '../../api/consultations.js';
 
 const EditConsultationForm = ({loading, consultation}) => {
 	if (loading) {
-		return <div>Loading...</div>;
+		return <Loading />;
 	}
 
 	if (!consultation) {
-		return <div>Error: Consultation not found.</div>;
+		return <NoContent>Consultation not found.</NoContent>;
 	}
 
 	return <ConsultationForm consultation={consultation} />;

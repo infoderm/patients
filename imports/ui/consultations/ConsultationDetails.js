@@ -25,7 +25,7 @@ const ConsultationDetails = ({loading, consultation}) => {
 	}
 
 	if (!consultation) {
-		return <NoContent>Error: Consultation not found.</NoContent>;
+		return <NoContent>Consultation not found.</NoContent>;
 	}
 
 	return (
