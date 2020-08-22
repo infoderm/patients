@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 	saveButton: {
 		position: 'fixed',
 		bottom: theme.spacing(3),
-		right: theme.spacing(21)
+		right: theme.spacing(30)
 	}
 }));
 
