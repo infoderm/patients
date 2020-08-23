@@ -1,12 +1,15 @@
 import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
+import {useTracker} from 'meteor/react-meteor-data';
+
+import React from 'react';
 
 import StaticPatientCard from './StaticPatientCard.js';
 
 import {Patients} from '../../api/patients.js';
 
-const ReactivePatientCard = withTracker(({patient}) => {
+const ReactivePatientCard = ({patient}) => {
 	const patientId = patient._id;
+
 	// The options fields key selects fields whose updates we want to subscribe
 	// to. Here we subscribe to everything needed to display a
 	// StaticPatientCard.
@@ -20,29 +23,32 @@ const ReactivePatientCard = withTracker(({patient}) => {
 	// subscription.
 	// delete options.fields['photo'];
 
-	const handle = Meteor.subscribe('patient', patientId, options);
+	const props = useTracker(() => {
+		const handle = Meteor.subscribe('patient', patientId, options);
+		if (handle.ready()) {
+			const upToDate = Patients.findOne(patientId, options);
+			if (upToDate) {
+				return {
+					loading: false,
+					found: true,
+					patient: {
+						...patient,
+						...upToDate
+					}
+				};
+			}
 
-	if (handle.ready()) {
-		const upToDate = Patients.findOne(patientId, options);
-		if (upToDate) {
 			return {
 				loading: false,
-				found: true,
-				patient: {
-					...patient,
-					...upToDate
-				}
+				found: false,
+				patient
 			};
 		}
 
-		return {
-			loading: false,
-			found: false,
-			patient
-		};
-	}
+		return {loading: true, patient};
+	}, [patientId, options]);
 
-	return {loading: true, patient};
-})(StaticPatientCard);
+	return <StaticPatientCard {...props} />;
+};
 
 export default ReactivePatientCard;
