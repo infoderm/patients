@@ -13,8 +13,11 @@ import {doctors} from './doctors.js';
 import {allergies} from './allergies.js';
 
 import {makeIndex} from './string.js';
+import observeQuery from './observeQuery.js';
 
+const cacheCollection = 'patients.cache';
 export const Patients = new Mongo.Collection('patients');
+export const PatientsCache = new Mongo.Collection(cacheCollection);
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = ['', 'male', 'female', 'other'];
@@ -32,6 +35,11 @@ if (Meteor.isServer) {
 		check(_id, String);
 		return Patients.find({owner: this.userId, _id}, options);
 	});
+
+	Meteor.publish(
+		'patients.find.observe',
+		observeQuery(Patients, cacheCollection)
+	);
 }
 
 function updateTags(userId, fields) {
@@ -466,6 +474,7 @@ function createPatient(string) {
 }
 
 export const patients = {
+	cacheCollection,
 	toString: patientToString,
 	toKey: patientToKey,
 	merge: mergePatients,

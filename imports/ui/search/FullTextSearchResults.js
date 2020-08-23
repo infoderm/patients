@@ -5,8 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import {myDecodeURIComponent} from '../../client/uri.js';
 
-import Refresh from '../navigation/Refresh.js';
-import PatientsSearchResults from '../patients/PatientsSearchResults.js';
+import PatientsObservedSearchResults from '../patients/PatientsObservedSearchResults.js';
 
 const useStyles = makeStyles(() => ({
 	results: {
@@ -17,12 +16,17 @@ const useStyles = makeStyles(() => ({
 export default function FullTextSearchResults({match}) {
 	const classes = useStyles();
 	const [key, setKey] = useState(Math.random());
+	const refresh = () => setKey(Math.random());
 	const query = myDecodeURIComponent(match.params.query);
 	return (
-		<div key={key}>
+		<div>
 			<Typography variant="h3">Results for query `{query}`.</Typography>
-			<PatientsSearchResults className={classes.results} match={match} />
-			<Refresh onClick={() => setKey(Math.random())} />
+			<PatientsObservedSearchResults
+				className={classes.results}
+				match={match}
+				refresh={refresh}
+				refreshKey={key}
+			/>
 		</div>
 	);
 }
