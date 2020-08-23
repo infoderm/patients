@@ -92,9 +92,10 @@ export default function createTagCollection(options) {
 				});
 
 				// Publish the current size of a collection.
-				Meteor.publish(parentPublicationStats, function (tag) {
-					check(tag, String);
-					const query = {[key]: tag, owner: this.userId};
+				Meteor.publish(parentPublicationStats, function (name) {
+					check(name, String);
+					const uid = JSON.stringify({name, owner: this.userId});
+					const query = {[key]: name, owner: this.userId};
 					// We only include relevant fields
 					const options = {fields: {_id: 1, [key]: 1}};
 
@@ -105,17 +106,17 @@ export default function createTagCollection(options) {
 					// Until then, we don't want to send a lot of `changed` messages—hence
 					// tracking the `initializing` state.
 					const handle = Parent.find(query, options).observeChanges({
-						added: (_id) => {
+						added: () => {
 							count += 1;
 
 							if (!initializing) {
-								this.changed(stats, tag, {count});
+								this.changed(stats, uid, {count});
 							}
 						},
 
-						removed: (_id) => {
+						removed: () => {
 							count -= 1;
-							this.changed(stats, tag, {count});
+							this.changed(stats, uid, {count});
 						}
 
 						// We don't care about `changed` events.
@@ -124,7 +125,7 @@ export default function createTagCollection(options) {
 					// Instead, we'll send one `added` message right after `observeChanges` has
 					// returned, and mark the subscription as ready.
 					initializing = false;
-					this.added(stats, tag, {count});
+					this.added(stats, uid, {name, count});
 					this.ready();
 
 					// Stop observing the cursor when the client unsubscribes. Stopping a

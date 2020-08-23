@@ -145,13 +145,14 @@ if (Meteor.isServer) {
 	Meteor.publish(books.options.parentPublicationStats, function (name) {
 		check(name, String);
 
+		const key = JSON.stringify({name, owner: this.userId});
 		const query = {
 			...books.selector(name),
 			owner: this.userId,
 			isDone: true
 		};
 		const options = {fields: {_id: 1, price: 1, datetime: 1}};
-		for (const key of Object.keys(query)) options.fields[key] = 1;
+		for (const field of Object.keys(query)) options.fields[field] = 1;
 
 		const minHeap = new PairingHeap(increasing);
 		const maxHeap = new PairingHeap(decreasing);
@@ -161,6 +162,7 @@ if (Meteor.isServer) {
 		let initializing = true;
 
 		const state = () => ({
+			name,
 			count,
 			total,
 			first: minHeap.head(),
@@ -179,7 +181,7 @@ if (Meteor.isServer) {
 				refs.set(_id, [price, minRef, maxRef]);
 
 				if (!initializing) {
-					this.changed(books.options.stats, name, state());
+					this.changed(books.options.stats, key, state());
 				}
 			},
 
@@ -199,7 +201,7 @@ if (Meteor.isServer) {
 					maxHeap.update(maxRef, datetime);
 				}
 
-				this.changed(books.options.stats, name, state());
+				this.changed(books.options.stats, key, state());
 			},
 
 			removed: (_id) => {
@@ -209,14 +211,14 @@ if (Meteor.isServer) {
 				minHeap.delete(minRef);
 				maxHeap.delete(maxRef);
 				refs.delete(_id);
-				this.changed(books.options.stats, name, state());
+				this.changed(books.options.stats, key, state());
 			}
 		});
 
 		// Instead, we'll send one `added` message right after `observeChanges` has
 		// returned, and mark the subscription as ready.
 		initializing = false;
-		this.added(books.options.stats, name, state());
+		this.added(books.options.stats, key, state());
 		this.ready();
 
 		// Stop observing the cursor when the client unsubscribes. Stopping a

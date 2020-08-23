@@ -209,7 +209,7 @@ const ReactiveTagCard = withRouter(
 			}
 
 			if (statsHandle.ready()) {
-				result.stats = statsCollection.findOne(name);
+				result.stats = statsCollection.findOne({name});
 			}
 
 			return result;
