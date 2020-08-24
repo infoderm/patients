@@ -1,10 +1,14 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 const makeQuery = (Collection, subscription) => (query, options, deps) => {
 	const [loading, setLoading] = useState(true);
 	const [results, setResults] = useState([]);
+
+	useEffect(() => {
+		setLoading(true);
+	}, deps);
 
 	useTracker(() => {
 		const handle = Meteor.subscribe(subscription, query, options);
