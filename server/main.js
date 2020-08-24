@@ -148,8 +148,8 @@ Meteor.startup(() => {
 		{
 			background: true,
 			weights: {
-				firstname: 3,
-				lastname: 2
+				firstname: 2,
+				lastname: 3
 			}
 		}
 	);
