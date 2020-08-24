@@ -14,8 +14,10 @@ import {allergies} from './allergies.js';
 
 import {makeIndex} from './string.js';
 import observeQuery from './observeQuery.js';
+import makeObservedQuery from './makeObservedQuery.js';
 
-const cacheCollection = 'patients.cache';
+const cacheCollection = 'patients.find.cache';
+const cachePublication = 'patients.find.observe';
 export const Patients = new Mongo.Collection('patients');
 export const PatientsCache = new Mongo.Collection(cacheCollection);
 
@@ -36,10 +38,7 @@ if (Meteor.isServer) {
 		return Patients.find({owner: this.userId, _id}, options);
 	});
 
-	Meteor.publish(
-		'patients.find.observe',
-		observeQuery(Patients, cacheCollection)
-	);
+	Meteor.publish(cachePublication, observeQuery(Patients, cacheCollection));
 }
 
 function updateTags(userId, fields) {
@@ -473,8 +472,14 @@ function createPatient(string) {
 	};
 }
 
+export const usePatientsFind = makeObservedQuery(
+	PatientsCache,
+	cachePublication
+);
+
 export const patients = {
 	cacheCollection,
+	cachePublication,
 	toString: patientToString,
 	toKey: patientToKey,
 	merge: mergePatients,

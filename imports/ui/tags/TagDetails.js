@@ -1,27 +1,14 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
-import React from 'react';
-import PropTypes from 'prop-types';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
 const ListWithHeader = (props) => {
-	const {
-		name,
-		Card,
-		List,
-		useItem,
-		listProps,
-		root,
-		page,
-		perpage,
-		items
-	} = props;
+	const {name, Card, List, useItem, listProps, root, page, perpage} = props;
 
 	const {loading, item} = useItem(name);
 
@@ -42,66 +29,73 @@ const ListWithHeader = (props) => {
 					<Typography variant="h2">Patients</Typography>
 				</div>
 			)}
-			<List
-				{...listProps}
-				root={root}
-				page={page}
-				perpage={perpage}
-				items={items}
-			/>
+			<List {...listProps} root={root} page={page} perpage={perpage} />
 		</div>
 	);
 };
 
 const TagDetails = (props) => {
-	const {Card, List, useItem, listProps, root, page, perpage, items} = props;
+	const {
+		Card,
+		List,
+		useItem,
+		useParents,
+		root,
+		page,
+		perpage,
+		name,
+		selector,
+		sort,
+		fields
+	} = props;
+
+	const options = {
+		fields,
+		sort,
+		skip: (page - 1) * perpage,
+		limit: perpage
+	};
+
+	const [refreshKey, setRefreshKey] = useState(Math.random());
+	const refresh = () => setRefreshKey(Math.random());
+	const {loading, results, dirty} = useParents(selector, options, [
+		name,
+		page,
+		perpage,
+		refreshKey
+	]);
+
+	const listProps = {
+		...props.listProps,
+		loading,
+		dirty,
+		refresh,
+		items: results
+	};
 
 	if (!Card)
-		return (
-			<List
-				{...listProps}
-				root={root}
-				page={page}
-				perpage={perpage}
-				items={items}
-			/>
-		);
+		return <List {...listProps} root={root} page={page} perpage={perpage} />;
 
 	if (!useItem) throw new Error('useItem must be given if Card is given');
 
-	return <ListWithHeader {...props} />;
+	return <ListWithHeader {...props} listProps={listProps} />;
 };
 
 TagDetails.propTypes = {
-	List: PropTypes.elementType.isRequired,
 	Card: PropTypes.elementType,
-	useItem: PropTypes.func,
-	root: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired,
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired,
 
-	subscription: PropTypes.string.isRequired,
-	collection: PropTypes.object.isRequired,
+	useItem: PropTypes.func,
+	name: PropTypes.string.isRequired,
+
+	List: PropTypes.elementType.isRequired,
+	root: PropTypes.string.isRequired,
+
+	useParents: PropTypes.func.isRequired,
 	selector: PropTypes.object.isRequired,
 	sort: PropTypes.object.isRequired,
 	fields: PropTypes.object,
-
-	items: PropTypes.array.isRequired
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired
 };
 
-export default withTracker(
-	({subscription, name, collection, selector, sort, fields, page, perpage}) => {
-		Meteor.subscribe(subscription, name, {sort, fields});
-		return {
-			items: collection
-				.find(selector, {
-					sort,
-					fields,
-					skip: (page - 1) * perpage,
-					limit: perpage
-				})
-				.fetch()
-		};
-	}
-)(TagDetails);
+export default TagDetails;

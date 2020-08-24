@@ -5,8 +5,7 @@ import TagDetails from '../tags/TagDetails.js';
 
 import PagedPatientsList from '../patients/PagedPatientsList.js';
 
-import {Patients} from '../../api/patients.js';
-import {doctors} from '../../api/doctors.js';
+import {usePatientsFind} from '../../api/patients.js';
 
 import {DoctorCardWithoutItem} from './DoctorCard.js';
 import useDoctor from './useDoctor.js';
@@ -21,18 +20,17 @@ export default function DoctorDetails({match, name, page, perpage}) {
 
 	return (
 		<TagDetails
-			root={`/doctor/${myEncodeURIComponent(name)}`}
+			Card={DoctorCardWithoutItem}
+			useItem={useDoctor}
 			name={name}
-			page={page}
-			perpage={perpage}
-			collection={Patients}
-			subscription={doctors.options.parentPublication}
+			List={PagedPatientsList}
+			root={`/doctor/${myEncodeURIComponent(name)}`}
+			useParents={usePatientsFind}
 			selector={{doctors: name}}
 			sort={{lastname: 1}}
 			fields={PagedPatientsList.projection}
-			List={PagedPatientsList}
-			Card={DoctorCardWithoutItem}
-			useItem={useDoctor}
+			page={page}
+			perpage={perpage}
 		/>
 	);
 }

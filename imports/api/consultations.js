@@ -13,7 +13,11 @@ import {list, map, range, product} from '@aureooms/js-itertools';
 import {Uploads} from './uploads.js';
 import {books} from './books.js';
 
+import makeQuery from './makeQuery.js';
+
 export const Consultations = new Mongo.Collection('consultations');
+
+export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 
 if (Meteor.isServer) {
 	Meteor.publish('consultation', function (_id) {

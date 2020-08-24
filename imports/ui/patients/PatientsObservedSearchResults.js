@@ -2,18 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {myDecodeURIComponent} from '../../client/uri.js';
-import makeObservedQuery from '../../client/makeObservedQuery.js';
 
 import Refresh from '../navigation/Refresh.js';
 import StaticPatientsList from './StaticPatientsList.js';
 import ReactivePatientCard from './ReactivePatientCard.js';
 
-import {PatientsCache} from '../../api/patients.js';
-
-const useObservedQuery = makeObservedQuery(
-	PatientsCache,
-	'patients.find.observe'
-);
+import {usePatientsFind} from '../../api/patients.js';
 
 const PatientsObservedSearchResults = (props) => {
 	let {match, page, perpage, refresh, refreshKey, ...rest} = props;
@@ -44,7 +38,7 @@ const PatientsObservedSearchResults = (props) => {
 		limit: perpage
 	};
 
-	const {loading, results, dirty} = useObservedQuery(query, options, [
+	const {loading, results, dirty} = usePatientsFind(query, options, [
 		$search,
 		page,
 		perpage,

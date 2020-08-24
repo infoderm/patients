@@ -3,15 +3,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Paginator from '../navigation/Paginator.js';
+import Refresh from '../navigation/Refresh.js';
 
 import ReactivePatientCard from './ReactivePatientCard.js';
 import PatientsPage from './PatientsPage.js';
 
-export default function PagedPatientsList({root, page, perpage, items}) {
+export default function PagedPatientsList({
+	root,
+	page,
+	perpage,
+	items,
+	refresh,
+	dirty
+}) {
 	return (
 		<>
 			<PatientsPage patients={items} Card={ReactivePatientCard} />
 			<Paginator page={page} end={items.length < perpage} root={root} />
+			{refresh && dirty && <Refresh onClick={refresh} />}
 		</>
 	);
 }
@@ -24,9 +33,16 @@ PagedPatientsList.projection = {
 	niss: 1
 };
 
+PagedPatientsList.defaultProps = {
+	dirty: false,
+	refresh: undefined
+};
+
 PagedPatientsList.propTypes = {
 	root: PropTypes.string.isRequired,
 	page: PropTypes.number.isRequired,
 	perpage: PropTypes.number.isRequired,
-	items: PropTypes.array.isRequired
+	items: PropTypes.array.isRequired,
+	refresh: PropTypes.func,
+	dirty: PropTypes.bool
 };

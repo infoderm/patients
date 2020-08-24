@@ -1,7 +1,11 @@
 import {Meteor} from 'meteor/meteor';
 import {useState, useEffect, useRef} from 'react';
 
-const makeObservedQuery = (cache, subscription) => (query, options, deps) => {
+const makeObservedQuery = (Collection, subscription) => (
+	query,
+	options,
+	deps
+) => {
 	const [loading, setLoading] = useState(true);
 	const [results, setResults] = useState([]);
 	const [dirty, setDirty] = useState(false);
@@ -17,7 +21,7 @@ const makeObservedQuery = (cache, subscription) => (query, options, deps) => {
 				if (handleRef.current === handle) setDirty(true);
 			},
 			onReady: () => {
-				const {results} = cache.findOne({key});
+				const {results} = Collection.findOne({key});
 				setLoading(false);
 				setResults(results);
 			}

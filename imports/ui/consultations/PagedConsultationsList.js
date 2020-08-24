@@ -4,12 +4,23 @@ import PropTypes from 'prop-types';
 
 import Loading from '../navigation/Loading.js';
 import Paginator from '../navigation/Paginator.js';
+import Refresh from '../navigation/Refresh.js';
 import NoContent from '../navigation/NoContent.js';
 
 import ConsultationsList from './ConsultationsList.js';
 
 export default function PagedConsultationsList(props) {
-	const {root, loading, page, perpage, items, itemProps, ...rest} = props;
+	const {
+		root,
+		loading,
+		page,
+		perpage,
+		items,
+		itemProps,
+		refresh,
+		dirty,
+		...rest
+	} = props;
 
 	return (
 		<div>
@@ -21,18 +32,23 @@ export default function PagedConsultationsList(props) {
 				<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 			)}
 			<Paginator page={page} end={items.length < perpage} root={root} />
+			{refresh && dirty && <Refresh onClick={refresh} />}
 		</div>
 	);
 }
 
 PagedConsultationsList.defaultProps = {
-	loading: false
+	loading: false,
+	dirty: false,
+	refresh: undefined
 };
 
 PagedConsultationsList.propTypes = {
-	loading: PropTypes.bool,
 	root: PropTypes.string.isRequired,
 	page: PropTypes.number.isRequired,
 	perpage: PropTypes.number.isRequired,
-	items: PropTypes.array.isRequired
+	items: PropTypes.array.isRequired,
+	loading: PropTypes.bool,
+	refresh: PropTypes.func,
+	dirty: PropTypes.bool
 };

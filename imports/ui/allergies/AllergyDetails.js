@@ -5,8 +5,7 @@ import TagDetails from '../tags/TagDetails.js';
 
 import PagedPatientsList from '../patients/PagedPatientsList.js';
 
-import {Patients} from '../../api/patients.js';
-import {allergies} from '../../api/allergies.js';
+import {usePatientsFind} from '../../api/patients.js';
 
 import {AllergyCardWithoutItem} from './AllergyCard.js';
 import useAllergy from './useAllergy.js';
@@ -21,18 +20,17 @@ export default function AllergyDetails({match, name, page, perpage}) {
 
 	return (
 		<TagDetails
-			root={`/allergy/${myEncodeURIComponent(name)}`}
+			Card={AllergyCardWithoutItem}
+			useItem={useAllergy}
 			name={name}
-			page={page}
-			perpage={perpage}
-			collection={Patients}
-			subscription={allergies.options.parentPublication}
+			List={PagedPatientsList}
+			root={`/allergy/${myEncodeURIComponent(name)}`}
+			useParents={usePatientsFind}
 			selector={{allergies: name}}
 			sort={{lastname: 1}}
 			fields={PagedPatientsList.projection}
-			List={PagedPatientsList}
-			Card={AllergyCardWithoutItem}
-			useItem={useAllergy}
+			page={page}
+			perpage={perpage}
 		/>
 	);
 }

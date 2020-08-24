@@ -5,8 +5,7 @@ import TagDetails from '../tags/TagDetails.js';
 
 import PagedPatientsList from '../patients/PagedPatientsList.js';
 
-import {Patients} from '../../api/patients.js';
-import {insurances} from '../../api/insurances.js';
+import {usePatientsFind} from '../../api/patients.js';
 
 import {InsuranceCardWithoutItem} from './InsuranceCard.js';
 import useInsurance from './useInsurance.js';
@@ -21,18 +20,17 @@ export default function InsuranceDetails({match, name, page, perpage}) {
 
 	return (
 		<TagDetails
-			root={`/insurance/${myEncodeURIComponent(name)}`}
+			Card={InsuranceCardWithoutItem}
+			useItem={useInsurance}
 			name={name}
-			page={page}
-			perpage={perpage}
-			collection={Patients}
-			subscription={insurances.options.parentPublication}
+			List={PagedPatientsList}
+			root={`/insurance/${myEncodeURIComponent(name)}`}
+			useParents={usePatientsFind}
 			selector={{insurances: name}}
 			sort={{lastname: 1}}
 			fields={PagedPatientsList.projection}
-			List={PagedPatientsList}
-			Card={InsuranceCardWithoutItem}
-			useItem={useInsurance}
+			page={page}
+			perpage={perpage}
 		/>
 	);
 }

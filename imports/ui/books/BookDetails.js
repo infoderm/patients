@@ -5,7 +5,7 @@ import TagDetails from '../tags/TagDetails.js';
 
 import PagedConsultationsList from '../consultations/PagedConsultationsList.js';
 
-import {Consultations} from '../../api/consultations.js';
+import {useConsultationsFind} from '../../api/consultations.js';
 
 import {books} from '../../api/books.js';
 
@@ -22,20 +22,19 @@ export default function BookDetails({match, year, book, page, perpage}) {
 
 	return (
 		<TagDetails
-			root={`/book/${year}/${myEncodeURIComponent(book)}`}
 			name={name}
-			page={page}
-			perpage={perpage}
-			collection={Consultations}
-			subscription="book.consultations"
-			selector={books.selector(name)}
-			sort={{datetime: 1}}
 			List={PagedConsultationsList}
 			listProps={{
 				itemProps: {
 					showPrice: true
 				}
 			}}
+			root={`/book/${year}/${myEncodeURIComponent(book)}`}
+			useParents={useConsultationsFind}
+			selector={books.selector(name)}
+			sort={{datetime: 1}}
+			page={page}
+			perpage={perpage}
 		/>
 	);
 }
