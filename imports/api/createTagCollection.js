@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
+import makeQuery from './makeQuery.js';
+
 const STATS_SUFFIX = '.stats';
 
 export default function createTagCollection(options) {
@@ -19,10 +21,22 @@ export default function createTagCollection(options) {
 	const Collection = new Mongo.Collection(collection);
 	const Stats = new Mongo.Collection(stats);
 
+	const useTags = makeQuery(Collection, publication);
+
 	if (Meteor.isServer) {
-		Meteor.publish(publication, function (args) {
-			const query = {...args, owner: this.userId};
-			return Collection.find(query);
+		Meteor.publish(publication, function (query, options) {
+			query = {...query, owner: this.userId};
+			if (options && options.skip) {
+				const skip = 0;
+				const limit = options.limit ? options.skip + options.limit : undefined;
+				options = {
+					...options,
+					skip,
+					limit
+				};
+			}
+
+			return Collection.find(query, options);
 		});
 		if (singlePublication) {
 			Meteor.publish(singlePublication, function (name) {
@@ -203,5 +217,5 @@ export default function createTagCollection(options) {
 		}
 	};
 
-	return {Collection, operations};
+	return {Collection, operations, useTags};
 }

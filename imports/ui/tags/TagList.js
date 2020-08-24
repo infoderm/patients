@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {useTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
 import PropTypes from 'prop-types';
@@ -12,36 +9,29 @@ import NoContent from '../navigation/NoContent.js';
 import Paginator from '../navigation/Paginator.js';
 
 const TagList = (props) => {
-	const {
-		subscription,
-		collection,
+	const {useTags, query, sort, page, perpage, Card, root, url} = props;
+
+	const options = {sort, skip: (page - 1) * perpage, limit: perpage};
+	const {loading, results: tags} = useTags(query, options, [
 		query,
 		sort,
 		page,
-		perpage,
-		Card,
-		root,
-		url
-	} = props;
+		perpage
+	]);
 
-	const {loading, tags} = useTracker(() => {
-		const handle = Meteor.subscribe(subscription, query);
-		return {
-			loading: !handle.ready(),
-			tags: collection
-				.find(query, {sort, skip: (page - 1) * perpage, limit: perpage})
-				.fetch()
-		};
-	}, [subscription, collection, query, sort, page, perpage]);
+	if (loading && tags.length === 0) return <Loading />;
 
 	const _root = root || url.split('/page/')[0];
 
+	const style = {
+		transition: 'opacity 200ms ease-out'
+	};
+	if (loading) style.opacity = 0.4;
+
 	return (
 		<>
-			<div>
-				{loading ? (
-					<Loading />
-				) : tags.length > 0 ? (
+			<div style={style}>
+				{tags.length > 0 ? (
 					<Grid container spacing={3}>
 						{tags.map((tag) => (
 							<Card key={tag._id} item={tag} />
@@ -73,8 +63,7 @@ TagList.propTypes = {
 	query: PropTypes.object,
 	sort: PropTypes.object,
 
-	subscription: PropTypes.string.isRequired,
-	collection: PropTypes.object.isRequired
+	useTags: PropTypes.func.isRequired
 };
 
 export default TagList;

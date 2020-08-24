@@ -12,7 +12,7 @@ import TagList from '../tags/TagList.js';
 import BooksDownloadDialog from './BooksDownloadDialog.js';
 
 import BookCard from './BookCard.js';
-import {Books} from '../../api/books.js';
+import {useBooks} from '../../api/books.js';
 
 import YearJumper from '../navigation/YearJumper.js';
 
@@ -47,12 +47,11 @@ export default function BooksList({match, year, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				collection={Books}
 				Card={BookCard}
-				subscription="books"
 				url={match.url}
 				query={query}
 				sort={{fiscalYear: 1, bookNumber: -1}}
+				useTags={useBooks}
 			/>
 			<Fab
 				className={classes.saveButton}

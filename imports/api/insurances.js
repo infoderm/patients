@@ -1,6 +1,10 @@
 import createTagCollection from './createTagCollection.js';
 
-const {Collection: Insurances, operations: insurances} = createTagCollection({
+const {
+	Collection: Insurances,
+	operations: insurances,
+	useTags: useInsurances
+} = createTagCollection({
 	collection: 'insurances',
 	publication: 'insurances',
 	singlePublication: 'insurance',
@@ -8,4 +12,4 @@ const {Collection: Insurances, operations: insurances} = createTagCollection({
 	key: 'insurances'
 });
 
-export {Insurances, insurances};
+export {Insurances, insurances, useInsurances};

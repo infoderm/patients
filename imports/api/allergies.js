@@ -3,7 +3,11 @@ import {check} from 'meteor/check';
 
 import createTagCollection from './createTagCollection.js';
 
-const {Collection: Allergies, operations: allergies} = createTagCollection({
+const {
+	Collection: Allergies,
+	operations: allergies,
+	useTags: useAllergies
+} = createTagCollection({
 	collection: 'allergies',
 	publication: 'allergies',
 	singlePublication: 'allergy',
@@ -11,7 +15,7 @@ const {Collection: Allergies, operations: allergies} = createTagCollection({
 	key: 'allergies'
 });
 
-export {Allergies, allergies};
+export {Allergies, allergies, useAllergies};
 
 Meteor.methods({
 	'allergies.changeColor'(tagId, newColor) {

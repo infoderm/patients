@@ -5,12 +5,16 @@ import {check} from 'meteor/check';
 import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
+import makeQuery from './makeQuery.js';
+
 const collection = 'books';
 const publication = 'books';
 const stats = 'books.stats';
 
 export const Books = new Mongo.Collection(collection);
 const Stats = new Mongo.Collection(stats);
+
+export const useBooks = makeQuery(Books, publication);
 
 if (Meteor.isServer) {
 	Meteor.publish(publication, function (args) {

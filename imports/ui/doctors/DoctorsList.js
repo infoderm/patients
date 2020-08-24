@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TagList from '../tags/TagList.js';
 
 import DoctorCard from './DoctorCard.js';
-import {Doctors} from '../../api/doctors.js';
+import {useDoctors} from '../../api/doctors.js';
 
 import AlphabetJumper from '../navigation/AlphabetJumper.js';
 
@@ -21,11 +21,10 @@ export default function DoctorsList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				collection={Doctors}
 				Card={DoctorCard}
-				subscription="doctors"
 				url={match.url}
 				query={query}
+				useTags={useDoctors}
 			/>
 		</div>
 	);
