@@ -218,6 +218,7 @@ const ReactiveTagCard = withRouter(
 );
 
 ReactiveTagCard.defaultProps = {
+	limit: 0,
 	subscription: undefined,
 	collection: {
 		find: () => () => []
@@ -231,7 +232,7 @@ ReactiveTagCard.PropTypes = {
 	statsCollection: PropTypes.object.isRequired,
 	selector: PropTypes.object.isRequired,
 	options: PropTypes.object,
-	limit: PropTypes.number.isRequired
+	limit: PropTypes.number
 };
 
 export default ReactiveTagCard;

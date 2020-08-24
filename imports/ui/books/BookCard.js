@@ -34,7 +34,6 @@ export default function BookCard({item}) {
 			statsSubscription={books.options.parentPublicationStats}
 			selector={books.selector(item.name)}
 			options={{fields: {price: 1, datetime: 1}}}
-			limit={0}
 			url={(_name) => `/book/${year}/${myEncodeURIComponent(book)}`}
 			subheader={({count}) =>
 				count === undefined ? '...' : `${count} consultations`
