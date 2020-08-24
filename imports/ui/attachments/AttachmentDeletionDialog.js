@@ -99,7 +99,7 @@ export default function AttachmentDeletionDialog(props) {
 				</DialogContentText>
 				<AttachmentThumbnail
 					className={classes.thumbnail}
-					height="300"
+					height="600"
 					attachmentId={attachment._id}
 				/>
 				<FormControl fullWidth margin="dense">
