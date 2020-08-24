@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
@@ -101,6 +102,12 @@ export default function NavigationDrawer({
 			title: 'main',
 
 			links: [
+				{
+					to: '/new/patient',
+					icon: <PersonAddIcon />,
+					title: 'Nouveau Patient'
+				},
+
 				{
 					to: '/consultations',
 					icon: <FolderSharedIcon />,
