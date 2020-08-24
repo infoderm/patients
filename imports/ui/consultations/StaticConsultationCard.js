@@ -150,7 +150,10 @@ const StaticConsultationCard = (props) => {
 	const owed = owes ? price - paid : 0;
 
 	return (
-		<Accordion defaultExpanded={defaultExpanded}>
+		<Accordion
+			defaultExpanded={defaultExpanded}
+			TransitionProps={{unmountOnExit: true}}
+		>
 			<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 				<div className={classes.chips}>
 					<Chip

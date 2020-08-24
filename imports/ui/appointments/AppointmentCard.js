@@ -88,7 +88,10 @@ class AppointmentCard extends React.Component {
 		const {deleting} = this.state;
 
 		return (
-			<Accordion defaultExpanded={defaultExpanded}>
+			<Accordion
+				defaultExpanded={defaultExpanded}
+				TransitionProps={{unmountOnExit: true}}
+			>
 				<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 					<div className={classes.chips}>
 						<Chip

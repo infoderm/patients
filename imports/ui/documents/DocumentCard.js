@@ -196,7 +196,10 @@ class DocumentCard extends React.Component {
 		const {linking, unlinking, deleting, restoring, superdeleting} = this.state;
 
 		return (
-			<Accordion defaultExpanded={defaultExpanded}>
+			<Accordion
+				defaultExpanded={defaultExpanded}
+				TransitionProps={{unmountOnExit: true}}
+			>
 				<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 					<div className={classes.chips}>
 						{parsed ? (
