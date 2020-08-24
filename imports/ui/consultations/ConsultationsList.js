@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 
-import ConsultationCard from './ConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -20,7 +20,7 @@ export default function ConsultationsList({
 	return (
 		<div className={classes.container}>
 			{items.map((consultation, i) => (
-				<ConsultationCard
+				<ReactiveConsultationCard
 					key={consultation._id}
 					consultation={consultation}
 					defaultExpanded={i === 0 && defaultExpandedFirst}

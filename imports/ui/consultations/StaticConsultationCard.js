@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
@@ -53,8 +50,6 @@ import StaticPatientChip from '../patients/StaticPatientChip.js';
 import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
-
-import {Patients} from '../../api/patients.js';
 
 const useStyles = makeStyles((theme) => ({
 	heading: {
@@ -117,7 +112,7 @@ function paymentMethodIcon(payment_method) {
 	}
 }
 
-const ConsultationCard = (props) => {
+const StaticConsultationCard = (props) => {
 	const classes = useStyles();
 
 	const [paying, setPaying] = useState(false);
@@ -397,38 +392,17 @@ const ConsultationCard = (props) => {
 	);
 };
 
-ConsultationCard.defaultProps = {
+StaticConsultationCard.defaultProps = {
 	patientChip: true,
 	showPrice: false,
 	defaultExpanded: false
 };
 
-ConsultationCard.propTypes = {
+StaticConsultationCard.propTypes = {
 	consultation: PropTypes.object.isRequired,
 	patientChip: PropTypes.bool,
 	showPrice: PropTypes.bool,
 	defaultExpanded: PropTypes.bool
 };
 
-export default withTracker(({consultation}) => {
-	const _id = consultation.patientId;
-	if (_id === undefined) {
-		return {loadingPatient: true};
-	}
-
-	const options = {
-		fields: {
-			...StaticPatientChip.projection,
-			...ConsultationPaymentDialog.projection,
-			...ConsultationDebtSettlementDialog.projection,
-			...ConsultationDeletionDialog.projection
-		}
-	};
-	const handle = Meteor.subscribe('patient', _id, options);
-	if (handle.ready()) {
-		const patient = Patients.findOne(_id, options);
-		return {loadingPatient: false, patient};
-	}
-
-	return {loadingPatient: true};
-})(ConsultationCard);
+export default StaticConsultationCard;

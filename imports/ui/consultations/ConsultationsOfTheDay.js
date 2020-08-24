@@ -22,7 +22,7 @@ import {TIME_BREAK} from '../../client/constants.js';
 import Prev from '../navigation/Prev.js';
 import Next from '../navigation/Next.js';
 
-import ConsultationCard from './ConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 
 import {Consultations} from '../../api/consultations.js';
 
@@ -58,7 +58,7 @@ const ConsultationsOfTheDay = (props) => {
 				) : (
 					<div className={classes.container}>
 						{am.map((consultation) => (
-							<ConsultationCard
+							<ReactiveConsultationCard
 								key={consultation._id}
 								consultation={consultation}
 							/>
@@ -71,7 +71,7 @@ const ConsultationsOfTheDay = (props) => {
 				) : (
 					<div className={classes.container}>
 						{pm.map((consultation) => (
-							<ConsultationCard
+							<ReactiveConsultationCard
 								key={consultation._id}
 								consultation={consultation}
 							/>

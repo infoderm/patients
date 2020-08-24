@@ -9,7 +9,7 @@ import {Consultations} from '../../api/consultations.js';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import ConsultationCard from './ConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -30,7 +30,7 @@ const ConsultationDetails = ({loading, consultation}) => {
 
 	return (
 		<div className={classes.container}>
-			<ConsultationCard defaultExpanded consultation={consultation} />
+			<ReactiveConsultationCard defaultExpanded consultation={consultation} />
 		</div>
 	);
 };

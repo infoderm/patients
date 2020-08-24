@@ -3,7 +3,7 @@ import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 
-import ConsultationCard from '../consultations/ConsultationCard.js';
+import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
 
 import {Consultations} from '../../api/consultations.js';
 
@@ -19,7 +19,10 @@ const ConsultationsMissingAPrice = ({loading, consultations, ...rest}) => {
 	return (
 		<div {...rest}>
 			{consultations.map((consultation) => (
-				<ConsultationCard key={consultation._id} consultation={consultation} />
+				<ReactiveConsultationCard
+					key={consultation._id}
+					consultation={consultation}
+				/>
 			))}
 		</div>
 	);
