@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	createButton: {
 		position: 'fixed',
 		bottom: theme.spacing(3),
-		right: theme.spacing(21)
+		right: theme.spacing(30)
 	}
 }));
 
