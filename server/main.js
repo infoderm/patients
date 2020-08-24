@@ -141,6 +141,7 @@ Meteor.startup(() => {
 
 	Patients.rawCollection().createIndex(
 		{
+			owner: 1,
 			firstname: 'text',
 			lastname: 'text'
 		},

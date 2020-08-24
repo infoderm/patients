@@ -1,5 +1,9 @@
 const observeQuery = (QueriedCollection, resultsCollection) =>
 	function (key, query, options, observe) {
+		query = {
+			...query,
+			owner: this.userId
+		};
 		observe = {
 			added: true,
 			removed: true,
@@ -9,8 +13,7 @@ const observeQuery = (QueriedCollection, resultsCollection) =>
 			key,
 			query,
 			options,
-			observe,
-			owner: this.userId
+			observe
 		});
 		const results = [];
 		let initializing = true;
