@@ -10,7 +10,7 @@ import blue from '@material-ui/core/colors/blue';
 import TagCard from '../tags/TagCard.js';
 import withItem from '../tags/withItem.js';
 
-import PatientChip from '../patients/PatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip.js';
 import DoctorDeletionDialog from './DoctorDeletionDialog.js';
 import DoctorRenamingDialog from './DoctorRenamingDialog.js';
 
@@ -19,10 +19,16 @@ import {Doctors, doctors} from '../../api/doctors.js';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
 
-const styles = () => ({
+const styles = (theme) => ({
 	avatar: {
 		color: '#fff',
 		backgroundColor: blue[500]
+	},
+	patientChip: {
+		marginRight: theme.spacing(1),
+		backgroundColor: '#aaa',
+		fontWeight: 'normal',
+		color: '#fff'
 	}
 });
 
@@ -43,7 +49,7 @@ const DoctorCard = ({classes, item, name, loading}) => {
 			subscription={doctors.options.parentPublication}
 			statsSubscription={doctors.options.parentPublicationStats}
 			selector={{doctors: item.name}}
-			options={{fields: PatientChip.projection}}
+			options={{fields: StaticPatientChip.projection}}
 			limit={1}
 			url={(name) => `/doctor/${myEncodeURIComponent(name)}`}
 			subheader={({count}) =>
@@ -55,7 +61,11 @@ const DoctorCard = ({classes, item, name, loading}) => {
 				) : (
 					<div>
 						{patients.map((patient) => (
-							<PatientChip key={patient._id} patient={patient} />
+							<StaticPatientChip
+								key={patient._id}
+								patient={patient}
+								className={classes.patientChip}
+							/>
 						))}
 						{count > patients.length && (
 							<Chip label={`+ ${count - patients.length}`} />

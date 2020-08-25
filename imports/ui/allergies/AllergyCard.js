@@ -10,7 +10,7 @@ import green from '@material-ui/core/colors/green';
 
 import TagCard from '../tags/TagCard.js';
 
-import PatientChip from '../patients/PatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip.js';
 
 import AllergyDeletionDialog from './AllergyDeletionDialog.js';
 import AllergyRenamingDialog from './AllergyRenamingDialog.js';
@@ -29,8 +29,11 @@ const useStyles = makeStyles((theme) => ({
 		color: '#fff',
 		backgroundColor: green[500]
 	},
-	chip: {
-		marginRight: theme.spacing(1)
+	patientChip: {
+		marginRight: theme.spacing(1),
+		backgroundColor: '#aaa',
+		fontWeight: 'normal',
+		color: '#fff'
 	}
 }));
 
@@ -60,7 +63,7 @@ const AllergyCard = ({item, loading}) => {
 			subscription={allergies.options.parentPublication}
 			statsSubscription={allergies.options.parentPublicationStats}
 			selector={{allergies: item.name}}
-			options={{fields: PatientChip.projection}}
+			options={{fields: StaticPatientChip.projection}}
 			limit={1}
 			url={(name) => `/allergy/${myEncodeURIComponent(name)}`}
 			subheader={({count}) =>
@@ -72,13 +75,14 @@ const AllergyCard = ({item, loading}) => {
 				) : (
 					<div>
 						{patients.map((patient) => (
-							<PatientChip key={patient._id} patient={patient} />
+							<StaticPatientChip
+								key={patient._id}
+								patient={patient}
+								className={classes.patientChip}
+							/>
 						))}
 						{count !== undefined && count > patients.length && (
-							<Chip
-								className={classes.chip}
-								label={`+ ${count - patients.length}`}
-							/>
+							<Chip label={`+ ${count - patients.length}`} />
 						)}
 					</div>
 				)

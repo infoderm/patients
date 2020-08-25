@@ -9,7 +9,7 @@ import red from '@material-ui/core/colors/red';
 
 import TagCard from '../tags/TagCard.js';
 
-import PatientChip from '../patients/PatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip.js';
 
 import withInsurance from './withInsurance.js';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog.js';
@@ -20,10 +20,16 @@ import {insurances} from '../../api/insurances.js';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
 
-const styles = () => ({
+const styles = (theme) => ({
 	avatar: {
 		color: '#fff',
 		backgroundColor: red[500]
+	},
+	patientChip: {
+		marginRight: theme.spacing(1),
+		backgroundColor: '#aaa',
+		fontWeight: 'normal',
+		color: '#fff'
 	}
 });
 
@@ -39,7 +45,7 @@ const InsuranceCard = ({classes, item, loading}) => {
 			subscription={insurances.options.parentPublication}
 			statsSubscription={insurances.options.parentPublicationStats}
 			selector={{insurances: item.name}}
-			options={{fields: PatientChip.projection}}
+			options={{fields: StaticPatientChip.projection}}
 			limit={1}
 			url={(name) => `/insurance/${myEncodeURIComponent(name)}`}
 			subheader={({count}) =>
@@ -51,7 +57,11 @@ const InsuranceCard = ({classes, item, loading}) => {
 				) : (
 					<div>
 						{patients.map((patient) => (
-							<PatientChip key={patient._id} patient={patient} />
+							<StaticPatientChip
+								key={patient._id}
+								patient={patient}
+								className={classes.patientChip}
+							/>
 						))}
 						{count > patients.length && (
 							<Chip label={`+ ${count - patients.length}`} />

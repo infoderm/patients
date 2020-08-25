@@ -60,7 +60,7 @@ const StaticConsultationCard = (props) => {
 StaticConsultationCard.defaultProps = {
 	loading: false,
 	found: true,
-	patientChip: true,
+	PatientChip: undefined,
 	showPrice: false,
 	defaultExpanded: false
 };
@@ -69,7 +69,7 @@ StaticConsultationCard.propTypes = {
 	loading: PropTypes.bool,
 	found: PropTypes.bool,
 	consultation: PropTypes.object.isRequired,
-	patientChip: PropTypes.bool,
+	PatientChip: PropTypes.elementType,
 	showPrice: PropTypes.bool,
 	defaultExpanded: PropTypes.bool
 };

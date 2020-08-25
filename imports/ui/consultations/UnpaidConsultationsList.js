@@ -11,7 +11,8 @@ import MoneyIcon from '@material-ui/icons/Money';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
+import StaticConsultationCard from '../StaticConsultationCard.js';
+import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
@@ -70,10 +71,11 @@ const UnpaidConsultationsList = ({loading, consultations}) => {
 			) : (
 				<div className={classes.container}>
 					{unpaidConsultations.map((consultation) => (
-						<ReactiveConsultationCard
+						<StaticConsultationCard
 							key={consultation._id}
 							showPrice
 							consultation={consultation}
+							PatientChip={ReactivePatientChip}
 						/>
 					))}
 				</div>

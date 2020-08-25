@@ -53,7 +53,6 @@ const ConsultationsForPatient = (props) => {
 				perpage={perpage}
 				query={query}
 				sort={sort}
-				itemProps={{patientChip: false}}
 				defaultExpandedFirst={page === 1}
 			/>
 			<Fab

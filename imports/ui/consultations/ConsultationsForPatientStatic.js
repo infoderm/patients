@@ -8,7 +8,7 @@ import AddCommentIcon from '@material-ui/icons/AddComment';
 
 import NoContent from '../navigation/NoContent.js';
 
-import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
+import StaticConsultationCard from '../consultations/StaticConsultationCard.js';
 
 export default function ConsultationsForPatientStatic({
 	classes,
@@ -24,10 +24,9 @@ export default function ConsultationsForPatientStatic({
 			)}
 			<div {...rest}>
 				{consultations.map((consultation, i) => (
-					<ReactiveConsultationCard
+					<StaticConsultationCard
 						key={consultation._id}
 						consultation={consultation}
-						patientChip={false}
 						defaultExpanded={!i}
 					/>
 				))}

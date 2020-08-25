@@ -20,8 +20,6 @@ import dateFormat from 'date-fns/format';
 
 import Currency from 'currency-formatter';
 
-import StaticPatientChip from '../patients/StaticPatientChip.js';
-
 const useStyles = makeStyles((theme) => ({
 	summary: {
 		position: 'relative'
@@ -33,10 +31,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 	chip: {
 		marginRight: theme.spacing(1)
-	},
-	patientchip: {
-		backgroundColor: '#88f',
-		fontWeight: 'bold'
 	},
 	pricechip: {
 		marginRight: theme.spacing(1),
@@ -71,7 +65,7 @@ const StaticConsultationCardSummary = (props) => {
 		missingPaymentData,
 		owes,
 		owed,
-		patientChip,
+		PatientChip,
 		showPrice,
 		loadingPatient,
 		patient,
@@ -98,11 +92,10 @@ const StaticConsultationCardSummary = (props) => {
 					to={`/calendar/${dateFormat(datetime, 'yyyy-MM-dd')}`}
 				/>
 				<Chip label={dateFormat(datetime, 'hh:mma')} className={classes.chip} />
-				{!patientChip || !patientId ? null : (
-					<StaticPatientChip
-						className={classes.patientchip}
+				{!PatientChip || !patientId ? null : (
+					<PatientChip
 						loading={loadingPatient}
-						exists={Boolean(patient)}
+						found={Boolean(patient)}
 						patient={patient || {_id: patientId}}
 					/>
 				)}
@@ -138,13 +131,13 @@ const StaticConsultationCardSummary = (props) => {
 };
 
 StaticConsultationCardSummary.defaultProps = {
-	patientChip: true,
+	PatientChip: undefined,
 	showPrice: false
 };
 
 StaticConsultationCardSummary.propTypes = {
 	consultation: PropTypes.object.isRequired,
-	patientChip: PropTypes.bool,
+	PatientChip: PropTypes.elementType,
 	showPrice: PropTypes.bool
 };
 

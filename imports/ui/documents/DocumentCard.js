@@ -250,7 +250,7 @@ class DocumentCard extends React.Component {
 							<StaticPatientChip
 								className={classes.patientchip}
 								loading={loadingPatient}
-								exists={Boolean(patient)}
+								found={Boolean(patient)}
 								patient={patient || {_id: patientId}}
 							/>
 						)}

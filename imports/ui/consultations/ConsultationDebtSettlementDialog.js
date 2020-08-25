@@ -14,9 +14,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import {usePatient} from '../../api/patients.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -25,11 +28,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ConsultationDebtSettlementDialog(props) {
-	const {open, onClose, patient, consultation} = props;
+	const {open, onClose, consultation} = props;
 
 	const {currency, price, paid} = consultation;
 
 	const owed = price - paid;
+
+	const options = {fields: ConsultationDebtSettlementDialog.projection};
+	const deps = [
+		consultation.patientId,
+		JSON.stringify(ConsultationDebtSettlementDialog.projection)
+	];
+	const {loading, found, fields: patient} = usePatient(
+		{},
+		consultation.patientId,
+		options,
+		deps
+	);
 
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -62,6 +77,10 @@ export default function ConsultationDebtSettlementDialog(props) {
 		);
 	};
 
+	const patientIdentifier = found
+		? `${patient.firstname} ${patient.lastname}`
+		: `#${consultation.patientId}`;
+
 	return (
 		<Dialog
 			open={open}
@@ -69,9 +88,9 @@ export default function ConsultationDebtSettlementDialog(props) {
 			aria-labelledby="consultation-debt-settling-dialog-title"
 			onClose={onClose}
 		>
+			{loading && <LinearProgress />}
 			<DialogTitle id="consultation-debt-settling-dialog-title">
-				Clear debt of consultation for patient {patient.firstname}{' '}
-				{patient.lastname}
+				Clear debt of consultation for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
@@ -108,8 +127,7 @@ export default function ConsultationDebtSettlementDialog(props) {
 
 ConsultationDebtSettlementDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	patient: PropTypes.object.isRequired
+	onClose: PropTypes.func.isRequired
 };
 
 ConsultationDebtSettlementDialog.projection = {

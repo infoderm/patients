@@ -10,9 +10,22 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
-	chip: {
+	loading: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#aaa',
+		fontWeight: 'bold',
+		color: '#fff'
+	},
+	found: {
+		marginRight: theme.spacing(1),
+		backgroundColor: '#88f',
+		fontWeight: 'bold',
+		color: '#fff'
+	},
+	notfound: {
+		marginRight: theme.spacing(1),
+		backgroundColor: '#f88',
+		fontWeight: 'bold',
 		color: '#fff'
 	}
 }));
@@ -20,27 +33,29 @@ const useStyles = makeStyles((theme) => ({
 export default function StaticPatientChip({
 	className,
 	loading,
-	exists,
+	found,
 	patient
 }) {
 	const classes = useStyles();
-
 	return (
 		<Chip
 			key={patient._id}
 			avatar={
-				!loading && patient && patient.photo ? (
+				!loading && found && patient.photo ? (
 					<Avatar src={`data:image/png;base64,${patient.photo}`} />
 				) : null
 			}
 			label={
 				loading
 					? patient._id
-					: !exists
-					? 'Not found'
+					: !found
+					? `Not found`
 					: `${patient.lastname} ${patient.firstname}`
 			}
-			className={classNames(classes.chip, className)}
+			className={classNames(
+				loading ? classes.loading : found ? classes.found : classes.notfound,
+				className
+			)}
 			component={Link}
 			to={`/patient/${patient._id}`}
 		/>
@@ -55,12 +70,12 @@ StaticPatientChip.projection = {
 
 StaticPatientChip.defaultProps = {
 	loading: false,
-	exists: true
+	found: true
 };
 
 StaticPatientChip.propTypes = {
 	className: PropTypes.string,
 	loading: PropTypes.bool,
-	exists: PropTypes.bool,
+	found: PropTypes.bool,
 	patient: PropTypes.object.isRequired
 };

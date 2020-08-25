@@ -13,11 +13,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string.js';
+import {usePatient} from '../../api/patients.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -26,7 +28,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ConsultationDeletionDialog = (props) => {
-	const {open, onClose, patient, consultation} = props;
+	const {open, onClose, consultation} = props;
+
+	const options = {fields: ConsultationDeletionDialog.projection};
+	const deps = [
+		consultation.patientId,
+		JSON.stringify(ConsultationDeletionDialog.projection)
+	];
+	const {loading, found, fields: patient} = usePatient(
+		{},
+		consultation.patientId,
+		options,
+		deps
+	);
 
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -67,6 +81,14 @@ const ConsultationDeletionDialog = (props) => {
 		}
 	};
 
+	const patientIdentifier = found
+		? `${patient.firstname} ${patient.lastname}`
+		: `#${consultation.patientId}`;
+	const label = loading
+		? 'Loading patient data...'
+		: found
+		? "Patient's last name"
+		: 'Could not find patient.';
 	return (
 		<Dialog
 			open={open}
@@ -74,8 +96,9 @@ const ConsultationDeletionDialog = (props) => {
 			aria-labelledby="consultation-deletion-dialog-title"
 			onClose={onClose}
 		>
+			{loading && <LinearProgress />}
 			<DialogTitle id="consultation-deletion-dialog-title">
-				Delete consultation for patient {patient.firstname} {patient.lastname}
+				Delete consultation for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
@@ -86,8 +109,9 @@ const ConsultationDeletionDialog = (props) => {
 				<TextField
 					autoFocus
 					fullWidth
+					disabled={!found}
 					margin="dense"
-					label="Patient's last name"
+					label={label}
 					value={lastname}
 					helperText={lastnameError}
 					error={Boolean(lastnameError)}
@@ -100,6 +124,7 @@ const ConsultationDeletionDialog = (props) => {
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
+					disabled={!found}
 					color="secondary"
 					onClick={deleteThisConsultationIfPatientsLastNameMatches}
 				>
@@ -119,8 +144,7 @@ ConsultationDeletionDialog.projection = {
 ConsultationDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object.isRequired,
-	patient: PropTypes.object.isRequired
+	consultation: PropTypes.object.isRequired
 };
 
 export default ConsultationDeletionDialog;

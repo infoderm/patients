@@ -22,7 +22,8 @@ import {TIME_BREAK} from '../../client/constants.js';
 import Prev from '../navigation/Prev.js';
 import Next from '../navigation/Next.js';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
+import StaticConsultationCard from './StaticConsultationCard.js';
+import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import {Consultations} from '../../api/consultations.js';
 
@@ -58,9 +59,10 @@ const ConsultationsOfTheDay = (props) => {
 				) : (
 					<div className={classes.container}>
 						{am.map((consultation) => (
-							<ReactiveConsultationCard
+							<StaticConsultationCard
 								key={consultation._id}
 								consultation={consultation}
+								PatientChip={ReactivePatientChip}
 							/>
 						))}
 					</div>
@@ -71,9 +73,10 @@ const ConsultationsOfTheDay = (props) => {
 				) : (
 					<div className={classes.container}>
 						{pm.map((consultation) => (
-							<ReactiveConsultationCard
+							<StaticConsultationCard
 								key={consultation._id}
 								consultation={consultation}
+								PatientChip={ReactivePatientChip}
 							/>
 						))}
 					</div>

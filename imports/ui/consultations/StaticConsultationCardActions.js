@@ -26,8 +26,6 @@ const StaticConsultationCardActions = (props) => {
 	const {
 		found,
 		owes,
-		loadingPatient,
-		patient,
 		consultation: {_id, payment_method}
 	} = props;
 
@@ -76,36 +74,25 @@ const StaticConsultationCardActions = (props) => {
 				Delete
 				<DeleteIcon />
 			</Button>
-			{!owes ||
-			payment_method !== 'wire' ||
-			loadingPatient ||
-			!patient ? null : (
+			{!owes || payment_method !== 'wire' ? null : (
 				<ConsultationPaymentDialog
 					open={paying}
 					consultation={props.consultation}
-					patient={patient}
-					disabled={!found}
 					onClose={() => setPaying(false)}
 				/>
 			)}
-			{!owes || loadingPatient || !patient ? null : (
+			{!owes ? null : (
 				<ConsultationDebtSettlementDialog
 					open={settling}
 					consultation={props.consultation}
-					patient={patient}
-					disabled={!found}
 					onClose={() => setSettling(false)}
 				/>
 			)}
-			{loadingPatient || !patient ? null : (
-				<ConsultationDeletionDialog
-					open={deleting}
-					consultation={props.consultation}
-					patient={patient}
-					disabled={!found}
-					onClose={() => setDeleting(false)}
-				/>
-			)}
+			<ConsultationDeletionDialog
+				open={deleting}
+				consultation={props.consultation}
+				onClose={() => setDeleting(false)}
+			/>
 		</AccordionActions>
 	);
 };

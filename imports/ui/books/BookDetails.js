@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import TagDetails from '../tags/TagDetails.js';
 
+import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 import PagedConsultationsList from '../consultations/PagedConsultationsList.js';
 
 import {useConsultationsFind} from '../../api/consultations.js';
@@ -26,7 +27,8 @@ export default function BookDetails({match, year, book, page, perpage}) {
 			List={PagedConsultationsList}
 			listProps={{
 				itemProps: {
-					showPrice: true
+					showPrice: true,
+					PatientChip: ReactivePatientChip
 				}
 			}}
 			root={`/book/${year}/${myEncodeURIComponent(book)}`}
