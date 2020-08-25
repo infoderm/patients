@@ -15,6 +15,7 @@ import {allergies} from './allergies.js';
 import {makeIndex} from './string.js';
 import observeQuery from './observeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
+import makeCachedFindOne from './makeCachedFindOne.js';
 
 const cacheCollection = 'patients.find.cache';
 const cachePublication = 'patients.find.observe';
@@ -476,6 +477,8 @@ export const usePatientsFind = makeObservedQuery(
 	PatientsCache,
 	cachePublication
 );
+
+export const usePatient = makeCachedFindOne(Patients, 'patient');
 
 export const patients = {
 	cacheCollection,
