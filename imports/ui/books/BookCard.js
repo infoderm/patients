@@ -39,7 +39,13 @@ export default function BookCard({item}) {
 				count === undefined ? '...' : `${count} consultations`
 			}
 			content={({count, total, first, last}) => {
-				if (count === undefined) return '...';
+				if (count === undefined)
+					return (
+						<Typography variant="body1">
+							Total ... <br />
+							From ...
+						</Typography>
+					);
 				if (count === 0) {
 					return null;
 				}
