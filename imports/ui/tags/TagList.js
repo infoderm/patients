@@ -11,13 +11,9 @@ import Paginator from '../navigation/Paginator.js';
 const TagList = (props) => {
 	const {useTags, query, sort, page, perpage, Card, root, url} = props;
 
+	const deps = [JSON.stringify({query, sort, page, perpage})];
 	const options = {sort, skip: (page - 1) * perpage, limit: perpage};
-	const {loading, results: tags} = useTags(query, options, [
-		query,
-		sort,
-		page,
-		perpage
-	]);
+	const {loading, results: tags} = useTags(query, options, deps);
 
 	if (loading && tags.length === 0) return <Loading />;
 
