@@ -18,7 +18,7 @@ import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
 
-const StaticConsultationCard = (props) => {
+const StaticConsultationCardActions = (props) => {
 	const [paying, setPaying] = useState(false);
 	const [settling, setSettling] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -110,13 +110,13 @@ const StaticConsultationCard = (props) => {
 	);
 };
 
-StaticConsultationCard.defaultProps = {
+StaticConsultationCardActions.defaultProps = {
 	found: true
 };
 
-StaticConsultationCard.propTypes = {
+StaticConsultationCardActions.propTypes = {
 	found: PropTypes.bool,
 	consultation: PropTypes.object.isRequired
 };
 
-export default StaticConsultationCard;
+export default StaticConsultationCardActions;

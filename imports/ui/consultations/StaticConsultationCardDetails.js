@@ -62,7 +62,7 @@ function paymentMethodString(payment_method) {
 	}
 }
 
-const StaticConsultationCard = (props) => {
+const StaticConsultationCardDetails = (props) => {
 	const classes = useStyles();
 
 	const {
@@ -216,8 +216,8 @@ const StaticConsultationCard = (props) => {
 	);
 };
 
-StaticConsultationCard.propTypes = {
+StaticConsultationCardDetails.propTypes = {
 	consultation: PropTypes.object.isRequired
 };
 
-export default StaticConsultationCard;
+export default StaticConsultationCardDetails;

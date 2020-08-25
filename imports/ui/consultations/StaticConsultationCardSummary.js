@@ -64,7 +64,7 @@ function paymentMethodIcon(payment_method) {
 	}
 }
 
-const StaticConsultationCard = (props) => {
+const StaticConsultationCardSummary = (props) => {
 	const classes = useStyles();
 
 	const {
@@ -137,15 +137,15 @@ const StaticConsultationCard = (props) => {
 	);
 };
 
-StaticConsultationCard.defaultProps = {
+StaticConsultationCardSummary.defaultProps = {
 	patientChip: true,
 	showPrice: false
 };
 
-StaticConsultationCard.propTypes = {
+StaticConsultationCardSummary.propTypes = {
 	consultation: PropTypes.object.isRequired,
 	patientChip: PropTypes.bool,
 	showPrice: PropTypes.bool
 };
 
-export default StaticConsultationCard;
+export default StaticConsultationCardSummary;
