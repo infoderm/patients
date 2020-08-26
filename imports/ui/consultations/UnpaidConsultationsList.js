@@ -11,7 +11,7 @@ import MoneyIcon from '@material-ui/icons/Money';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import StaticConsultationCard from '../StaticConsultationCard.js';
+import StaticConsultationCard from './StaticConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import Loading from '../navigation/Loading.js';

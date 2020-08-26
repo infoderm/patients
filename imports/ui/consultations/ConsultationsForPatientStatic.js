@@ -8,7 +8,7 @@ import AddCommentIcon from '@material-ui/icons/AddComment';
 
 import NoContent from '../navigation/NoContent.js';
 
-import StaticConsultationCard from '../consultations/StaticConsultationCard.js';
+import StaticConsultationCard from './StaticConsultationCard.js';
 
 export default function ConsultationsForPatientStatic({
 	classes,
