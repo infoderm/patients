@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import dateFormat from 'date-fns/format';
 
+import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 import ConsultationsPager from './ConsultationsPager.js';
 
 import YearJumper from '../navigation/YearJumper.js';
@@ -45,7 +46,10 @@ export default function ThirdPartyConsultationsList({
 				perpage={perpage}
 				query={query}
 				sort={sort}
-				itemProps={{showPrice: true}}
+				itemProps={{
+					showPrice: true,
+					PatientChip: ReactivePatientChip
+				}}
 			/>
 		</div>
 	);
