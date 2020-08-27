@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {myDecodeURIComponent} from '../../client/uri.js';
+import {normalizeSearch} from '../../api/string.js';
 
 import Refresh from '../navigation/Refresh.js';
 import StaticPatientsList from './StaticPatientsList.js';
 import ReactivePatientCard from './ReactivePatientCard.js';
 
-import {usePatientsFind} from '../../api/patients.js';
+import {usePatientsAdvancedFind} from '../../api/patients.js';
 
 const PatientsObservedSearchResults = (props) => {
 	let {match, page, perpage, refresh, refreshKey, ...rest} = props;
@@ -17,7 +18,7 @@ const PatientsObservedSearchResults = (props) => {
 		PatientsObservedSearchResults.defaultProps.page;
 	perpage = perpage || PatientsObservedSearchResults.defaultProps.perpage;
 
-	const $search = myDecodeURIComponent(match.params.query);
+	const $search = normalizeSearch(myDecodeURIComponent(match.params.query));
 
 	const query = {$text: {$search}};
 
@@ -38,7 +39,7 @@ const PatientsObservedSearchResults = (props) => {
 		limit: perpage
 	};
 
-	const {loading, results, dirty} = usePatientsFind(query, options, [
+	const {loading, results, dirty} = usePatientsAdvancedFind(query, options, [
 		$search,
 		page,
 		perpage,
