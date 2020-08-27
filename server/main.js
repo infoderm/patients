@@ -185,6 +185,7 @@ Meteor.startup(() => {
 			lastname_substring_short: 'text'
 		},
 		{
+			name: 'PatientsSearchIndex.text',
 			default_language: 'none',
 			weights: {
 				firstname_whole: 15,
