@@ -17,6 +17,7 @@ import Chip from '@material-ui/core/Chip';
 
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
+import red from '@material-ui/core/colors/red';
 
 import eidFormatBirthdate from '../../client/eidFormatBirthdate.js';
 
@@ -79,13 +80,18 @@ const useStyles = makeStyles((theme) => ({
 	},
 	name: {
 		display: 'flex'
+	},
+	scoreChip: {
+		marginLeft: theme.spacing(1),
+		color: '#fff',
+		backgroundColor: red[500]
 	}
 }));
 
 export default function StaticPatientCard({loading, found, patient}) {
 	const classes = useStyles();
 
-	const {_id, birthdate, photo, niss} = patient;
+	const {_id, birthdate, photo, niss, score} = patient;
 
 	const firstname = patient.firstname || '?';
 	const lastname = patient.lastname || '?';
@@ -123,6 +129,12 @@ export default function StaticPatientCard({loading, found, patient}) {
 				<CardContent className={classes.content} />
 				<CardActions disableSpacing className={classes.actions}>
 					<Chip label={niss || '?'} />
+					{score && (
+						<Chip
+							className={classes.scoreChip}
+							label={`Search score: ${score.toFixed(3)}`}
+						/>
+					)}
 				</CardActions>
 			</div>
 			{photoTransitions.map(({item, props, key}) =>
