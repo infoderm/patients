@@ -5,13 +5,13 @@ import NoContent from './navigation/NoContent.js';
 import Router from './Router.js';
 import ErrorBoundary from './ErrorBoundary.js';
 
-export default function Content({currentUser}) {
+export default function Content({loading, currentUser}) {
 	const classes = useStyles();
 
 	if (!currentUser) {
 		return (
 			<main className={classes.main}>
-				<NoContent>Please sign in</NoContent>
+				{ loading ? <NoContent>Loading...</NoContent> : <NoContent>Please sign in</NoContent>}
 			</main>
 		);
 	}

@@ -12,13 +12,11 @@ import {
 
 import {SnackbarProvider} from 'notistack';
 
-import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
-// eslint-disable-next-line import/no-unassigned-import
-import 'react-circular-progressbar/dist/styles.css';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import {sum, map} from '@aureooms/js-itertools';
+import {all, map} from '@aureooms/js-itertools';
 
 import {settings} from '../api/settings.js';
 
@@ -41,22 +39,16 @@ const useStyles = makeStyles(() => ({
 		width: '100%',
 		minHeight: '100vh'
 	},
-	progressbarContainer: {
-		position: 'relative',
-		display: 'flex',
+	progress: {
+		display: 'block',
+		position: 'fixed',
 		width: '100%',
-		minHeight: '100vh'
-	},
-	progressbar: {
-		margin: 'auto',
-		height: 100,
-		width: 100,
-		fontWeight: 'bold'
+		zIndex: 9999
 	}
 }));
 
 const App = (props) => {
-	const {currentUser, textTransform, navigationDrawerIsOpen, progress} = props;
+	const {currentUser, textTransform, navigationDrawerIsOpen, loading} = props;
 
 	const theme = useTheme();
 	const classes = useStyles();
@@ -66,42 +58,25 @@ const App = (props) => {
 			<CssBaseline />
 			<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
 				<ErrorBoundary>
-					{progress < 1 ? (
-						<div className={classes.progressbarContainer}>
-							<CircularProgressbar
-								background
-								className={classes.progressbar}
-								maxValue={1}
-								value={progress}
-								text={`${(100 * progress) | 0}%`}
-								backgroundPadding={6}
-								styles={buildStyles({
-									backgroundColor: theme.palette.primary.main,
-									textColor: '#fff',
-									pathColor: '#fff',
-									trailColor: 'transparent'
-								})}
+					<div>
+						<CustomWholeWindowDropZone />
+						<div className={classes.appFrame} style={{textTransform}}>
+							{loading && <LinearProgress className={classes.progress}/>}
+							<Header
+								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								currentUser={currentUser}
+							/>
+							<NavigationDrawer
+								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								currentUser={currentUser}
+							/>
+							<Content
+								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								currentUser={currentUser}
+								loading={loading}
 							/>
 						</div>
-					) : (
-						<div>
-							<CustomWholeWindowDropZone />
-							<div className={classes.appFrame} style={{textTransform}}>
-								<Header
-									navigationDrawerIsOpen={navigationDrawerIsOpen}
-									currentUser={currentUser}
-								/>
-								<NavigationDrawer
-									navigationDrawerIsOpen={navigationDrawerIsOpen}
-									currentUser={currentUser}
-								/>
-								<Content
-									navigationDrawerIsOpen={navigationDrawerIsOpen}
-									currentUser={currentUser}
-								/>
-							</div>
-						</div>
-					)}
+					</div>
 				</ErrorBoundary>
 			</SnackbarProvider>
 		</MuiThemeProvider>
@@ -110,14 +85,13 @@ const App = (props) => {
 
 export default withTracker(() => {
 	const handles = [
-		{ready: () => true},
 		settings.subscribe('text-transform'),
 		settings.subscribe('navigation-drawer-is-open')
 	];
 	return {
-		progress: sum(map((x) => (x.ready() ? 1 : 0), handles)) / handles.length,
-		textTransform: settings.get('text-transform'),
-		navigationDrawerIsOpen: settings.get('navigation-drawer-is-open'),
+		loading: !all(map((x) => x.ready(), handles)),
+		textTransform: settings.getWithBrowserCache('text-transform'),
+		navigationDrawerIsOpen: settings.getWithBrowserCache('navigation-drawer-is-open'),
 		currentUser: Meteor.user()
 	};
 })(App);
