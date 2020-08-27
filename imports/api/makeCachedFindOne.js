@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {useTracker} from 'meteor/react-meteor-data';
 import {useState, useEffect} from 'react';
 
 const makeCachedFindOne = (Collection, subscription) => (
@@ -16,17 +15,35 @@ const makeCachedFindOne = (Collection, subscription) => (
 		setLoading(true);
 		setFound(false);
 		setFields(init);
-	}, deps);
+		let current = init;
 
-	useTracker(() => {
-		const handle = Meteor.subscribe(subscription, query, options);
+		let queryHandle;
+		const handle = Meteor.subscribe(subscription, query, options, {
+			onStop: () => {
+				if (queryHandle) queryHandle.stop();
+			},
+			onReady: () => {
+				setLoading(false);
+				queryHandle = Collection.find(query, options).observeChanges({
+					added: (_id, upToDate) => {
+						setFound(true);
+						current = {...init, ...upToDate};
+						setFields(current);
+					},
+					changed: (_id, upToDate) => {
+						current = {...current, ...upToDate};
+						setFields(current);
+					},
+					removed: (_id) => {
+						setFound(false);
+					}
+				});
+			}
+		});
 
-		if (handle.ready()) {
-			const upToDate = Collection.findOne(query, options);
-			setLoading(false);
-			setFound(Boolean(upToDate));
-			setFields({...fields, ...upToDate});
-		}
+		return () => {
+			handle.stop();
+		};
 	}, deps);
 
 	return {loading, found, fields};
