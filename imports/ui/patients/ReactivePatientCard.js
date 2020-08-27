@@ -16,18 +16,9 @@ const ReactivePatientCard = ({patient}) => {
 	// subscription.
 	// delete options.fields['photo'];
 
-	const deps = [
-		patientId,
-		JSON.stringify(patient),
-		JSON.stringify(StaticPatientCard.projection)
-	];
-	const {loading, found, fields} = usePatient(
-		patient,
-		patientId,
-		options,
-		deps
-	);
-	const props = {loading, found, patient: fields};
+	const deps = [patientId, JSON.stringify(StaticPatientCard.projection)];
+	const {loading, found, fields} = usePatient({}, patientId, options, deps);
+	const props = {loading, found, patient: {...patient, ...fields}};
 
 	return <StaticPatientCard {...props} />;
 };
