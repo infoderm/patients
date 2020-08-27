@@ -12,15 +12,23 @@ import {insurances} from './insurances.js';
 import {doctors} from './doctors.js';
 import {allergies} from './allergies.js';
 
-import {makeIndex} from './string.js';
+import {makeIndex, shatter} from './string.js';
 import observeQuery from './observeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
 import makeCachedFindOne from './makeCachedFindOne.js';
 
+const collection = 'patients';
 const cacheCollection = 'patients.find.cache';
 const cachePublication = 'patients.find.observe';
-export const Patients = new Mongo.Collection('patients');
+const indexCollection = 'patients.index.collection';
+const indexCacheCollection = 'patients.index.cache.collection';
+const indexCachePublication = 'patients.index.cache.publication';
+export const Patients = new Mongo.Collection(collection);
 export const PatientsCache = new Mongo.Collection(cacheCollection);
+export const PatientsSearchIndex = new Mongo.Collection(indexCollection);
+export const PatientsSearchIndexCache = new Mongo.Collection(
+	indexCacheCollection
+);
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = ['', 'male', 'female', 'other'];
@@ -40,6 +48,42 @@ if (Meteor.isServer) {
 	});
 
 	Meteor.publish(cachePublication, observeQuery(Patients, cacheCollection));
+	Meteor.publish(
+		indexCachePublication,
+		observeQuery(PatientsSearchIndex, indexCacheCollection)
+	);
+}
+
+function updateIndex(userId, _id, fields) {
+	const {niss, firstname, lastname, birthdate, sex} = fields;
+	const patientIndex = {};
+	if (firstname) {
+		const nameIndex = shatter(firstname);
+		for (const [key, value] of Object.entries(nameIndex)) {
+			patientIndex['firstname_' + key] = value;
+		}
+	}
+
+	if (lastname) {
+		const nameIndex = shatter(lastname);
+		for (const [key, value] of Object.entries(nameIndex)) {
+			patientIndex['lastname_' + key] = value;
+		}
+	}
+
+	const upsertFields = {
+		...patientIndex,
+		niss,
+		firstname,
+		lastname,
+		birthdate,
+		sex,
+		owner: userId
+	};
+
+	PatientsSearchIndex.upsert(_id, {
+		$set: upsertFields
+	});
 }
 
 function updateTags(userId, fields) {
@@ -164,11 +208,15 @@ Meteor.methods({
 
 		updateTags(this.userId, fields);
 
-		return Patients.insert({
+		const patientId = Patients.insert({
 			...fields,
 			createdAt: new Date(),
 			owner: this.userId
 		});
+
+		updateIndex(this.userId, patientId, fields);
+
+		return patientId;
 	},
 
 	'patients.update'(patientId, newfields) {
@@ -181,6 +229,8 @@ Meteor.methods({
 		const fields = sanitize(newfields);
 
 		updateTags(this.userId, fields);
+
+		updateIndex(this.userId, patientId, fields);
 
 		return Patients.update(patientId, {$set: fields});
 	},
@@ -239,6 +289,7 @@ Meteor.methods({
 				}
 			}
 		);
+		PatientsSearchIndex.remove(patientId);
 		return Patients.remove(patientId);
 	},
 
@@ -301,6 +352,8 @@ Meteor.methods({
 			owner: this.userId
 		});
 
+		updateIndex(this.userId, newPatientId, fields);
+
 		// Not needed to update tags since the merged info should only contain
 		// existing tags
 		// updateTags(this.userId, fields);
@@ -356,6 +409,9 @@ Meteor.methods({
 		);
 
 		// (9)
+		PatientsSearchIndex.remove({
+			_id: {$in: oldPatientIds}
+		});
 		Patients.remove({
 			_id: {$in: oldPatientIds}
 		});
@@ -478,11 +534,17 @@ export const usePatientsFind = makeObservedQuery(
 	cachePublication
 );
 
+export const usePatientsAdvancedFind = makeObservedQuery(
+	PatientsSearchIndexCache,
+	indexCachePublication
+);
+
 export const usePatient = makeCachedFindOne(Patients, 'patient');
 
 export const patients = {
 	cacheCollection,
 	cachePublication,
+	updateIndex,
 	toString: patientToString,
 	toKey: patientToKey,
 	merge: mergePatients,

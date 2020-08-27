@@ -6,7 +6,11 @@ import {Meteor} from 'meteor/meteor';
 import dateParseISO from 'date-fns/parseISO';
 
 import {Settings} from '../imports/api/settings.js';
-import {Patients} from '../imports/api/patients.js';
+import {
+	Patients,
+	PatientsSearchIndex,
+	patients
+} from '../imports/api/patients.js';
 import {Drugs} from '../imports/api/drugs.js';
 import {Consultations} from '../imports/api/consultations.js';
 // import {appointments} from '../imports/api/appointments.js';
@@ -22,6 +26,7 @@ Meteor.startup(() => {
 	const collections = [
 		Settings,
 		Patients,
+		PatientsSearchIndex,
 		Drugs,
 		Consultations,
 		Insurances,
@@ -119,6 +124,17 @@ Meteor.startup(() => {
 			Consultations.rawCollection().save(consultation);
 		});
 
+	// Regenerate PatientsSearchIndex
+	PatientsSearchIndex.remove({});
+	Patients.rawCollection()
+		.find()
+		.snapshot()
+		.forEach(
+			Meteor.bindEnvironment((patient) => {
+				patients.updateIndex(patient.owner, patient._id, patient);
+			})
+		);
+
 	// Create indexes
 
 	const createSimpleIndex = (collection, field) =>
@@ -151,6 +167,38 @@ Meteor.startup(() => {
 				firstname: 2,
 				lastname: 3
 			}
+		}
+	);
+
+	PatientsSearchIndex.rawCollection().createIndex(
+		{
+			owner: 1,
+			firstname_whole: 'text',
+			firstname_particles: 'text',
+			firstname_substring_long: 'text',
+			firstname_substring_medium: 'text',
+			firstname_substring_short: 'text',
+			lastname_whole: 'text',
+			lastname_particles: 'text',
+			lastname_substring_long: 'text',
+			lastname_substring_medium: 'text',
+			lastname_substring_short: 'text'
+		},
+		{
+			default_language: 'none',
+			weights: {
+				firstname_whole: 15,
+				firstname_particles: 4,
+				firstname_substring_long: 5,
+				firstname_substring_medium: 3,
+				firstname_substring_short: 2,
+				lastname_whole: 20,
+				lastname_particles: 6,
+				lastname_substring_long: 7,
+				lastname_substring_medium: 5,
+				lastname_substring_short: 4
+			},
+			background: true
 		}
 	);
 
