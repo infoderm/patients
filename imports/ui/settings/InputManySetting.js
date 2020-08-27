@@ -8,7 +8,7 @@ import SetPicker from '../input/SetPicker.js';
 
 import Typography from '@material-ui/core/Typography';
 
-import {settings} from '../../api/settings.js';
+import {settings} from '../../client/settings.js';
 
 class InputManySetting extends React.Component {
 	onChange = (e) => {

@@ -4,7 +4,6 @@ import {withTracker} from 'meteor/react-meteor-data';
 import React from 'react';
 
 import {
-	useTheme,
 	makeStyles,
 	MuiThemeProvider,
 	createMuiTheme
@@ -18,7 +17,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import {all, map} from '@aureooms/js-itertools';
 
-import {settings} from '../api/settings.js';
+import {settings} from '../client/settings.js';
 
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone.js';
 import Header from './Header.js';
@@ -50,7 +49,6 @@ const useStyles = makeStyles(() => ({
 const App = (props) => {
 	const {currentUser, textTransform, navigationDrawerIsOpen, loading} = props;
 
-	const theme = useTheme();
 	const classes = useStyles();
 
 	return (
@@ -61,7 +59,7 @@ const App = (props) => {
 					<div>
 						<CustomWholeWindowDropZone />
 						<div className={classes.appFrame} style={{textTransform}}>
-							{loading && <LinearProgress className={classes.progress}/>}
+							{loading && <LinearProgress className={classes.progress} />}
 							<Header
 								navigationDrawerIsOpen={navigationDrawerIsOpen}
 								currentUser={currentUser}
@@ -91,7 +89,9 @@ export default withTracker(() => {
 	return {
 		loading: !all(map((x) => x.ready(), handles)),
 		textTransform: settings.getWithBrowserCache('text-transform'),
-		navigationDrawerIsOpen: settings.getWithBrowserCache('navigation-drawer-is-open'),
+		navigationDrawerIsOpen: settings.getWithBrowserCache(
+			'navigation-drawer-is-open'
+		),
 		currentUser: Meteor.user()
 	};
 })(App);

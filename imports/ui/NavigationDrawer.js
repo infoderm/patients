@@ -34,7 +34,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import {settings} from '../api/settings.js';
+import {settings} from '../client/settings.js';
 
 const drawerWidthOpen = 240;
 

@@ -4,7 +4,7 @@ import {list, filter} from '@aureooms/js-itertools';
 
 import {msToString, units} from '../../client/duration.js';
 
-// import {settings} from '../../api/settings.js';
+// import {settings} from '../../client/settings.js';
 
 import InputManySetting from './InputManySetting.js';
 

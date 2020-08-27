@@ -63,39 +63,8 @@ const defaults = {
 	'account-holder': ''
 };
 
-const localStoragePrefix = 'u3208hfosjas-';
-
-function get(key) {
-	const item = Settings.findOne({key});
-	if (item === undefined) {
-		return defaults[key];
-	}
-
-	return item.value;
-}
-
-function getWithBrowserCache(key) {
-	const item = Settings.findOne({key});
-	const localStorageKey = localStoragePrefix + key;
-	if (item === undefined) {
-		const cached = window.localStorage.getItem(localStorageKey);
-		if (cached !== null) return JSON.parse(cached);
-		else return defaults[key];
-	}
-
-	window.localStorage.setItem(localStorageKey, JSON.stringify(item.value));
-	return item.value;
-}
-
-function subscribe(key) {
-	return Meteor.subscribe('setting', key);
-}
-
 const settings = {
 	defaults,
-	get,
-	getWithBrowserCache,
-	subscribe,
 	methods
 };
 

@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
-import {settings} from '../api/settings.js';
+import {settings} from '../client/settings.js';
 
 import FullTextSearchInput from './search/FullTextSearchInput.js';
 import AccountsUI from './users/AccountsUI.js';

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 
-import {settings} from '../../api/settings.js';
+import {settings} from '../../client/settings.js';
 
 import ValuePicker from '../input/ValuePicker.js';
 

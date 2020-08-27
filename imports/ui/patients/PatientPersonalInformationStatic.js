@@ -43,7 +43,7 @@ import {empty} from '@aureooms/js-cardinality';
 import {Insurances} from '../../api/insurances.js';
 import {Doctors} from '../../api/doctors.js';
 import {Allergies} from '../../api/allergies.js';
-import {settings} from '../../api/settings.js';
+import {settings} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../client/eidParseBirthdate.js';
 

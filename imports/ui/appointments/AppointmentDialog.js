@@ -26,7 +26,7 @@ import dateFormat from 'date-fns/format';
 import {msToString} from '../../client/duration.js';
 
 import {Patients, patients} from '../../api/patients.js';
-import {settings} from '../../api/settings.js';
+import {settings} from '../../client/settings.js';
 // import {appointments} from '../../api/appointments.js';
 
 import SetPicker from '../input/SetPicker.js';

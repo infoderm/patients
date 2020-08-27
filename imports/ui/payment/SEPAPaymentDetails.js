@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 
-import {settings} from '../../api/settings.js';
+import {settings} from '../../client/settings.js';
 
 import SEPAPaymentQRCode from './SEPAPaymentQRCode.js';
 

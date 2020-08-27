@@ -11,7 +11,11 @@ export default function Content({loading, currentUser}) {
 	if (!currentUser) {
 		return (
 			<main className={classes.main}>
-				{ loading ? <NoContent>Loading...</NoContent> : <NoContent>Please sign in</NoContent>}
+				{loading ? (
+					<NoContent>Loading...</NoContent>
+				) : (
+					<NoContent>Please sign in</NoContent>
+				)}
 			</main>
 		);
 	}

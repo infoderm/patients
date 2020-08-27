@@ -2,7 +2,7 @@ import React from 'react';
 
 import {onlyLowerCaseASCII} from '../../api/string.js';
 
-// import {settings} from '../../api/settings.js';
+// import {settings} from '../../client/settings.js';
 
 import InputManySetting from './InputManySetting.js';
 

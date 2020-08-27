@@ -22,7 +22,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {onlyASCII} from '../../api/string.js';
 import {usePatient} from '../../api/patients.js';
 
-import {settings} from '../../api/settings.js';
+import {settings} from '../../client/settings.js';
 
 import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
 
