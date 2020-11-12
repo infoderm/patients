@@ -15,6 +15,7 @@ const ReactivePatientCard = ({patient}) => {
 	// loading when first loading the photo via a query response, then via this
 	// subscription.
 	// delete options.fields['photo'];
+	// Currently this is not necessary since we do not preload photos.
 
 	const deps = [patientId, JSON.stringify(StaticPatientCard.projection)];
 	const {loading, found, fields} = usePatient({}, patientId, options, deps);
