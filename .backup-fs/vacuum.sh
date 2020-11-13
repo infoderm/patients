@@ -14,3 +14,5 @@ DELETE="$(comm -23 <(echo "$LIST") <(echo "$KEEP"))"
 for dir in $DELETE ; do
   trash-put "${BACKUP}/${dir}"
 done
+
+trash-empty 30
