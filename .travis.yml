@@ -8,3 +8,19 @@ install:
 
 script:
   - npm run lint
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "DIFKI/zfqmnoQ0AbBK/+orxTM5wPbsob11IUsd4vms5dUx56Dx8MNvK9k5I7/cdh/5NaR5aYqgiB4XQ1CkP4ALJLtvpACBEpTs5eoDcH3zlGVlmcNg9lPTs6sfCNKizxYx5AnJupSxCbtrM3YBq0IsUfdQWwwGQYqfnDVu6F1RDYl73C3AU/e3lra7yIxebQB1CBJC4rVX9vCbTUtLoAJ7jRmr8KNTUxxeuAtoFLTe19XvUBa+8KlY7QbxEy+7LILElC+DUr8ljG/seC15MybwwwTYAnzhhweD2S57ygVWSF0ivCuU2i1cjU4In95mwnBAe0C0V7huorg2Y4ZZ3lkO3x8rNhhlmlAwRDQdnuMB+hJFTEjnKB94NZY3530wZuBmn8wB6/X9hva974pdS1Su1gKY7MgusnFq4t8XDnHiU37YDwjF8i3PgBBaJHEEHVGRZfuaLedPxPckaZV0muDVtMdB63Bspxjg8ydtU3Pf4WZYl96kmvOMgY7eTt2VCKIlEzy1H0EHWrjhHUyPLvSrg3f+A1EexRzQlLBVqhi0Ta5TTdUSESENxWq//lKBRnGbZk0hvtiDXxoMbjzf1vfgupQwlprzsnA+ipsnKEp4t1meDmTS2zmiQnyqRUnPwkJWNFLaz3E5wTYMjJ5AZl49f2eGv71lmdWLrXMTNmM18="
+
+before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+addons:
+  coverity_scan:
+    project:
+      name: "dermatodoc/patients"
+    notification_email: aurelien.ooms@gmail.com
+    branch_pattern: coverity_scan
