@@ -39,8 +39,7 @@ function renderSuggestion({
 	itemToKey
 }) {
 	const isHighlighted = highlightedIndex === index;
-	const isSelected =
-		selectedItem && itemToKey(selectedItem) === itemToKey(suggestion);
+	const isSelected = selectedItem.map(itemToKey).includes(itemToKey(suggestion));
 
 	return (
 		<MenuItem
@@ -61,8 +60,51 @@ renderSuggestion.propTypes = {
 	highlightedIndex: PropTypes.number,
 	index: PropTypes.number,
 	itemProps: PropTypes.object,
-	selectedItem: PropTypes.string,
+	selectedItem: PropTypes.array.isRequired,
 	suggestion: PropTypes.object.isRequired
+};
+
+const Suggestions = ({
+	classes,
+	filter,
+	suggestions,
+	query,
+	getItemProps,
+	highlightedIndex,
+	selectedItem,
+	itemToKey,
+	itemToString,
+}) => {
+
+	return (
+		<Paper square className={classes.paper}>
+			{filter(suggestions, query, itemToString).map(
+				(suggestion, index) =>
+					renderSuggestion({
+						suggestion,
+						index,
+						itemProps: getItemProps({item: suggestion}),
+						highlightedIndex,
+						selectedItem,
+						itemToString,
+						itemToKey
+					})
+			)}
+		</Paper>
+	);
+
+};
+
+Suggestions.propTypes = {
+	classes: PropTypes.object.isRequired,
+	filter: PropTypes.func.isRequired,
+	suggestions: PropTypes.array.isRequired,
+	query: PropTypes.string.isRequired,
+	getItemProps: PropTypes.func.isRequired,
+	highlightedIndex: PropTypes.number,
+	selectedItem: PropTypes.array.isRequired,
+	itemToKey: PropTypes.func.isRequired,
+	itemToString: PropTypes.func.isRequired,
 };
 
 class SetPicker extends React.Component {
@@ -280,20 +322,17 @@ class SetPicker extends React.Component {
 							})
 						})}
 						{isOpen && !full ? (
-							<Paper square className={classes.paper}>
-								{filter(suggestions, inputValue2, itemToString).map(
-									(suggestion, index) =>
-										renderSuggestion({
-											suggestion,
-											index,
-											itemProps: getItemProps({item: suggestion}),
-											highlightedIndex,
-											selectedItem: selectedItem2,
-											itemToString,
-											itemToKey
-										})
-								)}
-							</Paper>
+							<Suggestions
+								classes={classes}
+								filter={filter}
+								suggestions={suggestions}
+								query={inputValue2}
+								getItemProps={getItemProps}
+								highlightedIndex={highlightedIndex}
+								selectedItem={selectedItem2}
+								itemToString={itemToString}
+								itemToKey={itemToKey}
+							/>
 						) : null}
 					</div>
 				)}
