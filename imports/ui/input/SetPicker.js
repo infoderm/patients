@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import Downshift from 'downshift';
@@ -76,9 +76,26 @@ const Suggestions = ({
 	itemToString,
 }) => {
 
+	const [results, setResults] = useState([]);
+
+	useEffect(() => {
+		// See https://github.com/facebook/react/issues/14326
+		let canceled = false;
+
+		async function getResults() {
+			const results = await filter(suggestions, query, itemToString);
+			if (!canceled) {
+				setResults(results);
+			}
+		}
+
+		getResults();
+		return () => { canceled = true; };
+	}, [filter, suggestions, query, itemToString]);
+
 	return (
 		<Paper square className={classes.paper}>
-			{filter(suggestions, query, itemToString).map(
+			{results.map(
 				(suggestion, index) =>
 					renderSuggestion({
 						suggestion,
