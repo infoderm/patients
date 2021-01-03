@@ -66,8 +66,7 @@ renderSuggestion.propTypes = {
 
 const Suggestions = ({
 	classes,
-	filter,
-	suggestions,
+	useSuggestions,
 	query,
 	getItemProps,
 	highlightedIndex,
@@ -76,22 +75,9 @@ const Suggestions = ({
 	itemToString,
 }) => {
 
-	const [results, setResults] = useState([]);
+	const {loading, results} = useSuggestions(query);
 
-	useEffect(() => {
-		// See https://github.com/facebook/react/issues/14326
-		let canceled = false;
-
-		async function getResults() {
-			const results = await filter(suggestions, query, itemToString);
-			if (!canceled) {
-				setResults(results);
-			}
-		}
-
-		getResults();
-		return () => { canceled = true; };
-	}, [filter, suggestions, query, itemToString]);
+	if (loading) return null;
 
 	return (
 		<Paper square className={classes.paper}>
@@ -114,8 +100,7 @@ const Suggestions = ({
 
 Suggestions.propTypes = {
 	classes: PropTypes.object.isRequired,
-	filter: PropTypes.func.isRequired,
-	suggestions: PropTypes.array.isRequired,
+	useSuggestions: PropTypes.func.isRequired,
 	query: PropTypes.string.isRequired,
 	getItemProps: PropTypes.func.isRequired,
 	highlightedIndex: PropTypes.number,
@@ -278,8 +263,7 @@ class SetPicker extends React.Component {
 		const {
 			value,
 			classes,
-			filter,
-			suggestions,
+			useSuggestions,
 			itemToString,
 			itemToKey,
 			chip,
@@ -341,8 +325,7 @@ class SetPicker extends React.Component {
 						{isOpen && !full ? (
 							<Suggestions
 								classes={classes}
-								filter={filter}
-								suggestions={suggestions}
+								useSuggestions={useSuggestions}
 								query={inputValue2}
 								getItemProps={getItemProps}
 								highlightedIndex={highlightedIndex}
@@ -393,9 +376,8 @@ SetPicker.defaultProps = {
 
 SetPicker.propTypes = {
 	classes: PropTypes.object.isRequired,
-	suggestions: PropTypes.array.isRequired,
 	value: PropTypes.array.isRequired,
-	filter: PropTypes.func.isRequired,
+	useSuggestions: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	itemToString: PropTypes.func.isRequired,
 	inputTransform: PropTypes.func,
