@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import {Link} from 'react-router-dom';
 import {Prompt} from 'react-router';
 
-import {map, list, filter, take} from '@aureooms/js-itertools';
+import {map, list, filter} from '@aureooms/js-itertools';
 
 import {withStyles} from '@material-ui/core/styles';
 import {withSnackbar} from 'notistack';
@@ -136,20 +136,19 @@ const styles = (theme) => ({
 	}
 });
 
-const useSuggestions = (useCollectionFind, set) => (searchString) => {
-
+const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 	const $regex = '^' + normalizeSearch(searchString);
 	const limit = 5;
 
 	const query = {name: {$regex, $options: 'i'}};
 
 	const sort = {
-		name: 1,
+		name: 1
 	};
 	const fields = {
 		...sort,
 		_id: 1,
-		name: 1,
+		name: 1
 	};
 
 	const options = {
@@ -160,8 +159,8 @@ const useSuggestions = (useCollectionFind, set) => (searchString) => {
 	};
 
 	const {loading, results, dirty} = useCollectionFind(query, options, [
-		$regex,
-		//refreshKey,
+		$regex
+		// refreshKey,
 	]);
 
 	// Find a way to exclude directly in query to always return 5 results if
@@ -170,15 +169,9 @@ const useSuggestions = (useCollectionFind, set) => (searchString) => {
 
 	return {
 		loading,
-		results: list(
-			filter(
-				notInSet,
-				results
-			)
-		),
-		dirty,
+		results: list(filter(notInSet, results)),
+		dirty
 	};
-
 };
 
 class PatientPersonalInformation extends React.Component {
@@ -229,11 +222,7 @@ class PatientPersonalInformation extends React.Component {
 	};
 
 	render() {
-		const {
-			classes,
-			loading,
-			importantStrings
-		} = this.props;
+		const {classes, loading, importantStrings} = this.props;
 
 		const {patient, editing, dirty, deleting} = this.state;
 
@@ -419,7 +408,10 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={useSuggestions(useAllergiesFind, patient.allergies)}
+										useSuggestions={makeSuggestions(
+											useAllergiesFind,
+											patient.allergies
+										)}
 										readOnly={!editing}
 										TextFieldProps={{
 											label: 'Allergies',
@@ -503,7 +495,10 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={useSuggestions(useDoctorsFind, patient.doctors)}
+										useSuggestions={makeSuggestions(
+											useDoctorsFind,
+											patient.doctors
+										)}
 										readOnly={!editing}
 										TextFieldProps={{
 											label: 'Médecin Traitant',
@@ -523,7 +518,10 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={useSuggestions(useInsurancesFind, patient.insurances)}
+										useSuggestions={makeSuggestions(
+											useInsurancesFind,
+											patient.insurances
+										)}
 										readOnly={!editing}
 										TextFieldProps={{
 											label: 'Mutuelle',

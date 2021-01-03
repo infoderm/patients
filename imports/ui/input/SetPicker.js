@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import Downshift from 'downshift';
@@ -39,7 +39,9 @@ function renderSuggestion({
 	itemToKey
 }) {
 	const isHighlighted = highlightedIndex === index;
-	const isSelected = selectedItem.map(itemToKey).includes(itemToKey(suggestion));
+	const isSelected = selectedItem
+		.map(itemToKey)
+		.includes(itemToKey(suggestion));
 
 	return (
 		<MenuItem
@@ -72,9 +74,8 @@ const Suggestions = ({
 	highlightedIndex,
 	selectedItem,
 	itemToKey,
-	itemToString,
+	itemToString
 }) => {
-
 	// TODO DEBOUNCE!!!
 	const {loading, results} = useSuggestions(query);
 
@@ -82,21 +83,19 @@ const Suggestions = ({
 
 	return (
 		<Paper square className={classes.paper}>
-			{results.map(
-				(suggestion, index) =>
-					renderSuggestion({
-						suggestion,
-						index,
-						itemProps: getItemProps({item: suggestion}),
-						highlightedIndex,
-						selectedItem,
-						itemToString,
-						itemToKey
-					})
+			{results.map((suggestion, index) =>
+				renderSuggestion({
+					suggestion,
+					index,
+					itemProps: getItemProps({item: suggestion}),
+					highlightedIndex,
+					selectedItem,
+					itemToString,
+					itemToKey
+				})
 			)}
 		</Paper>
 	);
-
 };
 
 Suggestions.propTypes = {
@@ -107,7 +106,7 @@ Suggestions.propTypes = {
 	highlightedIndex: PropTypes.number,
 	selectedItem: PropTypes.array.isRequired,
 	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired,
+	itemToString: PropTypes.func.isRequired
 };
 
 class SetPicker extends React.Component {

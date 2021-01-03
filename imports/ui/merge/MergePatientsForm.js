@@ -34,8 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 const patientToString = (x) => `${x.lastname} ${x.firstname} (${x._id})`;
 
-const useSuggestions = (set) => (searchString) => {
-
+const makeSuggestions = (set) => (searchString) => {
 	const $search = normalizeSearch(searchString);
 	const limit = 5;
 
@@ -48,7 +47,7 @@ const useSuggestions = (set) => (searchString) => {
 		...sort,
 		_id: 1,
 		firstname: 1,
-		lastname: 1,
+		lastname: 1
 	};
 
 	const options = {
@@ -59,8 +58,8 @@ const useSuggestions = (set) => (searchString) => {
 	};
 
 	const {loading, results, dirty} = usePatientsAdvancedFind(query, options, [
-		$search,
-		//refreshKey,
+		$search
+		// refreshKey,
 	]);
 
 	// Find a way to exclude directly in query to always return 5 results if
@@ -69,15 +68,9 @@ const useSuggestions = (set) => (searchString) => {
 
 	return {
 		loading,
-		results: list(
-			filter(
-				notInSet,
-				results
-			)
-		),
-		dirty,
+		results: list(filter(notInSet, results)),
+		dirty
 	};
-
 };
 
 const MergePatientsForm = () => {
@@ -96,7 +89,7 @@ const MergePatientsForm = () => {
 							<SetPicker
 								itemToKey={(x) => x._id}
 								itemToString={patientToString}
-								useSuggestions={useSuggestions(toMerge)}
+								useSuggestions={makeSuggestions(toMerge)}
 								TextFieldProps={{
 									label: 'Patients to merge',
 									margin: 'normal'
