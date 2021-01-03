@@ -3,8 +3,12 @@ import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import makeQuery from './makeQuery.js';
+import makeObservedQuery from './makeObservedQuery.js';
+import observeQuery from './observeQuery.js';
 
 const STATS_SUFFIX = '.stats';
+const FIND_CACHE_SUFFIX = '.find.cache';
+const FIND_OBSERVE_SUFFIX = '.find.observe';
 
 export default function createTagCollection(options) {
 	const {
@@ -18,10 +22,21 @@ export default function createTagCollection(options) {
 	const stats = collection + STATS_SUFFIX;
 	const parentPublicationStats = parentPublication + STATS_SUFFIX;
 
+	const cacheCollection = collection + FIND_CACHE_SUFFIX;
+	const cachePublication = collection + FIND_OBSERVE_SUFFIX;
+
 	const Collection = new Mongo.Collection(collection);
 	const Stats = new Mongo.Collection(stats);
 
+	const TagsCache = new Mongo.Collection(cacheCollection);
+
 	const useTags = makeQuery(Collection, publication);
+
+	// TODO rename to useObservedTags
+	const useTagsFind = makeObservedQuery(
+		TagsCache,
+		cachePublication
+	);
 
 	if (Meteor.isServer) {
 		Meteor.publish(publication, function (query, options) {
@@ -38,6 +53,9 @@ export default function createTagCollection(options) {
 
 			return Collection.find(query, options);
 		});
+
+		Meteor.publish(cachePublication, observeQuery(Collection, cacheCollection));
+
 		if (singlePublication) {
 			Meteor.publish(singlePublication, function (name) {
 				return Collection.find({owner: this.userId, name});
@@ -217,5 +235,5 @@ export default function createTagCollection(options) {
 		}
 	};
 
-	return {Collection, operations, useTags};
+	return {Collection, operations, useTags, useTagsFind};
 }
