@@ -75,6 +75,7 @@ const Suggestions = ({
 	itemToString,
 }) => {
 
+	// TODO DEBOUNCE!!!
 	const {loading, results} = useSuggestions(query);
 
 	if (loading) return null;
