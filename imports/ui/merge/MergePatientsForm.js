@@ -1,10 +1,6 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
-import {all, map, list, filter, take} from '@aureooms/js-itertools';
+import {all, map, list, filter} from '@aureooms/js-itertools';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -14,13 +10,10 @@ import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import {makeIndex} from '../../api/string.js';
-import {Patients} from '../../api/patients.js';
+import {usePatientsAdvancedFind} from '../../api/patients.js';
+import {normalizeSearch} from '../../api/string.js';
 
 import SetPicker from '../input/SetPicker.js';
-
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
 
 import PatientGridItem from '../patients/PatientGridItem.js';
 import ReactivePatientCard from '../patients/ReactivePatientCard.js';
@@ -41,36 +34,57 @@ const useStyles = makeStyles((theme) => ({
 
 const patientToString = (x) => `${x.lastname} ${x.firstname} (${x._id})`;
 
-const tagFilter = (set) => (suggestions, inputValue) => {
+const useSuggestions = (set) => (searchString) => {
+
+	const $search = normalizeSearch(searchString);
+	const limit = 5;
+
+	const query = {$text: {$search}};
+
+	const sort = {
+		score: {$meta: 'textScore'}
+	};
+	const fields = {
+		...sort,
+		_id: 1,
+		firstname: 1,
+		lastname: 1,
+	};
+
+	const options = {
+		fields,
+		sort,
+		skip: 0,
+		limit
+	};
+
+	const {loading, results, dirty} = usePatientsAdvancedFind(query, options, [
+		$search,
+		//refreshKey,
+	]);
+
+	// Find a way to exclude directly in query to always return 5 results if
+	// possible
 	const notInSet = (x) => all(map((y) => x._id !== y._id, set));
-	const matches = makeIndex(inputValue);
 
-	const keep = 5;
-
-	return list(
-		take(
+	return {
+		loading,
+		results: list(
 			filter(
 				notInSet,
-				filter((x) => matches(patientToString(x)), suggestions)
-			),
-			keep
-		)
-	);
+				results
+			)
+		),
+		dirty,
+	};
+
 };
 
-const MergePatientsForm = ({loading, patients}) => {
+const MergePatientsForm = () => {
 	const [step, setStep] = useState('select');
 	const [toMerge, setToMerge] = useState([]);
 
 	const classes = useStyles();
-
-	if (loading) {
-		return <Loading />;
-	}
-
-	if (patients.length < 2) {
-		return <NoContent>There is nothing to merge</NoContent>;
-	}
 
 	switch (step) {
 		case 'select':
@@ -80,10 +94,9 @@ const MergePatientsForm = ({loading, patients}) => {
 					<Grid container className={classes.container}>
 						<Grid item sm={12} md={12}>
 							<SetPicker
-								suggestions={patients}
 								itemToKey={(x) => x._id}
 								itemToString={patientToString}
-								filter={tagFilter(toMerge)}
+								useSuggestions={useSuggestions(toMerge)}
 								TextFieldProps={{
 									label: 'Patients to merge',
 									margin: 'normal'
@@ -138,23 +151,4 @@ const MergePatientsForm = ({loading, patients}) => {
 	}
 };
 
-MergePatientsForm.propTypes = {
-	patients: PropTypes.array.isRequired
-};
-
-export default withTracker(() => {
-	const query = {};
-	const options = {
-		sort: {lastname: 1},
-		fields: {
-			firstname: 1,
-			lastname: 1
-		}
-	};
-	const handle = Meteor.subscribe('patients', query, options);
-	const loading = !handle.ready();
-	return {
-		loading,
-		patients: loading ? [] : Patients.find(query, options).fetch()
-	};
-})(MergePatientsForm);
+export default MergePatientsForm;
