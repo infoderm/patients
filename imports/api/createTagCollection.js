@@ -33,10 +33,7 @@ export default function createTagCollection(options) {
 	const useTags = makeQuery(Collection, publication);
 
 	// TODO rename to useObservedTags
-	const useTagsFind = makeObservedQuery(
-		TagsCache,
-		cachePublication
-	);
+	const useTagsFind = makeObservedQuery(TagsCache, cachePublication);
 
 	if (Meteor.isServer) {
 		Meteor.publish(publication, function (query, options) {
