@@ -3,7 +3,8 @@ import createTagCollection from './createTagCollection.js';
 const {
 	Collection: Insurances,
 	operations: insurances,
-	useTags: useInsurances
+	useTags: useInsurances,
+	useTagsFind: useInsurancesFind
 } = createTagCollection({
 	collection: 'insurances',
 	publication: 'insurances',
@@ -12,4 +13,4 @@ const {
 	key: 'insurances'
 });
 
-export {Insurances, insurances, useInsurances};
+export {Insurances, insurances, useInsurances, useInsurancesFind};
