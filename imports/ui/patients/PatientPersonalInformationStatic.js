@@ -137,6 +137,8 @@ const styles = (theme) => ({
 });
 
 const makeSuggestions = (useCollectionFind, set) => (searchString) => {
+	// TODO Make any substring match and possibly find a way to exploit some
+	// index, or use custom index.
 	const $regex = '^' + normalizeSearch(searchString);
 	const limit = 5;
 
@@ -163,7 +165,7 @@ const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 		// refreshKey,
 	]);
 
-	// Find a way to exclude directly in query to always return 5 results if
+	// TODO Find a way to exclude directly in query to always return 5 results if
 	// possible
 	const notInSet = (x) => (!set ? true : !set.includes(x.name));
 

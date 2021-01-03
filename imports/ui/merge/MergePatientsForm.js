@@ -62,7 +62,7 @@ const makeSuggestions = (set) => (searchString) => {
 		// refreshKey,
 	]);
 
-	// Find a way to exclude directly in query to always return 5 results if
+	// TODO Find a way to exclude directly in query to always return 5 results if
 	// possible
 	const notInSet = (x) => all(map((y) => x._id !== y._id, set));
 
