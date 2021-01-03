@@ -529,11 +529,13 @@ function createPatient(string) {
 	};
 }
 
+// TODO rename to useObservedPatients
 export const usePatientsFind = makeObservedQuery(
 	PatientsCache,
 	cachePublication
 );
 
+// TODO rename to useAdvancedObservedPatients
 export const usePatientsAdvancedFind = makeObservedQuery(
 	PatientsSearchIndexCache,
 	indexCachePublication
