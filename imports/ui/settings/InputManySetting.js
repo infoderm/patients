@@ -41,8 +41,7 @@ class InputManySetting extends React.Component {
 				<Typography variant="h4">{title}</Typography>
 				<SetPicker
 					readOnly={loading}
-					suggestions={[]}
-					filter={(x) => x}
+					useSuggestions={() => ({results: []})}
 					itemToKey={(x) => x}
 					itemToString={(x) => x}
 					createNewItem={(x) => x}

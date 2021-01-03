@@ -165,8 +165,7 @@ class PatientSheet extends React.Component {
 								<Grid item xs={12} md={12}>
 									<SetPicker
 										readOnly
-										suggestions={[]}
-										filter={(x) => x}
+										useSuggestions={() => ({results: []})}
 										itemToKey={(x) => x}
 										itemToString={(x) => x}
 										TextFieldProps={{
@@ -236,8 +235,7 @@ class PatientSheet extends React.Component {
 								<Grid item xs={12} md={4}>
 									<SetPicker
 										readOnly
-										suggestions={[]}
-										filter={(x) => x}
+										useSuggestions={() => ({results: []})}
 										itemToKey={(x) => x}
 										itemToString={(x) => x}
 										TextFieldProps={{
@@ -253,8 +251,7 @@ class PatientSheet extends React.Component {
 								<Grid item xs={12} md={4}>
 									<SetPicker
 										readOnly
-										suggestions={[]}
-										filter={(x) => x}
+										useSuggestions={() => ({results: []})}
 										itemToKey={(x) => x}
 										itemToString={(x) => x}
 										TextFieldProps={{
@@ -296,8 +293,7 @@ class PatientSheet extends React.Component {
 								<Grid item xs={12} md={12}>
 									<SetPicker
 										readOnly
-										suggestions={[]}
-										filter={(x) => x}
+										useSuggestions={() => ({results: []})}
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x._id}
 										TextFieldProps={{
@@ -310,8 +306,7 @@ class PatientSheet extends React.Component {
 								<Grid item xs={12} md={12}>
 									<SetPicker
 										readOnly
-										suggestions={[]}
-										filter={(x) => x}
+										useSuggestions={() => ({results: []})}
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x._id}
 										TextFieldProps={{
@@ -324,8 +319,7 @@ class PatientSheet extends React.Component {
 								<Grid item xs={12} md={12}>
 									<SetPicker
 										readOnly
-										suggestions={[]}
-										filter={(x) => x}
+										useSuggestions={() => ({results: []})}
 										itemToKey={(x) => x}
 										itemToString={(x) => x}
 										TextFieldProps={{
