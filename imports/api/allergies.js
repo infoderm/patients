@@ -6,7 +6,8 @@ import createTagCollection from './createTagCollection.js';
 const {
 	Collection: Allergies,
 	operations: allergies,
-	useTags: useAllergies
+	useTags: useAllergies,
+	useTagsFind: useAllergiesFind
 } = createTagCollection({
 	collection: 'allergies',
 	publication: 'allergies',
@@ -15,7 +16,7 @@ const {
 	key: 'allergies'
 });
 
-export {Allergies, allergies, useAllergies};
+export {Allergies, allergies, useAllergies, useAllergiesFind};
 
 Meteor.methods({
 	'allergies.changeColor'(tagId, newColor) {
