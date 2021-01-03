@@ -40,9 +40,10 @@ import startOfToday from 'date-fns/startOfToday';
 import odiff from 'odiff';
 import {empty} from '@aureooms/js-cardinality';
 
-import {Insurances} from '../../api/insurances.js';
-import {Doctors} from '../../api/doctors.js';
-import {Allergies} from '../../api/allergies.js';
+import {useInsurancesFind} from '../../api/insurances.js';
+import {useDoctorsFind} from '../../api/doctors.js';
+import {useAllergiesFind} from '../../api/allergies.js';
+import {normalizeSearch} from '../../api/string.js';
 import {settings} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../client/eidParseBirthdate.js';
@@ -135,14 +136,49 @@ const styles = (theme) => ({
 	}
 });
 
-const tagFilter = (set) => (suggestions, inputValue) => {
+const useSuggestions = (useCollectionFind, set) => (searchString) => {
+
+	const $regex = '^' + normalizeSearch(searchString);
+	const limit = 5;
+
+	const query = {name: {$regex, $options: 'i'}};
+
+	const sort = {
+		name: 1,
+	};
+	const fields = {
+		...sort,
+		_id: 1,
+		name: 1,
+	};
+
+	const options = {
+		fields,
+		sort,
+		skip: 0,
+		limit
+	};
+
+	const {loading, results, dirty} = useCollectionFind(query, options, [
+		$regex,
+		//refreshKey,
+	]);
+
+	// Find a way to exclude directly in query to always return 5 results if
+	// possible
 	const notInSet = (x) => (!set ? true : !set.includes(x.name));
-	const matches = (x) =>
-		!inputValue || x.name.toLowerCase().includes(inputValue.toLowerCase());
 
-	const keep = 5;
+	return {
+		loading,
+		results: list(
+			filter(
+				notInSet,
+				results
+			)
+		),
+		dirty,
+	};
 
-	return list(take(filter(notInSet, filter(matches, suggestions)), keep));
 };
 
 class PatientPersonalInformation extends React.Component {
@@ -196,9 +232,6 @@ class PatientPersonalInformation extends React.Component {
 		const {
 			classes,
 			loading,
-			insurances,
-			doctors,
-			allergies,
 			importantStrings
 		} = this.props;
 
@@ -383,11 +416,10 @@ class PatientPersonalInformation extends React.Component {
 
 								<Grid item xs={12} md={12}>
 									<SetPicker
-										suggestions={allergies}
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										filter={tagFilter(patient.allergies)}
+										useSuggestions={useSuggestions(useAllergiesFind, patient.allergies)}
 										readOnly={!editing}
 										TextFieldProps={{
 											label: 'Allergies',
@@ -468,11 +500,10 @@ class PatientPersonalInformation extends React.Component {
 								</Grid>
 								<Grid item xs={12} md={4}>
 									<SetPicker
-										suggestions={doctors}
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										filter={tagFilter(patient.doctors)}
+										useSuggestions={useSuggestions(useDoctorsFind, patient.doctors)}
 										readOnly={!editing}
 										TextFieldProps={{
 											label: 'Médecin Traitant',
@@ -489,11 +520,10 @@ class PatientPersonalInformation extends React.Component {
 								</Grid>
 								<Grid item xs={12} md={4}>
 									<SetPicker
-										suggestions={insurances}
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										filter={tagFilter(patient.insurances)}
+										useSuggestions={useSuggestions(useInsurancesFind, patient.insurances)}
 										readOnly={!editing}
 										TextFieldProps={{
 											label: 'Mutuelle',
@@ -619,19 +649,10 @@ PatientPersonalInformation.propTypes = {
 };
 
 export default withTracker(() => {
-	Meteor.subscribe('insurances');
-	Meteor.subscribe('doctors');
-	Meteor.subscribe('allergies');
 	settings.subscribe('important-strings');
 
-	const insurances = Insurances.find({}, {sort: {name: 1}}).fetch();
-	const doctors = Doctors.find({}, {sort: {name: 1}}).fetch();
-	const allergies = Allergies.find({}, {sort: {name: 1}}).fetch();
 	const importantStrings = settings.get('important-strings');
 	return {
-		insurances,
-		doctors,
-		allergies,
 		importantStrings
 	};
 })(
