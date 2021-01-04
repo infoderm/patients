@@ -75,6 +75,7 @@ Meteor.methods({
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {
+			// TODO update patients search index
 			const patientId = Patients.insert({
 				...args.patientFields,
 				createdForAppointment: true,
