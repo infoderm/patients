@@ -6,8 +6,10 @@ import {myEncodeURIComponent} from '../../client/uri.js';
 
 import SearchBox from '../input/SearchBox.js';
 
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
+
 const THRESHOLD_HISTORY_PUSH = 2000; // 2 seconds
-const DEBOUNCE_HISTORY_UPDATE = 300; // 300 ms
+const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;
 
 export default function FullTextSearchInput({className}) {
 	const history = useHistory();
