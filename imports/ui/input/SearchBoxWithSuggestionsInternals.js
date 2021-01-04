@@ -8,8 +8,7 @@ import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions.js';
 
 export default function SearchBoxWithSuggestionsInternals(props) {
 	const {
-		filter,
-		suggestions,
+		useSuggestions,
 		itemToKey,
 		itemToString,
 		placeholder,
@@ -21,6 +20,8 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 		highlightedIndex
 	} = props;
 
+	const suggestions = useSuggestions(inputValue);
+
 	return (
 		<SearchBoxInternalsContainer>
 			<SearchBoxInternalsAdornment />
@@ -30,8 +31,8 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 			/>
 			{isOpen ? (
 				<SearchBoxInternalsSuggestions
-					suggestions={filter(suggestions, inputValue, itemToString)}
 					{...{
+						suggestions,
 						itemToKey,
 						itemToString,
 						getItemProps,
@@ -45,8 +46,7 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 }
 
 SearchBoxWithSuggestionsInternals.propTypes = {
-	suggestions: PropTypes.array.isRequired,
-	filter: PropTypes.func.isRequired,
+	useSuggestions: PropTypes.func.isRequired,
 	itemToString: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	getInputProps: PropTypes.func.isRequired,

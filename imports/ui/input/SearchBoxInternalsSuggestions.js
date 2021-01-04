@@ -24,9 +24,11 @@ export default function SearchBoxInternalsSuggestions(props) {
 
 	const classes = useStyles();
 
+	if (suggestions.loading) return null;
+
 	return (
 		<Paper square className={classes.suggestions}>
-			{suggestions.map((item, index) => (
+			{suggestions.results.map((item, index) => (
 				<MenuItem
 					key={itemToKey(item)}
 					{...getItemProps({
@@ -46,7 +48,7 @@ export default function SearchBoxInternalsSuggestions(props) {
 }
 
 SearchBoxInternalsSuggestions.propTypes = {
-	suggestions: PropTypes.array.isRequired,
+	suggestions: PropTypes.object.isRequired,
 	itemToString: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	getItemProps: PropTypes.func.isRequired,

@@ -7,8 +7,7 @@ import SearchBoxWithSuggestionsInternals from './SearchBoxWithSuggestionsInterna
 
 export default function SearchBoxWithSuggestions(props) {
 	const {
-		filter,
-		suggestions,
+		useSuggestions,
 		itemToKey,
 		itemToString,
 		placeholder,
@@ -16,8 +15,7 @@ export default function SearchBoxWithSuggestions(props) {
 		...rest
 	} = props;
 	const internalsProps = {
-		filter,
-		suggestions,
+		useSuggestions,
 		itemToKey,
 		itemToString,
 		placeholder,
@@ -38,15 +36,9 @@ export default function SearchBoxWithSuggestions(props) {
 	);
 }
 
-SearchBoxWithSuggestions.defaultProps = {
-	itemToString: (x) => (x ? x : ''),
-	itemToKey: (x) => x
-};
-
 SearchBoxWithSuggestions.propTypes = {
-	suggestions: PropTypes.array.isRequired,
-	filter: PropTypes.func.isRequired,
-	itemToString: PropTypes.func,
-	itemToKey: PropTypes.func,
+	useSuggestions: PropTypes.func.isRequired,
+	itemToString: PropTypes.func.isRequired,
+	itemToKey: PropTypes.func.isRequired,
 	placeholder: PropTypes.string
 };
