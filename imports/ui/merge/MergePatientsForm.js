@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDebounce} from 'use-debounce';
 
-import {all, map, list, filter} from '@aureooms/js-itertools';
+import {map, list} from '@aureooms/js-itertools';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -46,9 +46,10 @@ const makeSuggestions = (set) => (searchString) => {
 	);
 
 	const $search = normalizeSearch(debouncedSearchString);
+	const $nin = list(map((x) => x._id, set));
 	const limit = 5;
 
-	const query = {$text: {$search}};
+	const query = {$text: {$search}, _id: {$nin}};
 
 	const sort = {
 		score: {$meta: 'textScore'}
@@ -67,20 +68,16 @@ const makeSuggestions = (set) => (searchString) => {
 		limit
 	};
 
-	const {loading, results, ...rest} = usePatientsAdvancedFind(query, options, [
-		$search
+	const {loading, ...rest} = usePatientsAdvancedFind(query, options, [
+		$search,
+		JSON.stringify($nin)
 		// refreshKey,
 	]);
-
-	// TODO Find a way to exclude directly in query to always return 5 results if
-	// possible
-	const notInSet = (x) => all(map((y) => x._id !== y._id, set));
 
 	return {
 		loading: loading || pending(),
 		cancel,
 		flush,
-		results: list(filter(notInSet, results)),
 		...rest
 	};
 };
