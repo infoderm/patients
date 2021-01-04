@@ -30,6 +30,7 @@ function renderInput(inputProps) {
 }
 
 function renderSuggestion({
+	loading,
 	suggestion,
 	index,
 	itemProps,
@@ -48,6 +49,7 @@ function renderSuggestion({
 			{...itemProps}
 			key={itemToKey(suggestion)}
 			selected={isHighlighted}
+			disabled={loading}
 			component="div"
 			style={{
 				fontWeight: isSelected ? 500 : 400
@@ -76,15 +78,15 @@ const Suggestions = ({
 	itemToKey,
 	itemToString
 }) => {
-	// TODO DEBOUNCE!!!
 	const {loading, results} = useSuggestions(query);
 
-	if (loading) return null;
+	if (!results || results.length === 0) return null;
 
 	return (
 		<Paper square className={classes.paper}>
 			{results.map((suggestion, index) =>
 				renderSuggestion({
+					loading,
 					suggestion,
 					index,
 					itemProps: getItemProps({item: suggestion}),

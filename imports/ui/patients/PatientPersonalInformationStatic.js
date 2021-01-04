@@ -2,6 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
+import {useDebounce} from 'use-debounce';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -56,6 +57,8 @@ import DoctorChip from '../doctors/DoctorChip.js';
 import InsuranceChip from '../insurances/InsuranceChip.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
+
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
@@ -136,10 +139,19 @@ const styles = (theme) => ({
 	}
 });
 
+const DEBOUNCE_OPTIONS = {leading: false};
+// TODO this does not work because we do not render on an empty input
+
 const makeSuggestions = (useCollectionFind, set) => (searchString) => {
+	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
+		searchString,
+		TIMEOUT_INPUT_DEBOUNCE,
+		DEBOUNCE_OPTIONS
+	);
+
 	// TODO Make any substring match and possibly find a way to exploit some
 	// index, or use custom index.
-	const $regex = '^' + normalizeSearch(searchString);
+	const $regex = '^' + normalizeSearch(debouncedSearchString);
 	const limit = 5;
 
 	const query = {name: {$regex, $options: 'i'}};
@@ -160,7 +172,7 @@ const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 		limit
 	};
 
-	const {loading, results, dirty} = useCollectionFind(query, options, [
+	const {loading, results, ...rest} = useCollectionFind(query, options, [
 		$regex
 		// refreshKey,
 	]);
@@ -170,9 +182,11 @@ const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 	const notInSet = (x) => (!set ? true : !set.includes(x.name));
 
 	return {
-		loading,
+		loading: loading || pending(),
 		results: list(filter(notInSet, results)),
-		dirty
+		cancel,
+		flush,
+		...rest
 	};
 };
 

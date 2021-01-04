@@ -52,6 +52,7 @@
     "recompose": "^0.30.0",
     "regenerator-runtime": "^0.13.7",
     "sepa-payment-qr-code": "^1.0.0",
+    "use-debounce": "^5.2.0",
     "webfontloader": "^1.6.28",
     "xml-js": "^1.6.11"
   },
