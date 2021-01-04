@@ -98,7 +98,7 @@ class AppointmentCard extends React.Component {
 							label={dateFormat(datetime, 'iii do MMMM yyyy')}
 							className={classes.chip}
 							component={Link}
-							to={`/calendar/${dateFormat(datetime, 'yyyy-MM-dd')}`}
+							to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
 						/>
 						<Chip
 							label={dateFormat(datetime, 'hh:mma')}

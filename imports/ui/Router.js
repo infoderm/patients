@@ -59,17 +59,18 @@ const ConsultationsOfTheDayFromMatch = ({match}) => (
 	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))} />
 );
 
-const CurrentMonthlyPlanner = (props) => {
+const CurrentMonthlyPlanner = ({match, ...rest}) => {
 	const today = startOfToday();
 	const year = dateFormat(today, 'yyyy');
 	const month = dateFormat(today, 'MM');
-	const match = {
+	const matchWithParams = {
+		...match,
 		params: {
 			year,
 			month
 		}
 	};
-	return <MonthlyPlanner match={match} {...props} />;
+	return <MonthlyPlanner match={matchWithParams} {...rest} />;
 };
 
 export default function Router() {
@@ -110,7 +111,7 @@ export default function Router() {
 			<Route exact path="/calendar" component={Calendar} />
 			<Route
 				exact
-				path="/calendar/:day"
+				path="/calendar/day/:day"
 				component={ConsultationsOfTheDayFromMatch}
 			/>
 			<Route
