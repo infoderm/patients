@@ -1,4 +1,5 @@
 import deburr from 'lodash.deburr';
+import escapeStringRegexp from 'escape-string-regexp';
 
 import {all, map, sorted} from '@aureooms/js-itertools';
 import {len, decreasing} from '@aureooms/js-compare';
@@ -135,5 +136,6 @@ export {
 	onlyLowerCaseASCII,
 	makeIndex,
 	shatter,
-	normalizeSearch
+	normalizeSearch,
+	escapeStringRegexp
 };
