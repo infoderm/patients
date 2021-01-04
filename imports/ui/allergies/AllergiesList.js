@@ -4,6 +4,7 @@ import TagList from '../tags/TagList.js';
 
 import AllergyCard from './AllergyCard.js';
 import {useAllergies} from '../../api/allergies.js';
+import {escapeStringRegexp} from '../../api/string.js';
 
 import AlphabetJumper from '../navigation/AlphabetJumper.js';
 
@@ -13,7 +14,9 @@ export default function AllergiesList({match, prefix, page, perpage}) {
 		page;
 	prefix = (match && match.params.prefix) || prefix;
 
-	const query = prefix ? {name: {$regex: '^' + prefix, $options: 'i'}} : {};
+	const query = prefix
+		? {name: {$regex: '^' + escapeStringRegexp(prefix), $options: 'i'}}
+		: {};
 
 	return (
 		<div>
