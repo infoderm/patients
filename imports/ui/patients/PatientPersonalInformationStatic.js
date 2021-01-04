@@ -44,7 +44,7 @@ import {empty} from '@aureooms/js-cardinality';
 import {useInsurancesFind} from '../../api/insurances.js';
 import {useDoctorsFind} from '../../api/doctors.js';
 import {useAllergiesFind} from '../../api/allergies.js';
-import {normalizeSearch} from '../../api/string.js';
+import {escapeStringRegexp} from '../../api/string.js';
 import {settings} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../client/eidParseBirthdate.js';
@@ -149,9 +149,7 @@ const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 		DEBOUNCE_OPTIONS
 	);
 
-	// TODO Make any substring match and possibly find a way to exploit some
-	// index, or use custom index.
-	const $regex = '^' + normalizeSearch(debouncedSearchString);
+	const $regex = escapeStringRegexp(debouncedSearchString);
 	const $nin = set || [];
 	const limit = 5;
 

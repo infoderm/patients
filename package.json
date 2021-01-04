@@ -29,6 +29,7 @@
     "date-fns": "^2.15.0",
     "debounce": "^1.2.0",
     "downshift": "^6.0.5",
+    "escape-string-regexp": "^4.0.0",
     "file-saver": "^2.0.2",
     "gridfs-stream": "^1.1.1",
     "healthone": "3.0.0",
