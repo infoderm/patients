@@ -35,7 +35,6 @@ const useSuggestions = (searchString) => {
 };
 
 const PatientPicker = ({...rest}) => {
-
 	return (
 		<SetPicker
 			itemToKey={patients.toKey}
@@ -45,7 +44,6 @@ const PatientPicker = ({...rest}) => {
 			{...rest}
 		/>
 	);
-
 };
 
 export default PatientPicker;
