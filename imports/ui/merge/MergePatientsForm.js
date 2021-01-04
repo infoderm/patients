@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import {usePatientsAdvancedFind} from '../../api/patients.js';
+import {patients, usePatientsAdvancedFind} from '../../api/patients.js';
 import {normalizeSearch} from '../../api/string.js';
 
 import SetPicker from '../input/SetPicker.js';
@@ -31,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: theme.spacing(1)
 	}
 }));
-
-const patientToString = (x) => `${x.lastname} ${x.firstname} (${x._id})`;
 
 const makeSuggestions = (set) => (searchString) => {
 	const $search = normalizeSearch(searchString);
@@ -88,7 +86,7 @@ const MergePatientsForm = () => {
 						<Grid item sm={12} md={12}>
 							<SetPicker
 								itemToKey={(x) => x._id}
-								itemToString={patientToString}
+								itemToString={patients.toString}
 								useSuggestions={makeSuggestions(toMerge)}
 								TextFieldProps={{
 									label: 'Patients to merge',
