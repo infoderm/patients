@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
@@ -112,12 +111,7 @@ class AppointmentDialog extends React.Component {
 	};
 
 	render() {
-		const {
-			classes,
-			open,
-			onClose,
-			appointmentDuration
-		} = this.props;
+		const {classes, open, onClose, appointmentDuration} = this.props;
 
 		return (
 			<Dialog
