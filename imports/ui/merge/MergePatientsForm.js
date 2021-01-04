@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useDebounce} from 'use-debounce';
 
 import {all, map, list, filter} from '@aureooms/js-itertools';
 
@@ -18,6 +19,8 @@ import SetPicker from '../input/SetPicker.js';
 import PatientGridItem from '../patients/PatientGridItem.js';
 import ReactivePatientCard from '../patients/ReactivePatientCard.js';
 
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
+
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,8 +35,17 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
+const DEBOUNCE_OPTIONS = {leading: false};
+// TODO this does not work because we do not render on an empty input
+
 const makeSuggestions = (set) => (searchString) => {
-	const $search = normalizeSearch(searchString);
+	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
+		searchString,
+		TIMEOUT_INPUT_DEBOUNCE,
+		DEBOUNCE_OPTIONS
+	);
+
+	const $search = normalizeSearch(debouncedSearchString);
 	const limit = 5;
 
 	const query = {$text: {$search}};
@@ -55,7 +67,7 @@ const makeSuggestions = (set) => (searchString) => {
 		limit
 	};
 
-	const {loading, results, dirty} = usePatientsAdvancedFind(query, options, [
+	const {loading, results, ...rest} = usePatientsAdvancedFind(query, options, [
 		$search
 		// refreshKey,
 	]);
@@ -65,9 +77,11 @@ const makeSuggestions = (set) => (searchString) => {
 	const notInSet = (x) => all(map((y) => x._id !== y._id, set));
 
 	return {
-		loading,
+		loading: loading || pending(),
+		cancel,
+		flush,
 		results: list(filter(notInSet, results)),
-		dirty
+		...rest
 	};
 };
 

@@ -1,8 +1,20 @@
+import {useDebounce} from 'use-debounce';
 import {usePatientsAdvancedFind} from '../../api/patients.js';
 import {normalizeSearch} from '../../api/string.js';
 
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
+
+const DEBOUNCE_OPTIONS = {leading: false};
+// TODO this does not work because we do not render on an empty input
+
 const usePatientsSuggestions = (searchString) => {
-	const $search = normalizeSearch(searchString);
+	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
+		searchString,
+		TIMEOUT_INPUT_DEBOUNCE,
+		DEBOUNCE_OPTIONS
+	);
+
+	const $search = normalizeSearch(debouncedSearchString);
 	const limit = 5;
 
 	const query = {$text: {$search}};
@@ -24,10 +36,17 @@ const usePatientsSuggestions = (searchString) => {
 		limit
 	};
 
-	return usePatientsAdvancedFind(query, options, [
+	const {loading, ...rest} = usePatientsAdvancedFind(query, options, [
 		$search
 		// refreshKey,
 	]);
+
+	return {
+		loading: loading || pending(),
+		cancel,
+		flush,
+		...rest
+	};
 };
 
 export default usePatientsSuggestions;
