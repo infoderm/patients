@@ -82,8 +82,8 @@ const ConsultationsOfTheDay = (props) => {
 					</div>
 				)}
 			</div>
-			<Prev to={`/calendar/${dayBefore}`} />
-			<Next to={`/calendar/${dayAfter}`} />
+			<Prev to={`/calendar/day/${dayBefore}`} />
+			<Next to={`/calendar/day/${dayAfter}`} />
 		</>
 	);
 };

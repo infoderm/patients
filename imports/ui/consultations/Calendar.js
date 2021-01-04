@@ -14,7 +14,7 @@ export default function Calendar() {
 	const onDayClick = (event) => {
 		const day = event.target.value;
 		setDay(day);
-		history.push(`calendar/${day}`);
+		history.push(`calendar/day/${day}`);
 	};
 
 	return (
