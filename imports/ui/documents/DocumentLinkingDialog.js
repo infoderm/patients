@@ -15,39 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {patients, usePatientsAdvancedFind} from '../../api/patients.js';
-import {normalizeSearch} from '../../api/string.js';
-
-import SetPicker from '../input/SetPicker.js';
-
-const useSuggestions = (searchString) => {
-	const $search = normalizeSearch(searchString);
-	const limit = 5;
-
-	const query = {$text: {$search}};
-
-	const sort = {
-		score: {$meta: 'textScore'}
-	};
-	const fields = {
-		...sort,
-		_id: 1,
-		firstname: 1,
-		lastname: 1
-	};
-
-	const options = {
-		fields,
-		sort,
-		skip: 0,
-		limit
-	};
-
-	return usePatientsAdvancedFind(query, options, [
-		$search
-		// refreshKey,
-	]);
-};
+import PatientPicker from '../patients/PatientPicker.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -94,17 +62,13 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 					want to link this document, enter the name of the patient to link it
 					to and click the link button.
 				</DialogContentText>
-				<SetPicker
-					itemToKey={patients.toKey}
-					itemToString={patients.toString}
-					useSuggestions={useSuggestions}
+				<PatientPicker
 					TextFieldProps={{
 						autoFocus: true,
 						label: 'Patient to link document to',
 						margin: 'normal'
 					}}
 					value={patient}
-					maxCount={1}
 					onChange={(e) => setPatient(e.target.value)}
 				/>
 			</DialogContent>
