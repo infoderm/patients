@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import {Link} from 'react-router-dom';
 import {Prompt} from 'react-router';
 
-import {map, list, filter} from '@aureooms/js-itertools';
+import {map, list} from '@aureooms/js-itertools';
 
 import {withStyles} from '@material-ui/core/styles';
 import {withSnackbar} from 'notistack';
@@ -152,9 +152,10 @@ const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 	// TODO Make any substring match and possibly find a way to exploit some
 	// index, or use custom index.
 	const $regex = '^' + normalizeSearch(debouncedSearchString);
+	const $nin = set || [];
 	const limit = 5;
 
-	const query = {name: {$regex, $options: 'i'}};
+	const query = {name: {$regex, $options: 'i', $nin}};
 
 	const sort = {
 		name: 1
@@ -172,18 +173,14 @@ const makeSuggestions = (useCollectionFind, set) => (searchString) => {
 		limit
 	};
 
-	const {loading, results, ...rest} = useCollectionFind(query, options, [
-		$regex
+	const {loading, ...rest} = useCollectionFind(query, options, [
+		$regex,
+		JSON.stringify($nin)
 		// refreshKey,
 	]);
 
-	// TODO Find a way to exclude directly in query to always return 5 results if
-	// possible
-	const notInSet = (x) => (!set ? true : !set.includes(x.name));
-
 	return {
 		loading: loading || pending(),
-		results: list(filter(notInSet, results)),
 		cancel,
 		flush,
 		...rest
