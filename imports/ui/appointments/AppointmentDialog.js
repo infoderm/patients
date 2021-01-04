@@ -25,11 +25,11 @@ import dateFormat from 'date-fns/format';
 
 import {msToString} from '../../client/duration.js';
 
-import {Patients, patients} from '../../api/patients.js';
+import {patients} from '../../api/patients.js';
 import {settings} from '../../client/settings.js';
 // import {appointments} from '../../api/appointments.js';
 
-import SetPicker from '../input/SetPicker.js';
+import PatientPicker from '../patients/PatientPicker.js';
 
 const styles = (theme) => ({
 	rightIcon: {
@@ -116,7 +116,6 @@ class AppointmentDialog extends React.Component {
 			classes,
 			open,
 			onClose,
-			allPatients,
 			appointmentDuration
 		} = this.props;
 
@@ -175,12 +174,8 @@ class AppointmentDialog extends React.Component {
 							</FormControl>
 						</Grid>
 						<Grid item xs={12}>
-							<SetPicker
+							<PatientPicker
 								readOnly={this.state.patientIsReadOnly}
-								suggestions={allPatients}
-								itemToKey={patients.toKey}
-								itemToString={patients.toString}
-								filter={patients.filter}
 								TextFieldProps={{
 									autoFocus: true,
 									label: "Patient's lastname then firstname(s)",
@@ -249,35 +244,17 @@ AppointmentDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
-	allPatients: PropTypes.array.isRequired,
 	appointmentDuration: PropTypes.array.isRequired,
 	initialDatetime: PropTypes.instanceOf(Date).isRequired,
 	initialPatient: PropTypes.object
 };
 
-export default withTracker((props) => {
-	const {initialPatient} = props;
-
+export default withTracker(() => {
 	const appointmentDurationHandle = settings.subscribe('appointment-duration');
 
 	const additionalProps = {
-		allPatients: [],
 		appointmentDuration: [0]
 	};
-
-	if (!initialPatient) {
-		const query = {};
-		const options = {
-			sort: {lastname: 1},
-			fields: {
-				_id: 1,
-				firstname: 1,
-				lastname: 1
-			}
-		};
-		Meteor.subscribe('patients', query, options);
-		additionalProps.allPatients = Patients.find(query, options).fetch();
-	}
 
 	if (appointmentDurationHandle.ready()) {
 		additionalProps.appointmentDuration = settings.get('appointment-duration');
