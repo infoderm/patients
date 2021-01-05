@@ -131,7 +131,7 @@ export default function NavigationDrawer({
 					to: '/calendar/month/current',
 					icon: <AccessTimeIcon />,
 					title: 'Appointments',
-					disabled: true
+					disabled: false
 				},
 
 				{

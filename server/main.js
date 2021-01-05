@@ -13,7 +13,7 @@ import {
 } from '../imports/api/patients.js';
 import {Drugs} from '../imports/api/drugs.js';
 import {Consultations} from '../imports/api/consultations.js';
-// import {appointments} from '../imports/api/appointments.js';
+import {appointments} from '../imports/api/appointments.js';
 import {Insurances, insurances} from '../imports/api/insurances.js';
 import {Doctors, doctors} from '../imports/api/doctors.js';
 import {Allergies, allergies} from '../imports/api/allergies.js';
