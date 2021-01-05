@@ -1,10 +1,7 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 
-import {Consultations} from '../../api/consultations.js';
+import {useConsultation} from '../../api/consultations.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
@@ -18,14 +15,24 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const ConsultationDetails = ({loading, consultation}) => {
+const ConsultationDetails = ({match}) => {
 	const classes = useStyles();
+
+	const _id = match.params.id;
+	const options = {fields: StaticConsultationCard.projection};
+	const deps = [_id, JSON.stringify(StaticConsultationCard.projection)];
+	const {loading, found, fields: consultation} = useConsultation(
+		{},
+		_id,
+		options,
+		deps
+	);
 
 	if (loading) {
 		return <Loading />;
 	}
 
-	if (!consultation) {
+	if (!found) {
 		return <NoContent>Consultation not found.</NoContent>;
 	}
 
@@ -40,13 +47,4 @@ const ConsultationDetails = ({loading, consultation}) => {
 	);
 };
 
-export default withTracker(({match}) => {
-	const _id = match.params.id;
-	const handle = Meteor.subscribe('consultation', _id);
-	if (handle.ready()) {
-		const consultation = Consultations.findOne(_id);
-		return {loading: false, consultation};
-	}
-
-	return {loading: true};
-})(ConsultationDetails);
+export default ConsultationDetails;

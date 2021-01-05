@@ -57,6 +57,8 @@ const StaticConsultationCard = (props) => {
 	);
 };
 
+StaticConsultationCard.projection = {};
+
 StaticConsultationCard.defaultProps = {
 	loading: false,
 	found: true,
