@@ -14,18 +14,24 @@ import {Uploads} from './uploads.js';
 import {books} from './books.js';
 
 import makeQuery from './makeQuery.js';
+import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
 
 export const Consultations = new Mongo.Collection('consultations');
+
+export const useConsultation = makeCachedFindOne(Consultations, 'consultation');
 
 export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 
 if (Meteor.isServer) {
-	Meteor.publish('consultation', function (_id) {
+	Meteor.publish('consultation', function (_id, options) {
 		check(_id, String);
-		return Consultations.find({
-			owner: this.userId,
-			_id
-		});
+		return Consultations.find(
+			{
+				owner: this.userId,
+				_id
+			},
+			options
+		);
 	});
 
 	Meteor.publish('consultations', function (query = {}) {
