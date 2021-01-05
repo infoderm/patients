@@ -17,6 +17,7 @@ import Divider from '@material-ui/core/Divider';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Chip from '@material-ui/core/Chip';
@@ -131,9 +132,11 @@ class AppointmentCard extends React.Component {
 				<AccordionDetails>
 					<List>
 						<ListItem>
-							<Avatar>
-								<InfoIcon />
-							</Avatar>
+							<ListItemAvatar>
+								<Avatar>
+									<InfoIcon />
+								</Avatar>
+							</ListItemAvatar>
 							<ListItemText primary="Motif du rendez-vous" secondary={reason} />
 						</ListItem>
 					</List>
