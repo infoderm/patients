@@ -12,7 +12,7 @@ import PatientHeader from './PatientHeader.js';
 import PatientPersonalInformation from './PatientPersonalInformation.js';
 
 import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
-// Import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
+import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
 import DocumentsForPatient from '../documents/DocumentsForPatient.js';
 import AttachmentsForPatient from '../attachments/AttachmentsForPatient.js';
 
@@ -40,10 +40,7 @@ const PatientRecord = (props) => {
 
 	const {location, patientId, tab, page, perpage} = props;
 
-	const tabs = ['information', 'consultations', 'documents', 'attachments'];
-
-	// Const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
-	// {(tab === 'appointments' && <AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
+	const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
 
 	return (
 		<div className={classes.root}>
@@ -56,6 +53,7 @@ const PatientRecord = (props) => {
 			{tab === 'information' && (
 				<PatientPersonalInformation patientId={patientId} />
 			)}
+			{tab === 'appointments' && (<AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
 			{tab === 'consultations' && (
 				<ConsultationsForPatient
 					className={classes.container}
