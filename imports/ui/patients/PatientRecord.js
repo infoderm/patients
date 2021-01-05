@@ -40,7 +40,13 @@ const PatientRecord = (props) => {
 
 	const {location, patientId, tab, page, perpage} = props;
 
-	const tabs = ['information', 'appointments', 'consultations', 'documents', 'attachments'] ;
+	const tabs = [
+		'information',
+		'appointments',
+		'consultations',
+		'documents',
+		'attachments'
+	];
 
 	return (
 		<div className={classes.root}>
@@ -53,7 +59,14 @@ const PatientRecord = (props) => {
 			{tab === 'information' && (
 				<PatientPersonalInformation patientId={patientId} />
 			)}
-			{tab === 'appointments' && (<AppointmentsForPatient className={classes.container} patientId={patientId} page={page} perpage={perpage}/>)}
+			{tab === 'appointments' && (
+				<AppointmentsForPatient
+					className={classes.container}
+					patientId={patientId}
+					page={page}
+					perpage={perpage}
+				/>
+			)}
 			{tab === 'consultations' && (
 				<ConsultationsForPatient
 					className={classes.container}
