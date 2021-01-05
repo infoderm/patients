@@ -26,7 +26,6 @@ import {msToString} from '../../client/duration.js';
 
 import {patients} from '../../api/patients.js';
 import {settings} from '../../client/settings.js';
-import {appointments} from '../../api/appointments.js';
 
 import PatientPicker from '../patients/PatientPicker.js';
 
