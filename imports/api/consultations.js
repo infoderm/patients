@@ -22,6 +22,11 @@ export const useConsultation = makeCachedFindOne(Consultations, 'consultation');
 
 export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 
+export const useConsultationsAndAppointments = makeQuery(
+	Consultations,
+	'consultationsAndAppointments'
+);
+
 if (Meteor.isServer) {
 	Meteor.publish('consultation', function (_id, options) {
 		check(_id, String);
@@ -97,10 +102,14 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('consultationsAndAppointments', function () {
-		return Consultations.find({
-			owner: this.userId
-		});
+	Meteor.publish('consultationsAndAppointments', function (query, options) {
+		return Consultations.find(
+			{
+				...query,
+				owner: this.userId
+			},
+			options
+		);
 	});
 
 	Meteor.publish('patient.consultations', function (patientId, options) {
