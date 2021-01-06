@@ -14,6 +14,8 @@ import SmartphoneIcon from '@material-ui/icons/Smartphone';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
+import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog.js';
+
 import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
@@ -26,7 +28,7 @@ const StaticConsultationCardActions = (props) => {
 	const {
 		found,
 		owes,
-		consultation: {_id, payment_method}
+		consultation: {_id, isDone, payment_method}
 	} = props;
 
 	return (
@@ -88,11 +90,19 @@ const StaticConsultationCardActions = (props) => {
 					onClose={() => setSettling(false)}
 				/>
 			)}
-			<ConsultationDeletionDialog
-				open={deleting}
-				consultation={props.consultation}
-				onClose={() => setDeleting(false)}
-			/>
+			{isDone ? (
+				<ConsultationDeletionDialog
+					open={deleting}
+					consultation={props.consultation}
+					onClose={() => setDeleting(false)}
+				/>
+			) : (
+				<AppointmentDeletionDialog
+					open={deleting}
+					appointment={props.consultation}
+					onClose={() => setDeleting(false)}
+				/>
+			)}
 		</AccordionActions>
 	);
 };

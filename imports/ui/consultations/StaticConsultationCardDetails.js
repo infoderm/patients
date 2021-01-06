@@ -69,6 +69,7 @@ const StaticConsultationCardDetails = (props) => {
 		deleted,
 		missingPaymentData,
 		consultation: {
+			isDone,
 			reason,
 			done,
 			todo,
@@ -94,51 +95,64 @@ const StaticConsultationCardDetails = (props) => {
 							<InfoIcon />
 						</Avatar>
 					</ListItemAvatar>
-					<ListItemText primary="Motif de la consultation" secondary={reason} />
+					<ListItemText
+						primary={
+							isDone ? 'Motif de la consultation' : 'Motif du rendez-vous'
+						}
+						secondary={reason}
+					/>
 				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<DoneIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Examens déjà réalisés" secondary={done} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<HourglassFullIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Examens à réaliser" secondary={todo} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<EditIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Traitement" secondary={treatment} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<AlarmIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="À revoir" secondary={next} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<WarningIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Autres remarques" secondary={more} />
-				</ListItem>
-				{missingPaymentData ? (
-					''
-				) : (
+				{isDone && (
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<DoneIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Examens déjà réalisés" secondary={done} />
+					</ListItem>
+				)}
+				{isDone && (
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<HourglassFullIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Examens à réaliser" secondary={todo} />
+					</ListItem>
+				)}
+				{isDone && (
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<EditIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Traitement" secondary={treatment} />
+					</ListItem>
+				)}
+				{isDone && (
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<AlarmIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="À revoir" secondary={next} />
+					</ListItem>
+				)}
+				{isDone && (
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<WarningIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Autres remarques" secondary={more} />
+					</ListItem>
+				)}
+				{missingPaymentData ? null : (
 					<ListItem>
 						<ListItemAvatar>
 							<Avatar>
@@ -153,9 +167,7 @@ const StaticConsultationCardDetails = (props) => {
 						/>
 					</ListItem>
 				)}
-				{missingPaymentData ? (
-					''
-				) : (
+				{missingPaymentData ? null : (
 					<ListItem>
 						<ListItemAvatar>
 							<Avatar>
@@ -168,9 +180,7 @@ const StaticConsultationCardDetails = (props) => {
 						/>
 					</ListItem>
 				)}
-				{book === '' ? (
-					''
-				) : (
+				{book && (
 					<ListItem>
 						<ListItemAvatar>
 							<Avatar>
@@ -180,9 +190,7 @@ const StaticConsultationCardDetails = (props) => {
 						<ListItemText primary="Carnet" secondary={book} />
 					</ListItem>
 				)}
-				{attachments === undefined || attachments.length === 0 ? (
-					''
-				) : (
+				{attachments === undefined || attachments.length === 0 ? null : (
 					<ListItem>
 						<ListItemAvatar>
 							<Avatar>

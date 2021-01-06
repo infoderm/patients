@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import NoContent from '../navigation/NoContent.js';
 
-import AppointmentCard from '../appointments/AppointmentCard.js';
+import StaticConsultationCard from '../consultations/StaticConsultationCard.js';
 
 export default function AppointmentsForPatientStatic({
 	patientId,
@@ -18,10 +18,9 @@ export default function AppointmentsForPatientStatic({
 			)}
 			<div {...rest}>
 				{appointments.map((appointment, i) => (
-					<AppointmentCard
+					<StaticConsultationCard
 						key={appointment._id}
-						appointment={appointment}
-						patientChip={false}
+						consultation={appointment}
 						defaultExpanded={!i}
 					/>
 				))}

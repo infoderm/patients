@@ -18,6 +18,8 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import dateFormat from 'date-fns/format';
 
+import {msToString} from '../../client/duration.js';
+
 import Currency from 'currency-formatter';
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +74,7 @@ const StaticConsultationCardSummary = (props) => {
 		consultation: {
 			patientId,
 			datetime,
+			duration,
 			currency,
 			payment_method,
 			price,
@@ -92,6 +95,9 @@ const StaticConsultationCardSummary = (props) => {
 					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
 				/>
 				<Chip label={dateFormat(datetime, 'hh:mma')} className={classes.chip} />
+				{duration && (
+					<Chip label={msToString(duration)} className={classes.chip} />
+				)}
 				{!PatientChip || !patientId ? null : (
 					<PatientChip
 						loading={loadingPatient}
