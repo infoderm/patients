@@ -83,9 +83,9 @@ const MonthlyPlanner = (props) => {
 				weekly={() => history.push(`/calendar/week/${firstWeekOfMonth}`)}
 				events={events}
 				DayHeader={DayHeader}
+				weekOptions={weekOptions}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
-				weekOptions={weekOptions}
 			/>
 			<NewAppointmentDialog
 				initialDatetime={selectedSlot}
