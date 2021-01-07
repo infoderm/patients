@@ -13,10 +13,14 @@ export function monthly(year, month, weekOptions) {
 }
 
 export function weekly(year, week, weekOptions) {
-	const firstDayOfMonth = new Date(year, week - 1, 1);
-	const lastDayOfMonth = startOfDay(endOfMonth(firstDayOfMonth));
-	const begin = startOfWeek(firstDayOfMonth, weekOptions); // Inclusive
-	const end = addDays(startOfDay(endOfWeek(lastDayOfMonth, weekOptions)), 1); // Non-inclusive
+	const someDayOfWeek = new Date(
+		year,
+		0,
+		(weekOptions.firstWeekContainsDate || 1) + (week - 1) * 7
+	);
+	const lastDayOfWeek = startOfDay(endOfWeek(someDayOfWeek, weekOptions));
+	const begin = startOfWeek(someDayOfWeek, weekOptions); // Inclusive
+	const end = addDays(lastDayOfWeek, 1); // Non-inclusive
 	return [begin, end];
 }
 

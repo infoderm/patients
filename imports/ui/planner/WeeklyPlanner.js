@@ -6,21 +6,21 @@ import React, {useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 
 import isSameDay from 'date-fns/isSameDay';
-import startOfMonth from 'date-fns/startOfMonth';
+import startOfWeek from 'date-fns/startOfWeek';
 import dateFormat from 'date-fns/format';
-import addMonths from 'date-fns/addMonths';
-import subMonths from 'date-fns/subMonths';
+import addWeeks from 'date-fns/addWeeks';
+import subWeeks from 'date-fns/subWeeks';
 
 import {Consultations} from '../../api/consultations.js';
 
-import MonthlyCalendar from '../calendar/MonthlyCalendar.js';
+import WeeklyCalendar from '../calendar/WeeklyCalendar.js';
 import calendarRanges from '../calendar/ranges.js';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
 
 const DayHeader = ({className, day}) => {
-	const firstDayOfMonth = startOfMonth(day);
-	const displayFormat = isSameDay(day, firstDayOfMonth) ? 'MMM d' : 'd';
+	const firstDayOfWeek = startOfWeek(day);
+	const displayFormat = isSameDay(day, firstDayOfWeek) ? 'MMM d' : 'd';
 	return (
 		<div className={className}>
 			<Link to={`/calendar/day/${dateFormat(day, 'yyyy-MM-dd')}`}>
@@ -33,21 +33,17 @@ const DayHeader = ({className, day}) => {
 const WeeklyPlanner = (props) => {
 	const {
 		year,
-		month,
+		week,
 		weekOptions,
-		firstDayOfMonth,
-		firstDayOfNextMonth,
-		firstDayOfPrevMonth,
+		nextWeek,
+		prevWeek,
+		monthOfWeek,
 		consultations
 	} = props;
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
 	const [creatingAppointment, setCreatingAppointment] = useState(false);
 	const history = useHistory();
-
-	const previousMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
-	const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
-	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/ww');
 
 	const onSlotClick = (slot) => {
 		console.debug(slot);
@@ -75,17 +71,17 @@ const WeeklyPlanner = (props) => {
 
 	return (
 		<div>
-			<MonthlyCalendar
+			<WeeklyCalendar
 				year={year}
-				month={month}
-				prev={() => history.push(`/calendar/month/${previousMonth}`)}
-				next={() => history.push(`/calendar/month/${nextMonth}`)}
-				weekly={() => history.push(`/calendar/week/${firstWeekOfMonth}`)}
+				week={week}
+				prev={() => history.push(`/calendar/week/${prevWeek}`)}
+				next={() => history.push(`/calendar/week/${nextWeek}`)}
+				monthly={() => history.push(`/calendar/month/${monthOfWeek}`)}
 				events={events}
 				DayHeader={DayHeader}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
-				{...weekOptions}
+				weekOptions={weekOptions}
 			/>
 			<NewAppointmentDialog
 				initialDatetime={selectedSlot}
@@ -101,27 +97,35 @@ export default withTracker(({match}) => {
 	const week = Number.parseInt(match.params.week, 10);
 
 	const weekOptions = {
-		weekStartsOn: 1
+		useAdditionalWeekYearTokens: true,
+		weekStartsOn: 1,
+		firstWeekContainsDate: 1
 	};
 
 	const [begin, end] = calendarRanges.weekly(year, week, weekOptions);
 
 	console.debug(begin, end);
 
-	const firstDayOfMonth = new Date(year, week - 1, 1);
-	const firstDayOfPreviousMonth = subMonths(firstDayOfMonth, 1);
-	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
+	const someDayOfWeek = new Date(
+		year,
+		0,
+		weekOptions.firstWeekContainsDate + (week - 1) * 7
+	);
+	const someDayOfPrevWeek = subWeeks(someDayOfWeek, 1);
+	const someDayOfNextWeek = addWeeks(someDayOfWeek, 1);
+	const prevWeek = dateFormat(someDayOfPrevWeek, 'YYYY/ww', weekOptions);
+	const nextWeek = dateFormat(someDayOfNextWeek, 'YYYY/ww', weekOptions);
+	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
 
 	Meteor.subscribe('consultations.interval', begin, end);
 
 	return {
 		year,
-		month: week,
 		week,
 		weekOptions,
-		firstDayOfMonth,
-		firstDayOfNextMonth,
-		firstDayOfPrevMonth: firstDayOfPreviousMonth,
+		nextWeek,
+		prevWeek,
+		monthOfWeek,
 		consultations: Consultations.find(
 			{
 				datetime: {

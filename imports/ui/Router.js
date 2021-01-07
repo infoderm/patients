@@ -73,6 +73,20 @@ const CurrentMonthlyPlanner = ({match, ...rest}) => {
 	return <MonthlyPlanner match={matchWithParams} {...rest} />;
 };
 
+const CurrentWeeklyPlanner = ({match, ...rest}) => {
+	const today = startOfToday();
+	const year = dateFormat(today, 'yyyy');
+	const week = dateFormat(today, 'ww');
+	const matchWithParams = {
+		...match,
+		params: {
+			year,
+			week
+		}
+	};
+	return <WeeklyPlanner match={matchWithParams} {...rest} />;
+};
+
 export default function Router() {
 	return (
 		<Switch>
@@ -128,6 +142,11 @@ export default function Router() {
 				exact
 				path="/calendar/week/:year/:week"
 				component={WeeklyPlanner}
+			/>
+			<Route
+				exact
+				path="/calendar/week/current"
+				component={CurrentWeeklyPlanner}
 			/>
 			<Route exact path="/consultations" component={LastDayOfConsultations} />
 			<Route exact path="/consultation/:id" component={ConsultationDetails} />

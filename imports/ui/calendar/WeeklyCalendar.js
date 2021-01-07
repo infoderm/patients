@@ -1,27 +1,47 @@
-// import React from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-// /calendar/week/2018-47
+import CalendarHeader from './CalendarHeader.js';
+import WeeklyCalendarData from './WeeklyCalendarData.js';
 
-// class Calendar extends React.Component {
-// constructor(props) {}
+const WeeklyCalendar = (props) => {
+	const {
+		events,
+		next,
+		prev,
+		monthly,
+		year,
+		week,
+		weekOptions,
+		DayHeader,
+		onSlotClick,
+		onEventClick
+	} = props;
 
-// handleNext() {}
+	return (
+		<div>
+			<CalendarHeader prev={prev} next={next} monthly={monthly} />
+			<WeeklyCalendarData
+				year={year}
+				week={week}
+				events={events}
+				weekOptions={weekOptions}
+				DayHeader={DayHeader}
+				onSlotClick={onSlotClick}
+				onEventClick={onEventClick}
+			/>
+		</div>
+	);
+};
 
-// handlePrev() {}
+WeeklyCalendar.propTypes = {
+	year: PropTypes.number.isRequired,
+	week: PropTypes.number.isRequired,
+	events: PropTypes.array.isRequired,
+	next: PropTypes.func,
+	prev: PropTypes.func,
+	monthly: PropTypes.func,
+	weekOptions: PropTypes.object
+};
 
-// render() {
-// const {classes} = this.props;
-
-// return (
-// <div>
-// <WeeklyCalendarData />
-// </div>
-// );
-// }
-// }
-
-// Calendar.defaultProps = {};
-
-// const CalendarFromMatch = ({match}) => {
-// return <Calendar {...match} />;
-// };
+export default WeeklyCalendar;
