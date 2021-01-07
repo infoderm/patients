@@ -100,7 +100,7 @@ class AppointmentDialog extends React.Component {
 				if (err) {
 					console.error(err);
 				} else {
-					console.log(`Consultation #${res} created.`);
+					console.log(`Consultation #${res._id} created.`);
 					onClose();
 				}
 			});

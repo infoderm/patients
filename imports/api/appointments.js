@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
 import {Consultations} from './consultations.js';
-import {Patients} from './patients.js';
+import {patients} from './patients.js';
 
 export const Appointments = Consultations;
 
@@ -75,22 +75,25 @@ Meteor.methods({
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {
-			// TODO update patients search index
-			const patientId = Patients.insert({
+			const patient = {
 				...args.patientFields,
-				createdForAppointment: true,
-				createdAt: new Date(),
-				owner: this.userId
-			});
+				createdForAppointment: true
+			};
+			const patientId = patients.insertPatient.call(this, patient);
 			console.debug(`Created patient #${patientId} for new appointment.`);
 			args.consultationFields.patientId = patientId;
 		}
 
-		return Consultations.insert({
+		const consultationId = Consultations.insert({
 			...args.consultationFields,
 			createdAt: new Date(),
 			owner: this.userId
 		});
+
+		return {
+			_id: consultationId,
+			patientId: args.consultationFields.patientId
+		};
 	}
 });
 

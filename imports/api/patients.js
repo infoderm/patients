@@ -121,7 +121,8 @@ function sanitize({
 	doctors,
 	allergies,
 
-	noshow
+	noshow,
+	createdForAppointment
 }) {
 	if (niss !== undefined) check(niss, String);
 	if (firstname !== undefined) check(firstname, String);
@@ -144,6 +145,8 @@ function sanitize({
 	if (allergies !== undefined) check(allergies, [String]);
 
 	if (noshow !== undefined) check(noshow, Number);
+	if (createdForAppointment !== undefined)
+		check(createdForAppointment, Boolean);
 
 	niss = niss && niss.trim();
 	firstname = firstname && firstname.trim();
@@ -194,31 +197,33 @@ function sanitize({
 		doctors,
 		insurances,
 
-		noshow
+		noshow,
+		createdForAppointment
 	};
 }
 
+function insertPatient(patient) {
+	if (!this.userId) {
+		throw new Meteor.Error('not-authorized');
+	}
+
+	const fields = sanitize(patient);
+
+	updateTags(this.userId, fields);
+
+	const patientId = Patients.insert({
+		...fields,
+		createdAt: new Date(),
+		owner: this.userId
+	});
+
+	updateIndex(this.userId, patientId, fields);
+
+	return patientId;
+}
+
 Meteor.methods({
-	'patients.insert'(patient) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const fields = sanitize(patient);
-
-		updateTags(this.userId, fields);
-
-		const patientId = Patients.insert({
-			...fields,
-			createdAt: new Date(),
-			owner: this.userId
-		});
-
-		updateIndex(this.userId, patientId, fields);
-
-		return patientId;
-	},
-
+	'patients.insert': insertPatient,
 	'patients.update'(patientId, newfields) {
 		check(patientId, String);
 		const patient = Patients.findOne(patientId);
@@ -547,6 +552,7 @@ export const patients = {
 	cacheCollection,
 	cachePublication,
 	updateIndex,
+	insertPatient,
 	toString: patientToString,
 	toKey: patientToKey,
 	merge: mergePatients,
