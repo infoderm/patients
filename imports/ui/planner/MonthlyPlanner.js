@@ -85,7 +85,7 @@ const MonthlyPlanner = (props) => {
 				DayHeader={DayHeader}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
-				{...weekOptions}
+				weekOptions={weekOptions}
 			/>
 			<NewAppointmentDialog
 				initialDatetime={selectedSlot}
