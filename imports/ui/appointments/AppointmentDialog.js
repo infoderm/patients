@@ -1,6 +1,7 @@
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {withStyles} from '@material-ui/core/styles';
@@ -81,7 +82,7 @@ class AppointmentDialog extends React.Component {
 	createAppointment = (event) => {
 		event.preventDefault();
 
-		const {onClose, onSubmit} = this.props;
+		const {onClose, onSubmit, history} = this.props;
 
 		const {date, time, duration, patient, phone, reason} = this.state;
 
@@ -102,6 +103,7 @@ class AppointmentDialog extends React.Component {
 				} else {
 					console.log(`Consultation #${res._id} created.`);
 					onClose();
+					history.push({pathname: `/patient/${res.patientId}/appointments`});
 				}
 			});
 		} else {
@@ -234,6 +236,7 @@ class AppointmentDialog extends React.Component {
 
 AppointmentDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
@@ -242,16 +245,22 @@ AppointmentDialog.propTypes = {
 	initialPatient: PropTypes.object
 };
 
-export default withTracker(() => {
-	const appointmentDurationHandle = settings.subscribe('appointment-duration');
+export default withRouter(
+	withTracker(() => {
+		const appointmentDurationHandle = settings.subscribe(
+			'appointment-duration'
+		);
 
-	const additionalProps = {
-		appointmentDuration: [0]
-	};
+		const additionalProps = {
+			appointmentDuration: [0]
+		};
 
-	if (appointmentDurationHandle.ready()) {
-		additionalProps.appointmentDuration = settings.get('appointment-duration');
-	}
+		if (appointmentDurationHandle.ready()) {
+			additionalProps.appointmentDuration = settings.get(
+				'appointment-duration'
+			);
+		}
 
-	return additionalProps;
-})(withStyles(styles, {withTheme: true})(AppointmentDialog));
+		return additionalProps;
+	})(withStyles(styles, {withTheme: true})(AppointmentDialog))
+);
