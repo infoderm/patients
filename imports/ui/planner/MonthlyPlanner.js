@@ -11,7 +11,7 @@ import dateFormat from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
 
-import {Consultations} from '../../api/consultations.js';
+import {Events} from '../../api/events.js';
 
 import MonthlyCalendar from '../calendar/MonthlyCalendar.js';
 import calendarRanges from '../calendar/ranges.js';
@@ -38,7 +38,7 @@ const MonthlyPlanner = (props) => {
 		firstDayOfMonth,
 		firstDayOfNextMonth,
 		firstDayOfPrevMonth,
-		consultations
+		events
 	} = props;
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
@@ -58,18 +58,6 @@ const MonthlyPlanner = (props) => {
 	const onEventClick = (event) => {
 		console.debug(event);
 	};
-
-	console.debug(consultations);
-
-	const events = [];
-
-	for (const consultation of consultations) {
-		const event = {
-			begin: consultation.datetime,
-			title: consultation._id
-		};
-		events.push(event);
-	}
 
 	console.debug(events);
 
@@ -112,7 +100,7 @@ export default withTracker(({match}) => {
 	const firstDayOfPreviousMonth = subMonths(firstDayOfMonth, 1);
 	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
 
-	Meteor.subscribe('consultations.interval', begin, end);
+	Meteor.subscribe('events.interval', begin, end);
 
 	return {
 		year,
@@ -121,16 +109,16 @@ export default withTracker(({match}) => {
 		firstDayOfMonth,
 		firstDayOfNextMonth,
 		firstDayOfPrevMonth: firstDayOfPreviousMonth,
-		consultations: Consultations.find(
+		events: Events.find(
 			{
-				datetime: {
+				begin: {
 					$gte: begin,
 					$lt: end
 				}
 			},
 			{
 				sort: {
-					datetime: 1
+					begin: 1
 				}
 			}
 		).fetch()

@@ -12,7 +12,7 @@ import addWeeks from 'date-fns/addWeeks';
 import subWeeks from 'date-fns/subWeeks';
 import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
 
-import {Consultations} from '../../api/consultations.js';
+import {Events} from '../../api/events.js';
 
 import WeeklyCalendar from '../calendar/WeeklyCalendar.js';
 import calendarRanges from '../calendar/ranges.js';
@@ -39,7 +39,7 @@ const WeeklyPlanner = (props) => {
 		nextWeek,
 		prevWeek,
 		monthOfWeek,
-		consultations
+		events
 	} = props;
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
@@ -55,18 +55,6 @@ const WeeklyPlanner = (props) => {
 	const onEventClick = (event) => {
 		console.debug(event);
 	};
-
-	console.debug(consultations);
-
-	const events = [];
-
-	for (const consultation of consultations) {
-		const event = {
-			begin: consultation.datetime,
-			title: consultation._id
-		};
-		events.push(event);
-	}
 
 	console.debug(events);
 
@@ -118,7 +106,7 @@ export default withTracker(({match}) => {
 	const nextWeek = dateFormat(someDayOfNextWeek, 'YYYY/ww', weekOptions);
 	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
 
-	Meteor.subscribe('consultations.interval', begin, end);
+	Meteor.subscribe('events.interval', begin, end);
 
 	return {
 		year,
@@ -127,16 +115,16 @@ export default withTracker(({match}) => {
 		nextWeek,
 		prevWeek,
 		monthOfWeek,
-		consultations: Consultations.find(
+		events: Events.find(
 			{
-				datetime: {
+				begin: {
 					$gte: begin,
 					$lt: end
 				}
 			},
 			{
 				sort: {
-					datetime: 1
+					begin: 1
 				}
 			}
 		).fetch()

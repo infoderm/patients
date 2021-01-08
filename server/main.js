@@ -13,6 +13,7 @@ import {
 } from '../imports/api/patients.js';
 import {Drugs} from '../imports/api/drugs.js';
 import {Consultations} from '../imports/api/consultations.js';
+import {Events} from '../imports/api/events.js';
 // eslint-disable-next-line import/no-unassigned-import
 import '../imports/api/appointments.js';
 import {Insurances, insurances} from '../imports/api/insurances.js';
@@ -30,6 +31,7 @@ Meteor.startup(() => {
 		PatientsSearchIndex,
 		Drugs,
 		Consultations,
+		Events,
 		Insurances,
 		Doctors,
 		Allergies,
@@ -273,6 +275,16 @@ Meteor.startup(() => {
 			book: 1,
 			datetime: 1,
 			isDone: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Events.rawCollection().createIndex(
+		{
+			owner: 1,
+			begin: 1
 		},
 		{
 			background: true
