@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {makeStyles} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import addDays from 'date-fns/addDays';
@@ -15,8 +16,7 @@ import {list, take, range, enumerate} from '@aureooms/js-itertools';
 const ColumnHeader = ({classes, day, col}) => {
 	return (
 		<div
-			className={classNames(classes.dayBox, {
-				[classes.columnHeader]: true,
+			className={classNames(classes.columnHeader, {
 				[classes[`col${col}`]]: true
 			})}
 		>
@@ -123,12 +123,12 @@ const More = (props) => {
 };
 
 const CalendarDataGrid = (props) => {
-	const {useStyles, days, events, mores, DayHeader, onSlotClick} = props;
+	const {useStyles, days, events, mores, DayHeader, weekOptions, onSlotClick} = props;
 
 	const classes = useStyles();
 
 	return (
-		<div>
+		<Paper>
 			<div className={classes.header}>
 				{list(take(days, 7)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} {...props} />
@@ -150,6 +150,7 @@ const CalendarDataGrid = (props) => {
 							[classes[`col${props.col}`]]: true,
 							[classes[`row${props.row}`]]: true
 						})}
+						weekOptions={weekOptions}
 						{...props}
 					/>
 				))}
@@ -172,7 +173,7 @@ const CalendarDataGrid = (props) => {
 					/>
 				))}
 			</div>
-		</div>
+		</Paper>
 	);
 };
 
@@ -184,6 +185,7 @@ const CalendarData = (props) => {
 		lineHeight,
 		maxLines,
 		DayHeader,
+		weekOptions,
 		onSlotClick,
 		onEventClick
 	} = props;
@@ -208,12 +210,15 @@ const CalendarData = (props) => {
 			display: 'grid',
 			gridTemplateColumns: 'repeat(7, 1fr)',
 			gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
+			lineHeight: `calc(2*${lineHeight})`,
 			backgroundColor: '#aaa',
-			border: '1px solid #aaa',
 			gridGap: '1px'
 		},
 		columnHeader: {
 			backgroundColor: '#fff',
+			fontWeight: 'bold',
+			textAlign: 'center',
+			color: '#aaa',
 			padding: '5px 5px',
 			gridColumnEnd: 'span 1',
 			gridRowEnd: `span ${headerHeight}`
@@ -223,7 +228,6 @@ const CalendarData = (props) => {
 			gridTemplateColumns: 'repeat(7, 1fr)',
 			gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
 			backgroundColor: '#aaa',
-			border: '1px solid #aaa',
 			gridGap: '1px'
 		},
 		dayHeader: {
@@ -294,6 +298,7 @@ const CalendarData = (props) => {
 			events={eventProps}
 			mores={moreProps}
 			DayHeader={DayHeader}
+			weekOptions={weekOptions}
 			onSlotClick={onSlotClick}
 			onEventClick={onEventClick}
 		/>

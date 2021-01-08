@@ -10,6 +10,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import dateFormat from 'date-fns/format';
 import addWeeks from 'date-fns/addWeeks';
 import subWeeks from 'date-fns/subWeeks';
+import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
 
 import {Consultations} from '../../api/consultations.js';
 
@@ -18,9 +19,9 @@ import calendarRanges from '../calendar/ranges.js';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
 
-const DayHeader = ({className, day}) => {
-	const firstDayOfWeek = startOfWeek(day);
-	const displayFormat = isSameDay(day, firstDayOfWeek) ? 'MMM d' : 'd';
+const DayHeader = ({className, day, weekOptions}) => {
+	const firstDayOfWeek = startOfWeek(day, weekOptions);
+	const displayFormat = isFirstDayOfMonth(day) || isSameDay(day, firstDayOfWeek) ? 'MMM d' : 'd';
 	return (
 		<div className={className}>
 			<Link to={`/calendar/day/${dateFormat(day, 'yyyy-MM-dd')}`}>
