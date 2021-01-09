@@ -35,7 +35,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import dateFormat from 'date-fns/format';
-import formatDistanceStrict from 'date-fns/formatDistanceStrict';
+import formatDuration from 'date-fns/formatDuration';
+import intervalToDuration from 'date-fns/intervalToDuration';
 import startOfToday from 'date-fns/startOfToday';
 
 import odiff from 'odiff';
@@ -265,6 +266,9 @@ class PatientPersonalInformation extends React.Component {
 		const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
 
 		const _birthdate = eidParseBirthdate(patient.birthdate);
+		const thisMorning = startOfToday();
+		const detailedAge = formatDuration(intervalToDuration({start: _birthdate, end: thisMorning}), { delimiter: ',' });
+		const age = detailedAge.split(',')[0]
 
 		return (
 			<div>
@@ -300,7 +304,7 @@ class PatientPersonalInformation extends React.Component {
 							''
 						) : (
 							<Typography variant="h5">
-								{formatDistanceStrict(_birthdate, startOfToday())}
+								{age}
 							</Typography>
 						)}
 						{!patient.noshow ? (
