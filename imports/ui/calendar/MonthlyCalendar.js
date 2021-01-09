@@ -6,6 +6,7 @@ import MonthlyCalendarData from './MonthlyCalendarData.js';
 
 const MonthlyCalendar = (props) => {
 	const {
+		className,
 		events,
 		next,
 		prev,
@@ -15,11 +16,12 @@ const MonthlyCalendar = (props) => {
 		weekOptions,
 		DayHeader,
 		onSlotClick,
-		onEventClick
+		onEventClick,
+		...rest
 	} = props;
 
 	return (
-		<div>
+		<div className={className}>
 			<CalendarHeader prev={prev} next={next} weekly={weekly} />
 			<MonthlyCalendarData
 				year={year}
@@ -29,6 +31,7 @@ const MonthlyCalendar = (props) => {
 				DayHeader={DayHeader}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
+				{...rest}
 			/>
 		</div>
 	);

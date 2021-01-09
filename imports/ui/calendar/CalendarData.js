@@ -15,6 +15,8 @@ import dateFormat from 'date-fns/format';
 
 import {list, take, range, enumerate} from '@aureooms/js-itertools';
 
+import {ALL_WEEK_DAYS} from './constants.js';
+
 const ColumnHeader = ({classes, day, col}) => {
 	return (
 		<div
@@ -44,18 +46,19 @@ const dayKey = (datetime) => dateFormat(datetime, 'yyyyMMdd');
 function* generateDays(
 	begin,
 	end,
-	includeDaysOfWeek = new Set([0, 1, 2, 3, 4, 5, 6])
+	displayedWeekDays = new Set(ALL_WEEK_DAYS())
 ) {
 	let i = 0;
 	let current = begin;
 	while (current < end) {
-		if (includeDaysOfWeek.has(i % 7 | 0)) yield current;
+		if (displayedWeekDays.has(i % 7 | 0)) yield current;
 		current = addDays(begin, ++i);
 	}
 }
 
-function* generateDaysProps(rowSize, begin, end, includeDaysOfWeek) {
-	const days = generateDays(begin, end, includeDaysOfWeek);
+function* generateDaysProps(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS())) {
+	const rowSize = displayedWeekDays.size;
+	const days = generateDays(begin, end, displayedWeekDays);
 	for (const [ith, day] of enumerate(days)) {
 		const col = (ith % rowSize) + 1;
 		const row = (ith - col + 1) / rowSize + 1;
@@ -174,7 +177,7 @@ const CalendarDataGrid = (props) => {
 						{...props}
 					/>
 				))}
-				{events.map((props, key) => (
+				{events.filter((props) => `day${props.day}slot${props.slot}` in classes).map((props, key) => (
 					<EventFragment
 						key={key}
 						className={classNames(classes.slot, {
@@ -184,7 +187,7 @@ const CalendarDataGrid = (props) => {
 						{...props}
 					/>
 				))}
-				{mores.map((props, key) => (
+				{mores.filter((props) => `day${props.day}more` in classes).map((props, key) => (
 					<More
 						key={key}
 						className={classNames(classes.more, {
@@ -207,16 +210,20 @@ const CalendarData = (props) => {
 		maxLines,
 		DayHeader,
 		weekOptions,
+		displayedWeekDays,
 		onSlotClick,
 		onEventClick
 	} = props;
 
 	const days = differenceInDays(end, begin); // Should be a multiple of 7
+	if (days % 7 !== 0) console.warn(`days (= ${days}) is not a multiple of 7`);
 
-	const rowSize = 7;
-	const nrows = days / rowSize;
+	const _displayedWeekDays = new Set(displayedWeekDays);
+	const rowSize = _displayedWeekDays.size;
 
-	const daysProps = [...generateDaysProps(rowSize, begin, end)];
+	const nrows = days / 7;
+
+	const daysProps = [...generateDaysProps(begin, end, _displayedWeekDays)];
 
 	const occupancy = createOccupancyMap(begin, end);
 	const eventProps = [
@@ -336,7 +343,8 @@ const CalendarData = (props) => {
 };
 
 CalendarData.defaultProps = {
-	lineHeight: '25px'
+	lineHeight: '25px',
+	displayedWeekDays: list(ALL_WEEK_DAYS())
 };
 
 CalendarData.propTypes = {
@@ -344,7 +352,8 @@ CalendarData.propTypes = {
 	end: PropTypes.instanceOf(Date).isRequired,
 	events: PropTypes.array.isRequired,
 	maxLines: PropTypes.number.isRequired,
-	lineHeight: PropTypes.any
+	lineHeight: PropTypes.any,
+	displayedWeekDays: PropTypes.array
 };
 
 export default CalendarData;

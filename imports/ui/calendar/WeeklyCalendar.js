@@ -6,6 +6,7 @@ import WeeklyCalendarData from './WeeklyCalendarData.js';
 
 const WeeklyCalendar = (props) => {
 	const {
+		className,
 		events,
 		next,
 		prev,
@@ -15,11 +16,12 @@ const WeeklyCalendar = (props) => {
 		weekOptions,
 		DayHeader,
 		onSlotClick,
-		onEventClick
+		onEventClick,
+		...rest
 	} = props;
 
 	return (
-		<div>
+		<div className={className}>
 			<CalendarHeader prev={prev} next={next} monthly={monthly} />
 			<WeeklyCalendarData
 				year={year}
@@ -29,6 +31,7 @@ const WeeklyCalendar = (props) => {
 				DayHeader={DayHeader}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
+				{...rest}
 			/>
 		</div>
 	);

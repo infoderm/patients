@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
+import {ALL_WEEK_DAYS} from '../ui/calendar/constants.js';
+
 const Settings = new Mongo.Collection('settings');
 
 if (Meteor.isServer) {
@@ -61,7 +63,7 @@ const defaults = {
 	'text-transform': 'uppercase',
 	iban: '',
 	'account-holder': '',
-	'displayed-week-days': [0, 1, 2, 3, 4, 5, 6]
+	'displayed-week-days': [...ALL_WEEK_DAYS()]
 };
 
 const settings = {

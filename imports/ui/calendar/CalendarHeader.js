@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+import EventIcon from '@material-ui/icons/Event';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -49,6 +51,7 @@ const CalendarHeader = ({prev, next, weekly, monthly}) => {
 				onClick={weekly}
 			>
 				Weekly
+				<ViewWeekIcon className={classes.rightIcon} />
 			</Button>
 			<Button
 				disabled={!monthly}
@@ -57,6 +60,7 @@ const CalendarHeader = ({prev, next, weekly, monthly}) => {
 				onClick={monthly}
 			>
 				Monthly
+				<EventIcon className={classes.rightIcon} />
 			</Button>
 		</>
 	);
