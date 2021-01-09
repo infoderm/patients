@@ -21,6 +21,7 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 
+import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -65,7 +66,7 @@ import PatientDeletionDialog from './PatientDeletionDialog.js';
 
 const styles = (theme) => ({
 	photoPlaceHolder: {
-		display: 'flex',
+		display: 'inline-flex',
 		fontSize: '4rem',
 		margin: 0,
 		width: 140,
@@ -75,13 +76,16 @@ const styles = (theme) => ({
 		color: '#fff',
 		backgroundColor: '#999',
 		verticalAlign: 'top',
-		marginRight: theme.spacing(2)
+		marginBottom: theme.spacing(2)
+	},
+	left: {
+		textAlign: 'center'
 	},
 	photo: {
 		width: 140,
 		height: 200,
 		verticalAlign: 'top',
-		marginRight: theme.spacing(2)
+		marginBottom: theme.spacing(2)
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -276,7 +280,7 @@ class PatientPersonalInformation extends React.Component {
 			(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
 
 		return (
-			<div>
+			<Paper>
 				<Prompt
 					when={dirty}
 					message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
@@ -285,7 +289,7 @@ class PatientPersonalInformation extends React.Component {
 					container
 					className={classNames(classes.container, classes.details)}
 				>
-					<Grid item sm={4} md={2}>
+					<Grid item sm={4} md={2} className={classes.left}>
 						{patient.photo ? (
 							<img
 								className={classes.photo}
@@ -654,7 +658,7 @@ class PatientPersonalInformation extends React.Component {
 					patient={this.props.patient}
 					onClose={() => this.setState({deleting: false})}
 				/>
-			</div>
+			</Paper>
 		);
 	}
 }
