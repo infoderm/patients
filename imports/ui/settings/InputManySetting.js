@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -11,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import {settings, useSetting} from '../../client/settings.js';
 
 const InputManySetting = (props) => {
-
 	const {
 		className,
 		setting,

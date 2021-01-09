@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {list, map, filter, range} from '@aureooms/js-itertools';
+import {list, filter, range} from '@aureooms/js-itertools';
 
 import InputManySetting from './InputManySetting.js';
 
@@ -9,14 +9,19 @@ const KEY = 'displayed-week-days';
 const formatDayOfWeek = (i) => {
 	const day = 5 + i;
 	// TODO use date-fns
-	return new Date(1970, 0, day).toLocaleString('en', { weekday: 'long' });
+	return new Date(1970, 0, day).toLocaleString('en', {weekday: 'long'});
 };
 
-const makeSuggestions = (value) => (inputValue) => (
-	{
-		results: list(filter((i) => !value.includes(i) && formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()), range(7)))
-	}
-);
+const makeSuggestions = (value) => (inputValue) => ({
+	results: list(
+		filter(
+			(i) =>
+				!value.includes(i) &&
+				formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()),
+			range(7)
+		)
+	)
+});
 
 export default function DisplayedWeekDaysSetting({className}) {
 	return (

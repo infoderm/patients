@@ -21,7 +21,8 @@ import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
 
 const DayHeader = ({className, day, weekOptions}) => {
 	const firstDayOfWeek = startOfWeek(day, weekOptions);
-	const displayFormat = isFirstDayOfMonth(day) || isSameDay(day, firstDayOfWeek) ? 'MMM d' : 'd';
+	const displayFormat =
+		isFirstDayOfMonth(day) || isSameDay(day, firstDayOfWeek) ? 'MMM d' : 'd';
 	return (
 		<div className={className}>
 			<Link to={`/calendar/day/${dateFormat(day, 'yyyy-MM-dd')}`}>

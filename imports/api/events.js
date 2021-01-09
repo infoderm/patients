@@ -8,7 +8,6 @@ const events = 'events';
 export const Events = new Mongo.Collection(events);
 
 if (Meteor.isServer) {
-
 	Meteor.publish('events.interval', function (begin, end) {
 		check(begin, Date);
 		check(end, Date);
@@ -52,5 +51,4 @@ if (Meteor.isServer) {
 		// messages.
 		this.onStop(() => handle.stop());
 	});
-
 }

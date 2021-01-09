@@ -32,7 +32,6 @@ function getWithBrowserCache(key) {
 }
 
 export const useSetting = (key) => {
-
 	const loading = useTracker(() => {
 		const handle = subscribe(key);
 		return !handle.ready();
@@ -46,7 +45,6 @@ export const useSetting = (key) => {
 		loading,
 		value
 	};
-
 };
 
 export const settings = {

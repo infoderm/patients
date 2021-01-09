@@ -39,11 +39,15 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 
 const dayKey = (datetime) => dateFormat(datetime, 'yyyyMMdd');
 
-function* generateDays(begin, end, includeDaysOfWeek=new Set([0,1,2,3,4,5,6])) {
+function* generateDays(
+	begin,
+	end,
+	includeDaysOfWeek = new Set([0, 1, 2, 3, 4, 5, 6])
+) {
 	let i = 0;
 	let current = begin;
 	while (current < end) {
-		if (includeDaysOfWeek.has((i%7)|0)) yield current;
+		if (includeDaysOfWeek.has(i % 7 | 0)) yield current;
 		current = addDays(begin, ++i);
 	}
 }
@@ -126,7 +130,16 @@ const More = (props) => {
 };
 
 const CalendarDataGrid = (props) => {
-	const {useStyles, rowSize, days, events, mores, DayHeader, weekOptions, onSlotClick} = props;
+	const {
+		useStyles,
+		rowSize,
+		days,
+		events,
+		mores,
+		DayHeader,
+		weekOptions,
+		onSlotClick
+	} = props;
 
 	const classes = useStyles();
 
