@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import {Link} from 'react-router-dom';
+
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
@@ -114,11 +116,13 @@ function* generateMoreProps(occupancy, begin, end, maxLines) {
 }
 
 const EventFragment = (props) => {
-	const {className, event} = props;
+	const {className, event, eventProps} = props;
 
 	return (
 		<div className={className}>
-			{dateFormat(event.begin, 'HH:mm')} {event.title}
+			<Link to={event.uri} style={event.style} {...eventProps}>
+				{dateFormat(event.begin, 'HH:mm')} {event.title}
+			</Link>
 		</div>
 	);
 };
@@ -173,9 +177,10 @@ const CalendarDataGrid = (props) => {
 				{events.map((props, key) => (
 					<EventFragment
 						key={key}
-						className={classNames(classes.event, {
+						className={classNames(classes.slot, {
 							[classes[`day${props.day}slot${props.slot}`]]: true
 						})}
+						eventProps={{className: classes.event}}
 						{...props}
 					/>
 				))}
@@ -259,13 +264,21 @@ const CalendarData = (props) => {
 				backgroundColor: '#ddd'
 			}
 		},
-		event: {
+		slot: {
 			gridColumnEnd: 'span 1',
 			gridRowEnd: 'span 1',
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
-			paddingLeft: '10px'
+			margin: '0 10px'
+		},
+		event: {
+			display: 'inline-block',
+			width: '100%',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			padding: '1px 6px',
+			borderRadius: '3px'
 		},
 		more: {
 			gridColumnEnd: 'span 1',

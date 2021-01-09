@@ -3,6 +3,7 @@ import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import {Consultations} from './consultations.js';
+import {Patients} from './patients.js';
 
 const events = 'events';
 export const Events = new Mongo.Collection(events);
@@ -20,14 +21,30 @@ if (Meteor.isServer) {
 			}
 		};
 
-		const options = {fields: {_id: 1, patientId: 1, datetime: 1}};
+		const options = {fields: {_id: 1, patientId: 1, datetime: 1, isDone: 1}};
 		for (const field of Object.keys(query)) options.fields[field] = 1;
 
-		const event = (_id, {owner, patientId, datetime}) => ({
-			owner,
-			title: patientId,
-			begin: datetime
-		});
+		const event = (_id, {owner, patientId, datetime, isDone}) => {
+			const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
+			return {
+				owner,
+				title: `${patient.lastname} ${patient.firstname}`,
+				begin: datetime,
+				uri: `/patient/${patient._id}/${
+					isDone ? 'consultations' : 'appointments'
+				}`,
+				style: {
+					backgroundColor:
+						isDone === false
+							? '#fff5d6'
+							: patient.noshow > 0
+							? '#ff7961'
+							: '#757de8',
+					color:
+						isDone === false ? 'black' : patient.noshow > 0 ? 'black' : 'black'
+				}
+			};
+		};
 
 		const handle = Consultations.find(query, options).observeChanges({
 			added: (_id, fields) => {
