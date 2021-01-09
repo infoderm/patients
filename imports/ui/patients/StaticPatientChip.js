@@ -10,6 +10,9 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
+	chip: {
+		maxWidth: '200px'
+	},
 	loading: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#aaa',
@@ -53,6 +56,7 @@ export default function StaticPatientChip({
 					: `${patient.lastname} ${patient.firstname}`
 			}
 			className={classNames(
+				classes.chip,
 				loading ? classes.loading : found ? classes.found : classes.notfound,
 				className
 			)}
