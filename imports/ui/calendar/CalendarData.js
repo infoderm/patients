@@ -37,16 +37,19 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 	);
 };
 
-function* generateDays(begin, end) {
+const dayKey = (datetime) => dateFormat(datetime, 'yyyyMMdd');
+
+function* generateDays(begin, end, includeDaysOfWeek=new Set([0,1,2,3,4,5,6])) {
+	let i = 0;
 	let current = begin;
 	while (current < end) {
-		yield current;
-		current = addDays(current, 1);
+		if (includeDaysOfWeek.has((i%7)|0)) yield current;
+		current = addDays(begin, ++i);
 	}
 }
 
-function* generateDaysProps(rowSize, begin, end) {
-	const days = generateDays(begin, end);
+function* generateDaysProps(rowSize, begin, end, includeDaysOfWeek) {
+	const days = generateDays(begin, end, includeDaysOfWeek);
 	for (const [ith, day] of enumerate(days)) {
 		const col = (ith % rowSize) + 1;
 		const row = (ith - col + 1) / rowSize + 1;
@@ -62,7 +65,7 @@ function createOccupancyMap(begin, end) {
 	const occupancy = new Map();
 
 	for (const day of generateDays(begin, end)) {
-		occupancy.set(dateFormat(day, 'yyyyMMdd'), 0);
+		occupancy.set(dayKey(day), 0);
 	}
 
 	return occupancy;
@@ -77,7 +80,7 @@ function* generateEventProps(occupancy, begin, end, maxLines, events) {
 			continue;
 		}
 
-		const day = dateFormat(event.begin, 'yyyyMMdd');
+		const day = dayKey(event.begin);
 
 		const slot = occupancy.get(day) + 1;
 
@@ -95,7 +98,7 @@ function* generateEventProps(occupancy, begin, end, maxLines, events) {
 
 function* generateMoreProps(occupancy, begin, end, maxLines) {
 	for (const day of generateDays(begin, end)) {
-		const key = dateFormat(day, 'yyyyMMdd');
+		const key = dayKey(day);
 		const count = occupancy.get(key) - maxLines;
 		if (count > 0) {
 			yield {
@@ -123,14 +126,14 @@ const More = (props) => {
 };
 
 const CalendarDataGrid = (props) => {
-	const {useStyles, days, events, mores, DayHeader, weekOptions, onSlotClick} = props;
+	const {useStyles, rowSize, days, events, mores, DayHeader, weekOptions, onSlotClick} = props;
 
 	const classes = useStyles();
 
 	return (
 		<Paper>
 			<div className={classes.header}>
-				{list(take(days, 7)).map((props, key) => (
+				{list(take(days, rowSize)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} {...props} />
 				))}
 			</div>
@@ -208,7 +211,7 @@ const CalendarData = (props) => {
 	const gridStyles = {
 		header: {
 			display: 'grid',
-			gridTemplateColumns: 'repeat(7, 1fr)',
+			gridTemplateColumns: `repeat(${rowSize}, 1fr)`,
 			gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
 			lineHeight: `calc(2*${lineHeight})`,
 			backgroundColor: '#aaa',
@@ -225,7 +228,7 @@ const CalendarData = (props) => {
 		},
 		grid: {
 			display: 'grid',
-			gridTemplateColumns: 'repeat(7, 1fr)',
+			gridTemplateColumns: `repeat(${rowSize}, 1fr)`,
 			gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
 			backgroundColor: '#aaa',
 			gridGap: '1px'
@@ -275,7 +278,7 @@ const CalendarData = (props) => {
 	}
 
 	for (const {day, row, col} of daysProps) {
-		const dayId = dateFormat(day, 'yyyyMMdd');
+		const dayId = dayKey(day);
 		for (const j of range(1, maxLines)) {
 			gridStyles[`day${dayId}slot${j}`] = {
 				gridColumnStart: col,
@@ -294,6 +297,7 @@ const CalendarData = (props) => {
 	return (
 		<CalendarDataGrid
 			useStyles={useStyles}
+			rowSize={rowSize}
 			days={daysProps}
 			events={eventProps}
 			mores={moreProps}
