@@ -1,4 +1,5 @@
 import {Meteor} from 'meteor/meteor';
+import {useTracker} from 'meteor/react-meteor-data';
 import {Settings, settings as _settings} from '../api/settings.js';
 
 const {defaults, methods} = _settings;
@@ -30,10 +31,29 @@ function getWithBrowserCache(key) {
 	return item.value;
 }
 
+export const useSetting = (key) => {
+
+	const loading = useTracker(() => {
+		const handle = subscribe(key);
+		return !handle.ready();
+	}, key);
+
+	const value = useTracker(() => {
+		return get(key);
+	}, key);
+
+	return {
+		loading,
+		value
+	};
+
+};
+
 export const settings = {
 	defaults,
 	methods,
 	subscribe,
+	useSetting,
 	get,
 	getWithBrowserCache
 };
