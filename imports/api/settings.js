@@ -60,7 +60,8 @@ const defaults = {
 	'week-starts-on': 1,
 	'text-transform': 'uppercase',
 	iban: '',
-	'account-holder': ''
+	'account-holder': '',
+	'displayed-week-days': [0, 1, 2, 3, 4, 5, 6]
 };
 
 const settings = {
