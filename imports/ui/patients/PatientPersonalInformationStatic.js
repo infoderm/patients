@@ -267,8 +267,10 @@ class PatientPersonalInformation extends React.Component {
 
 		const _birthdate = eidParseBirthdate(patient.birthdate);
 		const thisMorning = startOfToday();
-		const detailedAge = formatDuration(intervalToDuration({start: _birthdate, end: thisMorning}), { delimiter: ',' });
-		const age = detailedAge.split(',')[0]
+		const ageInterval = {start: _birthdate, end: thisMorning};
+		const detailedAge = formatDuration(intervalToDuration(ageInterval), { delimiter: ',' });
+		const shortAge = detailedAge.split(',')[0];
+		const displayedAge = (ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
 
 		return (
 			<div>
@@ -304,7 +306,7 @@ class PatientPersonalInformation extends React.Component {
 							''
 						) : (
 							<Typography variant="h5">
-								{age}
+								{displayedAge}
 							</Typography>
 						)}
 						{!patient.noshow ? (
