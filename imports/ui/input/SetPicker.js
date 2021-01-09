@@ -156,13 +156,16 @@ class SetPicker extends React.Component {
 					this.highlightedIndex === null &&
 					createNewItem
 				) {
-					const item = inputValue.trim();
+					// TODO avoid creating new item before multiset check
+					// and/or handle item creation failure
+					const item = createNewItem(inputValue.trim());
+					const itemString = itemToString(item);
 					const newValue = value.slice();
 					if (
 						multiset ||
-						all(map((x) => x !== item, map(itemToString, value)))
+						all(map((x) => x !== itemString, map(itemToString, value)))
 					) {
-						newValue.push(createNewItem(item));
+						newValue.push(item);
 						if (sort) {
 							sort(newValue);
 						}
