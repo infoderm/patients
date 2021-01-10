@@ -63,7 +63,7 @@ const defaults = {
 	'text-transform': 'uppercase',
 	iban: '',
 	'account-holder': '',
-	'displayed-week-days': [...ALL_WEEK_DAYS()]
+	'displayed-week-days': [...ALL_WEEK_DAYS]
 };
 
 const settings = {

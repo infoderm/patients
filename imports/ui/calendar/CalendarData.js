@@ -43,11 +43,7 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 
 const dayKey = (datetime) => dateFormat(datetime, 'yyyyMMdd');
 
-function* generateDays(
-	begin,
-	end,
-	displayedWeekDays = new Set(ALL_WEEK_DAYS())
-) {
+function* generateDays(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS)) {
 	let i = 0;
 	let current = begin;
 	while (current < end) {
@@ -56,7 +52,11 @@ function* generateDays(
 	}
 }
 
-function* generateDaysProps(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS())) {
+function* generateDaysProps(
+	begin,
+	end,
+	displayedWeekDays = new Set(ALL_WEEK_DAYS)
+) {
 	const rowSize = displayedWeekDays.size;
 	const days = generateDays(begin, end, displayedWeekDays);
 	for (const [ith, day] of enumerate(days)) {
@@ -177,25 +177,29 @@ const CalendarDataGrid = (props) => {
 						{...props}
 					/>
 				))}
-				{events.filter((props) => `day${props.day}slot${props.slot}` in classes).map((props, key) => (
-					<EventFragment
-						key={key}
-						className={classNames(classes.slot, {
-							[classes[`day${props.day}slot${props.slot}`]]: true
-						})}
-						eventProps={{className: classes.event}}
-						{...props}
-					/>
-				))}
-				{mores.filter((props) => `day${props.day}more` in classes).map((props, key) => (
-					<More
-						key={key}
-						className={classNames(classes.more, {
-							[classes[`day${props.day}more`]]: true
-						})}
-						{...props}
-					/>
-				))}
+				{events
+					.filter((props) => `day${props.day}slot${props.slot}` in classes)
+					.map((props, key) => (
+						<EventFragment
+							key={key}
+							className={classNames(classes.slot, {
+								[classes[`day${props.day}slot${props.slot}`]]: true
+							})}
+							eventProps={{className: classes.event}}
+							{...props}
+						/>
+					))}
+				{mores
+					.filter((props) => `day${props.day}more` in classes)
+					.map((props, key) => (
+						<More
+							key={key}
+							className={classNames(classes.more, {
+								[classes[`day${props.day}more`]]: true
+							})}
+							{...props}
+						/>
+					))}
 			</div>
 		</Paper>
 	);
@@ -344,7 +348,7 @@ const CalendarData = (props) => {
 
 CalendarData.defaultProps = {
 	lineHeight: '25px',
-	displayedWeekDays: list(ALL_WEEK_DAYS())
+	displayedWeekDays: ALL_WEEK_DAYS
 };
 
 CalendarData.propTypes = {

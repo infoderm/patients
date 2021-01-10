@@ -99,7 +99,9 @@ const MonthlyPlanner = (props) => {
 				events={events}
 				DayHeader={DayHeader}
 				weekOptions={weekOptions}
-				displayedWeekDays={displayAllWeekDays ? [...ALL_WEEK_DAYS()] : displayedWeekDays}
+				displayedWeekDays={
+					displayAllWeekDays ? ALL_WEEK_DAYS : displayedWeekDays
+				}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
 			/>

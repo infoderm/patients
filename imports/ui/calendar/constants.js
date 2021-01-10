@@ -1,3 +1,3 @@
-import {range} from '@aureooms/js-itertools';
+import {list, range} from '@aureooms/js-itertools';
 
-export const ALL_WEEK_DAYS = () => range(7);
+export const ALL_WEEK_DAYS = Object.freeze(list(range(7)));
