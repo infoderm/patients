@@ -525,7 +525,13 @@ const patientFilter = (suggestions, inputValue, transform = (v) => v) => {
 };
 
 function createPatient(string) {
-	const [lastname, ...firstnames] = string.split(' ');
+	let nameSplit = string.split(',');
+
+	if (nameSplit.length < 2) {
+		nameSplit = string.split(' ');
+	}
+
+	const [lastname, ...firstnames] = nameSplit;
 
 	return {
 		lastname,
