@@ -3,8 +3,6 @@ import 'regenerator-runtime/runtime.js';
 import {Meteor} from 'meteor/meteor';
 // import {ObjectId} from 'meteor/mongo';
 
-import dateParseISO from 'date-fns/parseISO';
-
 import {Settings} from '../imports/api/settings.js';
 import {
 	Patients,
@@ -103,25 +101,6 @@ Meteor.startup(() => {
 
 			if (consultation.isDone !== false) {
 				consultation.isDone = true;
-			}
-
-			Consultations.rawCollection().save(consultation);
-		});
-
-	// Move book/2020/0 consultations of value 20 after march 15 to book/2020/covid
-	// and set payment method to third-party
-	Consultations.rawCollection()
-		.find()
-		.snapshot()
-		.forEach((consultation) => {
-			if (
-				consultation.book === '0' &&
-				consultation.datetime >= dateParseISO('2020-03-15') &&
-				consultation.datetime < dateParseISO('2020-06-01') &&
-				consultation.price === 20
-			) {
-				consultation.book = 'covid';
-				consultation.payment_method = 'third-party';
 			}
 
 			Consultations.rawCollection().save(consultation);
