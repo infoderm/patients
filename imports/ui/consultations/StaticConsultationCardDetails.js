@@ -62,6 +62,26 @@ function paymentMethodString(payment_method) {
 	}
 }
 
+const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
+	<ListItem>
+		<ListItemAvatar>
+			<Avatar>
+				<Icon />
+			</Avatar>
+		</ListItemAvatar>
+		<ListItemText
+			primary={primary}
+			secondary={secondary}
+			secondaryTypographyProps={{
+				style: {
+					whiteSpace: 'pre-wrap'
+				}
+			}}
+			{...rest}
+		/>
+	</ListItem>
+);
+
 const StaticConsultationCardDetails = (props) => {
 	const classes = useStyles();
 
@@ -89,135 +109,91 @@ const StaticConsultationCardDetails = (props) => {
 		<AccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<List>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<InfoIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText
-						primary={
-							isDone ? 'Motif de la consultation' : 'Motif du rendez-vous'
-						}
-						secondary={reason}
+				<ConsultationsCardListItem
+					Icon={InfoIcon}
+					primary={isDone ? 'Motif de la consultation' : 'Motif du rendez-vous'}
+					secondary={reason}
+				/>
+				{isDone && done && (
+					<ConsultationsCardListItem
+						Icon={DoneIcon}
+						primary="Examens déjà réalisés"
+						secondary={done}
 					/>
-				</ListItem>
-				{isDone && (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<DoneIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Examens déjà réalisés" secondary={done} />
-					</ListItem>
+				)}
+				{isDone && todo && (
+					<ConsultationsCardListItem
+						Icon={HourglassFullIcon}
+						primary="Examens à réaliser"
+						secondary={todo}
+					/>
 				)}
 				{isDone && (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<HourglassFullIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Examens à réaliser" secondary={todo} />
-					</ListItem>
+					<ConsultationsCardListItem
+						Icon={EditIcon}
+						primary="Traitement"
+						secondary={treatment}
+					/>
 				)}
 				{isDone && (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<EditIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Traitement" secondary={treatment} />
-					</ListItem>
+					<ConsultationsCardListItem
+						Icon={AlarmIcon}
+						primary="À revoir"
+						secondary={next}
+					/>
 				)}
-				{isDone && (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<AlarmIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="À revoir" secondary={next} />
-					</ListItem>
-				)}
-				{isDone && (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<WarningIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Autres remarques" secondary={more} />
-					</ListItem>
+				{isDone && more && (
+					<ConsultationsCardListItem
+						Icon={WarningIcon}
+						primary="Autres remarques"
+						secondary={more}
+					/>
 				)}
 				{missingPaymentData ? null : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<EuroSymbolIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="Paiement"
-							secondary={`À payé ${Currency.format(paid, {
-								code: currency
-							})} de ${Currency.format(price, {code: currency})}.`}
-						/>
-					</ListItem>
+					<ConsultationsCardListItem
+						Icon={EuroSymbolIcon}
+						primary="Paiement"
+						secondary={`À payé ${Currency.format(paid, {
+							code: currency
+						})} de ${Currency.format(price, {code: currency})}.`}
+					/>
 				)}
 				{missingPaymentData ? null : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<AccountBalanceWalletIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="Méthode de Paiement"
-							secondary={paymentMethodString(payment_method)}
-						/>
-					</ListItem>
+					<ConsultationsCardListItem
+						Icon={AccountBalanceWalletIcon}
+						primary="Méthode de Paiement"
+						secondary={paymentMethodString(payment_method)}
+					/>
 				)}
 				{book && (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<BookIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Carnet" secondary={book} />
-					</ListItem>
+					<ConsultationsCardListItem
+						Icon={BookIcon}
+						primary="Carnet"
+						secondary={book}
+					/>
 				)}
 				{attachments === undefined || attachments.length === 0 ? null : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<AttachmentIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							disableTypography
-							primary={
-								<Typography variant="subtitle1">
-									{attachments.length} attachments
-								</Typography>
-							}
-							secondary={
-								<ul>
-									{attachments.map((attachmentId) => (
-										<li key={attachmentId}>
-											<AttachmentLink
-												className={classes.link}
-												attachmentId={attachmentId}
-											/>
-										</li>
-									))}
-								</ul>
-							}
-						/>
-					</ListItem>
+					<ConsultationsCardListItem
+						disableTypography
+						Icon={AttachmentIcon}
+						primary={
+							<Typography variant="subtitle1">
+								{attachments.length} attachments
+							</Typography>
+						}
+						secondary={
+							<ul>
+								{attachments.map((attachmentId) => (
+									<li key={attachmentId}>
+										<AttachmentLink
+											className={classes.link}
+											attachmentId={attachmentId}
+										/>
+									</li>
+								))}
+							</ul>
+						}
+					/>
 				)}
 			</List>
 		</AccordionDetails>
