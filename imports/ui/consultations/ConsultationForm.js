@@ -404,6 +404,7 @@ class ConsultationForm extends React.Component {
 					className={classes.fab}
 					color="primary"
 					aria-label="save"
+					disabled={!this.state.dirty}
 					onClick={this.handleSubmit}
 				>
 					<SaveIcon />
