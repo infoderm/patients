@@ -17,7 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {normalized} from '../../api/string.js';
+import {capitalized, normalized} from '../../api/string.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -37,7 +37,7 @@ const TagDeletionDialog = (props) => {
 
 	const {open, onClose, title, method, tag} = props;
 
-	const Title = title[0].toUpperCase() + title.slice(1);
+	const Title = capitalized(title);
 
 	const deleteThisTagIfNameMatches = (event) => {
 		event.preventDefault();

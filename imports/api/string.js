@@ -13,6 +13,8 @@ const normalized = (string) => {
 	return string;
 };
 
+const capitalized = (string) => string[0].toUpperCase() + string.slice(1);
+
 const onlyASCII = (string) => {
 	string = deburr(string);
 	return string;
@@ -173,6 +175,7 @@ const parseUint32StrictOrString = (string, base) => {
 
 export {
 	normalized,
+	capitalized,
 	onlyASCII,
 	onlyLowerCaseASCII,
 	makeIndex,

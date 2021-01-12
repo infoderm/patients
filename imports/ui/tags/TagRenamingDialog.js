@@ -17,7 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {normalized} from '../../api/string.js';
+import {capitalized, normalized} from '../../api/string.js';
 import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoCompleteTextField.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +52,7 @@ const TagRenamingDialog = (props) => {
 		nameFormat
 	} = props;
 
-	const Title = title[0].toUpperCase() + title.slice(1);
+	const Title = capitalized(title);
 
 	const renameThisTagIfNameMatchesAndNewNameNotEmpty = (event) => {
 		event.preventDefault();
