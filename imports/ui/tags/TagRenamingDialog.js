@@ -46,7 +46,10 @@ const TagRenamingDialog = (props) => {
 		collection,
 		subscription,
 		method,
-		tag
+		tag,
+		nameKey,
+		nameKeyTitle,
+		nameFormat
 	} = props;
 
 	const Title = title[0].toUpperCase() + title.slice(1);
@@ -54,7 +57,7 @@ const TagRenamingDialog = (props) => {
 	const renameThisTagIfNameMatchesAndNewNameNotEmpty = (event) => {
 		event.preventDefault();
 		let error = false;
-		if (normalized(oldname) !== normalized(tag.name)) {
+		if (normalized(oldname) !== normalized(tag[nameKey].toString())) {
 			setOldnameError('Names do not match');
 			error = true;
 		} else {
@@ -63,7 +66,7 @@ const TagRenamingDialog = (props) => {
 
 		const name = newname.trim();
 		if (name.length === 0) {
-			setNewnameError('The new name is empty');
+			setNewnameError(`The new ${nameKeyTitle} is empty`);
 			error = true;
 		} else {
 			setNewnameError('');
@@ -80,7 +83,10 @@ const TagRenamingDialog = (props) => {
 					console.error(err);
 					enqueueSnackbar(err.message, {variant: 'error'});
 				} else {
-					const message = `${Title} #${tag._id} rename from ${oldname} to ${name} (using ${method}).`;
+					const message = `${Title} #${tag._id} renamed from ${nameFormat(
+						tag,
+						tag[nameKey]
+					)} to ${nameFormat(tag, name)} (using ${method}).`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
 					onRename(name);
@@ -97,7 +103,7 @@ const TagRenamingDialog = (props) => {
 			onClose={onClose}
 		>
 			<DialogTitle id={ariaId}>
-				Rename {title} {tag.name}
+				Rename {title} {nameFormat(tag, tag[nameKey])}
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
@@ -109,7 +115,7 @@ const TagRenamingDialog = (props) => {
 					autoFocus
 					fullWidth
 					margin="dense"
-					label={`${Title}'s old name`}
+					label={`${Title}'s old ${nameKeyTitle}`}
 					value={oldname}
 					helperText={oldnameError}
 					error={Boolean(oldnameError)}
@@ -118,11 +124,11 @@ const TagRenamingDialog = (props) => {
 				<MeteorSimpleAutoCompleteTextField
 					subscription={subscription}
 					collection={collection}
-					selector={{name: {$ne: tag.name}}}
-					stringify={(tag) => tag.name}
+					selector={{[nameKey]: {$ne: tag[nameKey]}}}
+					stringify={(tag) => tag[nameKey]}
 					textFieldProps={{
 						margin: 'dense',
-						label: `${Title}'s new name`,
+						label: `${Title}'s new ${nameKeyTitle}`,
 						fullWidth: true,
 						value: newname,
 						onChange: (e) => setNewname(e.target.value),
@@ -148,6 +154,12 @@ const TagRenamingDialog = (props) => {
 	);
 };
 
+TagRenamingDialog.defaultProps = {
+	nameKey: 'name',
+	nameKeyTitle: 'name',
+	nameFormat: (_tag, name) => name
+};
+
 TagRenamingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
@@ -156,7 +168,10 @@ TagRenamingDialog.propTypes = {
 	collection: PropTypes.object.isRequired,
 	subscription: PropTypes.string.isRequired,
 	method: PropTypes.string.isRequired,
-	tag: PropTypes.object.isRequired
+	tag: PropTypes.object.isRequired,
+	nameKey: PropTypes.string,
+	nameKeyTitle: PropTypes.string,
+	nameFormat: PropTypes.func
 };
 
 export default TagRenamingDialog;

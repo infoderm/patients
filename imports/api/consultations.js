@@ -11,7 +11,8 @@ import isBefore from 'date-fns/isBefore';
 import {list, map, range, product} from '@aureooms/js-itertools';
 
 import {Uploads} from './uploads.js';
-import {books} from './books.js';
+import {Books, books} from './books.js';
+import {parseUint32StrictOrString} from './string.js';
 
 import makeQuery from './makeQuery.js';
 import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
@@ -480,7 +481,6 @@ Meteor.methods({
 			$pull: {attachments: uploadId}
 		});
 	},
-
 	'consultations.remove'(consultationId) {
 		check(consultationId, String);
 		const consultation = Consultations.findOne(consultationId);
@@ -489,5 +489,47 @@ Meteor.methods({
 		}
 
 		return Consultations.remove(consultationId);
+	},
+	'books.changeBookNumber'(oldBookId, newBookNumber) {
+		check(oldBookId, String);
+		check(newBookNumber, String);
+
+		if (!this.userId) {
+			throw new Meteor.Error('not-authorized');
+		}
+
+		const book = Books.findOne({_id: oldBookId, owner: this.userId});
+		if (!book) {
+			throw new Meteor.Error('not-found');
+		}
+
+		const {name: oldName, fiscalYear} = book;
+
+		newBookNumber = newBookNumber.trim();
+		if (newBookNumber === '') {
+			throw new Meteor.Error('value-error');
+		}
+
+		newBookNumber = parseUint32StrictOrString(newBookNumber);
+
+		const newName = books.format(fiscalYear, newBookNumber);
+		const newBookId = books.add(this.userId, newName);
+
+		const query = {
+			...books.selector(oldName),
+			owner: this.userId,
+			isDone: true
+		};
+
+		Consultations.update(
+			query,
+			{
+				$set: {book: newBookNumber.toString()}
+			},
+			{multi: true}
+		);
+
+		Books.remove(oldBookId);
+		return newBookId;
 	}
 });
