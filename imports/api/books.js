@@ -6,6 +6,7 @@ import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
 import makeQuery from './makeQuery.js';
+import {parseUint32StrictOrString} from './string.js';
 
 const collection = 'books';
 const publication = 'books';
@@ -84,16 +85,8 @@ export const books = {
 	parse: (name) => {
 		const [year, book] = books.split(name);
 
-		let fiscalYear = year;
-		let bookNumber = book;
-
-		try {
-			fiscalYear = Number.parseInt(fiscalYear, 10);
-		} catch {}
-
-		try {
-			bookNumber = Number.parseInt(bookNumber, 10);
-		} catch {}
+		const fiscalYear = parseUint32StrictOrString(year);
+		const bookNumber = parseUint32StrictOrString(book);
 
 		return [fiscalYear, bookNumber];
 	},

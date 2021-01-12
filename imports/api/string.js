@@ -1,3 +1,4 @@
+import assert from 'assert';
 import deburr from 'lodash.deburr';
 import escapeStringRegexp from 'escape-string-regexp';
 
@@ -130,6 +131,46 @@ const shatter = (data) => {
 	return index;
 };
 
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+const _isPositiveIntegerStrict_regex = (base) => {
+	assert(base >= 2 && base <= 36);
+	const maxDigit = Math.min(base, 10) - 1;
+	const alphaRange = base <= 10 ? '' : `a-${alphabet[base - 10 - 1]}`;
+	const alphaRanges = alphaRange + alphaRange.toUpperCase();
+	const limb = `[0-${maxDigit}${alphaRanges}]`;
+	const nonZeroLimb = `[1-${maxDigit}${alphaRanges}]`;
+	const regex = `^${nonZeroLimb}${limb}*$`;
+	return new RegExp(regex);
+};
+
+const isZeroStrict = (string) => string === '0';
+
+const isNonNegativeIntegerStrict = (string, base) => {
+	if (base < 2 || base > 36) return false;
+	if (isZeroStrict(string)) return true;
+	const regex = _isPositiveIntegerStrict_regex(base);
+	return regex.test(string);
+};
+
+const parseNonNegativeIntegerStrict = (string, base = 10) => {
+	return isNonNegativeIntegerStrict(string, base)
+		? Number.parseInt(string, base)
+		: Number.NaN;
+};
+
+const parseNonNegativeIntegerStrictOrString = (string, base) => {
+	const parsed = parseNonNegativeIntegerStrict(string, base);
+	return Number.isNaN(parsed) ? string : parsed;
+};
+
+const parseUint32StrictOrString = (string, base) => {
+	const parsed = parseNonNegativeIntegerStrict(string, base);
+	return Number.isNaN(parsed) || (parsed >>> 0).toString() !== string
+		? string
+		: parsed;
+};
+
 export {
 	normalized,
 	onlyASCII,
@@ -137,5 +178,8 @@ export {
 	makeIndex,
 	shatter,
 	normalizeSearch,
-	escapeStringRegexp
+	escapeStringRegexp,
+	parseNonNegativeIntegerStrict,
+	parseNonNegativeIntegerStrictOrString,
+	parseUint32StrictOrString
 };
