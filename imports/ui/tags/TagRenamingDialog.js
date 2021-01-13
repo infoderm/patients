@@ -13,14 +13,22 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Avatar from '@material-ui/core/Avatar';
 
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {capitalized, normalized} from '../../api/string.js';
-import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoCompleteTextField.js';
+import SetPicker from '../input/SetPicker.js';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		overflowY: 'visible'
+	},
+	content: {
+		overflowY: 'visible'
+	},
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	}
@@ -43,8 +51,7 @@ const TagRenamingDialog = (props) => {
 		onClose,
 		onRename,
 		title,
-		collection,
-		subscription,
+		useTagsFind,
 		method,
 		tag,
 		nameKey,
@@ -66,7 +73,9 @@ const TagRenamingDialog = (props) => {
 
 		const name = newname.trim();
 		if (name.length === 0) {
-			setNewnameError(`The new ${nameKeyTitle} is empty`);
+			setNewnameError(
+				`The new ${nameKeyTitle} is empty. Did you forget to press ENTER?`
+			);
 			error = true;
 		} else {
 			setNewnameError('');
@@ -99,13 +108,14 @@ const TagRenamingDialog = (props) => {
 		<Dialog
 			open={open}
 			component="form"
+			PaperProps={{className: classes.root}}
 			aria-labelledby={ariaId}
 			onClose={onClose}
 		>
 			<DialogTitle id={ariaId}>
 				Rename {title} {nameFormat(tag, tag[nameKey])}
 			</DialogTitle>
-			<DialogContent>
+			<DialogContent className={classes.content}>
 				<DialogContentText>
 					If you do not want to rename this {title}, click cancel. If you really
 					want to rename this {title} from the system, enter the {title}&apos;s
@@ -121,20 +131,30 @@ const TagRenamingDialog = (props) => {
 					error={Boolean(oldnameError)}
 					onChange={(e) => setOldname(e.target.value)}
 				/>
-				<MeteorSimpleAutoCompleteTextField
-					subscription={subscription}
-					collection={collection}
-					selector={{[nameKey]: {$ne: tag[nameKey]}}}
-					stringify={(tag) => tag[nameKey]}
-					textFieldProps={{
-						margin: 'dense',
+				<SetPicker
+					itemToKey={(x) => x._id}
+					itemToString={(x) => x[nameKey]}
+					createNewItem={(name) => ({[nameKey]: name})}
+					useSuggestions={makeSubstringSuggestions(
+						useTagsFind,
+						[tag[nameKey]],
+						nameKey
+					)}
+					TextFieldProps={{
 						label: `${Title}'s new ${nameKeyTitle}`,
+						margin: 'normal',
 						fullWidth: true,
-						value: newname,
-						onChange: (e) => setNewname(e.target.value),
 						helperText: newnameError,
 						error: Boolean(newnameError)
 					}}
+					chipProps={{
+						avatar: <Avatar>{Title.slice(0, 2)}</Avatar>
+					}}
+					value={newname !== '' ? [{[nameKey]: newname}] : []}
+					maxCount={1}
+					onChange={({target: {value}}) =>
+						setNewname(value.length === 1 ? value[0][nameKey] : '')
+					}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -157,7 +177,8 @@ const TagRenamingDialog = (props) => {
 TagRenamingDialog.defaultProps = {
 	nameKey: 'name',
 	nameKeyTitle: 'name',
-	nameFormat: (_tag, name) => name
+	nameFormat: (_tag, name) => name,
+	useTagsFind: () => ({results: []})
 };
 
 TagRenamingDialog.propTypes = {
@@ -165,8 +186,7 @@ TagRenamingDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	onRename: PropTypes.func.isRequired,
 	title: PropTypes.string.isRequired,
-	collection: PropTypes.object.isRequired,
-	subscription: PropTypes.string.isRequired,
+	useTagsFind: PropTypes.func,
 	method: PropTypes.string.isRequired,
 	tag: PropTypes.object.isRequired,
 	nameKey: PropTypes.string,

@@ -6,9 +6,9 @@ import makeQuery from './makeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
 import observeQuery from './observeQuery.js';
 
-const STATS_SUFFIX = '.stats';
-const FIND_CACHE_SUFFIX = '.find.cache';
-const FIND_OBSERVE_SUFFIX = '.find.observe';
+export const STATS_SUFFIX = '.stats';
+export const FIND_CACHE_SUFFIX = '.find.cache';
+export const FIND_OBSERVE_SUFFIX = '.find.observe';
 
 export default function createTagCollection(options) {
 	const {

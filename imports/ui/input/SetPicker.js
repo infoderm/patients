@@ -117,7 +117,7 @@ class SetPicker extends React.Component {
 	};
 
 	UNSAFE_componentWillReceiveProps(nextProps) {
-		if (nextProps.readOnly) {
+		if (nextProps.readOnly || nextProps.value.length >= nextProps.maxCount) {
 			this.setState({inputValue: ''});
 		}
 	}
@@ -365,6 +365,7 @@ const styles = (theme) => ({
 		flexWrap: 'wrap'
 	},
 	inputInput: {
+		margin: `${theme.spacing(1) / 2}px 0`,
 		width: 'auto',
 		flexGrow: 1
 	},

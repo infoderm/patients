@@ -2,7 +2,6 @@ import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
-import {useDebounce} from 'use-debounce';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -46,12 +45,12 @@ import {empty} from '@aureooms/js-cardinality';
 import {useInsurancesFind} from '../../api/insurances.js';
 import {useDoctorsFind} from '../../api/doctors.js';
 import {useAllergiesFind} from '../../api/allergies.js';
-import {escapeStringRegexp} from '../../api/string.js';
 import {settings} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../client/eidParseBirthdate.js';
 
 import SetPicker from '../input/SetPicker.js';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 import ColorizedTextarea from '../input/ColorizedTextarea.js';
 
 import AllergyChip from '../allergies/AllergyChip.js';
@@ -59,8 +58,6 @@ import DoctorChip from '../doctors/DoctorChip.js';
 import InsuranceChip from '../insurances/InsuranceChip.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
-
-import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
@@ -143,52 +140,6 @@ const styles = (theme) => ({
 		right: theme.spacing(30)
 	}
 });
-
-const DEBOUNCE_OPTIONS = {leading: false};
-// TODO this does not work because we do not render on an empty input
-
-const makeSuggestions = (useCollectionFind, set) => (searchString) => {
-	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
-		searchString,
-		TIMEOUT_INPUT_DEBOUNCE,
-		DEBOUNCE_OPTIONS
-	);
-
-	const $regex = escapeStringRegexp(debouncedSearchString);
-	const $nin = set || [];
-	const limit = 5;
-
-	const query = {name: {$regex, $options: 'i', $nin}};
-
-	const sort = {
-		name: 1
-	};
-	const fields = {
-		...sort,
-		_id: 1,
-		name: 1
-	};
-
-	const options = {
-		fields,
-		sort,
-		skip: 0,
-		limit
-	};
-
-	const {loading, ...rest} = useCollectionFind(query, options, [
-		$regex,
-		JSON.stringify($nin)
-		// refreshKey,
-	]);
-
-	return {
-		loading: loading || pending(),
-		cancel,
-		flush,
-		...rest
-	};
-};
 
 class PatientPersonalInformation extends React.Component {
 	constructor(props) {
@@ -430,7 +381,7 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={makeSuggestions(
+										useSuggestions={makeSubstringSuggestions(
 											useAllergiesFind,
 											patient.allergies
 										)}
@@ -517,7 +468,7 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={makeSuggestions(
+										useSuggestions={makeSubstringSuggestions(
 											useDoctorsFind,
 											patient.doctors
 										)}
@@ -540,7 +491,7 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={makeSuggestions(
+										useSuggestions={makeSubstringSuggestions(
 											useInsurancesFind,
 											patient.insurances
 										)}
