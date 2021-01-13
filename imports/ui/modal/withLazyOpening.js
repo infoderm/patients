@@ -1,22 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
+
+import useOpened from './useOpened.js';
 
 const withLazyOpening = (Openable) => (props) => {
 	const {open} = props;
 
-	const [triedToOpen, setTriedToOpen] = useState(false);
-	const render = open || triedToOpen;
+	const opened = useOpened(open);
 
-	useEffect(() => {
-		if (render && !triedToOpen) {
-			setTriedToOpen(true);
-		}
-	}, [render, triedToOpen]);
-
-	if (!triedToOpen) {
-		return null;
-	}
-
-	return <Openable {...props} />;
+	return opened ? <Openable {...props} /> : null;
 };
 
 export default withLazyOpening;
