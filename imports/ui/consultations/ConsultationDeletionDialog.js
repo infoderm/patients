@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -8,7 +8,7 @@ import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -20,6 +20,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string.js';
 import {usePatient} from '../../api/patients.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -46,18 +47,6 @@ const ConsultationDeletionDialog = (props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [lastname, setLastname] = useState('');
 	const [lastnameError, setLastnameError] = useState('');
-	const [triedToOpen, setTriedToOpen] = useState(false);
-	const render = open || triedToOpen;
-
-	useEffect(() => {
-		if (render && !triedToOpen) {
-			setTriedToOpen(true);
-		}
-	}, [render, triedToOpen]);
-
-	if (!triedToOpen) {
-		return null;
-	}
 
 	const deleteThisConsultationIfPatientsLastNameMatches = (event) => {
 		event.preventDefault();
@@ -147,4 +136,4 @@ ConsultationDeletionDialog.propTypes = {
 	consultation: PropTypes.object.isRequired
 };
 
-export default ConsultationDeletionDialog;
+export default withLazyOpening(ConsultationDeletionDialog);

@@ -9,7 +9,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -20,6 +20,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {usePatient} from '../../api/patients.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function ConsultationDebtSettlementDialog(props) {
+const ConsultationDebtSettlementDialog = (props) => {
 	const {open, onClose, consultation} = props;
 
 	const {currency, price, paid} = consultation;
@@ -123,7 +124,7 @@ export default function ConsultationDebtSettlementDialog(props) {
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 
 ConsultationDebtSettlementDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
@@ -134,3 +135,5 @@ ConsultationDebtSettlementDialog.projection = {
 	firstname: 1,
 	lastname: 1
 };
+
+export default withLazyOpening(ConsultationDebtSettlementDialog);

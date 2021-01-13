@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -29,6 +29,8 @@ import AttachmentThumbnail from './AttachmentThumbnail.js';
 
 import {normalized} from '../../api/string.js';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
+
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
@@ -38,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function AttachmentDeletionDialog(props) {
+const AttachmentDeletionDialog = (props) => {
 	const {open, onClose, detach, itemId, attachment} = props;
 
 	const classes = useStyles();
@@ -146,7 +148,7 @@ export default function AttachmentDeletionDialog(props) {
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 
 AttachmentDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
@@ -155,3 +157,5 @@ AttachmentDeletionDialog.propTypes = {
 	itemId: PropTypes.string.isRequired,
 	attachment: PropTypes.object.isRequired
 };
+
+export default withLazyOpening(AttachmentDeletionDialog);

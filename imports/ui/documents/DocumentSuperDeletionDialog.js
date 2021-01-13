@@ -7,7 +7,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -16,13 +16,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
+
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	}
 }));
 
-export default function DocumentSuperDeletionDialog({open, onClose, document}) {
+const DocumentSuperDeletionDialog = ({open, onClose, document}) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -72,9 +74,11 @@ export default function DocumentSuperDeletionDialog({open, onClose, document}) {
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 
 DocumentSuperDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired
 };
+
+export default withLazyOpening(DocumentSuperDeletionDialog);

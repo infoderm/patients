@@ -8,7 +8,7 @@ import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -20,6 +20,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import StaticPatientCard from './StaticPatientCard.js';
 
 import {normalized} from '../../api/string.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function PatientDeletionDialog({open, onClose, patient}) {
+const PatientDeletionDialog = ({open, onClose, patient}) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [lastname, setLastname] = useState('');
@@ -98,10 +99,12 @@ export default function PatientDeletionDialog({open, onClose, patient}) {
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 
 PatientDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	patient: PropTypes.object.isRequired
 };
+
+export default withLazyOpening(PatientDeletionDialog);

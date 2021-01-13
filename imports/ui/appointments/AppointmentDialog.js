@@ -9,7 +9,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -28,6 +28,7 @@ import {msToString} from '../../client/duration.js';
 import {patients} from '../../api/patients.js';
 import {settings} from '../../client/settings.js';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
 import PatientPicker from '../patients/PatientPicker.js';
 
 const styles = (theme) => ({
@@ -245,22 +246,24 @@ AppointmentDialog.propTypes = {
 	initialPatient: PropTypes.object
 };
 
-export default withRouter(
-	withTracker(() => {
-		const appointmentDurationHandle = settings.subscribe(
-			'appointment-duration'
-		);
-
-		const additionalProps = {
-			appointmentDuration: [0]
-		};
-
-		if (appointmentDurationHandle.ready()) {
-			additionalProps.appointmentDuration = settings.get(
+export default withLazyOpening(
+	withRouter(
+		withTracker(() => {
+			const appointmentDurationHandle = settings.subscribe(
 				'appointment-duration'
 			);
-		}
 
-		return additionalProps;
-	})(withStyles(styles, {withTheme: true})(AppointmentDialog))
+			const additionalProps = {
+				appointmentDuration: [0]
+			};
+
+			if (appointmentDurationHandle.ready()) {
+				additionalProps.appointmentDuration = settings.get(
+					'appointment-duration'
+				);
+			}
+
+			return additionalProps;
+		})(withStyles(styles, {withTheme: true})(AppointmentDialog))
+	)
 );

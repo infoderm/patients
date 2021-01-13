@@ -9,7 +9,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -18,13 +18,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
+
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	}
 }));
 
-export default function MergePatientsConfirmationDialog(props) {
+const MergePatientsConfirmationDialog = (props) => {
 	const {
 		open,
 		onClose,
@@ -95,7 +97,7 @@ export default function MergePatientsConfirmationDialog(props) {
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 
 MergePatientsConfirmationDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
@@ -105,3 +107,5 @@ MergePatientsConfirmationDialog.propTypes = {
 	documentsToAttach: PropTypes.array.isRequired,
 	toDelete: PropTypes.array.isRequired
 };
+
+export default withLazyOpening(MergePatientsConfirmationDialog);

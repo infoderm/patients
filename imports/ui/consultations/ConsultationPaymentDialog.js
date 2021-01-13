@@ -9,7 +9,7 @@ import dateFormat from 'date-fns/format';
 import {makeStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -24,6 +24,7 @@ import {usePatient} from '../../api/patients.js';
 
 import {settings} from '../../client/settings.js';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
 import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
 
 const SIZE_CODE = 256;
@@ -169,15 +170,17 @@ ConsultationPaymentDialog.propTypes = {
 	onClose: PropTypes.func.isRequired
 };
 
-export default withTracker(() => {
-	settings.subscribe('account-holder');
-	settings.subscribe('iban');
+export default withLazyOpening(
+	withTracker(() => {
+		settings.subscribe('account-holder');
+		settings.subscribe('iban');
 
-	const accountHolder = settings.get('account-holder');
-	const iban = settings.get('iban');
+		const accountHolder = settings.get('account-holder');
+		const iban = settings.get('iban');
 
-	return {
-		accountHolder,
-		iban
-	};
-})(ConsultationPaymentDialog);
+		return {
+			accountHolder,
+			iban
+		};
+	})(ConsultationPaymentDialog)
+);

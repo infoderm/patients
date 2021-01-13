@@ -8,7 +8,7 @@ import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -18,6 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {capitalized, normalized} from '../../api/string.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -113,4 +114,4 @@ TagDeletionDialog.propTypes = {
 	tag: PropTypes.object.isRequired
 };
 
-export default TagDeletionDialog;
+export default withLazyOpening(TagDeletionDialog);

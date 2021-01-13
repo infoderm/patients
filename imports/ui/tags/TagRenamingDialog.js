@@ -8,7 +8,7 @@ import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -21,6 +21,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import {capitalized, normalized} from '../../api/string.js';
 import SetPicker from '../input/SetPicker.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -194,4 +195,4 @@ TagRenamingDialog.propTypes = {
 	nameFormat: PropTypes.func
 };
 
-export default TagRenamingDialog;
+export default withLazyOpening(TagRenamingDialog);
