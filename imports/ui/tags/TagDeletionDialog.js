@@ -7,7 +7,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -19,6 +18,10 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import {capitalized, normalized} from '../../api/string.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+
+import ConfirmationTextField, {
+	useConfirmationTextFieldState
+} from '../input/ConfirmationTextField.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -32,18 +35,23 @@ let nextAriaId = 0;
 const TagDeletionDialog = (props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [name, setName] = useState('');
-	const [nameError, setNameError] = useState('');
 	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
 
 	const {open, onClose, title, method, tag} = props;
+
+	const getError = (expected, value) =>
+		normalized(expected) === normalized(value) ? '' : 'Names do not match';
+
+	const {
+		validate,
+		props: ConfirmationTextFieldProps
+	} = useConfirmationTextFieldState(tag.name, getError);
 
 	const Title = capitalized(title);
 
 	const deleteThisTagIfNameMatches = (event) => {
 		event.preventDefault();
-		if (normalized(name) === normalized(tag.name)) {
-			setNameError('');
+		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
 				persist: 'true'
@@ -60,8 +68,6 @@ const TagDeletionDialog = (props) => {
 					onClose();
 				}
 			});
-		} else {
-			setNameError('Names do not match');
 		}
 	};
 
@@ -81,15 +87,12 @@ const TagDeletionDialog = (props) => {
 					want to delete this {title} from the system, enter the {title}&apos;s
 					name below and click the delete button.
 				</DialogContentText>
-				<TextField
+				<ConfirmationTextField
 					autoFocus
 					fullWidth
 					margin="dense"
 					label={`${Title}'s name`}
-					value={name}
-					helperText={nameError}
-					error={Boolean(nameError)}
-					onChange={(e) => setName(e.target.value)}
+					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -97,7 +100,11 @@ const TagDeletionDialog = (props) => {
 					Cancel
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="secondary" onClick={deleteThisTagIfNameMatches}>
+				<Button
+					disabled={ConfirmationTextFieldProps.error}
+					color="secondary"
+					onClick={deleteThisTagIfNameMatches}
+				>
 					Delete
 					<DeleteIcon className={classes.rightIcon} />
 				</Button>

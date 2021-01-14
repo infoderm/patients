@@ -1,13 +1,12 @@
 import {Meteor} from 'meteor/meteor';
 
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -22,6 +21,10 @@ import StaticPatientCard from './StaticPatientCard.js';
 import {normalized} from '../../api/string.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 
+import ConfirmationTextField, {
+	useConfirmationTextFieldState
+} from '../input/ConfirmationTextField.js';
+
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
@@ -31,13 +34,17 @@ const useStyles = makeStyles((theme) => ({
 const PatientDeletionDialog = ({open, onClose, patient}) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [lastname, setLastname] = useState('');
-	const [lastnameError, setLastnameError] = useState('');
+	const getError = (expected, value) =>
+		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
+
+	const {
+		validate,
+		props: ConfirmationTextFieldProps
+	} = useConfirmationTextFieldState(patient.lastname || '', getError);
 
 	const deleteThisPatientIfLastNameMatches = (event) => {
 		event.preventDefault();
-		if (normalized(lastname) === normalized(patient.lastname || '')) {
-			setLastnameError('');
+		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
 				persist: true
@@ -54,8 +61,6 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 					onClose();
 				}
 			});
-		} else {
-			setLastnameError('Last names do not match');
 		}
 	};
 
@@ -76,15 +81,12 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 					and click the delete button.
 				</DialogContentText>
 				<StaticPatientCard patient={patient} />
-				<TextField
+				<ConfirmationTextField
 					autoFocus
 					fullWidth
 					margin="dense"
 					label="Patient's last name"
-					value={lastname}
-					helperText={lastnameError}
-					error={Boolean(lastnameError)}
-					onChange={(e) => setLastname(e.target.value)}
+					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -92,7 +94,11 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 					Cancel
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="secondary" onClick={deleteThisPatientIfLastNameMatches}>
+				<Button
+					disabled={ConfirmationTextFieldProps.error}
+					color="secondary"
+					onClick={deleteThisPatientIfLastNameMatches}
+				>
 					Delete
 					<DeleteIcon className={classes.rightIcon} />
 				</Button>
