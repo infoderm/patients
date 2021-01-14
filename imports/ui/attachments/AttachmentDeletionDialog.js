@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -12,22 +12,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-
 import Button from '@material-ui/core/Button';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import AttachmentThumbnail from './AttachmentThumbnail.js';
 
 import {normalized} from '../../api/string.js';
+
+import ConfirmationTextField, {
+	useConfirmationTextFieldState
+} from '../input/ConfirmationTextField.js';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
 
@@ -45,8 +41,16 @@ const AttachmentDeletionDialog = (props) => {
 
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [filename, setFilename] = useState('');
-	const [filenameError, setFilenameError] = useState('');
+
+	const getError = (expected, value) =>
+		normalized(expected) === normalized(value)
+			? ''
+			: 'Attachment names do not match';
+
+	const {
+		validate,
+		props: ConfirmationTextFieldProps
+	} = useConfirmationTextFieldState(attachment.name, getError);
 
 	const trashAttachment = (attachment) => {
 		Meteor.call('uploads.remove', attachment._id, (err) => {
@@ -62,8 +66,7 @@ const AttachmentDeletionDialog = (props) => {
 
 	const deleteThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
-		if (normalized(filename) === normalized(attachment.name)) {
-			setFilenameError('');
+		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
 			Meteor.call(detach, itemId, attachment._id, (err, _res) => {
 				closeSnackbar(key);
@@ -78,8 +81,6 @@ const AttachmentDeletionDialog = (props) => {
 					trashAttachment(attachment);
 				}
 			});
-		} else {
-			setFilenameError('Attachment names do not match');
 		}
 	};
 
@@ -104,34 +105,13 @@ const AttachmentDeletionDialog = (props) => {
 					height="600"
 					attachmentId={attachment._id}
 				/>
-				<FormControl fullWidth margin="dense">
-					<InputLabel error={Boolean(filenameError)}>
-						Attachment&apos;s filename
-					</InputLabel>
-					<Input
-						autoFocus
-						value={filename}
-						error={Boolean(filenameError)}
-						endAdornment={
-							<InputAdornment position="end">
-								<IconButton
-									aria-label="autofill filename check"
-									onClick={() => {
-										setFilename(attachment.name);
-										setFilenameError('');
-									}}
-									onMouseDown={(e) => e.preventDefault()}
-								>
-									<AssignmentIcon />
-								</IconButton>
-							</InputAdornment>
-						}
-						onChange={(e) => setFilename(e.target.value)}
-					/>
-					<FormHelperText error={Boolean(filenameError)}>
-						{filenameError}
-					</FormHelperText>
-				</FormControl>
+				<ConfirmationTextField
+					fullWidth
+					autoFocus
+					margin="dense"
+					label="Attachment's filename"
+					{...ConfirmationTextFieldProps}
+				/>
 			</DialogContent>
 			<DialogActions>
 				<Button type="submit" color="default" onClick={onClose}>
@@ -140,6 +120,7 @@ const AttachmentDeletionDialog = (props) => {
 				</Button>
 				<Button
 					color="secondary"
+					disabled={ConfirmationTextFieldProps.error}
 					onClick={deleteThisAttachmentIfAttachmentNameMatches}
 				>
 					Delete
