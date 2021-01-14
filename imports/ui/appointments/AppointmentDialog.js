@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 
 import {withStyles} from '@material-ui/core/styles';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -113,7 +115,7 @@ class AppointmentDialog extends React.Component {
 	};
 
 	render() {
-		const {classes, open, onClose, appointmentDuration} = this.props;
+		const {classes, open, onClose, loading, appointmentDuration} = this.props;
 
 		return (
 			<Dialog
@@ -123,6 +125,7 @@ class AppointmentDialog extends React.Component {
 				aria-labelledby="new-appointment-dialog-title"
 				onClose={onClose}
 			>
+				{loading && <LinearProgress />}
 				<DialogTitle id="new-appointment-dialog-title">
 					Schedule an appointment
 				</DialogTitle>
@@ -154,6 +157,7 @@ class AppointmentDialog extends React.Component {
 							<FormControl>
 								<InputLabel htmlFor="duration">Duration</InputLabel>
 								<Select
+									readOnly={loading}
 									value={this.state.duration}
 									inputProps={{
 										name: 'duration',
@@ -241,6 +245,7 @@ AppointmentDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
+	loading: PropTypes.bool.isRequired,
 	appointmentDuration: PropTypes.array.isRequired,
 	initialDatetime: PropTypes.instanceOf(Date).isRequired,
 	initialPatient: PropTypes.object
@@ -252,18 +257,10 @@ export default withLazyOpening(
 			const appointmentDurationHandle = settings.subscribe(
 				'appointment-duration'
 			);
-
-			const additionalProps = {
-				appointmentDuration: [0]
+			return {
+				loading: !appointmentDurationHandle.ready(),
+				appointmentDuration: settings.get('appointment-duration')
 			};
-
-			if (appointmentDurationHandle.ready()) {
-				additionalProps.appointmentDuration = settings.get(
-					'appointment-duration'
-				);
-			}
-
-			return additionalProps;
 		})(withStyles(styles, {withTheme: true})(AppointmentDialog))
 	)
 );
