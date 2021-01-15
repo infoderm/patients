@@ -85,6 +85,18 @@ Meteor.startup(() => {
 			Patients.rawCollection().save(patient);
 		});
 
+	// Regenerate patient.normalizedName
+	Patients.rawCollection()
+		.find()
+		.snapshot()
+		.forEach((patient) => {
+			patient.normalizedName = patients.normalizedName(
+				patient.firstname,
+				patient.lastname
+			);
+			Patients.rawCollection().save(patient);
+		});
+
 	// Add .isDone field to consultations
 	Consultations.rawCollection()
 		.find()
@@ -132,6 +144,7 @@ Meteor.startup(() => {
 
 	createSimpleIndex(Patients, 'niss');
 	createSimpleIndex(Patients, 'lastname');
+	createSimpleIndex(Patients, 'normalizedName');
 	createSimpleIndex(Patients, 'doctors');
 	createSimpleIndex(Patients, 'insurances');
 	createSimpleIndex(Patients, 'allergies');

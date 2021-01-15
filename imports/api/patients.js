@@ -12,7 +12,8 @@ import {insurances} from './insurances.js';
 import {doctors} from './doctors.js';
 import {allergies} from './allergies.js';
 
-import {makeIndex, shatter} from './string.js';
+import {makeIndex, shatter, normalized, normalizeSearch} from './string.js';
+
 import observeQuery from './observeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
 import makeCachedFindOne from './makeCachedFindOne.js';
@@ -52,6 +53,12 @@ if (Meteor.isServer) {
 		indexCachePublication,
 		observeQuery(PatientsSearchIndex, indexCacheCollection)
 	);
+}
+
+function normalizedName(firstname, lastname) {
+	const lastnameHash = normalizeSearch(lastname || '').replace(' ', '-');
+	const firstnameHash = normalized(firstname || '').split(' ')[0];
+	return `${lastnameHash} ${firstnameHash}`;
 }
 
 function updateIndex(userId, _id, fields) {
@@ -183,6 +190,7 @@ function sanitize({
 		birthdate,
 		sex,
 		photo,
+		normalizedName: normalizedName(firstname, lastname),
 
 		antecedents,
 		ongoing,
@@ -561,6 +569,7 @@ export const patients = {
 	insertPatient,
 	toString: patientToString,
 	toKey: patientToKey,
+	normalizedName,
 	merge: mergePatients,
 	filter: patientFilter,
 	create: createPatient

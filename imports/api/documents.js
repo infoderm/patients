@@ -10,9 +10,7 @@ import {zip} from '@aureooms/js-itertools';
 import parseHealthOne from 'healthone/lib/parse';
 import chardet from 'chardet';
 
-import {normalized} from './string.js';
-
-import {Patients} from './patients.js';
+import {Patients, patients} from './patients.js';
 
 export const Documents = new Mongo.Collection('documents');
 
@@ -188,8 +186,18 @@ function sanitize({patientId, format, array}) {
 	];
 }
 
-function normalizedName(firstname, lastname) {
-	return normalized(`${lastname.replace(' ', '-')} ${firstname}`).split(' ');
+function* findBestPatientMatch_queries(entry) {
+	if (entry.patient) {
+		const {nn, firstname, lastname} = entry.patient;
+
+		if (nn) yield {niss: nn};
+
+		if (firstname && lastname) {
+			yield {normalizedName: patients.normalizedName(firstname, lastname)};
+			// In case names have been swapped
+			yield {normalizedName: patients.normalizedName(lastname, firstname)};
+		}
+	}
 }
 
 function findBestPatientMatch(owner, entry) {
@@ -197,42 +205,32 @@ function findBestPatientMatch(owner, entry) {
 		return entry.patientId;
 	}
 
-	if (!entry.patient) {
-		return undefined;
-	}
+	const firstTwo = {limit: 2};
 
-	const matches = [];
+	const queries = findBestPatientMatch_queries(entry);
 
-	const {nn, firstname, lastname} = entry.patient;
-
-	if (nn) {
-		const patient = Patients.findOne({owner, niss: nn});
-		if (patient) {
-			return patient._id;
+	for (const query of queries) {
+		const matches = Patients.find({...query, owner}, firstTwo).fetch();
+		switch (matches.length) {
+			case 0:
+				// If no patient matches
+				continue;
+			case 1:
+				// If exactly 1 patient matches
+				return matches[0]._id;
+			default:
+				// If more than 1 patient matches
+				return undefined;
 		}
 	}
 
-	if (firstname && lastname) {
-		const [hash1, hash2] = normalizedName(firstname, lastname);
+	return undefined;
+}
 
-		const patients = Patients.find({owner}).fetch();
-
-		for (const candidate of patients) {
-			const [cHash1, cHash2] = normalizedName(
-				candidate.firstname,
-				candidate.lastname
-			);
-			if (hash1 === cHash1 && hash2 === cHash2) {
-				matches.push(candidate._id);
-			}
-		}
-	}
-
-	if (matches.length === 1) {
-		return matches[0];
-	}
-
-	// If 0 or more than 1 matches
+function findBestPatientMatchServerOnly(owner, entry) {
+	// This query depends on the entire database being available.
+	// Therefore, it cannot be simulated efficiently on the client.
+	if (Meteor.isServer) return findBestPatientMatch(owner, entry);
 	return undefined;
 }
 
@@ -296,7 +294,7 @@ Meteor.methods({
 		for (const entry of entries) {
 			// Find best patient match for this document
 
-			const patientId = findBestPatientMatch(this.userId, entry);
+			const patientId = findBestPatientMatchServerOnly(this.userId, entry);
 
 			// Find document with matching source
 
