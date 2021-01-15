@@ -28,6 +28,79 @@ export const useConsultationsAndAppointments = makeQuery(
 	'consultationsAndAppointments'
 );
 
+function setupConsultationsStatsPublication(collection, query, options, init) {
+	// Generate unique key depending on parameters
+	const key = JSON.stringify({query, options, init});
+
+	const minHeap = new PairingHeap(increasing);
+	const maxHeap = new PairingHeap(decreasing);
+	const refs = new Map();
+	let count = 0;
+	let total = 0;
+
+	const state = () => ({
+		...init,
+		count,
+		total,
+		first: minHeap.head(),
+		last: maxHeap.head()
+	});
+
+	// `observeChanges` only returns after the initial `added` callbacks have run.
+	// Until then, we don't want to send a lot of `changed` messages—hence
+	// tracking the `initializing` state.
+	let initializing = true;
+	const handle = Consultations.find(query, options).observeChanges({
+		added: (_id, {price, datetime}) => {
+			count += 1;
+			if (price) total += price;
+			const minRef = minHeap.push(datetime);
+			const maxRef = maxHeap.push(datetime);
+			refs.set(_id, [price, minRef, maxRef]);
+
+			if (!initializing) {
+				this.changed(collection, key, state());
+			}
+		},
+
+		changed: (_id, fields) => {
+			const [oldPrice, minRef, maxRef] = refs.get(_id);
+			let newPrice = oldPrice;
+			if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
+				newPrice = fields.price;
+				if (oldPrice) total -= oldPrice;
+				if (newPrice) total += newPrice;
+				refs.set(_id, [newPrice, minRef, maxRef]);
+			}
+
+			if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
+				const datetime = fields.datetime;
+				minHeap.update(minRef, datetime);
+				maxHeap.update(maxRef, datetime);
+			}
+
+			this.changed(collection, key, state());
+		},
+
+		removed: (_id) => {
+			count -= 1;
+			const [price, minRef, maxRef] = refs.get(_id);
+			if (price) total -= price;
+			minHeap.delete(minRef);
+			maxHeap.delete(maxRef);
+			refs.delete(_id);
+			this.changed(collection, key, state());
+		}
+	});
+
+	// Instead, we'll send one `added` message right after `observeChanges` has
+	// returned, and mark the subscription as ready.
+	initializing = false;
+	this.added(collection, key, state());
+
+	return handle;
+}
+
 if (Meteor.isServer) {
 	Meteor.publish('consultation', function (_id, options) {
 		check(_id, String);
@@ -165,7 +238,7 @@ if (Meteor.isServer) {
 	Meteor.publish(books.options.parentPublicationStats, function (name) {
 		check(name, String);
 
-		const key = JSON.stringify({name, owner: this.userId});
+		const collection = books.options.stats;
 		const query = {
 			...books.selector(name),
 			owner: this.userId,
@@ -174,71 +247,13 @@ if (Meteor.isServer) {
 		const options = {fields: {_id: 1, price: 1, datetime: 1}};
 		for (const field of Object.keys(query)) options.fields[field] = 1;
 
-		const minHeap = new PairingHeap(increasing);
-		const maxHeap = new PairingHeap(decreasing);
-		const refs = new Map();
-		let count = 0;
-		let total = 0;
-		let initializing = true;
-
-		const state = () => ({
-			name,
-			count,
-			total,
-			first: minHeap.head(),
-			last: maxHeap.head()
-		});
-
-		// `observeChanges` only returns after the initial `added` callbacks have run.
-		// Until then, we don't want to send a lot of `changed` messages—hence
-		// tracking the `initializing` state.
-		const handle = Consultations.find(query, options).observeChanges({
-			added: (_id, {price, datetime}) => {
-				count += 1;
-				if (price) total += price;
-				const minRef = minHeap.push(datetime);
-				const maxRef = maxHeap.push(datetime);
-				refs.set(_id, [price, minRef, maxRef]);
-
-				if (!initializing) {
-					this.changed(books.options.stats, key, state());
-				}
-			},
-
-			changed: (_id, fields) => {
-				const [oldPrice, minRef, maxRef] = refs.get(_id);
-				let newPrice = oldPrice;
-				if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
-					newPrice = fields.price;
-					if (oldPrice) total -= oldPrice;
-					if (newPrice) total += newPrice;
-					refs.set(_id, [newPrice, minRef, maxRef]);
-				}
-
-				if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
-					const datetime = fields.datetime;
-					minHeap.update(minRef, datetime);
-					maxHeap.update(maxRef, datetime);
-				}
-
-				this.changed(books.options.stats, key, state());
-			},
-
-			removed: (_id) => {
-				count -= 1;
-				const [price, minRef, maxRef] = refs.get(_id);
-				if (price) total -= price;
-				minHeap.delete(minRef);
-				maxHeap.delete(maxRef);
-				refs.delete(_id);
-				this.changed(books.options.stats, key, state());
-			}
-		});
-
-		// Instead, we'll send one `added` message right after `observeChanges` has
-		// returned, and mark the subscription as ready.
-		initializing = false;
-		this.added(books.options.stats, key, state());
+		const handle = setupConsultationsStatsPublication.call(
+			this,
+			collection,
+			query,
+			options,
+			{name}
+		);
 		this.ready();
 
 		// Stop observing the cursor when the client unsubscribes. Stopping a
