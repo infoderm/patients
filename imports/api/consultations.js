@@ -572,7 +572,6 @@ Meteor.methods({
 });
 
 export const consultations = {
-	methods,
 	sanitize,
 	stats: {
 		collection: stats,
