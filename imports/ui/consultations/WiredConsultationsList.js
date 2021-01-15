@@ -5,7 +5,9 @@ import dateFormat from 'date-fns/format';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 import ConsultationsPager from './ConsultationsPager.js';
+import ConsultationsStatsCard from './ConsultationsStatsCard.js';
 
+import Center from '../grid/Center.js';
 import YearJumper from '../navigation/YearJumper.js';
 
 export default function WiredConsultationsList({match, year, page, perpage}) {
@@ -31,9 +33,32 @@ export default function WiredConsultationsList({match, year, page, perpage}) {
 
 	const sort = {datetime: -1};
 
+	const url = `/wires/${year}`;
+	const title = year;
+	const abbr = year.slice(-2);
+	const avatar = 'Wi';
+
 	return (
 		<div>
 			<YearJumper current={current} toURL={(x) => `/wires/${x}`} />
+			<div
+				style={{
+					paddingLeft: 30,
+					paddingRight: 30,
+					paddingBottom: 50,
+					paddingTop: 20
+				}}
+			>
+				<Center>
+					<ConsultationsStatsCard
+						query={query}
+						title={title}
+						url={url}
+						abbr={abbr}
+						avatar={avatar}
+					/>
+				</Center>
+			</div>
 			<ConsultationsPager
 				root={`/wires/${year}`}
 				url={match.url}

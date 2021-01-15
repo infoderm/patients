@@ -17,7 +17,12 @@ import {parseUint32StrictOrString} from './string.js';
 import makeQuery from './makeQuery.js';
 import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
 
-export const Consultations = new Mongo.Collection('consultations');
+const collection = 'consultations';
+const stats = collection + '.stats';
+const statsPublication = stats;
+
+export const Consultations = new Mongo.Collection(collection);
+const Stats = new Mongo.Collection(stats);
 
 export const useConsultation = makeCachedFindOne(Consultations, 'consultation');
 
@@ -28,9 +33,17 @@ export const useConsultationsAndAppointments = makeQuery(
 	'consultationsAndAppointments'
 );
 
-function setupConsultationsStatsPublication(collection, query, options, init) {
+const statsKey = (query, init) => JSON.stringify({query, init});
+
+function setupConsultationsStatsPublication(collection, query, init) {
 	// Generate unique key depending on parameters
-	const key = JSON.stringify({query, options, init});
+	const key = statsKey(query, init);
+	const selector = {
+		...query,
+		isDone: true,
+		owner: this.userId
+	};
+	const options = {fields: {_id: 1, price: 1, datetime: 1}};
 
 	const minHeap = new PairingHeap(increasing);
 	const maxHeap = new PairingHeap(decreasing);
@@ -50,7 +63,7 @@ function setupConsultationsStatsPublication(collection, query, options, init) {
 	// Until then, we don't want to send a lot of `changed` messages—hence
 	// tracking the `initializing` state.
 	let initializing = true;
-	const handle = Consultations.find(query, options).observeChanges({
+	const handle = Consultations.find(selector, options).observeChanges({
 		added: (_id, {price, datetime}) => {
 			count += 1;
 			if (price) total += price;
@@ -239,20 +252,29 @@ if (Meteor.isServer) {
 		check(name, String);
 
 		const collection = books.options.stats;
-		const query = {
-			...books.selector(name),
-			owner: this.userId,
-			isDone: true
-		};
-		const options = {fields: {_id: 1, price: 1, datetime: 1}};
-		for (const field of Object.keys(query)) options.fields[field] = 1;
+		const query = books.selector(name);
 
 		const handle = setupConsultationsStatsPublication.call(
 			this,
 			collection,
 			query,
-			options,
 			{name}
+		);
+		this.ready();
+
+		// Stop observing the cursor when the client unsubscribes. Stopping a
+		// subscription automatically takes care of sending the client any `removed`
+		// messages.
+		this.onStop(() => handle.stop());
+	});
+
+	Meteor.publish(statsPublication, function (query) {
+		const collection = stats;
+
+		const handle = setupConsultationsStatsPublication.call(
+			this,
+			collection,
+			query
 		);
 		this.ready();
 
@@ -548,3 +570,14 @@ Meteor.methods({
 		return newBookId;
 	}
 });
+
+export const consultations = {
+	methods,
+	sanitize,
+	stats: {
+		collection: stats,
+		publication: statsPublication,
+		Collection: Stats,
+		key: statsKey
+	}
+};

@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 
 import {withStyles} from '@material-ui/core/styles';
 
-import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -109,54 +108,52 @@ class TagCard extends React.Component {
 		const {deleting, renaming} = this.state;
 
 		return (
-			<Grid item sm={12} md={12} lg={6} xl={4}>
-				<Card className={classes.card}>
-					<div className={classes.details}>
-						<CardHeader
-							className={classes.header}
-							avatar={avatar}
-							title={tag.name}
-							subheader={subheader(stats, items)}
-							component={Link}
-							to={url(tag.name)}
-						/>
-						<CardContent className={classes.content}>
-							{content(stats, items)}
-						</CardContent>
-						<CardActions disableSpacing className={classes.actions}>
-							{RenamingDialog && (
-								<Button color="primary" onClick={this.openRenamingDialog}>
-									Rename
-									<EditIcon />
-								</Button>
-							)}
-							{DeletionDialog && (
-								<Button color="secondary" onClick={this.openDeletionDialog}>
-									Delete
-									<DeleteIcon />
-								</Button>
-							)}
-							{RenamingDialog && (
-								<RenamingDialog
-									open={renaming}
-									tag={tag}
-									onClose={this.closeRenamingDialog}
-									onRename={this.onRename}
-								/>
-							)}
-							{DeletionDialog && (
-								<DeletionDialog
-									open={deleting}
-									tag={tag}
-									onClose={this.closeDeletionDialog}
-								/>
-							)}
-							{actions(stats, items)}
-						</CardActions>
-					</div>
-					<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
-				</Card>
-			</Grid>
+			<Card className={classes.card}>
+				<div className={classes.details}>
+					<CardHeader
+						className={classes.header}
+						avatar={avatar}
+						title={tag.name}
+						subheader={subheader(stats, items)}
+						component={Link}
+						to={url(tag.name)}
+					/>
+					<CardContent className={classes.content}>
+						{content(stats, items)}
+					</CardContent>
+					<CardActions disableSpacing className={classes.actions}>
+						{RenamingDialog && (
+							<Button color="primary" onClick={this.openRenamingDialog}>
+								Rename
+								<EditIcon />
+							</Button>
+						)}
+						{DeletionDialog && (
+							<Button color="secondary" onClick={this.openDeletionDialog}>
+								Delete
+								<DeleteIcon />
+							</Button>
+						)}
+						{RenamingDialog && (
+							<RenamingDialog
+								open={renaming}
+								tag={tag}
+								onClose={this.closeRenamingDialog}
+								onRename={this.onRename}
+							/>
+						)}
+						{DeletionDialog && (
+							<DeletionDialog
+								open={deleting}
+								tag={tag}
+								onClose={this.closeDeletionDialog}
+							/>
+						)}
+						{actions(stats, items)}
+					</CardActions>
+				</div>
+				<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
+			</Card>
 		);
 	}
 }
@@ -225,7 +222,7 @@ ReactiveTagCard.defaultProps = {
 	}
 };
 
-ReactiveTagCard.PropTypes = {
+ReactiveTagCard.propTypes = {
 	subscription: PropTypes.string,
 	statsSubscription: PropTypes.string.isRequired,
 	collection: PropTypes.object,

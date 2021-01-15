@@ -5,7 +5,9 @@ import dateFormat from 'date-fns/format';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 import ConsultationsPager from './ConsultationsPager.js';
+import ConsultationsStatsCard from './ConsultationsStatsCard.js';
 
+import Center from '../grid/Center.js';
 import YearJumper from '../navigation/YearJumper.js';
 
 export default function ThirdPartyConsultationsList({
@@ -36,9 +38,32 @@ export default function ThirdPartyConsultationsList({
 
 	const sort = {datetime: -1};
 
+	const url = `/third-party/${year}`;
+	const title = year;
+	const abbr = year.slice(-2);
+	const avatar = 'Th';
+
 	return (
 		<div>
 			<YearJumper current={current} toURL={(x) => `/third-party/${x}`} />
+			<div
+				style={{
+					paddingLeft: 30,
+					paddingRight: 30,
+					paddingBottom: 50,
+					paddingTop: 20
+				}}
+			>
+				<Center>
+					<ConsultationsStatsCard
+						query={query}
+						title={title}
+						url={url}
+						abbr={abbr}
+						avatar={avatar}
+					/>
+				</Center>
+			</div>
 			<ConsultationsPager
 				root={`/third-party/${year}`}
 				url={match.url}
