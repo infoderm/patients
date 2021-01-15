@@ -7,7 +7,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -19,6 +18,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {capitalized, normalized} from '../../api/string.js';
+
+import ConfirmationTextField, {
+	useConfirmationTextFieldState
+} from '../input/ConfirmationTextField.js';
 import SetPicker from '../input/SetPicker.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
@@ -41,8 +44,6 @@ let nextAriaId = 0;
 const TagRenamingDialog = (props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [oldname, setOldname] = useState('');
-	const [oldnameError, setOldnameError] = useState('');
 	const [newname, setNewname] = useState('');
 	const [newnameError, setNewnameError] = useState('');
 	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
@@ -60,18 +61,18 @@ const TagRenamingDialog = (props) => {
 		nameFormat
 	} = props;
 
+	const getError = (expected, value) =>
+		normalized(expected) === normalized(value) ? '' : 'Names do not match';
+	const {
+		validate: validateOldName,
+		props: ConfirmationTextFieldProps
+	} = useConfirmationTextFieldState(tag[nameKey].toString(), getError);
+
 	const Title = capitalized(title);
 
 	const renameThisTagIfNameMatchesAndNewNameNotEmpty = (event) => {
 		event.preventDefault();
-		let error = false;
-		if (normalized(oldname) !== normalized(tag[nameKey].toString())) {
-			setOldnameError('Names do not match');
-			error = true;
-		} else {
-			setOldnameError('');
-		}
-
+		let error = !validateOldName();
 		const name = newname.trim();
 		if (name.length === 0) {
 			setNewnameError(
@@ -122,15 +123,12 @@ const TagRenamingDialog = (props) => {
 					want to rename this {title} from the system, enter the {title}&apos;s
 					old name and new name below and click the rename button.
 				</DialogContentText>
-				<TextField
+				<ConfirmationTextField
 					autoFocus
 					fullWidth
 					margin="dense"
 					label={`${Title}'s old ${nameKeyTitle}`}
-					value={oldname}
-					helperText={oldnameError}
-					error={Boolean(oldnameError)}
-					onChange={(e) => setOldname(e.target.value)}
+					{...ConfirmationTextFieldProps}
 				/>
 				<SetPicker
 					itemToKey={(x) => x._id}
