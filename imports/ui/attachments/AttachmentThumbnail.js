@@ -38,7 +38,14 @@ class AttachmentThumbnail extends React.Component {
 			thumbnail(fileurl, {
 				width: desiredWidth,
 				height: desiredHeight
-			}).then((dataUrl) => this.setState({src: dataUrl}));
+			})
+				.then((dataUrl) => this.setState({src: dataUrl}))
+				.catch((error) =>
+					console.error(
+						`Failed to generate PDF thumbmail URL for upload '${attachment.name}' (#${attachment._id})`,
+						{attachment, error}
+					)
+				);
 		}
 	}
 
