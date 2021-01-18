@@ -11,21 +11,121 @@ import isBefore from 'date-fns/isBefore';
 import {list, map, range, product} from '@aureooms/js-itertools';
 
 import {Uploads} from './uploads.js';
-import {books} from './books.js';
+import {Books, books} from './books.js';
+import {parseUint32StrictOrString} from './string.js';
 
 import makeQuery from './makeQuery.js';
+import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
+import unconditionallyRemoveById from './unconditionallyRemoveById.js';
+import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 
-export const Consultations = new Mongo.Collection('consultations');
+const collection = 'consultations';
+const stats = collection + '.stats';
+const statsPublication = stats;
+
+export const Consultations = new Mongo.Collection(collection);
+const Stats = new Mongo.Collection(stats);
+
+export const useConsultation = makeCachedFindOne(Consultations, 'consultation');
 
 export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 
+export const useConsultationsAndAppointments = makeQuery(
+	Consultations,
+	'consultationsAndAppointments'
+);
+
+const statsKey = (query, init) => JSON.stringify({query, init});
+
+function setupConsultationsStatsPublication(collection, query, init) {
+	// Generate unique key depending on parameters
+	const key = statsKey(query, init);
+	const selector = {
+		...query,
+		isDone: true,
+		owner: this.userId
+	};
+	const options = {fields: {_id: 1, price: 1, datetime: 1}};
+
+	const minHeap = new PairingHeap(increasing);
+	const maxHeap = new PairingHeap(decreasing);
+	const refs = new Map();
+	let count = 0;
+	let total = 0;
+
+	const state = () => ({
+		...init,
+		count,
+		total,
+		first: minHeap.head(),
+		last: maxHeap.head()
+	});
+
+	// `observeChanges` only returns after the initial `added` callbacks have run.
+	// Until then, we don't want to send a lot of `changed` messages—hence
+	// tracking the `initializing` state.
+	let initializing = true;
+	const handle = Consultations.find(selector, options).observeChanges({
+		added: (_id, {price, datetime}) => {
+			count += 1;
+			if (price) total += price;
+			const minRef = minHeap.push(datetime);
+			const maxRef = maxHeap.push(datetime);
+			refs.set(_id, [price, minRef, maxRef]);
+
+			if (!initializing) {
+				this.changed(collection, key, state());
+			}
+		},
+
+		changed: (_id, fields) => {
+			const [oldPrice, minRef, maxRef] = refs.get(_id);
+			let newPrice = oldPrice;
+			if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
+				newPrice = fields.price;
+				if (oldPrice) total -= oldPrice;
+				if (newPrice) total += newPrice;
+				refs.set(_id, [newPrice, minRef, maxRef]);
+			}
+
+			if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
+				const datetime = fields.datetime;
+				minHeap.update(minRef, datetime);
+				maxHeap.update(maxRef, datetime);
+			}
+
+			this.changed(collection, key, state());
+		},
+
+		removed: (_id) => {
+			count -= 1;
+			const [price, minRef, maxRef] = refs.get(_id);
+			if (price) total -= price;
+			minHeap.delete(minRef);
+			maxHeap.delete(maxRef);
+			refs.delete(_id);
+			this.changed(collection, key, state());
+		}
+	});
+
+	// Instead, we'll send one `added` message right after `observeChanges` has
+	// returned, and mark the subscription as ready.
+	initializing = false;
+	this.added(collection, key, state());
+
+	return handle;
+}
+
 if (Meteor.isServer) {
-	Meteor.publish('consultation', function (_id) {
+	Meteor.publish('consultation', function (_id, options) {
 		check(_id, String);
-		return Consultations.find({
-			owner: this.userId,
-			_id
-		});
+		return Consultations.find(
+			{
+				owner: this.userId,
+				_id
+			},
+			options
+		);
 	});
 
 	Meteor.publish('consultations', function (query = {}) {
@@ -91,10 +191,14 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('consultationsAndAppointments', function () {
-		return Consultations.find({
-			owner: this.userId
-		});
+	Meteor.publish('consultationsAndAppointments', function (query, options) {
+		return Consultations.find(
+			{
+				...query,
+				owner: this.userId
+			},
+			options
+		);
 	});
 
 	Meteor.publish('patient.consultations', function (patientId, options) {
@@ -149,80 +253,31 @@ if (Meteor.isServer) {
 	Meteor.publish(books.options.parentPublicationStats, function (name) {
 		check(name, String);
 
-		const key = JSON.stringify({name, owner: this.userId});
-		const query = {
-			...books.selector(name),
-			owner: this.userId,
-			isDone: true
-		};
-		const options = {fields: {_id: 1, price: 1, datetime: 1}};
-		for (const field of Object.keys(query)) options.fields[field] = 1;
+		const collection = books.options.stats;
+		const query = books.selector(name);
 
-		const minHeap = new PairingHeap(increasing);
-		const maxHeap = new PairingHeap(decreasing);
-		const refs = new Map();
-		let count = 0;
-		let total = 0;
-		let initializing = true;
+		const handle = setupConsultationsStatsPublication.call(
+			this,
+			collection,
+			query,
+			{name}
+		);
+		this.ready();
 
-		const state = () => ({
-			name,
-			count,
-			total,
-			first: minHeap.head(),
-			last: maxHeap.head()
-		});
+		// Stop observing the cursor when the client unsubscribes. Stopping a
+		// subscription automatically takes care of sending the client any `removed`
+		// messages.
+		this.onStop(() => handle.stop());
+	});
 
-		// `observeChanges` only returns after the initial `added` callbacks have run.
-		// Until then, we don't want to send a lot of `changed` messages—hence
-		// tracking the `initializing` state.
-		const handle = Consultations.find(query, options).observeChanges({
-			added: (_id, {price, datetime}) => {
-				count += 1;
-				if (price) total += price;
-				const minRef = minHeap.push(datetime);
-				const maxRef = maxHeap.push(datetime);
-				refs.set(_id, [price, minRef, maxRef]);
+	Meteor.publish(statsPublication, function (query) {
+		const collection = stats;
 
-				if (!initializing) {
-					this.changed(books.options.stats, key, state());
-				}
-			},
-
-			changed: (_id, fields) => {
-				const [oldPrice, minRef, maxRef] = refs.get(_id);
-				let newPrice = oldPrice;
-				if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
-					newPrice = fields.price;
-					if (oldPrice) total -= oldPrice;
-					if (newPrice) total += newPrice;
-					refs.set(_id, [newPrice, minRef, maxRef]);
-				}
-
-				if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
-					const datetime = fields.datetime;
-					minHeap.update(minRef, datetime);
-					maxHeap.update(maxRef, datetime);
-				}
-
-				this.changed(books.options.stats, key, state());
-			},
-
-			removed: (_id) => {
-				count -= 1;
-				const [price, minRef, maxRef] = refs.get(_id);
-				if (price) total -= price;
-				minHeap.delete(minRef);
-				maxHeap.delete(maxRef);
-				refs.delete(_id);
-				this.changed(books.options.stats, key, state());
-			}
-		});
-
-		// Instead, we'll send one `added` message right after `observeChanges` has
-		// returned, and mark the subscription as ready.
-		initializing = false;
-		this.added(books.options.stats, key, state());
+		const handle = setupConsultationsStatsPublication.call(
+			this,
+			collection,
+			query
+		);
 		this.ready();
 
 		// Stop observing the cursor when the client unsubscribes. Stopping a
@@ -261,11 +316,11 @@ function sanitize({
 	check(patientId, String);
 	check(datetime, Date);
 
-	check(reason, String);
-	check(done, String);
-	check(todo, String);
-	check(treatment, String);
-	check(next, String);
+	if (reason !== undefined) check(reason, String);
+	if (done !== undefined) check(done, String);
+	if (todo !== undefined) check(todo, String);
+	if (treatment !== undefined) check(treatment, String);
+	if (next !== undefined) check(next, String);
 	if (more !== undefined) check(more, String);
 
 	if (currency !== undefined) check(currency, String);
@@ -274,19 +329,20 @@ function sanitize({
 	if (book !== undefined) check(book, String);
 	if (payment_method !== undefined) check(payment_method, String);
 
-	reason = reason.trim();
-	done = done.trim();
-	todo = todo.trim();
-	treatment = treatment.trim();
-	next = next.trim();
-	more = more && more.trim();
+	reason = reason?.trim();
+	done = done?.trim();
+	todo = todo?.trim();
+	treatment = treatment?.trim();
+	next = next?.trim();
+	more = more?.trim();
 
-	currency = currency && currency.trim().toUpperCase();
-	book = book && book.trim();
+	currency = currency?.trim().toUpperCase();
+	book = book?.trim();
 
 	return {
 		patientId,
 		datetime,
+		realDatetime: datetime,
 		reason,
 		done,
 		todo,
@@ -303,7 +359,7 @@ function sanitize({
 	};
 }
 
-Meteor.methods({
+const methods = {
 	'books.interval.csv'(begin, end, firstBook, lastBook, maxRows) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
@@ -391,7 +447,7 @@ Meteor.methods({
 		return table.join('\n');
 	},
 
-	'consultations.insert'(consultation) {
+	'consultations.insert'(consultation, setDoneDatetime = false) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -402,18 +458,29 @@ Meteor.methods({
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
+		const createdAt = new Date();
+		const doneDatetime = setDoneDatetime ? createdAt : undefined;
+
 		return Consultations.insert({
 			...fields,
-			createdAt: new Date(),
+			createdAt,
+			doneDatetime,
 			owner: this.userId
 		});
 	},
 
-	'consultations.update'(consultationId, newfields) {
+	'consultations.update'(
+		consultationId,
+		newfields,
+		updateExistingDoneDatetime = false
+	) {
 		check(consultationId, String);
-		const consultation = Consultations.findOne(consultationId);
-		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
+		const existing = Consultations.findOne({
+			_id: consultationId,
+			owner: this.userId
+		});
+		if (!existing) {
+			throw new Meteor.Error('not-found');
 		}
 
 		const fields = sanitize(newfields);
@@ -421,7 +488,13 @@ Meteor.methods({
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
-		return Consultations.update(consultationId, {$set: fields});
+		return Consultations.update(consultationId, {
+			$set: {
+				...fields,
+				doneDatetime:
+					(!updateExistingDoneDatetime && existing.doneDatetime) || new Date()
+			}
+		});
 	},
 
 	'consultations.attach'(consultationId, uploadId) {
@@ -466,13 +539,70 @@ Meteor.methods({
 		});
 	},
 
-	'consultations.remove'(consultationId) {
-		check(consultationId, String);
-		const consultation = Consultations.findOne(consultationId);
-		if (!consultation || consultation.owner !== this.userId) {
+	'consultations.remove': unconditionallyRemoveById(Consultations),
+
+	'consultations.restoreAppointment': unconditionallyUpdateById(
+		Consultations,
+		(existing) => ({
+			$set: {
+				datetime: existing.scheduledDatetime,
+				isDone: false
+			}
+		})
+	),
+	'books.changeBookNumber'(oldBookId, newBookNumber) {
+		check(oldBookId, String);
+		check(newBookNumber, String);
+
+		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		return Consultations.remove(consultationId);
+		const book = Books.findOne({_id: oldBookId, owner: this.userId});
+		if (!book) {
+			throw new Meteor.Error('not-found');
+		}
+
+		const {name: oldName, fiscalYear} = book;
+
+		newBookNumber = newBookNumber.trim();
+		if (newBookNumber === '') {
+			throw new Meteor.Error('value-error');
+		}
+
+		newBookNumber = parseUint32StrictOrString(newBookNumber);
+
+		const newName = books.format(fiscalYear, newBookNumber);
+		const newBookId = books.add(this.userId, newName);
+
+		const query = {
+			...books.selector(oldName),
+			owner: this.userId,
+			isDone: true
+		};
+
+		Consultations.update(
+			query,
+			{
+				$set: {book: newBookNumber.toString()}
+			},
+			{multi: true}
+		);
+
+		Books.remove(oldBookId);
+		return newBookId;
 	}
-});
+};
+
+Meteor.methods(methods);
+
+export const consultations = {
+	methods,
+	sanitize,
+	stats: {
+		collection: stats,
+		publication: statsPublication,
+		Collection: Stats,
+		key: statsKey
+	}
+};

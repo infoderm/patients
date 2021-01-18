@@ -79,4 +79,10 @@ function msToString(dirtyMs, dirtyOptions) {
 	return [...msToParts(ms, options)].join(options.separator);
 }
 
-export {msToString, units};
+function msToStringShort(dirtyMs, dirtyOptions) {
+	const options = Object.assign({}, DEFAULT_OPTIONS, dirtyOptions);
+	const ms = dirtyMs;
+	return msToParts(ms, options).next().value;
+}
+
+export {msToString, msToStringShort, units};

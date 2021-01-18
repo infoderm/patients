@@ -10,7 +10,7 @@ import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -25,6 +25,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 import saveTextAs from '../../client/saveTextAs.js';
 
 import {books} from '../../api/books.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -32,13 +33,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function BooksDownloadDialog({
+const BooksDownloadDialog = ({
 	open,
 	onClose,
 	initialAdvancedFunctionality,
 	initialBegin,
 	initialEnd
-}) {
+}) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -190,7 +191,7 @@ export default function BooksDownloadDialog({
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 
 BooksDownloadDialog.defaultProps = {
 	initialAdvancedFunctionality: false
@@ -203,3 +204,5 @@ BooksDownloadDialog.propTypes = {
 	initialEnd: PropTypes.instanceOf(Date),
 	initialAdvancedFunctionality: PropTypes.bool
 };
+
+export default withLazyOpening(BooksDownloadDialog);

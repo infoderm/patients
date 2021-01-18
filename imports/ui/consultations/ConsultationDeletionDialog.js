@@ -1,14 +1,13 @@
 import {Meteor} from 'meteor/meteor';
 
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -20,6 +19,11 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string.js';
 import {usePatient} from '../../api/patients.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
+
+import ConfirmationTextField, {
+	useConfirmationTextFieldState
+} from '../input/ConfirmationTextField.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -44,25 +48,17 @@ const ConsultationDeletionDialog = (props) => {
 
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [lastname, setLastname] = useState('');
-	const [lastnameError, setLastnameError] = useState('');
-	const [triedToOpen, setTriedToOpen] = useState(false);
-	const render = open || triedToOpen;
+	const getError = (expected, value) =>
+		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
 
-	useEffect(() => {
-		if (render && !triedToOpen) {
-			setTriedToOpen(true);
-		}
-	}, [render, triedToOpen]);
-
-	if (!triedToOpen) {
-		return null;
-	}
+	const {
+		validate,
+		props: ConfirmationTextFieldProps
+	} = useConfirmationTextFieldState(patient.lastname, getError);
 
 	const deleteThisConsultationIfPatientsLastNameMatches = (event) => {
 		event.preventDefault();
-		if (normalized(lastname) === normalized(patient.lastname)) {
-			setLastnameError('');
+		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
 			Meteor.call('consultations.remove', consultation._id, (err, _res) => {
 				closeSnackbar(key);
@@ -76,8 +72,6 @@ const ConsultationDeletionDialog = (props) => {
 					onClose();
 				}
 			});
-		} else {
-			setLastnameError('Last names do not match');
 		}
 	};
 
@@ -106,16 +100,13 @@ const ConsultationDeletionDialog = (props) => {
 					really want to delete this consultation from the system, enter the
 					patient&apos;s last name below and click the delete button.
 				</DialogContentText>
-				<TextField
+				<ConfirmationTextField
 					autoFocus
 					fullWidth
 					disabled={!found}
 					margin="dense"
 					label={label}
-					value={lastname}
-					helperText={lastnameError}
-					error={Boolean(lastnameError)}
-					onChange={(e) => setLastname(e.target.value)}
+					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -124,7 +115,7 @@ const ConsultationDeletionDialog = (props) => {
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
-					disabled={!found}
+					disabled={!found || ConfirmationTextFieldProps.error}
 					color="secondary"
 					onClick={deleteThisConsultationIfPatientsLastNameMatches}
 				>
@@ -147,4 +138,4 @@ ConsultationDeletionDialog.propTypes = {
 	consultation: PropTypes.object.isRequired
 };
 
-export default ConsultationDeletionDialog;
+export default withLazyOpening(ConsultationDeletionDialog);

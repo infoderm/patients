@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 
 import {withStyles} from '@material-ui/core/styles';
 
+import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
 import Avatar from '@material-ui/core/Avatar';
-
 import TextField from '@material-ui/core/TextField';
 
 import SetPicker from '../input/SetPicker.js';
@@ -59,7 +58,7 @@ class PatientSheet extends React.Component {
 		const maxRows = 100;
 
 		return (
-			<div>
+			<Paper>
 				<Grid container className={classes.container}>
 					<Grid item sm={4} md={2}>
 						{patient.photo ? (
@@ -333,7 +332,7 @@ class PatientSheet extends React.Component {
 						</form>
 					</Grid>
 				</Grid>
-			</div>
+			</Paper>
 		);
 	}
 }

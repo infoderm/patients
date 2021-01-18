@@ -1,5 +1,3 @@
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,7 +7,7 @@ import dateFormat from 'date-fns/format';
 import {makeStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -22,8 +20,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import {onlyASCII} from '../../api/string.js';
 import {usePatient} from '../../api/patients.js';
 
-import {settings} from '../../client/settings.js';
+import {useSetting} from '../../client/settings.js';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
 import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
 
 const SIZE_CODE = 256;
@@ -67,7 +66,12 @@ const useStyles = makeStyles((theme) => ({
 const ConsultationPaymentDialog = (props) => {
 	const classes = useStyles();
 
-	const {open, onClose, consultation, accountHolder, iban} = props;
+	const {open, onClose, consultation} = props;
+
+	const {loading: loadingAccountHolder, value: accountHolder} = useSetting(
+		'account-holder'
+	);
+	const {loading: loadingIban, value: iban} = useSetting('iban');
 
 	const {currency, price, paid, datetime} = consultation;
 
@@ -78,12 +82,14 @@ const ConsultationPaymentDialog = (props) => {
 		consultation.patientId,
 		JSON.stringify(ConsultationPaymentDialog.projection)
 	];
-	const {loading, found, fields: patient} = usePatient(
+	const {loading: loadingPatient, found, fields: patient} = usePatient(
 		{},
 		consultation.patientId,
 		options,
 		deps
 	);
+
+	const loading = loadingAccountHolder || loadingIban || loadingPatient;
 
 	const _date = dateFormat(datetime, 'yyyy-MM-dd');
 	const _lastname = onlyASCII(patient.lastname);
@@ -134,7 +140,7 @@ const ConsultationPaymentDialog = (props) => {
 				</DialogContentText>
 				<div className={classes.codeContainer}>
 					<div className={classes.codeProgress}>
-						{loading ? (
+						{loadingPatient ? (
 							<CircularProgress
 								disableShrink
 								size={SIZE_PROGRESS}
@@ -169,15 +175,4 @@ ConsultationPaymentDialog.propTypes = {
 	onClose: PropTypes.func.isRequired
 };
 
-export default withTracker(() => {
-	settings.subscribe('account-holder');
-	settings.subscribe('iban');
-
-	const accountHolder = settings.get('account-holder');
-	const iban = settings.get('iban');
-
-	return {
-		accountHolder,
-		iban
-	};
-})(ConsultationPaymentDialog);
+export default withLazyOpening(ConsultationPaymentDialog);

@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
+import {ALL_WEEK_DAYS} from '../ui/calendar/constants.js';
+
 const Settings = new Mongo.Collection('settings');
 
 if (Meteor.isServer) {
@@ -56,11 +58,13 @@ const defaults = {
 	currency: 'EUR',
 	lang: 'en',
 	'appointment-duration': [15 * 60 * 1000, 30 * 60 * 1000],
+	'appointment-cancellation-reason': ['patient-cancelled', 'doctor-cancelled'],
 	'important-strings': [],
 	'week-starts-on': 1,
 	'text-transform': 'uppercase',
 	iban: '',
-	'account-holder': ''
+	'account-holder': '',
+	'displayed-week-days': [...ALL_WEEK_DAYS]
 };
 
 const settings = {

@@ -8,6 +8,8 @@ import InputManySetting from './InputManySetting.js';
 
 const KEY = 'important-strings';
 
+// TODO filter out items that are superstrings of others
+
 export default class ImportantStringsSetting extends React.Component {
 	render() {
 		const {className} = this.props;

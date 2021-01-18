@@ -12,7 +12,8 @@ import {insurances} from './insurances.js';
 import {doctors} from './doctors.js';
 import {allergies} from './allergies.js';
 
-import {makeIndex, shatter} from './string.js';
+import {makeIndex, shatter, normalized, normalizeSearch} from './string.js';
+
 import observeQuery from './observeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
 import makeCachedFindOne from './makeCachedFindOne.js';
@@ -52,6 +53,12 @@ if (Meteor.isServer) {
 		indexCachePublication,
 		observeQuery(PatientsSearchIndex, indexCacheCollection)
 	);
+}
+
+function normalizedName(firstname, lastname) {
+	const lastnameHash = normalizeSearch(lastname || '').replace(' ', '-');
+	const firstnameHash = normalized(firstname || '').split(' ')[0];
+	return `${lastnameHash} ${firstnameHash}`;
 }
 
 function updateIndex(userId, _id, fields) {
@@ -121,7 +128,8 @@ function sanitize({
 	doctors,
 	allergies,
 
-	noshow
+	noshow,
+	createdForAppointment
 }) {
 	if (niss !== undefined) check(niss, String);
 	if (firstname !== undefined) check(firstname, String);
@@ -144,6 +152,8 @@ function sanitize({
 	if (allergies !== undefined) check(allergies, [String]);
 
 	if (noshow !== undefined) check(noshow, Number);
+	if (createdForAppointment !== undefined)
+		check(createdForAppointment, Boolean);
 
 	niss = niss && niss.trim();
 	firstname = firstname && firstname.trim();
@@ -180,6 +190,7 @@ function sanitize({
 		birthdate,
 		sex,
 		photo,
+		normalizedName: normalizedName(firstname, lastname),
 
 		antecedents,
 		ongoing,
@@ -194,31 +205,33 @@ function sanitize({
 		doctors,
 		insurances,
 
-		noshow
+		noshow,
+		createdForAppointment
 	};
 }
 
+function insertPatient(patient) {
+	if (!this.userId) {
+		throw new Meteor.Error('not-authorized');
+	}
+
+	const fields = sanitize(patient);
+
+	updateTags(this.userId, fields);
+
+	const patientId = Patients.insert({
+		...fields,
+		createdAt: new Date(),
+		owner: this.userId
+	});
+
+	updateIndex(this.userId, patientId, fields);
+
+	return patientId;
+}
+
 Meteor.methods({
-	'patients.insert'(patient) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const fields = sanitize(patient);
-
-		updateTags(this.userId, fields);
-
-		const patientId = Patients.insert({
-			...fields,
-			createdAt: new Date(),
-			owner: this.userId
-		});
-
-		updateIndex(this.userId, patientId, fields);
-
-		return patientId;
-	},
-
+	'patients.insert': insertPatient,
 	'patients.update'(patientId, newfields) {
 		check(patientId, String);
 		const patient = Patients.findOne(patientId);
@@ -520,7 +533,13 @@ const patientFilter = (suggestions, inputValue, transform = (v) => v) => {
 };
 
 function createPatient(string) {
-	const [lastname, ...firstnames] = string.split(' ');
+	let nameSplit = string.split(',');
+
+	if (nameSplit.length < 2) {
+		nameSplit = string.split(' ');
+	}
+
+	const [lastname, ...firstnames] = nameSplit;
 
 	return {
 		lastname,
@@ -547,8 +566,10 @@ export const patients = {
 	cacheCollection,
 	cachePublication,
 	updateIndex,
+	insertPatient,
 	toString: patientToString,
 	toKey: patientToKey,
+	normalizedName,
 	merge: mergePatients,
 	filter: patientFilter,
 	create: createPatient

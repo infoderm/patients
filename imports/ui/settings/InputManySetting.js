@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -8,11 +7,20 @@ import SetPicker from '../input/SetPicker.js';
 
 import Typography from '@material-ui/core/Typography';
 
-import {settings} from '../../client/settings.js';
+import {settings, useSetting} from '../../client/settings.js';
 
-class InputManySetting extends React.Component {
-	onChange = (e) => {
-		const setting = this.props.setting;
+const InputManySetting = (props) => {
+	const {
+		className,
+		setting,
+		title,
+		label,
+		makeSuggestions,
+		placeholder,
+		...rest
+	} = props;
+
+	const onChange = (e) => {
 		const newValue = e.target.value;
 
 		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
@@ -24,65 +32,42 @@ class InputManySetting extends React.Component {
 		});
 	};
 
-	render() {
-		const {
-			className,
-			loading,
-			setting,
-			value,
-			title,
-			label,
-			placeholder,
-			...rest
-		} = this.props;
+	const {loading, value} = useSetting(setting);
+	console.debug({loading, value});
 
-		return (
-			<div className={className}>
-				<Typography variant="h4">{title}</Typography>
-				<SetPicker
-					readOnly={loading}
-					useSuggestions={() => ({results: []})}
-					itemToKey={(x) => x}
-					itemToString={(x) => x}
-					createNewItem={(x) => x}
-					inputTransform={(x) => x}
-					TextFieldProps={{
-						label,
-						margin: 'normal'
-					}}
-					value={value}
-					placeholder={loading ? 'loading...' : placeholder}
-					onChange={this.onChange}
-					{...rest}
-				/>
-			</div>
-		);
-	}
-
-	static propTypes = {
-		title: PropTypes.string.isRequired,
-		label: PropTypes.string,
-		value: PropTypes.array.isRequired
-	};
-}
-
-const Component = withTracker(({setting}) => {
-	const handle = settings.subscribe(setting);
-	if (handle.ready()) {
-		return {
-			loading: false,
-			value: settings.get(setting)
-		};
-	}
-
-	return {
-		loading: true,
-		value: settings.defaults[setting]
-	};
-})(InputManySetting);
-
-Component.propTypes = {
-	setting: PropTypes.string.isRequired
+	return (
+		<div className={className}>
+			<Typography variant="h4">{title}</Typography>
+			<SetPicker
+				readOnly={loading}
+				useSuggestions={makeSuggestions(value)}
+				itemToKey={(x) => x}
+				itemToString={(x) => x}
+				createNewItem={(x) => x}
+				inputTransform={(x) => x}
+				TextFieldProps={{
+					label,
+					margin: 'normal'
+				}}
+				value={value}
+				placeholder={loading ? 'loading...' : placeholder}
+				onChange={onChange}
+				{...rest}
+			/>
+		</div>
+	);
 };
 
-export default Component;
+InputManySetting.defaultProps = {
+	makeSuggestions: () => () => ({results: []}),
+	label: undefined
+};
+
+InputManySetting.propTypes = {
+	setting: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	makeSuggestions: PropTypes.func,
+	label: PropTypes.string
+};
+
+export default InputManySetting;

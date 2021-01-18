@@ -3,8 +3,6 @@ import 'regenerator-runtime/runtime.js';
 import {Meteor} from 'meteor/meteor';
 // import {ObjectId} from 'meteor/mongo';
 
-import dateParseISO from 'date-fns/parseISO';
-
 import {Settings} from '../imports/api/settings.js';
 import {
 	Patients,
@@ -13,7 +11,9 @@ import {
 } from '../imports/api/patients.js';
 import {Drugs} from '../imports/api/drugs.js';
 import {Consultations} from '../imports/api/consultations.js';
-// import {appointments} from '../imports/api/appointments.js';
+import {Events} from '../imports/api/events.js';
+// eslint-disable-next-line import/no-unassigned-import
+import '../imports/api/appointments.js';
 import {Insurances, insurances} from '../imports/api/insurances.js';
 import {Doctors, doctors} from '../imports/api/doctors.js';
 import {Allergies, allergies} from '../imports/api/allergies.js';
@@ -29,6 +29,7 @@ Meteor.startup(() => {
 		PatientsSearchIndex,
 		Drugs,
 		Consultations,
+		Events,
 		Insurances,
 		Doctors,
 		Allergies,
@@ -84,6 +85,18 @@ Meteor.startup(() => {
 			Patients.rawCollection().save(patient);
 		});
 
+	// Regenerate patient.normalizedName
+	Patients.rawCollection()
+		.find()
+		.snapshot()
+		.forEach((patient) => {
+			patient.normalizedName = patients.normalizedName(
+				patient.firstname,
+				patient.lastname
+			);
+			Patients.rawCollection().save(patient);
+		});
+
 	// Add .isDone field to consultations
 	Consultations.rawCollection()
 		.find()
@@ -105,20 +118,15 @@ Meteor.startup(() => {
 			Consultations.rawCollection().save(consultation);
 		});
 
-	// Move book/2020/0 consultations of value 20 after march 15 to book/2020/covid
-	// and set payment method to third-party
+	// Add new appointments/consultations fields
 	Consultations.rawCollection()
 		.find()
 		.snapshot()
 		.forEach((consultation) => {
-			if (
-				consultation.book === '0' &&
-				consultation.datetime >= dateParseISO('2020-03-15') &&
-				consultation.datetime < dateParseISO('2020-06-01') &&
-				consultation.price === 20
-			) {
-				consultation.book = 'covid';
-				consultation.payment_method = 'third-party';
+			if (consultation.isDone) {
+				consultation.realDatetime = consultation.datetime;
+			} else {
+				consultation.scheduledDatetime = consultation.datetime;
 			}
 
 			Consultations.rawCollection().save(consultation);
@@ -150,6 +158,7 @@ Meteor.startup(() => {
 
 	createSimpleIndex(Patients, 'niss');
 	createSimpleIndex(Patients, 'lastname');
+	createSimpleIndex(Patients, 'normalizedName');
 	createSimpleIndex(Patients, 'doctors');
 	createSimpleIndex(Patients, 'insurances');
 	createSimpleIndex(Patients, 'allergies');
@@ -272,6 +281,16 @@ Meteor.startup(() => {
 			book: 1,
 			datetime: 1,
 			isDone: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Events.rawCollection().createIndex(
+		{
+			owner: 1,
+			begin: 1
 		},
 		{
 			background: true

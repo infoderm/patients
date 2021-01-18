@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 import {useState, useEffect} from 'react';
 
+// TODO do not use useState and useEffect, simply exploit handle.ready();
+
 const makeQuery = (Collection, subscription) => (query, options, deps) => {
 	const [loading, setLoading] = useState(true);
 	const [results, setResults] = useState([]);

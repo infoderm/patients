@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useDebounce} from 'use-debounce';
 
 import {map, list} from '@aureooms/js-itertools';
 
@@ -11,15 +10,13 @@ import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import {patients, usePatientsAdvancedFind} from '../../api/patients.js';
-import {normalizeSearch} from '../../api/string.js';
+import {patients} from '../../api/patients.js';
 
 import SetPicker from '../input/SetPicker.js';
 
 import PatientGridItem from '../patients/PatientGridItem.js';
 import ReactivePatientCard from '../patients/ReactivePatientCard.js';
-
-import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
+import makePatientsSuggestions from '../patients/makePatientsSuggestions.js';
 
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
 
@@ -34,53 +31,6 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: theme.spacing(1)
 	}
 }));
-
-const DEBOUNCE_OPTIONS = {leading: false};
-// TODO this does not work because we do not render on an empty input
-
-const makeSuggestions = (set) => (searchString) => {
-	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
-		searchString,
-		TIMEOUT_INPUT_DEBOUNCE,
-		DEBOUNCE_OPTIONS
-	);
-
-	const $search = normalizeSearch(debouncedSearchString);
-	const $nin = list(map((x) => x._id, set));
-	const limit = 5;
-
-	const query = {$text: {$search}, _id: {$nin}};
-
-	const sort = {
-		score: {$meta: 'textScore'}
-	};
-	const fields = {
-		...sort,
-		_id: 1,
-		firstname: 1,
-		lastname: 1
-	};
-
-	const options = {
-		fields,
-		sort,
-		skip: 0,
-		limit
-	};
-
-	const {loading, ...rest} = usePatientsAdvancedFind(query, options, [
-		$search,
-		JSON.stringify($nin)
-		// refreshKey,
-	]);
-
-	return {
-		loading: loading || pending(),
-		cancel,
-		flush,
-		...rest
-	};
-};
 
 const MergePatientsForm = () => {
 	const [step, setStep] = useState('select');
@@ -98,7 +48,7 @@ const MergePatientsForm = () => {
 							<SetPicker
 								itemToKey={(x) => x._id}
 								itemToString={patients.toString}
-								useSuggestions={makeSuggestions(toMerge)}
+								useSuggestions={makePatientsSuggestions(toMerge)}
 								TextFieldProps={{
 									label: 'Patients to merge',
 									margin: 'normal'

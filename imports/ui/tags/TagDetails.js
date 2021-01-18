@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
+import Center from '../grid/Center.js';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
@@ -21,10 +21,9 @@ const ListWithHeader = (props) => {
 			{Card && (
 				<div>
 					<div style={{paddingBottom: 50, paddingTop: 20}}>
-						<Grid container spacing={3}>
-							<Grid item sm={12} md={12} lg={3} xl={4} />
+						<Center>
 							<Card loading={loading} item={item} />
-						</Grid>
+						</Center>
 					</div>
 					<Typography variant="h2">Patients</Typography>
 				</div>

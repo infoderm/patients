@@ -16,10 +16,12 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import {format} from 'date-fns';
 
 import {Patients} from '../../api/patients.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
 	container: {
@@ -48,11 +50,8 @@ const styles = (theme) => ({
 		width: '48px',
 		height: '48px'
 	},
-	fab: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	}
+	saveButton: computeFixedFabStyle({theme, col: 2}),
+	doneButton: computeFixedFabStyle({theme, col: 1})
 });
 
 class ConsultationForm extends React.Component {
@@ -83,7 +82,7 @@ class ConsultationForm extends React.Component {
 		};
 	}
 
-	handleSubmit = (event) => {
+	handleSubmit = (setDoneDatetime) => (event) => {
 		event.preventDefault();
 
 		const {
@@ -129,21 +128,27 @@ class ConsultationForm extends React.Component {
 		};
 
 		if (consultationId === undefined) {
-			Meteor.call('consultations.insert', consultation, (err, _id) => {
-				if (err) {
-					console.error(err);
-				} else {
-					this.setState({
-						dirty: false
-					});
-					history.push({pathname: `/consultation/${_id}`});
+			Meteor.call(
+				'consultations.insert',
+				consultation,
+				setDoneDatetime,
+				(err, _id) => {
+					if (err) {
+						console.error(err);
+					} else {
+						this.setState({
+							dirty: false
+						});
+						history.push({pathname: `/consultation/${_id}`});
+					}
 				}
-			});
+			);
 		} else {
 			Meteor.call(
 				'consultations.update',
 				consultationId,
 				consultation,
+				setDoneDatetime,
 				(err, _res) => {
 					if (err) {
 						console.error(err);
@@ -161,7 +166,7 @@ class ConsultationForm extends React.Component {
 	render() {
 		const {
 			classes,
-			// consultation: {_id: consultationId},
+			consultation: {doneDatetime},
 			loadingPatient,
 			patient
 		} = this.props;
@@ -401,12 +406,22 @@ class ConsultationForm extends React.Component {
 					</Grid>
 				</Grid>
 				<Fab
-					className={classes.fab}
-					color="primary"
+					className={classes.saveButton}
+					color={doneDatetime ? 'primary' : 'secondary'}
 					aria-label="save"
-					onClick={this.handleSubmit}
+					disabled={!this.state.dirty}
+					onClick={this.handleSubmit(false)}
 				>
 					<SaveIcon />
+				</Fab>
+				<Fab
+					className={classes.doneButton}
+					color={!doneDatetime ? 'primary' : 'secondary'}
+					aria-label="done"
+					disabled={!this.state.dirty}
+					onClick={this.handleSubmit(true)}
+				>
+					<AssignmentTurnedInIcon />
 				</Fab>
 			</div>
 		);

@@ -7,20 +7,32 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Avatar from '@material-ui/core/Avatar';
 
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {normalized} from '../../api/string.js';
-import MeteorSimpleAutoCompleteTextField from '../input/MeteorSimpleAutoCompleteTextField.js';
+import {capitalized, normalized} from '../../api/string.js';
+
+import ConfirmationTextField, {
+	useConfirmationTextFieldState
+} from '../input/ConfirmationTextField.js';
+import SetPicker from '../input/SetPicker.js';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		overflowY: 'visible'
+	},
+	content: {
+		overflowY: 'visible'
+	},
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	}
@@ -32,8 +44,6 @@ let nextAriaId = 0;
 const TagRenamingDialog = (props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [oldname, setOldname] = useState('');
-	const [oldnameError, setOldnameError] = useState('');
 	const [newname, setNewname] = useState('');
 	const [newnameError, setNewnameError] = useState('');
 	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
@@ -43,27 +53,31 @@ const TagRenamingDialog = (props) => {
 		onClose,
 		onRename,
 		title,
-		collection,
-		subscription,
+		useTagsFind,
 		method,
-		tag
+		tag,
+		nameKey,
+		nameKeyTitle,
+		nameFormat
 	} = props;
 
-	const Title = title[0].toUpperCase() + title.slice(1);
+	const getError = (expected, value) =>
+		normalized(expected) === normalized(value) ? '' : 'Names do not match';
+	const {
+		validate: validateOldName,
+		props: ConfirmationTextFieldProps
+	} = useConfirmationTextFieldState(tag[nameKey].toString(), getError);
+
+	const Title = capitalized(title);
 
 	const renameThisTagIfNameMatchesAndNewNameNotEmpty = (event) => {
 		event.preventDefault();
-		let error = false;
-		if (normalized(oldname) !== normalized(tag.name)) {
-			setOldnameError('Names do not match');
-			error = true;
-		} else {
-			setOldnameError('');
-		}
-
+		let error = !validateOldName();
 		const name = newname.trim();
 		if (name.length === 0) {
-			setNewnameError('The new name is empty');
+			setNewnameError(
+				`The new ${nameKeyTitle} is empty. Did you forget to press ENTER?`
+			);
 			error = true;
 		} else {
 			setNewnameError('');
@@ -80,7 +94,10 @@ const TagRenamingDialog = (props) => {
 					console.error(err);
 					enqueueSnackbar(err.message, {variant: 'error'});
 				} else {
-					const message = `${Title} #${tag._id} rename from ${oldname} to ${name} (using ${method}).`;
+					const message = `${Title} #${tag._id} renamed from ${nameFormat(
+						tag,
+						tag[nameKey]
+					)} to ${nameFormat(tag, name)} (using ${method}).`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
 					onRename(name);
@@ -93,42 +110,50 @@ const TagRenamingDialog = (props) => {
 		<Dialog
 			open={open}
 			component="form"
+			PaperProps={{className: classes.root}}
 			aria-labelledby={ariaId}
 			onClose={onClose}
 		>
 			<DialogTitle id={ariaId}>
-				Rename {title} {tag.name}
+				Rename {title} {nameFormat(tag, tag[nameKey])}
 			</DialogTitle>
-			<DialogContent>
+			<DialogContent className={classes.content}>
 				<DialogContentText>
 					If you do not want to rename this {title}, click cancel. If you really
 					want to rename this {title} from the system, enter the {title}&apos;s
 					old name and new name below and click the rename button.
 				</DialogContentText>
-				<TextField
+				<ConfirmationTextField
 					autoFocus
 					fullWidth
 					margin="dense"
-					label={`${Title}'s old name`}
-					value={oldname}
-					helperText={oldnameError}
-					error={Boolean(oldnameError)}
-					onChange={(e) => setOldname(e.target.value)}
+					label={`${Title}'s old ${nameKeyTitle}`}
+					{...ConfirmationTextFieldProps}
 				/>
-				<MeteorSimpleAutoCompleteTextField
-					subscription={subscription}
-					collection={collection}
-					selector={{name: {$ne: tag.name}}}
-					stringify={(tag) => tag.name}
-					textFieldProps={{
-						margin: 'dense',
-						label: `${Title}'s new name`,
+				<SetPicker
+					itemToKey={(x) => x._id}
+					itemToString={(x) => x[nameKey]}
+					createNewItem={(name) => ({[nameKey]: name})}
+					useSuggestions={makeSubstringSuggestions(
+						useTagsFind,
+						[tag[nameKey]],
+						nameKey
+					)}
+					TextFieldProps={{
+						label: `${Title}'s new ${nameKeyTitle}`,
+						margin: 'normal',
 						fullWidth: true,
-						value: newname,
-						onChange: (e) => setNewname(e.target.value),
 						helperText: newnameError,
 						error: Boolean(newnameError)
 					}}
+					chipProps={{
+						avatar: <Avatar>{Title.slice(0, 2)}</Avatar>
+					}}
+					value={newname !== '' ? [{[nameKey]: newname}] : []}
+					maxCount={1}
+					onChange={({target: {value}}) =>
+						setNewname(value.length === 1 ? value[0][nameKey] : '')
+					}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -148,15 +173,24 @@ const TagRenamingDialog = (props) => {
 	);
 };
 
+TagRenamingDialog.defaultProps = {
+	nameKey: 'name',
+	nameKeyTitle: 'name',
+	nameFormat: (_tag, name) => name,
+	useTagsFind: () => ({results: []})
+};
+
 TagRenamingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onRename: PropTypes.func.isRequired,
 	title: PropTypes.string.isRequired,
-	collection: PropTypes.object.isRequired,
-	subscription: PropTypes.string.isRequired,
+	useTagsFind: PropTypes.func,
 	method: PropTypes.string.isRequired,
-	tag: PropTypes.object.isRequired
+	tag: PropTypes.object.isRequired,
+	nameKey: PropTypes.string,
+	nameKeyTitle: PropTypes.string,
+	nameFormat: PropTypes.func
 };
 
-export default TagRenamingDialog;
+export default withLazyOpening(TagRenamingDialog);

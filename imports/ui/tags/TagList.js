@@ -30,7 +30,9 @@ const TagList = (props) => {
 				{tags.length > 0 ? (
 					<Grid container spacing={3}>
 						{tags.map((tag) => (
-							<Card key={tag._id} item={tag} />
+							<Grid key={tag._id} item xs={12} sm={12} md={12} lg={6} xl={4}>
+								<Card item={tag} />
+							</Grid>
 						))}
 					</Grid>
 				) : (

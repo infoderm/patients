@@ -2,7 +2,6 @@ import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
-import {useDebounce} from 'use-debounce';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -21,6 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 
+import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -35,7 +35,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import dateFormat from 'date-fns/format';
-import formatDistanceStrict from 'date-fns/formatDistanceStrict';
+import formatDuration from 'date-fns/formatDuration';
+import intervalToDuration from 'date-fns/intervalToDuration';
 import startOfToday from 'date-fns/startOfToday';
 
 import odiff from 'odiff';
@@ -44,12 +45,12 @@ import {empty} from '@aureooms/js-cardinality';
 import {useInsurancesFind} from '../../api/insurances.js';
 import {useDoctorsFind} from '../../api/doctors.js';
 import {useAllergiesFind} from '../../api/allergies.js';
-import {escapeStringRegexp} from '../../api/string.js';
 import {settings} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../client/eidParseBirthdate.js';
 
 import SetPicker from '../input/SetPicker.js';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 import ColorizedTextarea from '../input/ColorizedTextarea.js';
 
 import AllergyChip from '../allergies/AllergyChip.js';
@@ -58,13 +59,12 @@ import InsuranceChip from '../insurances/InsuranceChip.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
-import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
-
 import PatientDeletionDialog from './PatientDeletionDialog.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
 	photoPlaceHolder: {
-		display: 'flex',
+		display: 'inline-flex',
 		fontSize: '4rem',
 		margin: 0,
 		width: 140,
@@ -74,13 +74,16 @@ const styles = (theme) => ({
 		color: '#fff',
 		backgroundColor: '#999',
 		verticalAlign: 'top',
-		marginRight: theme.spacing(2)
+		marginBottom: theme.spacing(2)
+	},
+	left: {
+		textAlign: 'center'
 	},
 	photo: {
 		width: 140,
 		height: 200,
 		verticalAlign: 'top',
-		marginRight: theme.spacing(2)
+		marginBottom: theme.spacing(2)
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -107,83 +110,13 @@ const styles = (theme) => ({
 	problem: {
 		color: 'red'
 	},
-	editButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	},
-	saveButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	},
-	undoButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(12)
-	},
-	attachButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(12)
-	},
-	consultationButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(21)
-	},
-	deleteButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	editButton: computeFixedFabStyle({theme, col: 1}),
+	saveButton: computeFixedFabStyle({theme, col: 1}),
+	undoButton: computeFixedFabStyle({theme, col: 2}),
+	attachButton: computeFixedFabStyle({theme, col: 2}),
+	consultationButton: computeFixedFabStyle({theme, col: 3}),
+	deleteButton: computeFixedFabStyle({theme, col: 4})
 });
-
-const DEBOUNCE_OPTIONS = {leading: false};
-// TODO this does not work because we do not render on an empty input
-
-const makeSuggestions = (useCollectionFind, set) => (searchString) => {
-	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
-		searchString,
-		TIMEOUT_INPUT_DEBOUNCE,
-		DEBOUNCE_OPTIONS
-	);
-
-	const $regex = escapeStringRegexp(debouncedSearchString);
-	const $nin = set || [];
-	const limit = 5;
-
-	const query = {name: {$regex, $options: 'i', $nin}};
-
-	const sort = {
-		name: 1
-	};
-	const fields = {
-		...sort,
-		_id: 1,
-		name: 1
-	};
-
-	const options = {
-		fields,
-		sort,
-		skip: 0,
-		limit
-	};
-
-	const {loading, ...rest} = useCollectionFind(query, options, [
-		$regex,
-		JSON.stringify($nin)
-		// refreshKey,
-	]);
-
-	return {
-		loading: loading || pending(),
-		cancel,
-		flush,
-		...rest
-	};
-};
 
 class PatientPersonalInformation extends React.Component {
 	constructor(props) {
@@ -265,9 +198,17 @@ class PatientPersonalInformation extends React.Component {
 		const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
 
 		const _birthdate = eidParseBirthdate(patient.birthdate);
+		const thisMorning = startOfToday();
+		const ageInterval = {start: _birthdate, end: thisMorning};
+		const detailedAge = formatDuration(intervalToDuration(ageInterval), {
+			delimiter: ','
+		});
+		const shortAge = detailedAge.split(',')[0];
+		const displayedAge =
+			(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
 
 		return (
-			<div>
+			<Paper>
 				<Prompt
 					when={dirty}
 					message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
@@ -276,7 +217,7 @@ class PatientPersonalInformation extends React.Component {
 					container
 					className={classNames(classes.container, classes.details)}
 				>
-					<Grid item sm={4} md={2}>
+					<Grid item sm={4} md={2} className={classes.left}>
 						{patient.photo ? (
 							<img
 								className={classes.photo}
@@ -299,9 +240,7 @@ class PatientPersonalInformation extends React.Component {
 						{!patient.birthdate ? (
 							''
 						) : (
-							<Typography variant="h5">
-								{formatDistanceStrict(_birthdate, startOfToday())}
-							</Typography>
+							<Typography variant="h5">{displayedAge}</Typography>
 						)}
 						{!patient.noshow ? (
 							''
@@ -419,7 +358,7 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={makeSuggestions(
+										useSuggestions={makeSubstringSuggestions(
 											useAllergiesFind,
 											patient.allergies
 										)}
@@ -506,7 +445,7 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={makeSuggestions(
+										useSuggestions={makeSubstringSuggestions(
 											useDoctorsFind,
 											patient.doctors
 										)}
@@ -529,7 +468,7 @@ class PatientPersonalInformation extends React.Component {
 										itemToKey={(x) => x._id}
 										itemToString={(x) => x.name}
 										createNewItem={(name) => ({name})}
-										useSuggestions={makeSuggestions(
+										useSuggestions={makeSubstringSuggestions(
 											useInsurancesFind,
 											patient.insurances
 										)}
@@ -647,7 +586,7 @@ class PatientPersonalInformation extends React.Component {
 					patient={this.props.patient}
 					onClose={() => this.setState({deleting: false})}
 				/>
-			</div>
+			</Paper>
 		);
 	}
 }

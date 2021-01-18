@@ -8,7 +8,7 @@ import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -16,6 +16,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -104,4 +106,4 @@ AttachmentEditionDialog.propTypes = {
 	attachment: PropTypes.object.isRequired
 };
 
-export default AttachmentEditionDialog;
+export default withLazyOpening(AttachmentEditionDialog);

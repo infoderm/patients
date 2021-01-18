@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 import Accordion from '@material-ui/core/Accordion';
 
@@ -14,6 +15,9 @@ import StaticConsultationCardActions from './StaticConsultationCardActions.js';
 const useStyles = makeStyles(() => ({
 	card: {
 		transition: 'opacity 500ms ease-out'
+	},
+	appointment: {
+		backgroundColor: '#FFF5D6'
 	}
 }));
 
@@ -24,7 +28,7 @@ const StaticConsultationCard = (props) => {
 		loading,
 		found,
 		defaultExpanded,
-		consultation: {currency, price, paid}
+		consultation: {isDone, currency, price, paid}
 	} = props;
 
 	const deleted = !loading && !found;
@@ -46,7 +50,9 @@ const StaticConsultationCard = (props) => {
 		<Accordion
 			defaultExpanded={defaultExpanded}
 			TransitionProps={{unmountOnExit: true}}
-			className={classes.card}
+			className={classNames(classes.card, {
+				[classes.appointment]: !isDone
+			})}
 			style={cardOpacity}
 		>
 			<StaticConsultationCardSummary {...props} {...extraProps} />
@@ -56,6 +62,8 @@ const StaticConsultationCard = (props) => {
 		</Accordion>
 	);
 };
+
+StaticConsultationCard.projection = {};
 
 StaticConsultationCard.defaultProps = {
 	loading: false,

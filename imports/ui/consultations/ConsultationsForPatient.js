@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
 import {Link} from 'react-router-dom';
@@ -9,32 +6,34 @@ import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 
-import {Patients} from '../../api/patients.js';
-// import {Consultations} from '../../api/consultations.js';
+import {usePatient} from '../../api/patients.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import ConsultationsPager from './ConsultationsPager.js';
 
 const useStyles = makeStyles((theme) => ({
-	createButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	createButton: computeFixedFabStyle({theme, col: 4})
 }));
 
 const ConsultationsForPatient = (props) => {
 	const classes = useStyles();
 
-	const {patientId, loading, patient, page, perpage} = props;
+	const {patientId, page, perpage} = props;
+
+	const options = {fields: {_id: 1}};
+
+	const deps = [patientId];
+
+	const {loading, found} = usePatient({}, patientId, options, deps);
 
 	if (loading) {
 		return <Loading />;
 	}
 
-	if (!patient) {
+	if (!found) {
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
@@ -67,15 +66,4 @@ const ConsultationsForPatient = (props) => {
 	);
 };
 
-export default withTracker(({patientId}) => {
-	const patientHandle = Meteor.subscribe('patient', patientId);
-
-	const loading = !patientHandle.ready();
-
-	const patient = loading ? null : Patients.findOne(patientId);
-
-	return {
-		loading,
-		patient
-	};
-})(ConsultationsForPatient);
+export default ConsultationsForPatient;

@@ -1,37 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/core/styles';
-
-import Fab from '@material-ui/core/Fab';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-const useStyles = makeStyles((theme) => ({
-	fabnext: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(12)
-	}
-}));
+import FixedFab from '../button/FixedFab.js';
 
-export default function Next({to, ...rest}) {
-	const classes = useStyles();
-
-	return (
-		<Fab
-			className={classes.fabnext}
-			color="primary"
-			component={Link}
-			to={to}
-			{...rest}
-		>
-			<NavigateNextIcon />
-		</Fab>
-	);
-}
+const Next = ({to, ...rest}) => (
+	<FixedFab col={2} color="primary" component={Link} to={to} {...rest}>
+		<NavigateNextIcon />
+	</FixedFab>
+);
 
 Next.propTypes = {
 	to: PropTypes.string.isRequired
 };
+
+export default Next;

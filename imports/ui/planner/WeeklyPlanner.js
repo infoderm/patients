@@ -5,22 +5,35 @@ import React, {useState} from 'react';
 
 import {Link, useHistory} from 'react-router-dom';
 
+import {makeStyles} from '@material-ui/core/styles';
+
+import Fab from '@material-ui/core/Fab';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+
 import isSameDay from 'date-fns/isSameDay';
-import startOfMonth from 'date-fns/startOfMonth';
+import startOfWeek from 'date-fns/startOfWeek';
 import dateFormat from 'date-fns/format';
-import addMonths from 'date-fns/addMonths';
-import subMonths from 'date-fns/subMonths';
+import addWeeks from 'date-fns/addWeeks';
+import subWeeks from 'date-fns/subWeeks';
+import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
 
-import {Consultations} from '../../api/consultations.js';
+import {Events} from '../../api/events.js';
+import {useSetting} from '../../client/settings.js';
 
-import MonthlyCalendar from '../calendar/MonthlyCalendar.js';
-import calendarRanges from '../calendar/ranges.js';
+import Loading from '../navigation/Loading.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
+
+import WeeklyCalendar from '../calendar/WeeklyCalendar.js';
+import {weekly} from '../calendar/ranges.js';
+import {ALL_WEEK_DAYS} from '../calendar/constants.js';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
 
-const DayHeader = ({className, day}) => {
-	const firstDayOfMonth = startOfMonth(day);
-	const displayFormat = isSameDay(day, firstDayOfMonth) ? 'MMM d' : 'd';
+const DayHeader = ({className, day, weekOptions}) => {
+	const firstDayOfWeek = startOfWeek(day, weekOptions);
+	const displayFormat =
+		isFirstDayOfMonth(day) || isSameDay(day, firstDayOfWeek) ? 'MMM d' : 'd';
 	return (
 		<div className={className}>
 			<Link to={`/calendar/day/${dateFormat(day, 'yyyy-MM-dd')}`}>
@@ -30,24 +43,32 @@ const DayHeader = ({className, day}) => {
 	);
 };
 
+const useStyles = makeStyles((theme) => ({
+	calendar: {
+		marginBottom: '6em'
+	},
+	displayAllWeekDaysToggle: computeFixedFabStyle({theme, col: 3})
+}));
+
 const WeeklyPlanner = (props) => {
 	const {
 		year,
-		month,
+		week,
 		weekOptions,
-		firstDayOfMonth,
-		firstDayOfNextMonth,
-		firstDayOfPrevMonth,
-		consultations
+		nextWeek,
+		prevWeek,
+		monthOfWeek,
+		events
 	} = props;
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
 	const [creatingAppointment, setCreatingAppointment] = useState(false);
+	const [displayAllWeekDays, setDisplayAllWeekDays] = useState(false);
 	const history = useHistory();
+	const {loading, value: displayedWeekDays} = useSetting('displayed-week-days');
+	const classes = useStyles();
 
-	const previousMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
-	const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
-	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/ww');
+	if (loading) return <Loading />;
 
 	const onSlotClick = (slot) => {
 		console.debug(slot);
@@ -59,40 +80,39 @@ const WeeklyPlanner = (props) => {
 		console.debug(event);
 	};
 
-	console.debug(consultations);
-
-	const events = [];
-
-	for (const consultation of consultations) {
-		const event = {
-			begin: consultation.datetime,
-			title: consultation._id
-		};
-		events.push(event);
-	}
-
 	console.debug(events);
 
 	return (
-		<div>
-			<MonthlyCalendar
+		<>
+			<WeeklyCalendar
+				className={classes.calendar}
 				year={year}
-				month={month}
-				prev={() => history.push(`/calendar/month/${previousMonth}`)}
-				next={() => history.push(`/calendar/month/${nextMonth}`)}
-				weekly={() => history.push(`/calendar/week/${firstWeekOfMonth}`)}
+				week={week}
+				prev={() => history.push(`/calendar/week/${prevWeek}`)}
+				next={() => history.push(`/calendar/week/${nextWeek}`)}
+				monthly={() => history.push(`/calendar/month/${monthOfWeek}`)}
 				events={events}
 				DayHeader={DayHeader}
+				weekOptions={weekOptions}
+				displayedWeekDays={
+					displayAllWeekDays ? ALL_WEEK_DAYS : displayedWeekDays
+				}
 				onSlotClick={onSlotClick}
 				onEventClick={onEventClick}
-				{...weekOptions}
 			/>
 			<NewAppointmentDialog
 				initialDatetime={selectedSlot}
 				open={creatingAppointment}
 				onClose={() => setCreatingAppointment(false)}
 			/>
-		</div>
+			<Fab
+				className={classes.displayAllWeekDaysToggle}
+				color={displayAllWeekDays ? 'primary' : 'default'}
+				onClick={() => setDisplayAllWeekDays(!displayAllWeekDays)}
+			>
+				{displayAllWeekDays ? <VisibilityIcon /> : <VisibilityOffIcon />}
+			</Fab>
+		</>
 	);
 };
 
@@ -101,37 +121,45 @@ export default withTracker(({match}) => {
 	const week = Number.parseInt(match.params.week, 10);
 
 	const weekOptions = {
-		weekStartsOn: 1
+		useAdditionalWeekYearTokens: true,
+		weekStartsOn: 1,
+		firstWeekContainsDate: 1
 	};
 
-	const [begin, end] = calendarRanges.weekly(year, week, weekOptions);
+	const [begin, end] = weekly(year, week, weekOptions);
 
 	console.debug(begin, end);
 
-	const firstDayOfMonth = new Date(year, week - 1, 1);
-	const firstDayOfPreviousMonth = subMonths(firstDayOfMonth, 1);
-	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
+	const someDayOfWeek = new Date(
+		year,
+		0,
+		weekOptions.firstWeekContainsDate + (week - 1) * 7
+	);
+	const someDayOfPrevWeek = subWeeks(someDayOfWeek, 1);
+	const someDayOfNextWeek = addWeeks(someDayOfWeek, 1);
+	const prevWeek = dateFormat(someDayOfPrevWeek, 'YYYY/ww', weekOptions);
+	const nextWeek = dateFormat(someDayOfNextWeek, 'YYYY/ww', weekOptions);
+	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
 
-	Meteor.subscribe('consultations.interval', begin, end);
+	Meteor.subscribe('events.interval', begin, end);
 
 	return {
 		year,
-		month: week,
 		week,
 		weekOptions,
-		firstDayOfMonth,
-		firstDayOfNextMonth,
-		firstDayOfPrevMonth: firstDayOfPreviousMonth,
-		consultations: Consultations.find(
+		nextWeek,
+		prevWeek,
+		monthOfWeek,
+		events: Events.find(
 			{
-				datetime: {
+				begin: {
 					$gte: begin,
 					$lt: end
 				}
 			},
 			{
 				sort: {
-					datetime: 1
+					begin: 1
 				}
 			}
 		).fetch()

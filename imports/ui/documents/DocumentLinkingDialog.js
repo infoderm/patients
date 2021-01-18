@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '../modal/OptimizedDialog.js';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -15,6 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import withLazyOpening from '../modal/withLazyOpening.js';
 import PatientPicker from '../patients/PatientPicker.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -101,4 +102,4 @@ DocumentLinkingDialog.projection = {
 	_id: 1
 };
 
-export default DocumentLinkingDialog;
+export default withLazyOpening(DocumentLinkingDialog);

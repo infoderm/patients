@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
 
+import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import InfoIcon from '@material-ui/icons/Info';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassFullIcon from '@material-ui/icons/HourglassFull';
@@ -62,6 +63,26 @@ function paymentMethodString(payment_method) {
 	}
 }
 
+const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
+	<ListItem>
+		<ListItemAvatar>
+			<Avatar>
+				<Icon />
+			</Avatar>
+		</ListItemAvatar>
+		<ListItemText
+			primary={primary}
+			secondary={secondary}
+			secondaryTypographyProps={{
+				style: {
+					whiteSpace: 'pre-wrap'
+				}
+			}}
+			{...rest}
+		/>
+	</ListItem>
+);
+
 const StaticConsultationCardDetails = (props) => {
 	const classes = useStyles();
 
@@ -69,6 +90,10 @@ const StaticConsultationCardDetails = (props) => {
 		deleted,
 		missingPaymentData,
 		consultation: {
+			isDone,
+			isCancelled,
+			cancellationDatetime,
+			cancellationReason,
 			reason,
 			done,
 			todo,
@@ -88,128 +113,98 @@ const StaticConsultationCardDetails = (props) => {
 		<AccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<List>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<InfoIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Motif de la consultation" secondary={reason} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<DoneIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Examens déjà réalisés" secondary={done} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<HourglassFullIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Examens à réaliser" secondary={todo} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<EditIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Traitement" secondary={treatment} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<AlarmIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="À revoir" secondary={next} />
-				</ListItem>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<WarningIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Autres remarques" secondary={more} />
-				</ListItem>
-				{missingPaymentData ? (
-					''
-				) : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<EuroSymbolIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="Paiement"
-							secondary={`À payé ${Currency.format(paid, {
-								code: currency
-							})} de ${Currency.format(price, {code: currency})}.`}
-						/>
-					</ListItem>
+				{!isDone && isCancelled && (
+					<ConsultationsCardListItem
+						Icon={AlarmOffIcon}
+						primary="Rendez-vous annulé"
+						secondary={`${cancellationDatetime}: ${cancellationReason}`}
+					/>
 				)}
-				{missingPaymentData ? (
-					''
-				) : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<AccountBalanceWalletIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="Méthode de Paiement"
-							secondary={paymentMethodString(payment_method)}
-						/>
-					</ListItem>
+				<ConsultationsCardListItem
+					Icon={InfoIcon}
+					primary={isDone ? 'Motif de la consultation' : 'Motif du rendez-vous'}
+					secondary={reason}
+				/>
+				{isDone && done && (
+					<ConsultationsCardListItem
+						Icon={DoneIcon}
+						primary="Examens déjà réalisés"
+						secondary={done}
+					/>
 				)}
-				{book === '' ? (
-					''
-				) : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<BookIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Carnet" secondary={book} />
-					</ListItem>
+				{isDone && todo && (
+					<ConsultationsCardListItem
+						Icon={HourglassFullIcon}
+						primary="Examens à réaliser"
+						secondary={todo}
+					/>
 				)}
-				{attachments === undefined || attachments.length === 0 ? (
-					''
-				) : (
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<AttachmentIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							disableTypography
-							primary={
-								<Typography variant="subtitle1">
-									{attachments.length} attachments
-								</Typography>
-							}
-							secondary={
-								<ul>
-									{attachments.map((attachmentId) => (
-										<li key={attachmentId}>
-											<AttachmentLink
-												className={classes.link}
-												attachmentId={attachmentId}
-											/>
-										</li>
-									))}
-								</ul>
-							}
-						/>
-					</ListItem>
+				{isDone && (
+					<ConsultationsCardListItem
+						Icon={EditIcon}
+						primary="Traitement"
+						secondary={treatment}
+					/>
+				)}
+				{isDone && (
+					<ConsultationsCardListItem
+						Icon={AlarmIcon}
+						primary="À revoir"
+						secondary={next}
+					/>
+				)}
+				{isDone && more && (
+					<ConsultationsCardListItem
+						Icon={WarningIcon}
+						primary="Autres remarques"
+						secondary={more}
+					/>
+				)}
+				{isDone && !missingPaymentData && (
+					<ConsultationsCardListItem
+						Icon={EuroSymbolIcon}
+						primary="Paiement"
+						secondary={`À payé ${Currency.format(paid, {
+							code: currency
+						})} de ${Currency.format(price, {code: currency})}.`}
+					/>
+				)}
+				{isDone && !missingPaymentData && (
+					<ConsultationsCardListItem
+						Icon={AccountBalanceWalletIcon}
+						primary="Méthode de Paiement"
+						secondary={paymentMethodString(payment_method)}
+					/>
+				)}
+				{isDone && book && (
+					<ConsultationsCardListItem
+						Icon={BookIcon}
+						primary="Carnet"
+						secondary={book}
+					/>
+				)}
+				{attachments === undefined || attachments.length === 0 ? null : (
+					<ConsultationsCardListItem
+						disableTypography
+						Icon={AttachmentIcon}
+						primary={
+							<Typography variant="subtitle1">
+								{attachments.length} attachments
+							</Typography>
+						}
+						secondary={
+							<ul>
+								{attachments.map((attachmentId) => (
+									<li key={attachmentId}>
+										<AttachmentLink
+											className={classes.link}
+											attachmentId={attachmentId}
+										/>
+									</li>
+								))}
+							</ul>
+						}
+					/>
 				)}
 			</List>
 		</AccordionDetails>

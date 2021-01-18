@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog.js';
 
-import {Allergies} from '../../api/allergies.js';
+import {useAllergiesFind} from '../../api/allergies.js';
 
 export default function AllergyRenamingDialog({open, onClose, onRename, tag}) {
 	return (
 		<TagRenamingDialog
 			open={open}
 			title="allergy"
-			collection={Allergies}
-			subscription="allergies"
+			useTagsFind={useAllergiesFind}
 			method="allergies.rename"
 			tag={tag}
 			onClose={onClose}

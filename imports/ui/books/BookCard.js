@@ -15,10 +15,15 @@ import {books} from '../../api/books.js';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
 
+import BookRenamingDialog from './BookRenamingDialog.js';
+
 const useStyles = makeStyles(() => ({
 	avatar: {
 		color: '#fff',
 		backgroundColor: orange[500]
+	},
+	content: {
+		lineHeight: 1.35
 	}
 }));
 
@@ -41,7 +46,7 @@ export default function BookCard({item}) {
 			content={({count, total, first, last}) => {
 				if (count === undefined)
 					return (
-						<Typography variant="body1">
+						<Typography className={classes.content} variant="body1">
 							Total ... <br />
 							From ...
 						</Typography>
@@ -52,7 +57,7 @@ export default function BookCard({item}) {
 
 				const fmt = 'MMM do, yyyy';
 				return (
-					<Typography variant="body1">
+					<Typography className={classes.content} variant="body1">
 						Total {total} € <br />
 						From {dateFormat(first, fmt)} to {dateFormat(last, fmt)}.
 					</Typography>
@@ -60,6 +65,7 @@ export default function BookCard({item}) {
 			}}
 			avatar={<Avatar className={classes.avatar}>Bk</Avatar>}
 			abbr={`/${book.slice(0, 2)}`}
+			RenamingDialog={BookRenamingDialog}
 		/>
 	);
 }

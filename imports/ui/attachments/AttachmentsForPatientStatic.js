@@ -8,16 +8,13 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import NoContent from '../navigation/NoContent.js';
 import Paginator from '../navigation/Paginator.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 import AttachmentsGallery from '../attachments/AttachmentsGallery.js';
 
 const useStyles = makeStyles((theme) => ({
-	attachButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	attachButton: computeFixedFabStyle({theme, col: 4})
 }));
 
 export default function AttachmentsForPatientStatic({

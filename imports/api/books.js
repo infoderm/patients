@@ -6,15 +6,30 @@ import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
 import makeQuery from './makeQuery.js';
+import makeObservedQuery from './makeObservedQuery.js';
+import observeQuery from './observeQuery.js';
+import {parseUint32StrictOrString} from './string.js';
+
+import {
+	STATS_SUFFIX,
+	FIND_CACHE_SUFFIX,
+	FIND_OBSERVE_SUFFIX
+} from './createTagCollection.js';
 
 const collection = 'books';
 const publication = 'books';
-const stats = 'books.stats';
+const stats = collection + STATS_SUFFIX;
+const cacheCollection = collection + FIND_CACHE_SUFFIX;
+const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 
 export const Books = new Mongo.Collection(collection);
 const Stats = new Mongo.Collection(stats);
+const BooksCache = new Mongo.Collection(cacheCollection);
 
 export const useBooks = makeQuery(Books, publication);
+
+// TODO rename to useObservedBooks
+export const useBooksFind = makeObservedQuery(BooksCache, cachePublication);
 
 if (Meteor.isServer) {
 	Meteor.publish(publication, function (args) {
@@ -24,6 +39,8 @@ if (Meteor.isServer) {
 		};
 		return Books.find(query);
 	});
+
+	Meteor.publish(cachePublication, observeQuery(Books, cacheCollection));
 }
 
 export const books = {
@@ -84,16 +101,8 @@ export const books = {
 	parse: (name) => {
 		const [year, book] = books.split(name);
 
-		let fiscalYear = year;
-		let bookNumber = book;
-
-		try {
-			fiscalYear = Number.parseInt(fiscalYear, 10);
-		} catch {}
-
-		try {
-			bookNumber = Number.parseInt(bookNumber, 10);
-		} catch {}
+		const fiscalYear = parseUint32StrictOrString(year);
+		const bookNumber = parseUint32StrictOrString(book);
 
 		return [fiscalYear, bookNumber];
 	},

@@ -8,12 +8,14 @@
 
     curl https://install.meteor.com | sh
     npm i -g npm-check-updates
+    npm i -g npx
     
 ### source
 
     git clone gh:dermatodoc/patients
     cd patients
     meteor npm ci
+    npx husky install # for pre-commit hook
     
 ### test server
     
