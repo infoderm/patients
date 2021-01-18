@@ -40,8 +40,11 @@ const UnpaidConsultationsList = ({loading, consultations}) => {
 		return <Loading />;
 	}
 
-	const unpaidConsultations = consultations
-		.filter((consultation) => consultation.paid !== consultation.price)
+	const unpaidConsultations = consultations.filter(
+		(consultation) => consultation.paid !== consultation.price
+	);
+
+	const displayedConsultations = unpaidConsultations
 		.filter(
 			(consultation) => showCash || consultation.payment_method !== 'cash'
 		)
@@ -57,9 +60,14 @@ const UnpaidConsultationsList = ({loading, consultations}) => {
 		<>
 			{unpaidConsultations.length === 0 ? (
 				<NoContent>All consultations have been paid for :)</NoContent>
+			) : displayedConsultations.length === 0 ? (
+				<NoContent>
+					None of the {unpaidConsultations.length} unpaid consultations matches
+					the current filter
+				</NoContent>
 			) : (
 				<div className={classes.container}>
-					{unpaidConsultations.map((consultation) => (
+					{displayedConsultations.map((consultation) => (
 						<StaticConsultationCard
 							key={consultation._id}
 							showPrice
