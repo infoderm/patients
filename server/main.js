@@ -118,6 +118,20 @@ Meteor.startup(() => {
 			Consultations.rawCollection().save(consultation);
 		});
 
+	// Add new appointments/consultations fields
+	Consultations.rawCollection()
+		.find()
+		.snapshot()
+		.forEach((consultation) => {
+			if (consultation.isDone) {
+				consultation.realDatetime = consultation.datetime;
+			} else {
+				consultation.scheduledDatetime = consultation.datetime;
+			}
+
+			Consultations.rawCollection().save(consultation);
+		});
+
 	// Regenerate PatientsSearchIndex
 	PatientsSearchIndex.remove({});
 	Patients.rawCollection()

@@ -1,47 +1,100 @@
+import {Meteor} from 'meteor/meteor';
+
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
 import AccordionActions from '@material-ui/core/AccordionActions';
 
 import Button from '@material-ui/core/Button';
 
 import EditIcon from '@material-ui/icons/Edit';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import SmartphoneIcon from '@material-ui/icons/Smartphone';
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import AlarmOffIcon from '@material-ui/icons/AlarmOff';
+import AlarmOnIcon from '@material-ui/icons/AlarmOn';
+import RestoreIcon from '@material-ui/icons/Restore';
 
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
 import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog.js';
+import AppointmentCancellationDialog from '../appointments/AppointmentCancellationDialog.js';
+import AppointmentUncancellationDialog from '../appointments/AppointmentUncancellationDialog.js';
+import EditAppointmentDialog from '../appointments/EditAppointmentDialog.js';
 
 import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
+import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog.js';
 
 const StaticConsultationCardActions = (props) => {
 	const [paying, setPaying] = useState(false);
 	const [settling, setSettling] = useState(false);
 	const [deleting, setDeleting] = useState(false);
+	const [restoreAppointment, setRestoreAppointment] = useState(false);
+	const [editing, setEditing] = useState(false);
+	const [cancelling, setCancelling] = useState(false);
+	const [uncancelling, setUncancelling] = useState(false);
+
+	const history = useHistory();
 
 	const {
 		found,
 		owes,
-		consultation: {_id, isDone, payment_method}
+		consultation: {_id, scheduledDatetime, isDone, isCancelled, payment_method}
 	} = props;
+
+	const beginConsultation = () => {
+		Meteor.call('appointments.beginConsultation', _id, (err) => {
+			if (err) {
+				console.error(err);
+			} else {
+				console.log(`Consultation #${_id} started.`);
+				history.push({pathname: `/edit/consultation/${_id}`});
+			}
+		});
+	};
 
 	return (
 		<AccordionActions>
-			<Button
+			<AttachFileButton
 				color="primary"
-				component={Link}
-				to={`/edit/consultation/${_id}`}
+				method="consultations.attach"
+				item={_id}
 				disabled={!found}
-			>
-				Edit
-				<EditIcon />
-			</Button>
+			/>
+			{!isDone && !isCancelled && (
+				<Button color="primary" disabled={!found} onClick={beginConsultation}>
+					Begin consultation
+					<FolderSharedIcon />
+				</Button>
+			)}
+			{isDone ? (
+				<Button
+					color="primary"
+					component={Link}
+					to={`/edit/consultation/${_id}`}
+					disabled={!found}
+				>
+					Edit
+					<EditIcon />
+				</Button>
+			) : (
+				!isCancelled && (
+					<Button
+						color="primary"
+						disabled={!found}
+						onClick={() => setEditing(true)}
+					>
+						Reschedule
+						<ScheduleIcon />
+					</Button>
+				)
+			)}
 			{owes && payment_method === 'wire' && (
 				<Button
 					color="primary"
@@ -62,12 +115,36 @@ const StaticConsultationCardActions = (props) => {
 					<EuroSymbolIcon />
 				</Button>
 			)}
-			<AttachFileButton
-				color="primary"
-				method="consultations.attach"
-				item={_id}
-				disabled={!found}
-			/>
+			{!isDone &&
+				(isCancelled ? (
+					<Button
+						color="primary"
+						disabled={!found}
+						onClick={() => setUncancelling(true)}
+					>
+						Uncancel
+						<AlarmOnIcon />
+					</Button>
+				) : (
+					<Button
+						color="secondary"
+						disabled={!found}
+						onClick={() => setCancelling(true)}
+					>
+						Cancel
+						<AlarmOffIcon />
+					</Button>
+				))}
+			{isDone && scheduledDatetime && (
+				<Button
+					color="secondary"
+					disabled={!found}
+					onClick={() => setRestoreAppointment(true)}
+				>
+					Restore Appointment
+					<RestoreIcon />
+				</Button>
+			)}
 			<Button
 				color="secondary"
 				disabled={!found}
@@ -103,8 +180,41 @@ const StaticConsultationCardActions = (props) => {
 					onClose={() => setDeleting(false)}
 				/>
 			)}
+			{!isDone && isCancelled ? (
+				<AppointmentUncancellationDialog
+					open={uncancelling}
+					appointment={props.consultation}
+					onClose={() => setUncancelling(false)}
+				/>
+			) : (
+				<AppointmentCancellationDialog
+					open={cancelling}
+					appointment={props.consultation}
+					onClose={() => setCancelling(false)}
+				/>
+			)}
+			{isDone && scheduledDatetime && (
+				<ConsultationAppointmentRestorationDialog
+					open={restoreAppointment}
+					consultation={props.consultation}
+					onClose={() => setRestoreAppointment(false)}
+				/>
+			)}
+			{!isDone && !isCancelled && (
+				<EditAppointmentDialog
+					open={editing}
+					appointment={props.consultation}
+					onClose={() => setEditing(false)}
+				/>
+			)}
 		</AccordionActions>
 	);
+};
+
+StaticConsultationCardActions.projection = {
+	_id: 1,
+	isDone: 1,
+	payment_method: 1
 };
 
 StaticConsultationCardActions.defaultProps = {

@@ -16,6 +16,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import {format} from 'date-fns';
 
@@ -49,7 +50,8 @@ const styles = (theme) => ({
 		width: '48px',
 		height: '48px'
 	},
-	saveButton: computeFixedFabStyle({theme, col: 1})
+	saveButton: computeFixedFabStyle({theme, col: 2}),
+	doneButton: computeFixedFabStyle({theme, col: 1})
 });
 
 class ConsultationForm extends React.Component {
@@ -80,7 +82,7 @@ class ConsultationForm extends React.Component {
 		};
 	}
 
-	handleSubmit = (event) => {
+	handleSubmit = (setDoneDatetime) => (event) => {
 		event.preventDefault();
 
 		const {
@@ -126,21 +128,27 @@ class ConsultationForm extends React.Component {
 		};
 
 		if (consultationId === undefined) {
-			Meteor.call('consultations.insert', consultation, (err, _id) => {
-				if (err) {
-					console.error(err);
-				} else {
-					this.setState({
-						dirty: false
-					});
-					history.push({pathname: `/consultation/${_id}`});
+			Meteor.call(
+				'consultations.insert',
+				consultation,
+				setDoneDatetime,
+				(err, _id) => {
+					if (err) {
+						console.error(err);
+					} else {
+						this.setState({
+							dirty: false
+						});
+						history.push({pathname: `/consultation/${_id}`});
+					}
 				}
-			});
+			);
 		} else {
 			Meteor.call(
 				'consultations.update',
 				consultationId,
 				consultation,
+				setDoneDatetime,
 				(err, _res) => {
 					if (err) {
 						console.error(err);
@@ -158,7 +166,7 @@ class ConsultationForm extends React.Component {
 	render() {
 		const {
 			classes,
-			// consultation: {_id: consultationId},
+			consultation: {doneDatetime},
 			loadingPatient,
 			patient
 		} = this.props;
@@ -399,12 +407,21 @@ class ConsultationForm extends React.Component {
 				</Grid>
 				<Fab
 					className={classes.saveButton}
-					color="primary"
+					color={doneDatetime ? 'primary' : 'secondary'}
 					aria-label="save"
 					disabled={!this.state.dirty}
-					onClick={this.handleSubmit}
+					onClick={this.handleSubmit(false)}
 				>
 					<SaveIcon />
+				</Fab>
+				<Fab
+					className={classes.doneButton}
+					color={!doneDatetime ? 'primary' : 'secondary'}
+					aria-label="done"
+					disabled={!this.state.dirty}
+					onClick={this.handleSubmit(true)}
+				>
+					<AssignmentTurnedInIcon />
 				</Fab>
 			</div>
 		);

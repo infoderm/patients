@@ -16,6 +16,8 @@ import {parseUint32StrictOrString} from './string.js';
 
 import makeQuery from './makeQuery.js';
 import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
+import unconditionallyRemoveById from './unconditionallyRemoveById.js';
+import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 
 const collection = 'consultations';
 const stats = collection + '.stats';
@@ -314,11 +316,11 @@ function sanitize({
 	check(patientId, String);
 	check(datetime, Date);
 
-	check(reason, String);
-	check(done, String);
-	check(todo, String);
-	check(treatment, String);
-	check(next, String);
+	if (reason !== undefined) check(reason, String);
+	if (done !== undefined) check(done, String);
+	if (todo !== undefined) check(todo, String);
+	if (treatment !== undefined) check(treatment, String);
+	if (next !== undefined) check(next, String);
 	if (more !== undefined) check(more, String);
 
 	if (currency !== undefined) check(currency, String);
@@ -327,19 +329,20 @@ function sanitize({
 	if (book !== undefined) check(book, String);
 	if (payment_method !== undefined) check(payment_method, String);
 
-	reason = reason.trim();
-	done = done.trim();
-	todo = todo.trim();
-	treatment = treatment.trim();
-	next = next.trim();
-	more = more && more.trim();
+	reason = reason?.trim();
+	done = done?.trim();
+	todo = todo?.trim();
+	treatment = treatment?.trim();
+	next = next?.trim();
+	more = more?.trim();
 
-	currency = currency && currency.trim().toUpperCase();
-	book = book && book.trim();
+	currency = currency?.trim().toUpperCase();
+	book = book?.trim();
 
 	return {
 		patientId,
 		datetime,
+		realDatetime: datetime,
 		reason,
 		done,
 		todo,
@@ -356,7 +359,7 @@ function sanitize({
 	};
 }
 
-Meteor.methods({
+const methods = {
 	'books.interval.csv'(begin, end, firstBook, lastBook, maxRows) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
@@ -444,7 +447,7 @@ Meteor.methods({
 		return table.join('\n');
 	},
 
-	'consultations.insert'(consultation) {
+	'consultations.insert'(consultation, setDoneDatetime = false) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -455,18 +458,29 @@ Meteor.methods({
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
+		const createdAt = new Date();
+		const doneDatetime = setDoneDatetime ? createdAt : undefined;
+
 		return Consultations.insert({
 			...fields,
-			createdAt: new Date(),
+			createdAt,
+			doneDatetime,
 			owner: this.userId
 		});
 	},
 
-	'consultations.update'(consultationId, newfields) {
+	'consultations.update'(
+		consultationId,
+		newfields,
+		updateExistingDoneDatetime = false
+	) {
 		check(consultationId, String);
-		const consultation = Consultations.findOne(consultationId);
-		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
+		const existing = Consultations.findOne({
+			_id: consultationId,
+			owner: this.userId
+		});
+		if (!existing) {
+			throw new Meteor.Error('not-found');
 		}
 
 		const fields = sanitize(newfields);
@@ -474,7 +488,13 @@ Meteor.methods({
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
-		return Consultations.update(consultationId, {$set: fields});
+		return Consultations.update(consultationId, {
+			$set: {
+				...fields,
+				doneDatetime:
+					(!updateExistingDoneDatetime && existing.doneDatetime) || new Date()
+			}
+		});
 	},
 
 	'consultations.attach'(consultationId, uploadId) {
@@ -518,15 +538,18 @@ Meteor.methods({
 			$pull: {attachments: uploadId}
 		});
 	},
-	'consultations.remove'(consultationId) {
-		check(consultationId, String);
-		const consultation = Consultations.findOne(consultationId);
-		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
 
-		return Consultations.remove(consultationId);
-	},
+	'consultations.remove': unconditionallyRemoveById(Consultations),
+
+	'consultations.restoreAppointment': unconditionallyUpdateById(
+		Consultations,
+		(existing) => ({
+			$set: {
+				datetime: existing.scheduledDatetime,
+				isDone: false
+			}
+		})
+	),
 	'books.changeBookNumber'(oldBookId, newBookNumber) {
 		check(oldBookId, String);
 		check(newBookNumber, String);
@@ -569,9 +592,12 @@ Meteor.methods({
 		Books.remove(oldBookId);
 		return newBookId;
 	}
-});
+};
+
+Meteor.methods(methods);
 
 export const consultations = {
+	methods,
 	sanitize,
 	stats: {
 		collection: stats,

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import AppointmentDialog from './AppointmentDialog.js';
 
 const onSubmit = (args, callback) => {
-	Meteor.call('consultations.schedule', args, callback);
+	Meteor.call('appointments.schedule', args, callback);
 };
 
 export default function NewAppointmentDialog(props) {

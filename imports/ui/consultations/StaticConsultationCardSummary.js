@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 
@@ -18,7 +19,7 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import dateFormat from 'date-fns/format';
 
-import {msToString} from '../../client/duration.js';
+import {msToString, msToStringShort} from '../../client/duration.js';
 
 import Currency from 'currency-formatter';
 
@@ -45,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: '#f88',
 		color: '#fff',
 		fontWeight: 'bold'
+	},
+	cancelledChip: {
+		backgroundColor: '#ff7961',
+		color: '#fff'
 	}
 }));
 
@@ -72,9 +77,13 @@ const StaticConsultationCardSummary = (props) => {
 		loadingPatient,
 		patient,
 		consultation: {
+			_id,
 			patientId,
 			datetime,
+			doneDatetime,
 			duration,
+			isDone,
+			isCancelled,
 			currency,
 			payment_method,
 			price,
@@ -90,14 +99,30 @@ const StaticConsultationCardSummary = (props) => {
 			<div className={classes.chips}>
 				<Chip
 					label={dateFormat(datetime, 'iii do MMMM yyyy')}
-					className={classes.chip}
+					className={classNames(classes.chip, {
+						[classes.cancelledChip]: isCancelled
+					})}
 					component={Link}
 					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
 				/>
-				<Chip label={dateFormat(datetime, 'hh:mma')} className={classes.chip} />
-				{duration && (
-					<Chip label={msToString(duration)} className={classes.chip} />
-				)}
+				<Chip
+					label={dateFormat(datetime, 'hh:mma')}
+					className={classNames(classes.chip, {
+						[classes.cancelledChip]: isCancelled
+					})}
+					component={Link}
+					to={`/consultation/${_id}`}
+				/>
+				{isDone
+					? doneDatetime && (
+							<Chip
+								label={msToStringShort(doneDatetime - datetime)}
+								className={classes.chip}
+							/>
+					  )
+					: duration && (
+							<Chip label={msToString(duration)} className={classes.chip} />
+					  )}
 				{!PatientChip || !patientId ? null : (
 					<PatientChip
 						loading={loadingPatient}

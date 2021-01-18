@@ -8,6 +8,7 @@ import TextTransformSetting from './TextTransformSetting.js';
 import LanguageSetting from './LanguageSetting.js';
 import NavigationDrawerIsOpenSetting from './NavigationDrawerIsOpenSetting.js';
 import AppointmentDurationSetting from './AppointmentDurationSetting.js';
+import AppointmentCancellationReasonSetting from './AppointmentCancellationReasonSetting.js';
 import DisplayedWeekDaysSetting from './DisplayedWeekDaysSetting.js';
 import ImportantStringsSetting from './ImportantStringsSetting.js';
 import WeekStartsOnSetting from './WeekStartsOnSetting.js';
@@ -44,6 +45,7 @@ export default function Settings() {
 			<Typography variant="h3">Other Settings</Typography>
 			<ImportantStringsSetting className={classes.setting} />
 			<AppointmentDurationSetting className={classes.setting} />
+			<AppointmentCancellationReasonSetting className={classes.setting} />
 			<DisplayedWeekDaysSetting className={classes.setting} />
 		</div>
 	);

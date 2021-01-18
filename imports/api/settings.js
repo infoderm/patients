@@ -58,6 +58,7 @@ const defaults = {
 	currency: 'EUR',
 	lang: 'en',
 	'appointment-duration': [15 * 60 * 1000, 30 * 60 * 1000],
+	'appointment-cancellation-reason': ['patient-cancelled', 'doctor-cancelled'],
 	'important-strings': [],
 	'week-starts-on': 1,
 	'text-transform': 'uppercase',

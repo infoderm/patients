@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
 
+import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import InfoIcon from '@material-ui/icons/Info';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassFullIcon from '@material-ui/icons/HourglassFull';
@@ -90,6 +91,9 @@ const StaticConsultationCardDetails = (props) => {
 		missingPaymentData,
 		consultation: {
 			isDone,
+			isCancelled,
+			cancellationDatetime,
+			cancellationReason,
 			reason,
 			done,
 			todo,
@@ -109,6 +113,13 @@ const StaticConsultationCardDetails = (props) => {
 		<AccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<List>
+				{!isDone && isCancelled && (
+					<ConsultationsCardListItem
+						Icon={AlarmOffIcon}
+						primary="Rendez-vous annulé"
+						secondary={`${cancellationDatetime}: ${cancellationReason}`}
+					/>
+				)}
 				<ConsultationsCardListItem
 					Icon={InfoIcon}
 					primary={isDone ? 'Motif de la consultation' : 'Motif du rendez-vous'}
@@ -149,7 +160,7 @@ const StaticConsultationCardDetails = (props) => {
 						secondary={more}
 					/>
 				)}
-				{missingPaymentData ? null : (
+				{isDone && !missingPaymentData && (
 					<ConsultationsCardListItem
 						Icon={EuroSymbolIcon}
 						primary="Paiement"
@@ -158,14 +169,14 @@ const StaticConsultationCardDetails = (props) => {
 						})} de ${Currency.format(price, {code: currency})}.`}
 					/>
 				)}
-				{missingPaymentData ? null : (
+				{isDone && !missingPaymentData && (
 					<ConsultationsCardListItem
 						Icon={AccountBalanceWalletIcon}
 						primary="Méthode de Paiement"
 						secondary={paymentMethodString(payment_method)}
 					/>
 				)}
-				{book && (
+				{isDone && book && (
 					<ConsultationsCardListItem
 						Icon={BookIcon}
 						primary="Carnet"

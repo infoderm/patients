@@ -1,10 +1,8 @@
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
-import {withRouter} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -27,13 +25,15 @@ import dateFormat from 'date-fns/format';
 
 import {msToString} from '../../client/duration.js';
 
-import {patients} from '../../api/patients.js';
-import {settings} from '../../client/settings.js';
+import {patients, usePatient} from '../../api/patients.js';
+import {useSetting} from '../../client/settings.js';
+
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
 import PatientPicker from '../patients/PatientPicker.js';
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
 	rightIcon: {
 		marginLeft: theme.spacing(1)
 	},
@@ -44,58 +44,83 @@ const styles = (theme) => ({
 		overflow: 'auto',
 		width: '100%'
 	}
-});
+}));
 
-class AppointmentDialog extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			date: dateFormat(props.initialDatetime, 'yyyy-MM-dd'),
-			time: dateFormat(props.initialDatetime, 'HH:mm'),
-			duration:
-				props.appointmentDuration.length > 0 ? props.appointmentDuration[0] : 0,
-			patient: props.initialPatient ? [props.initialPatient] : [],
-			phone: '',
-			reason: '',
-			patientError: '',
-			patientIsReadOnly: Boolean(props.initialPatient)
-		};
-	}
+const usePhone = (patientList) => {
+	const patientId = patientList.length === 1 ? patientList[0]._id : '?';
 
-	UNSAFE_componentWillReceiveProps(props) {
-		const fields = {
-			date: dateFormat(props.initialDatetime, 'yyyy-MM-dd'),
-			time: dateFormat(props.initialDatetime, 'HH:mm')
-		};
+	const options = {fields: {phone: 1}};
 
-		if (props.initialPatient) {
-			fields.patient = [props.initialPatient];
-			fields.patientError = '';
-			fields.patientIsReadOnly = true;
-		}
+	const deps = [patientId, JSON.stringify(options)];
 
-		if (!props.appointmentDuration.includes(this.state.duration)) {
-			fields.duration =
-				props.appointmentDuration.length > 0 ? props.appointmentDuration[0] : 0;
-		}
+	const {found, fields: patient} = usePatient({}, patientId, options, deps);
 
-		this.setState(fields);
-	}
+	const initPhone = found ? patient.phone : '';
 
-	createAppointment = (event) => {
+	return useStateWithInitOverride(initPhone);
+};
+
+const AppointmentDialog = (props) => {
+	const classes = useStyles();
+	const history = useHistory();
+
+	const {
+		initialDatetime,
+		initialAppointment,
+		initialPatient,
+		open,
+		onClose,
+		onSubmit
+	} = props;
+
+	const {loading, value: appointmentDuration} = useSetting(
+		'appointment-duration'
+	);
+
+	const [date, setDate] = useStateWithInitOverride(
+		dateFormat(initialDatetime, 'yyyy-MM-dd')
+	);
+	const [time, setTime] = useStateWithInitOverride(
+		dateFormat(initialDatetime, 'HH:mm')
+	);
+	const [
+		duration,
+		setDuration
+	] = useStateWithInitOverride(
+		appointmentDuration.includes(initialAppointment?.duration)
+			? initialAppointment.duration
+			: appointmentDuration.length > 0
+			? appointmentDuration[0]
+			: 0,
+		[initialAppointment, appointmentDuration]
+	);
+	const [
+		reason,
+		setReason
+	] = useStateWithInitOverride(initialAppointment?.reason || '', [
+		initialAppointment
+	]);
+
+	const [patientList, setPatientList] = useStateWithInitOverride(
+		initialPatient ? [initialPatient] : [],
+		[initialPatient]
+	);
+	const [phone, setPhone] = usePhone(patientList);
+	const [patientError, setPatientError] = useStateWithInitOverride('', [
+		initialPatient
+	]);
+	const patientIsReadOnly = Boolean(initialPatient);
+
+	const createAppointment = (event) => {
 		event.preventDefault();
 
-		const {onClose, onSubmit, history} = this.props;
-
-		const {date, time, duration, patient, phone, reason} = this.state;
-
-		if (patient.length === 1) {
-			this.setState({patientError: ''});
+		if (patientList.length === 1) {
+			setPatientError('');
 			const datetime = new Date(`${date}T${time}`);
 			const args = {
 				datetime,
 				duration,
-				patient: patient[0],
+				patient: patientList[0],
 				phone,
 				reason
 			};
@@ -104,163 +129,148 @@ class AppointmentDialog extends React.Component {
 				if (err) {
 					console.error(err);
 				} else {
-					console.log(`Consultation #${res._id} created.`);
+					console.log(
+						`Consultation #${res._id} ${
+							initialAppointment ? 'updated' : 'created'
+						}.`
+					);
 					onClose();
-					history.push({pathname: `/patient/${res.patientId}/appointments`});
+					if (!initialAppointment) {
+						history.push({pathname: `/consultation/${res._id}`});
+					}
 				}
 			});
 		} else {
-			this.setState({patientError: "The patient's name is required"});
+			setPatientError("The patient's name is required");
 		}
 	};
 
-	render() {
-		const {classes, open, onClose, loading, appointmentDuration} = this.props;
-
-		return (
-			<Dialog
-				classes={{paper: classes.dialogPaper}}
-				open={open}
-				component="form"
-				aria-labelledby="new-appointment-dialog-title"
-				onClose={onClose}
-			>
-				{loading && <LinearProgress />}
-				<DialogTitle id="new-appointment-dialog-title">
-					Schedule an appointment
-				</DialogTitle>
-				<DialogContent className={classes.dialogPaper}>
-					<Grid container>
-						<Grid item xs={4}>
-							<TextField
-								type="date"
-								label="Date"
-								InputLabelProps={{
-									shrink: true
-								}}
-								value={this.state.date}
-								onChange={(e) => this.setState({date: e.target.value})}
-							/>
-						</Grid>
-						<Grid item xs={4}>
-							<TextField
-								type="time"
-								label="Time"
-								InputLabelProps={{
-									shrink: true
-								}}
-								value={this.state.time}
-								onChange={(e) => this.setState({time: e.target.value})}
-							/>
-						</Grid>
-						<Grid item xs={4}>
-							<FormControl>
-								<InputLabel htmlFor="duration">Duration</InputLabel>
-								<Select
-									readOnly={loading}
-									value={this.state.duration}
-									inputProps={{
-										name: 'duration',
-										id: 'duration'
-									}}
-									onChange={(e) => this.setState({duration: e.target.value})}
-								>
-									{appointmentDuration.map((x) => (
-										<MenuItem key={x} value={x}>
-											{msToString(x)}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid item xs={12}>
-							<PatientPicker
-								readOnly={this.state.patientIsReadOnly}
-								TextFieldProps={{
-									autoFocus: true,
-									label: "Patient's lastname then firstname(s)",
-									margin: 'normal',
-									helperText: this.state.patientError,
-									error: Boolean(this.state.patientError)
-								}}
-								value={this.state.patient}
-								maxCount={1}
-								placeholder="Patient's lastname then firstname(s)"
-								createNewItem={patients.create}
-								onChange={(e) => this.setState({patient: e.target.value})}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								multiline
-								label="Numéro de téléphone"
-								placeholder="Numéro de téléphone"
-								rows={1}
-								className={classes.multiline}
-								value={this.state.phone}
-								margin="normal"
-								disabled={
-									this.state.patient.length !== 1 ||
-									this.state.patient[0]._id !== '?'
-								}
-								onChange={(e) => this.setState({phone: e.target.value})}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								multiline
-								label="Motif de la visite"
-								placeholder="Motif de la visite"
-								rows={4}
-								className={classes.multiline}
-								value={this.state.reason}
-								margin="normal"
-								onChange={(e) => this.setState({reason: e.target.value})}
-							/>
-						</Grid>
+	return (
+		<Dialog
+			classes={{paper: classes.dialogPaper}}
+			open={open}
+			component="form"
+			aria-labelledby="new-appointment-dialog-title"
+			onClose={onClose}
+		>
+			{loading && <LinearProgress />}
+			<DialogTitle id="new-appointment-dialog-title">
+				Schedule an appointment
+			</DialogTitle>
+			<DialogContent className={classes.dialogPaper}>
+				<Grid container>
+					<Grid item xs={4}>
+						<TextField
+							type="date"
+							label="Date"
+							InputLabelProps={{
+								shrink: true
+							}}
+							value={date}
+							onChange={(e) => setDate(e.target.value)}
+						/>
 					</Grid>
-				</DialogContent>
-				<DialogActions>
-					<Button type="submit" color="default" onClick={onClose}>
-						Cancel
-						<CancelIcon className={classes.rightIcon} />
-					</Button>
-					<Button
-						disabled={this.state.patient.length !== 1}
-						color="primary"
-						onClick={this.createAppointment}
-					>
-						Schedule
-						<AccessTimeIcon className={classes.rightIcon} />
-					</Button>
-				</DialogActions>
-			</Dialog>
-		);
-	}
-}
+					<Grid item xs={4}>
+						<TextField
+							type="time"
+							label="Time"
+							InputLabelProps={{
+								shrink: true
+							}}
+							value={time}
+							onChange={(e) => setTime(e.target.value)}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<FormControl>
+							<InputLabel htmlFor="duration">Duration</InputLabel>
+							<Select
+								readOnly={loading}
+								value={duration}
+								inputProps={{
+									name: 'duration',
+									id: 'duration'
+								}}
+								onChange={(e) => setDuration(e.target.value)}
+							>
+								{appointmentDuration.map((x) => (
+									<MenuItem key={x} value={x}>
+										{msToString(x)}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12}>
+						<PatientPicker
+							readOnly={patientIsReadOnly}
+							TextFieldProps={{
+								autoFocus: true,
+								label: "Patient's lastname then firstname(s)",
+								margin: 'normal',
+								helperText: patientError,
+								error: Boolean(patientError)
+							}}
+							value={patientList}
+							maxCount={1}
+							placeholder="Patient's lastname then firstname(s)"
+							createNewItem={patients.create}
+							onChange={(e) => setPatientList(e.target.value)}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<TextField
+							multiline
+							label="Numéro de téléphone"
+							placeholder="Numéro de téléphone"
+							rows={1}
+							className={classes.multiline}
+							value={phone}
+							InputLabelProps={{shrink: Boolean(phone)}}
+							margin="normal"
+							disabled={patientList.length !== 1 || patientList[0]._id !== '?'}
+							onChange={(e) => setPhone(e.target.value)}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<TextField
+							multiline
+							label="Motif de la visite"
+							placeholder="Motif de la visite"
+							rows={4}
+							className={classes.multiline}
+							value={reason}
+							margin="normal"
+							onChange={(e) => setReason(e.target.value)}
+						/>
+					</Grid>
+				</Grid>
+			</DialogContent>
+			<DialogActions>
+				<Button type="submit" color="default" onClick={onClose}>
+					Cancel
+					<CancelIcon className={classes.rightIcon} />
+				</Button>
+				<Button
+					disabled={patientList.length !== 1}
+					color="primary"
+					onClick={createAppointment}
+				>
+					Schedule
+					<AccessTimeIcon className={classes.rightIcon} />
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
+};
 
 AppointmentDialog.propTypes = {
-	classes: PropTypes.object.isRequired,
-	history: PropTypes.object.isRequired,
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
-	loading: PropTypes.bool.isRequired,
-	appointmentDuration: PropTypes.array.isRequired,
 	initialDatetime: PropTypes.instanceOf(Date).isRequired,
+	initialAppointment: PropTypes.object,
 	initialPatient: PropTypes.object
 };
 
-export default withLazyOpening(
-	withRouter(
-		withTracker(() => {
-			const appointmentDurationHandle = settings.subscribe(
-				'appointment-duration'
-			);
-			return {
-				loading: !appointmentDurationHandle.ready(),
-				appointmentDuration: settings.get('appointment-duration')
-			};
-		})(withStyles(styles, {withTheme: true})(AppointmentDialog))
-	)
-);
+export default withLazyOpening(AppointmentDialog);
