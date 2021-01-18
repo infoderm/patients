@@ -16,6 +16,7 @@ import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import {Consultations} from '../../api/consultations.js';
 
@@ -23,21 +24,9 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		padding: theme.spacing(3)
 	},
-	thirdPartyToggle: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	},
-	wireToggle: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(12)
-	},
-	cashToggle: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(21)
-	}
+	thirdPartyToggle: computeFixedFabStyle({theme, col: 1}),
+	wireToggle: computeFixedFabStyle({theme, col: 2}),
+	cashToggle: computeFixedFabStyle({theme, col: 3})
 }));
 
 const UnpaidConsultationsList = ({loading, consultations}) => {

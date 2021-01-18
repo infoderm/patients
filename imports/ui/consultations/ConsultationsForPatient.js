@@ -10,15 +10,12 @@ import {usePatient} from '../../api/patients.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import ConsultationsPager from './ConsultationsPager.js';
 
 const useStyles = makeStyles((theme) => ({
-	createButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	createButton: computeFixedFabStyle({theme, col: 4})
 }));
 
 const ConsultationsForPatient = (props) => {

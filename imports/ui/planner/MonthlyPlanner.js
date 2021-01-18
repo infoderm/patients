@@ -21,6 +21,7 @@ import {Events} from '../../api/events.js';
 import {useSetting} from '../../client/settings.js';
 
 import Loading from '../navigation/Loading.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import MonthlyCalendar from '../calendar/MonthlyCalendar.js';
 import {monthly} from '../calendar/ranges.js';
@@ -44,11 +45,7 @@ const useStyles = makeStyles((theme) => ({
 	calendar: {
 		marginBottom: '6em'
 	},
-	displayAllWeekDaysToggle: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(21)
-	}
+	displayAllWeekDaysToggle: computeFixedFabStyle({theme, col: 3})
 }));
 
 const MonthlyPlanner = (props) => {

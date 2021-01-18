@@ -60,6 +60,7 @@ import InsuranceChip from '../insurances/InsuranceChip.js';
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
 	photoPlaceHolder: {
@@ -109,36 +110,12 @@ const styles = (theme) => ({
 	problem: {
 		color: 'red'
 	},
-	editButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	},
-	saveButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	},
-	undoButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(12)
-	},
-	attachButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(12)
-	},
-	consultationButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(21)
-	},
-	deleteButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	editButton: computeFixedFabStyle({theme, col: 1}),
+	saveButton: computeFixedFabStyle({theme, col: 1}),
+	undoButton: computeFixedFabStyle({theme, col: 2}),
+	attachButton: computeFixedFabStyle({theme, col: 2}),
+	consultationButton: computeFixedFabStyle({theme, col: 3}),
+	deleteButton: computeFixedFabStyle({theme, col: 4})
 });
 
 class PatientPersonalInformation extends React.Component {

@@ -20,6 +20,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import {format} from 'date-fns';
 
 import {Patients} from '../../api/patients.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
 	container: {
@@ -48,11 +49,7 @@ const styles = (theme) => ({
 		width: '48px',
 		height: '48px'
 	},
-	fab: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(3)
-	}
+	saveButton: computeFixedFabStyle({theme, col: 1})
 });
 
 class ConsultationForm extends React.Component {
@@ -401,7 +398,7 @@ class ConsultationForm extends React.Component {
 					</Grid>
 				</Grid>
 				<Fab
-					className={classes.fab}
+					className={classes.saveButton}
 					color="primary"
 					aria-label="save"
 					disabled={!this.state.dirty}

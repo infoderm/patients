@@ -15,13 +15,10 @@ import BookCard from './BookCard.js';
 import {useBooks} from '../../api/books.js';
 
 import YearJumper from '../navigation/YearJumper.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const useStyles = makeStyles((theme) => ({
-	saveButton: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	saveButton: computeFixedFabStyle({theme, col: 4})
 }));
 
 export default function BooksList({match, year, page, perpage}) {

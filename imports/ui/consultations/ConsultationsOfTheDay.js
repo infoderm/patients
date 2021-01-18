@@ -21,6 +21,7 @@ import {TIME_BREAK} from '../../client/constants.js';
 
 import Prev from '../navigation/Prev.js';
 import Next from '../navigation/Next.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import StaticConsultationCard from './StaticConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
@@ -31,16 +32,8 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		padding: theme.spacing(3)
 	},
-	consultationsToggle: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(39)
-	},
-	appointmentsToggle: {
-		position: 'fixed',
-		bottom: theme.spacing(3),
-		right: theme.spacing(30)
-	}
+	consultationsToggle: computeFixedFabStyle({theme, col: 5}),
+	appointmentsToggle: computeFixedFabStyle({theme, col: 4})
 }));
 
 const ConsultationsOfTheDay = ({day}) => {
