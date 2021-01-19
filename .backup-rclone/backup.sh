@@ -3,7 +3,7 @@
 set -o xtrace
 
 DB="patients"
-SERVER='meteorapp@dermatodoc.local'
+SERVER='meteorapp@patients.local'
 CLOUD='db' # dropbox
 IDENTITY="$HOME/.ssh/meteorapp"
 #CRYPTO="-pbkdf2"

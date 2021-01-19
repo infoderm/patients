@@ -1,4 +1,4 @@
-# :face_with_thermometer: patients [![Build](https://img.shields.io/travis/dermatodoc/patients/master.svg)](https://travis-ci.org/dermatodoc/patients/branches)
+# :face_with_thermometer: patients [![Build](https://img.shields.io/travis/infoderm/patients/master.svg)](https://travis-ci.org/infoderm/patients/branches)
 
 > Patients meteor app
 
@@ -12,7 +12,7 @@
     
 ### source
 
-    git clone gh:dermatodoc/patients
+    git clone gh:infoderm/patients
     cd patients
     meteor npm ci
     npx husky install # for pre-commit hook

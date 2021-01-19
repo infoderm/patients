@@ -21,6 +21,6 @@ before_install:
 addons:
   coverity_scan:
     project:
-      name: "dermatodoc/patients"
+      name: "infoderm/patients"
     notification_email: aurelien.ooms@gmail.com
     branch_pattern: coverity_scan
