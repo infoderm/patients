@@ -1,4 +1,4 @@
-# :face_with_thermometer: patients [![Build](https://img.shields.io/travis/infoderm/patients/master.svg)](https://travis-ci.org/infoderm/patients/branches)
+# :face_with_thermometer: patients [![Build](https://img.shields.io/travis/infoderm/patients/main.svg)](https://travis-ci.org/infoderm/patients/branches)
 
 > Patients meteor app
 
