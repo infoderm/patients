@@ -85,7 +85,7 @@ class AttachmentCard extends React.Component {
 	};
 
 	render() {
-		const {classes, attachment, parent} = this.props;
+		const {classes, attachment, info} = this.props;
 
 		const {menu, editing, deleting} = this.state;
 
@@ -116,7 +116,10 @@ class AttachmentCard extends React.Component {
 						</Avatar>
 					}
 					title={attachment.name}
-					subheader={format(attachment.meta.createdAt, 'yyyy-MM-dd')}
+					subheader={`Added on ${format(
+						attachment.meta.createdAt,
+						'yyyy-MM-dd'
+					)}`}
 					action={
 						<div>
 							<IconButton
@@ -152,8 +155,8 @@ class AttachmentCard extends React.Component {
 							/>
 							<AttachmentDeletionDialog
 								open={deleting}
-								detach={`${parent.collection}.detach`}
-								itemId={parent._id}
+								detach={`${info.parentCollection}.detach`}
+								itemId={info.parentId}
 								attachment={attachment}
 								onClose={() => this.setState({deleting: false})}
 							/>
@@ -173,7 +176,7 @@ class AttachmentCard extends React.Component {
 AttachmentCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	attachment: PropTypes.object.isRequired,
-	parent: PropTypes.object.isRequired
+	info: PropTypes.object.isRequired
 };
 
 export default withStyles(styles, {withTheme: true})(AttachmentCard);

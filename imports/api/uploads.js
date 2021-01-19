@@ -91,8 +91,12 @@ export const Uploads = new FilesCollection({
 if (Meteor.isServer) {
 	Uploads.denyClient();
 
-	Meteor.publish('uploads', function () {
-		return Uploads.find({userId: this.userId}).cursor;
+	Meteor.publish('uploads', function (query) {
+		const selector = {
+			...query,
+			userId: this.userId
+		};
+		return Uploads.find(selector).cursor;
 	});
 
 	Meteor.publish('upload', function (_id) {
