@@ -5,6 +5,7 @@ import {check} from 'meteor/check';
 import makeQuery from './makeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
 import observeQuery from './observeQuery.js';
+import pageQuery from './pageQuery.js';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -36,20 +37,7 @@ export default function createTagCollection(options) {
 	const useTagsFind = makeObservedQuery(TagsCache, cachePublication);
 
 	if (Meteor.isServer) {
-		Meteor.publish(publication, function (query, options) {
-			query = {...query, owner: this.userId};
-			if (options && options.skip) {
-				const skip = 0;
-				const limit = options.limit ? options.skip + options.limit : undefined;
-				options = {
-					...options,
-					skip,
-					limit
-				};
-			}
-
-			return Collection.find(query, options);
-		});
+		Meteor.publish(publication, pageQuery(Collection));
 
 		Meteor.publish(cachePublication, observeQuery(Collection, cacheCollection));
 
