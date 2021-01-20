@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {FilesCollection} from 'meteor/ostrio:files';
 import {check} from 'meteor/check';
 
+import unconditionallyUpdateById from './unconditionallyUpdateById.js';
+
 import gridfs from 'gridfs-stream'; // We'll use this package to work with GridFS
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
 import {MongoInternals} from 'meteor/mongo';
@@ -32,7 +34,8 @@ export const Uploads = new FilesCollection({
 	onAfterUpload(upload) {
 		this.collection.update(upload._id, {
 			$set: {
-				'meta.createdAt': new Date()
+				'meta.createdAt': new Date(),
+				'meta.isDeleted': false
 			}
 		});
 
@@ -133,5 +136,21 @@ Meteor.methods({
 
 		check(filename, String);
 		return Uploads.collection.update(uploadId, {$set: {name: filename}});
-	}
+	},
+
+	'uploads.delete': unconditionallyUpdateById(
+		Uploads.collection,
+		{
+			$set: {'meta.isDeleted': true}
+		},
+		'userId'
+	),
+
+	'uploads.restore': unconditionallyUpdateById(
+		Uploads.collection,
+		{
+			$set: {'meta.isDeleted': false}
+		},
+		'userId'
+	)
 });
