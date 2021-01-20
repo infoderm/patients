@@ -12,7 +12,7 @@ import dateFormat from 'date-fns/format';
 
 import {list, map, groupby} from '@aureooms/js-itertools';
 
-import AttachmentCard from './AttachmentCard.js';
+import AttachmentsGrid from './AttachmentsGrid.js';
 
 import Loading from '../navigation/Loading.js';
 
@@ -22,12 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	group: {
 		padding: theme.spacing(2),
 		marginBottom: theme.spacing(2)
-	},
-	groupHeading: {
-		padding: theme.spacing(2)
-	},
-	item: {},
-	card: {}
+	}
 }));
 
 const AttachmentsGallery = (props) => {
@@ -63,8 +58,8 @@ const AttachmentsGallery = (props) => {
 			{list(
 				map(
 					([k, g]) => (
-						<Grid key={k} item container className={classes.group}>
-							<Grid item className={classes.groupHeading} lg={12}>
+						<Grid key={k} item container spacing={2} className={classes.group}>
+							<Grid item lg={12}>
 								<Typography variant="h3">
 									{k === Infinity
 										? 'Pièces jointes au patient'
@@ -74,22 +69,12 @@ const AttachmentsGallery = (props) => {
 										  )}`}
 								</Typography>
 							</Grid>
-							{g.map((attachment) => (
-								<Grid
-									key={attachment._id}
-									item
-									className={classes.item}
-									sm={12}
-									md={4}
-									xl={3}
-								>
-									<AttachmentCard
-										className={classes.card}
-										attachment={attachment}
-										info={attachmentsInfo.get(attachment._id)}
-									/>
-								</Grid>
-							))}
+							<AttachmentsGrid
+								item
+								spacing={2}
+								attachments={g}
+								attachmentsInfo={attachmentsInfo}
+							/>
 						</Grid>
 					),
 					groups
