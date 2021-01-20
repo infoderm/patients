@@ -16,7 +16,13 @@ const StaticAttachmentLink = ({loading, attachmentId, attachment, ...rest}) => {
 
 	return (
 		<Typography variant="body1">
-			<a {...rest} href={link(attachment)} alt={attachment.name}>
+			<a
+				{...rest}
+				href={link(attachment)}
+				alt={attachment.name}
+				rel="noreferrer"
+				target="_blank"
+			>
 				{attachment.name}
 			</a>
 		</Typography>
