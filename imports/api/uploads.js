@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {FilesCollection} from 'meteor/ostrio:files';
 import {check} from 'meteor/check';
 
+import {all, map} from '@aureooms/js-itertools';
+
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 
 import gridfs from 'gridfs-stream'; // We'll use this package to work with GridFS
@@ -19,7 +21,7 @@ if (Meteor.isServer) {
 
 export const Uploads = new FilesCollection({
 	collectionName: 'uploads',
-	allowClientCode: false,
+	allowClientCode: true,
 	onBeforeUpload(file) {
 		if (!this.userId) {
 			return 'Must be logged in to upload a file.';
@@ -81,6 +83,9 @@ export const Uploads = new FilesCollection({
 
 		return Boolean(_id); // Serve file from either GridFS or FS if it wasn't uploaded yet
 	},
+	onBeforeRemove(cursor) {
+		return all(map((x) => x.userId === this.userId, cursor.fetch()));
+	},
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {
 			Object.keys(upload.versions).forEach((versionName) => {
@@ -115,20 +120,6 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-	'uploads.remove'(uploadId) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		return Uploads.remove({_id: uploadId}, (err) => {
-			if (err) {
-				console.error(`[Trash] Error during removal: ${err}`);
-			} else {
-				console.log('[Trash] File removed from DB and FS');
-			}
-		});
-	},
-
 	'uploads.updateFilename'(uploadId, filename) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');

@@ -52,18 +52,6 @@ const AttachmentDeletionDialog = (props) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(attachment.name, getError);
 
-	const trashAttachment = (attachment) => {
-		Meteor.call('uploads.remove', attachment._id, (err) => {
-			if (err) {
-				const message = `[Trash] Error during removal: ${err.message}`;
-				console.error(message, err);
-			} else {
-				const message = '[Trash] File removed from DB and FS';
-				console.log(message);
-			}
-		});
-	};
-
 	const deleteThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
@@ -78,7 +66,6 @@ const AttachmentDeletionDialog = (props) => {
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
 					onClose();
-					trashAttachment(attachment);
 				}
 			});
 		}
