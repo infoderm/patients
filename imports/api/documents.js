@@ -10,44 +10,13 @@ import {zip} from '@aureooms/js-itertools';
 import parseHealthOne from 'healthone/lib/parse';
 import chardet from 'chardet';
 
+import pageQuery from './pageQuery';
 import {Patients, patients} from './patients.js';
 
 export const Documents = new Mongo.Collection('documents');
 
 if (Meteor.isServer) {
-	Meteor.publish('documents', function (options) {
-		return Documents.find({owner: this.userId}, options);
-	});
-
-	Meteor.publish('documents.unlinked', function (options) {
-		return Documents.find(
-			{
-				owner: this.userId,
-				patientId: null
-			},
-			options
-		);
-	});
-
-	Meteor.publish('documents.unparsed', function (options) {
-		return Documents.find(
-			{
-				owner: this.userId,
-				parsed: false
-			},
-			options
-		);
-	});
-
-	Meteor.publish('documents.mangled', function (options) {
-		return Documents.find(
-			{
-				owner: this.userId,
-				encoding: null
-			},
-			options
-		);
-	});
+	Meteor.publish('documents', pageQuery(Documents));
 
 	Meteor.publish('document', function (_id) {
 		return Documents.find({owner: this.userId, _id});
