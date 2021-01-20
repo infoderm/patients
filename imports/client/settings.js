@@ -19,6 +19,8 @@ function get(key) {
 
 const localStoragePrefix = 'u3208hfosjas-';
 function getWithBrowserCache(key) {
+	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
+	// TODO AVOID CLASHES BY ADDING USER ID's TO THE KEY?
 	const item = Settings.findOne({key});
 	const localStorageKey = localStoragePrefix + key;
 	if (item === undefined) {
@@ -31,15 +33,16 @@ function getWithBrowserCache(key) {
 	return item.value;
 }
 
-export const useSetting = (key) => {
+export const useSetting = (key, getFn = get) => {
+	// TODO use only one tracker
 	const loading = useTracker(() => {
 		const handle = subscribe(key);
 		return !handle.ready();
-	}, key);
+	}, [key]);
 
 	const value = useTracker(() => {
-		return get(key);
-	}, key);
+		return getFn(key);
+	}, [key]);
 
 	return {
 		loading,
