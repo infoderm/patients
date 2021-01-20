@@ -67,7 +67,7 @@ const AttachmentsGallery = (props) => {
 							<Grid item className={classes.groupHeading} lg={12}>
 								<Typography variant="h3">
 									{k === Infinity
-										? 'Attached to Patient'
+										? 'Pièces jointes au patient'
 										: `Consultation du ${dateFormat(
 												new Date(k),
 												'yyyy-MM-dd'

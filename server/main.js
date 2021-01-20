@@ -99,6 +99,44 @@ Meteor.startup(() => {
 			Patients.rawCollection().save(patient);
 		});
 
+	// Change schema for uploads attached to patients
+	Patients.rawCollection()
+		.find()
+		.snapshot()
+		.forEach(
+			Meteor.bindEnvironment(({_id, attachments}) => {
+				if (attachments) {
+					Attachments.update(
+						{_id: {$in: attachments}},
+						{
+							$addToSet: {'meta.attachedToPatients': _id}
+						},
+						{multi: true}
+					);
+					Patients.update(_id, {$unset: {attachments: true}});
+				}
+			})
+		);
+
+	// Change schema for uploads attached to consultations
+	Consultations.rawCollection()
+		.find()
+		.snapshot()
+		.forEach(
+			Meteor.bindEnvironment(({_id, attachments}) => {
+				if (attachments) {
+					Attachments.update(
+						{_id: {$in: attachments}},
+						{
+							$addToSet: {'meta.attachedToConsultations': _id}
+						},
+						{multi: true}
+					);
+					Consultations.update(_id, {$unset: {attachments: true}});
+				}
+			})
+		);
+
 	// Add .isDone field to consultations
 	Consultations.rawCollection()
 		.find()
@@ -337,9 +375,18 @@ Meteor.startup(() => {
 
 	Attachments.rawCollection().createIndex(
 		{
-			owner: 1,
-			patientId: 1,
-			group: -1
+			userId: 1,
+			'meta.attachedToPatients': 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Attachments.rawCollection().createIndex(
+		{
+			userId: 1,
+			'meta.attachedToConsultations': 1
 		},
 		{
 			background: true

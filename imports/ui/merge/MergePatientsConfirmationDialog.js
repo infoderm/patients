@@ -32,6 +32,7 @@ const MergePatientsConfirmationDialog = (props) => {
 		onClose,
 		toCreate,
 		consultationsToAttach,
+		attachmentsToAttach,
 		documentsToAttach,
 		toDelete
 	} = props;
@@ -47,6 +48,7 @@ const MergePatientsConfirmationDialog = (props) => {
 			'patients.merge',
 			toDelete,
 			consultationsToAttach,
+			attachmentsToAttach,
 			documentsToAttach,
 			toCreate,
 			(err, _id) => {
@@ -79,7 +81,7 @@ const MergePatientsConfirmationDialog = (props) => {
 					<b>1 new patient</b> will be created,{' '}
 					<b>{consultationsToAttach.length} consultations</b>,{' '}
 					<b>{documentsToAttach.length} documents</b>, and{' '}
-					<b>{toCreate.attachments.length} attachments</b> will be attached to
+					<b>{attachmentsToAttach.length} attachments</b> will be attached to
 					it, <b>{toDelete.length} patients will be deleted</b>. If you do not
 					want to merge those patients, click cancel. If you really want to
 					merge those patients, click the merge button.
@@ -104,6 +106,7 @@ MergePatientsConfirmationDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	toCreate: PropTypes.object.isRequired,
 	consultationsToAttach: PropTypes.array.isRequired,
+	attachmentsToAttach: PropTypes.array.isRequired,
 	documentsToAttach: PropTypes.array.isRequired,
 	toDelete: PropTypes.array.isRequired
 };

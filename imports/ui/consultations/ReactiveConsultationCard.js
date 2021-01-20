@@ -1,33 +1,31 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
+import React from 'react';
+import useAttachments from '../attachments/useAttachments.js';
 
-import StaticPatientChip from '../patients/StaticPatientChip.js';
-import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
-import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
-import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
-
-import {Patients} from '../../api/patients.js';
 import StaticConsultationCard from './StaticConsultationCard.js';
 
-export default withTracker(({consultation}) => {
-	const _id = consultation.patientId;
-	if (_id === undefined) {
-		return {loadingPatient: true};
-	}
+const ReactiveConsultationCard = ({consultation, ...rest}) => {
+	const query = {'meta.attachedToConsultations': consultation._id};
 
 	const options = {
 		fields: {
-			...StaticPatientChip.projection,
-			...ConsultationPaymentDialog.projection,
-			...ConsultationDebtSettlementDialog.projection,
-			...ConsultationDeletionDialog.projection
+			_id: 1,
+			'meta.attachedToConsultations': 1
 		}
 	};
-	const handle = Meteor.subscribe('patient', _id, options);
-	if (handle.ready()) {
-		const patient = Patients.findOne(_id, options);
-		return {loadingPatient: false, patient};
-	}
 
-	return {loadingPatient: true};
-})(StaticConsultationCard);
+	const deps = [consultation._id];
+
+	const {results: attachments} = useAttachments(query, options, deps);
+
+	const props = {
+		consultation,
+		attachments,
+		...rest
+	};
+
+	return <StaticConsultationCard {...props} />;
+};
+
+ReactiveConsultationCard.projection = StaticConsultationCard.projection;
+
+export default ReactiveConsultationCard;

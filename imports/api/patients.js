@@ -6,7 +6,7 @@ import {list, map, take, filter} from '@aureooms/js-itertools';
 
 import {Consultations} from './consultations.js';
 import {Documents} from './documents.js';
-import {Uploads} from './uploads.js';
+import {Attachments} from './attachments.js';
 
 import {insurances} from './insurances.js';
 import {doctors} from './doctors.js';
@@ -251,46 +251,71 @@ Meteor.methods({
 	'patients.attach'(patientId, uploadId) {
 		check(patientId, String);
 		check(uploadId, String);
-		const patient = Patients.findOne(patientId);
-		const upload = Uploads.findOne(uploadId);
-		if (!patient || patient.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own patient');
+
+		const patient = Patients.findOne({_id: patientId, owner: this.userId});
+		if (!patient) {
+			throw new Meteor.Error('not-found', 'patient not found');
 		}
 
-		if (!upload || upload.userId !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		const attachment = Attachments.findOne({
+			_id: uploadId,
+			userId: this.userId
+		});
+		if (!attachment) {
+			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
-		// If needed, use $each modifier to attach multiple documents
-		// simultaneously.
-		// See https://docs.mongodb.com/manual/reference/operator/update/addToSet/#each-modifier
-		return Patients.update(patientId, {$addToSet: {attachments: uploadId}});
+		return Attachments.update(uploadId, {
+			$addToSet: {'meta.attachedToPatients': patientId}
+		});
 	},
 
 	'patients.detach'(patientId, uploadId) {
 		check(patientId, String);
 		check(uploadId, String);
-		const patient = Patients.findOne(patientId);
-		const upload = Uploads.findOne(uploadId);
-		if (!patient || patient.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own patient');
+
+		const patient = Patients.findOne({_id: patientId, owner: this.userId});
+		if (!patient) {
+			throw new Meteor.Error('not-found', 'patient not found');
 		}
 
-		if (!upload || upload.userId !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		const attachment = Attachments.findOne({
+			_id: uploadId,
+			userId: this.userId
+		});
+		if (!attachment) {
+			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
-		return Patients.update(patientId, {$pull: {attachments: uploadId}});
+		return Attachments.update(uploadId, {
+			$pull: {'meta.attachedToPatients': patientId}
+		});
 	},
 
 	'patients.remove'(patientId) {
 		check(patientId, String);
-		const patient = Patients.findOne(patientId);
-		if (patient.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
+
+		const patient = Patients.findOne({_id: patientId, owner: this.userId});
+		if (!patient) {
+			throw new Meteor.Error('not-found');
 		}
 
-		Consultations.remove({owner: this.userId, patientId});
+		const consultationQuery = {owner: this.userId, patientId};
+		const consultationIds = Consultations.find(consultationQuery, {
+			fields: {_id: 1}
+		})
+			.fetch()
+			.map((x) => x._id);
+		const nConsultationRemoved = Consultations.remove(consultationQuery);
+
+		if (consultationIds.length !== nConsultationRemoved) {
+			console.warn(
+				`Removed ${nConsultationRemoved} consultations while removing patient #${patientId} but ${
+					consultationIds.length
+				} where found before (${JSON.stringify(consultationIds)})`
+			);
+		}
+
 		Documents.update(
 			{
 				owner: this.userId,
@@ -300,64 +325,79 @@ Meteor.methods({
 				$set: {
 					deleted: true
 				}
+			},
+			{
+				multi: true
 			}
 		);
+
+		Attachments.update(
+			{
+				userId: this.userId,
+				'meta.attachedToPatients': patientId
+			},
+			{
+				$pull: {'meta.attachedToPatients': patientId}
+			},
+			{
+				multi: true
+			}
+		);
+
+		Attachments.update(
+			{
+				userId: this.userId,
+				'meta.attachedToConsultations': {$in: consultationIds}
+			},
+			{
+				$pullAll: {'meta.attachedToConsultations': consultationIds}
+			},
+			{
+				multi: true
+			}
+		);
+
 		PatientsSearchIndex.remove(patientId);
 		return Patients.remove(patientId);
 	},
 
-	'patients.merge'(oldPatientIds, consultationIds, documentIds, newPatient) {
+	'patients.merge'(
+		oldPatientIds,
+		consultationIds,
+		attachmentIds,
+		documentIds,
+		newPatient
+	) {
 		// Here is what is done in this method
 		// (1) Check that user is connected
 		// (2) Check that each patient in `oldPatientIds` is owned by the user
-		// (3) Check that each attachment in `newPatient.attachments` is attached to a patient in `oldPatientIds`
-		// (4) Create new patient with attachments
-		// (5) Attach consultations in `consultationIds` to newly created patient
-		// (6) Remove consultations that have not been attached
-		// (7) Attach documents in `documentIds` to newly created patient
-		// (8) Remove documents that have not been attached
-		// (9) Remove patients in `oldPatientIds`
+		// (3) Create new patient
+		// (4) Attach consultations in `consultationIds` to newly created patient
+		// (5) Remove consultations that have not been attached
+		// (6) Attach attachments in `attachmentIds` to newly created patient
+		// (7) Detach old patients from all attachments
+		// (8) Attach documents in `documentIds` to newly created patient
+		// (9) Remove documents that have not been attached
+		// (10) Remove patients in `oldPatientIds`
 
 		// (1)
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const allowedAttachments = new Set();
-
 		// (2)
 		for (const oldPatientId of oldPatientIds) {
-			const oldPatient = Patients.findOne(oldPatientId);
-			if (!oldPatient || oldPatient.owner !== this.userId) {
-				throw new Meteor.Error('not-authorized', 'user does not own patient');
-			}
-
-			// Build list of allowed attachments to pass on new patient
-			if (oldPatient.attachments) {
-				for (const uploadId of oldPatient.attachments) {
-					allowedAttachments.add(uploadId);
-				}
+			const oldPatient = Patients.findOne({
+				_id: oldPatientId,
+				owner: this.userId
+			});
+			if (!oldPatient) {
+				throw new Meteor.Error('not-found', 'no such patient');
 			}
 		}
 
-		// (3) check that all attachments are allowed
-		// NOTE could filter and warn instead
-		if (newPatient.attachments) {
-			for (const uploadId of newPatient.attachments) {
-				if (!allowedAttachments.has(uploadId)) {
-					throw new Meteor.Error(
-						'not-authorized',
-						`uploadId ${uploadId} is not allowed in merge`
-					);
-				}
-			}
-		}
-
-		// (4)
-		const fields = {
-			...sanitize(newPatient),
-			attachments: newPatient.attachments
-		};
+		// (3)
+		const fields = sanitize(newPatient);
 
 		const newPatientId = Patients.insert({
 			...fields,
@@ -371,7 +411,7 @@ Meteor.methods({
 		// existing tags
 		// updateTags(this.userId, fields);
 
-		// (5)
+		// (4)
 		Consultations.update(
 			{
 				owner: this.userId, // This selector automatically filters out bad consultation ids
@@ -386,13 +426,42 @@ Meteor.methods({
 			}
 		);
 
-		// (6)
+		// (5)
 		Consultations.remove({
 			owner: this.userId,
 			patientId: {$in: oldPatientIds}
 		});
 
+		// (6)
+		Attachments.update(
+			{
+				userId: this.userId, // This selector automatically filters out bad attachments ids
+				'meta.attachedToPatients': {$in: oldPatientIds},
+				_id: {$in: attachmentIds}
+			},
+			{
+				$addToSet: {'meta.attachedToPatients': newPatientId}
+			},
+			{
+				multi: true
+			}
+		);
+
 		// (7)
+		Attachments.update(
+			{
+				userId: this.userId,
+				'meta.attachedToPatients': {$in: oldPatientIds}
+			},
+			{
+				$pullAll: {'meta.attachedToPatients': oldPatientIds}
+			},
+			{
+				multi: true
+			}
+		);
+
+		// (8)
 		Documents.update(
 			{
 				owner: this.userId, // This selector automatically filters out bad document ids
@@ -407,7 +476,7 @@ Meteor.methods({
 			}
 		);
 
-		// (8)
+		// (9)
 		Documents.update(
 			{
 				owner: this.userId,
@@ -421,7 +490,7 @@ Meteor.methods({
 			}
 		);
 
-		// (9)
+		// (10)
 		PatientsSearchIndex.remove({
 			_id: {$in: oldPatientIds}
 		});
@@ -443,7 +512,6 @@ function mergePatients(oldPatients) {
 		allergies: [],
 		doctors: [],
 		insurances: [],
-		attachments: [],
 		noshow: 0
 	};
 
@@ -500,7 +568,6 @@ function mergePatients(oldPatients) {
 		mergeSets('allergies');
 		mergeSets('doctors');
 		mergeSets('insurances');
-		mergeSets('attachments');
 
 		if (oldPatient.noshow) {
 			newPatient.noshow += oldPatient.noshow;
@@ -510,7 +577,6 @@ function mergePatients(oldPatients) {
 	newPatient.allergies = list(new Set(newPatient.allergies));
 	newPatient.doctors = list(new Set(newPatient.doctors));
 	newPatient.insurances = list(new Set(newPatient.insurances));
-	newPatient.attachments = list(new Set(newPatient.attachments));
 
 	return newPatient;
 }

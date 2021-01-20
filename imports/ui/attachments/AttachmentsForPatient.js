@@ -1,21 +1,13 @@
 import React from 'react';
 
-import {useAttachments} from '../../api/attachments.js';
+import useAttachmentsForPatients from './useAttachmentsForPatients.js';
 
 import Loading from '../navigation/Loading.js';
 
 import AttachmentsForPatientStatic from '../attachments/AttachmentsForPatientStatic.js';
 
 const AttachmentsForPatient = ({patientId, ...rest}) => {
-	const query = {patientId: {$in: [patientId]}};
-	const options = {
-		sort: {
-			group: -1
-		}
-	};
-	const deps = [patientId];
-
-	const {loading, results} = useAttachments(query, options, deps);
+	const {loading, results} = useAttachmentsForPatients([patientId]);
 
 	if (loading) {
 		return <Loading />;

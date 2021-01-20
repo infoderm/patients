@@ -23,7 +23,7 @@ import Prev from '../navigation/Prev.js';
 import Next from '../navigation/Next.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
-import StaticConsultationCard from './StaticConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import {useConsultationsAndAppointments} from '../../api/consultations.js';
@@ -85,7 +85,7 @@ const ConsultationsOfTheDay = ({day}) => {
 				) : (
 					<div className={classes.container}>
 						{am.map((consultation) => (
-							<StaticConsultationCard
+							<ReactiveConsultationCard
 								key={consultation._id}
 								consultation={consultation}
 								PatientChip={ReactivePatientChip}
@@ -99,7 +99,7 @@ const ConsultationsOfTheDay = ({day}) => {
 				) : (
 					<div className={classes.container}>
 						{pm.map((consultation) => (
-							<StaticConsultationCard
+							<ReactiveConsultationCard
 								key={consultation._id}
 								consultation={consultation}
 								PatientChip={ReactivePatientChip}

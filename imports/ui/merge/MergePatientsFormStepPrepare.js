@@ -21,6 +21,7 @@ import PatientSheet from '../patients/PatientSheet.js';
 
 import {Patients, patients} from '../../api/patients.js';
 import {Consultations} from '../../api/consultations.js';
+import {Attachments} from '../../api/attachments.js';
 import {Documents} from '../../api/documents.js';
 
 const styles = (theme) => ({
@@ -52,9 +53,11 @@ class MergePatientsFormStepPrepare extends React.Component {
 			error,
 			oldPatients,
 			consultations,
+			attachments,
 			documents,
 			newPatient,
 			newConsultations,
+			newAttachments,
 			newDocuments
 		} = this.props;
 
@@ -71,6 +74,7 @@ class MergePatientsFormStepPrepare extends React.Component {
 									<PatientSheet
 										patient={patient}
 										consultations={consultations[patient._id]}
+										attachments={attachments[patient._id]}
 										documents={documents[patient._id]}
 									/>
 								</div>
@@ -81,6 +85,7 @@ class MergePatientsFormStepPrepare extends React.Component {
 							<PatientSheet
 								patient={newPatient}
 								consultations={newConsultations}
+								attachments={newAttachments}
 								documents={newDocuments}
 							/>
 						</Grid>
@@ -120,6 +125,7 @@ class MergePatientsFormStepPrepare extends React.Component {
 							open={merging}
 							toCreate={newPatient}
 							consultationsToAttach={list(map((x) => x._id, newConsultations))}
+							attachmentsToAttach={list(map((x) => x._id, newAttachments))}
 							documentsToAttach={list(map((x) => x._id, newDocuments))}
 							toDelete={toMerge}
 							onClose={() => this.setState({merging: false})}
@@ -139,13 +145,14 @@ MergePatientsFormStepPrepare.propTypes = {
 export default withTracker(({toMerge}) => {
 	for (const patientId of toMerge) {
 		Meteor.subscribe('patient', patientId);
-		Meteor.subscribe('patient.consultations', patientId);
-		Meteor.subscribe('patient.appointments', patientId);
-		Meteor.subscribe('patient.documents', patientId);
+		Meteor.subscribe('patient.consultationsAndAppointments', patientId);
+		Meteor.subscribe('patient.attachments', patientId);
+		Meteor.subscribe('patient.documents.all', patientId);
 	}
 
 	const oldPatients = [];
 	const consultations = {};
+	const attachments = {};
 	const documents = {};
 	for (const patientId of toMerge) {
 		const patient = Patients.findOne(patientId);
@@ -160,21 +167,28 @@ export default withTracker(({toMerge}) => {
 			{patientId},
 			{sort: {datetime: -1}}
 		).fetch();
+		const attachmentsForPatient = Attachments.find(
+			{'meta.attachedToPatients': patientId},
+			{sort: {'meta.createdAt': -1}}
+		).fetch();
 		const documentsForPatient = Documents.find(
 			{patientId},
 			{sort: {createdAt: -1}}
 		).fetch();
 		oldPatients.push(patient);
 		consultations[patientId] = consultationsForPatient;
+		attachments[patientId] = attachmentsForPatient;
 		documents[patientId] = documentsForPatient;
 	}
 
 	return {
 		oldPatients,
 		consultations,
+		attachments,
 		documents,
 		newPatient: patients.merge(oldPatients),
 		newConsultations: list(chain(map((x) => consultations[x] || [], toMerge))),
+		newAttachments: list(chain(map((x) => attachments[x] || [], toMerge))),
 		newDocuments: list(chain(map((x) => documents[x] || [], toMerge)))
 	};
 })(withStyles(styles, {withTheme: true})(MergePatientsFormStepPrepare));
