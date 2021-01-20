@@ -35,6 +35,8 @@ export const useConsultationsAndAppointments = makeQuery(
 	'consultationsAndAppointments'
 );
 
+export const isUnpaid = ({price, paid}) => paid !== price;
+
 const statsKey = (query, init) => JSON.stringify({query, init});
 
 function setupConsultationsStatsPublication(collection, query, init) {
@@ -213,16 +215,6 @@ if (Meteor.isServer) {
 		);
 	});
 
-	Meteor.publish('consultations.unpaid', function () {
-		return Consultations.find({
-			owner: this.userId,
-			isDone: true,
-			$expr: {
-				$ne: ['$paid', '$price']
-			}
-		});
-	});
-
 	Meteor.publish(books.options.parentPublication, function (
 		name,
 		options = {}
@@ -353,6 +345,7 @@ function sanitize({
 		currency,
 		price,
 		paid,
+		unpaid: isUnpaid({price, paid}),
 		book,
 		payment_method,
 		isDone: true

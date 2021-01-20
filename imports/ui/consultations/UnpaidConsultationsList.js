@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState} from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -18,7 +15,7 @@ import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
-import {Consultations} from '../../api/consultations.js';
+import {useConsultationsFind} from '../../api/consultations.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -29,20 +26,28 @@ const useStyles = makeStyles((theme) => ({
 	cashToggle: computeFixedFabStyle({theme, col: 3})
 }));
 
-const UnpaidConsultationsList = ({loading, consultations}) => {
+const UnpaidConsultationsList = () => {
 	const classes = useStyles();
 
 	const [showCash, setShowCash] = useState(true);
 	const [showWire, setShowWire] = useState(true);
 	const [showThirdParty, setShowThirdParty] = useState(false);
 
+	const query = {
+		isDone: true,
+		unpaid: true
+	};
+	const options = {sort: {datetime: 1}};
+	const deps = [];
+	const {loading, results: unpaidConsultations} = useConsultationsFind(
+		query,
+		options,
+		deps
+	);
+
 	if (loading) {
 		return <Loading />;
 	}
-
-	const unpaidConsultations = consultations.filter(
-		(consultation) => consultation.paid !== consultation.price
-	);
 
 	const displayedConsultations = unpaidConsultations
 		.filter(
@@ -102,19 +107,4 @@ const UnpaidConsultationsList = ({loading, consultations}) => {
 	);
 };
 
-export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations.unpaid');
-	if (!handle.ready()) {
-		return {loading: true};
-	}
-
-	return {
-		loading: false,
-		consultations: Consultations.find(
-			{
-				isDone: true
-			},
-			{sort: {datetime: 1}}
-		).fetch()
-	};
-})(UnpaidConsultationsList);
+export default UnpaidConsultationsList;

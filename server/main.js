@@ -10,7 +10,7 @@ import {
 	patients
 } from '../imports/api/patients.js';
 import {Drugs} from '../imports/api/drugs.js';
-import {Consultations} from '../imports/api/consultations.js';
+import {Consultations, isUnpaid} from '../imports/api/consultations.js';
 import {Events} from '../imports/api/events.js';
 import {Attachments} from '../imports/api/attachments.js';
 // eslint-disable-next-line import/no-unassigned-import
@@ -115,6 +115,18 @@ Meteor.startup(() => {
 
 			if (consultation.isDone !== false) {
 				consultation.isDone = true;
+			}
+
+			Consultations.rawCollection().save(consultation);
+		});
+
+	// Add .unpaid field to consultations
+	Consultations.rawCollection()
+		.find()
+		.snapshot()
+		.forEach((consultation) => {
+			if (typeof consultation.unpaid !== 'boolean') {
+				consultation.unpaid = isUnpaid(consultation);
 			}
 
 			Consultations.rawCollection().save(consultation);
@@ -261,6 +273,17 @@ Meteor.startup(() => {
 			owner: 1,
 			datetime: 1,
 			isDone: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			unpaid: 1
 		},
 		{
 			background: true
