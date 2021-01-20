@@ -9,7 +9,6 @@ const makeQuery = (Collection, subscription) => (query, options, deps) => {
 			loading: !handle.ready(),
 			results: Collection.find(query, options).fetch()
 		};
-
 	}, deps);
 };
 
