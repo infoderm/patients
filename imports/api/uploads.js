@@ -30,6 +30,12 @@ export const Uploads = new FilesCollection({
 		return true;
 	},
 	onAfterUpload(upload) {
+		this.collection.update(upload._id, {
+			$set: {
+				'meta.createdAt': new Date()
+			}
+		});
+
 		// Move file to GridFS
 		Object.keys(upload.versions).forEach((versionName) => {
 			const metadata = {
