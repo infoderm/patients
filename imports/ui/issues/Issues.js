@@ -10,6 +10,7 @@ import PatientsMissingAGender from './PatientsMissingAGender.js';
 import UnlinkedDocuments from './UnlinkedDocuments.js';
 import UnparsedDocuments from './UnparsedDocuments.js';
 import MangledDocuments from './MangledDocuments.js';
+import UnattachedUploads from './UnattachedUploads.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -22,6 +23,8 @@ export default function Issues() {
 
 	return (
 		<div>
+			<Typography variant="h3">Uploads that are not attached</Typography>
+			<UnattachedUploads className={classes.container} />
 			<Typography variant="h3">Documents that are not parsed</Typography>
 			<UnparsedDocuments className={classes.container} />
 			<Typography variant="h3">
