@@ -100,6 +100,7 @@ class AttachmentCard extends React.Component {
 				className={classes.card}
 				component="a"
 				href={link(attachment)}
+				rel="noreferrer"
 				target="_blank"
 			>
 				<CardHeader

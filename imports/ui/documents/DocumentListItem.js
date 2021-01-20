@@ -298,6 +298,7 @@ class DocumentListItem extends React.Component {
 				<ListItemSecondaryAction>
 					<IconButton
 						component={Link}
+						rel="noreferrer"
 						target="_blank"
 						to={`/document/${_id.toHexString ? _id.toHexString() : _id}`}
 						aria-label="Open in New Tab"
