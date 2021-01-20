@@ -20,11 +20,13 @@ import PhotoIcon from '@material-ui/icons/Photo';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
 import AttachmentThumbnail from './AttachmentThumbnail.js';
 import AttachmentEditionDialog from './AttachmentEditionDialog.js';
 import AttachmentDeletionDialog from './AttachmentDeletionDialog.js';
+import AttachmentSuperDeletionDialog from './AttachmentSuperDeletionDialog.js';
 
 import {Uploads} from '../../api/uploads.js';
 
@@ -60,7 +62,8 @@ class AttachmentCard extends React.Component {
 		this.state = {
 			menu: null,
 			editing: false,
-			deleting: false
+			deleting: false,
+			superDeleting: false
 		};
 	}
 
@@ -79,21 +82,30 @@ class AttachmentCard extends React.Component {
 		event.preventDefault();
 	};
 
-	openDeleteDialog = (event) => {
+	openDeletionDialog = (event) => {
 		this.setState({menu: null, deleting: true});
+		event.preventDefault();
+	};
+
+	openSuperDeletionDialog = (event) => {
+		this.setState({menu: null, superDeleting: true});
 		event.preventDefault();
 	};
 
 	render() {
 		const {classes, attachment, info} = this.props;
 
-		const {menu, editing, deleting} = this.state;
+		const {menu, editing, deleting, superDeleting} = this.state;
 
 		const headerClasses = {
 			content: classes.headerContent,
 			title: classes.headerContentTitle,
 			subheader: classes.headerContentSubheader
 		};
+
+		const detached =
+			!attachment?.meta?.attachedToPatients?.length &&
+			!attachment?.meta?.attachedToConsultations?.length;
 
 		return (
 			<Card
@@ -142,25 +154,44 @@ class AttachmentCard extends React.Component {
 									</ListItemIcon>
 									<ListItemText>Rename</ListItemText>
 								</MenuItem>
-								<MenuItem onClick={this.openDeleteDialog}>
-									<ListItemIcon>
-										<DeleteIcon />
-									</ListItemIcon>
-									<ListItemText>Delete</ListItemText>
-								</MenuItem>
+								{info && (
+									<MenuItem onClick={this.openDeletionDialog}>
+										<ListItemIcon>
+											<DeleteIcon />
+										</ListItemIcon>
+										<ListItemText>Delete</ListItemText>
+									</MenuItem>
+								)}
+								{detached && (
+									<MenuItem onClick={this.openSuperDeletionDialog}>
+										<ListItemIcon>
+											<DeleteForeverIcon />
+										</ListItemIcon>
+										<ListItemText>Delete forever</ListItemText>
+									</MenuItem>
+								)}
 							</Menu>
 							<AttachmentEditionDialog
 								open={editing}
 								attachment={attachment}
 								onClose={() => this.setState({editing: false})}
 							/>
-							<AttachmentDeletionDialog
-								open={deleting}
-								detach={`${info.parentCollection}.detach`}
-								itemId={info.parentId}
-								attachment={attachment}
-								onClose={() => this.setState({deleting: false})}
-							/>
+							{info && (
+								<AttachmentDeletionDialog
+									open={deleting}
+									detach={`${info.parentCollection}.detach`}
+									itemId={info.parentId}
+									attachment={attachment}
+									onClose={() => this.setState({deleting: false})}
+								/>
+							)}
+							{detached && (
+								<AttachmentSuperDeletionDialog
+									open={superDeleting}
+									attachment={attachment}
+									onClose={() => this.setState({superDeleting: false})}
+								/>
+							)}
 						</div>
 					}
 				/>
@@ -177,7 +208,7 @@ class AttachmentCard extends React.Component {
 AttachmentCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	attachment: PropTypes.object.isRequired,
-	info: PropTypes.object.isRequired
+	info: PropTypes.object
 };
 
 export default withStyles(styles, {withTheme: true})(AttachmentCard);
