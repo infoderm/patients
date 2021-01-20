@@ -70,7 +70,7 @@ export const Uploads = new FilesCollection({
 		});
 	},
 	interceptDownload(http, upload, versionName) {
-		const _id = (upload.versions[versionName].meta || {}).gridFsFileId;
+		const _id = upload.versions[versionName].meta?.gridFsFileId;
 		if (_id) {
 			const readStream = gfs.createReadStream({_id});
 			readStream.on('error', (err) => {
@@ -84,7 +84,7 @@ export const Uploads = new FilesCollection({
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {
 			Object.keys(upload.versions).forEach((versionName) => {
-				const _id = (upload.versions[versionName].meta || {}).gridFsFileId;
+				const _id = upload.versions[versionName].meta?.gridFsFileId;
 				if (_id) {
 					gfs.remove({_id}, (err) => {
 						if (err) {
