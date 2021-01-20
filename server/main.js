@@ -161,6 +161,8 @@ Meteor.startup(() => {
 	createSimpleIndex(Patients, 'niss');
 	createSimpleIndex(Patients, 'lastname');
 	createSimpleIndex(Patients, 'normalizedName');
+	createSimpleIndex(Patients, 'sex');
+	createSimpleIndex(Patients, 'birthdate');
 	createSimpleIndex(Patients, 'doctors');
 	createSimpleIndex(Patients, 'insurances');
 	createSimpleIndex(Patients, 'allergies');
@@ -289,6 +291,17 @@ Meteor.startup(() => {
 		}
 	);
 
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			price: 1
+		},
+		{
+			background: true
+		}
+	);
+
 	Events.rawCollection().createIndex(
 		{
 			owner: 1,
@@ -338,8 +351,8 @@ Meteor.startup(() => {
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
-			createdAt: 1,
-			parsed: 1
+			parsed: 1,
+			createdAt: 1
 		},
 		{
 			background: true
@@ -349,8 +362,8 @@ Meteor.startup(() => {
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
-			createdAt: 1,
-			encoding: 1
+			encoding: 1,
+			createdAt: 1
 		},
 		{
 			background: true
