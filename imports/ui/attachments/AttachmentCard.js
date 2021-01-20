@@ -129,10 +129,10 @@ class AttachmentCard extends React.Component {
 						</Avatar>
 					}
 					title={attachment.name}
-					subheader={`Added on ${format(
-						attachment.meta.createdAt,
-						'yyyy-MM-dd'
-					)}`}
+					subheader={
+						attachment.meta.createdAt &&
+						`Added on ${format(attachment.meta.createdAt, 'yyyy-MM-dd')}`
+					}
 					action={
 						<div>
 							<IconButton
