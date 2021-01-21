@@ -67,6 +67,11 @@
     "lint-staged": "^10.5.3",
     "xo": "^0.37.1"
   },
+  "lint-staged": {
+    "*.js": [
+      "npm run lint-and-fix"
+    ]
+  },
   "private": true,
   "scripts": {
     "lint": "xo",
@@ -74,9 +79,6 @@
     "precommit": "lint-staged",
     "start": "meteor run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
-  },
-  "lint-staged": {
-    "*.js": ["npm run lint-and-fix"]
   },
   "xo": {
     "parser": "babel-eslint",
