@@ -48,13 +48,18 @@ ConsultationsPager.propTypes = {
 };
 
 export default withTracker(({query, sort, page, perpage}) => {
-	const handle = Meteor.subscribe('consultations', query);
+	const options = {
+		sort,
+		skip: (page - 1) * perpage,
+		limit: perpage
+	};
+	const handle = Meteor.subscribe(
+		'consultationsAndAppointments',
+		query,
+		options
+	);
 	return {
 		loading: !handle.ready(),
-		items: Consultations.find(query, {
-			sort,
-			skip: (page - 1) * perpage,
-			limit: perpage
-		}).fetch()
+		items: Consultations.find(query, options).fetch()
 	};
 })(ConsultationsPager);

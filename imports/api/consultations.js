@@ -14,6 +14,7 @@ import {Attachments} from './attachments.js';
 import {Books, books} from './books.js';
 import {parseUint32StrictOrString} from './string.js';
 
+import pageQuery from './pageQuery.js';
 import makeQuery from './makeQuery.js';
 import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
@@ -184,23 +185,7 @@ if (Meteor.isServer) {
 		);
 	});
 
-	Meteor.publish('consultations.wired', function () {
-		return Consultations.find({
-			owner: this.userId,
-			isDone: true,
-			payment_method: 'wire'
-		});
-	});
-
-	Meteor.publish('consultationsAndAppointments', function (query, options) {
-		return Consultations.find(
-			{
-				...query,
-				owner: this.userId
-			},
-			options
-		);
-	});
+	Meteor.publish('consultationsAndAppointments', pageQuery(Consultations));
 
 	Meteor.publish('patient.consultations', function (patientId, options) {
 		check(patientId, String);

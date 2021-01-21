@@ -309,8 +309,18 @@ Meteor.startup(() => {
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
-			datetime: 1,
-			isDone: 1
+			datetime: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			datetime: 1
 		},
 		{
 			background: true
@@ -332,8 +342,8 @@ Meteor.startup(() => {
 		{
 			owner: 1,
 			patientId: 1,
-			datetime: 1,
-			isDone: 1
+			isDone: 1,
+			datetime: -1
 		},
 		{
 			background: true
@@ -343,9 +353,21 @@ Meteor.startup(() => {
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
+			isDone: 1,
 			book: 1,
-			datetime: 1,
-			isDone: 1
+			datetime: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			payment_method: 1,
+			datetime: -1
 		},
 		{
 			background: true
@@ -401,6 +423,19 @@ Meteor.startup(() => {
 			status: 1,
 			lastVersion: 1,
 			deleted: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Documents.rawCollection().createIndex(
+		{
+			owner: 1,
+			identifier: 1,
+			reference: 1,
+			status: 1,
+			datetime: -1
 		},
 		{
 			background: true
