@@ -568,4 +568,66 @@ Meteor.startup(() => {
 				}
 			)
 		);
+
+	Promise.all([
+		Patients.rawCollection().distinct('_id'),
+		Consultations.rawCollection().distinct('_id'),
+		Attachments.rawCollection().distinct('meta.attachedToPatients'),
+		Attachments.rawCollection().distinct('meta.attachedToConsultations')
+	])
+		.then(
+			Meteor.bindEnvironment(
+				([
+					patientIds,
+					consultationIds,
+					attachedToPatientsIds,
+					attachedToConsultationsIds
+				]) => {
+					const patientIdsSet = new Set(patientIds);
+					const consultationIdsSet = new Set(consultationIds);
+					const badAttachedToPatientsIds = attachedToPatientsIds.filter(
+						(x) => !patientIdsSet.has(x)
+					);
+					const badAttachedToConsultationsIds = attachedToConsultationsIds.filter(
+						(x) => !consultationIdsSet.has(x)
+					);
+					if (badAttachedToPatientsIds.length >= 1) {
+						console.debug(
+							'Removing bad patient ids from Attachments.meta.attachedToPatients',
+							{badAttachedToPatientsIds}
+						);
+						Attachments.update(
+							{'meta.attachedToPatients': {$in: badAttachedToPatientsIds}},
+							{
+								$pullAll: {'meta.attachedToPatients': badAttachedToPatientsIds}
+							},
+							{multi: true}
+						);
+					}
+
+					if (badAttachedToConsultationsIds.length >= 1) {
+						console.debug(
+							'Removing bad consultation ids from Attachments.meta.attachedToConsultations',
+							{badAttachedToConsultationsIds}
+						);
+						Attachments.update(
+							{
+								'meta.attachedToConsultations': {
+									$in: badAttachedToConsultationsIds
+								}
+							},
+							{
+								$pullAll: {
+									'meta.attachedToConsultations': badAttachedToConsultationsIds
+								}
+							},
+							{multi: true}
+						);
+					}
+				}
+			)
+		)
+		.catch((error) => {
+			console.error(error);
+		});
 });
