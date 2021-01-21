@@ -47,7 +47,7 @@ function* generateDays(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS)) {
 	let i = 0;
 	let current = begin;
 	while (current < end) {
-		if (displayedWeekDays.has(i % 7 | 0)) yield current;
+		if (displayedWeekDays.has(Math.trunc(i % 7))) yield current;
 		current = addDays(begin, ++i);
 	}
 }

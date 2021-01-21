@@ -69,7 +69,7 @@ const words = (string) => string.trim().split(/\s+/);
 
 function* splitParticles(data) {
 	const queue = words(data).reverse();
-	outer: while (queue.length !== 0) {
+	outer: while (queue.length > 0) {
 		const word = queue.pop();
 		// greedy match
 		// TODO use prefix tree

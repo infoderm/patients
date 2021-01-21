@@ -626,7 +626,7 @@ Meteor.startup(() => {
 					const badAttachedToConsultationsIds = attachedToConsultationsIds.filter(
 						(x) => !consultationIdsSet.has(x)
 					);
-					if (badAttachedToPatientsIds.length >= 1) {
+					if (badAttachedToPatientsIds.length > 0) {
 						console.debug(
 							'Removing bad patient ids from Attachments.meta.attachedToPatients',
 							{badAttachedToPatientsIds}
@@ -640,7 +640,7 @@ Meteor.startup(() => {
 						);
 					}
 
-					if (badAttachedToConsultationsIds.length >= 1) {
+					if (badAttachedToConsultationsIds.length > 0) {
 						console.debug(
 							'Removing bad consultation ids from Attachments.meta.attachedToConsultations',
 							{badAttachedToConsultationsIds}

@@ -199,46 +199,46 @@ if (Meteor.isServer) {
 		);
 	});
 
-	Meteor.publish('patient.consultationsAndAppointments', function (
-		patientId,
-		options
-	) {
-		check(patientId, String);
-		return Consultations.find(
-			{
-				owner: this.userId,
-				patientId
-			},
-			options
-		);
-	});
+	Meteor.publish(
+		'patient.consultationsAndAppointments',
+		function (patientId, options) {
+			check(patientId, String);
+			return Consultations.find(
+				{
+					owner: this.userId,
+					patientId
+				},
+				options
+			);
+		}
+	);
 
-	Meteor.publish(books.options.parentPublication, function (
-		name,
-		options = {}
-	) {
-		const query = {
-			...books.selector(name),
-			owner: this.userId,
-			isDone: true
-		};
-		if (options.fields) {
-			const {fields, ...rest} = options;
-			const _options = {
-				...rest,
-				fields: {
-					...fields
-				}
+	Meteor.publish(
+		books.options.parentPublication,
+		function (name, options = {}) {
+			const query = {
+				...books.selector(name),
+				owner: this.userId,
+				isDone: true
 			};
-			for (const key of Object.keys(query)) {
-				_options.fields[key] = 1;
+			if (options.fields) {
+				const {fields, ...rest} = options;
+				const _options = {
+					...rest,
+					fields: {
+						...fields
+					}
+				};
+				for (const key of Object.keys(query)) {
+					_options.fields[key] = 1;
+				}
+
+				return Consultations.find(query, _options);
 			}
 
-			return Consultations.find(query, _options);
+			return Consultations.find(query, options);
 		}
-
-		return Consultations.find(query, options);
-	});
+	);
 
 	Meteor.publish(books.options.parentPublicationStats, function (name) {
 		check(name, String);

@@ -46,20 +46,19 @@ if (Meteor.isServer) {
 		);
 	});
 
-	Meteor.publish('documents.versions', function (
-		identifier,
-		reference,
-		options
-	) {
-		return Documents.find(
-			{
-				owner: this.userId,
-				identifier,
-				reference
-			},
-			options
-		);
-	});
+	Meteor.publish(
+		'documents.versions',
+		function (identifier, reference, options) {
+			return Documents.find(
+				{
+					owner: this.userId,
+					identifier,
+					reference
+				},
+				options
+			);
+		}
+	);
 }
 
 // Const utfLabelToEncoding = {

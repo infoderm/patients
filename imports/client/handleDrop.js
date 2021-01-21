@@ -24,11 +24,9 @@ function unpack(data, item) {
 		return ['unknown-file', f];
 	}
 
-	if (item.kind === 'string') {
-		if (item.type === 'text/plain') {
-			const xmlString = data.getData('text/plain');
-			return ['patient', xmlString];
-		}
+	if (item.kind === 'string' && item.type === 'text/plain') {
+		const xmlString = data.getData('text/plain');
+		return ['patient', xmlString];
 	}
 
 	return ['unknown', item];

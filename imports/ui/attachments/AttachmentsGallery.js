@@ -61,7 +61,7 @@ const AttachmentsGallery = (props) => {
 						<Grid key={k} item container spacing={2} className={classes.group}>
 							<Grid item lg={12}>
 								<Typography variant="h3">
-									{k === Infinity
+									{k === Number.POSITIVE_INFINITY
 										? 'Pièces jointes au patient'
 										: `Consultation du ${dateFormat(
 												new Date(k),

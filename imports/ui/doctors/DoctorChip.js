@@ -11,12 +11,10 @@ const DoctorChip = ({item, ...rest}) => {
 	let component;
 	let to;
 
-	if (item) {
-		if (!rest.onDelete) {
-			component = Link;
-			to = `/doctor/${myEncodeURIComponent(item.name)}`;
-			style = {cursor: 'pointer'};
-		}
+	if (item && !rest.onDelete) {
+		component = Link;
+		to = `/doctor/${myEncodeURIComponent(item.name)}`;
+		style = {cursor: 'pointer'};
 	}
 
 	return <Chip {...rest} style={style} component={component} to={to} />;

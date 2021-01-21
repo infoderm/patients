@@ -52,7 +52,7 @@ function* quantityToDigits(units, restUnit, quantity) {
 	let rest = quantity;
 
 	for (const [key, size] of units) {
-		const howManyOfKey = (rest / size) | 0;
+		const howManyOfKey = Math.trunc(rest / size);
 		if (howManyOfKey > 0) {
 			yield [key, howManyOfKey];
 			rest -= howManyOfKey * size;

@@ -14,7 +14,7 @@ const makeObservedQuery = (Collection, subscription) => (
 	useEffect(() => {
 		setDirty(false);
 
-		const timestamp = new Date().getTime();
+		const timestamp = Date.now();
 		const key = JSON.stringify({timestamp, query, options});
 		const handle = Meteor.subscribe(subscription, key, query, options, {
 			onStop: () => {

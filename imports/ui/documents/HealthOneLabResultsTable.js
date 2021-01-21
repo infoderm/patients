@@ -79,11 +79,10 @@ const HealthOneLabResultsTable = (props) => {
 		} else if (result.flag !== '') {
 			className = classes.unknownFlagRow;
 		} else if (result.code && result.code.startsWith('t_')) {
-			if (result.name && result.name.match(/^[A-Z ]*$/)) {
-				className = classes.headerRow;
-			} else {
-				className = classes.subheaderRow;
-			}
+			className =
+				result.name && result.name.match(/^[A-Z ]*$/)
+					? classes.headerRow
+					: classes.subheaderRow;
 		} else if (result.code === 'CORCOP') {
 			className = classes.commentRow;
 		} else if (result.code === 'TITRE') {
