@@ -77,6 +77,7 @@ StaticConsultationCard.propTypes = {
 	loading: PropTypes.bool,
 	found: PropTypes.bool,
 	consultation: PropTypes.object.isRequired,
+	attachments: PropTypes.array,
 	PatientChip: PropTypes.elementType,
 	showPrice: PropTypes.bool,
 	defaultExpanded: PropTypes.bool

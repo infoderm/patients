@@ -6,7 +6,7 @@ import {useConsultation} from '../../api/consultations.js';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import StaticConsultationCard from './StaticConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,8 +19,8 @@ const ConsultationDetails = ({match}) => {
 	const classes = useStyles();
 
 	const _id = match.params.id;
-	const options = {fields: StaticConsultationCard.projection};
-	const deps = [_id, JSON.stringify(StaticConsultationCard.projection)];
+	const options = {fields: ReactiveConsultationCard.projection};
+	const deps = [_id, JSON.stringify(ReactiveConsultationCard.projection)];
 	const {loading, found, fields: consultation} = useConsultation(
 		{},
 		_id,
@@ -38,7 +38,7 @@ const ConsultationDetails = ({match}) => {
 
 	return (
 		<div className={classes.container}>
-			<StaticConsultationCard
+			<ReactiveConsultationCard
 				defaultExpanded
 				PatientChip={ReactivePatientChip}
 				consultation={consultation}

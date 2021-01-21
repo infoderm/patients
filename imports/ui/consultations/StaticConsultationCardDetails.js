@@ -28,7 +28,7 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import Currency from 'currency-formatter';
 
-import AttachmentLink from '../attachments/AttachmentLink.js';
+import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink.js';
 
 const useStyles = makeStyles(() => ({
 	details: {
@@ -104,9 +104,9 @@ const StaticConsultationCardDetails = (props) => {
 			payment_method,
 			price,
 			paid,
-			book,
-			attachments
-		}
+			book
+		},
+		attachments
 	} = props;
 
 	return (
@@ -194,11 +194,11 @@ const StaticConsultationCardDetails = (props) => {
 						}
 						secondary={
 							<ul>
-								{attachments.map((attachmentId) => (
-									<li key={attachmentId}>
-										<AttachmentLink
+								{attachments.map(({_id}) => (
+									<li key={_id}>
+										<ReactiveAttachmentLink
 											className={classes.link}
-											attachmentId={attachmentId}
+											attachmentId={_id}
 										/>
 									</li>
 								))}

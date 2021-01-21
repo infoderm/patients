@@ -64,14 +64,19 @@
     "eslint-plugin-react-hooks": "^4.1.0",
     "faker": "^4.1.0",
     "husky": "^5.0.6",
+    "lint-staged": "^10.5.3",
     "xo": "^0.33.0"
   },
   "private": true,
   "scripts": {
     "lint": "xo",
-    "precommit": "npm run lint -- --quiet",
+    "lint-and-fix": "npm run lint -- --fix",
+    "precommit": "lint-staged",
     "start": "meteor run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
+  },
+  "lint-staged": {
+    "*.js": ["npm run lint-and-fix"]
   },
   "xo": {
     "parser": "babel-eslint",

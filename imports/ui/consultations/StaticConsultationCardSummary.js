@@ -86,9 +86,9 @@ const StaticConsultationCardSummary = (props) => {
 			isCancelled,
 			currency,
 			payment_method,
-			price,
-			attachments
-		}
+			price
+		},
+		attachments
 	} = props;
 
 	return (

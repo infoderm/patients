@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useReducer} from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import format from 'date-fns/format';
 
@@ -19,16 +19,20 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PhotoIcon from '@material-ui/icons/Photo';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import AttachmentIcon from '@material-ui/icons/Attachment';
-import DeleteIcon from '@material-ui/icons/Delete';
+import LinkIcon from '@material-ui/icons/Link';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
 import AttachmentThumbnail from './AttachmentThumbnail.js';
 import AttachmentEditionDialog from './AttachmentEditionDialog.js';
+import AttachmentLinkingDialog from './AttachmentLinkingDialog.js';
 import AttachmentDeletionDialog from './AttachmentDeletionDialog.js';
+import AttachmentSuperDeletionDialog from './AttachmentSuperDeletionDialog.js';
 
 import {Uploads} from '../../api/uploads.js';
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
 	card: {
 		display: 'block',
 		margin: theme.spacing(1)
@@ -49,131 +53,184 @@ const styles = (theme) => ({
 	thumbnail: {
 		height: 300
 	}
-});
+}));
 
 const link = (attachment) =>
 	`/${Uploads.link(attachment).split('/').slice(3).join('/')}`;
 
-class AttachmentCard extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			menu: null,
-			editing: false,
-			deleting: false
-		};
-	}
-
-	openMenu = (event) => {
-		this.setState({menu: event.currentTarget});
-		event.preventDefault();
-	};
-
-	closeMenu = (event) => {
-		this.setState({menu: null});
-		event.preventDefault();
-	};
-
-	openEditDialog = (event) => {
-		this.setState({menu: null, editing: true});
-		event.preventDefault();
-	};
-
-	openDeleteDialog = (event) => {
-		this.setState({menu: null, deleting: true});
-		event.preventDefault();
-	};
-
-	render() {
-		const {classes, attachment, parent} = this.props;
-
-		const {menu, editing, deleting} = this.state;
-
-		const headerClasses = {
-			content: classes.headerContent,
-			title: classes.headerContentTitle,
-			subheader: classes.headerContentSubheader
-		};
-
-		return (
-			<Card
-				className={classes.card}
-				component="a"
-				href={link(attachment)}
-				target="_blank"
-			>
-				<CardHeader
-					classes={headerClasses}
-					avatar={
-						<Avatar>
-							{attachment.isImage ? (
-								<PhotoIcon />
-							) : attachment.isPDF ? (
-								<PictureAsPdfIcon />
-							) : (
-								<AttachmentIcon />
-							)}
-						</Avatar>
-					}
-					title={attachment.name}
-					subheader={format(attachment.meta.createdAt, 'yyyy-MM-dd')}
-					action={
-						<div>
-							<IconButton
-								aria-owns={menu ? 'simple-menu' : null}
-								aria-haspopup="true"
-								onClick={this.openMenu}
-							>
-								<MoreVertIcon />
-							</IconButton>
-							<Menu
-								id="simple-menu"
-								anchorEl={menu}
-								open={Boolean(menu)}
-								onClose={this.closeMenu}
-							>
-								<MenuItem onClick={this.openEditDialog}>
-									<ListItemIcon>
-										<EditIcon />
-									</ListItemIcon>
-									<ListItemText>Rename</ListItemText>
-								</MenuItem>
-								<MenuItem onClick={this.openDeleteDialog}>
-									<ListItemIcon>
-										<DeleteIcon />
-									</ListItemIcon>
-									<ListItemText>Delete</ListItemText>
-								</MenuItem>
-							</Menu>
-							<AttachmentEditionDialog
-								open={editing}
-								attachment={attachment}
-								onClose={() => this.setState({editing: false})}
-							/>
-							<AttachmentDeletionDialog
-								open={deleting}
-								detach={`${parent.collection}.detach`}
-								itemId={parent._id}
-								attachment={attachment}
-								onClose={() => this.setState({deleting: false})}
-							/>
-						</div>
-					}
-				/>
-				<AttachmentThumbnail
-					className={classes.thumbnail}
-					height="600"
-					attachmentId={attachment._id}
-				/>
-			</Card>
-		);
-	}
-}
-
-AttachmentCard.propTypes = {
-	classes: PropTypes.object.isRequired,
-	attachment: PropTypes.object.isRequired,
-	parent: PropTypes.object.isRequired
+const initialState = {
+	menu: null,
+	editing: false,
+	linking: false,
+	deleting: false,
+	superDeleting: false
 };
 
-export default withStyles(styles, {withTheme: true})(AttachmentCard);
+const reducer = (state, action) => {
+	switch (action.type) {
+		case 'openMenu':
+			return {...state, menu: action.event.currentTarget};
+		case 'closeMenu':
+			return {...state, menu: null};
+		case 'openEditionDialog':
+			return {...state, menu: null, editing: true};
+		case 'openLinkingDialog':
+			return {...state, menu: null, linking: true};
+		case 'openDeletionDialog':
+			return {...state, menu: null, deleting: true};
+		case 'openSuperDeletionDialog':
+			return {...state, menu: null, superDeleting: true};
+		case 'closeEditionDialog':
+			return {...state, editing: false};
+		case 'closeLinkingDialog':
+			return {...state, linking: false};
+		case 'closeDeletionDialog':
+			return {...state, deleting: false};
+		case 'closeSuperDeletionDialog':
+			return {...state, superDeleting: false};
+		default:
+			throw new Error(`Unknown action type ${action.type}.`);
+	}
+};
+
+const AttachmentCard = (props) => {
+	const classes = useStyles();
+	const [state, dispatch] = useReducer(reducer, initialState);
+
+	const {menu, editing, linking, deleting, superDeleting} = state;
+	const {attachment, info} = props;
+
+	const headerClasses = {
+		content: classes.headerContent,
+		title: classes.headerContentTitle,
+		subheader: classes.headerContentSubheader
+	};
+
+	const detached =
+		!attachment?.meta?.attachedToPatients?.length &&
+		!attachment?.meta?.attachedToConsultations?.length;
+
+	const anchorProps = {
+		component: 'a',
+		href: link(attachment),
+		rel: 'noreferrer',
+		target: '_blank'
+	};
+
+	return (
+		<Card className={classes.card}>
+			<CardHeader
+				classes={headerClasses}
+				avatar={
+					<Avatar>
+						{attachment.isImage ? (
+							<PhotoIcon />
+						) : attachment.isPDF ? (
+							<PictureAsPdfIcon />
+						) : (
+							<AttachmentIcon />
+						)}
+					</Avatar>
+				}
+				title={attachment.name}
+				subheader={
+					attachment.meta.createdAt &&
+					`Added on ${format(attachment.meta.createdAt, 'yyyy-MM-dd')}`
+				}
+				action={
+					<>
+						<IconButton
+							aria-owns={menu ? 'simple-menu' : null}
+							aria-haspopup="true"
+							onClick={(event) => dispatch({type: 'openMenu', event})}
+						>
+							<MoreVertIcon />
+						</IconButton>
+						<Menu
+							id="simple-menu"
+							anchorEl={menu}
+							open={Boolean(menu)}
+							onClose={() => dispatch({type: 'closeMenu'})}
+						>
+							<MenuItem onClick={() => dispatch({type: 'openEditionDialog'})}>
+								<ListItemIcon>
+									<EditIcon />
+								</ListItemIcon>
+								<ListItemText>Rename</ListItemText>
+							</MenuItem>
+							{detached && (
+								<MenuItem onClick={() => dispatch({type: 'openLinkingDialog'})}>
+									<ListItemIcon>
+										<LinkIcon />
+									</ListItemIcon>
+									<ListItemText>Attach</ListItemText>
+								</MenuItem>
+							)}
+							{info && (
+								<MenuItem
+									onClick={() => dispatch({type: 'openDeletionDialog'})}
+								>
+									<ListItemIcon>
+										<LinkOffIcon />
+									</ListItemIcon>
+									<ListItemText>Detach</ListItemText>
+								</MenuItem>
+							)}
+							{detached && (
+								<MenuItem
+									onClick={() => dispatch({type: 'openSuperDeletionDialog'})}
+								>
+									<ListItemIcon>
+										<DeleteForeverIcon />
+									</ListItemIcon>
+									<ListItemText>Delete forever</ListItemText>
+								</MenuItem>
+							)}
+						</Menu>
+						<AttachmentEditionDialog
+							open={editing}
+							attachment={attachment}
+							onClose={() => dispatch({type: 'closeEditionDialog'})}
+						/>
+						{detached && (
+							<AttachmentLinkingDialog
+								open={linking}
+								attachment={attachment}
+								onClose={() => dispatch({type: 'closeLinkingDialog'})}
+							/>
+						)}
+						{info && (
+							<AttachmentDeletionDialog
+								open={deleting}
+								detach={`${info.parentCollection}.detach`}
+								itemId={info.parentId}
+								attachment={attachment}
+								onClose={() => dispatch({type: 'closeDeletionDialog'})}
+							/>
+						)}
+						{detached && (
+							<AttachmentSuperDeletionDialog
+								open={superDeleting}
+								attachment={attachment}
+								onClose={() => dispatch({type: 'closeSuperDeletionDialog'})}
+							/>
+						)}
+					</>
+				}
+			/>
+			<AttachmentThumbnail
+				className={classes.thumbnail}
+				height="600"
+				attachmentId={attachment._id}
+				{...anchorProps}
+			/>
+		</Card>
+	);
+};
+
+AttachmentCard.propTypes = {
+	attachment: PropTypes.object.isRequired,
+	info: PropTypes.object
+};
+
+export default AttachmentCard;

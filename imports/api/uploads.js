@@ -2,6 +2,10 @@ import {Meteor} from 'meteor/meteor';
 import {FilesCollection} from 'meteor/ostrio:files';
 import {check} from 'meteor/check';
 
+import {all, map} from '@aureooms/js-itertools';
+
+import unconditionallyUpdateById from './unconditionallyUpdateById.js';
+
 import gridfs from 'gridfs-stream'; // We'll use this package to work with GridFS
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
 import {MongoInternals} from 'meteor/mongo';
@@ -17,7 +21,7 @@ if (Meteor.isServer) {
 
 export const Uploads = new FilesCollection({
 	collectionName: 'uploads',
-	allowClientCode: false,
+	allowClientCode: true,
 	onBeforeUpload(file) {
 		if (!this.userId) {
 			return 'Must be logged in to upload a file.';
@@ -30,6 +34,13 @@ export const Uploads = new FilesCollection({
 		return true;
 	},
 	onAfterUpload(upload) {
+		this.collection.update(upload._id, {
+			$set: {
+				'meta.createdAt': new Date(),
+				'meta.isDeleted': false
+			}
+		});
+
 		// Move file to GridFS
 		Object.keys(upload.versions).forEach((versionName) => {
 			const metadata = {
@@ -61,7 +72,7 @@ export const Uploads = new FilesCollection({
 		});
 	},
 	interceptDownload(http, upload, versionName) {
-		const _id = (upload.versions[versionName].meta || {}).gridFsFileId;
+		const _id = upload.versions[versionName].meta?.gridFsFileId;
 		if (_id) {
 			const readStream = gfs.createReadStream({_id});
 			readStream.on('error', (err) => {
@@ -72,10 +83,13 @@ export const Uploads = new FilesCollection({
 
 		return Boolean(_id); // Serve file from either GridFS or FS if it wasn't uploaded yet
 	},
+	onBeforeRemove(cursor) {
+		return all(map((x) => x.userId === this.userId, cursor.fetch()));
+	},
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {
 			Object.keys(upload.versions).forEach((versionName) => {
-				const _id = (upload.versions[versionName].meta || {}).gridFsFileId;
+				const _id = upload.versions[versionName].meta?.gridFsFileId;
 				if (_id) {
 					gfs.remove({_id}, (err) => {
 						if (err) {
@@ -91,8 +105,12 @@ export const Uploads = new FilesCollection({
 if (Meteor.isServer) {
 	Uploads.denyClient();
 
-	Meteor.publish('uploads', function () {
-		return Uploads.find({userId: this.userId}).cursor;
+	Meteor.publish('uploads', function (query, options) {
+		const selector = {
+			...query,
+			userId: this.userId
+		};
+		return Uploads.find(selector, options).cursor;
 	});
 
 	Meteor.publish('upload', function (_id) {
@@ -102,20 +120,6 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-	'uploads.remove'(uploadId) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		return Uploads.remove({_id: uploadId}, (err) => {
-			if (err) {
-				console.error(`[Trash] Error during removal: ${err}`);
-			} else {
-				console.log('[Trash] File removed from DB and FS');
-			}
-		});
-	},
-
 	'uploads.updateFilename'(uploadId, filename) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
@@ -123,5 +127,21 @@ Meteor.methods({
 
 		check(filename, String);
 		return Uploads.collection.update(uploadId, {$set: {name: filename}});
-	}
+	},
+
+	'uploads.delete': unconditionallyUpdateById(
+		Uploads.collection,
+		{
+			$set: {'meta.isDeleted': true}
+		},
+		'userId'
+	),
+
+	'uploads.restore': unconditionallyUpdateById(
+		Uploads.collection,
+		{
+			$set: {'meta.isDeleted': false}
+		},
+		'userId'
+	)
 });

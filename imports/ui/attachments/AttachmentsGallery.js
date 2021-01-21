@@ -5,25 +5,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 
-import startOfDay from 'date-fns/startOfDay';
+import dateFormat from 'date-fns/format';
 
 import {list, map, groupby} from '@aureooms/js-itertools';
 
-import AttachmentCard from './AttachmentCard.js';
+import AttachmentsGrid from './AttachmentsGrid.js';
 
 import Loading from '../navigation/Loading.js';
 
 import {Uploads} from '../../api/uploads.js';
 
-const useStyles = makeStyles(() => ({
-	item: {},
-	card: {}
+const useStyles = makeStyles((theme) => ({
+	group: {
+		padding: theme.spacing(2),
+		marginBottom: theme.spacing(2)
+	}
 }));
 
 const AttachmentsGallery = (props) => {
-	const {loading, attachmentsParents, attachments} = props;
+	const {loading, attachmentsInfo, attachments} = props;
 
 	const classes = useStyles();
 
@@ -31,41 +34,49 @@ const AttachmentsGallery = (props) => {
 		return <Loading />;
 	}
 
-	const attachmentsList = [];
-
-	attachments.map((x) => attachmentsList.push(x));
+	const grp = (x) => attachmentsInfo.get(x._id).group;
 
 	const groups = list(
 		map(
 			([k, g]) => [k, list(g)],
 			groupby(
-				(x) => x.meta.createdAt && startOfDay(x.meta.createdAt),
-				attachmentsList
+				grp,
+				attachments.sort((a, b) => grp(b) - grp(a)) // We are abusing stable native sorting here.
 			)
 		)
 	);
+
+	console.debug({
+		attachments: attachments.map((attachment) => ({
+			attachment,
+			info: attachmentsInfo.get(attachment._id)
+		}))
+	});
 
 	return (
 		<Grid container>
 			{list(
 				map(
-					([_k, g]) =>
-						g.map((attachment) => (
-							<Grid
-								key={attachment._id}
-								item
-								className={classes.item}
-								sm={12}
-								md={4}
-								xl={3}
-							>
-								<AttachmentCard
-									className={classes.card}
-									attachment={attachment}
-									parent={attachmentsParents.get(attachment._id)}
-								/>
+					([k, g]) => (
+						<Grid key={k} item container spacing={2} className={classes.group}>
+							<Grid item lg={12}>
+								<Typography variant="h3">
+									{k === Infinity
+										? 'Pièces jointes au patient'
+										: `Consultation du ${dateFormat(
+												new Date(k),
+												'yyyy-MM-dd'
+										  )}`}
+								</Typography>
 							</Grid>
-						)),
+							<AttachmentsGrid
+								item
+								spacing={2}
+								attachments={g}
+								attachmentsInfo={attachmentsInfo}
+							/>
+						</Grid>
+					),
 					groups
 				)
 			)}
@@ -80,18 +91,19 @@ AttachmentsGallery.propTypes = {
 export default withTracker(({attachmentsInfo}) => {
 	if (attachmentsInfo.length === 0) return {loading: false, attachments: []};
 
-	const handle = Meteor.subscribe('uploads');
+	const attachmentsId = attachmentsInfo.map((x) => x.attachmentId);
+	const query = {_id: {$in: attachmentsId}};
+	const options = {sort: {'meta.createdAt': -1}};
+	// const options = undefined;
+	const handle = Meteor.subscribe('uploads', query);
+
 	if (!handle.ready()) {
 		return {loading: true};
 	}
 
-	const attachmentsId = attachmentsInfo.map((x) => x[0]);
 	return {
 		loading: false,
-		attachmentsParents: new Map(attachmentsInfo),
-		attachments: Uploads.find(
-			{_id: {$in: attachmentsId}},
-			{sort: {'meta.createdAt': -1}}
-		).fetch()
+		attachmentsInfo: new Map(attachmentsInfo.map((x) => [x.attachmentId, x])),
+		attachments: Uploads.find(query, options).fetch()
 	};
 })(AttachmentsGallery);

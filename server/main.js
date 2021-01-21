@@ -10,8 +10,9 @@ import {
 	patients
 } from '../imports/api/patients.js';
 import {Drugs} from '../imports/api/drugs.js';
-import {Consultations} from '../imports/api/consultations.js';
+import {Consultations, isUnpaid} from '../imports/api/consultations.js';
 import {Events} from '../imports/api/events.js';
+import {Attachments} from '../imports/api/attachments.js';
 // eslint-disable-next-line import/no-unassigned-import
 import '../imports/api/appointments.js';
 import {Insurances, insurances} from '../imports/api/insurances.js';
@@ -30,6 +31,7 @@ Meteor.startup(() => {
 		Drugs,
 		Consultations,
 		Events,
+		Attachments,
 		Insurances,
 		Doctors,
 		Allergies,
@@ -97,6 +99,44 @@ Meteor.startup(() => {
 			Patients.rawCollection().save(patient);
 		});
 
+	// Change schema for uploads attached to patients
+	Patients.rawCollection()
+		.find()
+		.snapshot()
+		.forEach(
+			Meteor.bindEnvironment(({_id, attachments}) => {
+				if (attachments) {
+					Attachments.update(
+						{_id: {$in: attachments}},
+						{
+							$addToSet: {'meta.attachedToPatients': _id}
+						},
+						{multi: true}
+					);
+					Patients.update(_id, {$unset: {attachments: true}});
+				}
+			})
+		);
+
+	// Change schema for uploads attached to consultations
+	Consultations.rawCollection()
+		.find()
+		.snapshot()
+		.forEach(
+			Meteor.bindEnvironment(({_id, attachments}) => {
+				if (attachments) {
+					Attachments.update(
+						{_id: {$in: attachments}},
+						{
+							$addToSet: {'meta.attachedToConsultations': _id}
+						},
+						{multi: true}
+					);
+					Consultations.update(_id, {$unset: {attachments: true}});
+				}
+			})
+		);
+
 	// Add .isDone field to consultations
 	Consultations.rawCollection()
 		.find()
@@ -113,6 +153,18 @@ Meteor.startup(() => {
 
 			if (consultation.isDone !== false) {
 				consultation.isDone = true;
+			}
+
+			Consultations.rawCollection().save(consultation);
+		});
+
+	// Add .unpaid field to consultations
+	Consultations.rawCollection()
+		.find()
+		.snapshot()
+		.forEach((consultation) => {
+			if (typeof consultation.unpaid !== 'boolean') {
+				consultation.unpaid = isUnpaid(consultation);
 			}
 
 			Consultations.rawCollection().save(consultation);
@@ -159,6 +211,8 @@ Meteor.startup(() => {
 	createSimpleIndex(Patients, 'niss');
 	createSimpleIndex(Patients, 'lastname');
 	createSimpleIndex(Patients, 'normalizedName');
+	createSimpleIndex(Patients, 'sex');
+	createSimpleIndex(Patients, 'birthdate');
 	createSimpleIndex(Patients, 'doctors');
 	createSimpleIndex(Patients, 'insurances');
 	createSimpleIndex(Patients, 'allergies');
@@ -266,6 +320,17 @@ Meteor.startup(() => {
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
+			isDone: 1,
+			unpaid: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
 			patientId: 1,
 			datetime: 1,
 			isDone: 1
@@ -287,10 +352,41 @@ Meteor.startup(() => {
 		}
 	);
 
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			price: 1
+		},
+		{
+			background: true
+		}
+	);
+
 	Events.rawCollection().createIndex(
 		{
 			owner: 1,
 			begin: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Attachments.rawCollection().createIndex(
+		{
+			userId: 1,
+			'meta.attachedToPatients': 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Attachments.rawCollection().createIndex(
+		{
+			userId: 1,
+			'meta.attachedToConsultations': 1
 		},
 		{
 			background: true
@@ -325,8 +421,8 @@ Meteor.startup(() => {
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
-			createdAt: 1,
-			parsed: 1
+			parsed: 1,
+			createdAt: 1
 		},
 		{
 			background: true
@@ -336,8 +432,8 @@ Meteor.startup(() => {
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
-			createdAt: 1,
-			encoding: 1
+			encoding: 1,
+			createdAt: 1
 		},
 		{
 			background: true
@@ -472,4 +568,66 @@ Meteor.startup(() => {
 				}
 			)
 		);
+
+	Promise.all([
+		Patients.rawCollection().distinct('_id'),
+		Consultations.rawCollection().distinct('_id'),
+		Attachments.rawCollection().distinct('meta.attachedToPatients'),
+		Attachments.rawCollection().distinct('meta.attachedToConsultations')
+	])
+		.then(
+			Meteor.bindEnvironment(
+				([
+					patientIds,
+					consultationIds,
+					attachedToPatientsIds,
+					attachedToConsultationsIds
+				]) => {
+					const patientIdsSet = new Set(patientIds);
+					const consultationIdsSet = new Set(consultationIds);
+					const badAttachedToPatientsIds = attachedToPatientsIds.filter(
+						(x) => !patientIdsSet.has(x)
+					);
+					const badAttachedToConsultationsIds = attachedToConsultationsIds.filter(
+						(x) => !consultationIdsSet.has(x)
+					);
+					if (badAttachedToPatientsIds.length >= 1) {
+						console.debug(
+							'Removing bad patient ids from Attachments.meta.attachedToPatients',
+							{badAttachedToPatientsIds}
+						);
+						Attachments.update(
+							{'meta.attachedToPatients': {$in: badAttachedToPatientsIds}},
+							{
+								$pullAll: {'meta.attachedToPatients': badAttachedToPatientsIds}
+							},
+							{multi: true}
+						);
+					}
+
+					if (badAttachedToConsultationsIds.length >= 1) {
+						console.debug(
+							'Removing bad consultation ids from Attachments.meta.attachedToConsultations',
+							{badAttachedToConsultationsIds}
+						);
+						Attachments.update(
+							{
+								'meta.attachedToConsultations': {
+									$in: badAttachedToConsultationsIds
+								}
+							},
+							{
+								$pullAll: {
+									'meta.attachedToConsultations': badAttachedToConsultationsIds
+								}
+							},
+							{multi: true}
+						);
+					}
+				}
+			)
+		)
+		.catch((error) => {
+			console.error(error);
+		});
 });

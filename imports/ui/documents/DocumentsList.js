@@ -1,42 +1,38 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Documents} from '../../api/documents.js';
+import useDocuments from '../../api/hooks/useDocuments.js';
 
 import StaticDocumentList from './StaticDocumentList.js';
 
-const DocumentsList = withTracker(({match, page, perpage}) => {
+const DocumentsList = ({match, page, perpage}) => {
 	page =
 		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
 		page ||
 		DocumentsList.defaultProps.page;
 	perpage = perpage || DocumentsList.defaultProps.perpage;
-	const sort = {
-		createdAt: -1
+
+	const options = {
+		sort: {createdAt: -1},
+		fields: StaticDocumentList.projection,
+		skip: (page - 1) * perpage,
+		limit: perpage
 	};
-	const fields = StaticDocumentList.projection;
-	const handle = Meteor.subscribe('documents', {sort, fields});
-	const loading = !handle.ready();
-	return {
-		page,
-		perpage,
-		root: '/documents',
-		loading,
-		documents: loading
-			? []
-			: Documents.find(
-					{},
-					{
-						sort,
-						fields,
-						skip: (page - 1) * perpage,
-						limit: perpage
-					}
-			  ).fetch()
-	};
-})(StaticDocumentList);
+
+	const deps = [page, perpage];
+
+	const {loading, results: documents} = useDocuments({}, options, deps);
+
+	return (
+		<StaticDocumentList
+			root="/documents"
+			page={page}
+			perpage={perpage}
+			loading={loading}
+			documents={documents}
+		/>
+	);
+};
 
 DocumentsList.defaultProps = {
 	page: 1,
@@ -44,8 +40,8 @@ DocumentsList.defaultProps = {
 };
 
 DocumentsList.propTypes = {
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired
+	page: PropTypes.number,
+	perpage: PropTypes.number
 };
 
 export default DocumentsList;

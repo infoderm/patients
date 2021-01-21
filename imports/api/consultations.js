@@ -10,13 +10,12 @@ import isBefore from 'date-fns/isBefore';
 
 import {list, map, range, product} from '@aureooms/js-itertools';
 
-import {Uploads} from './uploads.js';
+import {Attachments} from './attachments.js';
 import {Books, books} from './books.js';
 import {parseUint32StrictOrString} from './string.js';
 
 import makeQuery from './makeQuery.js';
 import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
-import unconditionallyRemoveById from './unconditionallyRemoveById.js';
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 
 const collection = 'consultations';
@@ -34,6 +33,8 @@ export const useConsultationsAndAppointments = makeQuery(
 	Consultations,
 	'consultationsAndAppointments'
 );
+
+export const isUnpaid = ({price, paid}) => paid !== price;
 
 const statsKey = (query, init) => JSON.stringify({query, init});
 
@@ -213,14 +214,18 @@ if (Meteor.isServer) {
 		);
 	});
 
-	Meteor.publish('consultations.unpaid', function () {
-		return Consultations.find({
-			owner: this.userId,
-			isDone: true,
-			$expr: {
-				$ne: ['$paid', '$price']
-			}
-		});
+	Meteor.publish('patient.consultationsAndAppointments', function (
+		patientId,
+		options
+	) {
+		check(patientId, String);
+		return Consultations.find(
+			{
+				owner: this.userId,
+				patientId
+			},
+			options
+		);
 	});
 
 	Meteor.publish(books.options.parentPublication, function (
@@ -353,6 +358,7 @@ function sanitize({
 		currency,
 		price,
 		paid,
+		unpaid: isUnpaid({price, paid}),
 		book,
 		payment_method,
 		isDone: true
@@ -500,46 +506,79 @@ const methods = {
 	'consultations.attach'(consultationId, uploadId) {
 		check(consultationId, String);
 		check(uploadId, String);
-		const consultation = Consultations.findOne(consultationId);
-		const upload = Uploads.findOne(uploadId);
-		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error(
-				'not-authorized',
-				'user does not own consultation'
-			);
+
+		const consultation = Consultations.findOne({
+			_id: consultationId,
+			owner: this.userId
+		});
+		if (!consultation) {
+			throw new Meteor.Error('not-found', 'consultation not found');
 		}
 
-		if (!upload || upload.userId !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		const attachment = Attachments.findOne({
+			_id: uploadId,
+			userId: this.userId
+		});
+		if (!attachment) {
+			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
-		return Consultations.update(consultationId, {
-			$addToSet: {attachments: uploadId}
+		return Attachments.update(uploadId, {
+			$addToSet: {'meta.attachedToConsultations': consultationId}
 		});
 	},
 
 	'consultations.detach'(consultationId, uploadId) {
 		check(consultationId, String);
 		check(uploadId, String);
-		const consultation = Consultations.findOne(consultationId);
-		const upload = Uploads.findOne(uploadId);
-		if (!consultation || consultation.owner !== this.userId) {
-			throw new Meteor.Error(
-				'not-authorized',
-				'user does not own consultation'
-			);
+
+		const consultation = Consultations.findOne({
+			_id: consultationId,
+			owner: this.userId
+		});
+		if (!consultation) {
+			throw new Meteor.Error('not-found', 'consultation not found');
 		}
 
-		if (!upload || upload.userId !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own attachment');
+		const attachment = Attachments.findOne({
+			_id: uploadId,
+			userId: this.userId
+		});
+		if (!attachment) {
+			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
-		return Consultations.update(consultationId, {
-			$pull: {attachments: uploadId}
+		return Attachments.update(uploadId, {
+			$pull: {'meta.attachedToConsultations': consultationId}
 		});
 	},
 
-	'consultations.remove': unconditionallyRemoveById(Consultations),
+	'consultations.remove'(consultationId) {
+		check(consultationId, String);
+
+		const consultation = Consultations.findOne({
+			_id: consultationId,
+			owner: this.userId
+		});
+		if (!consultation) {
+			throw new Meteor.Error('not-found');
+		}
+
+		Attachments.update(
+			{
+				userId: this.userId,
+				'meta.attachedToConsultations': consultationId
+			},
+			{
+				$pull: {'meta.attachedToConsultations': consultationId}
+			},
+			{
+				multi: true
+			}
+		);
+
+		return Consultations.remove(consultationId);
+	},
 
 	'consultations.restoreAppointment': unconditionallyUpdateById(
 		Consultations,

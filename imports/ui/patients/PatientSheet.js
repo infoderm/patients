@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 
 import SetPicker from '../input/SetPicker.js';
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
 	photoPlaceHolder: {
 		display: 'flex',
 		fontSize: '4rem',
@@ -48,300 +48,243 @@ const styles = (theme) => ({
 			color: 'black !important'
 		}
 	}
-});
+}));
 
-class PatientSheet extends React.Component {
-	render() {
-		const {classes, patient, consultations, documents} = this.props;
+const CustomTextField = ({value, ...rest}) => (
+	<TextField
+		InputLabelProps={{
+			shrink: value !== '' && value !== undefined && value !== null
+		}}
+		inputProps={{
+			readOnly: true
+		}}
+		margin="normal"
+		value={value}
+		{...rest}
+	/>
+);
 
-		const minRows = 8;
-		const maxRows = 100;
+const ReadOnlyTextField = (props) => {
+	const classes = useStyles();
+	return <CustomTextField className={classes.formControl} {...props} />;
+};
 
-		return (
-			<Paper>
-				<Grid container className={classes.container}>
-					<Grid item sm={4} md={2}>
-						{patient.photo ? (
-							<img
-								className={classes.photo}
-								src={`data:image/png;base64,${patient.photo}`}
-								title={`${patient.firstname} ${patient.lastname}`}
-							/>
-						) : (
-							<div className={classes.photoPlaceHolder}>
-								{patient.firstname ? patient.firstname[0] : '?'}
-								{patient.lastname ? patient.lastname[0] : '?'}
-							</div>
-						)}
-					</Grid>
-					<Grid item sm={8} md={10}>
-						<form>
-							<Grid container>
-								<Grid item xs={2}>
-									<TextField
-										className={classes.formControl}
-										label="NISS"
-										value={patient.niss}
-										inputProps={{
-											readOnly: true
-										}}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										className={classes.formControl}
-										label="Last name"
-										value={patient.lastname}
-										inputProps={{
-											readOnly: true
-										}}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										className={classes.formControl}
-										label="First name"
-										value={patient.firstname}
-										inputProps={{
-											readOnly: true
-										}}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={2}>
-									<TextField
-										className={classes.formControl}
-										label="Sex"
-										value={patient.sex}
-										inputProps={{
-											readOnly: true
-										}}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={2}>
-									<TextField
-										className={classes.formControl}
-										label="Birth date"
-										value={patient.birthdate}
-										inputProps={{
-											readOnly: true
-										}}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={12} md={6}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="Antécédents"
-										rows={minRows}
-										rowsMax={maxRows}
-										className={classes.multiline}
-										value={patient.antecedents}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={12} md={6}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="Traitement en cours"
-										rows={minRows}
-										rowsMax={maxRows}
-										className={classes.multiline}
-										value={patient.ongoing}
-										margin="normal"
-									/>
-								</Grid>
+const MultilineReadOnlyTextField = (props) => {
+	const classes = useStyles();
+	return <CustomTextField multiline className={classes.multiline} {...props} />;
+};
 
-								<Grid item xs={12} md={12}>
-									<SetPicker
-										readOnly
-										useSuggestions={() => ({results: []})}
-										itemToKey={(x) => x}
-										itemToString={(x) => x}
-										TextFieldProps={{
-											label: 'Allergies',
-											margin: 'normal'
-										}}
-										chipProps={{
-											avatar: <Avatar>Al</Avatar>
-										}}
-										value={patient.allergies || []}
-									/>
-								</Grid>
+const minRows = 8;
+const maxRows = 100;
 
-								<Grid item xs={12} md={6}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="Rue et Numéro"
-										rows={1}
-										className={classes.multiline}
-										value={patient.streetandnumber}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={12} md={2}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="Code Postal"
-										rows={1}
-										className={classes.multiline}
-										value={patient.zip}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={12} md={4}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="Commune"
-										rows={1}
-										className={classes.multiline}
-										value={patient.municipality}
-										margin="normal"
-									/>
-								</Grid>
+const LargeMultilineReadOnlyTextField = (props) => (
+	<MultilineReadOnlyTextField rows={minRows} rowsMax={maxRows} {...props} />
+);
 
-								<Grid item xs={12} md={4}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="Numéro de téléphone"
-										rows={1}
-										className={classes.multiline}
-										value={patient.phone}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={12} md={4}>
-									<SetPicker
-										readOnly
-										useSuggestions={() => ({results: []})}
-										itemToKey={(x) => x}
-										itemToString={(x) => x}
-										TextFieldProps={{
-											label: 'Médecin Traitant',
-											margin: 'normal'
-										}}
-										chipProps={{
-											avatar: <Avatar>Dr</Avatar>
-										}}
-										value={patient.doctors || []}
-									/>
-								</Grid>
-								<Grid item xs={12} md={4}>
-									<SetPicker
-										readOnly
-										useSuggestions={() => ({results: []})}
-										itemToKey={(x) => x}
-										itemToString={(x) => x}
-										TextFieldProps={{
-											label: 'Mutuelle',
-											margin: 'normal'
-										}}
-										chipProps={{
-											avatar: <Avatar>In</Avatar>
-										}}
-										value={patient.insurances || []}
-									/>
-								</Grid>
+const SmallMultilineReadOnlyTextField = (props) => (
+	<MultilineReadOnlyTextField rows={1} {...props} />
+);
 
-								<Grid item xs={9}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: true
-										}}
-										label="About"
-										rows={2}
-										rowsMax={maxRows}
-										className={classes.multiline}
-										value={patient.about}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										inputProps={{
-											readOnly: true
-										}}
-										label="PVPP"
-										className={classes.multiline}
-										value={patient.noshow || 0}
-										margin="normal"
-									/>
-								</Grid>
-								<Grid item xs={12} md={12}>
-									<SetPicker
-										readOnly
-										useSuggestions={() => ({results: []})}
-										itemToKey={(x) => x._id}
-										itemToString={(x) => x._id}
-										TextFieldProps={{
-											label: 'Consultations',
-											margin: 'normal'
-										}}
-										value={consultations || []}
-									/>
-								</Grid>
-								<Grid item xs={12} md={12}>
-									<SetPicker
-										readOnly
-										useSuggestions={() => ({results: []})}
-										itemToKey={(x) => x._id}
-										itemToString={(x) => x._id}
-										TextFieldProps={{
-											label: 'Documents',
-											margin: 'normal'
-										}}
-										value={documents || []}
-									/>
-								</Grid>
-								<Grid item xs={12} md={12}>
-									<SetPicker
-										readOnly
-										useSuggestions={() => ({results: []})}
-										itemToKey={(x) => x}
-										itemToString={(x) => x}
-										TextFieldProps={{
-											label: 'Attachments',
-											margin: 'normal'
-										}}
-										value={patient.attachments || []}
-									/>
-								</Grid>
-							</Grid>
-						</form>
-					</Grid>
+const PatientSheet = (props) => {
+	const classes = useStyles();
+
+	const {patient, consultations, attachments, documents} = props;
+
+	return (
+		<Paper>
+			<Grid container className={classes.container}>
+				<Grid item sm={4} md={2}>
+					{patient.photo ? (
+						<img
+							className={classes.photo}
+							src={`data:image/png;base64,${patient.photo}`}
+							title={`${patient.firstname} ${patient.lastname}`}
+						/>
+					) : (
+						<div className={classes.photoPlaceHolder}>
+							{patient.firstname ? patient.firstname[0] : '?'}
+							{patient.lastname ? patient.lastname[0] : '?'}
+						</div>
+					)}
 				</Grid>
-			</Paper>
-		);
-	}
-}
+				<Grid item sm={8} md={10}>
+					<form>
+						<Grid container>
+							<Grid item xs={2}>
+								<ReadOnlyTextField label="NISS" value={patient.niss} />
+							</Grid>
+							<Grid item xs={3}>
+								<ReadOnlyTextField label="Last name" value={patient.lastname} />
+							</Grid>
+							<Grid item xs={3}>
+								<ReadOnlyTextField
+									label="First name"
+									value={patient.firstname}
+								/>
+							</Grid>
+							<Grid item xs={2}>
+								<ReadOnlyTextField label="Sex" value={patient.sex} />
+							</Grid>
+							<Grid item xs={2}>
+								<ReadOnlyTextField
+									label="Birth date"
+									value={patient.birthdate}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<LargeMultilineReadOnlyTextField
+									label="Antécédents"
+									value={patient.antecedents}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<LargeMultilineReadOnlyTextField
+									label="Traitement en cours"
+									value={patient.ongoing}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={12}>
+								<SetPicker
+									readOnly
+									useSuggestions={() => ({results: []})}
+									itemToKey={(x) => x}
+									itemToString={(x) => x}
+									TextFieldProps={{
+										label: 'Allergies',
+										margin: 'normal'
+									}}
+									chipProps={{
+										avatar: <Avatar>Al</Avatar>
+									}}
+									value={patient.allergies || []}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
+								<SmallMultilineReadOnlyTextField
+									label="Rue et Numéro"
+									value={patient.streetandnumber}
+								/>
+							</Grid>
+							<Grid item xs={12} md={2}>
+								<SmallMultilineReadOnlyTextField
+									label="Code Postal"
+									value={patient.zip}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<SmallMultilineReadOnlyTextField
+									label="Commune"
+									value={patient.municipality}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={4}>
+								<SmallMultilineReadOnlyTextField
+									label="Numéro de téléphone"
+									value={patient.phone}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<SetPicker
+									readOnly
+									useSuggestions={() => ({results: []})}
+									itemToKey={(x) => x}
+									itemToString={(x) => x}
+									TextFieldProps={{
+										label: 'Médecin Traitant',
+										margin: 'normal'
+									}}
+									chipProps={{
+										avatar: <Avatar>Dr</Avatar>
+									}}
+									value={patient.doctors || []}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<SetPicker
+									readOnly
+									useSuggestions={() => ({results: []})}
+									itemToKey={(x) => x}
+									itemToString={(x) => x}
+									TextFieldProps={{
+										label: 'Mutuelle',
+										margin: 'normal'
+									}}
+									chipProps={{
+										avatar: <Avatar>In</Avatar>
+									}}
+									value={patient.insurances || []}
+								/>
+							</Grid>
+
+							<Grid item xs={9}>
+								<MultilineReadOnlyTextField
+									rows={2}
+									rowsMax={maxRows}
+									label="About"
+									value={patient.about}
+								/>
+							</Grid>
+							<Grid item xs={3}>
+								<MultilineReadOnlyTextField
+									label="PVPP"
+									value={patient.noshow || 0}
+								/>
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<SetPicker
+									readOnly
+									useSuggestions={() => ({results: []})}
+									itemToKey={(x) => x._id}
+									itemToString={(x) => x._id}
+									TextFieldProps={{
+										label: 'Consultations',
+										margin: 'normal'
+									}}
+									value={consultations || []}
+								/>
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<SetPicker
+									readOnly
+									useSuggestions={() => ({results: []})}
+									itemToKey={(x) => x._id}
+									itemToString={(x) => x._id}
+									TextFieldProps={{
+										label: 'Documents',
+										margin: 'normal'
+									}}
+									value={documents || []}
+								/>
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<SetPicker
+									readOnly
+									useSuggestions={() => ({results: []})}
+									itemToKey={(x) => x._id}
+									itemToString={(x) => x._id}
+									TextFieldProps={{
+										label: 'Attachments',
+										margin: 'normal'
+									}}
+									value={attachments || []}
+								/>
+							</Grid>
+						</Grid>
+					</form>
+				</Grid>
+			</Grid>
+		</Paper>
+	);
+};
 
 PatientSheet.propTypes = {
-	classes: PropTypes.object.isRequired,
 	patient: PropTypes.object.isRequired,
 	consultations: PropTypes.array.isRequired,
+	attachments: PropTypes.array.isRequired,
 	documents: PropTypes.array.isRequired
 };
 
-export default withStyles(styles, {withTheme: true})(PatientSheet);
+export default PatientSheet;

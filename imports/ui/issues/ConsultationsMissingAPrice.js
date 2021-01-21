@@ -3,7 +3,7 @@ import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 
-import StaticConsultationCard from '../consultations/StaticConsultationCard.js';
+import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import {Consultations} from '../../api/consultations.js';
@@ -20,7 +20,7 @@ const ConsultationsMissingAPrice = ({loading, consultations, ...rest}) => {
 	return (
 		<div {...rest}>
 			{consultations.map((consultation) => (
-				<StaticConsultationCard
+				<ReactiveConsultationCard
 					key={consultation._id}
 					consultation={consultation}
 					PatientChip={ReactivePatientChip}

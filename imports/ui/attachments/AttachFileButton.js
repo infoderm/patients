@@ -64,9 +64,7 @@ const AttachFileButton = ({method, item: itemId, children, ...rest}) => {
 					file,
 					streams: 'dynamic',
 					chunkSize: 'dynamic',
-					meta: {
-						createdAt: new Date()
-					}
+					meta: {}
 				},
 				false
 			);

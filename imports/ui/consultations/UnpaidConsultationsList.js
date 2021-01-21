@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState} from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -11,14 +8,14 @@ import MoneyIcon from '@material-ui/icons/Money';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import StaticConsultationCard from './StaticConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
-import {Consultations} from '../../api/consultations.js';
+import {useConsultationsFind} from '../../api/consultations.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -29,20 +26,28 @@ const useStyles = makeStyles((theme) => ({
 	cashToggle: computeFixedFabStyle({theme, col: 3})
 }));
 
-const UnpaidConsultationsList = ({loading, consultations}) => {
+const UnpaidConsultationsList = () => {
 	const classes = useStyles();
 
 	const [showCash, setShowCash] = useState(true);
 	const [showWire, setShowWire] = useState(true);
 	const [showThirdParty, setShowThirdParty] = useState(false);
 
+	const query = {
+		isDone: true,
+		unpaid: true
+	};
+	const options = {sort: {datetime: 1}};
+	const deps = [];
+	const {loading, results: unpaidConsultations} = useConsultationsFind(
+		query,
+		options,
+		deps
+	);
+
 	if (loading) {
 		return <Loading />;
 	}
-
-	const unpaidConsultations = consultations.filter(
-		(consultation) => consultation.paid !== consultation.price
-	);
 
 	const displayedConsultations = unpaidConsultations
 		.filter(
@@ -68,7 +73,7 @@ const UnpaidConsultationsList = ({loading, consultations}) => {
 			) : (
 				<div className={classes.container}>
 					{displayedConsultations.map((consultation) => (
-						<StaticConsultationCard
+						<ReactiveConsultationCard
 							key={consultation._id}
 							showPrice
 							consultation={consultation}
@@ -102,19 +107,4 @@ const UnpaidConsultationsList = ({loading, consultations}) => {
 	);
 };
 
-export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations.unpaid');
-	if (!handle.ready()) {
-		return {loading: true};
-	}
-
-	return {
-		loading: false,
-		consultations: Consultations.find(
-			{
-				isDone: true
-			},
-			{sort: {datetime: 1}}
-		).fetch()
-	};
-})(UnpaidConsultationsList);
+export default UnpaidConsultationsList;
