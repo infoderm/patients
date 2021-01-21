@@ -14,7 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Button from '@material-ui/core/Button';
 
-import DeleteIcon from '@material-ui/icons/Delete';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import AttachmentThumbnail from './AttachmentThumbnail.js';
@@ -52,7 +52,7 @@ const AttachmentDeletionDialog = (props) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(attachment.name, getError);
 
-	const deleteThisAttachmentIfAttachmentNameMatches = (event) => {
+	const detachThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
@@ -62,7 +62,7 @@ const AttachmentDeletionDialog = (props) => {
 					console.error(err);
 					enqueueSnackbar(err.message, {variant: 'error'});
 				} else {
-					const message = `[Detach] Attachment ${attachment.name} deleted with ${detach}(${itemId}).`;
+					const message = `[Detach] Attachment ${attachment.name} detached with ${detach}(${itemId}).`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
 					onClose();
@@ -79,13 +79,13 @@ const AttachmentDeletionDialog = (props) => {
 			onClose={onClose}
 		>
 			<DialogTitle id="attachment-deletion-dialog-title">
-				Delete attachment {attachment.name}
+				Detach attachment {attachment.name}
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
-					If you do not want to delete this attachment, click cancel. If you
-					really want to delete this attachment from the system, enter its
-					filename below and click the delete button.
+					If you do not want to detach this attachment, click cancel. If you
+					really want to detach this attachment from the system, enter its
+					filename below and click the detach button.
 				</DialogContentText>
 				<AttachmentThumbnail
 					className={classes.thumbnail}
@@ -108,10 +108,10 @@ const AttachmentDeletionDialog = (props) => {
 				<Button
 					color="secondary"
 					disabled={ConfirmationTextFieldProps.error}
-					onClick={deleteThisAttachmentIfAttachmentNameMatches}
+					onClick={detachThisAttachmentIfAttachmentNameMatches}
 				>
-					Delete
-					<DeleteIcon className={classes.rightIcon} />
+					Detach
+					<LinkOffIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

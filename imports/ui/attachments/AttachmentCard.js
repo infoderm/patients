@@ -19,7 +19,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PhotoIcon from '@material-ui/icons/Photo';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import AttachmentIcon from '@material-ui/icons/Attachment';
-import DeleteIcon from '@material-ui/icons/Delete';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -157,9 +157,9 @@ class AttachmentCard extends React.Component {
 								{info && (
 									<MenuItem onClick={this.openDeletionDialog}>
 										<ListItemIcon>
-											<DeleteIcon />
+											<LinkOffIcon />
 										</ListItemIcon>
-										<ListItemText>Delete</ListItemText>
+										<ListItemText>Detach</ListItemText>
 									</MenuItem>
 								)}
 								{detached && (
