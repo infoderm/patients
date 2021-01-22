@@ -10,6 +10,8 @@ export function fetchPDF({url, cMapUrl, cMapPacked}) {
 	cMapUrl = cMapUrl ?? CMAP_URL;
 	cMapPacked = cMapPacked ?? CMAP_PACKED;
 
+	// NB: we have to use an explicit path here otherwise the worker file is
+	// not part of the build.
 	return import('pdfjs-dist/build/pdf.worker.js').then((module) => {
 		const globalObject = typeof window !== 'undefined' ? window : {};
 		if (globalObject.pdfjsWorker === undefined) {
