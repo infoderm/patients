@@ -33,6 +33,16 @@ function getWithBrowserCache(key) {
 	return item.value;
 }
 
+export const setSetting = (key, newValue) => {
+	Meteor.call(methods.update, key, newValue, (err) => {
+		if (err) {
+			console.error(err);
+		} else {
+			console.debug('Setting', key, 'updated to', newValue);
+		}
+	});
+};
+
 export const useSetting = (key, getFn = get) => {
 	// TODO use only one tracker
 	const loading = useTracker(() => {

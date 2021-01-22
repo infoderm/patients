@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import {Link} from 'react-router-dom';
 import classNames from 'classnames';
@@ -34,7 +33,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import {settings} from '../client/settings.js';
+import {setSetting} from '../client/settings.js';
 
 const drawerWidthOpen = 240;
 
@@ -84,17 +83,8 @@ export default function NavigationDrawer({
 	const classes = useStyles();
 
 	const toggleNavigationDrawerIsOpen = () => {
-		const setting = 'navigation-drawer-is-open';
-
 		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
-
-		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.debug('Setting', setting, 'updated to', newValue);
-			}
-		});
+		setSetting('navigation-drawer-is-open', newValue);
 	};
 
 	const blocks = [

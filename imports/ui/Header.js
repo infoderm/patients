@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import {useLocation} from 'react-router-dom';
 
@@ -12,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
-import {settings} from '../client/settings.js';
+import {setSetting} from '../client/settings.js';
 
 import FullTextSearchInput from './search/FullTextSearchInput.js';
 import AccountsUI from './users/AccountsUI.js';
@@ -67,17 +66,8 @@ export default function Header({currentUser, navigationDrawerIsOpen}) {
 	const location = useLocation();
 
 	const toggleNavigationDrawerIsOpen = () => {
-		const setting = 'navigation-drawer-is-open';
-
 		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
-
-		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.debug('Setting', setting, 'updated to', newValue);
-			}
-		});
+		setSetting('navigation-drawer-is-open', newValue);
 	};
 
 	return (
