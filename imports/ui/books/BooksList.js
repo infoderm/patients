@@ -14,6 +14,7 @@ import BooksDownloadDialog from './BooksDownloadDialog.js';
 
 import BookCard from './BookCard.js';
 import {useBooks} from '../../api/books.js';
+import {useSettingCached} from '../../client/settings.js';
 
 import YearJumper from '../navigation/YearJumper.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
@@ -27,7 +28,9 @@ export default function BooksList({match, year, page, perpage}) {
 	const classes = useStyles();
 
 	const [downloading, setDownloading] = useState(false);
-	const [sortingOrder, setSortingOrder] = useState(-1);
+	const {value: sortingOrder, setValue: setSortingOrder} = useSettingCached(
+		'books-sorting-order'
+	);
 
 	const now = new Date();
 	page =

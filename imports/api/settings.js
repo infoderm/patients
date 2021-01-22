@@ -55,6 +55,7 @@ const methods = {
 
 const defaults = {
 	'navigation-drawer-is-open': 'closed',
+	'books-sorting-order': -1,
 	currency: 'EUR',
 	lang: 'en',
 	'appointment-duration': [15 * 60 * 1000, 30 * 60 * 1000],

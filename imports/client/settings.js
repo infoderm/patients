@@ -63,6 +63,8 @@ export const useSetting = (key, getFn = get) => {
 	};
 };
 
+export const useSettingCached = (key) => useSetting(key, getWithBrowserCache);
+
 export const settings = {
 	defaults,
 	methods,
