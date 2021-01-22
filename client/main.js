@@ -19,12 +19,6 @@ WebFont.load({
 
 import App from '../imports/ui/App.js';
 
-// Required for pdfjs to work
-(typeof window !== 'undefined'
-	? window
-	: {}
-).pdfjsWorker = require('pdfjs-dist/build/pdf.worker.js');
-
 Meteor.startup(() =>
 	render(
 		<LocalizationProvider dateAdapter={DateFnsUtils}>

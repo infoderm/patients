@@ -1,18 +1,28 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
+
 import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
 import TabJumper from '../navigation/TabJumper.js';
 import NoMatch from '../navigation/NoMatch.js';
+import Loading from '../navigation/Loading.js';
 
 import PatientHeader from './PatientHeader.js';
 import PatientPersonalInformation from './PatientPersonalInformation.js';
 
-import ConsultationsForPatient from '../consultations/ConsultationsForPatient.js';
-import AppointmentsForPatient from '../appointments/AppointmentsForPatient.js';
-import DocumentsForPatient from '../documents/DocumentsForPatient.js';
-import AttachmentsForPatient from '../attachments/AttachmentsForPatient.js';
+const ConsultationsForPatient = lazy(() =>
+	import('../consultations/ConsultationsForPatient.js')
+);
+const AppointmentsForPatient = lazy(() =>
+	import('../appointments/AppointmentsForPatient.js')
+);
+const DocumentsForPatient = lazy(() =>
+	import('../documents/DocumentsForPatient.js')
+);
+const AttachmentsForPatient = lazy(() =>
+	import('../attachments/AttachmentsForPatient.js')
+);
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -54,44 +64,46 @@ const PatientRecord = (props) => {
 				current={tab}
 				toURL={(tab) => `/patient/${patientId}/${tab}`}
 			/>
-			{tab === 'information' && (
-				<PatientPersonalInformation patientId={patientId} />
-			)}
-			{tab === 'appointments' && (
-				<AppointmentsForPatient
-					className={classes.container}
-					patientId={patientId}
-					page={page}
-					perpage={perpage}
-				/>
-			)}
-			{tab === 'consultations' && (
-				<ConsultationsForPatient
-					className={classes.container}
-					classes={classes}
-					patientId={patientId}
-					page={page}
-					perpage={perpage}
-				/>
-			)}
-			{tab === 'documents' && (
-				<DocumentsForPatient
-					className={classes.container}
-					patientId={patientId}
-					page={page}
-					perpage={perpage}
-				/>
-			)}
-			{tab === 'attachments' && (
-				<AttachmentsForPatient
-					className={classes.container}
-					classes={classes}
-					patientId={patientId}
-					page={page}
-					perpage={perpage}
-				/>
-			)}
-			{!tabs.includes(tab) && <NoMatch location={location} />}
+			<Suspense fallback={<Loading />}>
+				{tab === 'information' && (
+					<PatientPersonalInformation patientId={patientId} />
+				)}
+				{tab === 'appointments' && (
+					<AppointmentsForPatient
+						className={classes.container}
+						patientId={patientId}
+						page={page}
+						perpage={perpage}
+					/>
+				)}
+				{tab === 'consultations' && (
+					<ConsultationsForPatient
+						className={classes.container}
+						classes={classes}
+						patientId={patientId}
+						page={page}
+						perpage={perpage}
+					/>
+				)}
+				{tab === 'documents' && (
+					<DocumentsForPatient
+						className={classes.container}
+						patientId={patientId}
+						page={page}
+						perpage={perpage}
+					/>
+				)}
+				{tab === 'attachments' && (
+					<AttachmentsForPatient
+						className={classes.container}
+						classes={classes}
+						patientId={patientId}
+						page={page}
+						perpage={perpage}
+					/>
+				)}
+				{!tabs.includes(tab) && <NoMatch location={location} />}
+			</Suspense>
 		</div>
 	);
 };

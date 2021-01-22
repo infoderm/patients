@@ -1,6 +1,4 @@
-import pdfjs from 'pdfjs-dist';
-
-// "pages": doc.pdfInfo.numPages
+import {fetchPDF} from './pdf.js';
 
 function createContext(page, desiredWidth, desiredHeight) {
 	const viewport = page.getViewport({scale: 1});
@@ -30,13 +28,12 @@ function createContext(page, desiredWidth, desiredHeight) {
 }
 
 export function thumbnail(
-	file,
+	url,
 	{page = 1, width, height, type, encoderOptions} = {}
 ) {
 	// A Promise
-	return pdfjs
-		.getDocument(file)
-		.promise.then((doc) => doc.getPage(page))
+	return fetchPDF({url})
+		.then((doc) => doc.getPage(page))
 		.then((thepage) => {
 			const renderContext = createContext(thepage, width, height);
 			return thepage.render(renderContext).promise.then(() => renderContext);
