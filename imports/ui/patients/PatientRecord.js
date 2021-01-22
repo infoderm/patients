@@ -1,5 +1,3 @@
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -111,22 +109,24 @@ PatientRecord.propTypes = {
 	perpage: PropTypes.number
 };
 
-export default withTracker(
-	({match, location, patientId, tab, page, perpage}) => {
-		patientId = patientId || match.params.id;
-		tab = tab || match.params.tab || PatientRecord.defaultProps.tab;
-		page =
-			page ||
-			Number.parseInt(match.params.page, 10) ||
-			PatientRecord.defaultProps.page;
-		perpage = perpage || PatientRecord.defaultProps.perpage;
+export default ({match, location, patientId, tab, page, perpage}) => {
+	patientId = patientId || match.params.id;
+	tab = tab || match.params.tab || PatientRecord.defaultProps.tab;
+	page =
+		page ||
+		Number.parseInt(match.params.page, 10) ||
+		PatientRecord.defaultProps.page;
+	perpage = perpage || PatientRecord.defaultProps.perpage;
 
-		return {
-			location,
-			patientId,
-			tab,
-			page,
-			perpage
-		};
-	}
-)(PatientRecord);
+	return (
+		<PatientRecord
+			{...{
+				location,
+				patientId,
+				tab,
+				page,
+				perpage
+			}}
+		/>
+	);
+};
