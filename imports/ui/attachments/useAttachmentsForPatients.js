@@ -64,7 +64,7 @@ const useAttachmentsForPatients = ($in) => {
 						parentId,
 						attachmentId: _id,
 						patientId: parentId,
-						group: Infinity
+						group: Number.POSITIVE_INFINITY
 					});
 				}
 			}

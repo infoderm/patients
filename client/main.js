@@ -17,8 +17,6 @@ WebFont.load({
 	}
 });
 
-// eslint-disable-next-line import/no-unassigned-import
-import '../imports/startup/accounts-config.js';
 import App from '../imports/ui/App.js';
 
 // Required for pdfjs to work

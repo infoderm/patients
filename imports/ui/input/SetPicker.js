@@ -375,7 +375,7 @@ const styles = (theme) => ({
 });
 
 SetPicker.defaultProps = {
-	maxCount: Infinity,
+	maxCount: Number.POSITIVE_INFINITY,
 	multiset: false,
 	inputTransform: (x) => x
 };
