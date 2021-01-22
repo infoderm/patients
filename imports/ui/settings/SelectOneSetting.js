@@ -1,74 +1,43 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 
-import {settings} from '../../client/settings.js';
+import {useSetting} from '../../client/settings.js';
 
 import ValuePicker from '../input/ValuePicker.js';
 
-class SelectOneSetting extends React.Component {
-	onChange = (e) => {
-		const {setting} = this.props;
+const SelectOneSetting = (props) => {
+	const {className, setting, options, optionToString, label, title} = props;
 
+	const {loading, value, setValue} = useSetting(setting);
+
+	const onChange = (e) => {
 		const newValue = e.target.value;
-
-		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.debug('Setting', setting, 'updated to', newValue);
-			}
-		});
+		setValue(newValue);
 	};
 
-	render() {
-		const {
-			className,
-			loading,
-			value,
-			options,
-			optionToString,
-			label,
-			title
-		} = this.props;
-
-		return (
-			<div className={className}>
-				{title && <Typography variant="h4">{title}</Typography>}
-				<ValuePicker
-					readOnly={loading}
-					options={options}
-					optionToString={optionToString}
-					label={label}
-					value={value}
-					onChange={this.onChange}
-				/>
-			</div>
-		);
-	}
-
-	static propTypes = {
-		title: PropTypes.string,
-		label: PropTypes.string,
-		options: PropTypes.array.isRequired,
-		optionToString: PropTypes.func
-	};
-}
-
-const Component = withTracker(({setting}) => {
-	const handle = settings.subscribe(setting);
-	return {
-		loading: !handle.ready(),
-		value: settings.get(setting)
-	};
-})(SelectOneSetting);
-
-Component.propTypes = {
-	setting: PropTypes.string.isRequired
+	return (
+		<div className={className}>
+			{title && <Typography variant="h4">{title}</Typography>}
+			<ValuePicker
+				readOnly={loading}
+				options={options}
+				optionToString={optionToString}
+				label={label}
+				value={value}
+				onChange={onChange}
+			/>
+		</div>
+	);
 };
 
-export default Component;
+SelectOneSetting.propTypes = {
+	title: PropTypes.string,
+	label: PropTypes.string,
+	setting: PropTypes.string.isRequired,
+	options: PropTypes.array.isRequired,
+	optionToString: PropTypes.func
+};
+
+export default SelectOneSetting;

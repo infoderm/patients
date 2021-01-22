@@ -54,9 +54,12 @@ export const useSetting = (key, getFn = get) => {
 		return getFn(key);
 	}, [key]);
 
+	const setValue = (newValue) => setSetting(key, newValue);
+
 	return {
 		loading,
-		value
+		value,
+		setValue
 	};
 };
 

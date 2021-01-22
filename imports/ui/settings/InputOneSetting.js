@@ -1,13 +1,10 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
-import {settings} from '../../client/settings.js';
+import {useSetting} from '../../client/settings.js';
 
 // TODO validate should have three possible outcomes
 //       1 valid input (sync)
@@ -15,16 +12,9 @@ import {settings} from '../../client/settings.js';
 //       0 wrong input (no sync, no update)
 
 const InputOneSetting = (props) => {
-	const {
-		className,
-		loading,
-		setting,
-		sanitize,
-		validate,
-		value,
-		label,
-		title
-	} = props;
+	const {className, setting, sanitize, validate, label, title} = props;
+
+	const {loading, value, setValue} = useSetting(setting);
 
 	const [error, setError] = useState(false);
 
@@ -35,14 +25,7 @@ const InputOneSetting = (props) => {
 
 	const onChange = (e) => {
 		const newValue = sanitize(e.target.value);
-
-		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.debug('Setting', setting, 'updated to', newValue);
-			}
-		});
+		setValue(newValue);
 	};
 
 	return (
@@ -62,6 +45,7 @@ const InputOneSetting = (props) => {
 InputOneSetting.propTypes = {
 	title: PropTypes.string,
 	label: PropTypes.string,
+	setting: PropTypes.string.isRequired,
 	sanitize: PropTypes.func,
 	validate: PropTypes.func
 };
@@ -73,16 +57,4 @@ InputOneSetting.defaultProps = {
 	})
 };
 
-const Component = withTracker(({setting}) => {
-	const handle = settings.subscribe(setting);
-	return {
-		loading: !handle.ready(),
-		value: settings.get(setting)
-	};
-})(InputOneSetting);
-
-Component.propTypes = {
-	setting: PropTypes.string.isRequired
-};
-
-export default Component;
+export default InputOneSetting;

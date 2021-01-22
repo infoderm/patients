@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -7,7 +5,7 @@ import SetPicker from '../input/SetPicker.js';
 
 import Typography from '@material-ui/core/Typography';
 
-import {settings, useSetting} from '../../client/settings.js';
+import {useSetting} from '../../client/settings.js';
 
 const InputManySetting = (props) => {
 	const {
@@ -20,20 +18,12 @@ const InputManySetting = (props) => {
 		...rest
 	} = props;
 
+	const {loading, value, setValue} = useSetting(setting);
+
 	const onChange = (e) => {
 		const newValue = e.target.value;
-
-		Meteor.call(settings.methods.update, setting, newValue, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.debug('Setting', setting, 'updated to', newValue);
-			}
-		});
+		setValue(newValue);
 	};
-
-	const {loading, value} = useSetting(setting);
-	console.debug({loading, value});
 
 	return (
 		<div className={className}>
