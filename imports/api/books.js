@@ -8,7 +8,11 @@ import addYears from 'date-fns/addYears';
 import makeQuery from './makeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
 import observeQuery from './observeQuery.js';
-import {parseUint32StrictOrString} from './string.js';
+import {
+	normalized,
+	normalizeInput,
+	parseUint32StrictOrString
+} from './string.js';
 
 import {
 	STATS_SUFFIX,
@@ -43,6 +47,9 @@ if (Meteor.isServer) {
 	Meteor.publish(cachePublication, observeQuery(Books, cacheCollection));
 }
 
+const sanitizeInput = normalizeInput;
+const sanitize = normalized;
+
 export const books = {
 	options: {
 		collection,
@@ -52,11 +59,13 @@ export const books = {
 		parentPublicationStats: 'book.stats'
 	},
 	cache: {Stats},
+	sanitizeInput,
+	sanitize,
 	add: (owner, name) => {
 		check(owner, String);
 		check(name, String);
 
-		name = name.trim();
+		name = sanitize(name);
 
 		const [fiscalYear, bookNumber] = books.parse(name);
 
@@ -79,7 +88,7 @@ export const books = {
 		check(owner, String);
 		check(name, String);
 
-		name = name.trim();
+		name = sanitize(name);
 
 		const fields = {
 			owner,

@@ -5,26 +5,18 @@ import escapeStringRegexp from 'escape-string-regexp';
 import {all, map, sorted} from '@aureooms/js-itertools';
 import {len, decreasing} from '@aureooms/js-compare';
 
-const normalized = (string) => {
-	string = string.toLowerCase();
-	string = string.trim();
-	string = string.replace(/\s/g, ' ');
-	string = deburr(string);
-	return string;
-};
+const normalizeWhiteSpace = (string) => string.replace(/\s+/g, ' ');
+
+const normalizeInput = (string) =>
+	normalizeWhiteSpace(onlyLowerCaseASCII(string));
+
+const normalized = (string) => normalizeInput(string).trim();
 
 const capitalized = (string) => string[0].toUpperCase() + string.slice(1);
 
-const onlyASCII = (string) => {
-	string = deburr(string);
-	return string;
-};
+const onlyASCII = (string) => deburr(string);
 
-const onlyLowerCaseASCII = (string) => {
-	string = string.toLowerCase();
-	string = deburr(string);
-	return string;
-};
+const onlyLowerCaseASCII = (string) => onlyASCII(string.toLowerCase());
 
 const makeIndex = (data) => {
 	const needles = onlyLowerCaseASCII(data).split(' ');
@@ -174,6 +166,8 @@ const parseUint32StrictOrString = (string, base) => {
 };
 
 export {
+	normalizeWhiteSpace,
+	normalizeInput,
 	normalized,
 	capitalized,
 	onlyASCII,

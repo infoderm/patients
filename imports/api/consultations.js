@@ -327,7 +327,7 @@ function sanitize({
 	more = more?.trim();
 
 	currency = currency?.trim().toUpperCase();
-	book = book?.trim();
+	book = books.sanitize(book || '');
 
 	return {
 		patientId,
@@ -582,19 +582,22 @@ const methods = {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const book = Books.findOne({_id: oldBookId, owner: this.userId});
-		if (!book) {
+		const oldBook = Books.findOne({_id: oldBookId, owner: this.userId});
+		if (!oldBook) {
 			throw new Meteor.Error('not-found');
 		}
 
-		const {name: oldName, fiscalYear} = book;
+		const {name: oldName, fiscalYear, bookNumber: oldBookNumber} = oldBook;
 
-		newBookNumber = newBookNumber.trim();
+		newBookNumber = books.sanitize(newBookNumber);
 		if (newBookNumber === '') {
 			throw new Meteor.Error('value-error');
 		}
 
 		newBookNumber = parseUint32StrictOrString(newBookNumber);
+		if (newBookNumber === oldBookNumber) {
+			throw new Meteor.Error('value-error');
+		}
 
 		const newName = books.format(fiscalYear, newBookNumber);
 		const newBookId = books.add(this.userId, newName);

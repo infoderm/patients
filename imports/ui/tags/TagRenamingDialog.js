@@ -17,7 +17,7 @@ import Avatar from '@material-ui/core/Avatar';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {capitalized, normalized} from '../../api/string.js';
+import {capitalized, normalized, normalizeInput} from '../../api/string.js';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
@@ -151,6 +151,7 @@ const TagRenamingDialog = (props) => {
 					}}
 					value={newname !== '' ? [{[nameKey]: newname}] : []}
 					maxCount={1}
+					inputTransform={normalizeInput}
 					onChange={({target: {value}}) =>
 						setNewname(value.length === 1 ? value[0][nameKey] : '')
 					}

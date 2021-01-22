@@ -21,6 +21,7 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import {format} from 'date-fns';
 
 import {Patients} from '../../api/patients.js';
+import {books} from '../../api/books.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
@@ -171,9 +172,9 @@ class ConsultationForm extends React.Component {
 			patient
 		} = this.props;
 
-		const update = (key) => (e) => {
+		const update = (key, transform = (x) => x) => (e) => {
 			this.setState({
-				[key]: e.target.value,
+				[key]: transform(e.target.value),
 				dirty: true
 			});
 		};
@@ -401,7 +402,7 @@ class ConsultationForm extends React.Component {
 							label="Carnet"
 							value={this.state.book}
 							margin="normal"
-							onChange={update('book')}
+							onChange={update('book', books.sanitizeInput)}
 						/>
 					</Grid>
 				</Grid>
