@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
+import SwapVertIcon from '@material-ui/icons/SwapVert';
 
 import dateFormat from 'date-fns/format';
 
@@ -18,13 +19,15 @@ import YearJumper from '../navigation/YearJumper.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const useStyles = makeStyles((theme) => ({
-	saveButton: computeFixedFabStyle({theme, col: 4})
+	saveButton: computeFixedFabStyle({theme, col: 4}),
+	toggleSortingOrderButton: computeFixedFabStyle({theme, col: 5})
 }));
 
 export default function BooksList({match, year, page, perpage}) {
 	const classes = useStyles();
 
 	const [downloading, setDownloading] = useState(false);
+	const [sortingOrder, setSortingOrder] = useState(-1);
 
 	const now = new Date();
 	page =
@@ -38,6 +41,8 @@ export default function BooksList({match, year, page, perpage}) {
 
 	const initialBegin = new Date(_year, 0, 1);
 
+	const sort = {fiscalYear: 1, bookNumber: sortingOrder};
+
 	return (
 		<div>
 			<YearJumper current={_year} toURL={(x) => `/books/${x}`} />
@@ -47,7 +52,7 @@ export default function BooksList({match, year, page, perpage}) {
 				Card={BookCard}
 				url={match.url}
 				query={query}
-				sort={{fiscalYear: 1, bookNumber: -1}}
+				sort={sort}
 				useTags={useBooks}
 			/>
 			<Fab
@@ -56,6 +61,13 @@ export default function BooksList({match, year, page, perpage}) {
 				onClick={() => setDownloading(true)}
 			>
 				<SaveIcon />
+			</Fab>
+			<Fab
+				className={classes.toggleSortingOrderButton}
+				color="default"
+				onClick={() => setSortingOrder(-sortingOrder)}
+			>
+				<SwapVertIcon />
 			</Fab>
 			<BooksDownloadDialog
 				initialBegin={initialBegin}
