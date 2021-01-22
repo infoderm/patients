@@ -5,26 +5,26 @@ import NoContent from './navigation/NoContent.js';
 import Router from './Router.js';
 import ErrorBoundary from './ErrorBoundary.js';
 
-export default function Content({loading, currentUser}) {
-	const classes = useStyles();
+const Child = ({loading, loggingIn, currentUser}) => {
+	if (loading) return <NoContent>Loading...</NoContent>;
+	if (loggingIn) return <NoContent>Logging in...</NoContent>;
+	if (!currentUser) return <NoContent>Please sign in</NoContent>;
 
-	if (!currentUser) {
-		return (
-			<main className={classes.main}>
-				{loading ? (
-					<NoContent>Loading...</NoContent>
-				) : (
-					<NoContent>Please sign in</NoContent>
-				)}
-			</main>
-		);
-	}
+	return (
+		<ErrorBoundary>
+			<Router />
+		</ErrorBoundary>
+	);
+};
+
+const Content = (props) => {
+	const classes = useStyles();
 
 	return (
 		<main className={classes.main}>
-			<ErrorBoundary>
-				<Router />
-			</ErrorBoundary>
+			<Child {...props} />
 		</main>
 	);
-}
+};
+
+export default Content;

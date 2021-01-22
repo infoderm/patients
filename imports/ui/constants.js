@@ -1,1 +1,2 @@
 export const TIMEOUT_INPUT_DEBOUNCE = 300; // 300 ms
+export const TIMEOUT_REACTIVITY_DEBOUNCE = 300; // 300 ms

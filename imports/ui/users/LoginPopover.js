@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {useStyles} from './Popover.js';
 import {useSnackbar} from 'notistack';
@@ -17,14 +18,17 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 	const [password, setPassword] = useState('');
 	const [errorUsername, setErrorUsername] = useState('');
 	const [errorPassword, setErrorPassword] = useState('');
+	const [loggingIn, setLoggingIn] = useState(false);
 
 	const login = (event) => {
 		event.preventDefault();
+		setLoggingIn(true);
 		const key = enqueueSnackbar('Logging in...', {
 			variant: 'info',
 			persist: true
 		});
 		Meteor.loginWithPassword(username, password, (err) => {
+			setLoggingIn(false);
 			closeSnackbar(key);
 			if (err) {
 				const {message, reason} = err;
@@ -72,6 +76,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 					className={classes.row}
 					label="Username"
 					value={username}
+					disabled={loggingIn}
 					onChange={(e) => setUsername(e.target.value)}
 				/>
 				<TextField
@@ -81,12 +86,14 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 					label="Password"
 					type="password"
 					value={password}
+					disabled={loggingIn}
 					onChange={(e) => setPassword(e.target.value)}
 				/>
 				<Button
 					type="submit"
 					color="primary"
 					className={classes.row}
+					disabled={loggingIn}
 					onClick={login}
 				>
 					Log in
@@ -94,11 +101,13 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 				<Button
 					color="secondary"
 					className={classes.row}
+					disabled={loggingIn}
 					onClick={() => changeMode('register')}
 				>
 					Create account?
 				</Button>
 			</form>
+			{loggingIn && <LinearProgress />}
 		</Popover>
 	);
 };

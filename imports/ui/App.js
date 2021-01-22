@@ -1,7 +1,6 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
+
+import {useTracker} from 'meteor/react-meteor-data';
 
 import {
 	makeStyles,
@@ -25,6 +24,9 @@ import Content from './Content.js';
 import NavigationDrawer from './NavigationDrawer.js';
 import ErrorBoundary from './ErrorBoundary.js';
 
+import useLoggingIn from './users/useLoggingIn.js';
+import useUser from './users/useUser.js';
+
 const muitheme = createMuiTheme({
 	typography: {
 		useNextVariants: true
@@ -46,10 +48,26 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-const App = (props) => {
-	const {currentUser, textTransform, navigationDrawerIsOpen, loading} = props;
+const useUISettings = () =>
+	useTracker(() => {
+		const handles = [
+			settings.subscribe('text-transform'),
+			settings.subscribe('navigation-drawer-is-open')
+		];
+		return {
+			loading: !all(map((x) => x.ready(), handles)),
+			textTransform: settings.getWithBrowserCache('text-transform'),
+			navigationDrawerIsOpen: settings.getWithBrowserCache(
+				'navigation-drawer-is-open'
+			)
+		};
+	}, []);
 
+const App = () => {
 	const classes = useStyles();
+	const {loading, textTransform, navigationDrawerIsOpen} = useUISettings();
+	const loggingIn = useLoggingIn();
+	const currentUser = useUser();
 
 	return (
 		<MuiThemeProvider theme={muitheme}>
@@ -62,6 +80,7 @@ const App = (props) => {
 							{loading && <LinearProgress className={classes.progress} />}
 							<Header
 								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								loggingIn={loggingIn}
 								currentUser={currentUser}
 							/>
 							<NavigationDrawer
@@ -70,6 +89,7 @@ const App = (props) => {
 							/>
 							<Content
 								navigationDrawerIsOpen={navigationDrawerIsOpen}
+								loggingIn={loggingIn}
 								currentUser={currentUser}
 								loading={loading}
 							/>
@@ -81,17 +101,4 @@ const App = (props) => {
 	);
 };
 
-export default withTracker(() => {
-	const handles = [
-		settings.subscribe('text-transform'),
-		settings.subscribe('navigation-drawer-is-open')
-	];
-	return {
-		loading: !all(map((x) => x.ready(), handles)),
-		textTransform: settings.getWithBrowserCache('text-transform'),
-		navigationDrawerIsOpen: settings.getWithBrowserCache(
-			'navigation-drawer-is-open'
-		),
-		currentUser: Meteor.user()
-	};
-})(App);
+export default App;
