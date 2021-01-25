@@ -155,6 +155,8 @@ class DocumentListItem extends React.Component {
 											<BusinessIcon />
 										</Avatar>
 									}
+									component={Link}
+									to={`/documents/${myEncodeURIComponent(identifier)}`}
 									label={identifier}
 									className={classes.chip}
 								/>

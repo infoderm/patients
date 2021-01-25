@@ -46,6 +46,9 @@ const DocumentsList = lazy(() => import('./documents/DocumentsList.js'));
 const DocumentVersionsList = lazy(() =>
 	import('./documents/DocumentVersionsList.js')
 );
+const DocumentsFromIdentifierList = lazy(() =>
+	import('./documents/DocumentsFromIdentifierList.js')
+);
 const DocumentDetails = lazy(() => import('./documents/DocumentDetails.js'));
 
 const WiredConsultationsList = lazy(() =>
@@ -134,6 +137,16 @@ export default function Router() {
 
 				<Route exact path="/documents" component={DocumentsList} />
 				<Route exact path="/documents/page/:page" component={DocumentsList} />
+				<Route
+					exact
+					path="/documents/:identifier"
+					component={DocumentsFromIdentifierList}
+				/>
+				<Route
+					exact
+					path="/documents/:identifier/page/:page"
+					component={DocumentsFromIdentifierList}
+				/>
 				<Route exact path="/document/:id" component={DocumentDetails} />
 				<Route
 					exact

@@ -445,6 +445,17 @@ Meteor.startup(() => {
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
+			identifier: 1,
+			datetime: -1
+		},
+		{
+			background: true
+		}
+	);
+
+	Documents.rawCollection().createIndex(
+		{
+			owner: 1,
 			patientId: 1,
 			createdAt: 1
 		},
