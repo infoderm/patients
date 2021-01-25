@@ -17,6 +17,7 @@ const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
 	perpage = perpage || DocumentsVersionsList.defaultProps.perpage;
 	const identifier = myDecodeURIComponent(match.params.identifier);
 	const reference = myDecodeURIComponent(match.params.reference);
+	const query = {identifier, reference};
 	const sort = {
 		status: 1,
 		datetime: -1
@@ -27,30 +28,20 @@ const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
 		results: 0,
 		text: 0
 	};
-	const handle = Meteor.subscribe('documents.versions', identifier, reference, {
+	const options = {
 		sort,
-		fields
-	});
+		fields,
+		skip: (page - 1) * perpage,
+		limit: perpage
+	};
+	const handle = Meteor.subscribe('documents', query, options);
 	const loading = !handle.ready();
 	return {
 		page,
 		perpage,
 		root: `/document/versions/${match.params.identifier}/${match.params.reference}`,
 		loading,
-		documents: loading
-			? []
-			: Documents.find(
-					{
-						identifier,
-						reference
-					},
-					{
-						sort,
-						fields,
-						skip: (page - 1) * perpage,
-						limit: perpage
-					}
-			  ).fetch()
+		documents: loading ? [] : Documents.find(query, options).fetch()
 	};
 })(StaticDocumentList);
 

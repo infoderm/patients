@@ -538,21 +538,14 @@ const component = withTracker(
 			if (!parsed) {
 				additionalProps.versions = [document];
 			} else {
+				const query = {identifier, reference};
 				const options = {
 					sort: {status: 1, datetime: -1},
 					fields: {identifier: 1, reference: 1, status: 1, datetime: 1}
 				};
-				const handle = Meteor.subscribe(
-					'documents.versions',
-					identifier,
-					reference,
-					options
-				);
+				const handle = Meteor.subscribe('documents', query, options);
 				if (handle.ready()) {
-					const versions = Documents.find(
-						{identifier, reference},
-						options
-					).fetch();
+					const versions = Documents.find(query, options).fetch();
 					additionalProps.versions = versions;
 				} else {
 					additionalProps.loadingVersions = true;
