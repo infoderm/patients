@@ -51,8 +51,8 @@ DocumentsVersionsList.defaultProps = {
 };
 
 DocumentsVersionsList.propTypes = {
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired
+	page: PropTypes.number,
+	perpage: PropTypes.number
 };
 
 export default DocumentsVersionsList;
