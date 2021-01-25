@@ -30,6 +30,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import dateformat from 'date-fns/format';
 
 import {Patients} from '../../api/patients.js';
+import {myEncodeURIComponent} from '../../client/uri.js';
 
 import DocumentLinkingDialog from './DocumentLinkingDialog.js';
 
@@ -165,6 +166,10 @@ class DocumentListItem extends React.Component {
 											<ConfirmationNumberIcon />
 										</Avatar>
 									}
+									component={Link}
+									to={`/document/versions/${myEncodeURIComponent(
+										identifier
+									)}/${myEncodeURIComponent(reference)}`}
 									label={reference}
 									className={classes.chip}
 								/>
