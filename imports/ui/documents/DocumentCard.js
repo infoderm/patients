@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Chip from '@material-ui/core/Chip';
@@ -368,9 +369,11 @@ class DocumentCard extends React.Component {
 					<List className={classes.list}>
 						{parsed && format === 'healthone' && kind === 'lab' && (
 							<ListItem>
-								<Avatar>
-									<TableChartIcon />
-								</Avatar>
+								<ListItemAvatar>
+									<Avatar>
+										<TableChartIcon />
+									</Avatar>
+								</ListItemAvatar>
 								<ListItemText
 									disableTypography
 									primary={<Typography variant="subtitle1">Results</Typography>}
@@ -380,9 +383,11 @@ class DocumentCard extends React.Component {
 						)}
 						{parsed && format === 'healthone' && kind === 'report' && (
 							<ListItem>
-								<Avatar>
-									<SubjectIcon />
-								</Avatar>
+								<ListItemAvatar>
+									<Avatar>
+										<SubjectIcon />
+									</Avatar>
+								</ListItemAvatar>
 								<ListItemText
 									disableTypography
 									primary={
@@ -394,9 +399,11 @@ class DocumentCard extends React.Component {
 						)}
 						{(!parsed || format !== 'healthone') && (
 							<ListItem>
-								<Avatar>
-									<FileCopyIcon />
-								</Avatar>
+								<ListItemAvatar>
+									<Avatar>
+										<FileCopyIcon />
+									</Avatar>
+								</ListItemAvatar>
 								<ListItemText
 									disableTypography
 									primary={<Typography variant="subtitle1">Source</Typography>}
