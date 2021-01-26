@@ -1,22 +1,28 @@
 import React from 'react';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: theme.spacing(3)
+		marginTop: theme.spacing(3),
+		textAlign: 'center'
+	},
+	paper: {
+		whiteSpace: 'pre-wrap',
+		padding: theme.spacing(3),
+		display: 'inline-block'
 	}
-});
+}));
 
-const HealthOneReportContents = ({classes, document}) => {
+const HealthOneReportContents = ({document}) => {
+	const classes = useStyles();
+
 	return (
-		<Paper className={classes.container}>
-			{document.text.map((line, i) => (
-				<div key={i}>{line}</div>
-			))}
-		</Paper>
+		<div className={classes.container}>
+			<Paper className={classes.paper}>{document.text.join('\n').trim()}</Paper>
+		</div>
 	);
 };
 
-export default withStyles(styles, {withTheme: true})(HealthOneReportContents);
+export default HealthOneReportContents;
