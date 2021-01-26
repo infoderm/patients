@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
 const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 	const classes = useStyles();
 
-	const [patient, setPatient] = useState(existingLink ? [existingLink] : []);
+	const [patients, setPatients] = useState(existingLink ? [existingLink] : []);
 
 	const linkThisDocument = (event) => {
 		event.preventDefault();
 		const documentId = document._id;
-		const patientId = patient[0]._id;
+		const patientId = patients[0]._id;
 		Meteor.call('documents.link', documentId, patientId, (err, _res) => {
 			if (err) {
 				console.error(err);
@@ -69,8 +69,8 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 						label: 'Patient to link document to',
 						margin: 'normal'
 					}}
-					value={patient}
-					onChange={(e) => setPatient(e.target.value)}
+					value={patients}
+					onChange={(e) => setPatients(e.target.value)}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -79,7 +79,7 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
-					disabled={patient.length === 0}
+					disabled={patients.length === 0}
 					color="secondary"
 					onClick={linkThisDocument}
 				>
