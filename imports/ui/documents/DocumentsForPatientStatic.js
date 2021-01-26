@@ -23,7 +23,7 @@ export default function DocumentsForPatientStatic({
 					<DocumentCard
 						key={document._id}
 						document={document}
-						patientChip={false}
+						PatientChip={null}
 						defaultExpanded={page === 1 && i === 0}
 					/>
 				))}
