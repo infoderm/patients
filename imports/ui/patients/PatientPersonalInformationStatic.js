@@ -367,7 +367,7 @@ class PatientPersonalInformation extends React.Component {
 											label: 'Allergies',
 											margin: 'normal'
 										}}
-										chip={AllergyChip}
+										Chip={AllergyChip}
 										chipProps={{
 											avatar: <Avatar>Al</Avatar>
 										}}
@@ -454,7 +454,7 @@ class PatientPersonalInformation extends React.Component {
 											label: 'Médecin Traitant',
 											margin: 'normal'
 										}}
-										chip={DoctorChip}
+										Chip={DoctorChip}
 										chipProps={{
 											avatar: <Avatar>Dr</Avatar>
 										}}
@@ -477,7 +477,7 @@ class PatientPersonalInformation extends React.Component {
 											label: 'Mutuelle',
 											margin: 'normal'
 										}}
-										chip={InsuranceChip}
+										Chip={InsuranceChip}
 										chipProps={{
 											avatar: <Avatar>In</Avatar>
 										}}

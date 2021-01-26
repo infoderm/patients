@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import StaticPatientChip from './StaticPatientChip.js';
 
@@ -23,6 +24,10 @@ const ReactivePatientChip = ({patient, ...props}) => {
 	props = {...props, loading, found, patient: fields};
 
 	return <StaticPatientChip {...props} />;
+};
+
+ReactivePatientChip.propTypes = {
+	patient: PropTypes.object.isRequired
 };
 
 ReactivePatientChip.projection = {

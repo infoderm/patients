@@ -271,7 +271,7 @@ class SetPicker extends React.Component {
 			useSuggestions,
 			itemToString,
 			itemToKey,
-			chip,
+			Chip,
 			chipProps,
 			TextFieldProps,
 			placeholder,
@@ -280,8 +280,6 @@ class SetPicker extends React.Component {
 		} = this.props;
 
 		const {inputValue} = this.state;
-
-		const ChipElement = chip || Chip;
 
 		const full = value.length >= maxCount;
 
@@ -313,8 +311,10 @@ class SetPicker extends React.Component {
 							},
 							InputProps: getInputProps({
 								startAdornment: value.map((item, index) => (
-									<ChipElement
-										{...chipProps}
+									<Chip
+										{...(chipProps instanceof Function
+											? chipProps(item, index)
+											: chipProps)}
 										key={itemToString(item)}
 										tabIndex={-1}
 										label={itemToString(item)}
@@ -375,6 +375,7 @@ const styles = (theme) => ({
 });
 
 SetPicker.defaultProps = {
+	Chip,
 	maxCount: Number.POSITIVE_INFINITY,
 	multiset: false,
 	inputTransform: (x) => x
@@ -382,6 +383,7 @@ SetPicker.defaultProps = {
 
 SetPicker.propTypes = {
 	classes: PropTypes.object.isRequired,
+	Chip: PropTypes.elementType,
 	value: PropTypes.array.isRequired,
 	useSuggestions: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,

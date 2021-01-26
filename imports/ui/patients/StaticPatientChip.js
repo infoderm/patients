@@ -37,9 +37,19 @@ export default function StaticPatientChip({
 	className,
 	loading,
 	found,
-	patient
+	patient,
+	onClick,
+	onDelete
 }) {
 	const classes = useStyles();
+
+	let component;
+	let to;
+	if (!onClick && !onDelete) {
+		component = Link;
+		to = `/patient/${patient._id}`;
+	}
+
 	return (
 		<Chip
 			key={patient._id}
@@ -60,8 +70,10 @@ export default function StaticPatientChip({
 				loading ? classes.loading : found ? classes.found : classes.notfound,
 				className
 			)}
-			component={Link}
-			to={`/patient/${patient._id}`}
+			component={component}
+			to={to}
+			onClick={onClick}
+			onDelete={onDelete}
 		/>
 	);
 }
@@ -81,5 +93,7 @@ StaticPatientChip.propTypes = {
 	className: PropTypes.string,
 	loading: PropTypes.bool,
 	found: PropTypes.bool,
-	patient: PropTypes.object.isRequired
+	patient: PropTypes.object.isRequired,
+	onClick: PropTypes.func,
+	onDelete: PropTypes.func
 };
