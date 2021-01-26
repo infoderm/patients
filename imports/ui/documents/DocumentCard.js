@@ -13,7 +13,6 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionActions from '@material-ui/core/AccordionActions';
 
-import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
@@ -60,6 +59,7 @@ import DocumentLinkingDialog from './DocumentLinkingDialog.js';
 import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
 import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
 import HealthOneReportContents from './HealthOneReportContents.js';
+import DocumentSource from './DocumentSource.js';
 
 const styles = (theme) => ({
 	heading: {
@@ -121,12 +121,8 @@ const styles = (theme) => ({
 		color: '#fff',
 		fontWeight: 'bold'
 	},
-	pre: {
-		padding: theme.spacing(3),
-		overflowX: 'auto'
-	},
 	list: {
-		maxWidth: '100%'
+		width: '100%'
 	}
 });
 
@@ -176,8 +172,6 @@ class DocumentCard extends React.Component {
 			document: {
 				createdAt,
 				patientId,
-				source,
-				decoded,
 				parsed,
 				format,
 				kind,
@@ -407,11 +401,7 @@ class DocumentCard extends React.Component {
 								<ListItemText
 									disableTypography
 									primary={<Typography variant="subtitle1">Source</Typography>}
-									secondary={
-										<Paper>
-											<pre className={classes.pre}>{decoded || source}</pre>
-										</Paper>
-									}
+									secondary={<DocumentSource document={document} />}
 								/>
 							</ListItem>
 						)}

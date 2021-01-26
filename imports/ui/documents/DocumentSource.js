@@ -7,8 +7,7 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		maxWidth: 1200,
 		margin: '0 auto',
-		marginTop: theme.spacing(3),
-		textAlign: 'center'
+		marginTop: theme.spacing(3)
 	},
 	paper: {
 		display: 'inline-block',
@@ -17,12 +16,12 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const HealthOneReportContents = ({document}) => {
+const HealthOneReportContents = ({document: {decoded, source}}) => {
 	const classes = useStyles();
 
 	return (
 		<div className={classes.container}>
-			<Paper className={classes.paper}>{document.text.join('\n').trim()}</Paper>
+			<Paper className={classes.paper}>{decoded || source}</Paper>
 		</div>
 	);
 };
