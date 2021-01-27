@@ -1,14 +1,10 @@
 import React from 'react';
 
-import useDocuments from '../../api/hooks/useDocuments.js';
+import {useUnlinkedDocuments} from '../../api/issues.js';
 
 import DocumentsPage from '../documents/DocumentsPage.js';
 
 const UnlinkedDocuments = (props) => {
-	const query = {
-		patientId: null
-	};
-
 	const options = {
 		sort: {
 			'patient.lastname': 1,
@@ -19,10 +15,13 @@ const UnlinkedDocuments = (props) => {
 		fields: {
 			...DocumentsPage.projection
 			// patientId: 1,
+			// patient: 1,
+			// datetime: 1,
+			// createdAt: 1
 		}
 	};
 
-	const {loading, results: documents} = useDocuments(query, options, []);
+	const {loading, results: documents} = useUnlinkedDocuments({}, options, []);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;

@@ -1,25 +1,22 @@
 import React from 'react';
 
-import useDocuments from '../../api/hooks/useDocuments.js';
+import {useUnparsedDocuments} from '../../api/issues.js';
 
 import DocumentsPage from '../documents/DocumentsPage.js';
 
 const UnparsedDocuments = (props) => {
-	const query = {
-		parsed: false
-	};
-
 	const options = {
 		sort: {
 			createdAt: 1
 		},
 		fields: {
 			...DocumentsPage.projection
-			// parsed: 1
+			// parsed: 1,
+			// createdAt: 1
 		}
 	};
 
-	const {loading, results: documents} = useDocuments(query, options, []);
+	const {loading, results: documents} = useUnparsedDocuments({}, options, []);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;

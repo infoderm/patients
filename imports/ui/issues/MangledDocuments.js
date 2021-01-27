@@ -1,25 +1,22 @@
 import React from 'react';
 
-import useDocuments from '../../api/hooks/useDocuments.js';
+import {useMangledDocuments} from '../../api/issues.js';
 
 import DocumentsPage from '../documents/DocumentsPage.js';
 
 const MangledDocuments = (props) => {
-	const query = {
-		encoding: null
-	};
-
 	const options = {
 		sort: {
 			createdAt: 1
 		},
 		fields: {
 			...DocumentsPage.projection
-			// encoding: 1
+			// encoding: 1,
+			// createdAt: 1
 		}
 	};
 
-	const {loading, results: documents} = useDocuments(query, options, []);
+	const {loading, results: documents} = useMangledDocuments({}, options, []);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;

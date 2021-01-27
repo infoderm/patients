@@ -78,8 +78,6 @@ const DocumentChips = (props) => {
 
 	const {document} = props;
 
-	console.debug({document});
-
 	const classes = useStyles();
 
 	return (

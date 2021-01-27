@@ -1,24 +1,23 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
 import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
-import {Consultations} from '../../api/consultations.js';
+import {useConsultationsMissingABook} from '../../api/issues.js';
 
-const ConsultationsMissingABook = ({loading, consultations, ...rest}) => {
+const ConsultationsMissingABook = (props) => {
+	const {loading, results: consultations} = useConsultationsMissingABook();
+
 	if (loading) {
-		return <div {...rest}>Loading...</div>;
+		return <div {...props}>Loading...</div>;
 	}
 
 	if (consultations.length === 0) {
-		return <div {...rest}>All consultations have a book :)</div>;
+		return <div {...props}>All consultations have a book :)</div>;
 	}
 
 	return (
-		<div {...rest}>
+		<div {...props}>
 			{consultations.map((consultation) => (
 				<ReactiveConsultationCard
 					key={consultation._id}
@@ -30,18 +29,4 @@ const ConsultationsMissingABook = ({loading, consultations, ...rest}) => {
 	);
 };
 
-export default withTracker(() => {
-	const query = {
-		isDone: true,
-		$or: [{book: null}, {book: ''}]
-	};
-	const handle = Meteor.subscribe('consultations', query);
-	if (!handle.ready()) {
-		return {loading: true};
-	}
-
-	return {
-		loading: false,
-		consultations: Consultations.find(query).fetch()
-	};
-})(ConsultationsMissingABook);
+export default ConsultationsMissingABook;

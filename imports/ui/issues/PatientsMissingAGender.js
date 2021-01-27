@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
@@ -8,19 +5,21 @@ import Grid from '@material-ui/core/Grid';
 import PatientGridItem from '../patients/PatientGridItem.js';
 import StaticPatientCard from '../patients/StaticPatientCard.js';
 
-import {Patients} from '../../api/patients.js';
+import {usePatientsMissingAGender} from '../../api/issues.js';
 
-const PatientsMissingAGender = ({loading, patients, ...rest}) => {
+const PatientsMissingAGender = (props) => {
+	const {loading, results: patients} = usePatientsMissingAGender();
+
 	if (loading) {
-		return <div {...rest}>Loading...</div>;
+		return <div {...props}>Loading...</div>;
 	}
 
 	if (patients.length === 0) {
-		return <div {...rest}>All patients have a gender :)</div>;
+		return <div {...props}>All patients have a gender :)</div>;
 	}
 
 	return (
-		<Grid container spacing={3} {...rest}>
+		<Grid container spacing={3} {...props}>
 			{patients.map((patient) => (
 				<PatientGridItem
 					key={patient._id}
@@ -32,17 +31,4 @@ const PatientsMissingAGender = ({loading, patients, ...rest}) => {
 	);
 };
 
-export default withTracker(() => {
-	const query = {
-		$or: [{sex: null}, {sex: ''}]
-	};
-	const handle = Meteor.subscribe('patients', query);
-	if (!handle.ready()) {
-		return {loading: true};
-	}
-
-	return {
-		loading: false,
-		patients: Patients.find(query).fetch()
-	};
-})(PatientsMissingAGender);
+export default PatientsMissingAGender;

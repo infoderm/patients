@@ -1,24 +1,26 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
 import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
-import {Consultations} from '../../api/consultations.js';
+import {useConsultationsMissingAPrice} from '../../api/issues.js';
 
-const ConsultationsMissingAPrice = ({loading, consultations, ...rest}) => {
+const ConsultationsMissingAPrice = (props) => {
+	const {loading, results: consultations} = useConsultationsMissingAPrice({
+		isDone: true,
+		$or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}]
+	});
+
 	if (loading) {
-		return <div {...rest}>Loading...</div>;
+		return <div {...props}>Loading...</div>;
 	}
 
 	if (consultations.length === 0) {
-		return <div {...rest}>All consultations have a price :)</div>;
+		return <div {...props}>All consultations have a price :)</div>;
 	}
 
 	return (
-		<div {...rest}>
+		<div {...props}>
 			{consultations.map((consultation) => (
 				<ReactiveConsultationCard
 					key={consultation._id}
@@ -30,17 +32,4 @@ const ConsultationsMissingAPrice = ({loading, consultations, ...rest}) => {
 	);
 };
 
-export default withTracker(() => {
-	const handle = Meteor.subscribe('consultations.missing-a-price');
-	if (!handle.ready()) {
-		return {loading: true};
-	}
-
-	return {
-		loading: false,
-		consultations: Consultations.find({
-			isDone: true,
-			$or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}]
-		}).fetch()
-	};
-})(ConsultationsMissingAPrice);
+export default ConsultationsMissingAPrice;
