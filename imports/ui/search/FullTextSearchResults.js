@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import {myDecodeURIComponent} from '../../client/uri.js';
 
+import useRandom from '../hooks/useRandom.js';
 import PatientsObservedSearchResults from '../patients/PatientsObservedSearchResults.js';
 
 const useStyles = makeStyles(() => ({
@@ -15,8 +16,7 @@ const useStyles = makeStyles(() => ({
 
 export default function FullTextSearchResults({match}) {
 	const classes = useStyles();
-	const [key, setKey] = useState(Math.random());
-	const refresh = () => setKey(Math.random());
+	const [key, refresh] = useRandom();
 	const query = myDecodeURIComponent(match.params.query);
 	return (
 		<div>
