@@ -3,7 +3,7 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {usePatient} from '../../api/patients.js';
+import usePatient from '../patients/usePatient.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 import AppointmentDialog from './AppointmentDialog.js';
 

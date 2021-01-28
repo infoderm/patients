@@ -2,7 +2,7 @@ import React from 'react';
 
 import StaticPatientCard from './StaticPatientCard.js';
 
-import {usePatient} from '../../api/patients.js';
+import usePatient from './usePatient.js';
 
 const ReactivePatientCard = ({patient}) => {
 	const patientId = patient._id;

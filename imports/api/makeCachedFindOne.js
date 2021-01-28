@@ -1,50 +1,31 @@
 import {Meteor} from 'meteor/meteor';
-import {useState, useEffect} from 'react';
+import {useTracker} from 'meteor/react-meteor-data';
+import {useRef} from 'react';
 
 const makeCachedFindOne = (Collection, subscription) => (
 	init,
 	query,
 	options,
-	deps
+	_deps
 ) => {
-	const [loading, setLoading] = useState(true);
-	const [found, setFound] = useState(false);
-	const [fields, setFields] = useState(init);
+	const ref = useRef(init);
 
-	useEffect(() => {
-		setLoading(true);
-		setFound(false);
-		setFields(init);
-		let current = init;
+	const loading = useTracker(
+		() => {
+			const handle = Meteor.subscribe(subscription, query, options);
+			return !handle.ready();
+		} /* , deps */
+	);
 
-		let queryHandle;
-		const handle = Meteor.subscribe(subscription, query, options, {
-			onStop: () => {
-				if (queryHandle) queryHandle.stop();
-			},
-			onReady: () => {
-				setLoading(false);
-				queryHandle = Collection.find(query, options).observeChanges({
-					added: (_id, upToDate) => {
-						setFound(true);
-						current = {...init, ...upToDate};
-						setFields(current);
-					},
-					changed: (_id, upToDate) => {
-						current = {...current, ...upToDate};
-						setFields(current);
-					},
-					removed: (_id) => {
-						setFound(false);
-					}
-				});
-			}
-		});
+	const upToDate = useTracker(
+		() => {
+			return loading ? undefined : Collection.findOne(query, options);
+		} /* , [loading, ...deps] */
+	);
 
-		return () => {
-			handle.stop();
-		};
-	}, deps);
+	const found = Boolean(upToDate);
+	const fields = {...ref.current, ...upToDate};
+	ref.current = fields;
 
 	return {loading, found, fields};
 };

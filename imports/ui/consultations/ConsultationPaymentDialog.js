@@ -18,10 +18,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import CloseIcon from '@material-ui/icons/Close';
 
 import {onlyASCII} from '../../api/string.js';
-import {usePatient} from '../../api/patients.js';
 
 import {useSetting} from '../../client/settings.js';
 
+import usePatient from '../patients/usePatient.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
 

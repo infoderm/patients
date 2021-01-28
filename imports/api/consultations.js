@@ -16,7 +16,6 @@ import {parseUint32StrictOrString} from './string.js';
 
 import pageQuery from './pageQuery.js';
 import makeQuery from './makeQuery.js';
-import makeCachedFindOne from './makeFindOne.js'; // makeCachedFindOne has issues
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 
 const collection = 'consultations';
@@ -25,8 +24,6 @@ const statsPublication = stats;
 
 export const Consultations = new Mongo.Collection(collection);
 const Stats = new Mongo.Collection(stats);
-
-export const useConsultation = makeCachedFindOne(Consultations, 'consultation');
 
 export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 

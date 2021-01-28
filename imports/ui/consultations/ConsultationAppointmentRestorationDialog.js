@@ -18,8 +18,9 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string.js';
-import {usePatient} from '../../api/patients.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+
+import usePatient from '../patients/usePatient.js';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState

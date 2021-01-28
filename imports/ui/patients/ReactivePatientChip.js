@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import StaticPatientChip from './StaticPatientChip.js';
 
-import {usePatient} from '../../api/patients.js';
+import usePatient from './usePatient.js';
 
 const ReactivePatientChip = ({patient, ...props}) => {
 	const patientId = patient._id;

@@ -18,7 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string.js';
-import {usePatient} from '../../api/patients.js';
+import usePatient from '../patients/usePatient.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 
 import ConfirmationTextField, {

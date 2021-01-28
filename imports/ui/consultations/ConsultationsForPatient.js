@@ -6,7 +6,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 
-import {usePatient} from '../../api/patients.js';
+import usePatient from '../patients/usePatient.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';

@@ -19,7 +19,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {usePatient} from '../../api/patients.js';
+import usePatient from '../patients/usePatient.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 
 const useStyles = makeStyles((theme) => ({

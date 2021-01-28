@@ -16,7 +16,6 @@ import {makeIndex, shatter, normalized, normalizeSearch} from './string.js';
 
 import observeQuery from './observeQuery.js';
 import makeObservedQuery from './makeObservedQuery.js';
-import makeCachedFindOne from './makeCachedFindOne.js';
 
 const collection = 'patients';
 const cacheCollection = 'patients.find.cache';
@@ -625,8 +624,6 @@ export const usePatientsAdvancedFind = makeObservedQuery(
 	PatientsSearchIndexCache,
 	indexCachePublication
 );
-
-export const usePatient = makeCachedFindOne(Patients, 'patient');
 
 export const patients = {
 	cacheCollection,

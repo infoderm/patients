@@ -25,8 +25,10 @@ import dateFormat from 'date-fns/format';
 
 import {msToString} from '../../client/duration.js';
 
-import {patients, usePatient} from '../../api/patients.js';
+import {patients} from '../../api/patients.js';
 import {useSetting} from '../../client/settings.js';
+
+import usePatient from '../patients/usePatient.js';
 
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
 

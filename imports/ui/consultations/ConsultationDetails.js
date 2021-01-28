@@ -1,13 +1,13 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 
-import {useConsultation} from '../../api/consultations.js';
-
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
 import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
+
+import useConsultation from './useConsultation.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
