@@ -21,8 +21,10 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import {format} from 'date-fns';
 
 import {Patients} from '../../api/patients.js';
-import {books} from '../../api/books.js';
+import {books, useBooksFind} from '../../api/books.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
+import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 
 const styles = (theme) => ({
 	container: {
@@ -398,11 +400,26 @@ class ConsultationForm extends React.Component {
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<TextField
-							label="Carnet"
-							value={this.state.book}
-							margin="normal"
-							onChange={update('book', books.sanitizeInput)}
+						<AutocompleteWithSuggestions
+							itemToString={(x) => (x ? x.bookNumber : '')}
+							useSuggestions={makeSubstringSuggestions(
+								useBooksFind,
+								[],
+								'bookNumber'
+							)}
+							TextFieldProps={{
+								label: 'Carnet',
+								margin: 'normal'
+							}}
+							inputValue={this.state.book}
+							onInputChange={(event, newInputValue) => {
+								if (event) {
+									return update(
+										'book',
+										books.sanitizeInput
+									)({target: {value: newInputValue}});
+								}
+							}}
 						/>
 					</Grid>
 				</Grid>
