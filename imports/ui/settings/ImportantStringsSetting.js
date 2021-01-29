@@ -10,20 +10,18 @@ const KEY = 'important-strings';
 
 // TODO filter out items that are superstrings of others
 
-export default class ImportantStringsSetting extends React.Component {
-	render() {
-		const {className} = this.props;
+const ImportantStringsSetting = ({className}) => {
+	return (
+		<InputManySetting
+			className={className}
+			title="Important Strings"
+			label="Strings"
+			setting={KEY}
+			placeholder="Input important strings to highlight"
+			inputTransform={onlyLowerCaseASCII}
+			sort={(items) => items.sort()}
+		/>
+	);
+};
 
-		return (
-			<InputManySetting
-				className={className}
-				title="Important Strings"
-				label="Strings"
-				setting={KEY}
-				placeholder="Input important strings to highlight"
-				inputTransform={onlyLowerCaseASCII}
-				sort={(items) => items.sort()}
-			/>
-		);
-	}
-}
+export default ImportantStringsSetting;

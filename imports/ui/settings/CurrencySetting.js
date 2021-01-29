@@ -2,27 +2,25 @@ import React from 'react';
 
 import SelectOneSetting from './SelectOneSetting.js';
 
-export default class CurrencySetting extends React.Component {
-	render() {
-		const {className} = this.props;
+const CurrencySetting = ({className}) => {
+	const CURRENCIES = {
+		EUR: '€'
+	};
 
-		const CURRENCIES = {
-			EUR: '€'
-		};
+	const options = [...Object.keys(CURRENCIES)];
 
-		const options = [...Object.keys(CURRENCIES)];
+	const optionToString = (option) => CURRENCIES[option];
 
-		const optionToString = (option) => CURRENCIES[option];
+	return (
+		<SelectOneSetting
+			className={className}
+			label="currency"
+			setting="currency"
+			options={options}
+			optionToString={optionToString}
+			defaultValue="EUR"
+		/>
+	);
+};
 
-		return (
-			<SelectOneSetting
-				className={className}
-				label="currency"
-				setting="currency"
-				options={options}
-				optionToString={optionToString}
-				defaultValue="EUR"
-			/>
-		);
-	}
-}
+export default CurrencySetting;
