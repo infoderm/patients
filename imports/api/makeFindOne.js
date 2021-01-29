@@ -5,20 +5,16 @@ const makeFindOne = (Collection, subscription) => (
 	init,
 	query,
 	options,
-	_deps
+	deps
 ) => {
-	const loading = useTracker(
-		() => {
-			const handle = Meteor.subscribe(subscription, query, options);
-			return !handle.ready();
-		} /* , deps */
-	);
+	const loading = useTracker(() => {
+		const handle = Meteor.subscribe(subscription, query, options);
+		return !handle.ready();
+	}, deps);
 
-	const upToDate = useTracker(
-		() => {
-			return loading ? undefined : Collection.findOne(query, options);
-		} /* , [loading, ...deps] */
-	);
+	const upToDate = useTracker(() => {
+		return loading ? undefined : Collection.findOne(query, options);
+	}, [loading, ...deps]);
 
 	const found = Boolean(upToDate);
 
