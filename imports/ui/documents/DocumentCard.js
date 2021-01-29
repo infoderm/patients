@@ -20,17 +20,13 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DeleteIcon from '@material-ui/icons/Delete';
 import LinkIcon from '@material-ui/icons/Link';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import SubjectIcon from '@material-ui/icons/Subject';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-import saveTextAs from '../../client/saveTextAs';
 
 import DocumentChips from './DocumentChips';
 import DocumentVersionsButton from './actions/DocumentVersionsButton';
@@ -43,6 +39,8 @@ import DocumentUnlinkingDialog from './DocumentUnlinkingDialog';
 import HealthOneLabResultsTable from './HealthOneLabResultsTable';
 import HealthOneReportContents from './HealthOneReportContents';
 import DocumentSource from './DocumentSource';
+import DocumentDownloadButton from './actions/DocumentDownloadButton';
+import DocumentDeletionButton from './actions/DocumentDeletionButton';
 
 const styles = () =>
 	createStyles({
@@ -71,24 +69,6 @@ const DocumentCard = (props) => {
 		props;
 
 	const {patientId, parsed, format, kind, deleted} = document;
-
-	const download = (_event) => {
-		const extensions = {
-			healthone: 'HLT',
-			// 'medar' : 'MDR' ,
-			// 'medidoc' : 'MDD' ,
-		};
-
-		const ext = extensions[document.format] || 'UNK';
-
-		const name = document.parsed
-			? `${document.identifier}-${document.reference}-${document.status}`
-			: `${document._id}`;
-
-		const filename = `${name}.${ext}`;
-
-		saveTextAs(document.decoded || document.source, filename);
-	};
 
 	return (
 		<Accordion
@@ -129,7 +109,9 @@ const DocumentCard = (props) => {
 							</ListItemAvatar>
 							<ListItemText
 								disableTypography
-								primary={<Typography variant="subtitle1">Contents</Typography>}
+								primary={
+									<Typography variant="subtitle1">Contents</Typography>
+								}
 								secondary={<HealthOneReportContents document={document} />}
 							/>
 						</ListItem>
@@ -153,10 +135,7 @@ const DocumentCard = (props) => {
 			<Divider />
 			<AccordionActions>
 				{VersionsButton && <VersionsButton document={document} />}
-				<Button color="primary" onClick={download}>
-					Download
-					<CloudDownloadIcon />
-				</Button>
+				<DocumentDownloadButton document={document} />
 				<Button color="primary" onClick={() => setLinking(true)}>
 					Link
 					<LinkIcon />
@@ -179,12 +158,7 @@ const DocumentCard = (props) => {
 						<DeleteForeverIcon />
 					</Button>
 				)}
-				{!deleted && (
-					<Button color="secondary" onClick={() => setDeleting(true)}>
-						Delete
-						<DeleteIcon />
-					</Button>
-				)}
+				<DocumentDeletionButton document={document} />
 				<DocumentLinkingDialog
 					open={linking}
 					document={document}
