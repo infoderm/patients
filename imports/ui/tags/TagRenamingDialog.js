@@ -21,7 +21,7 @@ import {capitalized, normalized, normalizeInput} from '../../api/string.js';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
 } from '../input/ConfirmationTextField.js';
-import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
+import Combobox from '../input/Combobox.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
@@ -128,7 +128,8 @@ const TagRenamingDialog = (props) => {
 					label={`${Title}'s old ${nameKeyTitle}`}
 					{...ConfirmationTextFieldProps}
 				/>
-				<AutocompleteWithSuggestions
+				<Combobox
+					itemToKey={(x) => x._id}
 					itemToString={(x) => (x ? x[nameKey] : '')}
 					useSuggestions={makeSubstringSuggestions(
 						useTagsFind,
