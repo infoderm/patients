@@ -12,7 +12,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Avatar from '@material-ui/core/Avatar';
 
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -22,9 +21,10 @@ import {capitalized, normalized, normalizeInput} from '../../api/string.js';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
 } from '../input/ConfirmationTextField.js';
-import SetPicker from '../input/SetPicker.js';
+import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -44,7 +44,7 @@ let nextAriaId = 0;
 const TagRenamingDialog = (props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [newname, setNewname] = useState('');
+	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
 	const [newnameError, setNewnameError] = useState('');
 	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
 
@@ -75,9 +75,7 @@ const TagRenamingDialog = (props) => {
 		let error = !validateOldName();
 		const name = newname.trim();
 		if (name.length === 0) {
-			setNewnameError(
-				`The new ${nameKeyTitle} is empty. Did you forget to press ENTER?`
-			);
+			setNewnameError(`The new ${nameKeyTitle} is empty.`);
 			error = true;
 		} else {
 			setNewnameError('');
@@ -130,10 +128,8 @@ const TagRenamingDialog = (props) => {
 					label={`${Title}'s old ${nameKeyTitle}`}
 					{...ConfirmationTextFieldProps}
 				/>
-				<SetPicker
-					itemToKey={(x) => x._id}
-					itemToString={(x) => x[nameKey]}
-					createNewItem={(name) => ({[nameKey]: name})}
+				<AutocompleteWithSuggestions
+					itemToString={(x) => (x ? x[nameKey] : '')}
 					useSuggestions={makeSubstringSuggestions(
 						useTagsFind,
 						[tag[nameKey]],
@@ -146,14 +142,9 @@ const TagRenamingDialog = (props) => {
 						helperText: newnameError,
 						error: Boolean(newnameError)
 					}}
-					chipProps={{
-						avatar: <Avatar>{Title.slice(0, 2)}</Avatar>
-					}}
-					value={newname !== '' ? [{[nameKey]: newname}] : []}
-					maxCount={1}
-					inputTransform={normalizeInput}
-					onChange={({target: {value}}) =>
-						setNewname(value.length === 1 ? value[0][nameKey] : '')
+					inputValue={newname}
+					onInputChange={(_event, newInputValue) =>
+						setNewname(normalizeInput(newInputValue))
 					}
 				/>
 			</DialogContent>
