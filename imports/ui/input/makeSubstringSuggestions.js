@@ -9,8 +9,6 @@ const DEBOUNCE_OPTIONS = {leading: false};
 const makeSubstringSuggestions = (useCollectionFind, set, key = 'name') => (
 	searchString
 ) => {
-	console.debug({useCollectionFind, set, searchString});
-
 	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
 		searchString,
 		TIMEOUT_INPUT_DEBOUNCE,
