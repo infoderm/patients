@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import keycode from 'keycode';
 import Downshift from 'downshift';
 
@@ -7,9 +8,17 @@ import {all, map} from '@aureooms/js-itertools';
 
 import {withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+
 import Chip from '@material-ui/core/Chip';
+
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
+
+import Suggestions from './Suggestions.js';
 
 function renderInput(inputProps) {
 	const {InputProps, classes, ref, ...other} = inputProps;
@@ -29,111 +38,41 @@ function renderInput(inputProps) {
 	);
 }
 
-function renderSuggestion({
-	loading,
-	suggestion,
-	index,
-	itemProps,
-	highlightedIndex,
-	selectedItem,
-	itemToString,
-	itemToKey
-}) {
-	const isHighlighted = highlightedIndex === index;
-	const isSelected = selectedItem
-		.map(itemToKey)
-		.includes(itemToKey(suggestion));
+const SetPicker = (props) => {
+	const {
+		classes,
+		useSuggestions,
+		itemToString,
+		itemToKey,
+		Chip,
+		chipProps,
+		TextFieldProps,
+		placeholder,
+		readOnly,
+		value,
+		onChange,
+		maxCount,
+		createNewItem,
+		multiset,
+		sort,
+		inputTransform
+	} = props;
 
-	return (
-		<MenuItem
-			{...itemProps}
-			key={itemToKey(suggestion)}
-			selected={isHighlighted}
-			disabled={loading}
-			component="div"
-			style={{
-				fontWeight: isSelected ? 500 : 400
-			}}
-		>
-			{itemToString(suggestion)}
-		</MenuItem>
+	const [inputValue, setInputValue] = useStateWithInitOverride(
+		inputTransform('')
 	);
-}
+	const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
-renderSuggestion.propTypes = {
-	highlightedIndex: PropTypes.number,
-	index: PropTypes.number,
-	itemProps: PropTypes.object,
-	selectedItem: PropTypes.array.isRequired,
-	suggestion: PropTypes.object.isRequired
-};
+	const count = value.length;
+	const full = count >= maxCount;
 
-const Suggestions = ({
-	classes,
-	useSuggestions,
-	query,
-	getItemProps,
-	highlightedIndex,
-	selectedItem,
-	itemToKey,
-	itemToString
-}) => {
-	const {loading, results} = useSuggestions(query);
+	const resetInputValue = () => setInputValue(inputTransform(''));
 
-	if (!results || results.length === 0) return null;
+	useEffect(() => {
+		if (readOnly || count >= maxCount) resetInputValue();
+	}, [readOnly, count, maxCount]);
 
-	return (
-		<Paper square className={classes.paper}>
-			{results.map((suggestion, index) =>
-				renderSuggestion({
-					loading,
-					suggestion,
-					index,
-					itemProps: getItemProps({item: suggestion}),
-					highlightedIndex,
-					selectedItem,
-					itemToString,
-					itemToKey
-				})
-			)}
-		</Paper>
-	);
-};
-
-Suggestions.propTypes = {
-	classes: PropTypes.object.isRequired,
-	useSuggestions: PropTypes.func.isRequired,
-	query: PropTypes.string.isRequired,
-	getItemProps: PropTypes.func.isRequired,
-	highlightedIndex: PropTypes.number,
-	selectedItem: PropTypes.array.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired
-};
-
-class SetPicker extends React.Component {
-	state = {
-		inputValue: ''
-	};
-
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		if (nextProps.readOnly || nextProps.value.length >= nextProps.maxCount) {
-			this.setState({inputValue: ''});
-		}
-	}
-
-	handleKeyDown = (event) => {
-		const {inputValue} = this.state;
-		const {
-			value,
-			onChange,
-			readOnly,
-			itemToString,
-			createNewItem,
-			maxCount,
-			multiset,
-			sort
-		} = this.props;
+	const handleKeyDown = (event) => {
 		if (readOnly) {
 			return;
 		}
@@ -153,7 +92,7 @@ class SetPicker extends React.Component {
 				if (
 					inputValue.length > 0 &&
 					value.length < maxCount &&
-					this.highlightedIndex === null &&
+					highlightedIndex === -1 &&
 					createNewItem
 				) {
 					// TODO avoid creating new item before multiset check
@@ -171,9 +110,7 @@ class SetPicker extends React.Component {
 						}
 					}
 
-					this.setState({
-						inputValue: ''
-					});
+					resetInputValue();
 
 					onChange({
 						target: {
@@ -188,29 +125,15 @@ class SetPicker extends React.Component {
 		}
 	};
 
-	handleInputChange = (event) => {
-		const {value, maxCount, inputTransform} = this.props;
+	const handleInputChange = (event) => {
 		if (value.length < maxCount) {
-			this.setState({
-				inputValue: inputTransform(event.target.value.trimStart())
-			});
+			setInputValue(inputTransform(event.target.value.trimStart()));
 		} else {
-			this.setState({
-				inputValue: inputTransform('')
-			});
+			resetInputValue();
 		}
 	};
 
-	handleChange = (item) => {
-		const {
-			value,
-			onChange,
-			itemToString,
-			maxCount,
-			multiset,
-			sort
-		} = this.props;
-
+	const handleChange = (item) => {
 		if (value.length >= maxCount) {
 			return;
 		}
@@ -226,9 +149,7 @@ class SetPicker extends React.Component {
 			}
 		}
 
-		this.setState({
-			inputValue: ''
-		});
+		resetInputValue();
 
 		onChange({
 			target: {
@@ -237,24 +158,23 @@ class SetPicker extends React.Component {
 		});
 	};
 
-	stateReducer = (state, changes) => {
+	const stateReducer = (state, changes) => {
 		switch (changes.type) {
 			case Downshift.stateChangeTypes.changeInput:
 				return {
 					...changes,
-					highlightedIndex: null
+					highlightedIndex: -1
 				};
 			default:
 				return changes;
 		}
 	};
 
-	handleStateChange = (changes, state) => {
-		this.highlightedIndex = state.highlightedIndex;
+	const handleStateChange = (changes, state) => {
+		setHighlightedIndex(state.highlightedIndex);
 	};
 
-	handleDelete = (index) => () => {
-		const {value, onChange} = this.props;
+	const handleDelete = (index) => () => {
 		const newValue = value.slice();
 		newValue.splice(index, 1);
 		onChange({
@@ -264,99 +184,84 @@ class SetPicker extends React.Component {
 		});
 	};
 
-	render() {
-		const {
-			value,
-			classes,
-			useSuggestions,
-			itemToString,
-			itemToKey,
-			Chip,
-			chipProps,
-			TextFieldProps,
-			placeholder,
-			readOnly,
-			maxCount
-		} = this.props;
+	const {loading, results: suggestions} = useSuggestions(inputValue);
 
-		const {inputValue} = this.state;
-
-		const full = value.length >= maxCount;
-
-		return (
-			<Downshift
-				inputValue={inputValue}
-				stateReducer={this.stateReducer}
-				selectedItem={value}
-				itemToString={itemToString}
-				itemToKey={itemToKey}
-				onChange={this.handleChange}
-				onStateChange={this.handleStateChange}
-			>
-				{({
-					getInputProps,
-					getItemProps,
-					isOpen,
-					inputValue: inputValue2,
-					selectedItem: selectedItem2,
-					highlightedIndex
-				}) => (
-					<div className={classes.container}>
-						{renderInput({
-							...TextFieldProps,
-							fullWidth: true,
-							classes,
-							inputProps: {
-								readOnly: readOnly || full
-							},
-							InputProps: getInputProps({
-								startAdornment: value.map((item, index) => (
-									<Chip
-										{...(chipProps instanceof Function
-											? chipProps(item, index)
-											: chipProps)}
-										key={itemToString(item)}
-										tabIndex={-1}
-										label={itemToString(item)}
-										className={classes.chip}
-										onDelete={readOnly ? null : this.handleDelete(index)}
-									/>
-								)),
-								onChange: this.handleInputChange,
-								onKeyDown: this.handleKeyDown,
-								placeholder: full ? '' : placeholder
-							})
-						})}
-						{isOpen && !full ? (
-							<Suggestions
-								classes={classes}
-								useSuggestions={useSuggestions}
-								query={inputValue2}
-								getItemProps={getItemProps}
-								highlightedIndex={highlightedIndex}
-								selectedItem={selectedItem2}
-								itemToString={itemToString}
-								itemToKey={itemToKey}
-							/>
-						) : null}
-					</div>
-				)}
-			</Downshift>
-		);
-	}
-}
+	return (
+		<Downshift
+			inputValue={inputValue}
+			stateReducer={stateReducer}
+			selectedItem={value}
+			itemToString={itemToString}
+			itemToKey={itemToKey}
+			onChange={handleChange}
+			onStateChange={handleStateChange}
+		>
+			{({
+				getInputProps,
+				getItemProps,
+				getToggleButtonProps,
+				isOpen,
+				selectedItem: selectedItem2,
+				highlightedIndex
+			}) => (
+				<div className={classes.container}>
+					{renderInput({
+						...TextFieldProps,
+						fullWidth: true,
+						classes,
+						inputProps: {
+							readOnly: readOnly || full
+						},
+						InputProps: getInputProps({
+							startAdornment: value.map((item, index) => (
+								<Chip
+									{...(chipProps instanceof Function
+										? chipProps(item, index)
+										: chipProps)}
+									key={itemToString(item)}
+									tabIndex={-1}
+									label={itemToString(item)}
+									className={classes.chip}
+									onDelete={readOnly ? null : handleDelete(index)}
+								/>
+							)),
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton
+										className={classNames({
+											[classes.hidden]: !suggestions?.length
+										})}
+										{...getToggleButtonProps()}
+									>
+										{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+									</IconButton>
+								</InputAdornment>
+							),
+							onChange: handleInputChange,
+							onKeyDown: handleKeyDown,
+							placeholder: full ? '' : placeholder
+						})
+					})}
+					<Suggestions
+						hide={!isOpen || full}
+						loading={loading}
+						suggestions={suggestions}
+						getItemProps={getItemProps}
+						highlightedIndex={highlightedIndex}
+						selectedItem={selectedItem2}
+						itemToString={itemToString}
+						itemToKey={itemToKey}
+					/>
+				</div>
+			)}
+		</Downshift>
+	);
+};
 
 const styles = (theme) => ({
 	container: {
 		flexGrow: 1,
 		position: 'relative'
-	},
-	paper: {
-		position: 'absolute',
-		zIndex: 1,
-		marginTop: theme.spacing(1),
-		left: 0,
-		right: 0
 	},
 	chip: {
 		margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`
@@ -371,6 +276,9 @@ const styles = (theme) => ({
 	},
 	divider: {
 		height: theme.spacing(2)
+	},
+	hidden: {
+		display: 'none'
 	}
 });
 
