@@ -35,9 +35,30 @@ export const useConsultationsMissingAPrice = makeFilteredCollection(
 	Consultations,
 	{
 		isDone: true,
-		// True > 0
-		// '' >= 0
+		/**
+		 * We filter a superset of the following query:
+		 * {
+		 *   $or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}]
+		 * }.
+		 *
+		 * Executing this query through meteor raises the following error:
+		 * "The Mongo server and the Meteor query disagree on how many documents match your query."
+		 * See https://forums.meteor.com/t/the-mongo-server-and-the-meteor-query-disagree-not-type/55086.
+		 */
 		price: {$not: {$gt: 1}}
+		/**
+		 * The original query must then be run on the superset loaded in minimongo.
+		 *
+		 * Remark:
+		 * --
+		 * Note that:
+		 *   - true >= 1
+		 *   - '' >= 0
+		 *
+		 * So we cannot use price: {$not: {$ge: 0}} which would correspond to
+		 * a supserset with negative prices included (and excluding prices in
+		 * [0, 1)).
+		 */
 	},
 	undefined,
 	'issues.ConsultationsMissingAPrice'
