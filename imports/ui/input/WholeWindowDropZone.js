@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import classNames from 'classnames';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -9,7 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import blue from '@material-ui/core/colors/blue';
 
 const styles = () => ({
-	container: {
+	root: {
 		display: 'flex',
 		zIndex: 999999999,
 		visibility: 'hidden',
@@ -24,93 +24,75 @@ const styles = () => ({
 		width: '100%',
 		height: '100vh',
 		backgroundColor: blue[900]
+	},
+	visible: {
+		visibility: 'visible',
+		opacity: 0.5
 	}
 });
 
-function hide(x) {
-	x.style.visibility = 'hidden';
-	x.style.opacity = 0;
-}
+const useStyles = makeStyles(styles);
 
-function show(x) {
-	x.style.visibility = 'visible';
-	x.style.opacity = 0.5;
-}
+const WholeWindowDropZone = ({callback}) => {
+	const classes = useStyles();
+	const [visible, setVisible] = useState(false);
 
-class WholeWindowDropZone extends React.Component {
-	constructor(props) {
-		super(props);
-		this._listeners = {};
-		this._container = null;
-	}
-
-	componentDidMount() {
-		const {callback} = this.props;
-
+	useEffect(() => {
 		let lastTarget;
 
-		this._listeners.prevent = (e) => e.preventDefault();
+		const prevent = (e) => e.preventDefault();
 
-		this._listeners.handleDragEnter = (e) => {
+		const handleDragEnter = (e) => {
 			e.preventDefault();
 			lastTarget = e.target;
-			show(this._container);
+			setVisible(true);
 		};
 
-		this._listeners.handleDragLeave = (e) => {
+		const handleDragLeave = (e) => {
 			e.preventDefault();
 			if (e.target === lastTarget || e.target === document) {
-				hide(this._container);
+				setVisible(false);
 			}
 		};
 
-		this._listeners.handleDrop = (event) => {
-			event.preventDefault();
-			const data = event.dataTransfer;
+		const handleDrop = (e) => {
+			e.preventDefault();
+			const data = e.dataTransfer;
 			try {
 				callback(data);
 			} catch (error) {
 				console.error(error);
 			}
 
-			hide(this._container);
+			setVisible(false);
 		};
 
-		window.addEventListener('dragover', this._listeners.prevent);
-		window.addEventListener('dragexit', this._listeners.prevent);
-		window.addEventListener('dragenter', this._listeners.handleDragEnter);
-		window.addEventListener('dragleave', this._listeners.handleDragLeave);
-		window.addEventListener('drop', this._listeners.handleDrop);
-	}
+		window.addEventListener('dragover', prevent);
+		window.addEventListener('dragexit', prevent);
+		window.addEventListener('dragenter', handleDragEnter);
+		window.addEventListener('dragleave', handleDragLeave);
+		window.addEventListener('drop', handleDrop);
 
-	componentWillUnmount() {
-		window.removeEventListener('dragover', this._listeners.prevent);
-		window.removeEventListener('dragexit', this._listeners.prevent);
-		window.removeEventListener('dragenter', this._listeners.handleDragEnter);
-		window.removeEventListener('dragleave', this._listeners.handleDragLeave);
-		window.removeEventListener('drop', this._listeners.handleDrop);
-	}
+		return () => {
+			window.removeEventListener('dragover', prevent);
+			window.removeEventListener('dragexit', prevent);
+			window.removeEventListener('dragenter', handleDragEnter);
+			window.removeEventListener('dragleave', handleDragLeave);
+			window.removeEventListener('drop', handleDrop);
+		};
+	}, [callback]);
 
-	render() {
-		const {classes} = this.props;
-
-		return (
-			<div
-				ref={(node) => {
-					this._container = node;
-				}}
-				className={classes.container}
-			>
-				<Fab color="primary">
-					<AddIcon />
-				</Fab>
-			</div>
-		);
-	}
-}
-
-WholeWindowDropZone.propTypes = {
-	classes: PropTypes.object.isRequired
+	return (
+		<div
+			className={classNames(classes.root, {
+				[classes.visible]: visible
+			})}
+		>
+			<Fab color="primary">
+				<AddIcon />
+			</Fab>
+		</div>
+	);
 };
 
-export default withStyles(styles, {withTheme: true})(WholeWindowDropZone);
+export default WholeWindowDropZone;
