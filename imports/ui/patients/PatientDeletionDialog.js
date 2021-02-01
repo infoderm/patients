@@ -20,6 +20,7 @@ import StaticPatientCard from './StaticPatientCard.js';
 
 import {normalized} from '../../api/string.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
@@ -42,6 +43,8 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(patient.lastname || '', getError);
 
+	const isMounted = useIsMounted();
+
 	const deleteThisPatientIfLastNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
@@ -58,7 +61,7 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 					const message = `Patient #${patient._id} deleted.`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
-					onClose();
+					if (isMounted()) onClose();
 				}
 			});
 		}

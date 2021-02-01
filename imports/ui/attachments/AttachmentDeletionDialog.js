@@ -26,6 +26,7 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField.js';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -52,6 +53,8 @@ const AttachmentDeletionDialog = (props) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(attachment.name, getError);
 
+	const isMounted = useIsMounted();
+
 	const detachThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
@@ -65,7 +68,7 @@ const AttachmentDeletionDialog = (props) => {
 					const message = `[Detach] Attachment ${attachment.name} detached with ${detach}(${itemId}).`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
-					onClose();
+					if (isMounted()) onClose();
 				}
 			});
 		}

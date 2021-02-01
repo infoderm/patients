@@ -16,6 +16,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 import PatientPicker from '../patients/PatientPicker.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +33,8 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 
 	const [patients, setPatients] = useState(existingLink ? [existingLink] : []);
 
+	const isMounted = useIsMounted();
+
 	const linkThisDocument = (event) => {
 		event.preventDefault();
 		const documentId = document._id;
@@ -41,7 +44,7 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 				console.error(err);
 			} else {
 				console.log(`Document #${documentId} linked to patient #${patientId}.`);
-				onClose();
+				if (isMounted()) onClose();
 			}
 		});
 	};

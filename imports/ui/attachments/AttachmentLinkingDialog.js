@@ -16,6 +16,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 import PatientPicker from '../patients/PatientPicker.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +33,8 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 
 	const [patient, setPatient] = useState(existingLink ? [existingLink] : []);
 
+	const isMounted = useIsMounted();
+
 	const linkThisAttachment = (event) => {
 		event.preventDefault();
 		const attachmentId = attachment._id;
@@ -43,7 +46,7 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 				console.log(
 					`Attachment #${attachmentId} linked to patient #${patientId}.`
 				);
-				onClose();
+				if (isMounted()) onClose();
 			}
 		});
 	};

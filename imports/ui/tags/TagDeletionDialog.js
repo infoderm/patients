@@ -18,6 +18,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import {capitalized, normalized} from '../../api/string.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
@@ -49,6 +50,8 @@ const TagDeletionDialog = (props) => {
 
 	const Title = capitalized(title);
 
+	const isMounted = useIsMounted();
+
 	const deleteThisTagIfNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
@@ -65,7 +68,7 @@ const TagDeletionDialog = (props) => {
 					const message = `${Title} #${tag._id} deleted (using ${method}).`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
-					onClose();
+					if (isMounted()) onClose();
 				}
 			});
 		}

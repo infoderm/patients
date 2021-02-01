@@ -20,6 +20,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import {normalized} from '../../api/string.js';
 import usePatient from '../patients/usePatient.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
@@ -56,6 +57,8 @@ const ConsultationDeletionDialog = (props) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(patient.lastname, getError);
 
+	const isMounted = useIsMounted();
+
 	const deleteThisConsultationIfPatientsLastNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
@@ -69,7 +72,7 @@ const ConsultationDeletionDialog = (props) => {
 					const message = `Consultation #${consultation._id} deleted.`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
-					onClose();
+					if (isMounted()) onClose();
 				}
 			});
 		}

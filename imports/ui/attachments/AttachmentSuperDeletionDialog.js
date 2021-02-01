@@ -25,6 +25,7 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField.js';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -51,6 +52,8 @@ const AttachmentSuperDeletionDialog = (props) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(attachment.name, getError);
 
+	const isMounted = useIsMounted();
+
 	const trashThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
@@ -65,7 +68,7 @@ const AttachmentSuperDeletionDialog = (props) => {
 					const message = '[Trash] File removed from DB and FS';
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
-					onClose();
+					if (isMounted()) onClose();
 				}
 			});
 		}

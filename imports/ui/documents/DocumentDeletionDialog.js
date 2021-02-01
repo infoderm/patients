@@ -17,6 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -27,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
 const DocumentDeletionDialog = ({open, onClose, document}) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+	const isMounted = useIsMounted();
 
 	const deleteThisDocument = (event) => {
 		event.preventDefault();
@@ -40,7 +43,7 @@ const DocumentDeletionDialog = ({open, onClose, document}) => {
 				const message = `Document #${document._id} deleted.`;
 				console.log(message);
 				enqueueSnackbar(message, {variant: 'success'});
-				onClose();
+				if (isMounted()) onClose();
 			}
 		});
 	};

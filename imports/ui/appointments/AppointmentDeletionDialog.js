@@ -16,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -28,6 +29,8 @@ const AppointmentDeletionDialog = (props) => {
 
 	const classes = useStyles();
 
+	const isMounted = useIsMounted();
+
 	const deleteThisAppointment = (event) => {
 		event.preventDefault();
 		Meteor.call('appointments.remove', appointment._id, (err, _res) => {
@@ -35,7 +38,7 @@ const AppointmentDeletionDialog = (props) => {
 				console.error(err);
 			} else {
 				console.log(`Appointment #${appointment._id} deleted.`);
-				onClose();
+				if (isMounted()) onClose();
 			}
 		});
 	};
