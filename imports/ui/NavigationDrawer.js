@@ -169,8 +169,7 @@ export default function NavigationDrawer({
 				{
 					to: '/stats',
 					icon: <ShowChartIcon />,
-					title: 'Stats',
-					disabled: true
+					title: 'Stats'
 				}
 			]
 		},

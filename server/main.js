@@ -22,6 +22,8 @@ import {Books, books} from '../imports/api/books.js';
 import {Documents, documents} from '../imports/api/documents.js';
 // eslint-disable-next-line import/no-unassigned-import
 import '../imports/api/issues.js';
+// eslint-disable-next-line import/no-unassigned-import
+import '../imports/api/stats.js';
 
 Meteor.startup(() => {
 	// Code to run on server at startup
