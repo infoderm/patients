@@ -47,7 +47,7 @@ import {useDoctorsFind} from '../../api/doctors.js';
 import {useAllergiesFind} from '../../api/allergies.js';
 import {settings} from '../../client/settings.js';
 
-import eidParseBirthdate from '../../client/eidParseBirthdate.js';
+import eidParseBirthdate from '../../api/eidParseBirthdate.js';
 
 import SetPicker from '../input/SetPicker.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
