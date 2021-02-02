@@ -200,24 +200,24 @@ const ConsultationForm = ({consultation}) => {
 
 		if (
 			priceWarning &&
-			!(await confirm((resolve) => [
-				ConfirmationDialog,
-				{
-					onCancel: () => {
-						resolve(false);
-					},
-					onConfirm: () => {
-						resolve(true);
-					},
-					title: 'Confirm',
-					text: 'This consultation has a price of 0.',
-					cancel: 'Cancel',
-					confirm:
+			!(await confirm((resolve) => (
+				<ConfirmationDialog
+					title="Confirm"
+					text="This consultation has a price of 0."
+					cancel="Cancel"
+					confirm={
 						consultationId === undefined
 							? 'Create consultation anyway'
 							: 'Edit consultation anyway'
-				}
-			]))
+					}
+					onCancel={() => {
+						resolve(false);
+					}}
+					onConfirm={() => {
+						resolve(true);
+					}}
+				/>
+			)))
 		)
 			return;
 

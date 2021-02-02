@@ -50,8 +50,12 @@ const ConfirmationDialog = ({
 	);
 };
 
+ConfirmationDialog.defaultProps = {
+	open: false
+};
+
 ConfirmationDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
+	open: PropTypes.bool,
 	onCancel: PropTypes.func.isRequired,
 	onConfirm: PropTypes.func.isRequired,
 	title: PropTypes.string.isRequired,
