@@ -272,16 +272,6 @@ if (Meteor.isServer) {
 		// messages.
 		this.onStop(() => handle.stop());
 	});
-
-	Meteor.publish('consultations.missing-a-price', function () {
-		return Consultations.find({
-			owner: this.userId,
-			isDone: true,
-			// True > 0
-			// '' >= 0
-			price: {$not: {$gt: 1}}
-		});
-	});
 }
 
 function sanitize({
