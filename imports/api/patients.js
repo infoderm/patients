@@ -159,6 +159,12 @@ function sanitize({
 	lastname = lastname && lastname.trim();
 	birthdate = birthdate && birthdate.trim();
 	sex = sex && sex.trim();
+	if (!SEX_ALLOWED.includes(sex))
+		throw new Error(
+			`Wrong sex for patient (${sex}). Must be one of ${JSON.stringify(
+				SEX_ALLOWED
+			)}`
+		);
 	photo = photo && photo.replace(/\n/g, '');
 
 	antecedents = antecedents && antecedents.trim();
