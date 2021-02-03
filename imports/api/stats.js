@@ -13,8 +13,10 @@ export const Count = new Mongo.Collection(countCollection);
 export const countPublicationName = (QueriedCollection, {values}) =>
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;
 
-export const countPublicationKey = (QueriedCollection, {values}) =>
-	`${QueriedCollection._name}-${values.join('/')}`;
+export const countPublicationKey = (QueriedCollection, {values}, query) =>
+	`${QueriedCollection._name}-${values.join('/')}-${JSON.stringify(
+		query ?? {}
+	)}`;
 
 export const getCountOptions = (options) =>
 	typeof options === 'string'
@@ -26,10 +28,10 @@ export const getCountOptions = (options) =>
 		  };
 
 const countPublication = (QueriedCollection, {fields, discretize, values}) =>
-	function () {
+	function (query) {
 		const collection = countCollection;
-		const key = countPublicationKey(QueriedCollection, {values});
-		const selector = {owner: this.userId};
+		const key = countPublicationKey(QueriedCollection, {values}, query);
+		const selector = {...query, owner: this.userId};
 		const options = {
 			fields: Object.fromEntries(fields.map((field) => [field, 1]))
 		};

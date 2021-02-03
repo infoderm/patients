@@ -1,6 +1,6 @@
 import {Patients} from '../../api/patients.js';
-import useHistogram from './useHistogram.js';
+import makeHistogram from './makeHistogram.js';
 
-const useSexStats = () => useHistogram(Patients, ['sex']);
+const useSexStats = makeHistogram(Patients, ['sex']);
 
 export default useSexStats;

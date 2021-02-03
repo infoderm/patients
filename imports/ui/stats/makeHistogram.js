@@ -7,18 +7,18 @@ import {
 	countPublicationKey
 } from '../../api/stats.js';
 
-const useHistogram = (QueriedCollection, values) => {
+const makeHistogram = (QueriedCollection, values) => (query) => {
 	const publication = countPublicationName(QueriedCollection, {values});
-	const key = countPublicationKey(QueriedCollection, {values});
+	const key = countPublicationKey(QueriedCollection, {values}, query);
 	return useTracker(() => {
-		const handle = Meteor.subscribe(publication);
+		const handle = Meteor.subscribe(publication, query);
 		const loading = !handle.ready();
 		const results = loading ? undefined : Count.findOne(key);
 		return {
 			loading,
 			...results
 		};
-	});
+	}, [publication, key]);
 };
 
-export default useHistogram;
+export default makeHistogram;
