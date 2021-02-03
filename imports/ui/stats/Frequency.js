@@ -1,68 +1,36 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
-import {map, sorted} from '@aureooms/js-itertools';
-import {fromkeys} from '@aureooms/js-mapping';
-import {increasing} from '@aureooms/js-compare';
+import {scaleOrdinal} from '@visx/scale';
+
+import blue from '@material-ui/core/colors/blue';
+import pink from '@material-ui/core/colors/pink';
+import purple from '@material-ui/core/colors/purple';
+import grey from '@material-ui/core/colors/grey';
 
 import StackedBarChart from './StackedBarChart.js';
-import {Patients} from '../../api/patients.js';
-import {Consultations} from '../../api/consultations.js';
+import useFrequencyStats from './useFrequencyStats.js';
 
-const Chart = ({width, height, patients, consultations}) => {
-	const id2count = new Map(
-		fromkeys(
-			map((patient) => patient._id, patients),
-			0
-		)
-	);
+const Chart = (props) => {
+	const {loading, count} = useFrequencyStats();
 
-	for (const consultation of consultations) {
-		const id = consultation.patientId;
-		id2count.set(id, id2count.get(id) + 1);
-	}
+	const data = loading
+		? []
+		: Object.entries(count).map(([key, value]) => ({
+				key,
+				female: value.female ?? 0,
+				male: value.male ?? 0,
+				other: value.other ?? 0,
+				none: value[''] ?? 0
+		  }));
 
-	const id2sex = new Map(
-		map((patient) => [patient._id, patient.sex], patients)
-	);
+	const color = scaleOrdinal({
+		domain: ['female', 'male', 'other', 'none'],
+		range: [pink[500], blue[500], purple[500], grey[500]]
+	});
 
-	const count2count = new Map();
+	console.debug(data);
 
-	for (const [id, count] of id2count.entries()) {
-		if (!count2count.has(count)) {
-			count2count.set(
-				count,
-				new Map(fromkeys(['male', 'female', 'other', 'none'], 0))
-			);
-		}
-
-		const sex2count = count2count.get(count);
-		const sex = id2sex.get(id) || 'none';
-		sex2count.set(sex, sex2count.get(sex) + 1);
-	}
-
-	const data = [];
-
-	for (const key of sorted(increasing, count2count.keys())) {
-		const d = {key: `${key}`};
-		const sex2count = count2count.get(key);
-		for (const [sex, count] of sex2count.entries()) {
-			d[sex] = count;
-		}
-
-		data.push(d);
-	}
-
-	return <StackedBarChart width={width} height={height} data={data} />;
+	return <StackedBarChart {...props} data={data} color={color} />;
 };
 
-export default withTracker(() => {
-	Meteor.subscribe('patients');
-	Meteor.subscribe('consultations');
-	return {
-		patients: Patients.find({}, {sort: {lastname: 1}}).fetch(),
-		consultations: Consultations.find({}, {sort: {datetime: -1}}).fetch()
-	};
-})(Chart);
+export default Chart;

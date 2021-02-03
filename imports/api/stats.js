@@ -6,6 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 
 import eidParseBirthdate from './eidParseBirthdate.js';
 import {Patients} from './patients.js';
+import {Consultations} from './consultations.js';
 
 export const countCollection = 'stats.count';
 export const Count = new Mongo.Collection(countCollection);
@@ -119,6 +120,10 @@ const publishCount = (QueriedCollection, options) => {
 	);
 };
 
+export const frequencySexKey = (query) =>
+	`frequencySex-${JSON.stringify(query ?? {})}`;
+export const frequencySexPublication = `${countCollection}.frequencySex`;
+
 if (Meteor.isServer) {
 	publishCount(Patients, 'sex');
 	publishCount(Patients, {
@@ -143,5 +148,81 @@ if (Meteor.isServer) {
 			];
 		},
 		values: ['key', 'sex']
+	});
+
+	Meteor.publish(frequencySexPublication, function (query) {
+		const collection = countCollection;
+		const key = frequencySexKey(query);
+		const selector = {...query, isDone: true, owner: this.userId};
+		const options = {
+			fields: {
+				patientId: 1
+			}
+		};
+		let total = 0;
+		const refs = new Map();
+		const pRefs = new Map();
+		const count = [{}];
+
+		const state = () => ({
+			total,
+			count
+		});
+
+		const inc = (patientId) => {
+			if (!pRefs.has(patientId)) {
+				const entry = {
+					...Patients.findOne(patientId, {fields: {sex: 1}}), // TODO make reactive
+					count: 0
+				};
+				pRefs.set(patientId, entry);
+				if (count[0][entry.sex] === undefined) count[0][entry.sex] = 0;
+				count[0][entry.sex] += 1;
+			}
+
+			const patient = pRefs.get(patientId);
+			count[patient.count][patient.sex] -= 1;
+			patient.count += 1;
+			if (count[patient.count] === undefined) count[patient.count] = {};
+			if (count[patient.count][patient.sex] === undefined)
+				count[patient.count][patient.sex] = 0;
+			count[patient.count][patient.sex] += 1;
+		};
+
+		const dec = (patientId) => {
+			const patient = pRefs.get(patientId);
+			count[patient.count][patient.sex] -= 1;
+			patient.count -= 1;
+			if (count[patient.count] === undefined) count[patient.count] = {};
+			if (count[patient.count][patient.sex] === undefined)
+				count[patient.count][patient.sex] = 0;
+			count[patient.count][patient.sex] += 1;
+		};
+
+		let initializing = true;
+		const handle = Consultations.find(selector, options).observeChanges({
+			added: (_id, {patientId}) => {
+				total += 1;
+				inc(patientId);
+				refs.set(_id, patientId);
+				if (!initializing) {
+					this.changed(collection, key, state());
+				}
+			},
+
+			removed: (_id) => {
+				total -= 1;
+				const patientId = refs.get(_id);
+				dec(patientId);
+				refs.delete(_id);
+				this.changed(collection, key, state());
+			}
+		});
+
+		initializing = false;
+		this.added(collection, key, state());
+		this.ready();
+
+		this.onStop(() => handle.stop());
 	});
 }
