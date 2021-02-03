@@ -28,8 +28,6 @@ const Chart = (props) => {
 		range: [pink[500], blue[500], purple[500], grey[500]]
 	});
 
-	console.debug(data);
-
 	return <StackedBarChart {...props} data={data} color={color} />;
 };
 
