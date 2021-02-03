@@ -7,9 +7,9 @@ import {scaleBand, scaleLinear} from '@visx/scale';
 import {useTooltip, Tooltip} from '@visx/tooltip';
 import {LegendOrdinal} from '@visx/legend';
 import {localPoint} from '@visx/event';
-import {max} from 'd3-array';
 
-import {sum, map} from '@aureooms/js-itertools';
+import {sum, map, max} from '@aureooms/js-itertools';
+import {increasing} from '@aureooms/js-compare';
 
 const percentage = (p) => `${(p * 100).toPrecision(4)}%`;
 
@@ -65,7 +65,7 @@ const StackedBarChart = ({
 		padding: 0.2
 	});
 	const yScale = scaleLinear({
-		domain: [0, max(Object.values(totals))],
+		domain: [0, max(increasing, Object.values(totals)) ?? 1],
 		range: [yMax, 0],
 		nice: true
 	});
