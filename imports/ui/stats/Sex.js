@@ -33,7 +33,7 @@ const Label = ({x, y, children}) => {
 	);
 };
 
-const Chart = ({width, height, ...rest}) => {
+const Chart = ({width, height}) => {
 	const {
 		tooltipData,
 		tooltipLeft,
@@ -95,7 +95,7 @@ const Chart = ({width, height, ...rest}) => {
 		increasing(domain.indexOf(a.sex), domain.indexOf(b.sex));
 
 	return (
-		<div {...rest}>
+		<>
 			<svg width={width} height={height}>
 				<Group top={height / 2} left={width / 2}>
 					<Pie
@@ -138,7 +138,7 @@ const Chart = ({width, height, ...rest}) => {
 					).toPrecision(4)}%)`}
 				</TooltipWithBounds>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -4,7 +4,7 @@ import {Group} from '@visx/group';
 import {Grid} from '@visx/grid';
 import {AxisBottom} from '@visx/axis';
 import {scaleBand, scaleLinear} from '@visx/scale';
-import {useTooltip, Tooltip} from '@visx/tooltip';
+import {useTooltip, TooltipWithBounds} from '@visx/tooltip';
 import {LegendOrdinal} from '@visx/legend';
 import {localPoint} from '@visx/event';
 
@@ -20,8 +20,7 @@ const StackedBarChart = ({
 		top: 40
 	},
 	data,
-	color,
-	...rest
+	color
 }) => {
 	const {
 		tooltipOpen,
@@ -73,7 +72,7 @@ const StackedBarChart = ({
 	let tooltipTimeout;
 
 	return (
-		<div {...rest}>
+		<>
 			<svg width={width} height={height}>
 				<rect
 					x={0}
@@ -169,16 +168,16 @@ const StackedBarChart = ({
 				)}
 			</div>
 			{tooltipOpen && (
-				<Tooltip top={tooltipTop} left={tooltipLeft}>
+				<TooltipWithBounds top={tooltipTop} left={tooltipLeft}>
 					{`${tooltipData.key}: ${
 						tooltipData.bar.data[tooltipData.key]
 					} (${percentage(
 						tooltipData.bar.data[tooltipData.key] /
 							totals[tooltipData.bar.data.key]
 					)} ~ ${percentage(tooltipData.bar.data[tooltipData.key] / total)})`}
-				</Tooltip>
+				</TooltipWithBounds>
 			)}
-		</div>
+		</>
 	);
 };
 
