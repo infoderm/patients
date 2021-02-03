@@ -90,22 +90,30 @@ const defaultState = {
 	dirty: false
 };
 
+const removeUndefined = (object) => {
+	return Object.fromEntries(
+		Object.entries(object).filter(([_key, value]) => value !== undefined)
+	);
+};
+
 const init = (consultation) => ({
 	...defaultState,
-	date: format(consultation.datetime, 'yyyy-MM-dd'),
-	time: format(consultation.datetime, 'HH:mm'),
-	reason: consultation.reason,
-	done: consultation.done,
-	todo: consultation.todo,
-	treatment: consultation.treatment,
-	next: consultation.next,
-	more: consultation.more,
+	...removeUndefined({
+		date: format(consultation.datetime, 'yyyy-MM-dd'),
+		time: format(consultation.datetime, 'HH:mm'),
+		reason: consultation.reason,
+		done: consultation.done,
+		todo: consultation.todo,
+		treatment: consultation.treatment,
+		next: consultation.next,
+		more: consultation.more,
 
-	currency: consultation.currency,
-	payment_method: consultation.payment_method,
-	price: String(consultation.price),
-	paid: String(consultation.paid),
-	book: consultation.book
+		currency: consultation.currency,
+		payment_method: consultation.payment_method,
+		price: String(consultation.price),
+		paid: String(consultation.paid),
+		book: consultation.book
+	})
 });
 
 const reducer = (state, action) => {
