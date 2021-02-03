@@ -6,6 +6,8 @@ import {scaleOrdinal} from '@visx/scale';
 import {useTooltip, TooltipWithBounds} from '@visx/tooltip';
 import {localPoint} from '@visx/event';
 
+import {increasing} from '@aureooms/js-compare';
+
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import purple from '@material-ui/core/colors/purple';
@@ -77,16 +79,31 @@ const Chart = ({width, height, ...rest}) => {
 		}
 	}
 
-	const ordinalColorScale = scaleOrdinal({
-		domain: ['female', 'male', 'other', 'none', loadingText, noDataText],
-		range: [pink[500], blue[500], purple[500], grey[500], grey[500], grey[500]]
-	});
+	const domain = ['female', 'other', 'male', 'none', loadingText, noDataText];
+	const range = [
+		pink[500],
+		purple[500],
+		blue[500],
+		grey[500],
+		grey[500],
+		grey[500]
+	];
+
+	const ordinalColorScale = scaleOrdinal({domain, range});
+
+	const sortArcs = (a, b) =>
+		increasing(domain.indexOf(a.sex), domain.indexOf(b.sex));
 
 	return (
 		<div {...rest}>
 			<svg width={width} height={height}>
 				<Group top={height / 2} left={width / 2}>
-					<Pie data={sex} pieValue={(d) => d.freq} outerRadius={radius}>
+					<Pie
+						data={sex}
+						pieValue={(d) => d.freq}
+						pieSort={sortArcs}
+						outerRadius={radius}
+					>
 						{(pie) => {
 							return pie.arcs.map((arc, index) => {
 								const {sex, label} = arc.data;
