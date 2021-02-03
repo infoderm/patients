@@ -131,7 +131,7 @@ const Chart = ({width, height, ...rest}) => {
 					</Pie>
 				</Group>
 			</svg>
-			{!loading && tooltipOpen && (
+			{!loading && allCount > 0 && tooltipOpen && (
 				<TooltipWithBounds top={tooltipTop} left={tooltipLeft}>
 					{`${tooltipData.sex}: ${tooltipData.count} (${(
 						tooltipData.freq * 100
