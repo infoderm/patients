@@ -18,7 +18,6 @@ import BusinessIcon from '@material-ui/icons/Business';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import TodayIcon from '@material-ui/icons/Today';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
@@ -111,17 +110,9 @@ export default function NavigationDrawer({
 				},
 
 				{
-					to: '/calendar',
+					to: '/calendar/month/current',
 					icon: <TodayIcon />,
 					title: 'Calendar'
-				},
-
-				{
-					// To: "/appointments" ,
-					to: '/calendar/month/current',
-					icon: <AccessTimeIcon />,
-					title: 'Appointments',
-					disabled: false
 				},
 
 				{

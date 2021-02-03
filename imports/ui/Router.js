@@ -32,7 +32,6 @@ const EditConsultationForm = lazy(() =>
 const NewConsultationForm = lazy(() =>
 	import('./consultations/NewConsultationForm.js')
 );
-const Calendar = lazy(() => import('./consultations/Calendar.js'));
 
 const ImportData = lazy(() => import('./data/ImportData.js'));
 
@@ -159,7 +158,6 @@ export default function Router() {
 					component={DocumentVersionsList}
 				/>
 
-				<Route exact path="/calendar" component={Calendar} />
 				<Route
 					exact
 					path="/calendar/day/:day"
