@@ -74,7 +74,10 @@
   "postinstall": {
     "typeface-roboto/index.css": "copy public/typeface-roboto/index.css",
     "typeface-roboto/files/roboto-latin-*.woff": "copy public/typeface-roboto/files/roboto-latin-*.woff",
-    "typeface-roboto/files/roboto-latin-*.woff2": "copy public/typeface-roboto/files/roboto-latin-*.woff2"
+    "typeface-roboto/files/roboto-latin-*.woff2": "copy public/typeface-roboto/files/roboto-latin-*.woff2",
+    "pdfjs-dist/build/pdf.worker.js": "copy public/pdfjs-dist/build/pdf.worker.js",
+    "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/pdf.worker.js.map",
+    "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps"
   },
   "private": true,
   "scripts": {
