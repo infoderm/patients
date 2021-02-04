@@ -48,11 +48,8 @@ const DocumentsFromIdentifierList = lazy(() =>
 );
 const DocumentDetails = lazy(() => import('./documents/DocumentDetails.js'));
 
-const WiredConsultationsList = lazy(() =>
-	import('./consultations/WiredConsultationsList.js')
-);
-const ThirdPartyConsultationsList = lazy(() =>
-	import('./consultations/ThirdPartyConsultationsList.js')
+const PaidConsultationsList = lazy(() =>
+	import('./consultations/PaidConsultationsList.js')
 );
 const SEPAPaymentDetails = lazy(() =>
 	import('./payment/SEPAPaymentDetails.js')
@@ -206,28 +203,28 @@ export default function Router() {
 					component={BookDetails}
 				/>
 
-				<Route exact path="/wires" component={WiredConsultationsList} />
-				<Route exact path="/wires/:year" component={WiredConsultationsList} />
+				<Route exact path="/paid" component={PaidConsultationsList} />
+				<Route exact path="/paid/:year" component={PaidConsultationsList} />
 				<Route
 					exact
-					path="/wires/:year/page/:page"
-					component={WiredConsultationsList}
+					path="/paid/:year/page/:page"
+					component={PaidConsultationsList}
 				/>
 
 				<Route
 					exact
-					path="/third-party"
-					component={ThirdPartyConsultationsList}
+					path="/paid/:payment_method"
+					component={PaidConsultationsList}
 				/>
 				<Route
 					exact
-					path="/third-party/:year"
-					component={ThirdPartyConsultationsList}
+					path="/paid/:payment_method/:year"
+					component={PaidConsultationsList}
 				/>
 				<Route
 					exact
-					path="/third-party/:year/page/:page"
-					component={ThirdPartyConsultationsList}
+					path="/paid/:payment_method/:year/page/:page"
+					component={PaidConsultationsList}
 				/>
 
 				<Route exact path="/unpaid" component={UnpaidConsultationsList} />

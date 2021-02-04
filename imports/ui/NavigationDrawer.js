@@ -21,7 +21,6 @@ import TodayIcon from '@material-ui/icons/Today';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import PaymentIcon from '@material-ui/icons/Payment';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
@@ -29,7 +28,7 @@ import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CropFreeIcon from '@material-ui/icons/CropFree';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
 import {setSetting} from '../client/settings.js';
 
@@ -127,15 +126,9 @@ export default function NavigationDrawer({
 				},
 
 				{
-					to: '/wires',
-					icon: <PaymentIcon />,
-					title: 'Virements'
-				},
-
-				{
-					to: '/third-party',
-					icon: <AccountBalanceWalletIcon />,
-					title: 'Tiers Payant'
+					to: '/paid',
+					icon: <AccountBalanceIcon />,
+					title: 'Paid'
 				},
 
 				{
