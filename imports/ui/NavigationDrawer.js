@@ -33,7 +33,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 import {setSetting} from '../client/settings.js';
 
-const drawerWidthOpen = 240;
+export const drawerWidthOpen = 215;
 
 const useStyles = makeStyles((theme) => ({
 	drawerPaper: {
@@ -93,19 +93,19 @@ export default function NavigationDrawer({
 				{
 					to: '/new/patient',
 					icon: <PersonAddIcon />,
-					title: 'Nouveau Patient'
+					title: 'Nouveau'
 				},
 
 				{
 					to: '/consultations',
 					icon: <FolderSharedIcon />,
-					title: 'Consultations'
+					title: 'Dernière'
 				},
 
 				{
 					to: '/calendar/month/current',
 					icon: <TodayIcon />,
-					title: 'Calendar'
+					title: 'Agenda'
 				},
 
 				{

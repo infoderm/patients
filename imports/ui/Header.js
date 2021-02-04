@@ -16,7 +16,7 @@ import {setSetting} from '../client/settings.js';
 import FullTextSearchInput from './search/FullTextSearchInput.js';
 import AccountsUI from './users/AccountsUI.js';
 
-const drawerWidth = 240;
+import {drawerWidthOpen} from './NavigationDrawer.js';
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
 		})
 	},
 	appBarShift: {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
+		marginLeft: drawerWidthOpen,
+		width: `calc(100% - ${drawerWidthOpen}px)`,
 		transition: theme.transitions.create(['width', 'margin'], {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.enteringScreen
