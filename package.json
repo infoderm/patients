@@ -52,8 +52,8 @@
     "recompose": "^0.30.0",
     "regenerator-runtime": "^0.13.7",
     "sepa-payment-qr-code": "^1.0.0",
+    "typeface-roboto": "^1.1.13",
     "use-debounce": "^5.2.0",
-    "webfontloader": "^1.6.28",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
@@ -63,6 +63,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.0.6",
     "lint-staged": "^10.5.3",
+    "postinstall": "^0.7.0",
     "xo": "^0.37.1"
   },
   "lint-staged": {
@@ -70,10 +71,16 @@
       "npm run lint-and-fix"
     ]
   },
+  "postinstall": {
+    "typeface-roboto/index.css": "copy public/typeface-roboto/index.css",
+    "typeface-roboto/files/roboto-latin-*.woff": "copy public/typeface-roboto/files/roboto-latin-*.woff",
+    "typeface-roboto/files/roboto-latin-*.woff2": "copy public/typeface-roboto/files/roboto-latin-*.woff2"
+  },
   "private": true,
   "scripts": {
     "lint": "xo",
     "lint-and-fix": "npm run lint -- --fix",
+    "postinstall": "postinstall",
     "precommit": "lint-staged",
     "start": "meteor run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
