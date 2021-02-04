@@ -20,7 +20,7 @@ import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import TodayIcon from '@material-ui/icons/Today';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
-import ShowChartIcon from '@material-ui/icons/ShowChart';
+import BarChartIcon from '@material-ui/icons/BarChart';
 import PaymentIcon from '@material-ui/icons/Payment';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import BookIcon from '@material-ui/icons/Book';
@@ -28,7 +28,7 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import CropFreeIcon from '@material-ui/icons/CropFree';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 import {setSetting} from '../client/settings.js';
@@ -146,13 +146,13 @@ export default function NavigationDrawer({
 
 				{
 					to: '/sepa',
-					icon: <AccountBalanceIcon />,
+					icon: <CropFreeIcon />,
 					title: 'SEPA'
 				},
 
 				{
 					to: '/stats',
-					icon: <ShowChartIcon />,
+					icon: <BarChartIcon />,
 					title: 'Stats'
 				}
 			]
