@@ -72,11 +72,11 @@
     ]
   },
   "postinstall": {
-    "typeface-roboto/index.css": "copy public/typeface-roboto/index.css",
-    "typeface-roboto/files/roboto-latin-*.woff": "copy public/typeface-roboto/files/roboto-latin-*.woff",
-    "typeface-roboto/files/roboto-latin-*.woff2": "copy public/typeface-roboto/files/roboto-latin-*.woff2",
-    "pdfjs-dist/build/pdf.worker.js": "copy public/pdfjs-dist/build/pdf.worker.js",
-    "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/pdf.worker.js.map",
+    "typeface-roboto/index.css": "copy public/typeface-roboto/",
+    "typeface-roboto/files/*.woff": "copy public/typeface-roboto/files/",
+    "typeface-roboto/files/*.woff2": "copy public/typeface-roboto/files/",
+    "pdfjs-dist/build/pdf.worker.js": "copy public/pdfjs-dist/build/",
+    "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/",
     "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps"
   },
   "private": true,
