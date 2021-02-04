@@ -28,7 +28,6 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
@@ -104,21 +103,15 @@ export default function NavigationDrawer({
 				},
 
 				{
-					to: '/documents',
-					icon: <LibraryBooksIcon />,
-					title: 'Documents'
-				},
-
-				{
 					to: '/calendar/month/current',
 					icon: <TodayIcon />,
 					title: 'Calendar'
 				},
 
 				{
-					to: '/import',
-					icon: <CloudUploadIcon />,
-					title: 'Import'
+					to: '/documents',
+					icon: <LibraryBooksIcon />,
+					title: 'Documents'
 				}
 			]
 		},

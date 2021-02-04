@@ -1,9 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {makeStyles} from '@material-ui/core/styles';
+import Fab from '@material-ui/core/Fab';
+
 import useDocuments from '../../api/hooks/useDocuments.js';
+import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import StaticDocumentList from './StaticDocumentList.js';
+import HealthOneDocumentImportButton from './HealthOneDocumentImportButton.js';
+
+const styles = (theme) => ({
+	importButton: computeFixedFabStyle({theme, col: 4})
+});
+
+const useStyles = makeStyles(styles);
 
 const DocumentsList = ({match, page, perpage}) => {
 	page =
@@ -23,14 +34,23 @@ const DocumentsList = ({match, page, perpage}) => {
 
 	const {loading, results: documents} = useDocuments({}, options, deps);
 
+	const classes = useStyles();
+
 	return (
-		<StaticDocumentList
-			root="/documents"
-			page={page}
-			perpage={perpage}
-			loading={loading}
-			documents={documents}
-		/>
+		<>
+			<StaticDocumentList
+				root="/documents"
+				page={page}
+				perpage={perpage}
+				loading={loading}
+				documents={documents}
+			/>
+			<HealthOneDocumentImportButton
+				Button={Fab}
+				className={classes.importButton}
+				color="default"
+			/>
+		</>
 	);
 };
 
