@@ -33,8 +33,6 @@ const NewConsultationForm = lazy(() =>
 	import('./consultations/NewConsultationForm.js')
 );
 
-const ImportData = lazy(() => import('./data/ImportData.js'));
-
 const MonthlyPlanner = lazy(() => import('./planner/MonthlyPlanner.js'));
 const WeeklyPlanner = lazy(() => import('./planner/WeeklyPlanner.js'));
 
@@ -194,12 +192,6 @@ export default function Router() {
 					exact
 					path="/new/consultation/for/:id"
 					component={NewConsultationForm}
-				/>
-
-				<Route
-					exact
-					path="/import"
-					render={(props) => <ImportData {...props} />}
 				/>
 
 				<Route exact path="/books" component={BooksList} />
