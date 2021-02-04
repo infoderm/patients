@@ -23,5 +23,4 @@ dynamic-import@0.6.0
 underscore@1.0.10
 ostrio:files
 dburles:factory
-runisland:static-assets
 static-html
