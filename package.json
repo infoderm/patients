@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "emoji-favicon-cli": "^3.0.0",
     "eslint-config-xo-react": "^0.23.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
@@ -81,9 +82,10 @@
   },
   "private": true,
   "scripts": {
+    "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
     "lint": "xo",
     "lint-and-fix": "npm run lint -- --fix",
-    "postinstall": "postinstall",
+    "postinstall": "postinstall && npm run favicon",
     "precommit": "lint-staged",
     "start": "meteor run",
     "test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
