@@ -166,7 +166,7 @@ const parseUint32StrictOrString = (string, base) => {
 };
 
 export const containsNonAlphabetical = (string) =>
-	/[^a-zA-Z :-]/.test(onlyASCII(string));
+	/[^a-zA-Z :'-]/.test(onlyASCII(string));
 
 export {
 	normalizeWhiteSpace,
