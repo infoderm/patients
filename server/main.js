@@ -222,6 +222,10 @@ Meteor.startup(() => {
 	createSimpleIndex(Patients, 'allergies');
 	createSimpleIndex(Documents, 'createdAt');
 
+	createSimpleIndex(Insurances, 'containsNonAlphabetical');
+	createSimpleIndex(Doctors, 'containsNonAlphabetical');
+	createSimpleIndex(Allergies, 'containsNonAlphabetical');
+
 	Patients.rawCollection().createIndex(
 		{
 			owner: 1,
@@ -511,6 +515,14 @@ Meteor.startup(() => {
 	generateTags(Patients, insurances, 'insurances');
 	generateTags(Patients, doctors, 'doctors');
 	generateTags(Patients, allergies, 'allergies');
+
+	// Compute tag fields
+	const computeTagFields = (Collection, tags) =>
+		Collection.find().map(({owner, name}) => tags.add(owner, name));
+
+	computeTagFields(Insurances, insurances);
+	computeTagFields(Doctors, doctors);
+	computeTagFields(Allergies, allergies);
 
 	// eslint-disable-next-line array-callback-return
 	Consultations.find().map(({owner, datetime, book, isDone}) => {

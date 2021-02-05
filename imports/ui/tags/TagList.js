@@ -2,11 +2,11 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
-
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 import Paginator from '../navigation/Paginator.js';
+
+import TagGrid from './TagGrid.js';
 
 const TagList = (props) => {
 	const {useTags, query, sort, page, perpage, Card, root, url} = props;
@@ -28,13 +28,7 @@ const TagList = (props) => {
 		<>
 			<div style={style}>
 				{tags.length > 0 ? (
-					<Grid container spacing={3}>
-						{tags.map((tag) => (
-							<Grid key={tag._id} item xs={12} sm={12} md={12} lg={6} xl={4}>
-								<Card item={tag} />
-							</Grid>
-						))}
-					</Grid>
+					<TagGrid Card={Card} tags={tags} />
 				) : (
 					<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 				)}

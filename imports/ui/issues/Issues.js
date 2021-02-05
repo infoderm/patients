@@ -11,6 +11,7 @@ import UnlinkedDocuments from './UnlinkedDocuments.js';
 import UnparsedDocuments from './UnparsedDocuments.js';
 import MangledDocuments from './MangledDocuments.js';
 import UnattachedUploads from './UnattachedUploads.js';
+import DoctorsWithNonAlphabeticalSymbols from './DoctorsWithNonAlphabeticalSymbols.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -41,6 +42,10 @@ export default function Issues() {
 			<PatientsMissingAGender className={classes.container} />
 			<Typography variant="h3">Patients missing a birthdate</Typography>
 			<PatientsMissingABirthdate className={classes.container} />
+			<Typography variant="h3">
+				Doctors with non alphabetical symbols
+			</Typography>
+			<DoctorsWithNonAlphabeticalSymbols className={classes.container} />
 		</div>
 	);
 }

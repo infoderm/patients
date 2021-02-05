@@ -11,6 +11,12 @@ export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
 export const FIND_OBSERVE_SUFFIX = '.find.observe';
 
+import {containsNonAlphabetical} from './string.js';
+
+const computedFields = (name) => ({
+	containsNonAlphabetical: containsNonAlphabetical(name)
+});
+
 export default function createTagCollection(options) {
 	const {
 		collection,
@@ -63,12 +69,17 @@ export default function createTagCollection(options) {
 
 			name = name.trim();
 
-			const fields = {
+			const selector = {
 				owner,
 				name
 			};
 
-			return Collection.upsert(fields, {$set: fields});
+			const fields = {
+				...computedFields(name),
+				...selector
+			};
+
+			return Collection.upsert(selector, {$set: fields});
 		},
 
 		remove: (owner, name) => {
@@ -77,12 +88,12 @@ export default function createTagCollection(options) {
 
 			name = name.trim();
 
-			const fields = {
+			const selector = {
 				owner,
 				name
 			};
 
-			return Collection.remove(fields);
+			return Collection.remove(selector);
 		},
 
 		init: (Parent) => {
@@ -183,20 +194,21 @@ export default function createTagCollection(options) {
 						{multi: true}
 					);
 
-					const targetfields = {
+					const selector = {
 						owner,
 						name: newname
 					};
 
 					const newfields = {
 						...tag,
-						name: newname
+						...computedFields(newname),
+						...selector
 					};
 
 					delete newfields._id;
 
 					Collection.remove(tagId);
-					return Collection.upsert(targetfields, {$set: newfields});
+					return Collection.upsert(selector, {$set: newfields});
 				},
 
 				[`${collection}.delete`](tagId) {
