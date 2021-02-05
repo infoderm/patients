@@ -33,9 +33,11 @@ const useAttachmentsForPatients = ($in) => {
 
 	const options = {
 		fields: {
-			'meta.createdAt': 1,
-			'meta.attachedToPatients': 1,
-			'meta.attachedToConsultations': 1
+			meta: 1
+			// The following does not work because subsequent subscriptions
+			// will not fetch additional meta subdocument fields.
+			// 'meta.attachedToPatients': 1,
+			// 'meta.attachedToConsultations': 1
 		}
 	};
 

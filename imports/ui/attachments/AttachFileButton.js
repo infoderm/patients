@@ -59,12 +59,17 @@ const AttachFileButton = ({method, item: itemId, children, ...rest}) => {
 		};
 
 		for (const file of files) {
+			const meta = {};
+			if (Number.isInteger(file.lastModified)) {
+				meta.lastModified = new Date(file.lastModified);
+			}
+
 			const upload = Uploads.insert(
 				{
 					file,
 					streams: 'dynamic',
 					chunkSize: 'dynamic',
-					meta: {}
+					meta
 				},
 				false
 			);

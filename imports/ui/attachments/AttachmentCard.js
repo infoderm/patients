@@ -114,6 +114,15 @@ const AttachmentCard = (props) => {
 		target: '_blank'
 	};
 
+	const subheader = [
+		attachment.meta.createdAt &&
+			`A ${format(attachment.meta.createdAt, 'yyyy-MM-dd')}`,
+		attachment.meta.lastModified &&
+			`M ${format(attachment.meta.lastModified, 'yyyy-MM-dd')}`
+	]
+		.filter((x) => Boolean(x))
+		.join('/');
+
 	return (
 		<Card className={classes.card}>
 			<CardHeader
@@ -130,10 +139,7 @@ const AttachmentCard = (props) => {
 					</Avatar>
 				}
 				title={attachment.name}
-				subheader={
-					attachment.meta.createdAt &&
-					`Added on ${format(attachment.meta.createdAt, 'yyyy-MM-dd')}`
-				}
+				subheader={subheader}
 				action={
 					<>
 						<IconButton
