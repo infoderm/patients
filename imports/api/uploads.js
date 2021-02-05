@@ -76,14 +76,14 @@ export const Uploads = new FilesCollection({
 		const _id = upload.versions[versionName].meta?.gridFsFileId;
 		if (_id) {
 			const readStream = gfs.createReadStream({_id});
-			readStream.on('error', (err) => {
+			readStream.on('error', (error) => {
 				// File not found Error handling without Server Crash
 				http.response.statusCode = 404;
 				http.response.end('file not found');
 				console.error(
 					`chunk of file ${upload._id}/${upload.name} was not found`
 				);
-				console.debug({err});
+				console.debug({error});
 			});
 			http.response.setHeader('Cache-Control', this.cacheControl);
 			readStream.pipe(http.response);
@@ -99,9 +99,9 @@ export const Uploads = new FilesCollection({
 			Object.keys(upload.versions).forEach((versionName) => {
 				const _id = upload.versions[versionName].meta?.gridFsFileId;
 				if (_id) {
-					gfs.remove({_id}, (err) => {
-						if (err) {
-							throw err;
+					gfs.remove({_id}, (error) => {
+						if (error) {
+							throw error;
 						}
 					});
 				}
