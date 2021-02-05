@@ -22,7 +22,6 @@ if (Meteor.isServer) {
 export const Uploads = new FilesCollection({
 	collectionName: 'uploads',
 	allowClientCode: true,
-	cacheControl: 'private, max-age=31536000',
 	onBeforeUpload(file) {
 		if (!this.userId) {
 			return 'Must be logged in to upload a file.';
@@ -85,7 +84,10 @@ export const Uploads = new FilesCollection({
 				);
 				console.debug({error});
 			});
-			http.response.setHeader('Cache-Control', this.cacheControl);
+			const cacheControl = upload.public
+				? this.cacheControl
+				: this.cacheControl.replace(/public/, 'private');
+			http.response.setHeader('Cache-Control', cacheControl);
 			readStream.pipe(http.response);
 		}
 
