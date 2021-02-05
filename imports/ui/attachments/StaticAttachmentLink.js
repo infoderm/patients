@@ -2,8 +2,7 @@ import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
 
-const link = (attachment) =>
-	`/${attachment.link().split('/').slice(3).join('/')}`;
+import {link} from '../../api/attachments.js';
 
 const StaticAttachmentLink = ({loading, attachmentId, attachment, ...rest}) => {
 	if (loading) {

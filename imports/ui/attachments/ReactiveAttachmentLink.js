@@ -1,15 +1,15 @@
 import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
-import {Uploads} from '../../api/uploads.js';
+import {Attachments} from '../../api/attachments.js';
 
 import StaticAttachmentLink from './StaticAttachmentLink.js';
 
 const ReactiveAttachmentLink = withTracker(({attachmentId}) => {
 	const _id = attachmentId;
-	const handle = Meteor.subscribe('upload', _id);
+	const handle = Meteor.subscribe('attachment', _id);
 	if (handle.ready()) {
-		const attachment = Uploads.findOne(_id);
+		const attachment = Attachments.findOne(_id);
 		return {loading: false, attachment};
 	}
 

@@ -30,7 +30,7 @@ import AttachmentLinkingDialog from './AttachmentLinkingDialog.js';
 import AttachmentDeletionDialog from './AttachmentDeletionDialog.js';
 import AttachmentSuperDeletionDialog from './AttachmentSuperDeletionDialog.js';
 
-import {Uploads} from '../../api/uploads.js';
+import {link} from '../../api/attachments.js';
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -54,9 +54,6 @@ const useStyles = makeStyles((theme) => ({
 		height: 300
 	}
 }));
-
-const link = (attachment) =>
-	`/${Uploads.link(attachment).split('/').slice(3).join('/')}`;
 
 const initialState = {
 	menu: null,

@@ -16,7 +16,7 @@ import AttachmentsGrid from './AttachmentsGrid.js';
 
 import Loading from '../navigation/Loading.js';
 
-import {Uploads} from '../../api/uploads.js';
+import {Attachments} from '../../api/attachments.js';
 
 const useStyles = makeStyles((theme) => ({
 	group: {
@@ -94,8 +94,7 @@ export default withTracker(({attachmentsInfo}) => {
 	const attachmentsId = attachmentsInfo.map((x) => x.attachmentId);
 	const query = {_id: {$in: attachmentsId}};
 	const options = {sort: {'meta.createdAt': -1}};
-	// const options = undefined;
-	const handle = Meteor.subscribe('uploads', query);
+	const handle = Meteor.subscribe('attachments', query, options);
 
 	if (!handle.ready()) {
 		return {loading: true};
@@ -104,6 +103,6 @@ export default withTracker(({attachmentsInfo}) => {
 	return {
 		loading: false,
 		attachmentsInfo: new Map(attachmentsInfo.map((x) => [x.attachmentId, x])),
-		attachments: Uploads.find(query, options).fetch()
+		attachments: Attachments.find(query, options).fetch()
 	};
 })(AttachmentsGallery);
