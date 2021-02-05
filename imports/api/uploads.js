@@ -77,7 +77,13 @@ export const Uploads = new FilesCollection({
 		if (_id) {
 			const readStream = gfs.createReadStream({_id});
 			readStream.on('error', (err) => {
-				throw err;
+				// File not found Error handling without Server Crash
+				http.response.statusCode = 404;
+				http.response.end('file not found');
+				console.error(
+					`chunk of file ${upload._id}/${upload.name} was not found`
+				);
+				console.debug({err});
 			});
 			http.response.setHeader('Cache-Control', this.cacheControl);
 			readStream.pipe(http.response);
