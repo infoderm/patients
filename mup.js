@@ -20,9 +20,11 @@ module.exports = {
 			serverOnly: true
 		},
 		env: {
-			ROOT_URL: 'https://dermatodoc.local'
+			ROOT_URL: 'https://dermatodoc.local',
+			PORT: 3001
 		},
 		deployCheckWaitTime: 30,
+		deployCheckPort: 443,
 		enableUploadProgressBar: true
 	},
 
