@@ -11,25 +11,25 @@ import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
 	chip: {
+		marginRight: theme.spacing(1),
+		fontWeight: 'bold',
 		maxWidth: '200px'
 	},
 	loading: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#aaa',
-		fontWeight: 'bold',
 		color: '#fff'
 	},
 	found: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#88f',
-		fontWeight: 'bold',
 		color: '#fff'
 	},
 	notfound: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
-		fontWeight: 'bold',
 		color: '#fff'
+	},
+	willBeCreated: {
+		backgroundColor: '#8f8',
+		color: '#222'
 	}
 }));
 
@@ -50,6 +50,8 @@ export default function StaticPatientChip({
 		to = `/patient/${patient._id}`;
 	}
 
+	const willBeCreated = patient._id === '?';
+
 	return (
 		<Chip
 			key={patient._id}
@@ -62,12 +64,22 @@ export default function StaticPatientChip({
 				loading
 					? patient._id
 					: !found
-					? `Not found`
+					? willBeCreated
+						? [patient.lastname, patient.firstname, '(new)']
+								.filter((x) => Boolean(x))
+								.join(' ')
+						: `Not found`
 					: `${patient.lastname} ${patient.firstname}`
 			}
 			className={classNames(
 				classes.chip,
-				loading ? classes.loading : found ? classes.found : classes.notfound,
+				loading
+					? classes.loading
+					: found
+					? classes.found
+					: willBeCreated
+					? classes.willBeCreated
+					: classes.notfound,
 				className
 			)}
 			component={component}

@@ -31,7 +31,7 @@ export const PatientsSearchIndexCache = new Mongo.Collection(
 );
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
-export const SEX_ALLOWED = ['', 'male', 'female', 'other'];
+export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
 
 insurances.init(Patients);
 doctors.init(Patients);
