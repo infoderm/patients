@@ -1,7 +1,7 @@
 module.exports = {
 	servers: {
 		one: {
-			host: 'patients.local',
+			host: 'dermatodoc.local',
 			username: 'meteorapp',
 			pem: '~/.ssh/meteorapp'
 		}
@@ -20,11 +20,9 @@ module.exports = {
 			serverOnly: true
 		},
 		env: {
-			ROOT_URL: 'http://localhost',
-			PORT: 3001
+			ROOT_URL: 'https://dermatodoc.local'
 		},
 		deployCheckWaitTime: 30,
-		deployCheckPort: 80,
 		enableUploadProgressBar: true
 	},
 
