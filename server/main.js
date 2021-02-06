@@ -527,7 +527,7 @@ Meteor.startup(() => {
 	// eslint-disable-next-line array-callback-return
 	Consultations.find().map(({owner, datetime, book, isDone}) => {
 		if (isDone && datetime && book) {
-			books.add(owner, books.name(datetime, book));
+			books.add(owner, books.name(datetime, book), true);
 		}
 	});
 

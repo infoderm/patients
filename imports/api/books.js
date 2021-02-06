@@ -61,11 +61,11 @@ export const books = {
 	cache: {Stats},
 	sanitizeInput,
 	sanitize,
-	add: (owner, name) => {
+	add: (owner, name, verbatim = false) => {
 		check(owner, String);
 		check(name, String);
 
-		name = sanitize(name);
+		name = verbatim ? name : sanitize(name);
 
 		const [fiscalYear, bookNumber] = books.parse(name);
 
