@@ -20,9 +20,11 @@ const MonthlyCalendar = (props) => {
 		...rest
 	} = props;
 
+	const title = props.title ?? `/calendar/month/${year}/${month}`;
+
 	return (
 		<div className={className}>
-			<CalendarHeader prev={prev} next={next} weekly={weekly} />
+			<CalendarHeader title={title} prev={prev} next={next} weekly={weekly} />
 			<MonthlyCalendarData
 				year={year}
 				month={month}
@@ -38,6 +40,7 @@ const MonthlyCalendar = (props) => {
 };
 
 MonthlyCalendar.propTypes = {
+	title: PropTypes.string,
 	year: PropTypes.number.isRequired,
 	month: PropTypes.number.isRequired,
 	events: PropTypes.array.isRequired,

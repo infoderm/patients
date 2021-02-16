@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const WeeklyPlanner = (props) => {
 	const {
+		title,
 		year,
 		week,
 		weekOptions,
@@ -86,6 +87,7 @@ const WeeklyPlanner = (props) => {
 		<>
 			<WeeklyCalendar
 				className={classes.calendar}
+				title={title}
 				year={year}
 				week={week}
 				prev={() => history.push(`/calendar/week/${prevWeek}`)}
@@ -141,9 +143,12 @@ export default withTracker(({match}) => {
 	const nextWeek = dateFormat(someDayOfNextWeek, 'YYYY/ww', weekOptions);
 	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
 
+	const title = dateFormat(someDayOfWeek, "yyyy MMMM / 'Week' w");
+
 	Meteor.subscribe('events.interval', begin, end);
 
 	return {
+		title,
 		year,
 		week,
 		weekOptions,

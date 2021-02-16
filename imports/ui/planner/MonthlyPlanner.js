@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 const MonthlyPlanner = (props) => {
 	const {
+		title,
 		year,
 		month,
 		weekOptions,
@@ -88,6 +89,7 @@ const MonthlyPlanner = (props) => {
 		<>
 			<MonthlyCalendar
 				className={classes.calendar}
+				title={title}
 				year={year}
 				month={month}
 				prev={() => history.push(`/calendar/month/${previousMonth}`)}
@@ -134,9 +136,12 @@ export default withTracker(({match}) => {
 	const firstDayOfPreviousMonth = subMonths(firstDayOfMonth, 1);
 	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
 
+	const title = dateFormat(firstDayOfMonth, 'yyyy MMMM');
+
 	Meteor.subscribe('events.interval', begin, end);
 
 	return {
+		title,
 		year,
 		month,
 		weekOptions,

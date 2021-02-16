@@ -20,9 +20,11 @@ const WeeklyCalendar = (props) => {
 		...rest
 	} = props;
 
+	const title = props.title ?? `/calendar/week/${year}/${week}`;
+
 	return (
 		<div className={className}>
-			<CalendarHeader prev={prev} next={next} monthly={monthly} />
+			<CalendarHeader title={title} prev={prev} next={next} monthly={monthly} />
 			<WeeklyCalendarData
 				year={year}
 				week={week}
@@ -38,6 +40,7 @@ const WeeklyCalendar = (props) => {
 };
 
 WeeklyCalendar.propTypes = {
+	title: PropTypes.string,
 	year: PropTypes.number.isRequired,
 	week: PropTypes.number.isRequired,
 	events: PropTypes.array.isRequired,
