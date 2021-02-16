@@ -410,7 +410,9 @@ CalendarData.propTypes = {
 	events: PropTypes.array.isRequired,
 	maxLines: PropTypes.number.isRequired,
 	lineHeight: PropTypes.any,
-	displayedWeekDays: PropTypes.array
+	displayedWeekDays: PropTypes.array,
+	onSlotClick: PropTypes.func,
+	onEventClick: PropTypes.func
 };
 
 export default CalendarData;
