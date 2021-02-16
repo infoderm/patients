@@ -40,9 +40,8 @@ interface Options {
 export const thumbnail = async (
 	url: string,
 	{page = 1, width, height, type, encoderOptions}: Options,
-) =>
-	// A Promise
-	fetchPDF({url})
+) => {
+	const dataURL = await fetchPDF({url})
 		.then(async (doc) => doc.getPage(page))
 		.then(async (thepage) => {
 			const renderContext = createContext(thepage, width, height);
@@ -54,3 +53,6 @@ export const thumbnail = async (
 			canvas.remove();
 			return dataURL;
 		});
+
+	return dataURL;
+};
