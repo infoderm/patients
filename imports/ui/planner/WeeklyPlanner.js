@@ -143,7 +143,7 @@ export default withTracker(({match}) => {
 	const nextWeek = dateFormat(someDayOfNextWeek, 'YYYY/ww', weekOptions);
 	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
 
-	const title = dateFormat(someDayOfWeek, "yyyy MMMM / 'Week' w");
+	const title = dateFormat(someDayOfWeek, "yyyy MMMM / 'Week' w", weekOptions);
 
 	Meteor.subscribe('events.interval', begin, end);
 
