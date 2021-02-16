@@ -41,6 +41,16 @@ const DayHeader = ({className, day}) => {
 	);
 };
 
+const WeekNumber = ({className, day, weekOptions}) => {
+	return (
+		<div className={className}>
+			<Link to={`/calendar/week/${dateFormat(day, 'yyyy/ww', weekOptions)}`}>
+				{dateFormat(day, 'w', weekOptions)}
+			</Link>
+		</div>
+	);
+};
+
 const useStyles = makeStyles((theme) => ({
 	calendar: {
 		marginBottom: '6em'
@@ -97,6 +107,7 @@ const MonthlyPlanner = (props) => {
 				weekly={() => history.push(`/calendar/week/${firstWeekOfMonth}`)}
 				events={events}
 				DayHeader={DayHeader}
+				WeekNumber={WeekNumber}
 				weekOptions={weekOptions}
 				displayedWeekDays={
 					displayAllWeekDays ? ALL_WEEK_DAYS : displayedWeekDays

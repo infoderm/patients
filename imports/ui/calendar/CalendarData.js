@@ -144,6 +144,7 @@ const CalendarDataGrid = (props) => {
 		events,
 		mores,
 		DayHeader,
+		WeekNumber,
 		weekOptions,
 		onSlotClick
 	} = props;
@@ -153,11 +154,33 @@ const CalendarDataGrid = (props) => {
 	return (
 		<Paper>
 			<div className={classes.header}>
+				{WeekNumber && (
+					<div
+						className={classNames(classes.corner, {
+							[classes.col0]: true,
+							[classes.row0]: true
+						})}
+					/>
+				)}
 				{list(take(days, rowSize)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} {...props} />
 				))}
 			</div>
 			<div className={classes.grid}>
+				{WeekNumber &&
+					days
+						.filter((_, i) => i % rowSize === rowSize - 1)
+						.map((props, key) => (
+							<WeekNumber
+								key={key}
+								className={classNames(classes.weekNumber, {
+									[classes.col0]: true,
+									[classes[`row${props.row}`]]: true
+								})}
+								weekOptions={weekOptions}
+								{...props}
+							/>
+						))}
 				{days.map((props, key) => (
 					<DayBox
 						key={key}
@@ -205,6 +228,11 @@ const CalendarDataGrid = (props) => {
 	);
 };
 
+CalendarDataGrid.propTypes = {
+	DayHeader: PropTypes.elementType,
+	WeekNumber: PropTypes.elementType
+};
+
 const CalendarData = (props) => {
 	const {
 		events,
@@ -213,6 +241,7 @@ const CalendarData = (props) => {
 		lineHeight,
 		maxLines,
 		DayHeader,
+		WeekNumber,
 		weekOptions,
 		displayedWeekDays,
 		onSlotClick,
@@ -237,10 +266,19 @@ const CalendarData = (props) => {
 
 	const headerHeight = 2;
 
+	const displayWeekNumbers = Boolean(WeekNumber);
+
+	const gridTemplateColumns = [
+		displayWeekNumbers && '25px',
+		`repeat(${rowSize}, 1fr)`
+	]
+		.filter((x) => Boolean(x))
+		.join(' ');
+
 	const gridStyles = {
 		header: {
 			display: 'grid',
-			gridTemplateColumns: `repeat(${rowSize}, 1fr)`,
+			gridTemplateColumns,
 			gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
 			lineHeight: `calc(2*${lineHeight})`,
 			backgroundColor: '#aaa',
@@ -255,9 +293,14 @@ const CalendarData = (props) => {
 			gridColumnEnd: 'span 1',
 			gridRowEnd: `span ${headerHeight}`
 		},
+		corner: {
+			backgroundColor: '#fff',
+			gridColumnEnd: 'span 1',
+			gridRowEnd: `span ${headerHeight}`
+		},
 		grid: {
 			display: 'grid',
-			gridTemplateColumns: `repeat(${rowSize}, 1fr)`,
+			gridTemplateColumns,
 			gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
 			backgroundColor: '#aaa',
 			gridGap: '1px'
@@ -266,6 +309,13 @@ const CalendarData = (props) => {
 			padding: '5px 10px',
 			gridColumnEnd: 'span 1',
 			gridRowEnd: 'span 1'
+		},
+		weekNumber: {
+			backgroundColor: '#fff',
+			gridColumnEnd: 'span 1',
+			gridRowEnd: `span ${maxLines}`,
+			paddingTop: '5px',
+			textAlign: 'center'
 		},
 		dayBox: {
 			backgroundColor: '#fff',
@@ -302,9 +352,11 @@ const CalendarData = (props) => {
 		}
 	};
 
+	const colOffset = displayWeekNumbers ? 1 : 0;
+
 	for (const i of range(1, rowSize + 1)) {
 		gridStyles[`col${i}`] = {
-			gridColumnStart: i
+			gridColumnStart: colOffset + i
 		};
 	}
 
@@ -318,13 +370,13 @@ const CalendarData = (props) => {
 		const dayId = dayKey(day);
 		for (const j of range(1, maxLines)) {
 			gridStyles[`day${dayId}slot${j}`] = {
-				gridColumnStart: col,
+				gridColumnStart: colOffset + col,
 				gridRowStart: (row - 1) * maxLines + 1 + j
 			};
 		}
 
 		gridStyles[`day${dayId}more`] = {
-			gridColumnStart: col,
+			gridColumnStart: colOffset + col,
 			gridRowStart: row * maxLines
 		};
 	}
@@ -339,6 +391,7 @@ const CalendarData = (props) => {
 			events={eventProps}
 			mores={moreProps}
 			DayHeader={DayHeader}
+			WeekNumber={WeekNumber}
 			weekOptions={weekOptions}
 			onSlotClick={onSlotClick}
 			onEventClick={onEventClick}
