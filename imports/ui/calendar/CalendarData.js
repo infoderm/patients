@@ -322,7 +322,7 @@ const CalendarData = (props) => {
 			gridColumnEnd: 'span 1',
 			gridRowEnd: `span ${maxLines}`,
 			'&:hover': {
-				backgroundColor: '#ddd'
+				backgroundColor: '#f5f5f5'
 			}
 		},
 		slot: {
