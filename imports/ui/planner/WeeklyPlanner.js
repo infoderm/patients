@@ -10,6 +10,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 
 import isSameDay from 'date-fns/isSameDay';
 import startOfWeek from 'date-fns/startOfWeek';
@@ -47,7 +48,8 @@ const useStyles = makeStyles((theme) => ({
 	calendar: {
 		marginBottom: '6em'
 	},
-	displayAllWeekDaysToggle: computeFixedFabStyle({theme, col: 3})
+	displayAllWeekDaysToggle: computeFixedFabStyle({theme, col: 3}),
+	showCancelledEventsToggle: computeFixedFabStyle({theme, col: 4})
 }));
 
 const WeeklyPlanner = (props) => {
@@ -65,6 +67,7 @@ const WeeklyPlanner = (props) => {
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
 	const [creatingAppointment, setCreatingAppointment] = useState(false);
 	const [displayAllWeekDays, setDisplayAllWeekDays] = useState(false);
+	const [showCancelledEvents, setShowCancelledEvents] = useState(false);
 	const history = useHistory();
 	const {loading, value: displayedWeekDays} = useSetting('displayed-week-days');
 	const classes = useStyles();
@@ -81,7 +84,11 @@ const WeeklyPlanner = (props) => {
 		console.debug(event);
 	};
 
-	console.debug(events);
+	const displayedEvents = events.filter(
+		(x) => showCancelledEvents || !x.isCancelled
+	);
+
+	console.debug({displayedEvents});
 
 	return (
 		<>
@@ -93,7 +100,7 @@ const WeeklyPlanner = (props) => {
 				prev={() => history.push(`/calendar/week/${prevWeek}`)}
 				next={() => history.push(`/calendar/week/${nextWeek}`)}
 				monthly={() => history.push(`/calendar/month/${monthOfWeek}`)}
-				events={events}
+				events={displayedEvents}
 				DayHeader={DayHeader}
 				weekOptions={weekOptions}
 				displayedWeekDays={
@@ -113,6 +120,13 @@ const WeeklyPlanner = (props) => {
 				onClick={() => setDisplayAllWeekDays(!displayAllWeekDays)}
 			>
 				{displayAllWeekDays ? <VisibilityIcon /> : <VisibilityOffIcon />}
+			</Fab>
+			<Fab
+				className={classes.showCancelledEventsToggle}
+				color={showCancelledEvents ? 'primary' : 'default'}
+				onClick={() => setShowCancelledEvents(!showCancelledEvents)}
+			>
+				<AlarmOffIcon />
 			</Fab>
 		</>
 	);

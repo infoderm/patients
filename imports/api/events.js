@@ -15,6 +15,7 @@ if (Meteor.isServer) {
 			owner,
 			title: `${patient.lastname} ${patient.firstname}`,
 			begin: datetime,
+			isCancelled,
 			uri: `/consultation/${_id}`,
 			style: {
 				backgroundColor: isCancelled
