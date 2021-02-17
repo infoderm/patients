@@ -9,7 +9,7 @@ const events = 'events';
 export const Events = new Mongo.Collection(events);
 
 if (Meteor.isServer) {
-	const event = (_id, {owner, patientId, datetime, isDone}) => {
+	const event = (_id, {owner, patientId, datetime, isDone, isCancelled}) => {
 		const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
 		return {
 			owner,
@@ -19,14 +19,12 @@ if (Meteor.isServer) {
 				isDone ? 'consultations' : 'appointments'
 			}`,
 			style: {
-				backgroundColor:
-					isDone === false
-						? '#fff5d6'
-						: patient.noshow > 0
-						? '#ff7961'
-						: '#757de8',
-				color:
-					isDone === false ? 'black' : patient.noshow > 0 ? 'black' : 'black'
+				backgroundColor: isCancelled
+					? '#ff7961'
+					: isDone === false
+					? '#fff5d6'
+					: '#757de8',
+				color: 'black'
 			}
 		};
 	};
@@ -43,7 +41,9 @@ if (Meteor.isServer) {
 			}
 		};
 
-		const options = {fields: {_id: 1, patientId: 1, datetime: 1, isDone: 1}};
+		const options = {
+			fields: {_id: 1, patientId: 1, datetime: 1, isDone: 1, isCancelled: 1}
+		};
 
 		const handle = Consultations.find(query, options).observeChanges({
 			added: (_id, fields) => {
