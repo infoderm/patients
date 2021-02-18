@@ -73,13 +73,15 @@ const ConsultationsOfTheDay = ({day}) => {
 	const cam = count(am);
 	const cpm = count(pm);
 
+	const heading = `${format(
+		day,
+		'iiii do MMMM yyyy'
+	)} (AM: ${cam}, PM: ${cpm})`;
+
 	return (
 		<>
 			<div>
-				<Typography variant="h3">{`${format(
-					day,
-					'iiii do MMMM yyyy'
-				)} (AM: ${cam}, PM: ${cpm})`}</Typography>
+				<Typography variant="h4">{heading}</Typography>
 				{cam === 0 ? (
 					''
 				) : (
