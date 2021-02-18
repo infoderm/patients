@@ -50,10 +50,10 @@ const PatientRecord = (props) => {
 
 	const tabs = [
 		'information',
-		'appointments',
 		'consultations',
 		'documents',
-		'attachments'
+		'attachments',
+		'appointments'
 	];
 
 	return (
