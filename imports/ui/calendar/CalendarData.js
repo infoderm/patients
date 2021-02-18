@@ -306,7 +306,8 @@ const CalendarData = (props) => {
 			gridGap: '1px'
 		},
 		dayHeader: {
-			padding: '5px 10px',
+			margin: '3px auto',
+			textAlign: 'center',
 			gridColumnEnd: 'span 1',
 			gridRowEnd: 'span 1'
 		},
@@ -331,7 +332,7 @@ const CalendarData = (props) => {
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
-			margin: '0 10px'
+			margin: '0 10px 3px 10px'
 		},
 		event: {
 			display: 'inline-block',
@@ -342,12 +343,12 @@ const CalendarData = (props) => {
 			borderRadius: '3px'
 		},
 		more: {
+			margin: '0 auto 0 15px',
 			gridColumnEnd: 'span 1',
 			gridRowEnd: 'span 1',
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
-			paddingLeft: '10px',
 			fontWeight: 'bold'
 		}
 	};
