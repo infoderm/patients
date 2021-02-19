@@ -1,17 +1,15 @@
 import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react';
+import React, {useReducer, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import {Link} from 'react-router-dom';
 import {Prompt} from 'react-router';
 
 import {map, list} from '@aureooms/js-itertools';
 
-import {withStyles} from '@material-ui/core/styles';
-import {withSnackbar} from 'notistack';
+import {makeStyles} from '@material-ui/core/styles';
+import {useSnackbar} from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -39,13 +37,10 @@ import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import startOfToday from 'date-fns/startOfToday';
 
-import odiff from 'odiff';
-import {empty} from '@aureooms/js-cardinality';
-
 import {useInsurancesFind} from '../../api/insurances.js';
 import {useDoctorsFind} from '../../api/doctors.js';
 import {useAllergiesFind} from '../../api/allergies.js';
-import {settings} from '../../client/settings.js';
+import {useSetting} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../api/eidParseBirthdate.js';
 
@@ -63,6 +58,10 @@ import PatientDeletionDialog from './PatientDeletionDialog.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
+	root: {
+		padding: theme.spacing(3),
+		paddingBottom: theme.spacing(5)
+	},
 	photoPlaceHolder: {
 		display: 'inline-flex',
 		fontSize: '4rem',
@@ -86,20 +85,17 @@ const styles = (theme) => ({
 		marginBottom: theme.spacing(2)
 	},
 	formControl: {
-		margin: theme.spacing(1),
 		overflow: 'auto',
 		'& input, & div': {
 			color: 'black !important'
 		}
 	},
-	container: {
-		padding: theme.spacing(3)
+	setPicker: {
+		height: '100%'
 	},
-	details: {},
 	multiline: {
-		margin: theme.spacing(1),
+		height: '100%',
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing(2)}px)`,
 		'& textarea': {
 			color: 'black !important'
 		}
@@ -118,493 +114,555 @@ const styles = (theme) => ({
 	deleteButton: computeFixedFabStyle({theme, col: 4})
 });
 
-class PatientPersonalInformation extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			patient: props.patient,
-			editing: false,
-			dirty: false,
-			deleting: false
-		};
-	}
+const useStyles = makeStyles(styles);
 
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		if (!empty(odiff(this.props.patient, nextProps.patient))) {
-			this.setState({
-				patient: nextProps.patient,
+const initialState = {
+	patient: undefined,
+	editing: false,
+	dirty: false,
+	deleting: false
+};
+
+const reducer = (state, action) => {
+	switch (action.type) {
+		case 'update':
+			return {
+				...state,
+				patient: {...state.patient, [action.key]: action.value},
+				dirty: true
+			};
+		case 'editing':
+			return {...state, editing: true};
+		case 'not-editing':
+			return {...state, editing: false, dirty: false};
+		case 'deleting':
+			return {...state, deleting: true};
+		case 'not-deleting':
+			return {...state, deleting: false};
+		case 'init':
+			return {
+				...state,
 				editing: false,
 				dirty: false,
-				deleting: false
-			});
-		}
+				deleting: false,
+				patient: action.payload
+			};
+		default:
+			throw new Error(`Unknown action type ${action.type}.`);
 	}
+};
 
-	saveDetails = (_event) => {
-		const {
-			patient: {_id},
-			enqueueSnackbar,
-			closeSnackbar
-		} = this.props;
+const PatientPersonalInformation = (props) => {
+	const {value: importantStrings} = useSetting('important-strings');
+
+	const [state, dispatch] = useReducer(reducer, initialState);
+
+	useEffect(() => {
+		dispatch({type: 'init', payload: props.patient});
+	}, [JSON.stringify(props.patient)]);
+
+	const {editing, dirty, deleting, patient} = state;
+	const {loading} = props;
+
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+	const classes = useStyles();
+
+	const saveDetails = (_event) => {
 		const key = enqueueSnackbar('Processing...', {
 			variant: 'info',
 			persist: true
 		});
-		const fields = this.state.patient;
-		Meteor.call('patients.update', _id, fields, (err, _res) => {
+		Meteor.call('patients.update', patient._id, patient, (err, _res) => {
 			closeSnackbar(key);
 			if (err) {
 				console.error(err);
 				enqueueSnackbar(err.message, {variant: 'error'});
 			} else {
-				const message = `Patient #${_id} updated.`;
+				const message = `Patient #${patient._id} updated.`;
 				console.log(message);
 				enqueueSnackbar(message, {variant: 'success'});
-				this.setState({editing: false, dirty: false});
+				dispatch({type: 'not-editing'});
 			}
 		});
 	};
 
-	render() {
-		const {classes, loading, importantStrings} = this.props;
-
-		const {patient, editing, dirty, deleting} = this.state;
-
-		if (loading) {
-			return <div>Loading...</div>;
-		}
-
-		if (!patient) {
-			return <div>Patient not found.</div>;
-		}
-
-		const placeholder = !editing
-			? 'To edit this field you first need to click the edit button'
-			: 'Write some information here';
-
-		const minRows = 8;
-		const maxRows = 100;
-
-		const update = (key, f = (v) => v) => (e) => {
-			this.setState({
-				patient: {
-					...patient,
-					[key]: f(e.target.value)
-				},
-				dirty: true
-			});
-		};
-
-		const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
-
-		const _birthdate = eidParseBirthdate(patient.birthdate);
-		const thisMorning = startOfToday();
-		const ageInterval = {start: _birthdate, end: thisMorning};
-		const detailedAge = formatDuration(intervalToDuration(ageInterval), {
-			delimiter: ','
-		});
-		const shortAge = detailedAge.split(',')[0];
-		const displayedAge =
-			(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
-
-		return (
-			<Paper>
-				<Prompt
-					when={dirty}
-					message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
-				/>
-				<Grid
-					container
-					className={classNames(classes.container, classes.details)}
-				>
-					<Grid item sm={4} md={2} className={classes.left}>
-						{patient.photo ? (
-							<img
-								className={classes.photo}
-								src={`data:image/png;base64,${patient.photo}`}
-								title={`${patient.firstname} ${patient.lastname}`}
-							/>
-						) : (
-							<div className={classes.photoPlaceHolder}>
-								{patient.firstname ? patient.firstname[0] : '?'}
-								{patient.lastname ? patient.lastname[0] : '?'}
-							</div>
-						)}
-						{!patient.birthdate ? (
-							''
-						) : (
-							<Typography variant="h5">
-								{dateFormat(_birthdate, 'd MMM yyyy')}
-							</Typography>
-						)}
-						{!patient.birthdate ? (
-							''
-						) : (
-							<Typography variant="h5">{displayedAge}</Typography>
-						)}
-						{!patient.noshow ? (
-							''
-						) : (
-							<Typography className={classes.problem} variant="h4">
-								PVPP = {patient.noshow}
-							</Typography>
-						)}
-					</Grid>
-					<Grid item sm={8} md={10}>
-						<form>
-							<Grid container>
-								<Grid item xs={2}>
-									<TextField
-										className={classes.formControl}
-										label="NISS"
-										value={patient.niss}
-										inputProps={{
-											readOnly: !editing
-										}}
-										margin="normal"
-										onChange={update('niss')}
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										className={classes.formControl}
-										label="Last name"
-										value={patient.lastname}
-										inputProps={{
-											readOnly: !editing
-										}}
-										margin="normal"
-										onChange={update('lastname')}
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										className={classes.formControl}
-										label="First name"
-										value={patient.firstname}
-										inputProps={{
-											readOnly: !editing
-										}}
-										margin="normal"
-										onChange={update('firstname')}
-									/>
-								</Grid>
-								<Grid item xs={2}>
-									<FormControl className={classes.formControl}>
-										<InputLabel htmlFor="sex">Sex</InputLabel>
-										<Select
-											value={patient.sex || ''}
-											inputProps={{
-												readOnly: !editing,
-												name: 'sex',
-												id: 'sex'
-											}}
-											onChange={update('sex')}
-										>
-											<MenuItem value="">
-												<em>None</em>
-											</MenuItem>
-											<MenuItem value="female">Female</MenuItem>
-											<MenuItem value="male">Male</MenuItem>
-											<MenuItem value="other">Other</MenuItem>
-										</Select>
-									</FormControl>
-								</Grid>
-								<Grid item xs={2}>
-									<TextField
-										className={classes.formControl}
-										type="date"
-										disabled={!editing}
-										label="Birth date"
-										InputLabelProps={{
-											shrink: true
-										}}
-										value={dateFormat(_birthdate, 'yyyy-MM-dd')}
-										margin="normal"
-										onChange={update('birthdate')}
-									/>
-								</Grid>
-								<Grid item xs={12} md={6}>
-									<ColorizedTextarea
-										readOnly={!editing}
-										label="Antécédents"
-										placeholder={placeholder}
-										rows={minRows}
-										rowsMax={maxRows}
-										className={classes.multiline}
-										value={patient.antecedents}
-										margin="normal"
-										dict={importantStrings}
-										onChange={update('antecedents')}
-									/>
-								</Grid>
-								<Grid item xs={12} md={6}>
-									<ColorizedTextarea
-										readOnly={!editing}
-										label="Traitement en cours"
-										placeholder={placeholder}
-										rows={minRows}
-										rowsMax={maxRows}
-										className={classes.multiline}
-										value={patient.ongoing}
-										margin="normal"
-										dict={importantStrings}
-										onChange={update('ongoing')}
-									/>
-								</Grid>
-
-								<Grid item xs={12} md={12}>
-									<SetPicker
-										itemToKey={(x) => x._id}
-										itemToString={(x) => x.name}
-										createNewItem={(name) => ({name})}
-										useSuggestions={makeSubstringSuggestions(
-											useAllergiesFind,
-											patient.allergies
-										)}
-										readOnly={!editing}
-										TextFieldProps={{
-											label: 'Allergies',
-											margin: 'normal'
-										}}
-										Chip={AllergyChip}
-										chipProps={{
-											avatar: <Avatar>Al</Avatar>
-										}}
-										value={list(
-											map((x) => ({name: x}), patient.allergies || [])
-										)}
-										placeholder={placeholder}
-										onChange={updateList('allergies')}
-									/>
-								</Grid>
-
-								<Grid item xs={12} md={6}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: !editing
-										}}
-										label="Rue et Numéro"
-										placeholder={placeholder}
-										rows={1}
-										className={classes.multiline}
-										value={patient.streetandnumber}
-										margin="normal"
-										onChange={update('streetandnumber')}
-									/>
-								</Grid>
-								<Grid item xs={12} md={2}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: !editing
-										}}
-										label="Code Postal"
-										placeholder={placeholder}
-										rows={1}
-										className={classes.multiline}
-										value={patient.zip}
-										margin="normal"
-										onChange={update('zip')}
-									/>
-								</Grid>
-								<Grid item xs={12} md={4}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: !editing
-										}}
-										label="Commune"
-										placeholder={placeholder}
-										rows={1}
-										className={classes.multiline}
-										value={patient.municipality}
-										margin="normal"
-										onChange={update('municipality')}
-									/>
-								</Grid>
-
-								<Grid item xs={12} md={4}>
-									<TextField
-										multiline
-										inputProps={{
-											readOnly: !editing
-										}}
-										label="Numéro de téléphone"
-										placeholder={placeholder}
-										rows={1}
-										className={classes.multiline}
-										value={patient.phone}
-										margin="normal"
-										onChange={update('phone')}
-									/>
-								</Grid>
-								<Grid item xs={12} md={4}>
-									<SetPicker
-										itemToKey={(x) => x._id}
-										itemToString={(x) => x.name}
-										createNewItem={(name) => ({name})}
-										useSuggestions={makeSubstringSuggestions(
-											useDoctorsFind,
-											patient.doctors
-										)}
-										readOnly={!editing}
-										TextFieldProps={{
-											label: 'Médecin Traitant',
-											margin: 'normal'
-										}}
-										Chip={DoctorChip}
-										chipProps={{
-											avatar: <Avatar>Dr</Avatar>
-										}}
-										value={list(map((x) => ({name: x}), patient.doctors || []))}
-										placeholder={placeholder}
-										onChange={updateList('doctors')}
-									/>
-								</Grid>
-								<Grid item xs={12} md={4}>
-									<SetPicker
-										itemToKey={(x) => x._id}
-										itemToString={(x) => x.name}
-										createNewItem={(name) => ({name})}
-										useSuggestions={makeSubstringSuggestions(
-											useInsurancesFind,
-											patient.insurances
-										)}
-										readOnly={!editing}
-										TextFieldProps={{
-											label: 'Mutuelle',
-											margin: 'normal'
-										}}
-										Chip={InsuranceChip}
-										chipProps={{
-											avatar: <Avatar>In</Avatar>
-										}}
-										value={list(
-											map((x) => ({name: x}), patient.insurances || [])
-										)}
-										placeholder={placeholder}
-										onChange={updateList('insurances')}
-									/>
-								</Grid>
-
-								<Grid item xs={9}>
-									<ColorizedTextarea
-										readOnly={!editing}
-										label="About"
-										placeholder={placeholder}
-										rows={2}
-										rowsMax={maxRows}
-										className={classes.multiline}
-										value={patient.about}
-										margin="normal"
-										dict={importantStrings}
-										onChange={update('about')}
-									/>
-								</Grid>
-								<Grid item xs={3}>
-									<TextField
-										inputProps={{
-											readOnly: !editing
-										}}
-										label="PVPP"
-										placeholder={placeholder}
-										className={classes.multiline}
-										value={patient.noshow || 0}
-										margin="normal"
-										onChange={update('noshow', (v) =>
-											v === '' ? 0 : Number.parseInt(v, 10)
-										)}
-									/>
-								</Grid>
-							</Grid>
-						</form>
-					</Grid>
-				</Grid>
-				{editing ? (
-					<>
-						<Fab
-							className={classes.saveButton}
-							color="primary"
-							disabled={!dirty}
-							onClick={this.saveDetails}
-						>
-							<SaveIcon />
-						</Fab>
-						<Fab
-							className={classes.undoButton}
-							color={dirty ? 'secondary' : 'default'}
-							onClick={() =>
-								this.setState({
-									editing: false,
-									dirty: false,
-									patient: this.props.patient
-								})
-							}
-						>
-							<UndoIcon />
-						</Fab>
-					</>
-				) : (
-					<>
-						<Fab
-							className={classes.editButton}
-							color="default"
-							onClick={() => this.setState({editing: true})}
-						>
-							<EditIcon />
-						</Fab>
-						<AttachFileButton
-							Button={Fab}
-							className={classes.attachButton}
-							color="default"
-							method="patients.attach"
-							item={patient._id}
-						>
-							<AttachFileIcon />
-						</AttachFileButton>
-						<Fab
-							className={classes.consultationButton}
-							color="primary"
-							component={Link}
-							to={`/new/consultation/for/${patient._id}`}
-						>
-							<AddCommentIcon />
-						</Fab>
-						<Fab
-							className={classes.deleteButton}
-							color="secondary"
-							onClick={() => this.setState({deleting: true})}
-						>
-							<DeleteIcon />
-						</Fab>
-					</>
-				)}
-				<PatientDeletionDialog
-					open={deleting}
-					patient={this.props.patient}
-					onClose={() => this.setState({deleting: false})}
-				/>
-			</Paper>
-		);
+	if (loading) {
+		return <div>Loading...</div>;
 	}
-}
+
+	if (!patient) {
+		return <div>Patient not found.</div>;
+	}
+
+	const placeholder = !editing
+		? 'To edit this field you first need to click the edit button'
+		: 'Write some information here';
+
+	const minRows = 8;
+	const maxRows = 100;
+
+	const update = (key, f = (v) => v) => (e) => {
+		dispatch({type: 'update', key, value: f(e.target.value)});
+	};
+
+	const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
+
+	const _birthdate = eidParseBirthdate(patient.birthdate);
+	const thisMorning = startOfToday();
+	const ageInterval = {start: _birthdate, end: thisMorning};
+	const detailedAge = formatDuration(intervalToDuration(ageInterval), {
+		delimiter: ','
+	});
+	const shortAge = detailedAge.split(',')[0];
+	const displayedAge =
+		(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
+
+	const totalNoShow = patient.noshow;
+
+	return (
+		<Paper className={classes.root}>
+			<Prompt
+				when={dirty}
+				message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
+			/>
+			<Grid container spacing={3}>
+				<Grid item sm={4} md={2} className={classes.left}>
+					{patient.photo ? (
+						<img
+							className={classes.photo}
+							src={`data:image/png;base64,${patient.photo}`}
+							title={`${patient.firstname} ${patient.lastname}`}
+						/>
+					) : (
+						<div className={classes.photoPlaceHolder}>
+							{patient.firstname ? patient.firstname[0] : '?'}
+							{patient.lastname ? patient.lastname[0] : '?'}
+						</div>
+					)}
+					{!patient.birthdate ? (
+						''
+					) : (
+						<Typography variant="h5">
+							{dateFormat(_birthdate, 'd MMM yyyy')}
+						</Typography>
+					)}
+					{!patient.birthdate ? (
+						''
+					) : (
+						<Typography variant="h5">{displayedAge}</Typography>
+					)}
+					{!totalNoShow ? (
+						''
+					) : (
+						<Typography className={classes.problem} variant="h4">
+							PVPP = {totalNoShow}
+						</Typography>
+					)}
+				</Grid>
+				<Grid item sm={8} md={10}>
+					<form>
+						<Grid container spacing={3}>
+							<Grid item xs={2}>
+								<TextField
+									fullWidth
+									className={classes.formControl}
+									label="NISS"
+									value={patient.niss}
+									inputProps={{
+										readOnly: !editing
+									}}
+									margin="normal"
+									onChange={update('niss')}
+								/>
+							</Grid>
+							<Grid item xs={3}>
+								<TextField
+									fullWidth
+									className={classes.formControl}
+									label="Last name"
+									value={patient.lastname}
+									inputProps={{
+										readOnly: !editing
+									}}
+									margin="normal"
+									onChange={update('lastname')}
+								/>
+							</Grid>
+							<Grid item xs={3}>
+								<TextField
+									fullWidth
+									className={classes.formControl}
+									label="First name"
+									value={patient.firstname}
+									inputProps={{
+										readOnly: !editing
+									}}
+									margin="normal"
+									onChange={update('firstname')}
+								/>
+							</Grid>
+							<Grid item xs={2}>
+								<FormControl
+									fullWidth
+									margin="normal"
+									className={classes.formControl}
+								>
+									<InputLabel htmlFor="sex">Sex</InputLabel>
+									<Select
+										value={patient.sex || ''}
+										inputProps={{
+											readOnly: !editing,
+											name: 'sex',
+											id: 'sex'
+										}}
+										onChange={update('sex')}
+									>
+										<MenuItem value="">
+											<em>None</em>
+										</MenuItem>
+										<MenuItem value="female">Female</MenuItem>
+										<MenuItem value="male">Male</MenuItem>
+										<MenuItem value="other">Other</MenuItem>
+									</Select>
+								</FormControl>
+							</Grid>
+							<Grid item xs={2}>
+								<TextField
+									fullWidth
+									className={classes.formControl}
+									type="date"
+									disabled={!editing}
+									label="Birth date"
+									InputLabelProps={{
+										shrink: true
+									}}
+									value={dateFormat(_birthdate, 'yyyy-MM-dd')}
+									margin="normal"
+									onChange={update('birthdate')}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<ColorizedTextarea
+									fullWidth
+									readOnly={!editing}
+									label="Antécédents"
+									placeholder={placeholder}
+									rows={minRows}
+									rowsMax={maxRows}
+									className={classes.multiline}
+									InputProps={{
+										style: {
+											height: '100%',
+											alignItems: 'start'
+										}
+									}}
+									value={patient.antecedents}
+									margin="normal"
+									dict={importantStrings}
+									onChange={update('antecedents')}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<ColorizedTextarea
+									fullWidth
+									readOnly={!editing}
+									label="Traitement en cours"
+									placeholder={placeholder}
+									rows={minRows}
+									rowsMax={maxRows}
+									className={classes.multiline}
+									InputProps={{
+										style: {
+											height: '100%',
+											alignItems: 'start'
+										}
+									}}
+									value={patient.ongoing}
+									margin="normal"
+									dict={importantStrings}
+									onChange={update('ongoing')}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={12}>
+								<SetPicker
+									withoutToggle
+									itemToKey={(x) => x._id}
+									itemToString={(x) => x.name}
+									createNewItem={(name) => ({name})}
+									useSuggestions={makeSubstringSuggestions(
+										useAllergiesFind,
+										patient.allergies
+									)}
+									readOnly={!editing}
+									TextFieldProps={{
+										label: 'Allergies',
+										margin: 'normal'
+									}}
+									Chip={AllergyChip}
+									chipProps={{
+										avatar: <Avatar>Al</Avatar>
+									}}
+									value={list(map((x) => ({name: x}), patient.allergies || []))}
+									placeholder={placeholder}
+									onChange={updateList('allergies')}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
+								<TextField
+									fullWidth
+									multiline
+									inputProps={{
+										readOnly: !editing
+									}}
+									label="Rue et Numéro"
+									placeholder={placeholder}
+									rows={1}
+									className={classes.multiline}
+									value={patient.streetandnumber}
+									margin="normal"
+									onChange={update('streetandnumber')}
+								/>
+							</Grid>
+							<Grid item xs={12} md={2}>
+								<TextField
+									fullWidth
+									multiline
+									inputProps={{
+										readOnly: !editing
+									}}
+									label="Code Postal"
+									placeholder={placeholder}
+									rows={1}
+									className={classes.multiline}
+									value={patient.zip}
+									margin="normal"
+									onChange={update('zip')}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<TextField
+									fullWidth
+									multiline
+									inputProps={{
+										readOnly: !editing
+									}}
+									label="Commune"
+									placeholder={placeholder}
+									rows={1}
+									className={classes.multiline}
+									value={patient.municipality}
+									margin="normal"
+									onChange={update('municipality')}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={4}>
+								<TextField
+									fullWidth
+									multiline
+									InputProps={{
+										style: {
+											height: '100%',
+											alignItems: 'start'
+										},
+										inputProps: {
+											readOnly: !editing
+										}
+									}}
+									label="Numéro de téléphone"
+									placeholder={placeholder}
+									rows={1}
+									className={classes.multiline}
+									value={patient.phone}
+									margin="normal"
+									onChange={update('phone')}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<SetPicker
+									withoutToggle
+									className={classes.setPicker}
+									itemToKey={(x) => x._id}
+									itemToString={(x) => x.name}
+									createNewItem={(name) => ({name})}
+									useSuggestions={makeSubstringSuggestions(
+										useDoctorsFind,
+										patient.doctors
+									)}
+									readOnly={!editing}
+									TextFieldProps={{
+										fullWidth: true,
+										label: 'Médecin Traitant',
+										margin: 'normal',
+										style: {
+											height: '100%'
+										}
+									}}
+									InputProps={{
+										style: {
+											height: '100%'
+										}
+									}}
+									Chip={DoctorChip}
+									chipProps={{
+										avatar: <Avatar>Dr</Avatar>
+									}}
+									value={list(map((x) => ({name: x}), patient.doctors || []))}
+									placeholder={placeholder}
+									onChange={updateList('doctors')}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<SetPicker
+									withoutToggle
+									className={classes.setPicker}
+									itemToKey={(x) => x._id}
+									itemToString={(x) => x.name}
+									createNewItem={(name) => ({name})}
+									useSuggestions={makeSubstringSuggestions(
+										useInsurancesFind,
+										patient.insurances
+									)}
+									readOnly={!editing}
+									TextFieldProps={{
+										fullWidth: true,
+										label: 'Mutuelle',
+										margin: 'normal',
+										style: {
+											height: '100%'
+										}
+									}}
+									InputProps={{
+										style: {
+											height: '100%'
+										}
+									}}
+									Chip={InsuranceChip}
+									chipProps={{
+										avatar: <Avatar>In</Avatar>
+									}}
+									value={list(
+										map((x) => ({name: x}), patient.insurances || [])
+									)}
+									placeholder={placeholder}
+									onChange={updateList('insurances')}
+								/>
+							</Grid>
+
+							<Grid item xs={9}>
+								<ColorizedTextarea
+									fullWidth
+									readOnly={!editing}
+									label="About"
+									placeholder={placeholder}
+									rows={2}
+									rowsMax={maxRows}
+									className={classes.multiline}
+									InputProps={{
+										style: {
+											height: '100%',
+											alignItems: 'start'
+										}
+									}}
+									value={patient.about}
+									margin="normal"
+									dict={importantStrings}
+									onChange={update('about')}
+								/>
+							</Grid>
+							<Grid item xs={3}>
+								<TextField
+									InputProps={{
+										style: {
+											height: '100%',
+											alignItems: 'start'
+										},
+										inputProps: {
+											readOnly: !editing
+										}
+									}}
+									label="PVPP (sans RDV)"
+									placeholder={placeholder}
+									className={classes.multiline}
+									value={patient.noshow || 0}
+									margin="normal"
+									onChange={update('noshow', (v) =>
+										v === '' ? 0 : Number.parseInt(v, 10)
+									)}
+								/>
+							</Grid>
+						</Grid>
+					</form>
+				</Grid>
+			</Grid>
+			{editing ? (
+				<>
+					<Fab
+						className={classes.saveButton}
+						color="primary"
+						disabled={!dirty}
+						onClick={saveDetails}
+					>
+						<SaveIcon />
+					</Fab>
+					<Fab
+						className={classes.undoButton}
+						color={dirty ? 'secondary' : 'default'}
+						onClick={() => dispatch({type: 'init', payload: props.patient})}
+					>
+						<UndoIcon />
+					</Fab>
+				</>
+			) : (
+				<>
+					<Fab
+						className={classes.editButton}
+						color="default"
+						onClick={() => dispatch({type: 'editing'})}
+					>
+						<EditIcon />
+					</Fab>
+					<AttachFileButton
+						Button={Fab}
+						className={classes.attachButton}
+						color="default"
+						method="patients.attach"
+						item={patient._id}
+					>
+						<AttachFileIcon />
+					</AttachFileButton>
+					<Fab
+						className={classes.consultationButton}
+						color="primary"
+						component={Link}
+						to={`/new/consultation/for/${patient._id}`}
+					>
+						<AddCommentIcon />
+					</Fab>
+					<Fab
+						className={classes.deleteButton}
+						color="secondary"
+						onClick={() => dispatch({type: 'deleting'})}
+					>
+						<DeleteIcon />
+					</Fab>
+				</>
+			)}
+			<PatientDeletionDialog
+				open={deleting}
+				patient={props.patient}
+				onClose={() => dispatch({type: 'not-deleting'})}
+			/>
+		</Paper>
+	);
+};
 
 PatientPersonalInformation.propTypes = {
-	classes: PropTypes.object.isRequired,
+	loading: PropTypes.bool,
 	patient: PropTypes.object.isRequired
 };
 
-export default withTracker(() => {
-	settings.subscribe('important-strings');
-
-	const importantStrings = settings.get('important-strings');
-	return {
-		importantStrings
-	};
-})(
-	withStyles(styles, {withTheme: true})(
-		withSnackbar(PatientPersonalInformation)
-	)
-);
+export default PatientPersonalInformation;
