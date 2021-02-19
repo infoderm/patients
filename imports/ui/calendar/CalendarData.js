@@ -118,12 +118,29 @@ function* generateMoreProps(occupancy, begin, end, maxLines) {
 	}
 }
 
+const eventBackgroundColor = ({calendar, isCancelled}) => {
+	if (isCancelled) return '#ff7961';
+	switch (calendar) {
+		case 'appointments':
+			return '#fff5d6';
+		case 'consultations':
+			return '#757de8';
+		default:
+			return '#eee';
+	}
+};
+
 const EventFragment = (props) => {
 	const {className, event, eventProps} = props;
 
+	const style = {
+		backgroundColor: eventBackgroundColor(event),
+		color: '#111'
+	};
+
 	return (
 		<div className={className}>
-			<Link to={event.uri} style={event.style} {...eventProps}>
+			<Link to={event.uri} style={style} {...eventProps}>
 				{dateFormat(event.begin, 'HH:mm')} {event.title}
 			</Link>
 		</div>

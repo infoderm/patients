@@ -13,18 +13,11 @@ if (Meteor.isServer) {
 		const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
 		return {
 			owner,
+			calendar: isDone ? 'consultations' : 'appointments',
 			title: `${patient.lastname} ${patient.firstname}`,
 			begin: datetime,
 			isCancelled,
-			uri: `/consultation/${_id}`,
-			style: {
-				backgroundColor: isCancelled
-					? '#ff7961'
-					: isDone === false
-					? '#fff5d6'
-					: '#757de8',
-				color: 'black'
-			}
+			uri: `/consultation/${_id}`
 		};
 	};
 
