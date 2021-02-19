@@ -77,16 +77,16 @@ if (Meteor.isServer) {
 			}
 		};
 
-		const handle = Consultations.find(query, options).observeChanges({
-			added: (_id, fields) => {
+		const handle = Consultations.find(query, options).observe({
+			added: ({_id, ...fields}) => {
 				this.added(events, _id, event(_id, fields));
 			},
 
-			changed: (_id, fields) => {
+			changed: ({_id, ...fields}) => {
 				this.changed(events, _id, event(_id, fields));
 			},
 
-			removed: (_id) => {
+			removed: ({_id}) => {
 				this.removed(events, _id);
 			}
 		});
