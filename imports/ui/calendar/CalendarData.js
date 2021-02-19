@@ -11,6 +11,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import addDays from 'date-fns/addDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
+import startOfToday from 'date-fns/startOfToday';
 import dateFormat from 'date-fns/format';
 
 import {list, take, range, enumerate} from '@aureooms/js-itertools';
@@ -118,11 +119,13 @@ function* generateMoreProps(occupancy, begin, end, maxLines) {
 	}
 }
 
-const eventBackgroundColor = ({calendar, isCancelled}) => {
+const eventBackgroundColor = ({begin, calendar, isCancelled}) => {
 	if (isCancelled) return '#ff7961';
+	const today = startOfToday();
+	const isPast = isBefore(begin, today); // TODO make reactive?
 	switch (calendar) {
 		case 'appointments':
-			return '#fff5d6';
+			return isPast ? '#997C79' : '#fff5d6';
 		case 'consultations':
 			return '#757de8';
 		default:
