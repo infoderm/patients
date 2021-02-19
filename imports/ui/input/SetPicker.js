@@ -46,6 +46,7 @@ const SetPicker = (props) => {
 		itemToKey,
 		Chip,
 		chipProps,
+		withoutToggle,
 		TextFieldProps,
 		placeholder,
 		readOnly,
@@ -225,7 +226,7 @@ const SetPicker = (props) => {
 									onDelete={readOnly ? null : handleDelete(index)}
 								/>
 							)),
-							endAdornment: (
+							endAdornment: withoutToggle ? undefined : (
 								<InputAdornment position="end">
 									<IconButton
 										className={classNames({
@@ -292,6 +293,7 @@ SetPicker.defaultProps = {
 SetPicker.propTypes = {
 	classes: PropTypes.object.isRequired,
 	Chip: PropTypes.elementType,
+	withoutToggle: PropTypes.bool,
 	value: PropTypes.array.isRequired,
 	useSuggestions: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
