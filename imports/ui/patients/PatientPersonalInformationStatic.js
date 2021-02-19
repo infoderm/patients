@@ -29,6 +29,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -43,6 +44,7 @@ import {useAllergiesFind} from '../../api/allergies.js';
 import {useSetting} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../api/eidParseBirthdate.js';
+import useNoShowsForPatient from '../../api/useNoShowsForPatient.js';
 
 import SetPicker from '../input/SetPicker.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
@@ -105,6 +107,9 @@ const styles = (theme) => ({
 	},
 	problem: {
 		color: 'red'
+	},
+	noShowsAdornment: {
+		color: '#999'
 	},
 	editButton: computeFixedFabStyle({theme, col: 1}),
 	saveButton: computeFixedFabStyle({theme, col: 1}),
@@ -187,6 +192,8 @@ const PatientPersonalInformation = (props) => {
 		});
 	};
 
+	const {value: reifiedNoShows} = useNoShowsForPatient(props.patient._id);
+
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -218,7 +225,7 @@ const PatientPersonalInformation = (props) => {
 	const displayedAge =
 		(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
 
-	const totalNoShow = patient.noshow;
+	const totalNoShow = (patient.noshow || 0) + (reifiedNoShows || 0);
 
 	return (
 		<Paper className={classes.root}>
@@ -576,9 +583,16 @@ const PatientPersonalInformation = (props) => {
 							<Grid item xs={3}>
 								<TextField
 									InputProps={{
+										startAdornment: reifiedNoShows ? (
+											<InputAdornment
+												className={classes.noShowsAdornment}
+												position="start"
+											>
+												{reifiedNoShows}+
+											</InputAdornment>
+										) : undefined,
 										style: {
-											height: '100%',
-											alignItems: 'start'
+											height: '100%'
 										},
 										inputProps: {
 											readOnly: !editing
