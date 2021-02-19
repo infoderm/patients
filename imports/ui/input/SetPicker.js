@@ -41,6 +41,7 @@ function renderInput(inputProps) {
 const SetPicker = (props) => {
 	const {
 		classes,
+		className,
 		useSuggestions,
 		itemToString,
 		itemToKey,
@@ -48,6 +49,8 @@ const SetPicker = (props) => {
 		chipProps,
 		withoutToggle,
 		TextFieldProps,
+		inputProps,
+		InputProps,
 		placeholder,
 		readOnly,
 		value,
@@ -205,15 +208,17 @@ const SetPicker = (props) => {
 				selectedItem: selectedItem2,
 				highlightedIndex
 			}) => (
-				<div className={classes.container}>
+				<div className={classNames(classes.container, className)}>
 					{renderInput({
 						...TextFieldProps,
 						fullWidth: true,
 						classes,
 						inputProps: {
+							...inputProps,
 							readOnly: readOnly || full
 						},
 						InputProps: getInputProps({
+							...InputProps,
 							startAdornment: value.map((item, index) => (
 								<Chip
 									{...(chipProps instanceof Function
