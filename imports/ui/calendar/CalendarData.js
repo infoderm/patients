@@ -144,7 +144,8 @@ const EventFragment = (props) => {
 	return (
 		<div className={className}>
 			<Link to={event.uri} style={style} {...eventProps}>
-				{dateFormat(event.begin, 'HH:mm')} {event.title}
+				{dateFormat(event.begin, 'HH:mm')}-{dateFormat(event.end, 'HH:mm')}{' '}
+				{event.title}
 			</Link>
 		</div>
 	);
