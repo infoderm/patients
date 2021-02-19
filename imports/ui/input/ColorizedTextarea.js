@@ -6,48 +6,44 @@ import Typography from '@material-ui/core/Typography';
 
 import colorizeText from '../../client/colorizeText';
 
-class ColorizedTextarea extends React.Component {
-	render() {
-		const {
-			readOnly,
-			label,
-			placeholder,
-			rows,
-			rowsMax,
-			className,
-			value,
-			margin,
-			onChange,
-			dict,
-			...rest
-		} = this.props;
+const ColorizedTextarea = (props) => {
+	const {
+		readOnly,
+		label,
+		placeholder,
+		rows,
+		rowsMax,
+		className,
+		value,
+		margin,
+		onChange,
+		dict,
+		...rest
+	} = props;
 
-		if (readOnly) {
-			return (
-				<div className={className}>
-					{label && <InputLabel shrink>{label}</InputLabel>}
-					<Typography>{colorizeText(dict, value)}</Typography>
-				</div>
-			);
-		}
-
+	if (readOnly) {
 		return (
-			<TextField
-				multiline
-				className={className}
-				label={label}
-				value={value}
-				placeholder={placeholder}
-				rows={rows}
-				rowsMax={rowsMax}
-				margin={margin}
-				onChange={onChange}
-				{...rest}
-			/>
+			<div className={className}>
+				{label && <InputLabel shrink>{label}</InputLabel>}
+				<Typography>{colorizeText(dict, value)}</Typography>
+			</div>
 		);
 	}
-}
 
-const Component = ColorizedTextarea;
+	return (
+		<TextField
+			multiline
+			className={className}
+			label={label}
+			value={value}
+			placeholder={placeholder}
+			rows={rows}
+			rowsMax={rowsMax}
+			margin={margin}
+			onChange={onChange}
+			{...rest}
+		/>
+	);
+};
 
-export default Component;
+export default ColorizedTextarea;
