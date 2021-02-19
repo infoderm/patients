@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
 import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 
@@ -11,18 +9,11 @@ import usePatient from '../patients/usePatient.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
-import {computeFixedFabStyle} from '../button/FixedFab.js';
+import FixedFab from '../button/FixedFab.js';
 
 import ConsultationsPager from '../consultations/ConsultationsPager.js';
 
-const useStyles = makeStyles((theme) => ({
-	noShowToggle: computeFixedFabStyle({theme, col: 4}),
-	cancelledToggle: computeFixedFabStyle({theme, col: 5})
-}));
-
 const ConsultationsForPatient = (props) => {
-	const classes = useStyles();
-
 	const [showCancelled, setShowCancelled] = useState(false);
 	const [showNoShow, setShowNoShow] = useState(false);
 
@@ -85,20 +76,26 @@ const ConsultationsForPatient = (props) => {
 				sort={sort}
 				defaultExpandedFirst={page === 1}
 			/>
-			<Fab
-				className={classes.noShowToggle}
+			<FixedFab
+				col={4}
+				tooltip={showNoShow ? 'Hide no-shows' : 'Show no-shows'}
 				color={showNoShow ? 'primary' : 'default'}
 				onClick={() => setShowNoShow(!showNoShow)}
 			>
 				<PhoneDisabledIcon />
-			</Fab>
-			<Fab
-				className={classes.cancelledToggle}
+			</FixedFab>
+			<FixedFab
+				col={5}
+				tooltip={
+					showCancelled
+						? 'Hide cancelled appointments'
+						: 'Show cancelled appointments'
+				}
 				color={showCancelled ? 'primary' : 'default'}
 				onClick={() => setShowCancelled(!showCancelled)}
 			>
 				<AlarmOffIcon />
-			</Fab>
+			</FixedFab>
 		</>
 	);
 };
