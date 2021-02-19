@@ -230,7 +230,7 @@ const SetPicker = (props) => {
 								<InputAdornment position="end">
 									<IconButton
 										className={classNames({
-											[classes.hidden]: !suggestions?.length
+											[classes.hidden]: readOnly || !suggestions?.length
 										})}
 										{...getToggleButtonProps()}
 									>
