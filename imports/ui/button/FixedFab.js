@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import {useTheme} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
+
+import addTooltip from '../accessibility/addTooltip.js';
 
 export const computeFixedFabStyle = ({theme, col, row, style}) => ({
 	...style,
@@ -12,28 +13,17 @@ export const computeFixedFabStyle = ({theme, col, row, style}) => ({
 	right: theme.spacing(3 + 9 * ((col || FixedFab.defaultProps.col) - 1))
 });
 
-const FixedFab = ({col, row, style, tooltip, ...rest}) => {
+const FixedFab = React.forwardRef(({col, row, style, ...rest}, ref) => {
 	const theme = useTheme();
 
 	style = computeFixedFabStyle({theme, col, row, style});
 
-	const fab = <Fab style={style} {...rest} />;
-
-	if (tooltip) {
-		return (
-			<Tooltip title={tooltip} aria-label={tooltip}>
-				{fab}
-			</Tooltip>
-		);
-	}
-
-	return fab;
-};
+	return <Fab ref={ref} style={style} {...rest} />;
+});
 
 FixedFab.propTypes = {
 	col: PropTypes.number,
-	row: PropTypes.number,
-	tooltip: PropTypes.string
+	row: PropTypes.number
 };
 
 FixedFab.defaultProps = {
@@ -41,4 +31,4 @@ FixedFab.defaultProps = {
 	row: 1
 };
 
-export default FixedFab;
+export default addTooltip(FixedFab);
