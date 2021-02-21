@@ -2,6 +2,8 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
+import Tooltip from '../accessibility/Tooltip.js';
+
 import dateFormat from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import isBefore from 'date-fns/isBefore';
@@ -34,11 +36,13 @@ const EventFragment = (props) => {
 	)} ${event.title}`;
 
 	return (
-		<div className={className}>
-			<Link to={event.uri} style={style} {...eventProps}>
-				{text}
-			</Link>
-		</div>
+		<Tooltip title={text} aria-label={text}>
+			<div className={className}>
+				<Link to={event.uri} style={style} {...eventProps}>
+					{text}
+				</Link>
+			</div>
+		</Tooltip>
 	);
 };
 
