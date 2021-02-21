@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {Link} from 'react-router-dom';
-
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
@@ -11,12 +9,13 @@ import differenceInDays from 'date-fns/differenceInDays';
 import addDays from 'date-fns/addDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
-import startOfToday from 'date-fns/startOfToday';
 import dateFormat from 'date-fns/format';
 
 import {list, take, range, enumerate} from '@aureooms/js-itertools';
 
 import {ALL_WEEK_DAYS} from './constants.js';
+
+import EventFragment from './EventFragment.js';
 
 const ColumnHeader = ({classes, day, col}) => {
 	return (
@@ -118,38 +117,6 @@ function* generateMoreProps(occupancy, begin, end, maxLines) {
 		}
 	}
 }
-
-const eventBackgroundColor = ({begin, calendar, isCancelled}) => {
-	if (isCancelled) return '#ff7961';
-	const today = startOfToday();
-	const isPast = isBefore(begin, today); // TODO make reactive?
-	switch (calendar) {
-		case 'appointments':
-			return isPast ? '#997C79' : '#fff5d6';
-		case 'consultations':
-			return '#757de8';
-		default:
-			return '#eee';
-	}
-};
-
-const EventFragment = (props) => {
-	const {className, event, eventProps} = props;
-
-	const style = {
-		backgroundColor: eventBackgroundColor(event),
-		color: '#111'
-	};
-
-	return (
-		<div className={className}>
-			<Link to={event.uri} style={style} {...eventProps}>
-				{dateFormat(event.begin, 'HH:mm')}-{dateFormat(event.end, 'HH:mm')}{' '}
-				{event.title}
-			</Link>
-		</div>
-	);
-};
 
 const More = (props) => {
 	const {className, count} = props;
