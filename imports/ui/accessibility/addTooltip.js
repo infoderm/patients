@@ -1,5 +1,5 @@
 import React from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from './Tooltip.js';
 
 const addTooltip = (Component) => ({tooltip, ...rest}) => {
 	return tooltip ? (
