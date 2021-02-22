@@ -30,6 +30,7 @@ import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
+import Tooltip from './accessibility/Tooltip.js';
 import {setSetting} from '../client/settings.js';
 
 export const drawerWidthOpen = 215;
@@ -71,6 +72,19 @@ const useStyles = makeStyles((theme) => ({
 		...theme.mixins.toolbar
 	}
 }));
+
+const DrawerItem = ({expand, disabled, link}) => (
+	<Tooltip
+		placement="right"
+		title={expand ? '' : link.title}
+		aria-label={link.title}
+	>
+		<ListItem button disabled={disabled} component={Link} to={link.to}>
+			<ListItemIcon>{link.icon}</ListItemIcon>
+			{expand && <ListItemText primary={link.title} />}
+		</ListItem>
+	</Tooltip>
+);
 
 export default function NavigationDrawer({
 	currentUser,
@@ -257,18 +271,12 @@ export default function NavigationDrawer({
 				<div key={title}>
 					<List>
 						{links.map((link) => (
-							<ListItem
+							<DrawerItem
 								key={link.to}
-								button
 								disabled={!currentUser || link.disabled}
-								component={Link}
-								to={link.to}
-							>
-								<ListItemIcon>{link.icon}</ListItemIcon>
-								{navigationDrawerIsOpen === 'open' ? (
-									<ListItemText primary={link.title} />
-								) : null}
-							</ListItem>
+								expand={navigationDrawerIsOpen === 'open'}
+								link={link}
+							/>
 						))}
 					</List>
 					<Divider />
