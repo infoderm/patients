@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
 
@@ -17,16 +15,9 @@ import {useBooks} from '../../api/books.js';
 import {useSettingCached} from '../../client/settings.js';
 
 import YearJumper from '../navigation/YearJumper.js';
-import {computeFixedFabStyle} from '../button/FixedFab.js';
-
-const useStyles = makeStyles((theme) => ({
-	saveButton: computeFixedFabStyle({theme, col: 4}),
-	toggleSortingOrderButton: computeFixedFabStyle({theme, col: 5})
-}));
+import FixedFab from '../button/FixedFab.js';
 
 export default function BooksList({match, year, page, perpage}) {
-	const classes = useStyles();
-
 	const [downloading, setDownloading] = useState(false);
 	const {value: sortingOrder, setValue: setSortingOrder} = useSettingCached(
 		'books-sorting-order'
@@ -58,20 +49,22 @@ export default function BooksList({match, year, page, perpage}) {
 				sort={sort}
 				useTags={useBooks}
 			/>
-			<Fab
-				className={classes.saveButton}
+			<FixedFab
+				col={4}
 				color="secondary"
+				tooltip="Download books"
 				onClick={() => setDownloading(true)}
 			>
 				<SaveIcon />
-			</Fab>
-			<Fab
-				className={classes.toggleSortingOrderButton}
+			</FixedFab>
+			<FixedFab
+				col={5}
 				color="default"
+				tooltip="Toggle sorting order"
 				onClick={() => setSortingOrder(-sortingOrder)}
 			>
 				<SwapVertIcon />
-			</Fab>
+			</FixedFab>
 			<BooksDownloadDialog
 				initialBegin={initialBegin}
 				open={downloading}
