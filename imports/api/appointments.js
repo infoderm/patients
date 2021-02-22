@@ -46,7 +46,7 @@ function sanitize({datetime, duration, patient, phone, reason}) {
 	check(patient.firstname, String);
 	check(patient.lastname, String);
 	check(patient._id, String);
-	check(phone, String);
+	if (phone !== undefined) check(phone, String);
 	check(datetime, Date);
 	check(duration, Number);
 	check(reason, String);
