@@ -13,7 +13,6 @@ import {count} from '@aureooms/js-cardinality';
 
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import Fab from '@material-ui/core/Fab';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 
@@ -21,7 +20,7 @@ import {TIME_BREAK} from '../../client/constants.js';
 
 import Prev from '../navigation/Prev.js';
 import Next from '../navigation/Next.js';
-import {computeFixedFabStyle} from '../button/FixedFab.js';
+import FixedFab from '../button/FixedFab.js';
 
 import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
@@ -31,9 +30,7 @@ import {useConsultationsAndAppointments} from '../../api/consultations.js';
 const useStyles = makeStyles((theme) => ({
 	container: {
 		padding: theme.spacing(3)
-	},
-	consultationsToggle: computeFixedFabStyle({theme, col: 5}),
-	appointmentsToggle: computeFixedFabStyle({theme, col: 4})
+	}
 }));
 
 const ConsultationsOfTheDay = ({day}) => {
@@ -110,20 +107,24 @@ const ConsultationsOfTheDay = ({day}) => {
 					</div>
 				)}
 			</div>
-			<Fab
-				className={classes.consultationsToggle}
+			<FixedFab
+				col={5}
 				color={showConsultations ? 'primary' : 'default'}
+				tooltip={
+					showConsultations ? 'Hide consultations' : 'Show consultations'
+				}
 				onClick={() => setShowConsultations(!showConsultations)}
 			>
 				<FolderSharedIcon />
-			</Fab>
-			<Fab
-				className={classes.appointmentsToggle}
+			</FixedFab>
+			<FixedFab
+				col={4}
 				color={showAppointments ? 'primary' : 'default'}
+				tooltip={showAppointments ? 'Hide appointments' : 'Show appointments'}
 				onClick={() => setShowAppointments(!showAppointments)}
 			>
 				<AccessTimeIcon />
-			</Fab>
+			</FixedFab>
 			<Prev to={`/calendar/day/${dayBefore}`} />
 			<Next to={`/calendar/day/${dayAfter}`} />
 		</>
