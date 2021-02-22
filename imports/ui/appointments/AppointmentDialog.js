@@ -68,6 +68,7 @@ const AppointmentDialog = (props) => {
 
 	const {
 		initialDatetime,
+		noInitialTime,
 		initialAppointment,
 		initialPatient,
 		open,
@@ -83,7 +84,7 @@ const AppointmentDialog = (props) => {
 		dateFormat(initialDatetime, 'yyyy-MM-dd')
 	);
 	const [time, setTime] = useStateWithInitOverride(
-		dateFormat(initialDatetime, 'HH:mm')
+		noInitialTime ? '' : dateFormat(initialDatetime, 'HH:mm')
 	);
 	const [
 		duration,
@@ -169,6 +170,7 @@ const AppointmentDialog = (props) => {
 								shrink: true
 							}}
 							value={date}
+							error={!date}
 							onChange={(e) => setDate(e.target.value)}
 						/>
 					</Grid>
@@ -180,6 +182,7 @@ const AppointmentDialog = (props) => {
 								shrink: true
 							}}
 							value={time}
+							error={!time}
 							onChange={(e) => setTime(e.target.value)}
 						/>
 					</Grid>
@@ -254,7 +257,7 @@ const AppointmentDialog = (props) => {
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
-					disabled={patientList.length !== 1}
+					disabled={patientList.length !== 1 || !date || !time}
 					color="primary"
 					onClick={createAppointment}
 				>
@@ -266,11 +269,16 @@ const AppointmentDialog = (props) => {
 	);
 };
 
+AppointmentDialog.defaultProps = {
+	noInitialTime: false
+};
+
 AppointmentDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
 	initialDatetime: PropTypes.instanceOf(Date).isRequired,
+	noInitialTime: PropTypes.bool,
 	initialAppointment: PropTypes.object,
 	initialPatient: PropTypes.object
 };

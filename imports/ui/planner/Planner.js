@@ -51,6 +51,7 @@ const Planner = (props) => {
 				onSlotClick={onSlotClick}
 			/>
 			<NewAppointmentDialog
+				noInitialTime
 				initialDatetime={selectedSlot}
 				open={creatingAppointment}
 				onClose={() => setCreatingAppointment(false)}
