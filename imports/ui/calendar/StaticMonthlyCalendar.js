@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CalendarHeader from './CalendarHeader.js';
 import MonthlyCalendarData from './MonthlyCalendarData.js';
 
-const MonthlyCalendar = (props) => {
+const StaticMonthlyCalendar = (props) => {
 	const {
 		className,
 		events,
@@ -39,7 +39,7 @@ const MonthlyCalendar = (props) => {
 	);
 };
 
-MonthlyCalendar.propTypes = {
+StaticMonthlyCalendar.propTypes = {
 	title: PropTypes.string,
 	year: PropTypes.number.isRequired,
 	month: PropTypes.number.isRequired,
@@ -50,4 +50,4 @@ MonthlyCalendar.propTypes = {
 	weekOptions: PropTypes.object
 };
 
-export default MonthlyCalendar;
+export default StaticMonthlyCalendar;
