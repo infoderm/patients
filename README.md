@@ -16,9 +16,23 @@
     cd patients
     meteor npm ci
     npx husky install # for pre-commit hook
-    
-### test server
-    
+
+### tests
+
+#### Watch tests
+
+    npm run test
+
+#### Run once
+
+    npm run test -- --once
+
+#### Emulate CI tests (Travis)
+
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium npm run travis
+
+### server
+
     meteor run -p 12345
 
 ### dependency management
