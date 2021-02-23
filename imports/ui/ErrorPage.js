@@ -10,7 +10,7 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 import NoContent from './navigation/NoContent.js';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	explanation: {
 		textAlign: 'center',
 		fontSize: '1.3em',
@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme) => ({
 		padding: '1.5em',
 		borderRadius: '.5em',
 		textTransform: 'initial'
-	},
-	rightIcon: {
-		marginLeft: theme.spacing(1)
 	},
 	buttons: {
 		textAlign: 'center',
@@ -72,38 +69,38 @@ export default function ErrorPage({error, errorInfo, retry}) {
 					className={classes.button}
 					variant="contained"
 					color="primary"
+					endIcon={<RotateRightIcon />}
 					onClick={retry}
 				>
 					Re-render current route
-					<RotateRightIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					className={classes.button}
 					variant="contained"
 					color="secondary"
+					endIcon={<RefreshIcon />}
 					onClick={reloadRoute}
 				>
 					Reload current route
-					<RefreshIcon className={classes.rightIcon} />
 				</Button>
 				<br />
 				<Button
 					className={classes.button}
 					variant="contained"
 					color="primary"
+					endIcon={<HomeIcon />}
 					onClick={goBackHome}
 				>
 					Render home page
-					<HomeIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					className={classes.button}
 					variant="contained"
 					color="secondary"
+					endIcon={<PowerSettingsNewIcon />}
 					onClick={reloadApp}
 				>
 					Reload entire App
-					<PowerSettingsNewIcon className={classes.rightIcon} />
 				</Button>
 			</div>
 			<details className={classes.details}>
