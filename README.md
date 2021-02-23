@@ -55,6 +55,9 @@ the chromium that comes with `puppeteer` remove the assignment of the variable
 
 ## Deployment
 
+In this section, `dev` refers to the development machine, and `prod` refers to
+the production machine.
+
 ### Setup
 
 #### `dev` Create ssh keys on the development machine
