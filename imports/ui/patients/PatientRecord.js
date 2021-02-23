@@ -31,15 +31,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 	container: {
 		padding: theme.spacing(3)
-	},
-	button: {
-		margin: theme.spacing(1)
-	},
-	leftIcon: {
-		marginRight: theme.spacing(1)
-	},
-	rightIcon: {
-		marginLeft: theme.spacing(1)
 	}
 }));
 
@@ -79,7 +70,6 @@ const PatientRecord = (props) => {
 				{tab === 'consultations' && (
 					<ConsultationsForPatient
 						className={classes.container}
-						classes={classes}
 						patientId={patientId}
 						page={page}
 						perpage={perpage}
@@ -96,7 +86,6 @@ const PatientRecord = (props) => {
 				{tab === 'attachments' && (
 					<AttachmentsForPatient
 						className={classes.container}
-						classes={classes}
 						patientId={patientId}
 						page={page}
 						perpage={perpage}
