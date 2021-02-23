@@ -74,6 +74,7 @@
     "faker": "^5.4.0",
     "husky": "^5.0.6",
     "lint-staged": "^10.5.3",
+    "mup": "^1.5.3",
     "postinstall": "^0.7.0",
     "puppeteer": "^7.1.0",
     "total-order": "0.0.3",
@@ -102,7 +103,10 @@
     "start": "meteor run",
     "test": "meteor test --driver-package meteortesting:mocha",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ COVERAGE_OUT_LCOVONLY=1 npm run test -- --extra-packages lmieulet:meteor-coverage",
-    "travis": "npm run lint && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once"
+    "travis": "npm run lint && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
+    "setup-deploy": "mup setup",
+    "build-and-upload": "mup deploy",
+    "deploy": "git stash && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload && git stash pop"
   },
   "xo": {
     "parser": "babel-eslint",

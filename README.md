@@ -40,47 +40,53 @@
     meteor update
     ncu -u
     meteor npm ci
-    
-## Deployment (first time)
 
-### On the development machine (1)
+## Deployment
 
-#### Create ssh keys
+### Setup
+
+#### `dev` Create ssh keys on the development machine
 
     ssh-keygen -m PEM -t rsa -b 4096 -a 100 -f .ssh/meteorapp
 
-### On the production machine
+#### `prod` On the production machine
 
-#### Install and enable docker
+##### Install and enable docker
 
     pacman -S docker
     systemctl enable --now docker
 
-#### Create a user
+##### Create a user
 
     useradd -m meteorapp
     gpasswd -a meteorapp wheel
     gpasswd -a meteorapp docker
 
-#### Copy public key
+##### Copy `dev` public key on `prod`
 
 Append it to `/home/meteorapp/.ssh/authorized_keys`.
 Remember: `chmod .ssh 700` and `chmod .ssh/authorized_keys 640`.
 
+#### `dev` On the development machine
+Install dependencies, custom certificates, and MongoDB on server:
 
-### On the development machine (2)
+    npm run setup-deploy
 
-#### Install meteor-up (first time)
+### Deploy (on the development machine)
 
-    npm i -g mup
+#### Deploy the current state
 
-#### setup (first time)
+This is if you want to deploy from your development machine (current state).
 
-    mup setup
-    
-#### deploy
+    npm run build-and-upload
 
-    mup deploy
+#### Deploy the last commit
+
+    npm run deploy
+
+#### Deploy a specific tag
+
+    TAG=vYYYY.MM.DD npm run deploy
 
 ## Backup & Restore
 
