@@ -31,9 +31,9 @@
 
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium npm run travis
 
-### server
+### dev server
 
-    meteor run -p 12345
+    npm run dev
 
 ### dependency management
 
