@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
@@ -24,6 +22,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 
 import saveTextAs from '../../client/saveTextAs.js';
 
+import call from '../../api/call.js';
 import {books} from '../../api/books.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 
@@ -68,7 +67,7 @@ const BooksDownloadDialog = ({
 		setMaxRows(String(books.DOWNLOAD_MAX_ROWS));
 	}, [initialAdvancedFunctionality, initialBegin, initialEnd]);
 
-	const downloadData = (event) => {
+	const downloadData = async (event) => {
 		event.preventDefault();
 		const _firstBook = Number.parseInt(firstBook, 10);
 		const _lastBook = Number.parseInt(lastBook, 10);
@@ -77,28 +76,27 @@ const BooksDownloadDialog = ({
 			variant: 'info',
 			persist: true
 		});
-		Meteor.call(
-			'books.interval.csv',
-			begin,
-			end,
-			_firstBook,
-			_lastBook,
-			_maxRows,
-			(err, res) => {
-				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					enqueueSnackbar('Report ready!', {variant: 'success'});
-					const filename = advancedFunctionality
-						? 'carnets.csv'
-						: `carnets-${begin.getFullYear()}.csv`;
-					saveTextAs(res, filename);
-					onClose();
-				}
-			}
-		);
+		try {
+			const res = await call(
+				'books.interval.csv',
+				begin,
+				end,
+				_firstBook,
+				_lastBook,
+				_maxRows
+			);
+			closeSnackbar(key);
+			enqueueSnackbar('Report ready!', {variant: 'success'});
+			const filename = advancedFunctionality
+				? 'carnets.csv'
+				: `carnets-${begin.getFullYear()}.csv`;
+			saveTextAs(res, filename);
+			onClose();
+		} catch (error) {
+			console.error(error);
+			closeSnackbar(key);
+			enqueueSnackbar(error.message, {variant: 'error'});
+		}
 	};
 
 	return (
