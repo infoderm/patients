@@ -27,3 +27,6 @@ addons:
       name: "infoderm/patients"
     notification_email: aurelien.ooms@gmail.com
     branch_pattern: coverity_scan
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) || true

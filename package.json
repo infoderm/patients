@@ -1,5 +1,14 @@
 {
   "name": "patients",
+  "babel": {
+    "env": {
+      "COVERAGE": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
   "dependencies": {
     "@aureooms/js-cardinality": "^2.0.0",
     "@aureooms/js-codec-base64": "^2.0.1",
@@ -56,6 +65,7 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
+    "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
     "emoji-favicon-cli": "^3.0.0",
     "eslint-config-xo-react": "^0.23.0",
@@ -91,7 +101,8 @@
     "precommit": "lint-staged",
     "start": "meteor run",
     "test": "meteor test --driver-package meteortesting:mocha",
-    "travis": "npm run lint && TEST_BROWSER_DRIVER=puppeteer npm run test -- --once"
+    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ COVERAGE_OUT_LCOVONLY=1 npm run test -- --extra-packages lmieulet:meteor-coverage",
+    "travis": "npm run lint && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once"
   },
   "xo": {
     "parser": "babel-eslint",
