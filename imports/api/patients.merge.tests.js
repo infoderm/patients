@@ -5,12 +5,17 @@ import {assert} from 'chai';
 import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
+import totalOrder from 'total-order';
+import {sorted} from '@aureooms/js-itertools';
+
 import {Patients, patients} from './patients.mock.js';
 import {Consultations} from './consultations.mock.js';
 import {Documents} from './documents.mock.js';
 // eslint-disable-next-line import/no-unassigned-import
 import './uploads.mock.js';
 import {Attachments} from './attachments.mock.js';
+
+const setLike = (x) => sorted(totalOrder, x);
 
 if (Meteor.isServer) {
 	describe('Patients', () => {
@@ -84,14 +89,17 @@ if (Meteor.isServer) {
 
 				assert.equal(newPatient.firstname, patientB.firstname);
 
-				const expectedAttachments = new Set([uploadA._id, uploadB._id]);
+				const expectedAttachments = setLike([uploadA, uploadB]);
 
-				const newPatientAttachments = Attachments.find({
-					userId,
-					'meta.attachedToPatients': newPatientId
-				}).fetch();
+				const newPatientAttachments = Attachments.find(
+					{
+						userId,
+						'meta.attachedToPatients': newPatientId
+					},
+					{fields: {meta: 0}}
+				).fetch();
 
-				assert.deepEqual(new Set(newPatientAttachments), expectedAttachments);
+				assert.deepEqual(setLike(newPatientAttachments), expectedAttachments);
 
 				consultationA = Consultations.findOne(consultationA._id);
 

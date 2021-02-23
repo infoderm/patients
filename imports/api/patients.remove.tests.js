@@ -43,7 +43,7 @@ if (Meteor.isServer) {
 
 				assert.throws(
 					() => patientsRemove.apply(invocation, [patientId]),
-					/not-authorized/
+					/not-found/
 				);
 			});
 		});
