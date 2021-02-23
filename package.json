@@ -101,6 +101,7 @@
     "postinstall": "postinstall && npm run favicon",
     "precommit": "lint-staged",
     "dev": "meteor run -p ${PORT:-12345}",
+    "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
     "test": "meteor test --driver-package meteortesting:mocha",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ COVERAGE_OUT_LCOVONLY=1 npm run test -- --extra-packages lmieulet:meteor-coverage",
     "travis": "npm run lint && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",

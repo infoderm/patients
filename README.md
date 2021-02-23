@@ -35,6 +35,10 @@
 
     npm run dev
 
+### Bundle visualizer
+
+    npm run bundle-visualizer
+
 ### dependency management
 
     meteor update
