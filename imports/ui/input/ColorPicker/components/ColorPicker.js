@@ -1,7 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import compose from 'recompose/compose';
-import withState from 'recompose/withState';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
@@ -15,9 +13,9 @@ import color from 'color';
 
 const ColorPicker = ({
 	// ColorPicker
-	// defaultValue,
+	defaultValue,
 	onChange,
-	convert,
+	convert
 
 	// Text field
 	// name,
@@ -27,46 +25,49 @@ const ColorPicker = ({
 	// floatingLabelText,
 	// label,
 	// TextFieldProps,
+}) => {
+	const [showPicker, setShowPicker] = useState(false);
+	const [value, setValue] = useState(defaultValue);
 
-	// State
-	showPicker,
-	setShowPicker,
-	value,
-	setValue
-}) => (
-	<span>
-		<Chip
-			avatar={
-				<Avatar>
-					<ColorLensIcon />
-				</Avatar>
-			}
-			style={{
-				backgroundColor: value,
-				color: color(value).isLight() ? '#111' : '#ddd'
-			}}
-			label={value}
-			onClick={() => setShowPicker(true)}
-		/>
-		{showPicker && (
-			<PickerDialog
-				value={value}
-				onClick={() => {
-					setShowPicker(false);
-					onChange(value);
+	useEffect(() => {
+		if (defaultValue !== value) setValue(defaultValue);
+	}, [defaultValue]);
+
+	return (
+		<span>
+			<Chip
+				avatar={
+					<Avatar>
+						<ColorLensIcon />
+					</Avatar>
+				}
+				style={{
+					backgroundColor: value,
+					color: color(value).isLight() ? '#111' : '#ddd'
 				}}
-				onChange={(c) => {
-					const newValue = converters[convert](c);
-					setValue(newValue);
-					onChange(newValue);
-				}}
+				label={value}
+				onClick={() => setShowPicker(true)}
 			/>
-		)}
-	</span>
-);
+			{showPicker && (
+				<PickerDialog
+					value={value}
+					onClick={() => {
+						setShowPicker(false);
+						onChange(value);
+					}}
+					onChange={(c) => {
+						const newValue = converters[convert](c);
+						setValue(newValue);
+						onChange(newValue);
+					}}
+				/>
+			)}
+		</span>
+	);
+};
 
 ColorPicker.propTypes = {
-	value: PropTypes.string,
+	defaultValue: PropTypes.string,
 	onChange: PropTypes.func,
 	convert: PropTypes.oneOf(Object.keys(converters))
 };
@@ -75,9 +76,4 @@ ColorPicker.defaultProps = {
 	convert: DEFAULT_CONVERTER
 };
 
-const makeColorPicker = compose(
-	withState('showPicker', 'setShowPicker', false),
-	withState('value', 'setValue', ({defaultValue}) => defaultValue)
-);
-
-export default makeColorPicker(ColorPicker);
+export default ColorPicker;
