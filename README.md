@@ -74,7 +74,9 @@ the `chromium` executable that comes with `puppeteer` remove the assignment of t
 
     npm run upgrade
 
-### Setup
+## :hospital: Production
+
+### :wrench: Setup
 
 #### `dev` Create ssh keys on the development machine
 
@@ -103,11 +105,9 @@ Install dependencies, custom certificates, and MongoDB on server:
 
     npm run setup-deploy
 
-### Deploy (on the development machine)
+### :rocket: Deploy from `dev` on `prod`
 
-#### Deploy the current state
-
-This is if you want to deploy from your development machine (current state).
+#### Deploy the current state of `dev`
 
     npm run build-and-upload
 
