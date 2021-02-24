@@ -12,6 +12,10 @@ The stack (provided by  [meteor](https://meteor.com)):
   - **Client**: [React](https://reactjs.org)
 
 
+In what follows, `dev` refers to the development machine, and `prod` refers to
+the production machine.
+
+
 ## Development
 
 ### tools
@@ -60,9 +64,6 @@ the chromium that comes with `puppeteer` remove the assignment of the variable
 ## :gift: Dependency management
 
     npm run upgrade
-
-In this section, `dev` refers to the development machine, and `prod` refers to
-the production machine.
 
 ### Setup
 
