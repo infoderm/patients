@@ -11,14 +11,16 @@
 
     curl https://install.meteor.com | sh
     npm i -g npm-check-updates
-    npm i -g npx
-    
+
 ### source
 
     git clone gh:infoderm/patients
     cd patients
     meteor npm ci
-    npx husky install # for pre-commit hook
+
+### :fish: Install pre-commit hook (`.husky/pre-commit`)
+
+    npm run install-hooks
 
 ### tests
 

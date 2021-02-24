@@ -97,6 +97,7 @@
     "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
     "lint": "xo",
     "lint-and-fix": "npm run lint -- --fix",
+    "install-hooks": "husky install",
     "postinstall": "postinstall && npm run favicon",
     "precommit": "lint-staged",
     "dev": "meteor run -p ${PORT:-12345}",
