@@ -10,7 +10,6 @@
 ### tools
 
     curl https://install.meteor.com | sh
-    npm i -g npm-check-updates
 
 ### source
 
@@ -51,11 +50,9 @@ the chromium that comes with `puppeteer` remove the assignment of the variable
 
 ### dependency management
 
-    meteor update
-    ncu -u
-    meteor npm ci
+## :gift: Dependency management
 
-## Deployment
+    npm run upgrade
 
 In this section, `dev` refers to the development machine, and `prod` refers to
 the production machine.
