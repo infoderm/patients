@@ -16,16 +16,19 @@ In what follows, `dev` refers to the development machine, and `prod` refers to
 the production machine.
 
 
-## Development
+## :woman_technologist: Setup `dev`
 
-### tools
+### :comet: Install Meteor
 
     curl https://install.meteor.com | sh
 
-### source
+### :scroll: Get source
 
     git clone gh:infoderm/patients
     cd patients
+
+### :package: Install dependencies
+
     meteor npm ci
 
 ### :fish: Install pre-commit hook (`.husky/pre-commit`)
