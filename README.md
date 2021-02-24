@@ -35,21 +35,25 @@ the production machine.
 
     npm run install-hooks
 
-### tests
+## :microscope: Tests
 
-#### Watch tests
+### Watch tests
+
+> You can set host and port via the `$HOST` and `$PORT` environment variables (default `127.0.0.1:12348`).
 
     npm run test
 
-#### Run once
+### Run once
+
+> You can set host and port via the `$HOST` and `$PORT` environment variables (default `127.0.0.1:12348`).
 
     npm run test -- --once
 
-#### Emulate CI tests (Travis)
-We recommend using the chromium of your distribution. Installation of the
-custom chromium can be avoided by placing the line
+### Emulate CI tests (Travis)
+> :warning: We recommend using the `chromium` executable of your distribution. Installation of the
+puppeteer `chromium` executable can be avoided by placing the line
 `puppeteer_skip_chromium_download=true` in your `~/.npmrc`. If you wish to use
-the chromium that comes with `puppeteer` remove the assignment of the variable
+the `chromium` executable that comes with `puppeteer` remove the assignment of the variable
 `PUPPETEER_EXECUTABLE_PATH`.
 
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium npm run travis
