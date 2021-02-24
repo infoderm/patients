@@ -3,7 +3,8 @@
 [![Code coverage (cov)](https://img.shields.io/codecov/c/gh/infoderm/patients/main.svg)](https://codecov.io/gh/infoderm/patients)
 ==
 
-> Patients meteor app
+> An app to manage patient records, consultations,
+> appointments, lab reports, ...
 
 ## Development
 
