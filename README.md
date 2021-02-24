@@ -119,22 +119,18 @@ Install dependencies, custom certificates, and MongoDB on server:
 
     TAG=vYYYY.MM.DD npm run deploy
 
-## Backup & Restore
+## :recycle: Backup & Restore
 
 Need `rsync` on both machines.
 Need `tar`, `openssl`, `mongodump`, `mongorestore`,
 and the encryption key at `key/patients` on the production machine.
 
-The executables `mongodump` and `mongorestore` can be found at `aur/mongodb-tools-bin` on Arch.
+> The executables `mongodump` and `mongorestore` can be found at `community/mongodb-tools` on Arch Linux.
 
-### backup
+### :movie_camera: Backup
 
-Need `mongodump` on production machine and `rclone` on development machine.
+    sh .backup-fs/backup.sh
 
-    sh .backup/backup.sh
-
-### restore
-
-Need `mongorestore` on production machine.
+### :film_projector: Restore
 
     sh .backup/restore.sh
