@@ -6,6 +6,12 @@
 > An app to manage patient records, consultations,
 > appointments, lab reports, ...
 
+The stack (provided by  [meteor](https://meteor.com)):
+  - **Database:** [MongoDB](https://mongodb.com)
+  - **Server**: [Node.js](https://nodejs.org)
+  - **Client**: [React](https://reactjs.org)
+
+
 ## Development
 
 ### tools
