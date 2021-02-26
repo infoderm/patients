@@ -31,7 +31,7 @@ the production machine.
 
     meteor npm ci
 
-### :fish: Install pre-commit hook (`.husky/pre-commit`)
+### :fishing_pole_and_fish: Install pre-commit hook (`.husky/pre-commit`)
 
     npm run install-hooks
 
