@@ -1,6 +1,9 @@
 {
   "name": "patients",
   "babel": {
+    "plugins": [
+      "@babel/plugin-syntax-jsx"
+    ],
     "env": {
       "COVERAGE": {
         "plugins": [
@@ -64,6 +67,7 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.12.13",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
     "emoji-favicon-cli": "^3.0.0",
