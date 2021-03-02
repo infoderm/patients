@@ -6,7 +6,7 @@ import Downshift from 'downshift';
 
 import {all, map} from '@aureooms/js-itertools';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
@@ -38,9 +38,34 @@ function renderInput(inputProps) {
 	);
 }
 
+const styles = (theme) => ({
+	container: {
+		flexGrow: 1,
+		position: 'relative'
+	},
+	chip: {
+		margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`
+	},
+	inputRoot: {
+		flexWrap: 'wrap'
+	},
+	inputInput: {
+		margin: `${theme.spacing(1) / 2}px 0`,
+		width: 'auto',
+		flexGrow: 1
+	},
+	divider: {
+		height: theme.spacing(2)
+	},
+	hidden: {
+		display: 'none'
+	}
+});
+
+const useStyles = makeStyles(styles);
+
 const SetPicker = (props) => {
 	const {
-		classes,
 		className,
 		useSuggestions,
 		itemToString,
@@ -61,6 +86,8 @@ const SetPicker = (props) => {
 		sort,
 		inputTransform
 	} = props;
+
+	const classes = useStyles();
 
 	const [inputValue, setInputValue] = useStateWithInitOverride(
 		inputTransform('')
@@ -264,30 +291,6 @@ const SetPicker = (props) => {
 	);
 };
 
-const styles = (theme) => ({
-	container: {
-		flexGrow: 1,
-		position: 'relative'
-	},
-	chip: {
-		margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`
-	},
-	inputRoot: {
-		flexWrap: 'wrap'
-	},
-	inputInput: {
-		margin: `${theme.spacing(1) / 2}px 0`,
-		width: 'auto',
-		flexGrow: 1
-	},
-	divider: {
-		height: theme.spacing(2)
-	},
-	hidden: {
-		display: 'none'
-	}
-});
-
 SetPicker.defaultProps = {
 	Chip,
 	maxCount: Number.POSITIVE_INFINITY,
@@ -311,4 +314,4 @@ SetPicker.propTypes = {
 	multiset: PropTypes.bool
 };
 
-export default withStyles(styles)(SetPicker);
+export default SetPicker;
