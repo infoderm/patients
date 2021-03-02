@@ -74,7 +74,7 @@ the `chromium` executable that comes with `puppeteer` remove the assignment of t
 
     npm run upgrade
 
-## :hospital: Production
+## :woman_health_worker: Production
 
 ### :wrench: Setup
 
