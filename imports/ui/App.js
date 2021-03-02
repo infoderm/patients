@@ -78,7 +78,6 @@ const App = () => {
 							{loading && <LinearProgress className={classes.progress} />}
 							<Header
 								navigationDrawerIsOpen={navigationDrawerIsOpen}
-								loggingIn={loggingIn}
 								currentUser={currentUser}
 							/>
 							<NavigationDrawer
