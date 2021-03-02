@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "allowJs": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "types",
+    "checkJs": true,
+    "jsx": "preserve",
+    "target": "es2020",
+    "module": "es6",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "server/**/*",
+    "client/**/*",
+    "imports/**/*"
+  ]
+}
