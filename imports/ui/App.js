@@ -5,7 +5,8 @@ import {useTracker} from 'meteor/react-meteor-data';
 import {
 	makeStyles,
 	MuiThemeProvider,
-	createMuiTheme
+	createMuiTheme,
+	responsiveFontSizes
 } from '@material-ui/core/styles';
 
 import {SnackbarProvider} from 'notistack';
@@ -27,11 +28,8 @@ import ErrorBoundary from './ErrorBoundary.js';
 import useLoggingIn from './users/useLoggingIn.js';
 import useUser from './users/useUser.js';
 
-const muitheme = createMuiTheme({
-	typography: {
-		useNextVariants: true
-	}
-});
+let muitheme = createMuiTheme();
+muitheme = responsiveFontSizes(muitheme);
 
 const useStyles = makeStyles(() => ({
 	appFrame: {
