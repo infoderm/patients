@@ -223,7 +223,6 @@ const SetPicker = (props) => {
 			stateReducer={stateReducer}
 			selectedItem={value}
 			itemToString={itemToString}
-			itemToKey={itemToKey}
 			onChange={handleChange}
 			onStateChange={handleStateChange}
 		>
