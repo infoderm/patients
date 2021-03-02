@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -18,6 +18,8 @@ const styles = (theme) => ({
 		display: 'none'
 	}
 });
+
+const useStyles = makeStyles(styles);
 
 function renderSuggestion({
 	loading,
@@ -62,47 +64,46 @@ renderSuggestion.propTypes = {
 	suggestion: PropTypes.object.isRequired
 };
 
-class Suggestions extends React.Component {
-	render() {
-		const {
-			classes,
-			hide,
-			loading,
-			suggestions,
-			getItemProps,
-			highlightedIndex,
-			selectedItem,
-			itemToKey,
-			itemToString,
-			...rest
-		} = this.props;
+const Suggestions = (props) => {
+	const {
+		hide,
+		loading,
+		suggestions,
+		getItemProps,
+		highlightedIndex,
+		selectedItem,
+		itemToKey,
+		itemToString,
+		...rest
+	} = props;
 
-		return (
-			<Paper
-				square
-				className={classNames(classes.root, {
-					[classes.hidden]: hide || !suggestions?.length
-				})}
-			>
-				<div {...rest}>
-					{!hide &&
-						suggestions?.map((suggestion, index) =>
-							renderSuggestion({
-								loading,
-								suggestion,
-								index,
-								getItemProps,
-								highlightedIndex,
-								selectedItem,
-								itemToString,
-								itemToKey
-							})
-						)}
-				</div>
-			</Paper>
-		);
-	}
-}
+	const classes = useStyles();
+
+	return (
+		<Paper
+			square
+			className={classNames(classes.root, {
+				[classes.hidden]: hide || !suggestions?.length
+			})}
+		>
+			<div {...rest}>
+				{!hide &&
+					suggestions?.map((suggestion, index) =>
+						renderSuggestion({
+							loading,
+							suggestion,
+							index,
+							getItemProps,
+							highlightedIndex,
+							selectedItem,
+							itemToString,
+							itemToKey
+						})
+					)}
+			</div>
+		</Paper>
+	);
+};
 
 Suggestions.defaultProps = {
 	hide: false,
@@ -117,7 +118,8 @@ Suggestions.propTypes = {
 	getItemProps: PropTypes.func.isRequired,
 	highlightedIndex: PropTypes.number,
 	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired
+	itemToString: PropTypes.func.isRequired,
+	selectedItem: PropTypes.any
 };
 
-export default withStyles(styles)(Suggestions);
+export default Suggestions;
