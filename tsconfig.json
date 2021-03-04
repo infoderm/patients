@@ -7,8 +7,8 @@
     "outDir": "types",
     "checkJs": true,
     "jsx": "preserve",
-    "target": "es2020",
-    "module": "es2020",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true
   },
