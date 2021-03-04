@@ -122,7 +122,7 @@ Install dependencies, custom certificates, and MongoDB on server:
 ## :recycle: Backup & Restore
 
 Need `rsync` on both machines.
-Need `tar`, `openssl`, `mongodump`, `mongorestore`,
+Need `tar`, `age`, `mongodump`, `mongorestore`,
 and the encryption key at `key/patients` on the production machine.
 
 > The executables `mongodump` and `mongorestore` can be found at `community/mongodb-tools` on Arch Linux.
