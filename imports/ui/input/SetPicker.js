@@ -298,7 +298,6 @@ SetPicker.defaultProps = {
 };
 
 SetPicker.propTypes = {
-	classes: PropTypes.object.isRequired,
 	Chip: PropTypes.elementType,
 	withoutToggle: PropTypes.bool,
 	value: PropTypes.array.isRequired,

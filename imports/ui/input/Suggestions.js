@@ -111,7 +111,6 @@ Suggestions.defaultProps = {
 };
 
 Suggestions.propTypes = {
-	classes: PropTypes.object.isRequired,
 	hide: PropTypes.bool,
 	loading: PropTypes.bool,
 	suggestions: PropTypes.array.isRequired,
