@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 
 import {TIME_BREAK} from '../../client/constants.js';
 
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 const ConsultationsOfTheDay = ({day}) => {
 	const [showConsultations, setShowConsultations] = useState(true);
 	const [showAppointments, setShowAppointments] = useState(true);
+	const [showCancelledAppointments, setShowCancelledAppointments] = useState(false);
 
 	const prevDay = subDays(day, 1);
 	const nextDay = addDays(day, 1);
@@ -59,13 +61,15 @@ const ConsultationsOfTheDay = ({day}) => {
 		(c) =>
 			isBefore(c.datetime, pause) &&
 			(showConsultations || c.isDone === false) &&
-			(showAppointments || c.isDone !== false)
+			(showAppointments || c.isDone !== false) &&
+			(showCancelledAppointments || c.isCancelled !== true)
 	);
 	const pm = consultations.filter(
 		(c) =>
 			!isBefore(c.datetime, pause) &&
 			(showConsultations || c.isDone === false) &&
-			(showAppointments || c.isDone !== false)
+			(showAppointments || c.isDone !== false) &&
+			(showCancelledAppointments || c.isCancelled !== true)
 	);
 	const cam = count(am);
 	const cpm = count(pm);
@@ -108,7 +112,7 @@ const ConsultationsOfTheDay = ({day}) => {
 				)}
 			</div>
 			<FixedFab
-				col={5}
+				col={6}
 				color={showConsultations ? 'primary' : 'default'}
 				tooltip={
 					showConsultations ? 'Hide consultations' : 'Show consultations'
@@ -118,13 +122,23 @@ const ConsultationsOfTheDay = ({day}) => {
 				<FolderSharedIcon />
 			</FixedFab>
 			<FixedFab
-				col={4}
+				col={5}
 				color={showAppointments ? 'primary' : 'default'}
 				tooltip={showAppointments ? 'Hide appointments' : 'Show appointments'}
 				onClick={() => setShowAppointments(!showAppointments)}
 			>
 				<AccessTimeIcon />
 			</FixedFab>
+			{showAppointments && <FixedFab
+				col={4}
+				color={showCancelledAppointments ? 'primary' : 'default'}
+				tooltip={
+					showCancelledAppointments ? 'Hide cancelled appointments' : 'Show cancelled appointments'
+				}
+				onClick={() => setShowCancelledAppointments(!showCancelledAppointments)}
+			>
+				<AlarmOffIcon />
+			</FixedFab>}
 			<Prev to={`/calendar/day/${dayBefore}`} />
 			<Next to={`/calendar/day/${dayAfter}`} />
 		</>
