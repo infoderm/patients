@@ -39,13 +39,13 @@ the production machine.
 
 ### Watch tests
 
-> You can set host and port via the `$HOST` and `$PORT` environment variables (default `127.0.0.1:12348`).
+> You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12348`).
 
     npm run test
 
 ### Run once
 
-> You can set host and port via the `$HOST` and `$PORT` environment variables (default `127.0.0.1:12348`).
+> You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12348`).
 
     npm run test -- --once
 
@@ -60,13 +60,13 @@ the `chromium` executable that comes with `puppeteer` remove the assignment of t
 
 ## :alembic: Run `dev` server
 
-> You can set host and port via the `$HOST` and `$PORT` environment variables (default `127.0.0.1:12345`).
+> You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12345`).
 
     npm run dev
 
 ## :elephant: Run bundle visualizer
 
-> You can set host and port via the `$HOST` and `$PORT` environment variables (default `127.0.0.1:12345`).
+> You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12345`).
 
     npm run bundle-visualizer
 
