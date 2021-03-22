@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@aureooms/js-cardinality": "^2.0.0",
-    "@aureooms/js-codec-base64": "^2.0.1",
     "@aureooms/js-compare": "^1.4.8",
     "@aureooms/js-itertools": "^4.1.0",
     "@aureooms/js-mapping": "^4.0.0",
