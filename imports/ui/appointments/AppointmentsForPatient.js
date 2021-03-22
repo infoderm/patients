@@ -14,8 +14,8 @@ import FixedFab from '../button/FixedFab.js';
 import ConsultationsPager from '../consultations/ConsultationsPager.js';
 
 const ConsultationsForPatient = (props) => {
-	const [showCancelled, setShowCancelled] = useState(false);
-	const [showNoShow, setShowNoShow] = useState(false);
+	const [showCancelled, setShowCancelled] = useState(true);
+	const [showNoShow, setShowNoShow] = useState(true);
 
 	const {patientId, page, perpage} = props;
 
@@ -64,7 +64,7 @@ const ConsultationsForPatient = (props) => {
 		});
 	}
 
-	const sort = {datetime: 1};
+	const sort = {datetime: -1};
 
 	return (
 		<>
