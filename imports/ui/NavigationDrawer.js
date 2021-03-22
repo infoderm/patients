@@ -116,7 +116,7 @@ export default function NavigationDrawer({
 				},
 
 				{
-					to: '/calendar/month/current',
+					to: '/calendar/week/current',
 					icon: <TodayIcon />,
 					title: 'Agenda'
 				},
