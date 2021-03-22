@@ -538,39 +538,37 @@ Meteor.startup(() => {
 		.find()
 		.snapshot()
 		.forEach(
-			Meteor.bindEnvironment(
-				({_id, owner, createdAt, patientId, format, source, parsed}) => {
-					if (!_id.toHexString && parsed) {
+			async ({_id, owner, createdAt, patientId, format, source, parsed}) => {
+				if (!_id.toHexString && parsed) {
+					return;
+				}
+
+				const array = new TextEncoder().encode(source);
+
+				const document = {
+					patientId,
+					format,
+					array
+				};
+
+				const entries = await documents.sanitize(document);
+
+				for (const entry of entries) {
+					if (!entry.parsed) {
 						return;
 					}
 
-					const array = new TextEncoder().encode(source);
-
-					const document = {
-						patientId,
-						format,
-						array
-					};
-
-					const entries = documents.sanitize(document);
-
-					for (const entry of entries) {
-						if (!entry.parsed) {
-							return;
-						}
-
-						const inserted = Documents.insert({
-							...entry,
-							createdAt,
-							owner
-						});
-						console.debug('Inserted new parsed document', inserted);
-					}
-
-					console.debug('Removing old document', _id);
-					Documents.rawCollection().remove({_id});
+					const inserted = Documents.insert({
+						...entry,
+						createdAt,
+						owner
+					});
+					console.debug('Inserted new parsed document', inserted);
 				}
-			)
+
+				console.debug('Removing old document', _id);
+				Documents.rawCollection().remove({_id});
+			}
 		);
 
 	// Remove duplicate documents

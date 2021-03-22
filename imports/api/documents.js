@@ -3,12 +3,7 @@ import {Mongo} from 'meteor/mongo';
 // Import { Binary } from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import iconv from 'iconv-lite';
-
 import {zip} from '@aureooms/js-itertools';
-
-import parseHealthOne from 'healthone/lib/parse';
-import chardet from 'chardet';
 
 import pageQuery from './pageQuery';
 import {Patients, patients} from './patients.js';
@@ -51,7 +46,7 @@ if (Meteor.isServer) {
 // 'iso-8859-1': 'windows-1252',
 // } ;
 
-function sanitize({patientId, format, array}) {
+async function sanitize({patientId, format, array}) {
 	if (patientId !== undefined) check(patientId, String);
 	check(format, String);
 	check(array, Uint8Array);
@@ -67,6 +62,7 @@ function sanitize({patientId, format, array}) {
 		console.debug('trying to detect encoding...');
 		// Const utfLabel = chardet.detect(array).toLowerCase();
 		// const encoding = utfLabelToEncoding[utfLabel] || utfLabel;
+		const chardet = await import('chardet');
 		const encoding = chardet.detect(array).toLowerCase();
 		console.debug('encoding', encoding);
 		// Console.debug('constructing decoder');
@@ -74,10 +70,13 @@ function sanitize({patientId, format, array}) {
 		// console.debug('trying to decode with', decoder, '...');
 		// const decoded = decoder.decode(array.buffer, {stream: false});
 		console.debug('trying to decode with iconv...');
+
+		const iconv = await import('iconv-lite');
 		const decoded = iconv.decode(array, encoding);
 		console.debug('worked!');
 
 		if (format === 'healthone') {
+			const parseHealthOne = (await import('healthone/lib/parse')).default;
 			try {
 				const entries = [];
 				const mangledDocuments = parseHealthOne(mangled);
@@ -236,12 +235,12 @@ function updateLastVersionFlags(owner, document) {
 }
 
 Meteor.methods({
-	'documents.insert'(document) {
+	async 'documents.insert'(document) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const entries = sanitize(document);
+		const entries = await sanitize(document);
 
 		const result = [];
 
