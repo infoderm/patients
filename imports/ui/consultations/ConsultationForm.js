@@ -22,7 +22,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import WarningIcon from '@material-ui/icons/Warning';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
-import {format} from 'date-fns';
+import format from 'date-fns/format';
 
 import usePatient from '../patients/usePatient.js';
 import {books, useBooksFind} from '../../api/books.js';

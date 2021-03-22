@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import {format} from 'date-fns';
+import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import addHours from 'date-fns/addHours';

@@ -2,7 +2,7 @@ import faker from 'faker';
 
 import {list, map, range} from '@aureooms/js-itertools';
 
-import {format} from 'date-fns';
+import format from 'date-fns/format';
 
 import {Patients, patients, BIRTHDATE_FORMAT, SEX_ALLOWED} from './patients.js';
 
