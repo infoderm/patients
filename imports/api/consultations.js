@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import PairingHeap from '@aureooms/js-pairing-heap';
+import {PairingHeap} from '@aureooms/js-pairing-heap';
 import {increasing, decreasing} from '@aureooms/js-compare';
 
 import isAfter from 'date-fns/isAfter';

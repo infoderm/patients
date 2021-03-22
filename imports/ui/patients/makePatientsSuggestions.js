@@ -12,7 +12,7 @@ const DEBOUNCE_OPTIONS = {leading: false};
 const makePatientsSuggestions = (set = []) => {
 	const $nin = list(map((x) => x._id, set));
 	return (searchString) => {
-		const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
+		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(
 			searchString,
 			TIMEOUT_INPUT_DEBOUNCE,
 			DEBOUNCE_OPTIONS
@@ -49,7 +49,7 @@ const makePatientsSuggestions = (set = []) => {
 		const {loading, ...rest} = usePatientsAdvancedFind(query, options, deps);
 
 		return {
-			loading: loading || pending(),
+			loading: loading || isPending(),
 			cancel,
 			flush,
 			...rest

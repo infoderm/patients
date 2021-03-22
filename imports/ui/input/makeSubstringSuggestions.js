@@ -9,7 +9,7 @@ const DEBOUNCE_OPTIONS = {leading: false};
 const makeSubstringSuggestions = (useCollectionFind, set, key = 'name') => (
 	searchString
 ) => {
-	const [debouncedSearchString, {pending, cancel, flush}] = useDebounce(
+	const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(
 		searchString,
 		TIMEOUT_INPUT_DEBOUNCE,
 		DEBOUNCE_OPTIONS
@@ -44,7 +44,7 @@ const makeSubstringSuggestions = (useCollectionFind, set, key = 'name') => (
 	]);
 
 	return {
-		loading: loading || pending(),
+		loading: loading || isPending(),
 		cancel,
 		flush,
 		...rest
