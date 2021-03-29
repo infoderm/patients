@@ -33,7 +33,7 @@ the production machine.
 
 ### :fishing_pole_and_fish: Install pre-commit hook (`.husky/pre-commit`)
 
-    npm run install-hooks
+    meteor npm run install-hooks
 
 ## :microscope: Tests
 
@@ -41,13 +41,13 @@ the production machine.
 
 > You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12348`).
 
-    npm run test
+    meteor npm run test
 
 ### Run once
 
 > You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12348`).
 
-    npm run test -- --once
+    meteor npm run test -- --once
 
 ### Emulate CI tests (Travis)
 > :warning: We recommend using the `chromium` executable of your distribution. Installation of the
@@ -56,23 +56,23 @@ puppeteer `chromium` executable can be avoided by placing the line
 the `chromium` executable that comes with `puppeteer` remove the assignment of the variable
 `PUPPETEER_EXECUTABLE_PATH`.
 
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium npm run travis
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium meteor npm run travis
 
 ## :alembic: Run `dev` server
 
 > You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12345`).
 
-    npm run dev
+    meteor npm run dev
 
 ## :elephant: Run bundle visualizer
 
 > You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12345`).
 
-    npm run bundle-visualizer
+    meteor npm run bundle-visualizer
 
 ## :gift: Dependency management
 
-    npm run upgrade
+    meteor npm run upgrade
 
 ## :woman_health_worker: Production
 
@@ -103,21 +103,21 @@ Remember: `chmod .ssh 700` and `chmod .ssh/authorized_keys 640`.
 #### `dev` On the development machine
 Install dependencies, custom certificates, and MongoDB on server:
 
-    npm run setup-deploy
+    meteor npm run setup-deploy
 
 ### :rocket: Deploy from `dev` on `prod`
 
 #### Deploy the current state of `dev`
 
-    npm run build-and-upload
+    meteor npm run build-and-upload
 
 #### Deploy the last commit
 
-    npm run deploy
+    meteor npm run deploy
 
 #### Deploy a specific tag
 
-    TAG=vYYYY.MM.DD npm run deploy
+    TAG=vYYYY.MM.DD meteor npm run deploy
 
 ## :recycle: Backup & Restore
 
