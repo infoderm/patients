@@ -610,11 +610,12 @@ function createPatient(string) {
 		nameSplit = string.split(' ');
 	}
 
-	const [lastname, ...firstnames] = nameSplit;
+	const firstname = nameSplit.pop();
+	const lastnames = nameSplit;
 
 	return {
-		lastname,
-		firstname: firstnames.join(' '),
+		lastname: lastnames.join(' '),
+		firstname: firstname,
 		_id: '?'
 	};
 }
