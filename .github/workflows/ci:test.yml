@@ -1,0 +1,52 @@
+name: ci:test
+on:
+  - push
+  - pull_request
+jobs:
+  test:
+    name: Continuous integration (tests)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Compute Meteor release 🔎
+        run: export METEOR_RELEASE=$(cat .meteor/release | cut -d@ -f2)
+
+      - name: Cache Meteor 💽
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-meteor
+        with:
+          path: ~/.meteor
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('.meteor/release') }}-
+
+      - name: Install Meteor ☄️
+        run: |
+          export PATH=$HOME/.meteor:$PATH
+          command -v meteor >/dev/null 2>&1 || { curl https://install.meteor.com?release=$METEOR_RELEASE | sh; }
+
+      - name: Cache node modules 💽
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+
+      - name: Install dependencies 🔧
+        run: meteor npm clean-install
+
+      - name: Test 🔬
+        run: npm run ci:test
+
+      - name: Publish coverage report 📃
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true

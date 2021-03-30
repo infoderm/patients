@@ -1,5 +1,5 @@
 :face_with_thermometer: `patients`
-[![Build](https://img.shields.io/travis/infoderm/patients/main.svg)](https://travis-ci.org/infoderm/patients/branches)
+[![Tests](https://img.shields.io/github/workflow/status/infoderm/patients/ci:test?event=push&label=tests)](https://github.com/infoderm/patients/actions/workflows/ci:test.yml?query=branch:main)
 [![Code coverage (cov)](https://img.shields.io/codecov/c/gh/infoderm/patients/main.svg)](https://codecov.io/gh/infoderm/patients)
 ==
 
@@ -49,14 +49,14 @@ the production machine.
 
     meteor npm run test -- --once
 
-### Emulate CI tests (Travis)
+### Emulate CI tests (GitHub Actions)
 > :warning: We recommend using the `chromium` executable of your distribution. Installation of the
 puppeteer `chromium` executable can be avoided by placing the line
 `puppeteer_skip_chromium_download=true` in your `~/.npmrc`. If you wish to use
 the `chromium` executable that comes with `puppeteer` remove the assignment of the variable
 `PUPPETEER_EXECUTABLE_PATH`.
 
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium meteor npm run travis
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium meteor npm run ci:test
 
 ## :alembic: Run `dev` server
 
