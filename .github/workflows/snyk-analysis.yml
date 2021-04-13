@@ -9,6 +9,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    environment: Snyk
+
     steps:
 
       - name: Checkout 🛎️
