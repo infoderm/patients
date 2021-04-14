@@ -51,7 +51,7 @@
     "meteor-node-stubs": "^1.0.2",
     "notistack": "^1.0.5",
     "papaparse": "^5.3.0",
-    "pdfjs-dist": "^2.6.347",
+    "pdfjs-dist": "^2.7.570",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.1",
     "react-color": "^2.19.3",
