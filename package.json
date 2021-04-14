@@ -43,7 +43,7 @@
     "escape-string-regexp": "^4.0.0",
     "file-saver": "^2.0.5",
     "gridfs-stream": "^1.1.1",
-    "healthone": "4.0.1",
+    "healthone": "4.0.2",
     "iban": "0.0.14",
     "iconv-lite": "^0.6.2",
     "keycode": "^2.2.0",
