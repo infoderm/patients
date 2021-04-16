@@ -16,7 +16,7 @@ jobs:
       - name: Set env.METEOR_RELEASE 📻
         run: echo "METEOR_RELEASE=$(cat .meteor/release | cut -d@ -f2)" >> $GITHUB_ENV
 
-      - name: Cache Meteor 💽
+      - name: Cache Meteor ${{ env.METEOR_RELEASE }} 💿
         uses: actions/cache@v2
         id: cache-meteor
         env:
