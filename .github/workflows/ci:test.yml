@@ -26,7 +26,7 @@ jobs:
       - name: Install Meteor ☄️
         run: |
           export PATH=$HOME/.meteor:$PATH
-          command -v meteor >/dev/null 2>&1 || { curl https://install.meteor.com?release=$METEOR_RELEASE | sh; }
+          command -v meteor || { curl https://install.meteor.com?release=$METEOR_RELEASE | sh; }
 
       - name: Cache node modules 💽
         uses: actions/cache@v2
