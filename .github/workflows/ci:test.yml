@@ -44,7 +44,17 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
+      - name: Cache ./node_modules 💽
+        uses: actions/cache@v2
+        id: cache-node-modules
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install dependencies 📦
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: meteor npm clean-install
 
       - name: Cache ./.meteor/local 💾
