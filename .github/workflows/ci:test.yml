@@ -32,10 +32,10 @@ jobs:
         if: steps.cache-meteor.outputs.cache-hit != 'true'
         run: curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh
 
-      - name: Cache node modules 💽
+      - name: Cache npm packages 📦
         uses: actions/cache@v2
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-npm
         with:
           path: ~/.npm
           key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
