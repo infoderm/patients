@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.12.13",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.3.4",
     "emoji-favicon-cli": "^3.0.0",
