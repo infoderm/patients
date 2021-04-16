@@ -615,7 +615,7 @@ function createPatient(string) {
 
 	return {
 		lastname: lastnames.join(' '),
-		firstname: firstname,
+		firstname,
 		_id: '?'
 	};
 }

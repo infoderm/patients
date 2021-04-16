@@ -1,7 +1,4 @@
 const myEncodeURIComponent = encodeURIComponent;
 const myDecodeURIComponent = decodeURIComponent;
 
-export {
-	myDecodeURIComponent,
-	myEncodeURIComponent,
-};
+export {myDecodeURIComponent, myEncodeURIComponent};

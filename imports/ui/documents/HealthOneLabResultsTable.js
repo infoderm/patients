@@ -81,7 +81,7 @@ const HealthOneLabResultsTable = (props) => {
 			className = classes.unknownFlagRow;
 		} else if (result.code && result.code.startsWith('t_')) {
 			className =
-				result.name && result.name.match(/^[A-Z ]*$/)
+				result.name && /^[A-Z ]*$/.test(result.name)
 					? classes.headerRow
 					: classes.subheaderRow;
 		} else if (result.code === 'CORCOP') {

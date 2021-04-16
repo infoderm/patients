@@ -247,10 +247,10 @@ const SetPicker = (props) => {
 							...InputProps,
 							startAdornment: value.map((item, index) => (
 								<Chip
+									key={itemToString(item)}
 									{...(chipProps instanceof Function
 										? chipProps(item, index)
 										: chipProps)}
-									key={itemToString(item)}
 									tabIndex={-1}
 									label={itemToString(item)}
 									className={classes.chip}

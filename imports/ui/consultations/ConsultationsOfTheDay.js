@@ -37,7 +37,9 @@ const useStyles = makeStyles((theme) => ({
 const ConsultationsOfTheDay = ({day}) => {
 	const [showConsultations, setShowConsultations] = useState(true);
 	const [showAppointments, setShowAppointments] = useState(true);
-	const [showCancelledAppointments, setShowCancelledAppointments] = useState(false);
+	const [showCancelledAppointments, setShowCancelledAppointments] = useState(
+		false
+	);
 
 	const prevDay = subDays(day, 1);
 	const nextDay = addDays(day, 1);
@@ -129,16 +131,22 @@ const ConsultationsOfTheDay = ({day}) => {
 			>
 				<AccessTimeIcon />
 			</FixedFab>
-			{showAppointments && <FixedFab
-				col={4}
-				color={showCancelledAppointments ? 'primary' : 'default'}
-				tooltip={
-					showCancelledAppointments ? 'Hide cancelled appointments' : 'Show cancelled appointments'
-				}
-				onClick={() => setShowCancelledAppointments(!showCancelledAppointments)}
-			>
-				<AlarmOffIcon />
-			</FixedFab>}
+			{showAppointments && (
+				<FixedFab
+					col={4}
+					color={showCancelledAppointments ? 'primary' : 'default'}
+					tooltip={
+						showCancelledAppointments
+							? 'Hide cancelled appointments'
+							: 'Show cancelled appointments'
+					}
+					onClick={() =>
+						setShowCancelledAppointments(!showCancelledAppointments)
+					}
+				>
+					<AlarmOffIcon />
+				</FixedFab>
+			)}
 			<Prev to={`/calendar/day/${dayBefore}`} />
 			<Next to={`/calendar/day/${dayAfter}`} />
 		</>

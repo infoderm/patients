@@ -76,7 +76,9 @@ async function sanitize({patientId, format, array}) {
 		console.debug('worked!');
 
 		if (format === 'healthone') {
-			const {default: parseHealthOne} = await import('healthone/dist/default/parse.js');
+			const {default: parseHealthOne} = await import(
+				'healthone/dist/default/parse.js'
+			);
 			try {
 				const entries = [];
 				const mangledDocuments = parseHealthOne(mangled);

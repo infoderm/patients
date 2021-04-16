@@ -43,8 +43,8 @@ function renderSuggestion({
 
 	return (
 		<MenuItem
-			{...getItemProps({item: suggestion})}
 			key={itemToKey(suggestion)}
+			{...getItemProps({item: suggestion})}
 			selected={isHighlighted}
 			disabled={loading}
 			component="div"
