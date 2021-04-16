@@ -47,6 +47,23 @@ jobs:
       - name: Install dependencies 📦
         run: meteor npm clean-install
 
+      - name: Cache ./.meteor/local 💾
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-meteor-local
+        with:
+          path: |
+            ./.meteor/local/resolver-result-cache.json
+            ./.meteor/local/plugin-cache
+            ./.meteor/local/isopacks
+            ./.meteor/local/bundler-cache/scanner
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}-${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}-${{ github.ref }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-
+
       - name: Test 🔬
         run: meteor npm run ci:test
 
