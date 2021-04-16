@@ -28,7 +28,8 @@ jobs:
         run: echo "$HOME/.meteor" >> $GITHUB_PATH
 
       - name: Install Meteor ${{ env.METEOR_RELEASE }} ☄️
-        run: command -v meteor || { curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh; }
+        if: ! command -v meteor
+        run: curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh
 
       - name: Cache node modules 💽
         uses: actions/cache@v2
