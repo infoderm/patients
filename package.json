@@ -15,7 +15,7 @@
   "dependencies": {
     "@aureooms/js-cardinality": "^3.0.0",
     "@aureooms/js-compare": "^2.0.0",
-    "@aureooms/js-itertools": "^5.0.2",
+    "@aureooms/js-itertools": "^5.1.0",
     "@aureooms/js-mapping": "^5.0.0",
     "@aureooms/js-pairing-heap": "^2.0.1",
     "@babel/runtime": "^7.13.10",
