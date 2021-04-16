@@ -19,9 +19,10 @@ jobs:
           cache-name: cache-meteor
         with:
           path: ~/.meteor
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}
           restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('.meteor/release') }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-
 
       - name: Setup PATH 🪜
         run: echo "$HOME/.meteor" >> $GITHUB_PATH
