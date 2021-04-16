@@ -10,7 +10,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
-      - name: Compute Meteor release 🔎
+      - name: Set env.METEOR_RELEASE 📻
         run: echo "METEOR_RELEASE=$(cat .meteor/release | cut -d@ -f2)" >> $GITHUB_ENV
 
       - name: Cache Meteor 💽
