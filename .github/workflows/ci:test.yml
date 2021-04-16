@@ -27,7 +27,7 @@ jobs:
       - name: Setup PATH 🪜
         run: echo "$HOME/.meteor" >> $GITHUB_PATH
 
-      - name: Install Meteor ☄️
+      - name: Install Meteor ${{ env.METEOR_RELEASE }} ☄️
         run: command -v meteor || { curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh; }
 
       - name: Cache node modules 💽
