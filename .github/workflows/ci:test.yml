@@ -10,6 +10,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
+      - name: Set $PATH 🪜
+        run: echo "$HOME/.meteor" >> $GITHUB_PATH
+
       - name: Set env.METEOR_RELEASE 📻
         run: echo "METEOR_RELEASE=$(cat .meteor/release | cut -d@ -f2)" >> $GITHUB_ENV
 
@@ -24,9 +27,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-
-
-      - name: Set $PATH 🪜
-        run: echo "$HOME/.meteor" >> $GITHUB_PATH
 
       - name: Install Meteor ${{ env.METEOR_RELEASE }} ☄️
         if: steps.cache-meteor.outputs.cache-hit != 'true'
