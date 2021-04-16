@@ -32,7 +32,7 @@ jobs:
         if: steps.cache-meteor.outputs.cache-hit != 'true'
         run: curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh
 
-      - name: Cache npm packages 📦
+      - name: Cache npm packages 📀
         uses: actions/cache@v2
         env:
           cache-name: cache-npm
@@ -44,13 +44,13 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 
-      - name: Install dependencies 🔧
+      - name: Install dependencies 📦
         run: meteor npm clean-install
 
       - name: Test 🔬
         run: meteor npm run ci:test
 
-      - name: Publish coverage report 📃
+      - name: Publish coverage report 📰
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
