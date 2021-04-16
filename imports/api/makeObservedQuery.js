@@ -18,7 +18,10 @@ const makeObservedQuery = (Collection, subscription) => (
 		const key = JSON.stringify({timestamp, query, options});
 		const handle = Meteor.subscribe(subscription, key, query, options, {
 			onStop: () => {
-				if (handleRef.current === handle) setDirty(true);
+				if (handleRef.current === handle) {
+					setLoading(false);
+					setDirty(true);
+				}
 			},
 			onReady: () => {
 				const {results} = Collection.findOne({key});
