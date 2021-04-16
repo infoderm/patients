@@ -23,10 +23,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('.meteor/release') }}-
 
+      - name: Setup PATH 🪜
+        run: echo "$HOME/.meteor" >> $GITHUB_PATH
+
       - name: Install Meteor ☄️
-        run: |
-          echo "$HOME/.meteor" >> $GITHUB_PATH
-          command -v meteor || { curl https://install.meteor.com?release=$METEOR_RELEASE | sh; }
+        run: command -v meteor || { curl https://install.meteor.com?release=$METEOR_RELEASE | sh; }
 
       - name: Cache node modules 💽
         uses: actions/cache@v2
