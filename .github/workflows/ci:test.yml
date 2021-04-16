@@ -46,7 +46,7 @@ jobs:
         run: meteor npm clean-install
 
       - name: Test 🔬
-        run: npm run ci:test
+        run: meteor npm run ci:test
 
       - name: Publish coverage report 📃
         uses: codecov/codecov-action@v1
