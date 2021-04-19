@@ -153,10 +153,7 @@ export default function StaticPatientCard({loading, found, patient}) {
 						style={style}
 					/>
 				) : (
-					<animated.div
-						className={classes.photoPlaceHolder}
-						style={style}
-					>
+					<animated.div className={classes.photoPlaceHolder} style={style}>
 						{firstname[0]}
 						{lastname[0]}
 					</animated.div>
