@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
 		flex: '1 0 auto'
 	},
 	photoPlaceHolder: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
 		display: 'flex',
 		fontSize: '4rem',
 		margin: 0,
@@ -63,6 +66,9 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: '#999'
 	},
 	photo: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
 		width: 140,
 		height: 200
 	},
@@ -97,8 +103,8 @@ export default function StaticPatientCard({loading, found, patient}) {
 	const lastname = patient.lastname || '?';
 	const sex = patient.sex || 'N';
 
-	const photoTransitions = useTransition(photo, null, {
-		from: {position: 'absolute', right: 0, top: 0, opacity: 0},
+	const photoTransition = useTransition([photo], {
+		from: {opacity: 0},
 		enter: {opacity: 1},
 		leave: {opacity: 0}
 	});
@@ -137,22 +143,17 @@ export default function StaticPatientCard({loading, found, patient}) {
 					)}
 				</CardActions>
 			</div>
-			{photoTransitions.map(({item, props, key}) =>
+			{photoTransition((style, item) =>
 				item ? (
 					<CardMedia
-						key={key}
 						component={animated.div}
 						className={classes.photo}
 						image={`data:image/png;base64,${item}`}
 						title={`${firstname} ${lastname}`}
-						style={props}
+						style={style}
 					/>
 				) : (
-					<animated.div
-						key={key}
-						className={classes.photoPlaceHolder}
-						style={props}
-					>
+					<animated.div className={classes.photoPlaceHolder} style={style}>
 						{firstname[0]}
 						{lastname[0]}
 					</animated.div>
