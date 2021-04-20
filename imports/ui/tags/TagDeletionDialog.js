@@ -57,7 +57,7 @@ const TagDeletionDialog = (props) => {
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
-				persist: 'true'
+				persist: true
 			});
 			Meteor.call(method, tag._id, (err, _res) => {
 				closeSnackbar(key);
