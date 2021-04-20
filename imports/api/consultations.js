@@ -36,6 +36,29 @@ export const isUnpaid = ({price, paid}) => paid !== price;
 
 const statsKey = (query, init) => JSON.stringify({query, init});
 
+export const findLastConsultationInInterval = ([begin, end], filter) =>
+	Consultations.findOne(
+		{
+			isDone: true,
+			datetime: {
+				$gte: begin,
+				$lt: end
+			},
+			...filter
+		},
+		{
+			sort: {
+				datetime: -1
+			}
+		}
+	);
+
+export const filterNotInRareBooks = () => ({
+	book: {
+		$nin: books.RARE
+	}
+});
+
 function setupConsultationsStatsPublication(collection, query, init) {
 	// Generate unique key depending on parameters
 	const key = statsKey(query, init);
@@ -145,33 +168,32 @@ if (Meteor.isServer) {
 		});
 	});
 
-	Meteor.publish('consultations.accounted.interval.last', function (from, to) {
+	Meteor.publish('consultations.interval.last', function (from, to, filter) {
 		return Consultations.find(
 			{
-				owner: this.userId,
 				isDone: true,
 				datetime: {
 					$gte: from,
 					$lt: to
 				},
-				book: {
-					$ne: '0'
-				}
+				...filter,
+				owner: this.userId
 			},
 			{
 				sort: {
-					datetime: -1,
-					limit: 1
-				}
+					datetime: -1
+				},
+				limit: 1
 			}
 		);
 	});
 
-	Meteor.publish('consultations.last', function () {
+	Meteor.publish('consultations.last', function (filter) {
 		return Consultations.find(
 			{
-				owner: this.userId,
-				isDone: true
+				isDone: true,
+				...filter,
+				owner: this.userId
 			},
 			{
 				sort: {
