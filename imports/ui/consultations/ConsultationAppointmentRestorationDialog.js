@@ -19,6 +19,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
+import useIsMounted from '../hooks/useIsMounted.js';
 
 import usePatient from '../patients/usePatient.js';
 
@@ -57,6 +58,8 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 		props: ConfirmationTextFieldProps
 	} = useConfirmationTextFieldState(patient.lastname, getError);
 
+	const isMounted = useIsMounted();
+
 	const restoreThisConsultationsAppointmentIfPatientsLastNameMatches = (
 		event
 	) => {
@@ -75,7 +78,7 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 						const message = `Appointment #${consultation._id} restored from consultation.`;
 						console.log(message);
 						enqueueSnackbar(message, {variant: 'success'});
-						onClose();
+						if (isMounted()) onClose();
 					}
 				}
 			);
