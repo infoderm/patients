@@ -127,7 +127,7 @@ encrypted (`age`) compressed MongoDB archive (`--archive --gzip`).
 
 ### :movie_camera: Backup
 
-    sh .backup-fs/backup.sh
+    sh .backup/fs/backup.sh
 
 ### :film_projector: Restore
 
