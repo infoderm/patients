@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -o xtrace
 
@@ -6,14 +6,9 @@ DB="patients"
 SERVER='meteorapp@patients.local'
 CLOUD='db' # dropbox
 IDENTITY="$HOME/.ssh/meteorapp"
-#CRYPTO="-pbkdf2"
-#KEY="file:key/patients"
 KEYFILE="key/${DB}.txt"
 PUBKEY="$(grep 'public key' "$KEYFILE" | cut -d' ' -f4)"
-DUMP="dump/${DB}"
 BACKUP="backup/${DB}"
-ARCHIVE="${DB}.gz"
-#ENCRYPTED="${DB}.gz.enc"
 ENCRYPTED="${DB}.gz.age"
 
 function onserver {
@@ -25,11 +20,8 @@ function load {
 }
 
 cd "$(dirname "$0")"
-onserver rm -rf "$DUMP" "$ARCHIVE" "$ENCRYPTED" || exit 1
-onserver mongodump --db "$DB" || exit 1
-onserver tar czf "$ARCHIVE" "$DUMP" || exit 1
-#onserver openssl enc $CRYPTO -in patients.gz -out patients.gz.enc -pass $KEY || exit 1
-onserver age -r "$PUBKEY" -o "$ENCRYPTED" "$ARCHIVE" || exit 1
+onserver rm -f "$ENCRYPTED" || exit 1
+onserver "docker exec mongodb mongodump --db '$DB' --archive --gzip | age -r '$PUBKEY' -o '$ENCRYPTED'" || exit 3
 load "$SERVER":"$ENCRYPTED" "$ENCRYPTED" || exit 1
 rc copy "$ENCRYPTED" "$CLOUD":"$BACKUP"/"$(date '+%Y-%m-%d_%H:%M:%S')"
 

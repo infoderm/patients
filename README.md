@@ -121,11 +121,9 @@ Install dependencies, custom certificates, and MongoDB on server:
 
 ## :recycle: Backup & Restore
 
-Need `rsync` on both machines.
-Need `tar`, `age`, `mongodump`, `mongorestore`,
-and the encryption key at `key/patients` on the production machine.
-
-> The executables `mongodump` and `mongorestore` can be found at `community/mongodb-tools` on Arch Linux.
+The current backup system requires `age` and the encryption/decryption key at
+`~/key/patients` on the production machine. It saves the database as an
+encrypted (`age`) compressed MongoDB archive (`--archive --gzip`).
 
 ### :movie_camera: Backup
 
@@ -134,3 +132,20 @@ and the encryption key at `key/patients` on the production machine.
 ### :film_projector: Restore
 
     sh .backup/restore.sh
+
+### :scroll: Changelog
+
+#### Now
+
+The backup system uses encrypted (`age`) compressed MongoDB archives
+(`--archive --gzip`). They can be restored with
+
+    age --decrypt -i "$KEYFILE" < 'patients.gz.age' |
+      mongorestore --drop --db patients --archive --gzip
+
+#### Until 2021-04-20
+
+The backup system uses encrypted gzipped TAR archives. They can be processed by
+first decrypting with `age` to obtain a `.gz` file, then decompressing and
+unarchiving with `tar xzf` to obtain a `dump` directory, and finally using
+`mongorestore --drop --db patients` to restore the database.
