@@ -1,7 +1,14 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
-import {Consultations, consultations} from './consultations.js';
+import {thisYearsInterval} from '../util/datetime.js';
+
+import {
+	Consultations,
+	consultations,
+	findLastConsultationInInterval,
+	filterNotInRareBooks
+} from './consultations.js';
 import {patients} from './patients.js';
 
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
@@ -147,7 +154,11 @@ const methods = {
 	),
 	'appointments.beginConsultation': unconditionallyUpdateById(
 		Appointments,
-		() => {
+		function () {
+			const book = findLastConsultationInInterval(thisYearsInterval(), {
+				...filterNotInRareBooks(),
+				owner: this.userId
+			})?.book;
 			const realDatetime = new Date();
 			return {
 				$set: {
@@ -155,7 +166,8 @@ const methods = {
 					realDatetime,
 					price: 0,
 					paid: 0,
-					isDone: true
+					isDone: true,
+					book
 				}
 			};
 		}
