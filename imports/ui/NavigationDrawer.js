@@ -117,7 +117,7 @@ export default function NavigationDrawer({
 				},
 
 				{
-					to: '/consultations/last',
+					to: '/consultation/last',
 					icon: <BookmarkIcon />,
 					title: 'Dernière'
 				},

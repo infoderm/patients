@@ -26,6 +26,9 @@ const TodaysConsultations = lazy(() =>
 const LastDayOfConsultations = lazy(() =>
 	import('./consultations/LastDayOfConsultations.js')
 );
+const LastConsultation = lazy(() =>
+	import('./consultations/LastConsultation.js')
+);
 const ConsultationDetails = lazy(() =>
 	import('./consultations/ConsultationDetails.js')
 );
@@ -191,6 +194,7 @@ export default function Router() {
 					path="/consultations/last"
 					component={LastDayOfConsultations}
 				/>
+				<Route exact path="/consultation/last" component={LastConsultation} />
 				<Route exact path="/consultation/:id" component={ConsultationDetails} />
 				<Route
 					exact
