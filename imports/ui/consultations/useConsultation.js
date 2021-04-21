@@ -1,6 +1,6 @@
-import makeCachedFindOne from '../../api/makeCachedFindOne.js';
+import makeFindOne from '../../api/makeFindOne.js';
 import {Consultations} from '../../api/consultations.js';
 
-const useConsultation = makeCachedFindOne(Consultations, 'consultation');
+const useConsultation = makeFindOne(Consultations, 'consultation');
 
 export default useConsultation;
