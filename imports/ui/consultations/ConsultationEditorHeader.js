@@ -10,19 +10,10 @@ import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import usePatient from '../patients/usePatient.js';
 
+import useSubHeaderStyles from '../styles/subheader.js';
+
 const styles = () =>
 	createStyles({
-		header: {
-			backgroundColor: 'white',
-			position: 'fixed',
-			top: '76px',
-			paddingTop: '0.4em',
-			zIndex: 10,
-			marginLeft: '-24px',
-			marginRight: '-24px',
-			boxShadow:
-				'0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)'
-		},
 		avatar: {
 			width: '48px',
 			height: '48px'
@@ -49,11 +40,12 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const {loading, fields: patient} = usePatient(init, query, options, deps);
 
 	const classes = useStyles();
+	const subHeaderClasses = useSubHeaderStyles();
 
 	const {date, time} = state;
 
 	return (
-		<Grid container className={classes.header} spacing={3}>
+		<Grid container className={subHeaderClasses.subheader} spacing={3}>
 			{loading || !patient || !patient.photo ? null : (
 				<Grid item>
 					<Avatar
