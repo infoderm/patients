@@ -36,14 +36,10 @@ export const isUnpaid = ({price, paid}) => paid !== price;
 
 const statsKey = (query, init) => JSON.stringify({query, init});
 
-export const findLastConsultationInInterval = ([begin, end], filter) =>
+export const findLastConsultation = (filter) =>
 	Consultations.findOne(
 		{
 			isDone: true,
-			datetime: {
-				$gte: begin,
-				$lt: end
-			},
 			...filter
 		},
 		{
@@ -52,6 +48,15 @@ export const findLastConsultationInInterval = ([begin, end], filter) =>
 			}
 		}
 	);
+
+export const findLastConsultationInInterval = ([begin, end], filter) =>
+	findLastConsultation({
+		datetime: {
+			$gte: begin,
+			$lt: end
+		},
+		...filter
+	});
 
 export const filterNotInRareBooks = () => ({
 	book: {
