@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,9 +9,9 @@ import Avatar from '@material-ui/core/Avatar';
 
 import FaceIcon from '@material-ui/icons/Face';
 
-import {Patients} from '../../api/patients.js';
-
 import useSubHeaderStyles from '../styles/subheader.js';
+
+import useCachedPatient from './useCachedPatient.js';
 
 const useStyles = makeStyles(() => ({
 	avatar: {
@@ -23,7 +20,19 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-const PatientHeader = ({patientId, loading, patient}) => {
+const PatientHeader = ({patientId}) => {
+	const init = {_id: patientId};
+	const query = patientId;
+	const options = {};
+	const deps = [query];
+
+	const {loading, found, fields: patient} = useCachedPatient(
+		init,
+		query,
+		options,
+		deps
+	);
+
 	const classes = useStyles();
 	const subHeaderClasses = useSubHeaderStyles();
 
@@ -68,7 +77,7 @@ const PatientHeader = ({patientId, loading, patient}) => {
 					readOnly
 					label="Patient id"
 					value={patientId}
-					error={!loading && !patient}
+					error={!loading && !found}
 				/>
 			</Grid>
 		</Grid>
@@ -76,18 +85,7 @@ const PatientHeader = ({patientId, loading, patient}) => {
 };
 
 PatientHeader.propTypes = {
-	patientId: PropTypes.string.isRequired,
-	loading: PropTypes.bool.isRequired,
-	patient: PropTypes.object
+	patientId: PropTypes.string.isRequired
 };
 
-export default withTracker(({patientId}) => {
-	const handle = Meteor.subscribe('patient', patientId);
-
-	if (handle.ready()) {
-		const patient = Patients.findOne(patientId);
-		return {patientId, loading: false, patient};
-	}
-
-	return {patientId, loading: true};
-})(PatientHeader);
+export default PatientHeader;
