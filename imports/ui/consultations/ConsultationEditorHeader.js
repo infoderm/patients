@@ -6,21 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '../input/TextField.js';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
-
 import usePatient from '../patients/usePatient.js';
 
-import useSubHeaderStyles from '../styles/subheader.js';
-
-const styles = () =>
-	createStyles({
-		avatar: {
-			width: '48px',
-			height: '48px'
-		}
-	});
-
-const useStyles = makeStyles(styles);
+import useStyles from '../styles/subheader.js';
 
 const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const patientId = consultation.patientId;
@@ -40,12 +28,11 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const {loading, fields: patient} = usePatient(init, query, options, deps);
 
 	const classes = useStyles();
-	const subHeaderClasses = useSubHeaderStyles();
 
 	const {date, time} = state;
 
 	return (
-		<Grid container className={subHeaderClasses.subheader} spacing={3}>
+		<Grid container className={classes.container} spacing={3}>
 			{loading || !patient || !patient.photo ? null : (
 				<Grid item>
 					<Avatar

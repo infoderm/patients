@@ -1,24 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import Grid from '@material-ui/core/Grid';
 import TextField from '../input/TextField.js';
 import Avatar from '@material-ui/core/Avatar';
 
 import FaceIcon from '@material-ui/icons/Face';
 
-import useSubHeaderStyles from '../styles/subheader.js';
+import useStyles from '../styles/subheader.js';
 
 import useCachedPatient from './useCachedPatient.js';
-
-const useStyles = makeStyles(() => ({
-	avatar: {
-		width: '48px',
-		height: '48px'
-	}
-}));
 
 const PatientHeader = ({patientId}) => {
 	const init = {_id: patientId};
@@ -34,10 +25,9 @@ const PatientHeader = ({patientId}) => {
 	);
 
 	const classes = useStyles();
-	const subHeaderClasses = useSubHeaderStyles();
 
 	return (
-		<Grid container className={subHeaderClasses.subheader} spacing={3}>
+		<Grid container className={classes.container} spacing={3}>
 			<Grid item>
 				{!patient || !patient.photo ? (
 					<Avatar className={classes.avatar}>
