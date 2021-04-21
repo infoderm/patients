@@ -119,21 +119,25 @@ const init = (consultation) => ({
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'update':
-			return {...state, [action.key]: action.value, dirty: true};
+			switch (action.key) {
+				case 'paid':
+					return {...state, paid: action.value, syncPaid: false, dirty: true};
+				case 'price':
+					return {
+						...state,
+						price: action.value,
+						paid:
+							state.syncPaid && state.payment_method === 'cash'
+								? action.value
+								: state.paid,
+						dirty: true
+					};
+				default:
+					return {...state, [action.key]: action.value, dirty: true};
+			}
+
 		case 'not-dirty':
 			return {...state, dirty: false};
-		case 'update-paid':
-			return {...state, paid: action.value, syncPaid: false, dirty: true};
-		case 'update-price':
-			return {
-				...state,
-				price: action.value,
-				paid:
-					state.syncPaid && state.payment_method === 'cash'
-						? action.value
-						: state.paid,
-				dirty: true
-			};
 		default:
 			throw new Error(`Unknown action type ${action.type}.`);
 	}
@@ -456,9 +460,7 @@ const ConsultationForm = ({consultation}) => {
 									</InputAdornment>
 								)
 							}}
-							onChange={({target: {value}}) =>
-								dispatch({type: 'update-price', value})
-							}
+							onChange={update('price')}
 						/>
 					</Grid>
 					<Grid item xs={3}>
@@ -467,9 +469,7 @@ const ConsultationForm = ({consultation}) => {
 							value={paid}
 							margin="normal"
 							error={!/^\d+$/.test(paid)}
-							onChange={({target: {value}}) =>
-								dispatch({type: 'update-paid', value})
-							}
+							onChange={update('paid')}
 						/>
 					</Grid>
 					<Grid item xs={3}>
