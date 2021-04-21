@@ -37,7 +37,7 @@ const PatientHeader = ({patientId, loading, patient}) => {
 
 	return (
 		<Grid container className={classes.header} spacing={3}>
-			<Grid item xs={1}>
+			<Grid item>
 				{!patient || !patient.photo ? (
 					<Avatar className={classes.avatar}>
 						<FaceIcon />
