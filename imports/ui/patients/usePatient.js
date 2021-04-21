@@ -1,6 +1,6 @@
-import makeCachedFindOne from '../../api/makeCachedFindOne.js';
+import makeFindOne from '../../api/makeFindOne.js';
 import {Patients} from '../../api/patients.js';
 
-const usePatient = makeCachedFindOne(Patients, 'patient');
+const usePatient = makeFindOne(Patients, 'patient');
 
 export default usePatient;

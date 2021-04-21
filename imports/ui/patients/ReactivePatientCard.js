@@ -2,7 +2,7 @@ import React from 'react';
 
 import StaticPatientCard from './StaticPatientCard.js';
 
-import usePatient from './usePatient.js';
+import useCachedPatient from './useCachedPatient.js';
 
 const ReactivePatientCard = ({patient}) => {
 	const patientId = patient._id;
@@ -18,7 +18,12 @@ const ReactivePatientCard = ({patient}) => {
 	// Currently this is not necessary since we do not preload photos.
 
 	const deps = [patientId, JSON.stringify(StaticPatientCard.projection)];
-	const {loading, found, fields} = usePatient({}, patientId, options, deps);
+	const {loading, found, fields} = useCachedPatient(
+		{},
+		patientId,
+		options,
+		deps
+	);
 	const props = {loading, found, patient: {...patient, ...fields}};
 
 	return <StaticPatientCard {...props} />;
