@@ -187,7 +187,7 @@ const ConsultationForm = ({consultation}) => {
 					confirm={
 						consultationId === undefined
 							? 'Create consultation anyway'
-							: 'Edit consultation anyway'
+							: 'Update consultation anyway'
 					}
 					onCancel={() => {
 						resolve(false);
