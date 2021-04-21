@@ -1,35 +1,31 @@
-import {Meteor} from 'meteor/meteor';
-
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
-
-import ConsultationForm from './ConsultationForm.js';
 
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import {Consultations} from '../../api/consultations.js';
+import useConsultation from './useConsultation.js';
+import ConsultationForm from './ConsultationForm.js';
 
-const EditConsultationForm = ({loading, consultation}) => {
-	if (loading) {
-		return <Loading />;
-	}
+const EditConsultationForm = ({match}) => {
+	const init = {};
+	const query = match.params.id;
+	const options = {};
+	const deps = [query];
 
-	if (!consultation) {
+	const {loading, found, fields: consultation} = useConsultation(
+		init,
+		query,
+		options,
+		deps
+	);
+
+	if (loading) return <Loading />;
+
+	if (!found) {
 		return <NoContent>Consultation not found.</NoContent>;
 	}
 
 	return <ConsultationForm consultation={consultation} />;
 };
 
-export default withTracker(({match}) => {
-	const _id = match.params.id;
-	const handle = Meteor.subscribe('consultation', _id);
-	if (handle.ready()) {
-		const consultation = Consultations.findOne(_id);
-		return {loading: false, consultation};
-	}
-
-	return {loading: true};
-})(EditConsultationForm);
+export default EditConsultationForm;
