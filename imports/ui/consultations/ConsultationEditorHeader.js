@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {Link} from 'react-router-dom';
+
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '../input/TextField.js';
@@ -53,11 +55,13 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	return (
 		<Grid container className={classes.header} spacing={3}>
 			{loading || !patient || !patient.photo ? null : (
-				<Grid item xs={1}>
+				<Grid item>
 					<Avatar
 						alt={`${patient.firstname} ${patient.lastname}`}
 						src={`data:image/png;base64,${patient.photo}`}
 						className={classes.avatar}
+						component={Link}
+						to={`/patient/${patientId}`}
 					/>
 				</Grid>
 			)}
