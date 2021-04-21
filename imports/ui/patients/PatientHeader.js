@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import TextField from '../input/TextField.js';
 import Avatar from '@material-ui/core/Avatar';
 
 import FaceIcon from '@material-ui/icons/Face';
@@ -52,28 +52,28 @@ const PatientHeader = ({patientId, loading, patient}) => {
 			</Grid>
 			<Grid item xs={2}>
 				<TextField
-					inputProps={{readOnly: true}}
+					readOnly
 					label="Lastname"
 					value={!patient ? '?' : patient.lastname || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<TextField
-					inputProps={{readOnly: true}}
+					readOnly
 					label="Firstname"
 					value={!patient ? '?' : patient.firstname || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<TextField
-					inputProps={{readOnly: true}}
+					readOnly
 					label="NISS"
 					value={!patient ? '?' : patient.niss || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<TextField
-					inputProps={{readOnly: true}}
+					readOnly
 					label="Patient id"
 					value={patientId}
 					error={!loading && !patient}
