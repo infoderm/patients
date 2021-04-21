@@ -11,7 +11,6 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
 
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -24,7 +23,6 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import format from 'date-fns/format';
 
-import usePatient from '../patients/usePatient.js';
 import {books, useBooksFind} from '../../api/books.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
@@ -32,6 +30,8 @@ import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
 
 import confirm from '../modal/confirm.js';
 import ConfirmationDialog from '../modal/ConfirmationDialog.js';
+
+import ConsultationEditorHeader from './ConsultationEditorHeader.js';
 
 const styles = (theme) => ({
 	container: {
@@ -42,24 +42,9 @@ const styles = (theme) => ({
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing(2)}px)`
 	},
-	header: {
-		backgroundColor: 'white',
-		position: 'fixed',
-		top: '76px',
-		paddingTop: '0.4em',
-		zIndex: 10,
-		marginLeft: '-24px',
-		marginRight: '-24px',
-		boxShadow:
-			'0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)'
-	},
 	form: {
 		marginTop: 64 + theme.spacing(3),
 		padding: theme.spacing(3)
-	},
-	avatar: {
-		width: '48px',
-		height: '48px'
 	},
 	saveButton: computeFixedFabStyle({theme, col: 2}),
 	doneButton: computeFixedFabStyle({theme, col: 1}),
@@ -151,15 +136,6 @@ const ConsultationForm = ({consultation}) => {
 
 	const [state, dispatch] = useReducer(reducer, consultation, init);
 
-	const options = {
-		fields: {
-			niss: 1,
-			firstname: 1,
-			lastname: 1,
-			photo: 1
-		}
-	};
-
 	const {
 		date,
 		time,
@@ -178,15 +154,6 @@ const ConsultationForm = ({consultation}) => {
 
 		dirty
 	} = state;
-
-	const deps = [patientId];
-
-	const {loading: loadingPatient, fields: patient} = usePatient(
-		{},
-		patientId,
-		options,
-		deps
-	);
 
 	const priceWarning = Number.parseInt(price, 10) === 0;
 
@@ -275,71 +242,11 @@ const ConsultationForm = ({consultation}) => {
 				when={dirty}
 				message="You are trying to leave the page without saving your changes. Are you sure you want to continue?"
 			/>
-			<Grid container className={classes.header} spacing={3}>
-				{loadingPatient || !patient || !patient.photo ? null : (
-					<Grid item xs={1}>
-						<Avatar
-							alt={`${patient.firstname} ${patient.lastname}`}
-							src={`data:image/png;base64,${patient.photo}`}
-							className={classes.avatar}
-						/>
-					</Grid>
-				)}
-				{loadingPatient || !patient ? null : (
-					<Grid item xs={2}>
-						<TextField
-							inputProps={{readOnly: true}}
-							label="Lastname"
-							value={patient.lastname}
-						/>
-					</Grid>
-				)}
-				{loadingPatient || !patient ? null : (
-					<Grid item xs={2}>
-						<TextField
-							inputProps={{readOnly: true}}
-							label="Firstname"
-							value={patient.firstname}
-						/>
-					</Grid>
-				)}
-				{loadingPatient || !patient ? null : (
-					<Grid item xs={2}>
-						<TextField
-							inputProps={{readOnly: true}}
-							label="NISS"
-							value={patient.niss}
-						/>
-					</Grid>
-				)}
-				{!loadingPatient && patient ? null : (
-					<Grid item xs={2}>
-						<TextField disabled label="Patient id" value={patientId} />
-					</Grid>
-				)}
-				<Grid item xs={2}>
-					<TextField
-						type="date"
-						label="Date"
-						InputLabelProps={{
-							shrink: true
-						}}
-						value={date}
-						onChange={update('date')}
-					/>
-				</Grid>
-				<Grid item xs={1}>
-					<TextField
-						type="time"
-						label="Time"
-						InputLabelProps={{
-							shrink: true
-						}}
-						value={time}
-						onChange={update('time')}
-					/>
-				</Grid>
-			</Grid>
+			<ConsultationEditorHeader
+				consultation={consultation}
+				state={state}
+				update={update}
+			/>
 			<Paper className={classes.form}>
 				<Grid container spacing={3}>
 					<Grid item xs={12}>
