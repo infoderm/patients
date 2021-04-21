@@ -2,7 +2,7 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
-import TextField from '@material-ui/core/TextField';
+import TextField from '../input/TextField.js';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -62,29 +62,17 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			)}
 			{loading || !patient ? null : (
 				<Grid item xs={2}>
-					<TextField
-						inputProps={{readOnly: true}}
-						label="Lastname"
-						value={patient.lastname}
-					/>
+					<TextField readOnly label="Lastname" value={patient.lastname} />
 				</Grid>
 			)}
 			{loading || !patient ? null : (
 				<Grid item xs={2}>
-					<TextField
-						inputProps={{readOnly: true}}
-						label="Firstname"
-						value={patient.firstname}
-					/>
+					<TextField readOnly label="Firstname" value={patient.firstname} />
 				</Grid>
 			)}
 			{loading || !patient ? null : (
 				<Grid item xs={2}>
-					<TextField
-						inputProps={{readOnly: true}}
-						label="NISS"
-						value={patient.niss}
-					/>
+					<TextField readOnly label="NISS" value={patient.niss} />
 				</Grid>
 			)}
 			{!loading && patient ? null : (
