@@ -1,10 +1,7 @@
 import React from 'react';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
-
 import useConsultation from './useConsultation.js';
-import ConsultationForm from './ConsultationForm.js';
+import ConsultationEditor from './ConsultationEditor.js';
 
 const EditConsultationForm = ({match}) => {
 	const init = {};
@@ -19,13 +16,13 @@ const EditConsultationForm = ({match}) => {
 		deps
 	);
 
-	if (loading) return <Loading />;
-
-	if (!found) {
-		return <NoContent>Consultation not found.</NoContent>;
-	}
-
-	return <ConsultationForm consultation={consultation} />;
+	return (
+		<ConsultationEditor
+			loading={loading}
+			found={found}
+			consultation={consultation}
+		/>
+	);
 };
 
 export default EditConsultationForm;
