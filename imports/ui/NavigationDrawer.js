@@ -16,7 +16,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import BusinessIcon from '@material-ui/icons/Business';
 import BugReportIcon from '@material-ui/icons/BugReport';
-import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 import TodayIcon from '@material-ui/icons/Today';
 import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
@@ -110,8 +111,14 @@ export default function NavigationDrawer({
 				},
 
 				{
-					to: '/consultations',
-					icon: <FolderSharedIcon />,
+					to: '/consultations/today',
+					icon: <ScheduleIcon />,
+					title: "Aujourd'hui"
+				},
+
+				{
+					to: '/consultations/last',
+					icon: <BookmarkIcon />,
 					title: 'Dernière'
 				},
 

@@ -20,6 +20,9 @@ const NewPatientForm = lazy(() => import('./patients/NewPatientForm.js'));
 const ConsultationsOfTheDay = lazy(() =>
 	import('./consultations/ConsultationsOfTheDay.js')
 );
+const TodaysConsultations = lazy(() =>
+	import('./consultations/TodaysConsultations.js')
+);
 const LastDayOfConsultations = lazy(() =>
 	import('./consultations/LastDayOfConsultations.js')
 );
@@ -178,7 +181,16 @@ export default function Router() {
 					path="/calendar/week/current"
 					component={CurrentWeeklyPlanner}
 				/>
-				<Route exact path="/consultations" component={LastDayOfConsultations} />
+				<Route
+					exact
+					path="/consultations/today"
+					component={TodaysConsultations}
+				/>
+				<Route
+					exact
+					path="/consultations/last"
+					component={LastDayOfConsultations}
+				/>
 				<Route exact path="/consultation/:id" component={ConsultationDetails} />
 				<Route
 					exact
