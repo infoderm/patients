@@ -25,7 +25,12 @@ const ColorizedTextarea = (props) => {
 		return (
 			<div className={className}>
 				{label && <InputLabel shrink>{label}</InputLabel>}
-				<Typography style={{whiteSpace: 'pre-wrap'}}>
+				<Typography
+					style={{
+						whiteSpace: 'pre-wrap',
+						overflowWrap: 'break-word'
+					}}
+				>
 					{colorizeText(dict, value)}
 				</Typography>
 			</div>
