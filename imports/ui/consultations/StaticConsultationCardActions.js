@@ -9,6 +9,7 @@ import AccordionActions from '@material-ui/core/AccordionActions';
 
 import Button from '@material-ui/core/Button';
 
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import EditIcon from '@material-ui/icons/Edit';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -44,6 +45,9 @@ const StaticConsultationCardActions = (props) => {
 
 	const {
 		found,
+		attachAction,
+		editAction,
+		deleteAction,
 		owes,
 		consultation: {_id, scheduledDatetime, isDone, isCancelled, payment_method}
 	} = props;
@@ -61,40 +65,43 @@ const StaticConsultationCardActions = (props) => {
 
 	return (
 		<AccordionActions>
-			<AttachFileButton
-				color="primary"
-				method="consultations.attach"
-				item={_id}
-				disabled={!found}
-			/>
+			{attachAction && (
+				<AttachFileButton
+					color="primary"
+					method="consultations.attach"
+					item={_id}
+					disabled={!found}
+				/>
+			)}
 			{!isDone && !isCancelled && (
 				<Button color="primary" disabled={!found} onClick={beginConsultation}>
 					Begin consultation
 					<FolderSharedIcon />
 				</Button>
 			)}
-			{isDone ? (
-				<Button
-					color="primary"
-					component={Link}
-					to={`/edit/consultation/${_id}`}
-					disabled={!found}
-				>
-					Edit
-					<EditIcon />
-				</Button>
-			) : (
-				!isCancelled && (
+			{editAction &&
+				(isDone ? (
 					<Button
 						color="primary"
+						component={Link}
+						to={`/edit/consultation/${_id}`}
 						disabled={!found}
-						onClick={() => setEditing(true)}
 					>
-						Reschedule
-						<ScheduleIcon />
+						Edit
+						<EditIcon />
 					</Button>
-				)
-			)}
+				) : (
+					!isCancelled && (
+						<Button
+							color="primary"
+							disabled={!found}
+							onClick={() => setEditing(true)}
+						>
+							Reschedule
+							<ScheduleIcon />
+						</Button>
+					)
+				))}
 			{owes && payment_method === 'wire' && (
 				<Button
 					color="primary"
@@ -145,14 +152,16 @@ const StaticConsultationCardActions = (props) => {
 					<RestoreIcon />
 				</Button>
 			)}
-			<Button
-				color="secondary"
-				disabled={!found}
-				onClick={() => setDeleting(true)}
-			>
-				Delete
-				<DeleteIcon />
-			</Button>
+			{deleteAction && (
+				<Button
+					color="secondary"
+					disabled={!found}
+					onClick={() => setDeleting(true)}
+				>
+					Delete
+					<DeleteIcon />
+				</Button>
+			)}
 			{!owes || payment_method !== 'wire' ? null : (
 				<ConsultationPaymentDialog
 					open={paying}
@@ -167,19 +176,20 @@ const StaticConsultationCardActions = (props) => {
 					onClose={() => setSettling(false)}
 				/>
 			)}
-			{isDone ? (
-				<ConsultationDeletionDialog
-					open={deleting}
-					consultation={props.consultation}
-					onClose={() => setDeleting(false)}
-				/>
-			) : (
-				<AppointmentDeletionDialog
-					open={deleting}
-					appointment={props.consultation}
-					onClose={() => setDeleting(false)}
-				/>
-			)}
+			{deleteAction &&
+				(isDone ? (
+					<ConsultationDeletionDialog
+						open={deleting}
+						consultation={props.consultation}
+						onClose={() => setDeleting(false)}
+					/>
+				) : (
+					<AppointmentDeletionDialog
+						open={deleting}
+						appointment={props.consultation}
+						onClose={() => setDeleting(false)}
+					/>
+				))}
 			{!isDone && isCancelled ? (
 				<AppointmentUncancellationDialog
 					open={uncancelling}
@@ -200,12 +210,24 @@ const StaticConsultationCardActions = (props) => {
 					onClose={() => setRestoreAppointment(false)}
 				/>
 			)}
-			{!isDone && !isCancelled && (
+			{editAction && !isDone && !isCancelled && (
 				<EditAppointmentDialog
 					open={editing}
 					appointment={props.consultation}
 					onClose={() => setEditing(false)}
 				/>
+			)}
+			{!editAction && (
+				<Button
+					color="primary"
+					component={Link}
+					target="_blank"
+					to={`/consultation/${_id}`}
+					disabled={!found}
+				>
+					Open in new tab
+					<OpenInNewIcon />
+				</Button>
 			)}
 		</AccordionActions>
 	);
@@ -218,11 +240,17 @@ StaticConsultationCardActions.projection = {
 };
 
 StaticConsultationCardActions.defaultProps = {
-	found: true
+	found: true,
+	attachAction: true,
+	editAction: true,
+	deleteAction: true
 };
 
 StaticConsultationCardActions.propTypes = {
 	found: PropTypes.bool,
+	attachAction: PropTypes.bool,
+	editAction: PropTypes.bool,
+	deleteAction: PropTypes.bool,
 	consultation: PropTypes.object.isRequired
 };
 
