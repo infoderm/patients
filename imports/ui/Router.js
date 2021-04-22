@@ -32,11 +32,11 @@ const LastConsultation = lazy(() =>
 const ConsultationDetails = lazy(() =>
 	import('./consultations/ConsultationDetails.js')
 );
-const EditConsultationForm = lazy(() =>
-	import('./consultations/EditConsultationForm.js')
+const EditConsultation = lazy(() =>
+	import('./consultations/EditConsultation.js')
 );
-const NewConsultationForm = lazy(() =>
-	import('./consultations/NewConsultationForm.js')
+const NewConsultation = lazy(() =>
+	import('./consultations/NewConsultation.js')
 );
 
 const MonthlyPlanner = lazy(() => import('./planner/MonthlyPlanner.js'));
@@ -199,12 +199,12 @@ export default function Router() {
 				<Route
 					exact
 					path="/edit/consultation/:id"
-					component={EditConsultationForm}
+					component={EditConsultation}
 				/>
 				<Route
 					exact
 					path="/new/consultation/for/:id"
-					component={NewConsultationForm}
+					component={NewConsultation}
 				/>
 
 				<Route exact path="/books" component={BooksList} />
