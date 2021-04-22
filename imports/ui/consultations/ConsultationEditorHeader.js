@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '../input/TextField.js';
+import CopiableTextField from '../input/CopiableTextField.js';
 
 import FaceIcon from '@material-ui/icons/Face';
 
@@ -58,17 +59,25 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			)}
 			{loading || !patient ? null : (
 				<Grid item xs={2}>
-					<TextField readOnly label="Lastname" value={patient.lastname} />
+					<CopiableTextField
+						readOnly
+						label="Lastname"
+						value={patient.lastname}
+					/>
 				</Grid>
 			)}
 			{loading || !patient ? null : (
 				<Grid item xs={2}>
-					<TextField readOnly label="Firstname" value={patient.firstname} />
+					<CopiableTextField
+						readOnly
+						label="Firstname"
+						value={patient.firstname}
+					/>
 				</Grid>
 			)}
 			{loading || !patient ? null : (
 				<Grid item xs={2}>
-					<TextField readOnly label="NISS" value={patient.niss} />
+					<CopiableTextField readOnly label="NISS" value={patient.niss} />
 				</Grid>
 			)}
 			{!loading && patient ? null : (

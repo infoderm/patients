@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '../input/TextField.js';
+import CopiableTextField from '../input/CopiableTextField.js';
 import Avatar from '@material-ui/core/Avatar';
 
 import FaceIcon from '@material-ui/icons/Face';
@@ -42,21 +43,21 @@ const PatientHeader = ({patientId}) => {
 				)}
 			</Grid>
 			<Grid item xs={2}>
-				<TextField
+				<CopiableTextField
 					readOnly
 					label="Lastname"
 					value={!patient ? '?' : patient.lastname || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
-				<TextField
+				<CopiableTextField
 					readOnly
 					label="Firstname"
 					value={!patient ? '?' : patient.firstname || ''}
 				/>
 			</Grid>
 			<Grid item xs={2}>
-				<TextField
+				<CopiableTextField
 					readOnly
 					label="NISS"
 					value={!patient ? '?' : patient.niss || ''}
