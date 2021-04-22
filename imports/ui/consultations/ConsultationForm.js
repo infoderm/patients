@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import WarningIcon from '@material-ui/icons/Warning';
 
+import useBookStats from '../books/useBookStats.js';
 import {books, useBooksFind} from '../../api/books.js';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
@@ -37,6 +38,8 @@ const ConsultationForm = ({consultation, update}) => {
 	const classes = useStyles();
 
 	const {
+		datetime,
+
 		reason,
 		done,
 		todo,
@@ -52,6 +55,14 @@ const ConsultationForm = ({consultation, update}) => {
 
 		priceWarning
 	} = consultation;
+
+	const bookName = books.name(datetime, book);
+	const {loading, result} = useBookStats(bookName);
+
+	const bookIsFull =
+		!loading &&
+		result?.count >= books.MAX_CONSULTATIONS &&
+		books.isReal(bookName);
 
 	return (
 		<Paper className={classes.form}>
@@ -207,7 +218,12 @@ const ConsultationForm = ({consultation, update}) => {
 							)}
 							TextFieldProps={{
 								label: 'Carnet',
-								margin: 'normal'
+								margin: 'normal',
+								error: bookIsFull,
+								helperText: bookIsFull && 'Check if book is full!'
+							}}
+							InputProps={{
+								endAdornment: bookIsFull && <WarningIcon />
 							}}
 							inputValue={book}
 							onInputChange={(event, newInputValue) => {
