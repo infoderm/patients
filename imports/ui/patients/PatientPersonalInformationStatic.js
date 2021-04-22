@@ -270,85 +270,89 @@ const PatientPersonalInformation = (props) => {
 				<Grid item sm={8} md={10}>
 					<form>
 						<Grid container spacing={3}>
-							<Grid item xs={2}>
-								<TextField
-									fullWidth
-									className={classes.formControl}
-									label="NISS"
-									value={patient.niss}
-									inputProps={{
-										readOnly: !editing
-									}}
-									margin="normal"
-									onChange={update('niss')}
-								/>
-							</Grid>
-							<Grid item xs={3}>
-								<TextField
-									fullWidth
-									className={classes.formControl}
-									label="Last name"
-									value={patient.lastname}
-									inputProps={{
-										readOnly: !editing
-									}}
-									margin="normal"
-									onChange={update('lastname')}
-								/>
-							</Grid>
-							<Grid item xs={3}>
-								<TextField
-									fullWidth
-									className={classes.formControl}
-									label="First name"
-									value={patient.firstname}
-									inputProps={{
-										readOnly: !editing
-									}}
-									margin="normal"
-									onChange={update('firstname')}
-								/>
-							</Grid>
-							<Grid item xs={2}>
-								<FormControl
-									fullWidth
-									margin="normal"
-									className={classes.formControl}
-								>
-									<InputLabel htmlFor="sex">Sex</InputLabel>
-									<Select
-										value={patient.sex || ''}
-										inputProps={{
-											readOnly: !editing,
-											name: 'sex',
-											id: 'sex'
-										}}
-										onChange={update('sex')}
-									>
-										<MenuItem value="">
-											<em>None</em>
-										</MenuItem>
-										<MenuItem value="female">Female</MenuItem>
-										<MenuItem value="male">Male</MenuItem>
-										<MenuItem value="other">Other</MenuItem>
-									</Select>
-								</FormControl>
-							</Grid>
-							<Grid item xs={2}>
-								<TextField
-									fullWidth
-									className={classes.formControl}
-									type="date"
-									disabled={!editing}
-									label="Birth date"
-									InputLabelProps={{
-										shrink: true
-									}}
-									value={dateFormat(_birthdate, 'yyyy-MM-dd')}
-									margin="normal"
-									onChange={update('birthdate')}
-								/>
-							</Grid>
+							{editing && (
+								<>
+									<Grid item xs={2}>
+										<TextField
+											fullWidth
+											className={classes.formControl}
+											label="NISS"
+											value={patient.niss}
+											inputProps={{
+												readOnly: !editing
+											}}
+											margin="normal"
+											onChange={update('niss')}
+										/>
+									</Grid>
+									<Grid item xs={3}>
+										<TextField
+											fullWidth
+											className={classes.formControl}
+											label="Last name"
+											value={patient.lastname}
+											inputProps={{
+												readOnly: !editing
+											}}
+											margin="normal"
+											onChange={update('lastname')}
+										/>
+									</Grid>
+									<Grid item xs={3}>
+										<TextField
+											fullWidth
+											className={classes.formControl}
+											label="First name"
+											value={patient.firstname}
+											inputProps={{
+												readOnly: !editing
+											}}
+											margin="normal"
+											onChange={update('firstname')}
+										/>
+									</Grid>
+									<Grid item xs={2}>
+										<FormControl
+											fullWidth
+											margin="normal"
+											className={classes.formControl}
+										>
+											<InputLabel htmlFor="sex">Sex</InputLabel>
+											<Select
+												value={patient.sex || ''}
+												inputProps={{
+													readOnly: !editing,
+													name: 'sex',
+													id: 'sex'
+												}}
+												onChange={update('sex')}
+											>
+												<MenuItem value="">
+													<em>None</em>
+												</MenuItem>
+												<MenuItem value="female">Female</MenuItem>
+												<MenuItem value="male">Male</MenuItem>
+												<MenuItem value="other">Other</MenuItem>
+											</Select>
+										</FormControl>
+									</Grid>
+									<Grid item xs={2}>
+										<TextField
+											fullWidth
+											className={classes.formControl}
+											type="date"
+											disabled={!editing}
+											label="Birth date"
+											InputLabelProps={{
+												shrink: true
+											}}
+											value={dateFormat(_birthdate, 'yyyy-MM-dd')}
+											margin="normal"
+											onChange={update('birthdate')}
+										/>
+									</Grid>
+								</>
+							)}
 							<Grid item xs={12} md={6}>
 								<ColorizedTextarea
 									fullWidth
