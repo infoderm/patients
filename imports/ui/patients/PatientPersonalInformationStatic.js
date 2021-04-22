@@ -28,7 +28,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
+import TextField from '../input/TextField.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -202,9 +202,7 @@ const PatientPersonalInformation = (props) => {
 		return <div>Patient not found.</div>;
 	}
 
-	const placeholder = !editing
-		? 'To edit this field you first need to click the edit button'
-		: 'Write some information here';
+	const placeholder = !editing ? '?' : 'Write some information here';
 
 	const minRows = 8;
 	const maxRows = 100;
@@ -278,9 +276,7 @@ const PatientPersonalInformation = (props) => {
 											className={classes.formControl}
 											label="NISS"
 											value={patient.niss}
-											inputProps={{
-												readOnly: !editing
-											}}
+											readOnly={!editing}
 											margin="normal"
 											onChange={update('niss')}
 										/>
@@ -291,9 +287,7 @@ const PatientPersonalInformation = (props) => {
 											className={classes.formControl}
 											label="Last name"
 											value={patient.lastname}
-											inputProps={{
-												readOnly: !editing
-											}}
+											readOnly={!editing}
 											margin="normal"
 											onChange={update('lastname')}
 										/>
@@ -304,9 +298,7 @@ const PatientPersonalInformation = (props) => {
 											className={classes.formControl}
 											label="First name"
 											value={patient.firstname}
-											inputProps={{
-												readOnly: !editing
-											}}
+											readOnly={!editing}
 											margin="normal"
 											onChange={update('firstname')}
 										/>
@@ -362,6 +354,9 @@ const PatientPersonalInformation = (props) => {
 									rows={minRows}
 									rowsMax={maxRows}
 									className={classes.multiline}
+									InputLabelProps={{
+										shrink: true
+									}}
 									InputProps={{
 										style: {
 											height: '100%',
@@ -383,6 +378,9 @@ const PatientPersonalInformation = (props) => {
 									rows={minRows}
 									rowsMax={maxRows}
 									className={classes.multiline}
+									InputLabelProps={{
+										shrink: true
+									}}
 									InputProps={{
 										style: {
 											height: '100%',
@@ -425,10 +423,11 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
-									inputProps={{
-										readOnly: !editing
-									}}
+									readOnly={!editing}
 									label="Rue et Numéro"
+									InputLabelProps={{
+										shrink: true
+									}}
 									placeholder={placeholder}
 									rows={1}
 									className={classes.multiline}
@@ -441,10 +440,11 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
-									inputProps={{
-										readOnly: !editing
-									}}
+									readOnly={!editing}
 									label="Code Postal"
+									InputLabelProps={{
+										shrink: true
+									}}
 									placeholder={placeholder}
 									rows={1}
 									className={classes.multiline}
@@ -457,10 +457,11 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
-									inputProps={{
-										readOnly: !editing
-									}}
+									readOnly={!editing}
 									label="Commune"
+									InputLabelProps={{
+										shrink: true
+									}}
 									placeholder={placeholder}
 									rows={1}
 									className={classes.multiline}
@@ -474,13 +475,14 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
+									readOnly={!editing}
+									InputLabelProps={{
+										shrink: true
+									}}
 									InputProps={{
 										style: {
 											height: '100%',
 											alignItems: 'start'
-										},
-										inputProps: {
-											readOnly: !editing
 										}
 									}}
 									label="Numéro de téléphone"
@@ -572,6 +574,9 @@ const PatientPersonalInformation = (props) => {
 									rows={2}
 									rowsMax={maxRows}
 									className={classes.multiline}
+									InputLabelProps={{
+										shrink: true
+									}}
 									InputProps={{
 										style: {
 											height: '100%',
@@ -586,6 +591,7 @@ const PatientPersonalInformation = (props) => {
 							</Grid>
 							<Grid item xs={3}>
 								<TextField
+									readOnly={!editing}
 									InputProps={{
 										startAdornment: reifiedNoShows ? (
 											<InputAdornment
@@ -597,9 +603,6 @@ const PatientPersonalInformation = (props) => {
 										) : undefined,
 										style: {
 											height: '100%'
-										},
-										inputProps: {
-											readOnly: !editing
 										}
 									}}
 									label="PVPP (sans RDV)"

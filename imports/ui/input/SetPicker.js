@@ -7,7 +7,7 @@ import Downshift from 'downshift';
 import {all, map} from '@aureooms/js-itertools';
 
 import {makeStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import TextField from './TextField.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -239,6 +239,7 @@ const SetPicker = (props) => {
 						...TextFieldProps,
 						fullWidth: true,
 						classes,
+						readOnly,
 						inputProps: {
 							...inputProps,
 							readOnly: readOnly || full
@@ -271,7 +272,13 @@ const SetPicker = (props) => {
 							),
 							onChange: handleInputChange,
 							onKeyDown: handleKeyDown,
-							placeholder: full ? '' : placeholder
+							placeholder: readOnly
+								? count > 0
+									? ''
+									: placeholder
+								: full
+								? ''
+								: placeholder
 						})
 					})}
 					<Suggestions
