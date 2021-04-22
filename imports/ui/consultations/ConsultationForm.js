@@ -24,7 +24,6 @@ const styles = (theme) => ({
 		width: `calc(100% - ${theme.spacing(2)}px)`
 	},
 	form: {
-		marginTop: 64 + theme.spacing(3),
 		padding: theme.spacing(3)
 	},
 	hidden: {

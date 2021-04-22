@@ -4,6 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {Prompt} from 'react-router';
 
 import {makeStyles} from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
@@ -26,6 +27,9 @@ import ConsultationForm from './ConsultationForm.js';
 const styles = (theme) => ({
 	container: {
 		paddingBottom: '6em'
+	},
+	main: {
+		marginTop: 64 + theme.spacing(3)
 	},
 	saveButton: computeFixedFabStyle({theme, col: 2}),
 	doneButton: computeFixedFabStyle({theme, col: 1})
@@ -223,7 +227,11 @@ const ConsultationEditor = ({consultation}) => {
 				state={state}
 				update={update}
 			/>
-			<ConsultationForm consultation={state} update={update} />
+			<Grid container className={classes.main} spacing={3}>
+				<Grid item>
+					<ConsultationForm consultation={state} update={update} />
+				</Grid>
+			</Grid>
 			<Fab
 				className={classes.saveButton}
 				color={doneDatetime ? 'primary' : 'secondary'}
