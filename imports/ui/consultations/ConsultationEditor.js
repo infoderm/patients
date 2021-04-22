@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useState, useReducer} from 'react';
 
 import {useHistory} from 'react-router-dom';
 import {Prompt} from 'react-router';
@@ -6,6 +6,7 @@ import {Prompt} from 'react-router';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
+import CompareIcon from '@material-ui/icons/Compare';
 import SaveIcon from '@material-ui/icons/Save';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
@@ -23,6 +24,7 @@ import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import ConsultationEditorHeader from './ConsultationEditorHeader.js';
 import ConsultationForm from './ConsultationForm.js';
+import PrecedingConsultationsList from './PrecedingConsultationsList.js';
 
 const styles = (theme) => ({
 	container: {
@@ -31,6 +33,7 @@ const styles = (theme) => ({
 	main: {
 		marginTop: 64 + theme.spacing(3)
 	},
+	compareButton: computeFixedFabStyle({theme, col: 3}),
 	saveButton: computeFixedFabStyle({theme, col: 2}),
 	doneButton: computeFixedFabStyle({theme, col: 1})
 });
@@ -128,6 +131,8 @@ const Loader = ({loading, found, consultation}) => {
 const ConsultationEditor = ({consultation}) => {
 	const classes = useStyles();
 	const history = useHistory();
+
+	const [compare, setCompare] = useState(false);
 
 	const {_id: consultationId, patientId, doneDatetime} = consultation;
 
@@ -228,10 +233,23 @@ const ConsultationEditor = ({consultation}) => {
 				update={update}
 			/>
 			<Grid container className={classes.main} spacing={3}>
-				<Grid item>
+				{compare && (
+					<Grid item xs={6}>
+						<PrecedingConsultationsList consultation={consultation} />
+					</Grid>
+				)}
+				<Grid item xs={compare ? 6 : 12}>
 					<ConsultationForm consultation={state} update={update} />
 				</Grid>
 			</Grid>
+			<Fab
+				className={classes.compareButton}
+				color={compare ? 'primary' : 'default'}
+				aria-label="compare"
+				onClick={() => setCompare(!compare)}
+			>
+				<CompareIcon />
+			</Fab>
 			<Fab
 				className={classes.saveButton}
 				color={doneDatetime ? 'primary' : 'secondary'}
