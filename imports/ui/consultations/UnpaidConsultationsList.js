@@ -8,7 +8,7 @@ import MoneyIcon from '@material-ui/icons/Money';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
+import ConsultationsList from './ConsultationsList.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import Loading from '../navigation/Loading.js';
@@ -18,9 +18,6 @@ import {computeFixedFabStyle} from '../button/FixedFab.js';
 import {useConsultationsFind} from '../../api/consultations.js';
 
 const useStyles = makeStyles((theme) => ({
-	container: {
-		padding: theme.spacing(3)
-	},
 	thirdPartyToggle: computeFixedFabStyle({theme, col: 1}),
 	wireToggle: computeFixedFabStyle({theme, col: 2}),
 	cashToggle: computeFixedFabStyle({theme, col: 3})
@@ -71,16 +68,13 @@ const UnpaidConsultationsList = () => {
 					the current filter
 				</NoContent>
 			) : (
-				<div className={classes.container}>
-					{displayedConsultations.map((consultation) => (
-						<ReactiveConsultationCard
-							key={consultation._id}
-							showPrice
-							consultation={consultation}
-							PatientChip={ReactivePatientChip}
-						/>
-					))}
-				</div>
+				<ConsultationsList
+					items={displayedConsultations}
+					itemProps={{
+						showPrice: true,
+						PatientChip: ReactivePatientChip
+					}}
+				/>
 			)}
 			<Fab
 				className={classes.cashToggle}
