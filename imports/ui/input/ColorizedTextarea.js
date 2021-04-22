@@ -25,7 +25,9 @@ const ColorizedTextarea = (props) => {
 		return (
 			<div className={className}>
 				{label && <InputLabel shrink>{label}</InputLabel>}
-				<Typography>{colorizeText(dict, value)}</Typography>
+				<Typography style={{whiteSpace: 'pre-wrap'}}>
+					{colorizeText(dict, value)}
+				</Typography>
 			</div>
 		);
 	}
