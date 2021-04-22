@@ -4,11 +4,6 @@ import {enumerate} from '@aureooms/js-itertools';
 
 import {onlyLowerCaseASCII} from '../api/string.js';
 
-export function escape(s) {
-	// From https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
-	return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-}
-
 function* split(s) {
 	const n = s.length;
 	let word = '';
