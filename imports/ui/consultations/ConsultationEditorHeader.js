@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '../input/TextField.js';
 
+import FaceIcon from '@material-ui/icons/Face';
+
 import usePatient from '../patients/usePatient.js';
 
 import useStyles from '../styles/subheader.js';
@@ -33,15 +35,25 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 
 	return (
 		<Grid container className={classes.container} spacing={3}>
-			{loading || !patient || !patient.photo ? null : (
+			{loading || !patient ? null : (
 				<Grid item>
-					<Avatar
-						alt={`${patient.firstname} ${patient.lastname}`}
-						src={`data:image/png;base64,${patient.photo}`}
-						className={classes.avatar}
-						component={Link}
-						to={`/patient/${patientId}`}
-					/>
+					{!patient.photo ? (
+						<Avatar
+							className={classes.avatar}
+							component={Link}
+							to={`/patient/${patientId}`}
+						>
+							<FaceIcon />
+						</Avatar>
+					) : (
+						<Avatar
+							alt={`${patient.firstname} ${patient.lastname}`}
+							src={`data:image/png;base64,${patient.photo}`}
+							className={classes.avatar}
+							component={Link}
+							to={`/patient/${patientId}`}
+						/>
+					)}
 				</Grid>
 			)}
 			{loading || !patient ? null : (
