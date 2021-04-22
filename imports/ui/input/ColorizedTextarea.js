@@ -27,6 +27,7 @@ const ColorizedTextarea = (props) => {
 				{label && <InputLabel shrink>{label}</InputLabel>}
 				<Typography
 					style={{
+						maxHeight: rowsMax ? `${1.5 * rowsMax}rem` : undefined,
 						whiteSpace: 'pre-wrap',
 						overflowWrap: 'break-word'
 					}}
