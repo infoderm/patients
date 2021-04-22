@@ -11,6 +11,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import dateFormat from 'date-fns/format';
+import dateParseISO from 'date-fns/parseISO';
 
 import call from '../../api/call.js';
 
@@ -40,9 +41,15 @@ const styles = (theme) => ({
 
 const useStyles = makeStyles(styles);
 
+const defaultDate = '1970-01-01';
+const defaultTime = '00:00';
+
+const datetimeParse = (date, time) => dateParseISO(`${date}T${time}:00`);
+
 const defaultState = {
-	date: '1970-01-01',
-	time: '00:00',
+	datetime: datetimeParse(defaultDate, defaultTime),
+	date: defaultDate,
+	time: defaultTime,
 	reason: '',
 	done: '',
 	todo: '',
@@ -72,6 +79,7 @@ const isZero = (x) => Number.parseInt(String(x), 10) === 0;
 const init = (consultation) => ({
 	...defaultState,
 	...removeUndefined({
+		datetime: consultation.datetime,
 		date: dateFormat(consultation.datetime, 'yyyy-MM-dd'),
 		time: dateFormat(consultation.datetime, 'HH:mm'),
 		reason: consultation.reason,
@@ -94,6 +102,22 @@ const reducer = (state, action) => {
 	switch (action.type) {
 		case 'update':
 			switch (action.key) {
+				case 'datetime':
+					throw new Error('Cannot update datetime directly.');
+				case 'date':
+					return {
+						...state,
+						date: action.value,
+						datetime: datetimeParse(action.value, state.time),
+						dirty: true
+					};
+				case 'time':
+					return {
+						...state,
+						time: action.value,
+						datetime: datetimeParse(state.date, action.value),
+						dirty: true
+					};
 				case 'paid':
 					return {...state, paid: action.value, syncPaid: false, dirty: true};
 				case 'price':
@@ -139,8 +163,7 @@ const ConsultationEditor = ({consultation}) => {
 	const [state, dispatch] = useReducer(reducer, consultation, init);
 
 	const {
-		date,
-		time,
+		datetime,
 		reason,
 		done,
 		todo,
@@ -167,7 +190,7 @@ const ConsultationEditor = ({consultation}) => {
 
 		const consultation = {
 			patientId,
-			datetime: new Date(`${date}T${time}`),
+			datetime,
 			reason,
 			done,
 			todo,
