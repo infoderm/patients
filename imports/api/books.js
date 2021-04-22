@@ -137,6 +137,13 @@ export const books = {
 		};
 	},
 
+	isReal: (name) => {
+		const [fiscalYear, bookNumber] = books.parse(name);
+		if (typeof fiscalYear !== 'number') return false;
+		if (typeof bookNumber !== 'number') return false;
+		return Number.isInteger(bookNumber) && bookNumber > 0;
+	},
+
 	MAX_CONSULTATIONS: 50,
 	DOWNLOAD_FIRST_BOOK: 1,
 	DOWNLOAD_LAST_BOOK: 99,
