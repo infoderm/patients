@@ -2,11 +2,11 @@ import React from 'react';
 
 import Loading from '../navigation/Loading.js';
 
-import ConsultationForm from './ConsultationForm.js';
+import ConsultationEditor from './ConsultationEditor.js';
 
 import useBookPrefill from './useBookPrefill.js';
 
-const NewConsultationForm = ({match}) => {
+const NewConsultationEditor = ({match}) => {
 	const {loading, bookNumber} = useBookPrefill();
 
 	if (loading) return <Loading />;
@@ -28,7 +28,9 @@ const NewConsultationForm = ({match}) => {
 		book: bookNumber
 	};
 
-	return <ConsultationForm consultation={consultation} />;
+	return (
+		<ConsultationEditor found loading={false} consultation={consultation} />
+	);
 };
 
-export default NewConsultationForm;
+export default NewConsultationEditor;
