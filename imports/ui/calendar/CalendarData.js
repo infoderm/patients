@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
@@ -41,8 +41,22 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 	);
 };
 
+/**
+ * Compute day key.
+ *
+ * @param {Date} datetime
+ * @return {string}
+ */
 const dayKey = (datetime) => dateFormat(datetime, 'yyyyMMdd');
 
+/**
+ * Generate days in range.
+ *
+ * @param {Date} begin
+ * @param {Date} end
+ * @param {Set} displayedWeekDays
+ * @return {IterableIterator<Date>}
+ */
 function* generateDays(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS)) {
 	let i = 0;
 	let current = begin;
@@ -52,6 +66,14 @@ function* generateDays(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS)) {
 	}
 }
 
+/**
+ * Generate props for each day in range.
+ *
+ * @param {Date} begin
+ * @param {Date} end
+ * @param {Set} displayedWeekDays
+ * @return {IterableIterator<{day: Date, row: number, col: number}>}
+ */
 function* generateDaysProps(
 	begin,
 	end,
@@ -70,6 +92,13 @@ function* generateDaysProps(
 	}
 }
 
+/**
+ * createOccupancyMap.
+ *
+ * @param {Date} begin
+ * @param {Date} end
+ * @return {Map<string, number>}
+ */
 function createOccupancyMap(begin, end) {
 	const occupancy = new Map();
 
@@ -80,6 +109,16 @@ function createOccupancyMap(begin, end) {
 	return occupancy;
 }
 
+/**
+ * generateEventProps.
+ *
+ * @param {Map<string, number>} occupancy
+ * @param {Date} begin
+ * @param {Date} end
+ * @param {number} maxLines
+ * @param {Iterable<{begin: Date, end: Date}>} events
+ * @return {IterableIterator<{event, day: string, slot: number}>}
+ */
 function* generateEventProps(occupancy, begin, end, maxLines, events) {
 	for (const event of events) {
 		if (
@@ -105,6 +144,15 @@ function* generateEventProps(occupancy, begin, end, maxLines, events) {
 	}
 }
 
+/**
+ * generateMoreProps.
+ *
+ * @param {Map<string, number>} occupancy
+ * @param {Date} begin
+ * @param {Date} end
+ * @param {number} maxLines
+ * @return {IterableIterator<{day: string, count: number}>}
+ */
 function* generateMoreProps(occupancy, begin, end, maxLines) {
 	for (const day of generateDays(begin, end)) {
 		const key = dayKey(day);
@@ -118,11 +166,9 @@ function* generateMoreProps(occupancy, begin, end, maxLines) {
 	}
 }
 
-const More = (props) => {
-	const {className, count} = props;
-
-	return <div className={className}>{count} more</div>;
-};
+const More = ({className, count}) => (
+	<div className={className}>{count} more</div>
+);
 
 const CalendarDataGrid = (props) => {
 	const {
@@ -218,7 +264,15 @@ const CalendarDataGrid = (props) => {
 
 CalendarDataGrid.propTypes = {
 	DayHeader: PropTypes.elementType,
-	WeekNumber: PropTypes.elementType
+	WeekNumber: PropTypes.elementType,
+	useStyles: PropTypes.func.isRequired,
+	rowSize: PropTypes.number.isRequired,
+	days: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
+	mores: PropTypes.array.isRequired,
+	weekOptions: PropTypes.object.isRequired,
+	onSlotClick: PropTypes.func,
+	onEventClick: PropTypes.func
 };
 
 const CalendarData = (props) => {
@@ -370,7 +424,7 @@ const CalendarData = (props) => {
 		};
 	}
 
-	const useStyles = makeStyles(() => gridStyles);
+	const useStyles = makeStyles(createStyles(() => gridStyles));
 
 	return (
 		<CalendarDataGrid
