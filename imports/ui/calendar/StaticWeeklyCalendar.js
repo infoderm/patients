@@ -40,10 +40,12 @@ const StaticWeeklyCalendar = (props) => {
 };
 
 StaticWeeklyCalendar.propTypes = {
+	className: PropTypes.string,
 	title: PropTypes.string,
 	year: PropTypes.number.isRequired,
 	week: PropTypes.number.isRequired,
 	events: PropTypes.array.isRequired,
+	DayHeader: PropTypes.elementType.isRequired,
 	next: PropTypes.func,
 	prev: PropTypes.func,
 	monthly: PropTypes.func,
