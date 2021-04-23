@@ -22,6 +22,7 @@ import AlarmIcon from '@material-ui/icons/Alarm';
 import {blue, green} from '@material-ui/core/colors';
 
 import call from '../../api/call.js';
+import withLazyOpening from '../modal/withLazyOpening.js';
 
 import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient.js';
 import useConsultationsForPatient from '../consultations/useConsultationsForPatient.js';
@@ -145,4 +146,4 @@ ManageConsultationsForPatientDialog.propTypes = {
 	patientId: PropTypes.string.isRequired
 };
 
-export default ManageConsultationsForPatientDialog;
+export default withLazyOpening(ManageConsultationsForPatientDialog);
