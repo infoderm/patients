@@ -16,6 +16,7 @@ export default function NewAppointmentDialog(props) {
 NewAppointmentDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
+	noInitialTime: PropTypes.bool,
 	initialDatetime: PropTypes.instanceOf(Date).isRequired,
 	initialPatient: PropTypes.object
 };
