@@ -3,7 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React, {useReducer, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-import {Link} from 'react-router-dom';
 import {Prompt} from 'react-router';
 
 import {map, list} from '@aureooms/js-itertools';
@@ -16,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import Fab from '@material-ui/core/Fab';
-import AddCommentIcon from '@material-ui/icons/AddComment';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -54,6 +53,7 @@ import AllergyChip from '../allergies/AllergyChip.js';
 import DoctorChip from '../doctors/DoctorChip.js';
 import InsuranceChip from '../insurances/InsuranceChip.js';
 
+import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton.js';
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
@@ -655,14 +655,13 @@ const PatientPersonalInformation = (props) => {
 					>
 						<AttachFileIcon />
 					</AttachFileButton>
-					<Fab
+					<ManageConsultationsForPatientButton
 						className={classes.consultationButton}
 						color="primary"
-						component={Link}
-						to={`/new/consultation/for/${patient._id}`}
+						patientId={patient._id}
 					>
-						<AddCommentIcon />
-					</Fab>
+						<RateReviewIcon />
+					</ManageConsultationsForPatientButton>
 					<Fab
 						className={classes.deleteButton}
 						color="secondary"
