@@ -39,8 +39,12 @@ const NewConsultation = lazy(() =>
 	import('./consultations/NewConsultation.js')
 );
 
-const MonthlyPlanner = lazy(() => import('./planner/MonthlyPlanner.js'));
-const WeeklyPlanner = lazy(() => import('./planner/WeeklyPlanner.js'));
+const MonthlyPlanner = lazy(() =>
+	import('./planner/PreconfiguredMonthlyPlanner.js')
+);
+const WeeklyPlanner = lazy(() =>
+	import('./planner/PreconfiguredWeeklyPlanner.js')
+);
 
 const BooksList = lazy(() => import('./books/BooksList.js'));
 const BookDetails = lazy(() => import('./books/BookDetails.js'));
