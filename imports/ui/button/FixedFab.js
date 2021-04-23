@@ -9,8 +9,8 @@ import addTooltip from '../accessibility/addTooltip.js';
 export const computeFixedFabStyle = ({theme, col, row, style}) => ({
 	...style,
 	position: 'fixed',
-	bottom: theme.spacing(3 + 9 * ((row || FixedFab.defaultProps.row) - 1)),
-	right: theme.spacing(3 + 9 * ((col || FixedFab.defaultProps.col) - 1))
+	bottom: theme.spacing(3 + 9 * ((row ?? FixedFab.defaultProps.row) - 1)),
+	right: theme.spacing(3 + 9 * ((col ?? FixedFab.defaultProps.col) - 1))
 });
 
 const FixedFab = React.forwardRef(({col, row, style, ...rest}, ref) => {
