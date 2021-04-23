@@ -10,6 +10,7 @@ import addDays from 'date-fns/addDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import dateFormat from 'date-fns/format';
+import dateParse from 'date-fns/parse';
 
 import {list, take, range, enumerate} from '@aureooms/js-itertools';
 
@@ -40,6 +41,14 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 		/>
 	);
 };
+
+/**
+ * setTime.
+ *
+ * @param {Date} datetime
+ * @param {string} HHmm
+ */
+const setTime = (datetime, HHmm) => dateParse(HHmm, 'HH:mm', datetime);
 
 /**
  * Compute day key.
@@ -97,29 +106,33 @@ function* generateDaysProps(
  *
  * @param {Date} begin
  * @param {Date} end
- * @return {Map<string, number>}
+ * @return {Map<string, {usedSlots: number, totalEvents: number, shownEvents: number}>}
  */
 function createOccupancyMap(begin, end) {
 	const occupancy = new Map();
 
 	for (const day of generateDays(begin, end)) {
-		occupancy.set(dayKey(day), 0);
+		occupancy.set(dayKey(day), {usedSlots: 0, totalEvents: 0, shownEvents: 0});
 	}
 
 	return occupancy;
 }
 
 /**
- * generateEventProps.
+ * Assumes the input events are sorted by begin datetime.
  *
- * @param {Map<string, number>} occupancy
+ * @param {Map<string, {usedSlots: number, totalEvents: number, shownEvents: number}>} occupancy
  * @param {Date} begin
  * @param {Date} end
- * @param {number} maxLines
+ * @param {object} options
  * @param {Iterable<{begin: Date, end: Date}>} events
- * @return {IterableIterator<{event, day: string, slot: number}>}
+ * @return {IterableIterator<{event, day: string, slot: number, slots: number}>}
  */
-function* generateEventProps(occupancy, begin, end, maxLines, events) {
+function* generateEventProps(occupancy, begin, end, options, events) {
+	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
+
+	let previousEvent;
+	let previousDay;
 	for (const event of events) {
 		if (
 			(event.end && isBefore(event.end, begin)) ||
@@ -130,33 +143,69 @@ function* generateEventProps(occupancy, begin, end, maxLines, events) {
 
 		const day = dayKey(event.begin);
 
-		const slot = occupancy.get(day) + 1;
+		if (day !== previousDay) {
+			previousEvent = dayBegins
+				? {
+						end: setTime(event.begin, dayBegins)
+				  }
+				: undefined;
+		}
 
-		if (slot <= maxLines) {
+		const duration = event.end - event.begin || minEventDuration;
+
+		const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
+
+		const skip =
+			skipIdle && previousEvent
+				? minEventDuration
+					? Math.min(
+							3,
+							Math.max(
+								0,
+								Math.floor((event.begin - previousEvent.end) / minEventDuration)
+							)
+					  )
+					: 1
+				: 0;
+
+		let {usedSlots, totalEvents, shownEvents} = occupancy.get(day);
+		const slot = usedSlots + skip + 1;
+		++totalEvents;
+		usedSlots += skip + slots;
+
+		if (usedSlots <= maxLines) {
+			++shownEvents;
 			yield {
 				event,
 				day,
-				slot
+				slot,
+				slots
 			};
 		}
 
-		occupancy.set(day, slot);
+		occupancy.set(day, {
+			usedSlots,
+			totalEvents,
+			shownEvents
+		});
+		previousEvent = event;
+		previousDay = day;
 	}
 }
 
 /**
  * generateMoreProps.
  *
- * @param {Map<string, number>} occupancy
+ * @param {Map<string, {totalEvents: number, shownEvents: number}>} occupancy
  * @param {Date} begin
  * @param {Date} end
- * @param {number} maxLines
  * @return {IterableIterator<{day: string, count: number}>}
  */
-function* generateMoreProps(occupancy, begin, end, maxLines) {
+function* generateMoreProps(occupancy, begin, end) {
 	for (const day of generateDays(begin, end)) {
 		const key = dayKey(day);
-		const count = occupancy.get(key) - maxLines;
+		const {totalEvents, shownEvents} = occupancy.get(key);
+		const count = totalEvents - shownEvents;
 		if (count > 0) {
 			yield {
 				day: key,
@@ -240,6 +289,7 @@ const CalendarDataGrid = (props) => {
 						<EventFragment
 							key={key}
 							className={classNames(classes.slot, {
+								[classes[`slot${props.slots}`]]: true,
 								[classes[`day${props.day}slot${props.slot}`]]: true
 							})}
 							eventProps={{className: classes.event}}
@@ -282,6 +332,9 @@ const CalendarData = (props) => {
 		end,
 		lineHeight,
 		maxLines,
+		skipIdle,
+		minEventDuration,
+		dayBegins,
 		DayHeader,
 		WeekNumber,
 		weekOptions,
@@ -301,10 +354,16 @@ const CalendarData = (props) => {
 	const daysProps = [...generateDaysProps(begin, end, _displayedWeekDays)];
 
 	const occupancy = createOccupancyMap(begin, end);
+	const eventPropsOptions = {
+		maxLines: maxLines - 2,
+		skipIdle,
+		minEventDuration,
+		dayBegins
+	};
 	const eventProps = [
-		...generateEventProps(occupancy, begin, end, maxLines - 2, events)
+		...generateEventProps(occupancy, begin, end, eventPropsOptions, events)
 	];
-	const moreProps = [...generateMoreProps(occupancy, begin, end, maxLines - 2)];
+	const moreProps = [...generateMoreProps(occupancy, begin, end)];
 
 	const headerHeight = 2;
 
@@ -370,15 +429,18 @@ const CalendarData = (props) => {
 		},
 		slot: {
 			gridColumnEnd: 'span 1',
+			margin: '0 10px 3px 10px'
+		},
+		slot1: {
 			gridRowEnd: 'span 1',
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',
-			overflow: 'hidden',
-			margin: '0 10px 3px 10px'
+			overflow: 'hidden'
 		},
 		event: {
 			display: 'inline-block',
 			width: '100%',
+			height: '100%',
 			overflow: 'hidden',
 			textOverflow: 'ellipsis',
 			padding: '1px 6px',
@@ -424,6 +486,18 @@ const CalendarData = (props) => {
 		};
 	}
 
+	const slotTypes = new Set(
+		eventProps.map(({slots}) => slots).filter((x) => x !== 1)
+	);
+	for (const slots of slotTypes) {
+		gridStyles[`slot${slots}`] = {
+			gridRowEnd: `span ${slots}`,
+			textOverflow: 'ellipsis',
+			whiteSpace: 'pre-wrap',
+			overflow: 'hidden'
+		};
+	}
+
 	const useStyles = makeStyles(createStyles(() => gridStyles));
 
 	return (
@@ -443,6 +517,7 @@ const CalendarData = (props) => {
 };
 
 CalendarData.defaultProps = {
+	skipIdle: false,
 	lineHeight: '25px',
 	displayedWeekDays: ALL_WEEK_DAYS
 };
@@ -451,7 +526,10 @@ CalendarData.propTypes = {
 	begin: PropTypes.instanceOf(Date).isRequired,
 	end: PropTypes.instanceOf(Date).isRequired,
 	events: PropTypes.array.isRequired,
+	skipIdle: PropTypes.bool,
 	maxLines: PropTypes.number.isRequired,
+	minEventDuration: PropTypes.number,
+	dayBegins: PropTypes.string,
 	lineHeight: PropTypes.any,
 	displayedWeekDays: PropTypes.array,
 	onSlotClick: PropTypes.func,
