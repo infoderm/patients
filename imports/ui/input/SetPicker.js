@@ -196,6 +196,13 @@ const SetPicker = (props) => {
 					...changes,
 					highlightedIndex: -1
 				};
+			case Downshift.stateChangeTypes.keyDownEscape:
+				// TODO Make it so that if isOpen was true then we stop event
+				// bubbling.
+				return {
+					...state,
+					isOpen: false
+				};
 			default:
 				return changes;
 		}
