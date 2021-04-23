@@ -43,7 +43,8 @@ const ReactiveWeeklyCalendar = (props) => {
 		displayedWeekDays,
 		showCancelledEvents,
 		onSlotClick,
-		events
+		events,
+		...rest
 	} = props;
 
 	const history = useHistory();
@@ -66,6 +67,7 @@ const ReactiveWeeklyCalendar = (props) => {
 			weekOptions={weekOptions}
 			displayedWeekDays={displayedWeekDays}
 			onSlotClick={onSlotClick}
+			{...rest}
 		/>
 	);
 };

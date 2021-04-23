@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Planner = (props) => {
-	const {Calendar, match} = props;
+	const {Calendar, CalendarProps, match} = props;
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
 	const [creatingAppointment, setCreatingAppointment] = useState(false);
@@ -49,6 +49,7 @@ const Planner = (props) => {
 				}
 				showCancelledEvents={showCancelledEvents}
 				onSlotClick={onSlotClick}
+				{...CalendarProps}
 			/>
 			<NewAppointmentDialog
 				noInitialTime

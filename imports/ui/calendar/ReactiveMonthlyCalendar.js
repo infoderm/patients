@@ -51,7 +51,8 @@ const ReactiveMonthlyCalendar = (props) => {
 		displayedWeekDays,
 		showCancelledEvents,
 		onSlotClick,
-		events
+		events,
+		...rest
 	} = props;
 
 	const history = useHistory();
@@ -79,6 +80,7 @@ const ReactiveMonthlyCalendar = (props) => {
 			weekOptions={weekOptions}
 			displayedWeekDays={displayedWeekDays}
 			onSlotClick={onSlotClick}
+			{...rest}
 		/>
 	);
 };
