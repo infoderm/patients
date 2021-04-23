@@ -1,9 +1,5 @@
 import React from 'react';
 
-import {Link} from 'react-router-dom';
-
-import AddCommentIcon from '@material-ui/icons/AddComment';
-
 import usePatient from '../patients/usePatient.js';
 
 import Loading from '../navigation/Loading.js';
@@ -11,6 +7,7 @@ import NoContent from '../navigation/NoContent.js';
 import FixedFab from '../button/FixedFab.js';
 
 import ConsultationsPager from './ConsultationsPager.js';
+import ManageConsultationsForPatientButton from './ManageConsultationsForPatientButton.js';
 
 const ConsultationsForPatient = (props) => {
 	const {patientId, page, perpage} = props;
@@ -46,15 +43,13 @@ const ConsultationsForPatient = (props) => {
 				sort={sort}
 				defaultExpandedFirst={page === 1}
 			/>
-			<FixedFab
+			<ManageConsultationsForPatientButton
+				Button={FixedFab}
 				col={4}
 				color="primary"
-				component={Link}
-				to={`/new/consultation/for/${patientId}`}
-				tooltip="Start new consultation"
-			>
-				<AddCommentIcon />
-			</FixedFab>
+				patientId={patientId}
+				tooltip="Ask for directions"
+			/>
 		</>
 	);
 };

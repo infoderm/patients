@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import Fab from '@material-ui/core/Fab';
-import RateReviewIcon from '@material-ui/icons/RateReview';
+import FixedFab, {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -57,7 +57,6 @@ import ManageConsultationsForPatientButton from '../consultations/ManageConsulta
 import AttachFileButton from '../attachments/AttachFileButton.js';
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
-import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 const styles = (theme) => ({
 	root: {
@@ -115,7 +114,6 @@ const styles = (theme) => ({
 	saveButton: computeFixedFabStyle({theme, col: 1}),
 	undoButton: computeFixedFabStyle({theme, col: 2}),
 	attachButton: computeFixedFabStyle({theme, col: 2}),
-	consultationButton: computeFixedFabStyle({theme, col: 3}),
 	deleteButton: computeFixedFabStyle({theme, col: 4})
 });
 
@@ -656,12 +654,12 @@ const PatientPersonalInformation = (props) => {
 						<AttachFileIcon />
 					</AttachFileButton>
 					<ManageConsultationsForPatientButton
-						className={classes.consultationButton}
+						Button={FixedFab}
+						col={3}
 						color="primary"
 						patientId={patient._id}
-					>
-						<RateReviewIcon />
-					</ManageConsultationsForPatientButton>
+						tooltip="More actions!"
+					/>
 					<Fab
 						className={classes.deleteButton}
 						color="secondary"
