@@ -47,6 +47,7 @@ const defaultTime = '00:00';
 const datetimeParse = (date, time) => dateParseISO(`${date}T${time}:00`);
 
 const defaultState = {
+	_id: undefined,
 	datetime: datetimeParse(defaultDate, defaultTime),
 	date: defaultDate,
 	time: defaultTime,
@@ -79,6 +80,7 @@ const isZero = (x) => Number.parseInt(String(x), 10) === 0;
 const init = (consultation) => ({
 	...defaultState,
 	...removeUndefined({
+		_id: consultation._id,
 		datetime: consultation.datetime,
 		date: dateFormat(consultation.datetime, 'yyyy-MM-dd'),
 		time: dateFormat(consultation.datetime, 'HH:mm'),
@@ -102,6 +104,8 @@ const reducer = (state, action) => {
 	switch (action.type) {
 		case 'update':
 			switch (action.key) {
+				case '_id':
+					throw new Error('Cannot update _id.');
 				case 'datetime':
 					throw new Error('Cannot update datetime directly.');
 				case 'date':

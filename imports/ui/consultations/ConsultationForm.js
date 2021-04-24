@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -38,6 +38,7 @@ const ConsultationForm = ({consultation, update}) => {
 	const classes = useStyles();
 
 	const {
+		_id,
 		datetime,
 
 		reason,
@@ -56,12 +57,17 @@ const ConsultationForm = ({consultation, update}) => {
 		priceWarning
 	} = consultation;
 
+	const [initialDatetime] = useState(datetime);
+	const [initialBook] = useState(book);
+	const initialBookName = books.name(initialDatetime, initialBook);
+
 	const bookName = books.name(datetime, book);
 	const {loading, result} = useBookStats(bookName);
 
 	const bookIsFull =
 		!loading &&
-		result?.count >= books.MAX_CONSULTATIONS &&
+		result?.count >=
+			books.MAX_CONSULTATIONS + (_id && initialBookName === bookName ? 1 : 0) &&
 		books.isReal(bookName);
 
 	return (
