@@ -5,8 +5,6 @@ import Typography from '@material-ui/core/Typography';
 
 import ConsultationsMissingAPrice from './ConsultationsMissingAPrice.js';
 import ConsultationsMissingABook from './ConsultationsMissingABook.js';
-import PatientsMissingABirthdate from './PatientsMissingABirthdate.js';
-import PatientsMissingAGender from './PatientsMissingAGender.js';
 import UnlinkedDocuments from './UnlinkedDocuments.js';
 import UnparsedDocuments from './UnparsedDocuments.js';
 import MangledDocuments from './MangledDocuments.js';
@@ -38,10 +36,6 @@ export default function Issues() {
 			<ConsultationsMissingAPrice className={classes.container} />
 			<Typography variant="h3">Consultations missing a book</Typography>
 			<ConsultationsMissingABook className={classes.container} />
-			<Typography variant="h3">Patients missing a gender</Typography>
-			<PatientsMissingAGender className={classes.container} />
-			<Typography variant="h3">Patients missing a birthdate</Typography>
-			<PatientsMissingABirthdate className={classes.container} />
 			<Typography variant="h3">
 				Doctors with non alphabetical symbols
 			</Typography>
