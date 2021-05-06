@@ -8,8 +8,9 @@ import {useTooltip, TooltipWithBounds} from '@visx/tooltip';
 import {LegendOrdinal} from '@visx/legend';
 import {localPoint} from '@visx/event';
 
-import {sum, map, max} from '@aureooms/js-itertools';
-import {increasing} from '@aureooms/js-compare';
+import {sum, max} from '@iterable-iterator/reduce';
+import {map} from '@iterable-iterator/map';
+import {increasing} from '@total-order/primitive';
 
 const percentage = (p) => `${(p * 100).toPrecision(4)}%`;
 

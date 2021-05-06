@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {list} from '@aureooms/js-itertools';
+import {list} from '@iterable-iterator/list';
 
 import TabJumper from './TabJumper.js';
 

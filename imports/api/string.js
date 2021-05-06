@@ -2,8 +2,11 @@ import assert from 'assert';
 import deburr from 'lodash.deburr';
 import escapeStringRegexp from 'escape-string-regexp';
 
-import {all, map, sorted} from '@aureooms/js-itertools';
-import {len, decreasing} from '@aureooms/js-compare';
+import {all} from '@iterable-iterator/reduce';
+import {map} from '@iterable-iterator/map';
+import {sorted} from '@iterable-iterator/sorted';
+import {decreasing} from '@total-order/primitive';
+import {len} from '@total-order/key';
 
 const normalizeWhiteSpace = (string) => string.replace(/\s+/g, ' ');
 

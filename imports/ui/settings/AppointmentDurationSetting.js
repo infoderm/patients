@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {list, filter} from '@aureooms/js-itertools';
+import {list} from '@iterable-iterator/list';
+import {filter} from '@iterable-iterator/filter';
 
 import {msToString, units} from '../../client/duration.js';
 

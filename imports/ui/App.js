@@ -15,7 +15,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import {all, map} from '@aureooms/js-itertools';
+import {all} from '@iterable-iterator/reduce';
+import {map} from '@iterable-iterator/map';
 
 import {settings} from '../client/settings.js';
 

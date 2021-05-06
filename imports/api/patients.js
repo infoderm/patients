@@ -2,7 +2,10 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import {list, map, take, filter} from '@aureooms/js-itertools';
+import {list} from '@iterable-iterator/list';
+import {map} from '@iterable-iterator/map';
+import {take} from '@iterable-iterator/slice';
+import {filter} from '@iterable-iterator/filter';
 
 import {Consultations} from './consultations.js';
 import {Documents} from './documents.js';

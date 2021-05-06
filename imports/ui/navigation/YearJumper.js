@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {list, range} from '@aureooms/js-itertools';
+import {range} from '@iterable-iterator/range';
+import {list} from '@iterable-iterator/list';
 
 import TabJumper from './TabJumper.js';
 

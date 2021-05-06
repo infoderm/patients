@@ -4,7 +4,8 @@ import classNames from 'classnames';
 import keycode from 'keycode';
 import Downshift from 'downshift';
 
-import {all, map} from '@aureooms/js-itertools';
+import {all} from '@iterable-iterator/reduce';
+import {map} from '@iterable-iterator/map';
 
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from './TextField.js';

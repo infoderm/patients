@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {list, range} from '@aureooms/js-itertools';
+import {range} from '@iterable-iterator/range';
+import {list} from '@iterable-iterator/list';
 
 import SelectOneSetting from './SelectOneSetting.js';
 

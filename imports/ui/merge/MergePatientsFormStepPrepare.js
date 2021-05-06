@@ -4,7 +4,9 @@ import {withTracker} from 'meteor/react-meteor-data';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {map, list, chain} from '@aureooms/js-itertools';
+import {map} from '@iterable-iterator/map';
+import {list} from '@iterable-iterator/list';
+import {_chain as chain} from '@iterable-iterator/chain';
 
 import {withStyles} from '@material-ui/core/styles';
 

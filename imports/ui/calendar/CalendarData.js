@@ -12,7 +12,10 @@ import isAfter from 'date-fns/isAfter';
 import dateFormat from 'date-fns/format';
 import dateParse from 'date-fns/parse';
 
-import {list, take, range, enumerate} from '@aureooms/js-itertools';
+import {list} from '@iterable-iterator/list';
+import {take} from '@iterable-iterator/slice';
+import {range} from '@iterable-iterator/range';
+import {enumerate} from '@iterable-iterator/zip';
 
 import {ALL_WEEK_DAYS} from './constants.js';
 

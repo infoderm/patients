@@ -3,7 +3,7 @@ import {Mongo} from 'meteor/mongo';
 // Import { Binary } from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import {zip} from '@aureooms/js-itertools';
+import {zip} from '@iterable-iterator/zip';
 
 import pageQuery from './pageQuery';
 import {Patients, patients} from './patients.js';

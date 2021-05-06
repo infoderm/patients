@@ -2,13 +2,16 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import {PairingHeap} from '@aureooms/js-pairing-heap';
-import {increasing, decreasing} from '@aureooms/js-compare';
+import {PairingHeap} from '@heap-data-structure/pairing-heap';
+import {increasing, decreasing} from '@total-order/date';
 
 import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
 
-import {list, map, range, product} from '@aureooms/js-itertools';
+import {product} from '@set-theory/cartesian-product';
+import {map} from '@iterable-iterator/map';
+import {list} from '@iterable-iterator/list';
+import {range} from '@iterable-iterator/range';
 
 import {Attachments} from './attachments.js';
 import {Books, books} from './books.js';

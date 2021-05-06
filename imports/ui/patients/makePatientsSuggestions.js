@@ -1,5 +1,7 @@
 import {useDebounce} from 'use-debounce';
-import {map, list} from '@aureooms/js-itertools';
+
+import {map} from '@iterable-iterator/map';
+import {list} from '@iterable-iterator/list';
 
 import {usePatientsAdvancedFind} from '../../api/patients.js';
 import {normalizeSearch} from '../../api/string.js';

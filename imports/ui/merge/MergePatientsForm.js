@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
-import {map, list} from '@aureooms/js-itertools';
+import {map} from '@iterable-iterator/map';
+import {list} from '@iterable-iterator/list';
 
 import {makeStyles} from '@material-ui/core/styles';
 

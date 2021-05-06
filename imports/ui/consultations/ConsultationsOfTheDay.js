@@ -9,7 +9,7 @@ import subDays from 'date-fns/subDays';
 import addHours from 'date-fns/addHours';
 import isBefore from 'date-fns/isBefore';
 
-import {count} from '@aureooms/js-cardinality';
+import {count} from '@iterable-iterator/cardinality';
 
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';

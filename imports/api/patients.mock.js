@@ -1,6 +1,8 @@
 import faker from 'faker';
 
-import {list, map, range} from '@aureooms/js-itertools';
+import {list} from '@iterable-iterator/list';
+import {map} from '@iterable-iterator/map';
+import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 

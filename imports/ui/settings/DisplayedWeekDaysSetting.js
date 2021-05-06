@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {list, filter, range} from '@aureooms/js-itertools';
+import {list} from '@iterable-iterator/list';
+import {filter} from '@iterable-iterator/filter';
+import {range} from '@iterable-iterator/range';
 
 import InputManySetting from './InputManySetting.js';
 

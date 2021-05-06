@@ -2,7 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {FilesCollection} from 'meteor/ostrio:files';
 import {check} from 'meteor/check';
 
-import {all, map} from '@aureooms/js-itertools';
+import {all} from '@iterable-iterator/reduce';
+import {map} from '@iterable-iterator/map';
 
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 

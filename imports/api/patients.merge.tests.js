@@ -6,7 +6,7 @@ import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
 import totalOrder from 'total-order';
-import {sorted} from '@aureooms/js-itertools';
+import {sorted} from '@iterable-iterator/sorted';
 
 import {Patients, patients} from './patients.mock.js';
 import {Consultations} from './consultations.mock.js';

@@ -6,7 +6,7 @@ import {scaleOrdinal} from '@visx/scale';
 import {useTooltip, TooltipWithBounds} from '@visx/tooltip';
 import {localPoint} from '@visx/event';
 
-import {increasing} from '@aureooms/js-compare';
+import {increasing} from '@total-order/primitive';
 
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';

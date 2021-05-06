@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 
 import {Prompt} from 'react-router';
 
-import {map, list} from '@aureooms/js-itertools';
+import {map} from '@iterable-iterator/map';
+import {list} from '@iterable-iterator/list';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
