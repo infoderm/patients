@@ -1,11 +1,14 @@
 import assert from 'assert';
 import deburr from 'lodash.deburr';
 
-import {all} from '@iterable-iterator/reduce';
+import {all, min} from '@iterable-iterator/reduce';
+import {list} from '@iterable-iterator/list';
+import {len} from '@functional-abstraction/operator';
 import {map} from '@iterable-iterator/map';
 import {sorted} from '@iterable-iterator/sorted';
-import {decreasing} from '@total-order/primitive';
-import {len} from '@total-order/key';
+import {increasing, decreasing} from '@total-order/primitive';
+import {len as byLength} from '@total-order/key';
+import escapeStringRegexp from 'escape-string-regexp';
 
 export {default as escapeStringRegexp} from 'escape-string-regexp';
 
@@ -28,6 +31,57 @@ export const makeIndex = (data) => {
 	return (query) => {
 		const haystack = onlyLowerCaseASCII(query);
 		return all(map((needle) => haystack.includes(needle), needles));
+	};
+};
+
+const patternsStatistics = (patterns) => {
+	const minLength = min(increasing, map(len, patterns), 0);
+	return {
+		minLength
+	};
+};
+
+/**
+ * makeAnyIndex.
+ *
+ * @param {Iterable<string>} patterns
+ * @return {Function}
+ */
+export const makeAnyIndex = (patterns) => {
+	const needles = sorted(
+		byLength(increasing),
+		map(onlyLowerCaseASCII, patterns)
+	);
+	if (needles.length === 0) return null;
+	const minLength = needles[0].length;
+	return (query) => {
+		if (query.length < minLength) return false;
+		const haystack = onlyLowerCaseASCII(query);
+		for (const needle of needles) {
+			if (needle.length > haystack.length) return false;
+			if (haystack.includes(needle)) return true;
+		}
+
+		return false;
+	};
+};
+
+/**
+ * makeRegExpIndex.
+ *
+ * @param {Iterable<string>} patterns
+ * @return {Function}
+ */
+export const makeRegExpIndex = (patterns) => {
+	const needles = list(map(onlyLowerCaseASCII, patterns));
+	if (needles.length === 0) return null;
+	const {minLength} = patternsStatistics(needles);
+	const s = list(map(escapeStringRegexp, needles)).join('|');
+	const re = new RegExp(s);
+	return (query) => {
+		if (query.length < minLength) return false;
+		const haystack = onlyLowerCaseASCII(query);
+		return re.test(haystack);
 	};
 };
 
@@ -60,7 +114,7 @@ const PARTICLES_DE = [
 ];
 
 const PARTICLES = new Set([...PARTICLES_FR, ...PARTICLES_NL, ...PARTICLES_DE]);
-const PARTICLES_ORDERED = sorted(len(decreasing), PARTICLES);
+const PARTICLES_ORDERED = sorted(byLength(decreasing), PARTICLES);
 
 const words = (string) => string.trim().split(/\s+/);
 

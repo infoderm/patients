@@ -2,8 +2,6 @@ import React from 'react';
 
 import {enumerate} from '@iterable-iterator/zip';
 
-import {onlyLowerCaseASCII} from '../api/string.js';
-
 function* split(s) {
 	const n = s.length;
 	let word = '';
@@ -31,34 +29,23 @@ function* split(s) {
 	}
 }
 
-export default function colorizeText(dict, text) {
-	// O(m.n) algorithm
-	// TODO replace by Aho-Corasick
-
-	if (!text) {
-		return [];
-	}
-
-	const needles = [];
-
-	for (const word of dict) {
-		const needle = onlyLowerCaseASCII(word);
-		needles.push(needle);
-	}
+/**
+ * colorizeText.
+ *
+ * @param {Function} matches
+ * @param {string} text
+ */
+export default function colorizeText(matches, text) {
+	if (!text) return [];
+	if (!matches) return [text];
 
 	const result = [];
-	outer: for (const [i, piece] of enumerate(split(text))) {
-		if (piece.length > 1) {
-			const haystack = onlyLowerCaseASCII(piece);
-			for (const needle of needles) {
-				if (haystack.includes(needle)) {
-					result.push(<mark key={i}>{piece}</mark>);
-					continue outer;
-				}
-			}
+	for (const [i, piece] of enumerate(split(text))) {
+		if (matches(piece)) {
+			result.push(<mark key={i}>{piece}</mark>);
+		} else {
+			result.push(piece);
 		}
-
-		result.push(piece);
 	}
 
 	return result;

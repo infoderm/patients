@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 
-import React, {useReducer, useEffect} from 'react';
+import React, {useReducer, useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
 
 import {Prompt} from 'react-router';
@@ -45,6 +45,11 @@ import {useSetting} from '../../client/settings.js';
 
 import eidParseBirthdate from '../../api/eidParseBirthdate.js';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient.js';
+
+import {
+	// makeAnyIndex,
+	makeRegExpIndex
+} from '../../api/string.js';
 
 import SetPicker from '../input/SetPicker.js';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
@@ -158,6 +163,11 @@ const reducer = (state, action) => {
 
 const PatientPersonalInformation = (props) => {
 	const {value: importantStrings} = useSetting('important-strings');
+
+	const importantStringsDict = useMemo(() => {
+		// return makeAnyIndex(importantStrings);
+		return makeRegExpIndex(importantStrings);
+	}, [importantStrings]);
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -364,7 +374,7 @@ const PatientPersonalInformation = (props) => {
 									}}
 									value={patient.antecedents}
 									margin="normal"
-									dict={importantStrings}
+									dict={importantStringsDict}
 									onChange={update('antecedents')}
 								/>
 							</Grid>
@@ -388,7 +398,7 @@ const PatientPersonalInformation = (props) => {
 									}}
 									value={patient.ongoing}
 									margin="normal"
-									dict={importantStrings}
+									dict={importantStringsDict}
 									onChange={update('ongoing')}
 								/>
 							</Grid>
@@ -584,7 +594,7 @@ const PatientPersonalInformation = (props) => {
 									}}
 									value={patient.about}
 									margin="normal"
-									dict={importantStrings}
+									dict={importantStringsDict}
 									onChange={update('about')}
 								/>
 							</Grid>
