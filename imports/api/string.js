@@ -1,6 +1,5 @@
 import assert from 'assert';
 import deburr from 'lodash.deburr';
-import escapeStringRegexp from 'escape-string-regexp';
 
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
@@ -8,20 +7,23 @@ import {sorted} from '@iterable-iterator/sorted';
 import {decreasing} from '@total-order/primitive';
 import {len} from '@total-order/key';
 
-const normalizeWhiteSpace = (string) => string.replace(/\s+/g, ' ');
+export {default as escapeStringRegexp} from 'escape-string-regexp';
 
-const normalizeInput = (string) =>
+export const normalizeWhiteSpace = (string) => string.replace(/\s+/g, ' ');
+
+export const normalizeInput = (string) =>
 	normalizeWhiteSpace(onlyLowerCaseASCII(string));
 
-const normalized = (string) => normalizeInput(string).trim();
+export const normalized = (string) => normalizeInput(string).trim();
 
-const capitalized = (string) => string[0].toUpperCase() + string.slice(1);
+export const capitalized = (string) =>
+	string[0].toUpperCase() + string.slice(1);
 
-const onlyASCII = (string) => deburr(string);
+export const onlyASCII = (string) => deburr(string);
 
-const onlyLowerCaseASCII = (string) => onlyASCII(string.toLowerCase());
+export const onlyLowerCaseASCII = (string) => onlyASCII(string.toLowerCase());
 
-const makeIndex = (data) => {
+export const makeIndex = (data) => {
 	const needles = onlyLowerCaseASCII(data).split(' ');
 	return (query) => {
 		const haystack = onlyLowerCaseASCII(query);
@@ -81,7 +83,7 @@ function* splitParticles(data) {
 	}
 }
 
-const normalizeSearch = (data) =>
+export const normalizeSearch = (data) =>
 	[...splitParticles(onlyLowerCaseASCII(data))].join(' ');
 
 function* nonEmptySubstrings(string) {
@@ -97,7 +99,7 @@ const SHATTER_SHORT = 2;
 const SHATTER_MEDIUM = 4;
 const SHATTER_LONG = 6;
 
-const shatter = (data) => {
+export const shatter = (data) => {
 	const parts = splitParticles(onlyLowerCaseASCII(data));
 	const index = {
 		whole: [],
@@ -150,18 +152,18 @@ const isNonNegativeIntegerStrict = (string, base) => {
 	return regex.test(string);
 };
 
-const parseNonNegativeIntegerStrict = (string, base = 10) => {
+export const parseNonNegativeIntegerStrict = (string, base = 10) => {
 	return isNonNegativeIntegerStrict(string, base)
 		? Number.parseInt(string, base)
 		: Number.NaN;
 };
 
-const parseNonNegativeIntegerStrictOrString = (string, base) => {
+export const parseNonNegativeIntegerStrictOrString = (string, base) => {
 	const parsed = parseNonNegativeIntegerStrict(string, base);
 	return Number.isNaN(parsed) ? string : parsed;
 };
 
-const parseUint32StrictOrString = (string, base) => {
+export const parseUint32StrictOrString = (string, base) => {
 	const parsed = parseNonNegativeIntegerStrict(string, base);
 	return Number.isNaN(parsed) || (parsed >>> 0).toString() !== string
 		? string
@@ -170,19 +172,3 @@ const parseUint32StrictOrString = (string, base) => {
 
 export const containsNonAlphabetical = (string) =>
 	/[^a-zA-Z :'-]/.test(onlyASCII(string));
-
-export {
-	normalizeWhiteSpace,
-	normalizeInput,
-	normalized,
-	capitalized,
-	onlyASCII,
-	onlyLowerCaseASCII,
-	makeIndex,
-	shatter,
-	normalizeSearch,
-	escapeStringRegexp,
-	parseNonNegativeIntegerStrict,
-	parseNonNegativeIntegerStrictOrString,
-	parseUint32StrictOrString
-};
