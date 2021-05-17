@@ -52,31 +52,7 @@ if (Meteor.isServer) {
 		};
 	};
 
-	Meteor.publish('events.interval', function (begin, end) {
-		check(begin, Date);
-		check(end, Date);
-
-		const query = {
-			owner: this.userId,
-			datetime: {
-				$gte: begin,
-				$lt: end
-			}
-		};
-
-		const options = {
-			fields: {
-				_id: 1,
-				patientId: 1,
-				datetime: 1,
-				isDone: 1,
-				isCancelled: 1,
-				duration: 1,
-				doneDatetime: 1,
-				createdAt: 1
-			}
-		};
-
+	const publishEvents = function (query, options) {
 		const handle = Consultations.find(query, options).observe({
 			added: ({_id, ...fields}) => {
 				this.added(events, _id, event(_id, fields));
@@ -98,5 +74,31 @@ if (Meteor.isServer) {
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
 		this.onStop(() => handle.stop());
+	};
+
+	Meteor.publish('events.interval', function (begin, end) {
+		check(begin, Date);
+		check(end, Date);
+		const query = {
+			owner: this.userId,
+			datetime: {
+				$gte: begin,
+				$lt: end
+			}
+		};
+
+		const options = {
+			fields: {
+				_id: 1,
+				patientId: 1,
+				datetime: 1,
+				isDone: 1,
+				isCancelled: 1,
+				duration: 1,
+				doneDatetime: 1,
+				createdAt: 1
+			}
+		};
+		return publishEvents.call(this, query, options);
 	});
 }
