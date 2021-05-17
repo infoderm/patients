@@ -8,6 +8,7 @@ import {increasing, decreasing} from '@total-order/date';
 import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
 import addMilliseconds from 'date-fns/addMilliseconds';
+import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
 import {product} from '@set-theory/cartesian-product';
 import {map} from '@iterable-iterator/map';
@@ -21,6 +22,11 @@ import {parseUint32StrictOrString} from './string.js';
 import pageQuery from './pageQuery.js';
 import makeQuery from './makeQuery.js';
 import unconditionallyUpdateById from './unconditionallyUpdateById.js';
+
+export const DEFAULT_DURATION_IN_MINUTES = 15;
+export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
+export const DEFAULT_DURATION_IN_MILLISECONDS =
+	DEFAULT_DURATION_IN_SECONDS * 1000;
 
 const collection = 'consultations';
 const stats = collection + '.stats';
@@ -369,6 +375,33 @@ function sanitize({
 	};
 }
 
+const computedFields = (owner, state, changes) => {
+	const isLastConsultation =
+		Consultations.findOne({
+			owner,
+			isDone: true,
+			datetime: {$gt: changes.datetime ?? state?.datetime}
+		}) === undefined;
+
+	if (!isLastConsultation) return undefined;
+
+	const now = new Date();
+
+	const tolerance = state?.duration ?? DEFAULT_DURATION_IN_MILLISECONDS;
+
+	if (
+		state?.doneDatetime !== undefined &&
+		differenceInMilliseconds(now, state.doneDatetime) >= tolerance
+	) {
+		return undefined;
+	}
+
+	return {
+		doneDatetime: now,
+		end: now
+	};
+};
+
 const methods = {
 	'books.interval.csv'(begin, end, firstBook, lastBook, maxRows) {
 		if (!this.userId) {
@@ -457,7 +490,7 @@ const methods = {
 		return table.join('\n');
 	},
 
-	'consultations.insert'(consultation, setDoneDatetime = false) {
+	'consultations.insert'(consultation) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -468,24 +501,15 @@ const methods = {
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
-		const createdAt = new Date();
-		const doneDatetime = setDoneDatetime ? createdAt : undefined;
-		const end = doneDatetime;
-
 		return Consultations.insert({
 			...fields,
-			createdAt,
-			doneDatetime,
-			end,
+			...computedFields(this.userId, undefined, fields),
+			createdAt: new Date(),
 			owner: this.userId
 		});
 	},
 
-	'consultations.update'(
-		consultationId,
-		newfields,
-		updateExistingDoneDatetime = false
-	) {
+	'consultations.update'(consultationId, newfields) {
 		check(consultationId, String);
 		const existing = Consultations.findOne({
 			_id: consultationId,
@@ -500,16 +524,10 @@ const methods = {
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
-		const doneDatetime = updateExistingDoneDatetime
-			? new Date()
-			: existing.doneDatetime;
-		const end = doneDatetime;
-
 		return Consultations.update(consultationId, {
 			$set: {
 				...fields,
-				doneDatetime,
-				end
+				...computedFields(this.userId, existing, fields)
 			}
 		});
 	},

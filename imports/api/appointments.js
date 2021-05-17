@@ -168,6 +168,7 @@ const methods = {
 				$set: {
 					datetime: realDatetime,
 					realDatetime,
+					doneDatetime: realDatetime,
 					begin: realDatetime,
 					end: realDatetime,
 					price: 0,

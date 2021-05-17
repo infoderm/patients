@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import CompareIcon from '@material-ui/icons/Compare';
 import SaveIcon from '@material-ui/icons/Save';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import dateFormat from 'date-fns/format';
 import dateParseISO from 'date-fns/parseISO';
@@ -33,9 +32,8 @@ const styles = (theme) => ({
 	main: {
 		marginTop: 64 + theme.spacing(3)
 	},
-	compareButton: computeFixedFabStyle({theme, col: 3}),
-	saveButton: computeFixedFabStyle({theme, col: 2}),
-	doneButton: computeFixedFabStyle({theme, col: 1})
+	compareButton: computeFixedFabStyle({theme, col: 2}),
+	saveButton: computeFixedFabStyle({theme, col: 1})
 });
 
 const useStyles = makeStyles(styles);
@@ -160,7 +158,7 @@ const ConsultationEditor = ({consultation}) => {
 
 	const [compare, setCompare] = useState(false);
 
-	const {_id: consultationId, patientId, doneDatetime} = consultation;
+	const {_id: consultationId, patientId} = consultation;
 
 	const [state, dispatch] = useReducer(reducer, consultation, init);
 
@@ -187,7 +185,7 @@ const ConsultationEditor = ({consultation}) => {
 		dispatch({type: 'update', key, value: transform(e.target.value)});
 	};
 
-	const handleSubmit = (setDoneDatetime) => async (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		const consultation = {
@@ -232,13 +230,8 @@ const ConsultationEditor = ({consultation}) => {
 
 		try {
 			await (consultationId === undefined
-				? call('consultations.insert', consultation, setDoneDatetime)
-				: call(
-						'consultations.update',
-						consultationId,
-						consultation,
-						setDoneDatetime
-				  ));
+				? call('consultations.insert', consultation)
+				: call('consultations.update', consultationId, consultation));
 			dispatch({type: 'not-dirty'});
 		} catch (error) {
 			console.error(error);
@@ -276,21 +269,12 @@ const ConsultationEditor = ({consultation}) => {
 			</Fab>
 			<Fab
 				className={classes.saveButton}
-				color={doneDatetime ? 'primary' : 'secondary'}
+				color="primary"
 				aria-label="save"
 				disabled={!dirty}
-				onClick={handleSubmit(false)}
+				onClick={handleSubmit}
 			>
 				<SaveIcon />
-			</Fab>
-			<Fab
-				className={classes.doneButton}
-				color={!doneDatetime ? 'primary' : 'secondary'}
-				aria-label="done"
-				disabled={!dirty}
-				onClick={handleSubmit(true)}
-			>
-				<AssignmentTurnedInIcon />
 			</Fab>
 		</div>
 	);
