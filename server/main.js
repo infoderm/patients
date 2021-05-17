@@ -352,6 +352,27 @@ Meteor.startup(() => {
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
+			begin: 1,
+			end: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			end: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
 			isDone: 1,
 			datetime: 1
 		},
@@ -421,7 +442,18 @@ Meteor.startup(() => {
 	Events.rawCollection().createIndex(
 		{
 			owner: 1,
-			begin: 1
+			begin: 1,
+			end: 1
+		},
+		{
+			background: true
+		}
+	);
+
+	Events.rawCollection().createIndex(
+		{
+			owner: 1,
+			end: 1
 		},
 		{
 			background: true

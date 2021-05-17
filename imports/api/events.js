@@ -4,6 +4,7 @@ import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 import addMinutes from 'date-fns/addMinutes';
+import isAfter from 'date-fns/isAfter';
 
 import {Consultations} from './consultations.js';
 import {Patients} from './patients.js';
@@ -12,6 +13,31 @@ const DEFAULT_DURATION_IN_MINUTES = 15;
 
 const events = 'events';
 export const Events = new Mongo.Collection(events);
+
+export const intersectsInterval = (begin, end) => ({
+	$or: [
+		{
+			begin: {
+				$gte: begin,
+				$lt: end
+			}
+		},
+		{
+			end: {
+				$gt: begin,
+				$lte: end
+			}
+		},
+		{
+			begin: {
+				$lt: begin
+			},
+			end: {
+				$gt: end
+			}
+		}
+	]
+});
 
 if (Meteor.isServer) {
 	const event = (
@@ -91,6 +117,31 @@ if (Meteor.isServer) {
 			fields: {
 				_id: 1,
 				patientId: 1,
+				datetime: 1,
+				isDone: 1,
+				isCancelled: 1,
+				duration: 1,
+				doneDatetime: 1,
+				createdAt: 1
+			}
+		};
+		return publishEvents.call(this, query, options);
+	});
+
+	Meteor.publish('events.intersects', function (begin, end) {
+		check(begin, Date);
+		check(end, Date);
+		if (isAfter(begin, end)) throw new Error('begin is after end');
+		const query = {
+			...intersectsInterval(begin, end),
+			owner: this.userId
+		};
+		const options = {
+			fields: {
+				_id: 1,
+				patientId: 1,
+				begin: 1,
+				end: 1,
 				datetime: 1,
 				isDone: 1,
 				isCancelled: 1,

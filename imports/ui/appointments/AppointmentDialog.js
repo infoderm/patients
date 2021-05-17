@@ -18,17 +18,22 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import {Alert, AlertTitle} from '@material-ui/lab';
+
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import dateFormat from 'date-fns/format';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
+import addMilliseconds from 'date-fns/addMilliseconds';
 
 import {msToString} from '../../client/duration.js';
 
 import {patients} from '../../api/patients.js';
 import {useSetting} from '../../client/settings.js';
+
+import useIntersectingEvents from '../events/useIntersectingEvents.js';
 
 import usePatient from '../patients/usePatient.js';
 
@@ -116,16 +121,31 @@ const AppointmentDialog = (props) => {
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
+	const datetime = new Date(`${date}T${time}`);
 	const appointmentIsInThePast = isBefore(new Date(date), startOfToday());
 	const displayAppointmentIsInThePast =
 		!initialAppointment && appointmentIsInThePast;
+
+	const _id = initialAppointment?._id;
+	const begin = datetime;
+	const end = addMilliseconds(datetime, duration);
+	const {results: overlappingEvents} = useIntersectingEvents(
+		begin,
+		end,
+		{
+			_id: {$not: _id},
+			isCancelled: {$not: true}
+		},
+		{limit: 1},
+		[_id, Number(datetime), duration]
+	);
+	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
 
 	const createAppointment = (event) => {
 		event.preventDefault();
 
 		if (patientList.length === 1) {
 			setPatientError('');
-			const datetime = new Date(`${date}T${time}`);
 			const args = {
 				datetime,
 				duration,
@@ -260,6 +280,14 @@ const AppointmentDialog = (props) => {
 							onChange={(e) => setReason(e.target.value)}
 						/>
 					</Grid>
+					{appointmentOverlapsWithAnotherEvent && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Ce rendez-vous <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
 				</Grid>
 			</DialogContent>
 			<DialogActions>
