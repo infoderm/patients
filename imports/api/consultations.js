@@ -501,10 +501,14 @@ const methods = {
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
+		const createdAt = new Date();
+		const lastModifiedAt = createdAt;
+
 		return Consultations.insert({
 			...fields,
 			...computedFields(this.userId, undefined, fields),
-			createdAt: new Date(),
+			createdAt,
+			lastModifiedAt,
 			owner: this.userId
 		});
 	},
@@ -527,7 +531,8 @@ const methods = {
 		return Consultations.update(consultationId, {
 			$set: {
 				...fields,
-				...computedFields(this.userId, existing, fields)
+				...computedFields(this.userId, existing, fields),
+				lastModifiedAt: new Date()
 			}
 		});
 	},
