@@ -1,6 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
+import addMilliseconds from 'date-fns/addMilliseconds';
+
 import {thisYearsInterval} from '../util/datetime.js';
 
 import {
@@ -70,6 +72,8 @@ function sanitize({datetime, duration, patient, phone, reason}) {
 			datetime,
 			scheduledDatetime: datetime,
 			duration,
+			begin: datetime,
+			end: addMilliseconds(datetime, duration),
 			reason,
 			isDone: false
 		}
@@ -164,6 +168,8 @@ const methods = {
 				$set: {
 					datetime: realDatetime,
 					realDatetime,
+					begin: realDatetime,
+					end: realDatetime,
 					price: 0,
 					paid: 0,
 					isDone: true,

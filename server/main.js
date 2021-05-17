@@ -3,6 +3,8 @@ import 'regenerator-runtime/runtime.js';
 import {Meteor} from 'meteor/meteor';
 // import {ObjectId} from 'meteor/mongo';
 
+import addMilliseconds from 'date-fns/addMilliseconds';
+
 import {Settings} from '../imports/api/settings.js';
 import {
 	Patients,
@@ -185,6 +187,27 @@ Meteor.startup(() => {
 				consultation.realDatetime = consultation.datetime;
 			} else {
 				consultation.scheduledDatetime = consultation.datetime;
+			}
+
+			Consultations.rawCollection().save(consultation);
+		});
+
+	// Add begin/end fields
+	Consultations.rawCollection()
+		.find()
+		.snapshot()
+		.forEach((consultation) => {
+			if (consultation.isDone) {
+				consultation.begin = consultation.begin ?? consultation.datetime;
+				consultation.end =
+					consultation.end ??
+					consultation.doneDatetime ??
+					consultation.datetime;
+			} else {
+				consultation.begin = consultation.begin ?? consultation.datetime;
+				consultation.end =
+					consultation.end ??
+					addMilliseconds(consultation.datetime, consultation.duration);
 			}
 
 			Consultations.rawCollection().save(consultation);

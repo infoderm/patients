@@ -7,6 +7,7 @@ import {increasing, decreasing} from '@total-order/date';
 
 import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
+import addMilliseconds from 'date-fns/addMilliseconds';
 
 import {product} from '@set-theory/cartesian-product';
 import {map} from '@iterable-iterator/map';
@@ -350,6 +351,7 @@ function sanitize({
 		patientId,
 		datetime,
 		realDatetime: datetime,
+		begin: datetime,
 		reason,
 		done,
 		todo,
@@ -468,11 +470,13 @@ const methods = {
 
 		const createdAt = new Date();
 		const doneDatetime = setDoneDatetime ? createdAt : undefined;
+		const end = doneDatetime;
 
 		return Consultations.insert({
 			...fields,
 			createdAt,
 			doneDatetime,
+			end,
 			owner: this.userId
 		});
 	},
@@ -496,11 +500,16 @@ const methods = {
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
+		const doneDatetime = updateExistingDoneDatetime
+			? new Date()
+			: existing.doneDatetime;
+		const end = doneDatetime;
+
 		return Consultations.update(consultationId, {
 			$set: {
 				...fields,
-				doneDatetime:
-					(!updateExistingDoneDatetime && existing.doneDatetime) || new Date()
+				doneDatetime,
+				end
 			}
 		});
 	},
@@ -587,6 +596,8 @@ const methods = {
 		(existing) => ({
 			$set: {
 				datetime: existing.scheduledDatetime,
+				begin: existing.scheduledDatetime,
+				end: addMilliseconds(existing.scheduledDatetime, existing.duration),
 				isDone: false
 			}
 		})
