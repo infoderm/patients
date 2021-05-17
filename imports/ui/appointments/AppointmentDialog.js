@@ -22,6 +22,8 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import dateFormat from 'date-fns/format';
+import isBefore from 'date-fns/isBefore';
+import startOfToday from 'date-fns/startOfToday';
 
 import {msToString} from '../../client/duration.js';
 
@@ -114,6 +116,10 @@ const AppointmentDialog = (props) => {
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
+	const appointmentIsInThePast = isBefore(new Date(date), startOfToday());
+	const displayAppointmentIsInThePast =
+		!initialAppointment && appointmentIsInThePast;
+
 	const createAppointment = (event) => {
 		event.preventDefault();
 
@@ -170,7 +176,12 @@ const AppointmentDialog = (props) => {
 								shrink: true
 							}}
 							value={date}
-							error={!date}
+							error={!date || displayAppointmentIsInThePast}
+							helperText={
+								displayAppointmentIsInThePast
+									? 'Date dans le passé!'
+									: undefined
+							}
 							onChange={(e) => setDate(e.target.value)}
 						/>
 					</Grid>
