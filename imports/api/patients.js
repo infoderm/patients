@@ -640,6 +640,7 @@ export const patients = {
 	cachePublication,
 	updateIndex,
 	insertPatient,
+	sanitize,
 	toString: patientToString,
 	toKey: patientToKey,
 	normalizedName,
