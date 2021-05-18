@@ -3,7 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
@@ -24,17 +23,10 @@ import ConfirmationTextField, {
 	useConfirmationTextFieldState
 } from '../input/ConfirmationTextField.js';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-}));
-
 const MAGIC = '8324jdkf-tag-deletion-dialog-title';
 let nextAriaId = 0;
 
 const TagDeletionDialog = (props) => {
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
 
@@ -99,17 +91,21 @@ const TagDeletionDialog = (props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					disabled={ConfirmationTextFieldProps.error}
 					color="secondary"
+					endIcon={<DeleteIcon />}
 					onClick={deleteThisTagIfNameMatches}
 				>
 					Delete
-					<DeleteIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>
