@@ -11,9 +11,7 @@ const useStyles = makeStyles((theme) => ({
 		height: '100%',
 		position: 'relative',
 		pointerEvents: 'none',
-		alignItems: 'center',
-		justifyContent: 'center',
-		verticalAlign: 'middle'
+		justifyContent: 'center'
 	}
 }));
 

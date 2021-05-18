@@ -1,22 +1,22 @@
 import React from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
-import {fade} from '@material-ui/core/styles/colorManipulator';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
+		display: 'flex',
+		alignItems: 'center',
 		position: 'relative',
 		marginLeft: theme.spacing(1),
 		marginRight: theme.spacing(2),
-		borderRadius: 2,
-		background: fade(theme.palette.common.white, 0.15),
-		'&:hover': {
-			background: fade(theme.palette.common.white, 0.25)
-		}
+		borderRadius: 2
 	}
 }));
 
-export default function SearchBoxInternalsContainer({children}) {
+export default function SearchBoxInternalsContainer({className, children}) {
 	const classes = useStyles();
-	return <div className={classes.container}>{children}</div>;
+	return (
+		<div className={classNames(className, classes.container)}>{children}</div>
+	);
 }

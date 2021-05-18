@@ -4,11 +4,11 @@ import SearchBoxInternalsContainer from './SearchBoxInternalsContainer.js';
 import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment.js';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput.js';
 
-export default function SearchBox(props) {
+export default function SearchBox({className, expands, ...rest}) {
 	return (
-		<SearchBoxInternalsContainer>
+		<SearchBoxInternalsContainer className={className}>
 			<SearchBoxInternalsAdornment />
-			<SearchBoxInternalsInput inputProps={props} />
+			<SearchBoxInternalsInput expands={expands} inputProps={rest} />
 		</SearchBoxInternalsContainer>
 	);
 }

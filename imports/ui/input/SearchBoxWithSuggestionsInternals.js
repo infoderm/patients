@@ -26,8 +26,10 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 		<SearchBoxInternalsContainer>
 			<SearchBoxInternalsAdornment />
 			<SearchBoxInternalsInput
-				inputProps={getInputProps()}
-				placeholder={placeholder}
+				inputProps={{
+					placeholder,
+					...getInputProps()
+				}}
 			/>
 			{isOpen ? (
 				<SearchBoxInternalsSuggestions

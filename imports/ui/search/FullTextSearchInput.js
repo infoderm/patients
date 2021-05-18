@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 
 import {useHistory} from 'react-router-dom';
+import {makeStyles} from '@material-ui/core/styles';
+import {fade} from '@material-ui/core/styles/colorManipulator';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
 
@@ -11,8 +13,18 @@ import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
 const THRESHOLD_HISTORY_PUSH = 2000; // 2 seconds
 const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;
 
+const useStyles = makeStyles((theme) => ({
+	searchBox: {
+		background: fade(theme.palette.common.white, 0.15),
+		'&:hover': {
+			background: fade(theme.palette.common.white, 0.25)
+		}
+	}
+}));
+
 export default function FullTextSearchInput({className}) {
 	const history = useHistory();
+	const classes = useStyles();
 	const [lastHistoryUpdate, setLastHistoryUpdate] = useState(0);
 	const [value, setValue] = useState('');
 	const [pending, setPending] = useState(undefined);
@@ -45,6 +57,8 @@ export default function FullTextSearchInput({className}) {
 	return (
 		<div className={className}>
 			<SearchBox
+				expands
+				className={classes.searchBox}
 				placeholder="Search a patient…"
 				value={value}
 				onChange={onChange}
