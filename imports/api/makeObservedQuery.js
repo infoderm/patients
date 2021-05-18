@@ -19,14 +19,14 @@ const makeObservedQuery = (Collection, subscription) => (
 		const handle = Meteor.subscribe(subscription, key, query, options, {
 			onStop: () => {
 				if (handleRef.current === handle) {
-					setLoading(false);
 					setDirty(true);
+					setLoading(false);
 				}
 			},
 			onReady: () => {
 				const {results} = Collection.findOne({key});
-				setLoading(false);
 				setResults(results);
+				setLoading(false);
 			}
 		});
 		handleRef.current = handle;
