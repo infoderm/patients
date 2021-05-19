@@ -28,7 +28,6 @@ const MergePatientsFormStepPrepare = (props) => {
 	const {
 		toMerge,
 		onPrevStep,
-		onNextStep,
 		error,
 		oldPatients,
 		consultations,
@@ -47,7 +46,7 @@ const MergePatientsFormStepPrepare = (props) => {
 			{!error && (
 				<>
 					{oldPatients.map((patient) => (
-						<Grid key={patient._id} item sm={12} md={12}>
+						<Grid key={patient._id} item xs={12}>
 							<Typography variant="h1">{patient._id}</Typography>
 							<PatientSheet
 								patient={patient}
@@ -57,7 +56,7 @@ const MergePatientsFormStepPrepare = (props) => {
 							/>
 						</Grid>
 					))}
-					<Grid item sm={12} md={12}>
+					<Grid item xs={12}>
 						<Typography variant="h1">New patient information</Typography>
 						<PatientSheet
 							patient={newPatient}
@@ -69,39 +68,37 @@ const MergePatientsFormStepPrepare = (props) => {
 				</>
 			)}
 			{error && (
-				<Grid item sm={12} md={12}>
+				<Grid item xs={12}>
 					<span>{error.message}</span>
 				</Grid>
 			)}
-			<Grid item sm={12} md={12}>
-				<Grid container spacing={1}>
-					{onPrevStep && (
-						<Grid item>
-							<Button
-								color="default"
-								startIcon={<SkipPreviousIcon />}
-								onClick={onPrevStep}
-							>
-								Prev
-							</Button>
-						</Grid>
-					)}
-					{!error && onNextStep && (
-						<Grid item>
-							<Button
-								variant="contained"
-								color="primary"
-								endIcon={<SkipNextIcon />}
-								onClick={() => setMerging(true)}
-							>
-								Next
-							</Button>
-						</Grid>
-					)}
-				</Grid>
+			<Grid item container xs={12} spacing={1}>
+				{onPrevStep && (
+					<Grid item>
+						<Button
+							color="default"
+							startIcon={<SkipPreviousIcon />}
+							onClick={onPrevStep}
+						>
+							Prev
+						</Button>
+					</Grid>
+				)}
+				{!error && (
+					<Grid item>
+						<Button
+							variant="contained"
+							color="primary"
+							endIcon={<SkipNextIcon />}
+							onClick={() => setMerging(true)}
+						>
+							Next
+						</Button>
+					</Grid>
+				)}
 			</Grid>
 			{!error && (
-				<Grid item sm={12} md={12}>
+				<Grid item xs={12}>
 					<MergePatientsConfirmationDialog
 						open={merging}
 						toCreate={newPatient}

@@ -73,7 +73,6 @@ const MergePatientsForm = () => {
 				<MergePatientsFormStepPrepare
 					toMerge={list(map((x) => x._id, toMerge))}
 					onPrevStep={() => setStep('select')}
-					onNextStep={() => setStep('confirm')}
 				/>
 			);
 		default:
