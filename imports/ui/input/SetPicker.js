@@ -324,7 +324,9 @@ SetPicker.propTypes = {
 	sort: PropTypes.func,
 	createNewItem: PropTypes.func,
 	maxCount: PropTypes.number,
-	multiset: PropTypes.bool
+	multiset: PropTypes.bool,
+	TextFieldProps: PropTypes.object,
+	placeholder: PropTypes.string
 };
 
 export default SetPicker;
