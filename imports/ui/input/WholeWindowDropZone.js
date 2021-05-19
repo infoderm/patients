@@ -55,16 +55,15 @@ const WholeWindowDropZone = ({callback}) => {
 			}
 		};
 
-		const handleDrop = (e) => {
+		const handleDrop = async (e) => {
 			e.preventDefault();
+			setVisible(false);
 			const data = e.dataTransfer;
 			try {
-				callback(data);
+				await callback(data);
 			} catch (error) {
 				console.error(error);
 			}
-
-			setVisible(false);
 		};
 
 		window.addEventListener('dragover', prevent);
