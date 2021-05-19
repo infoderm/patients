@@ -32,26 +32,26 @@ function unpack(data, item) {
 	return ['unknown', item];
 }
 
-export default function handleDrop(history) {
-	return (data) => {
-		console.log(data);
+const handleDrop = (history) => (data) => {
+	console.log(data);
 
-		for (const item of data.items) {
-			const [kind, object] = unpack(data, item);
-			switch (kind) {
-				case 'drugs':
-					insertDrugs(object);
-					break;
-				case 'patient':
-					insertPatient(history, object);
-					break;
-				case 'healthone':
-					insertDocument(history, kind, object);
-					break;
-				default:
-					console.debug('handleDrop-default', kind, object);
-					break;
-			}
+	for (const item of data.items) {
+		const [kind, object] = unpack(data, item);
+		switch (kind) {
+			case 'drugs':
+				insertDrugs(object);
+				break;
+			case 'patient':
+				insertPatient(history, object);
+				break;
+			case 'healthone':
+				insertDocument(history, kind, object);
+				break;
+			default:
+				console.debug('handleDrop-default', kind, object);
+				break;
 		}
-	};
-}
+	}
+};
+
+export default handleDrop;
