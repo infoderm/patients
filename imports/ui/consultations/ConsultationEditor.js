@@ -16,7 +16,7 @@ import call from '../../api/call.js';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import confirm from '../modal/confirm.js';
+import dialog from '../modal/dialog.js';
 import ConfirmationDialog from '../modal/ConfirmationDialog.js';
 
 import {computeFixedFabStyle} from '../button/FixedFab.js';
@@ -207,7 +207,7 @@ const ConsultationEditor = ({consultation}) => {
 
 		if (
 			priceWarning &&
-			!(await confirm((resolve) => (
+			!(await dialog((resolve) => (
 				<ConfirmationDialog
 					title="Confirm"
 					text="This consultation has a price of 0."

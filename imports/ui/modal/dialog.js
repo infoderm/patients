@@ -3,21 +3,22 @@ import {render, unmountComponentAtNode} from 'react-dom';
 
 const DEFAULT_OPTIONS = {
 	unmountDelay: 3000,
-	openKey: 'open'
+	openKey: 'open',
+	parent: () => document.body
 };
 
-const confirm = async (componentExecutor, options) => {
+const dialog = (componentExecutor, options) => {
 	options = {...DEFAULT_OPTIONS, ...options};
 
 	const container = document.createElement('div');
-	document.body.append(container);
+	options.parent().append(container);
 
 	const unmount = () => {
 		unmountComponentAtNode(container);
 		container.remove();
 	};
 
-	const confirmation = new Promise((resolve, reject) => {
+	const promise = new Promise((resolve, reject) => {
 		render(
 			cloneElement(componentExecutor(resolve, reject), {
 				[options.openKey]: true
@@ -26,7 +27,7 @@ const confirm = async (componentExecutor, options) => {
 		);
 	});
 
-	return confirmation.finally(() => {
+	return promise.finally(() => {
 		const noop = () => {};
 		render(
 			cloneElement(componentExecutor(noop, noop), {[options.openKey]: false}),
@@ -38,4 +39,4 @@ const confirm = async (componentExecutor, options) => {
 	});
 };
 
-export default confirm;
+export default dialog;
