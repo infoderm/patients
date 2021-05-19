@@ -1,14 +1,14 @@
 import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {_chain as chain} from '@iterable-iterator/chain';
 
-import {withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -35,106 +35,102 @@ const styles = (theme) => ({
 	}
 });
 
-class MergePatientsFormStepPrepare extends React.Component {
-	state = {
-		merging: false
-	};
+const useStyles = makeStyles(styles);
 
-	render() {
-		const {
-			classes,
-			toMerge,
-			onPrevStep,
-			onNextStep,
-			error,
-			oldPatients,
-			consultations,
-			attachments,
-			documents,
-			newPatient,
-			newConsultations,
-			newAttachments,
-			newDocuments
-		} = this.props;
+const MergePatientsFormStepPrepare = (props) => {
+	const {
+		toMerge,
+		onPrevStep,
+		onNextStep,
+		error,
+		oldPatients,
+		consultations,
+		attachments,
+		documents,
+		newPatient,
+		newConsultations,
+		newAttachments,
+		newDocuments
+	} = props;
 
-		const {merging} = this.state;
+	const classes = useStyles();
 
-		return (
-			<Grid container className={classes.container}>
-				{!error && (
-					<Grid item sm={12} md={12}>
-						<Grid container spacing={3} className={classes.container}>
-							{oldPatients.map((patient) => (
-								<div key={patient._id}>
-									<Typography variant="h1">{patient._id}</Typography>
-									<PatientSheet
-										patient={patient}
-										consultations={consultations[patient._id]}
-										attachments={attachments[patient._id]}
-										documents={documents[patient._id]}
-									/>
-								</div>
-							))}
-						</Grid>
-						<Grid container spacing={3} className={classes.container}>
-							<Typography variant="h1">New patient information</Typography>
-							<PatientSheet
-								patient={newPatient}
-								consultations={newConsultations}
-								attachments={newAttachments}
-								documents={newDocuments}
-							/>
-						</Grid>
-					</Grid>
-				)}
-				{error && (
-					<Grid item sm={12} md={12}>
-						<span>{error.message}</span>
-					</Grid>
-				)}
+	const [merging, setMerging] = useState(false);
+
+	return (
+		<Grid container className={classes.container}>
+			{!error && (
 				<Grid item sm={12} md={12}>
-					{onPrevStep && (
-						<Button
-							className={classes.button}
-							color="default"
-							startIcon={<SkipPreviousIcon />}
-							onClick={onPrevStep}
-						>
-							Prev
-						</Button>
-					)}
-					{!error && onNextStep && (
-						<Button
-							variant="contained"
-							className={classes.button}
-							color="primary"
-							endIcon={<SkipNextIcon />}
-							onClick={() => this.setState({merging: true})}
-						>
-							Next
-						</Button>
-					)}
-				</Grid>
-				{!error && (
-					<Grid item sm={12} md={12}>
-						<MergePatientsConfirmationDialog
-							open={merging}
-							toCreate={newPatient}
-							consultationsToAttach={list(map((x) => x._id, newConsultations))}
-							attachmentsToAttach={list(map((x) => x._id, newAttachments))}
-							documentsToAttach={list(map((x) => x._id, newDocuments))}
-							toDelete={toMerge}
-							onClose={() => this.setState({merging: false})}
+					<Grid container spacing={3} className={classes.container}>
+						{oldPatients.map((patient) => (
+							<div key={patient._id}>
+								<Typography variant="h1">{patient._id}</Typography>
+								<PatientSheet
+									patient={patient}
+									consultations={consultations[patient._id]}
+									attachments={attachments[patient._id]}
+									documents={documents[patient._id]}
+								/>
+							</div>
+						))}
+					</Grid>
+					<Grid container spacing={3} className={classes.container}>
+						<Typography variant="h1">New patient information</Typography>
+						<PatientSheet
+							patient={newPatient}
+							consultations={newConsultations}
+							attachments={newAttachments}
+							documents={newDocuments}
 						/>
 					</Grid>
+				</Grid>
+			)}
+			{error && (
+				<Grid item sm={12} md={12}>
+					<span>{error.message}</span>
+				</Grid>
+			)}
+			<Grid item sm={12} md={12}>
+				{onPrevStep && (
+					<Button
+						className={classes.button}
+						color="default"
+						startIcon={<SkipPreviousIcon />}
+						onClick={onPrevStep}
+					>
+						Prev
+					</Button>
+				)}
+				{!error && onNextStep && (
+					<Button
+						variant="contained"
+						className={classes.button}
+						color="primary"
+						endIcon={<SkipNextIcon />}
+						onClick={() => setMerging(true)}
+					>
+						Next
+					</Button>
 				)}
 			</Grid>
-		);
-	}
-}
+			{!error && (
+				<Grid item sm={12} md={12}>
+					<MergePatientsConfirmationDialog
+						open={merging}
+						toCreate={newPatient}
+						consultationsToAttach={list(map((x) => x._id, newConsultations))}
+						attachmentsToAttach={list(map((x) => x._id, newAttachments))}
+						documentsToAttach={list(map((x) => x._id, newDocuments))}
+						toDelete={toMerge}
+						onClose={() => setMerging(false)}
+					/>
+				</Grid>
+			)}
+		</Grid>
+	);
+};
 
 MergePatientsFormStepPrepare.propTypes = {
-	classes: PropTypes.object.isRequired,
 	toMerge: PropTypes.array.isRequired
 };
 
@@ -187,4 +183,4 @@ export default withTracker(({toMerge}) => {
 		newAttachments: list(chain(map((x) => attachments[x] || [], toMerge))),
 		newDocuments: list(chain(map((x) => documents[x] || [], toMerge)))
 	};
-})(withStyles(styles, {withTheme: true})(MergePatientsFormStepPrepare));
+})(MergePatientsFormStepPrepare);
