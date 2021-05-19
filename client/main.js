@@ -10,6 +10,7 @@ import {LocalizationProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
 
 import App from '../imports/ui/App.js';
+import rootNode from '../imports/ui/rootNode.js';
 
 Meteor.startup(() =>
 	render(
@@ -18,6 +19,6 @@ Meteor.startup(() =>
 				<App />
 			</BrowserRouter>
 		</LocalizationProvider>,
-		document.querySelector('#render-target')
+		rootNode()
 	)
 );
