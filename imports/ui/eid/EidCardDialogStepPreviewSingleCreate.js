@@ -1,0 +1,86 @@
+import assert from 'assert';
+import React from 'react';
+
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+
+import Button from '@material-ui/core/Button';
+
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
+import call from '../../api/call.js';
+import {patients} from '../../api/patients.js';
+
+import dialog from '../modal/dialog.js';
+import ConfirmationDialog from '../modal/ConfirmationDialog.js';
+
+import GenericStaticPatientCard from '../patients/GenericStaticPatientCard.js';
+
+const EidCardDialogStepPreviewSingleCreate = ({
+	onPrevStep,
+	patientId,
+	eidInfo,
+	history,
+	onClose
+}) => {
+	assert(patientId === '?');
+	const onNext = async () => {
+		if (
+			await dialog((resolve) => (
+				<ConfirmationDialog
+					title="Confirm"
+					text="Confirm create operation."
+					cancel="Cancel"
+					confirm="Create a new patient"
+					ConfirmIcon={PersonAddIcon}
+					onCancel={() => {
+						resolve(false);
+					}}
+					onConfirm={() => {
+						resolve(true);
+					}}
+				/>
+			))
+		) {
+			try {
+				const _id = await call('patients.insert', eidInfo);
+				history.push({pathname: `/patient/${_id}`});
+				onClose();
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	};
+
+	const eidPatient = patients.sanitize(eidInfo);
+
+	return (
+		<>
+			<DialogTitle>Review action</DialogTitle>
+			<DialogContent>
+				<DialogContentText>
+					This is what the record will look like once created.
+				</DialogContentText>
+				<GenericStaticPatientCard patient={eidPatient} />
+			</DialogContent>
+			<DialogActions>
+				<Button
+					type="submit"
+					startIcon={<SkipPreviousIcon />}
+					onClick={onPrevStep}
+				>
+					Prev
+				</Button>
+				<Button color="primary" endIcon={<SkipNextIcon />} onClick={onNext}>
+					Next
+				</Button>
+			</DialogActions>
+		</>
+	);
+};
+
+export default EidCardDialogStepPreviewSingleCreate;
