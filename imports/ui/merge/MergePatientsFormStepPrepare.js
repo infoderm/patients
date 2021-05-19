@@ -32,12 +32,6 @@ const styles = (theme) => ({
 	},
 	button: {
 		margin: theme.spacing(1)
-	},
-	leftIcon: {
-		marginRight: theme.spacing(1)
-	},
-	rightIcon: {
-		marginLeft: theme.spacing(1)
 	}
 });
 
@@ -103,9 +97,9 @@ class MergePatientsFormStepPrepare extends React.Component {
 						<Button
 							className={classes.button}
 							color="default"
+							startIcon={<SkipPreviousIcon />}
 							onClick={onPrevStep}
 						>
-							<SkipPreviousIcon className={classes.leftIcon} />
 							Prev
 						</Button>
 					)}
@@ -114,10 +108,10 @@ class MergePatientsFormStepPrepare extends React.Component {
 							variant="contained"
 							className={classes.button}
 							color="primary"
+							endIcon={<SkipNextIcon />}
 							onClick={() => this.setState({merging: true})}
 						>
 							Next
-							<SkipNextIcon className={classes.rightIcon} />
 						</Button>
 					)}
 				</Grid>
