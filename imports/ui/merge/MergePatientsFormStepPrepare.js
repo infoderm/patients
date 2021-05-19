@@ -8,8 +8,6 @@ import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {_chain as chain} from '@iterable-iterator/chain';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -25,17 +23,6 @@ import {Patients, patients} from '../../api/patients.js';
 import {Consultations} from '../../api/consultations.js';
 import {Attachments} from '../../api/attachments.js';
 import {Documents} from '../../api/documents.js';
-
-const styles = (theme) => ({
-	container: {
-		padding: theme.spacing(3)
-	},
-	button: {
-		margin: theme.spacing(1)
-	}
-});
-
-const useStyles = makeStyles(styles);
 
 const MergePatientsFormStepPrepare = (props) => {
 	const {
@@ -53,28 +40,24 @@ const MergePatientsFormStepPrepare = (props) => {
 		newDocuments
 	} = props;
 
-	const classes = useStyles();
-
 	const [merging, setMerging] = useState(false);
 
 	return (
-		<Grid container className={classes.container}>
+		<Grid container spacing={3}>
 			{!error && (
-				<Grid item sm={12} md={12}>
-					<Grid container spacing={3} className={classes.container}>
-						{oldPatients.map((patient) => (
-							<div key={patient._id}>
-								<Typography variant="h1">{patient._id}</Typography>
-								<PatientSheet
-									patient={patient}
-									consultations={consultations[patient._id]}
-									attachments={attachments[patient._id]}
-									documents={documents[patient._id]}
-								/>
-							</div>
-						))}
-					</Grid>
-					<Grid container spacing={3} className={classes.container}>
+				<>
+					{oldPatients.map((patient) => (
+						<Grid key={patient._id} item sm={12} md={12}>
+							<Typography variant="h1">{patient._id}</Typography>
+							<PatientSheet
+								patient={patient}
+								consultations={consultations[patient._id]}
+								attachments={attachments[patient._id]}
+								documents={documents[patient._id]}
+							/>
+						</Grid>
+					))}
+					<Grid item sm={12} md={12}>
 						<Typography variant="h1">New patient information</Typography>
 						<PatientSheet
 							patient={newPatient}
@@ -83,7 +66,7 @@ const MergePatientsFormStepPrepare = (props) => {
 							documents={newDocuments}
 						/>
 					</Grid>
-				</Grid>
+				</>
 			)}
 			{error && (
 				<Grid item sm={12} md={12}>
@@ -91,27 +74,31 @@ const MergePatientsFormStepPrepare = (props) => {
 				</Grid>
 			)}
 			<Grid item sm={12} md={12}>
-				{onPrevStep && (
-					<Button
-						className={classes.button}
-						color="default"
-						startIcon={<SkipPreviousIcon />}
-						onClick={onPrevStep}
-					>
-						Prev
-					</Button>
-				)}
-				{!error && onNextStep && (
-					<Button
-						variant="contained"
-						className={classes.button}
-						color="primary"
-						endIcon={<SkipNextIcon />}
-						onClick={() => setMerging(true)}
-					>
-						Next
-					</Button>
-				)}
+				<Grid container spacing={1}>
+					{onPrevStep && (
+						<Grid item>
+							<Button
+								color="default"
+								startIcon={<SkipPreviousIcon />}
+								onClick={onPrevStep}
+							>
+								Prev
+							</Button>
+						</Grid>
+					)}
+					{!error && onNextStep && (
+						<Grid item>
+							<Button
+								variant="contained"
+								color="primary"
+								endIcon={<SkipNextIcon />}
+								onClick={() => setMerging(true)}
+							>
+								Next
+							</Button>
+						</Grid>
+					)}
+				</Grid>
 			</Grid>
 			{!error && (
 				<Grid item sm={12} md={12}>
