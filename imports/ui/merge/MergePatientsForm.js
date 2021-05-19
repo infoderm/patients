@@ -9,14 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import {patients} from '../../api/patients.js';
-
-import SetPicker from '../input/SetPicker.js';
-
-import PatientGridItem from '../patients/PatientGridItem.js';
-import ReactivePatientCard from '../patients/ReactivePatientCard.js';
-import makePatientsSuggestions from '../patients/makePatientsSuggestions.js';
-
+import MergePatientsFormStepSelect from './MergePatientsFormStepSelect.js';
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
 
 const MergePatientsForm = () => {
@@ -31,27 +24,12 @@ const MergePatientsForm = () => {
 						<Typography variant="h4">Select patients to merge</Typography>
 					</Grid>
 					<Grid item xs={12}>
-						<SetPicker
-							itemToKey={(x) => x._id}
-							itemToString={patients.toString}
-							useSuggestions={makePatientsSuggestions(toMerge)}
-							TextFieldProps={{
-								label: 'Patients to merge',
-								margin: 'normal'
-							}}
-							value={toMerge}
+						<MergePatientsFormStepSelect
+							selection={toMerge}
+							setSelection={setToMerge}
+							label="Patients to merge"
 							placeholder="Select patients to merge by entering their names here"
-							onChange={(e) => setToMerge(e.target.value)}
 						/>
-					</Grid>
-					<Grid item container xs={12} spacing={3}>
-						{toMerge.map((patient) => (
-							<PatientGridItem
-								key={patient._id}
-								Card={ReactivePatientCard}
-								patient={patient}
-							/>
-						))}
 					</Grid>
 					{toMerge.length >= 2 && (
 						<Grid item xs={12}>
