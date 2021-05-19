@@ -54,6 +54,7 @@
     "debounce": "^1.2.1",
     "downshift": "^6.1.2",
     "escape-string-regexp": "^5.0.0",
+    "fast-diff": "^1.2.0",
     "file-saver": "^2.0.5",
     "gridfs-stream": "^1.1.1",
     "healthone": "4.0.6",
