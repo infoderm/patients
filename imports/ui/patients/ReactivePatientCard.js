@@ -14,7 +14,7 @@ const ReactivePatientCard = ({patient}) => {
 	// We could unsubscribe from the photo fields updates. This would avoid double
 	// loading when first loading the photo via a query response, then via this
 	// subscription.
-	// delete options.fields['photo'];
+	// options.fields = mergeFields(options.fields, {photo: 0});
 	// Currently this is not necessary since we do not preload photos.
 
 	const deps = [patientId, JSON.stringify(StaticPatientCard.projection)];

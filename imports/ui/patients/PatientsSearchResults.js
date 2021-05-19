@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
 import {myDecodeURIComponent} from '../../client/uri.js';
+import mergeFields from '../../util/mergeFields.js';
 
 import StaticPatientsList from './StaticPatientsList.js';
 import ReactivePatientCard from './ReactivePatientCard.js';
@@ -31,13 +32,13 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 		const sort = {
 			score: {$meta: 'textScore'}
 		};
-		const fields = {
-			...sort,
-			...StaticPatientsList.projection
-		};
-		// We fetch the picture through a dedicated subscription to get live
-		// updates while avoiding double loading on init.
-		delete fields.photo;
+		const fields = mergeFields(
+			sort,
+			StaticPatientsList.projection,
+			// We fetch the picture through a dedicated subscription to get live
+			// updates while avoiding double loading on init.
+			{photo: 0}
+		);
 		const options = {
 			fields,
 			sort,
