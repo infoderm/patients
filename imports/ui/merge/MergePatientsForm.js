@@ -27,9 +27,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 	button: {
 		margin: theme.spacing(1)
-	},
-	rightIcon: {
-		marginLeft: theme.spacing(1)
 	}
 }));
 
@@ -76,10 +73,10 @@ const MergePatientsForm = () => {
 									variant="contained"
 									className={classes.button}
 									color="primary"
+									endIcon={<SkipNextIcon />}
 									onClick={() => setStep('prepare')}
 								>
 									Next
-									<SkipNextIcon className={classes.rightIcon} />
 								</Button>
 							</Grid>
 						)}
