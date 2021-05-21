@@ -14,7 +14,7 @@ IDENTITY="${HOME}/.ssh/meteorapp"
 KEYFILE="key/${DB}.txt"
 
 ssh -i "$IDENTITY" "$SERVER" < "$ENCRYPTED" \
-"age --decrypt -i '$KEYFILE' | docker exec -i mongodb mongorestore --drop --db '$DB' --archive --gzip"
+"age --decrypt -i '$KEYFILE' | docker exec -i mongodb mongorestore --drop --nsInclude '${DB}.*' --archive --gzip"
 
 if [ "$?" -eq 0 ] ; then
   echo 'SUCCESS!!'
