@@ -128,7 +128,7 @@
     "upgrade": "meteor update && npm run upgrade-deps && meteor npm install",
     "setup-deploy": "mup setup",
     "build-and-upload": "mup deploy",
-    "deploy": "git stash && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload && git stash pop"
+    "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload"
   },
   "xo": {
     "parser": "babel-eslint",
