@@ -141,7 +141,7 @@ The backup system uses encrypted (`age`) compressed MongoDB archives
 (`--archive --gzip`). They can be restored with
 
     age --decrypt -i "$KEYFILE" < 'patients.gz.age' |
-      mongorestore --drop --db patients --archive --gzip
+      mongorestore --drop --nsInclude 'patients.*' --archive --gzip
 
 #### Until 2021-04-20
 
