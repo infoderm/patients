@@ -13,7 +13,7 @@ const mergeFields = (...args) => {
 			if (sidedness === 0) sidedness = value ? 1 : -1;
 			if (result === undefined) result = {};
 			if (sidedness === 1 && key !== '_id') {
-				if (value) result[key] = 1;
+				if (value) result[key] = value;
 				else delete result[key];
 			} else if (value) delete result[key];
 			else result[key] = 0;
