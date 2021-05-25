@@ -43,9 +43,7 @@ const DEFAULT_FIELDS = {
 	...SelectablePatientCard.projection,
 	// We fetch the picture through a dedicated subscription to get live
 	// updates while avoiding double loading on init.
-	photo: 0,
-	// We do not care about search score
-	score: 0
+	photo: 0
 };
 
 const usePatientsNnSearch = ({niss: nn}) => {

@@ -104,6 +104,7 @@ const GenericStaticPatientCard = ({
 	found,
 	patient,
 	highlightNn,
+	showScore,
 	...rest
 }) => {
 	const classes = useStyles();
@@ -146,7 +147,7 @@ const GenericStaticPatientCard = ({
 						})}
 						label={niss || '?'}
 					/>
-					{score && (
+					{showScore && score && (
 						<Chip
 							className={classes.scoreChip}
 							label={`Search score: ${score.toFixed(3)}`}
@@ -186,13 +187,15 @@ GenericStaticPatientCard.projection = {
 GenericStaticPatientCard.defaultProps = {
 	loading: false,
 	found: true,
-	highlightNn: false
+	highlightNn: false,
+	showScore: false
 };
 
 GenericStaticPatientCard.propTypes = {
 	loading: PropTypes.bool,
 	found: PropTypes.bool,
 	highlightNn: PropTypes.bool,
+	showScore: PropTypes.bool,
 	patient: PropTypes.object.isRequired
 };
 
