@@ -87,6 +87,7 @@ TagDetails.propTypes = {
 	name: PropTypes.string.isRequired,
 
 	List: PropTypes.elementType.isRequired,
+	listProps: PropTypes.object,
 	root: PropTypes.string.isRequired,
 
 	useParents: PropTypes.func.isRequired,

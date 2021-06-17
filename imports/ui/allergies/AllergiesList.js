@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TagList from '../tags/TagList.js';
 
-import AllergyCard from './AllergyCard.js';
 import {useAllergies} from '../../api/allergies.js';
 import {escapeStringRegexp} from '../../api/string.js';
 
 import AlphabetJumper from '../navigation/AlphabetJumper.js';
+import AllergyCard from './AllergyCard.js';
 
 export default function AllergiesList({match, prefix, page, perpage}) {
 	page =

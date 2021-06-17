@@ -15,10 +15,8 @@ const useAttachmentsForPatients = ($in) => {
 
 	const cDeps = $in;
 
-	const {
-		loading: loadingConsultations,
-		results: consultations
-	} = useConsultationsAndAppointments(cQuery, cOptions, cDeps);
+	const {loading: loadingConsultations, results: consultations} =
+		useConsultationsAndAppointments(cQuery, cOptions, cDeps);
 
 	// console.debug({cQuery, cOptions, cDeps, loadingConsultations, consultations});
 

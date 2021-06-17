@@ -24,7 +24,7 @@ const ConfirmationDialog = ({
 	cancelColor,
 	confirmColor
 }) => (
-	<Dialog open={open} component="form" onClose={onCancel}>
+	<Dialog open={open} /* component="form" */ onClose={onCancel}>
 		<DialogTitle>{title}</DialogTitle>
 		<DialogContent>
 			<DialogContentText>{text}</DialogContentText>

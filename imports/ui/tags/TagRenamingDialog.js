@@ -63,10 +63,8 @@ const TagRenamingDialog = (props) => {
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
-	const {
-		validate: validateOldName,
-		props: ConfirmationTextFieldProps
-	} = useConfirmationTextFieldState(tag[nameKey].toString(), getError);
+	const {validate: validateOldName, props: ConfirmationTextFieldProps} =
+		useConfirmationTextFieldState(tag[nameKey].toString(), getError);
 
 	const Title = capitalized(title);
 
@@ -107,7 +105,7 @@ const TagRenamingDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			PaperProps={{className: classes.root}}
 			aria-labelledby={ariaId}
 			onClose={onClose}

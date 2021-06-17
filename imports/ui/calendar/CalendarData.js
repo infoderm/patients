@@ -154,7 +154,8 @@ function* generateEventProps(occupancy, begin, end, options, events) {
 				: undefined;
 		}
 
-		const duration = event.end - event.begin || minEventDuration;
+		const duration =
+			Number(event.end) - Number(event.begin) || minEventDuration;
 
 		const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
 
@@ -165,7 +166,10 @@ function* generateEventProps(occupancy, begin, end, options, events) {
 							3,
 							Math.max(
 								0,
-								Math.floor((event.begin - previousEvent.end) / minEventDuration)
+								Math.floor(
+									(Number(event.begin) - Number(previousEvent.end)) /
+										minEventDuration
+								)
 							)
 					  )
 					: 1
@@ -501,7 +505,8 @@ const CalendarData = (props) => {
 		};
 	}
 
-	const useStyles = makeStyles(createStyles(() => gridStyles));
+	const styles = createStyles(() => gridStyles);
+	const useStyles = makeStyles(styles);
 
 	return (
 		<CalendarDataGrid

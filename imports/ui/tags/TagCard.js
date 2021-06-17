@@ -5,7 +5,7 @@ import React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, createStyles} from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -17,51 +17,52 @@ import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const styles = (theme) => ({
-	card: {
-		display: 'flex',
-		minHeight: 200
-	},
-	details: {
-		display: 'flex',
-		flex: 1,
-		flexDirection: 'column',
-		minWidth: 300
-	},
-	header: {
-		flex: 1,
-		'& > div': {
-			minWidth: 0,
-			'& > span': {
-				whiteSpace: 'nowrap',
-				overflow: 'hidden',
-				textOverflow: 'ellipsis'
+const styles = (theme) =>
+	createStyles({
+		card: {
+			display: 'flex',
+			minHeight: 200
+		},
+		details: {
+			display: 'flex',
+			flex: 1,
+			flexDirection: 'column',
+			minWidth: 300
+		},
+		header: {
+			flex: 1,
+			'& > div': {
+				minWidth: 0,
+				'& > span': {
+					whiteSpace: 'nowrap',
+					overflow: 'hidden',
+					textOverflow: 'ellipsis'
+				}
 			}
+		},
+		content: {
+			flex: '1 0 auto'
+		},
+		photoPlaceHolder: {
+			display: 'flex',
+			fontSize: '4rem',
+			margin: 0,
+			width: 140,
+			height: 200,
+			alignItems: 'center',
+			justifyContent: 'center',
+			color: '#fff',
+			backgroundColor: '#999',
+			flex: 'none'
+		},
+		actions: {
+			display: 'flex',
+			paddingLeft: theme.spacing(2)
+		},
+		name: {
+			display: 'flex'
 		}
-	},
-	content: {
-		flex: '1 0 auto'
-	},
-	photoPlaceHolder: {
-		display: 'flex',
-		fontSize: '4rem',
-		margin: 0,
-		width: 140,
-		height: 200,
-		alignItems: 'center',
-		justifyContent: 'center',
-		color: '#fff',
-		backgroundColor: '#999',
-		flex: 'none'
-	},
-	actions: {
-		display: 'flex',
-		paddingLeft: theme.spacing(2)
-	},
-	name: {
-		display: 'flex'
-	}
-});
+	});
 
 class TagCard extends React.Component {
 	constructor(props) {

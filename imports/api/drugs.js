@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
+import mergeFields from '../util/mergeFields.js';
+
 export const Drugs = new Mongo.Collection('drugs');
 
 if (Meteor.isServer) {
@@ -15,11 +17,15 @@ if (Meteor.isServer) {
 	Meteor.publish('drugs.search', (query, limit) => {
 		check(query, String);
 		check(limit, Number);
+		const sort = {score: {$meta: 'textScore'}};
+		// mergeFields below is a temporary type hack to
+		// hide the fact that score is not 0/1.
+		const fields = mergeFields(sort);
 		return Drugs.find(
 			{$text: {$search: query}},
 			{
-				fields: {score: {$meta: 'textScore'}},
-				sort: {score: {$meta: 'textScore'}},
+				fields,
+				sort,
 				limit
 			}
 		);

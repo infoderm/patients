@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, createStyles} from '@material-ui/core/styles';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
@@ -11,34 +11,36 @@ import TagCard from '../tags/TagCard.js';
 import withItem from '../tags/withItem.js';
 
 import StaticPatientChip from '../patients/StaticPatientChip.js';
-import DoctorDeletionDialog from './DoctorDeletionDialog.js';
-import DoctorRenamingDialog from './DoctorRenamingDialog.js';
 
 import {Patients} from '../../api/patients.js';
 import {Doctors, doctors} from '../../api/doctors.js';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
+import DoctorRenamingDialog from './DoctorRenamingDialog.js';
+import DoctorDeletionDialog from './DoctorDeletionDialog.js';
 
-const styles = (theme) => ({
-	avatar: {
-		color: '#fff',
-		backgroundColor: blue[500]
-	},
-	patientChip: {
-		marginRight: theme.spacing(1),
-		backgroundColor: '#aaa',
-		fontWeight: 'normal',
-		color: '#fff'
-	}
-});
+const styles = (theme) =>
+	createStyles({
+		avatar: {
+			color: '#fff',
+			backgroundColor: blue[500]
+		},
+		patientChip: {
+			marginRight: theme.spacing(1),
+			backgroundColor: '#aaa',
+			fontWeight: 'normal',
+			color: '#fff'
+		}
+	});
 
 const DoctorCard = ({classes, item, name, loading}) => {
 	if (loading) {
-		return '...Loading';
+		return <>...Loading</>;
 	}
 
 	if (item === undefined) {
-		return `Doctor ${name} does not exist`;
+		// eslint-disable-next-line react/jsx-no-useless-fragment
+		return <>{`Doctor ${name} does not exist`}</>;
 	}
 
 	return (

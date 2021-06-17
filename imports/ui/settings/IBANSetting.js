@@ -1,11 +1,12 @@
 import React from 'react';
 
-import InputOneSetting from './InputOneSetting.js';
 import IBAN from 'iban';
+import InputOneSetting from './InputOneSetting.js';
 
-export default function IBANSetting() {
+export default function IBANSetting({className}) {
 	return (
 		<InputOneSetting
+			className={className}
 			setting="iban"
 			label="IBAN"
 			sanitize={(s) => s.trim()}

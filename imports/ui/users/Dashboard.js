@@ -1,14 +1,12 @@
 import {Meteor} from 'meteor/meteor';
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {useState} from 'react';
 
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import {withStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import ChangePasswordPopover from './ChangePasswordPopover.js';
@@ -56,73 +54,51 @@ class OptionsPopover extends React.Component {
 	}
 }
 
-const styles = (theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-});
+const Dashboard = ({currentUser}) => {
+	const [mode, setMode] = useState('options');
+	const [anchorEl, setAnchorEl] = useState(null);
 
-class Dashboard extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			anchorEl: null,
-			mode: 'options'
-		};
-	}
+	const handleClick = (event) => {
+		setMode('options');
+		setAnchorEl(event.currentTarget);
+	};
 
-	render() {
-		const {anchorEl, mode} = this.state;
-		const {classes, currentUser} = this.props;
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
-		const handleClick = (event) => {
-			this.setState({mode: 'options', anchorEl: event.currentTarget});
-		};
+	const changeMode = (newMode) => {
+		setMode(newMode);
+	};
 
-		const handleClose = () => {
-			this.setState({anchorEl: null});
-		};
-
-		const changeMode = (newmode) => {
-			this.setState({mode: newmode});
-		};
-
-		return (
-			<div>
-				<Button
-					aria-owns={
-						anchorEl
-							? mode === 'options'
-								? 'dashboard-options'
-								: 'dashboard-change-password'
-							: null
-					}
-					aria-haspopup="true"
-					style={{color: 'inherit'}}
-					onClick={handleClick}
-				>
-					Logged in as {currentUser.username}
-					<AccountCircleIcon className={classes.rightIcon} />
-				</Button>
-				{mode === 'options' ? (
-					<OptionsPopover
-						anchorEl={anchorEl}
-						handleClose={handleClose}
-						changeMode={changeMode}
-					/>
-				) : (
-					<ChangePasswordPopover
-						anchorEl={anchorEl}
-						handleClose={handleClose}
-					/>
-				)}
-			</div>
-		);
-	}
-}
-
-Dashboard.propTypes = {
-	classes: PropTypes.object.isRequired
+	return (
+		<div>
+			<Button
+				aria-owns={
+					anchorEl
+						? mode === 'options'
+							? 'dashboard-options'
+							: 'dashboard-change-password'
+						: null
+				}
+				aria-haspopup="true"
+				style={{color: 'inherit'}}
+				endIcon={<AccountCircleIcon />}
+				onClick={handleClick}
+			>
+				Logged in as {currentUser.username}
+			</Button>
+			{mode === 'options' ? (
+				<OptionsPopover
+					anchorEl={anchorEl}
+					handleClose={handleClose}
+					changeMode={changeMode}
+				/>
+			) : (
+				<ChangePasswordPopover anchorEl={anchorEl} handleClose={handleClose} />
+			)}
+		</div>
+	);
 };
 
-export default withStyles(styles)(Dashboard);
+export default Dashboard;

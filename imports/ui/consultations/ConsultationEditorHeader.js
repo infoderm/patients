@@ -4,10 +4,9 @@ import {Link} from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
+import FaceIcon from '@material-ui/icons/Face';
 import TextField from '../input/TextField.js';
 import CopiableTextField from '../input/CopiableTextField.js';
-
-import FaceIcon from '@material-ui/icons/Face';
 
 import usePatient from '../patients/usePatient.js';
 

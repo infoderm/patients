@@ -64,7 +64,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="attachment-edition-dialog-title"
 			onClose={onClose}
 		>

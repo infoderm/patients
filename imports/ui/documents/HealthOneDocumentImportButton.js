@@ -1,7 +1,6 @@
 import React from 'react';
-import DocumentImportButton from './DocumentImportButton.js';
-
 import insertDocument from '../../client/insertDocument.js';
+import DocumentImportButton from './DocumentImportButton.js';
 
 const HealthOneDocumentImportButton = (props) => {
 	const onImport = (history, files) => {

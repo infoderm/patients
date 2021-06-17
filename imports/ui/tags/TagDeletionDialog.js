@@ -35,10 +35,8 @@ const TagDeletionDialog = (props) => {
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
 
-	const {
-		validate,
-		props: ConfirmationTextFieldProps
-	} = useConfirmationTextFieldState(tag.name, getError);
+	const {validate, props: ConfirmationTextFieldProps} =
+		useConfirmationTextFieldState(tag.name, getError);
 
 	const Title = capitalized(title);
 
@@ -69,7 +67,7 @@ const TagDeletionDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby={ariaId}
 			onClose={onClose}
 		>

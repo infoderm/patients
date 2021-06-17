@@ -93,10 +93,7 @@ const AppointmentDialog = (props) => {
 	const [time, setTime] = useStateWithInitOverride(
 		noInitialTime ? '' : dateFormat(initialDatetime, 'HH:mm')
 	);
-	const [
-		duration,
-		setDuration
-	] = useStateWithInitOverride(
+	const [duration, setDuration] = useStateWithInitOverride(
 		appointmentDuration.includes(initialAppointment?.duration)
 			? initialAppointment.duration
 			: appointmentDuration.length > 0
@@ -104,12 +101,10 @@ const AppointmentDialog = (props) => {
 			: 0,
 		[initialAppointment, appointmentDuration]
 	);
-	const [
-		reason,
-		setReason
-	] = useStateWithInitOverride(initialAppointment?.reason || '', [
-		initialAppointment
-	]);
+	const [reason, setReason] = useStateWithInitOverride(
+		initialAppointment?.reason || '',
+		[initialAppointment]
+	);
 
 	const [patientList, setPatientList] = useStateWithInitOverride(
 		initialPatient ? [initialPatient] : [],
@@ -178,7 +173,7 @@ const AppointmentDialog = (props) => {
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="new-appointment-dialog-title"
 			onClose={onClose}
 		>

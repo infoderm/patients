@@ -50,18 +50,14 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const {
-		loading: loadingAppointments,
-		results: appointments
-	} = useUpcomingAppointmentsForPatient(patientId, {
-		limit: 2
-	});
-	const {
-		loading: loadingConsultations,
-		results: consultations
-	} = useConsultationsForPatient(patientId, {
-		limit: 3
-	});
+	const {loading: loadingAppointments, results: appointments} =
+		useUpcomingAppointmentsForPatient(patientId, {
+			limit: 2
+		});
+	const {loading: loadingConsultations, results: consultations} =
+		useConsultationsForPatient(patientId, {
+			limit: 3
+		});
 
 	const createNewConsultation = () => {
 		history.push(`/new/consultation/for/${patientId}`);

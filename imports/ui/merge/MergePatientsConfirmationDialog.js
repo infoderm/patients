@@ -69,7 +69,7 @@ const MergePatientsConfirmationDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="merge-patients-confirmation-dialog-title"
 			onClose={onClose}
 		>

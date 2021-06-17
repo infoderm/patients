@@ -7,10 +7,9 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 
 import {usePatientsFind} from '../../api/patients.js';
 
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 import {AllergyCardWithoutItem} from './AllergyCard.js';
 import useAllergy from './useAllergy.js';
-
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 
 export default function AllergyDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;

@@ -6,9 +6,16 @@ import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 
-import {Patients, patients, BIRTHDATE_FORMAT, SEX_ALLOWED} from './patients.js';
+import {
+	Patients,
+	patients,
+	PatientDocument,
+	PatientFields,
+	BIRTHDATE_FORMAT,
+	SEX_ALLOWED
+} from './patients.js';
 
-export {Patients, patients};
+export {Patients, patients, PatientDocument, PatientFields};
 
 const AGE_MAX = 130;
 

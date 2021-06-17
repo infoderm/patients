@@ -23,10 +23,10 @@ import Prev from '../navigation/Prev.js';
 import Next from '../navigation/Next.js';
 import FixedFab from '../button/FixedFab.js';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import {useConsultationsAndAppointments} from '../../api/consultations.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -37,9 +37,8 @@ const useStyles = makeStyles((theme) => ({
 const ConsultationsOfTheDay = ({day}) => {
 	const [showConsultations, setShowConsultations] = useState(true);
 	const [showAppointments, setShowAppointments] = useState(true);
-	const [showCancelledAppointments, setShowCancelledAppointments] = useState(
-		false
-	);
+	const [showCancelledAppointments, setShowCancelledAppointments] =
+		useState(false);
 
 	const prevDay = subDays(day, 1);
 	const nextDay = addDays(day, 1);

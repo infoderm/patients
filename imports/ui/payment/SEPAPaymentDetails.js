@@ -2,48 +2,49 @@ import {withTracker} from 'meteor/react-meteor-data';
 
 import React, {useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
+import TextField from '../input/TextField.js';
 
 import {settings} from '../../client/settings.js';
 
 import SEPAPaymentQRCode from './SEPAPaymentQRCode.js';
 
-const styles = (theme) => ({
-	container: {
-		height: '100%'
-	},
-	paper: {
-		width: 800,
-		height: 500
-	},
-	form: {
-		padding: theme.spacing(3)
-	},
-	qrcodeWrap: {
-		display: 'table',
-		width: 500,
-		height: 500
-	},
-	qrcode: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		textAlign: 'center'
-	},
-	title: {
-		margin: theme.spacing(2)
-	},
-	textField: {
-		margin: theme.spacing(3)
-	}
-});
+const styles = (theme) =>
+	createStyles({
+		container: {
+			height: '100%'
+		},
+		paper: {
+			width: 800,
+			height: 500
+		},
+		form: {
+			padding: theme.spacing(3)
+		},
+		qrcodeWrap: {
+			display: 'table',
+			width: 500,
+			height: 500
+		},
+		qrcode: {
+			display: 'table-cell',
+			verticalAlign: 'middle',
+			textAlign: 'center'
+		},
+		title: {
+			margin: theme.spacing(2)
+		},
+		textField: {
+			margin: theme.spacing(3)
+		}
+	});
 
 const useStyles = makeStyles(styles);
 
@@ -56,13 +57,12 @@ const SEPAPaymentDetails = (props) => {
 
 	const [amount, setAmount] = useState(0.01);
 	const [amountString, setAmountString] = useState(amount.toString());
-	const [unstructuredReference, setUnstructuredReference] = useState(
-		defaultReference
-	);
+	const [unstructuredReference, setUnstructuredReference] =
+		useState(defaultReference);
 
 	const handleAmountChange = (e) => {
 		setAmountString(e.target.value);
-		setAmount(Number.parseFloat(e.target.value, 10));
+		setAmount(Number.parseFloat(e.target.value));
 	};
 
 	const data = {

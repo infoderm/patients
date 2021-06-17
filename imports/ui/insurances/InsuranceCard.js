@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, createStyles} from '@material-ui/core/styles';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
@@ -11,27 +11,26 @@ import TagCard from '../tags/TagCard.js';
 
 import StaticPatientChip from '../patients/StaticPatientChip.js';
 
+import {Patients} from '../../api/patients.js';
+import {insurances} from '../../api/insurances.js';
+import {myEncodeURIComponent} from '../../client/uri.js';
 import withInsurance from './withInsurance.js';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog.js';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog.js';
 
-import {Patients} from '../../api/patients.js';
-import {insurances} from '../../api/insurances.js';
-
-import {myEncodeURIComponent} from '../../client/uri.js';
-
-const styles = (theme) => ({
-	avatar: {
-		color: '#fff',
-		backgroundColor: red[500]
-	},
-	patientChip: {
-		marginRight: theme.spacing(1),
-		backgroundColor: '#aaa',
-		fontWeight: 'normal',
-		color: '#fff'
-	}
-});
+const styles = (theme) =>
+	createStyles({
+		avatar: {
+			color: '#fff',
+			backgroundColor: red[500]
+		},
+		patientChip: {
+			marginRight: theme.spacing(1),
+			backgroundColor: '#aaa',
+			fontWeight: 'normal',
+			color: '#fff'
+		}
+	});
 
 const InsuranceCard = ({classes, item, loading}) => {
 	if (loading) return null;

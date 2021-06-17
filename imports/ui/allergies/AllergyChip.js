@@ -13,30 +13,26 @@ import {Allergies, allergies} from '../../api/allergies.js';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
 
-class AllergyChip extends React.Component {
-	render() {
-		const {item, ...rest} = this.props;
+const AllergyChip = ({item, ...rest}) => {
+	const style = {};
+	let component;
+	let to;
 
-		const style = {};
-		let component;
-		let to;
-
-		if (item) {
-			if (item.color) {
-				style.backgroundColor = item.color;
-				style.color = color(item.color).isLight() ? '#111' : '#ddd';
-			}
-
-			if (!rest.onDelete) {
-				component = Link;
-				to = `/allergy/${myEncodeURIComponent(item.name)}`;
-				style.cursor = 'pointer';
-			}
+	if (item) {
+		if (item.color) {
+			style.backgroundColor = item.color;
+			style.color = color(item.color).isLight() ? '#111' : '#ddd';
 		}
 
-		return <Chip {...rest} style={style} component={component} to={to} />;
+		if (!rest.onDelete) {
+			component = Link;
+			to = `/allergy/${myEncodeURIComponent(item.name)}`;
+			style.cursor = 'pointer';
+		}
 	}
-}
+
+	return <Chip {...rest} style={style} component={component} to={to} />;
+};
 
 export default withTracker(({label}) => {
 	const handle = Meteor.subscribe(allergies.options.singlePublication, label);

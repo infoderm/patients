@@ -51,7 +51,7 @@ const DocumentDeletionDialog = ({open, onClose, document}) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="document-deletion-dialog-title"
 			onClose={onClose}
 		>

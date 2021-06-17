@@ -2,22 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const styles = (theme) => ({
-	root: {
-		position: 'absolute',
-		zIndex: 1,
-		marginTop: theme.spacing(1),
-		left: 0,
-		right: 0
-	},
-	hidden: {
-		display: 'none'
-	}
-});
+const styles = (theme) =>
+	createStyles({
+		root: {
+			position: 'absolute',
+			zIndex: 1,
+			marginTop: theme.spacing(1),
+			left: 0,
+			right: 0
+		},
+		hidden: {
+			display: 'none'
+		}
+	});
 
 const useStyles = makeStyles(styles);
 
@@ -32,11 +33,12 @@ function renderSuggestion({
 	itemToKey
 }) {
 	const isHighlighted = highlightedIndex === index;
-	const isSelected = (Array.isArray(selectedItem)
-		? selectedItem
-		: selectedItem
-		? [selectedItem]
-		: []
+	const isSelected = (
+		Array.isArray(selectedItem)
+			? selectedItem
+			: selectedItem
+			? [selectedItem]
+			: []
 	)
 		.map(itemToKey)
 		.includes(itemToKey(suggestion));

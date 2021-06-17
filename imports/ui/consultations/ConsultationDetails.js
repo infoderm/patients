@@ -8,12 +8,11 @@ const ConsultationDetails = ({match, consultationId}) => {
 	const query = consultationId ?? match.params.id;
 	const options = {fields: StaticConsultationDetails.projection};
 	const deps = [query, JSON.stringify(StaticConsultationDetails.projection)];
-	const {loading, found, fields: consultation} = useConsultation(
-		init,
-		query,
-		options,
-		deps
-	);
+	const {
+		loading,
+		found,
+		fields: consultation
+	} = useConsultation(init, query, options, deps);
 
 	return (
 		<StaticConsultationDetails

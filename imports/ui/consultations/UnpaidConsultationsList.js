@@ -8,7 +8,6 @@ import MoneyIcon from '@material-ui/icons/Money';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import ConsultationsList from './ConsultationsList.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
 
 import Loading from '../navigation/Loading.js';
@@ -16,6 +15,7 @@ import NoContent from '../navigation/NoContent.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import {useConsultationsFind} from '../../api/consultations.js';
+import ConsultationsList from './ConsultationsList.js';
 
 const useStyles = makeStyles((theme) => ({
 	thirdPartyToggle: computeFixedFabStyle({theme, col: 1}),

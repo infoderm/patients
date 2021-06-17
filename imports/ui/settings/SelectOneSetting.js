@@ -33,6 +33,7 @@ const SelectOneSetting = (props) => {
 };
 
 SelectOneSetting.propTypes = {
+	className: PropTypes.string,
 	title: PropTypes.string,
 	label: PropTypes.string,
 	setting: PropTypes.string.isRequired,

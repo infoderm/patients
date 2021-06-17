@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+import FaceIcon from '@material-ui/icons/Face';
 import TextField from '../input/TextField.js';
 import CopiableTextField from '../input/CopiableTextField.js';
-import Avatar from '@material-ui/core/Avatar';
-
-import FaceIcon from '@material-ui/icons/Face';
 
 import useStyles from '../styles/subheader.js';
 
@@ -18,12 +17,11 @@ const PatientHeader = ({patientId}) => {
 	const options = {};
 	const deps = [query];
 
-	const {loading, found, fields: patient} = useCachedPatient(
-		init,
-		query,
-		options,
-		deps
-	);
+	const {
+		loading,
+		found,
+		fields: patient
+	} = useCachedPatient(init, query, options, deps);
 
 	const classes = useStyles();
 

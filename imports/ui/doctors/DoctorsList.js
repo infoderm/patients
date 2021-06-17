@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TagList from '../tags/TagList.js';
 
-import DoctorCard from './DoctorCard.js';
 import {useDoctors} from '../../api/doctors.js';
 import {escapeStringRegexp} from '../../api/string.js';
 
 import AlphabetJumper from '../navigation/AlphabetJumper.js';
+import DoctorCard from './DoctorCard.js';
 
 export default function DoctorsList({match, prefix, page, perpage}) {
 	page =

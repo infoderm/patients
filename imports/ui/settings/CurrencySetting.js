@@ -18,7 +18,6 @@ const CurrencySetting = ({className}) => {
 			setting="currency"
 			options={options}
 			optionToString={optionToString}
-			defaultValue="EUR"
 		/>
 	);
 };

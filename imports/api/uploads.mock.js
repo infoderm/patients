@@ -1,8 +1,8 @@
 import faker from 'faker';
 
-const randomDimension = () => faker.random.number({min: 32, max: 128});
-
 import {Uploads} from './uploads.js';
+
+const randomDimension = () => faker.random.number({min: 32, max: 128});
 
 export {Uploads};
 

@@ -12,7 +12,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Typography from '@material-ui/core/Typography';
-import SearchBox from '../input/SearchBox.js';
 
 import Grid from '@material-ui/core/Grid';
 import Collapse from '@material-ui/core/Collapse';
@@ -23,6 +22,7 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
 import DoneIcon from '@material-ui/icons/Done';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SearchBox from '../input/SearchBox.js';
 
 import mergeFields from '../../util/mergeFields.js';
 
@@ -100,9 +100,8 @@ const EidCardDialogStepSelection = ({
 		`${eidInfo.lastname} ${eidInfo.firstname}`
 	);
 
-	const {loading: loadingNnMatches, results: nnMatches} = usePatientsNnSearch(
-		eidInfo
-	);
+	const {loading: loadingNnMatches, results: nnMatches} =
+		usePatientsNnSearch(eidInfo);
 
 	const usePatientsNameSearch = makePatientsSuggestions(nnMatches, {
 		fields: DEFAULT_FIELDS,

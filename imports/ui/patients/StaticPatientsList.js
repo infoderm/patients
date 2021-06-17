@@ -7,8 +7,8 @@ import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 import Paginator from '../navigation/Paginator.js';
 
-import PatientsPage from './PatientsPage.js';
 import PatientGridItem from '../patients/PatientGridItem.js';
+import PatientsPage from './PatientsPage.js';
 import NewPatientCard from './NewPatientCard.js';
 
 export default function StaticPatientsList({

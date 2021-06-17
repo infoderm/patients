@@ -35,7 +35,6 @@ const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
 				<Grid item>
 					<Button
 						disabled={!weekly}
-						className={classes.button}
 						color="primary"
 						endIcon={<ViewWeekIcon />}
 						onClick={weekly}
@@ -46,7 +45,6 @@ const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
 				<Grid item>
 					<Button
 						disabled={!monthly}
-						className={classes.button}
 						color="primary"
 						endIcon={<EventIcon />}
 						onClick={monthly}
@@ -57,7 +55,6 @@ const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
 				<Grid item>
 					<Button
 						disabled={!prev}
-						className={classes.button}
 						color="primary"
 						startIcon={<SkipPreviousIcon />}
 						onClick={prev}
@@ -68,7 +65,6 @@ const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
 				<Grid item>
 					<Button
 						disabled={!next}
-						className={classes.button}
 						color="primary"
 						endIcon={<SkipNextIcon />}
 						onClick={next}

@@ -42,7 +42,7 @@ const DocumentUnlinkingDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="document-unlinking-dialog-title"
 			onClose={onClose}
 		>

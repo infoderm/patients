@@ -14,12 +14,11 @@ const PatientPersonalInformation = ({patientId}) => {
 	const options = {};
 	const deps = [query];
 
-	const {loading, found, fields: patient} = usePatient(
-		init,
-		query,
-		options,
-		deps
-	);
+	const {
+		loading,
+		found,
+		fields: patient
+	} = usePatient(init, query, options, deps);
 
 	if (loading) return <Loading />;
 

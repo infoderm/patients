@@ -15,8 +15,6 @@ import Button from '@material-ui/core/Button';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import AttachmentThumbnail from './AttachmentThumbnail.js';
-
 import {Uploads} from '../../api/uploads.js';
 import {normalized} from '../../api/string.js';
 
@@ -26,6 +24,7 @@ import ConfirmationTextField, {
 
 import withLazyOpening from '../modal/withLazyOpening.js';
 import useIsMounted from '../hooks/useIsMounted.js';
+import AttachmentThumbnail from './AttachmentThumbnail.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -47,10 +46,8 @@ const AttachmentSuperDeletionDialog = (props) => {
 			? ''
 			: 'Attachment names do not match';
 
-	const {
-		validate,
-		props: ConfirmationTextFieldProps
-	} = useConfirmationTextFieldState(attachment.name, getError);
+	const {validate, props: ConfirmationTextFieldProps} =
+		useConfirmationTextFieldState(attachment.name, getError);
 
 	const isMounted = useIsMounted();
 
@@ -77,7 +74,7 @@ const AttachmentSuperDeletionDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="attachment-deletion-dialog-title"
 			onClose={onClose}
 		>
@@ -92,7 +89,7 @@ const AttachmentSuperDeletionDialog = (props) => {
 				</DialogContentText>
 				<AttachmentThumbnail
 					className={classes.thumbnail}
-					height="600"
+					height={600}
 					attachmentId={attachment._id}
 				/>
 				<ConfirmationTextField

@@ -14,13 +14,13 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import dateFormat from 'date-fns/format';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
-import ConsultationsPager from './ConsultationsPager.js';
-import ConsultationsStatsCard from './ConsultationsStatsCard.js';
 
 import {capitalized} from '../../api/string.js';
 import Center from '../grid/Center.js';
 import {computeFixedFabStyle} from '../button/FixedFab.js';
 import YearJumper from '../navigation/YearJumper.js';
+import ConsultationsStatsCard from './ConsultationsStatsCard.js';
+import ConsultationsPager from './ConsultationsPager.js';
 
 const useStyles = makeStyles((theme) => ({
 	thirdPartyToggle: computeFixedFabStyle({theme, col: 4}),

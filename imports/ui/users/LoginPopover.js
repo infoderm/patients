@@ -8,8 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import {useStyles} from './Popover.js';
 import {useSnackbar} from 'notistack';
+import {useStyles} from './Popover.js';
 
 const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 	const classes = useStyles();
@@ -31,20 +31,35 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 			setLoggingIn(false);
 			closeSnackbar(key);
 			if (err) {
-				const {message, reason} = err;
+				const {message} = err;
 				enqueueSnackbar(message, {variant: 'error'});
-				if (reason === 'User not found') {
-					setErrorUsername(reason);
-					setErrorPassword('');
-				} else if (reason === 'Match failed') {
-					setErrorUsername('Please enter a username');
-					setErrorPassword('');
-				} else if (reason === 'Incorrect password') {
-					setErrorUsername('');
-					setErrorPassword(reason);
-				} else {
-					setErrorUsername('');
-					setErrorPassword('');
+				const reason = err instanceof Meteor.Error ? err.reason : undefined;
+				switch (reason) {
+					case 'User not found': {
+						setErrorUsername(reason);
+						setErrorPassword('');
+
+						break;
+					}
+
+					case 'Match failed': {
+						setErrorUsername('Please enter a username');
+						setErrorPassword('');
+
+						break;
+					}
+
+					case 'Incorrect password': {
+						setErrorUsername('');
+						setErrorPassword(reason);
+
+						break;
+					}
+
+					default: {
+						setErrorUsername('');
+						setErrorPassword('');
+					}
 				}
 			} else {
 				enqueueSnackbar('Welcome back!', {variant: 'success'});

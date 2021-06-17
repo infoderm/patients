@@ -5,7 +5,7 @@ import {list} from '@iterable-iterator/list';
 
 import SelectOneSetting from './SelectOneSetting.js';
 
-const WeekStartsOnSetting = () => {
+const WeekStartsOnSetting = ({className}) => {
 	const options = list(range(7));
 
 	const DAYS = [
@@ -22,12 +22,12 @@ const WeekStartsOnSetting = () => {
 
 	return (
 		<SelectOneSetting
+			className={className}
 			title="First day of the week"
 			label="WeekStartsOn"
 			setting="week-starts-on"
 			options={options}
 			optionToString={optionToString}
-			defaultValue={1}
 		/>
 	);
 };

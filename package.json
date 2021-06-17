@@ -48,6 +48,7 @@
     "@visx/tooltip": "1.7.2",
     "bcrypt": "5.0.1",
     "chardet": "^1.3.0",
+    "classnames": "^2.3.1",
     "color": "^3.1.3",
     "currency-formatter": "^1.5.7",
     "date-fns": "^2.21.2",
@@ -66,6 +67,7 @@
     "notistack": "^1.0.5",
     "papaparse": "^5.3.0",
     "pdfjs-dist": "^2.7.570",
+    "prop-types": "^15.7.2",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.2",
     "react-color": "^2.19.3",
@@ -81,6 +83,8 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@types/meteor": "^1.4.70",
+    "@types/mocha": "^8.2.2",
     "babel-eslint": "^10.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.3.4",
@@ -95,13 +99,10 @@
     "npm-check-updates": "^11.4.1",
     "postinstall": "^0.7.0",
     "puppeteer": "^8.0.0",
+    "simpl-schema": "^1.12.0",
     "total-order": "3.0.1",
-    "xo": "^0.38.2"
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint-and-fix"
-    ]
+    "typescript": "^4.3.2",
+    "xo": "^0.40.2"
   },
   "postinstall": {
     "typeface-roboto/index.css": "copy public/typeface-roboto/",
@@ -121,9 +122,10 @@
     "precommit": "lint-staged",
     "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
     "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
+    "tsc": "tsc",
     "test": "meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ COVERAGE_OUT_LCOVONLY=1 npm run test -- --extra-packages lmieulet:meteor-coverage",
-    "ci:test": "npm run lint && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
+    "ci:test": "npm run lint && npm run tsc && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
     "upgrade-deps": "ncu --upgrade",
     "upgrade": "meteor update && npm run upgrade-deps && meteor npm install",
     "setup-deploy": "mup setup",
@@ -149,6 +151,7 @@
       "unicorn/no-array-callback-reference": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-node-protocol": "off",
       "react/function-component-definition": "off",
       "react/state-in-constructor": "off",
       "react/static-property-placement": "off",
@@ -156,7 +159,15 @@
       "react/boolean-prop-naming": "off",
       "react/no-array-index-key": "off",
       "react/no-unsafe": "off",
-      "react/require-default-props": "off"
+      "react/require-default-props": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/restrict-template-expressions": "off"
     },
     "overrides": [
       {
@@ -179,6 +190,16 @@
         "globals": [
           "Factory"
         ]
+      },
+      {
+        "files": [
+          "mup.js",
+          "lint-staged.config.js"
+        ],
+        "rules": {
+          "unicorn/prefer-module": "off",
+          "unicorn/numeric-separators-style": "off"
+        }
       }
     ]
   }
