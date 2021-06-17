@@ -14,11 +14,10 @@ import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {groupby} from '@iterable-iterator/group';
 
-import AttachmentsGrid from './AttachmentsGrid.js';
-
 import Loading from '../navigation/Loading.js';
 
 import {Attachments} from '../../api/attachments.js';
+import AttachmentsGrid from './AttachmentsGrid.js';
 
 const useStyles = makeStyles((theme) => ({
 	group: {

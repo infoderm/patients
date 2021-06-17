@@ -6,10 +6,9 @@ import Avatar from '@material-ui/core/Avatar';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 
+import color from 'color';
 import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
-
-import color from 'color';
 
 const ColorPicker = ({
 	// ColorPicker

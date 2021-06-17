@@ -54,7 +54,7 @@ const AppointmentCancellationDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="appointment-cancellation-dialog-title"
 			onClose={onClose}
 		>

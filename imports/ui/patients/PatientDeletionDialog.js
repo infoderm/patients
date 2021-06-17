@@ -16,8 +16,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import StaticPatientCard from './StaticPatientCard.js';
-
 import {normalized} from '../../api/string.js';
 import withLazyOpening from '../modal/withLazyOpening.js';
 import useIsMounted from '../hooks/useIsMounted.js';
@@ -25,6 +23,7 @@ import useIsMounted from '../hooks/useIsMounted.js';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
 } from '../input/ConfirmationTextField.js';
+import StaticPatientCard from './StaticPatientCard.js';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
@@ -38,10 +37,8 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
 
-	const {
-		validate,
-		props: ConfirmationTextFieldProps
-	} = useConfirmationTextFieldState(patient.lastname || '', getError);
+	const {validate, props: ConfirmationTextFieldProps} =
+		useConfirmationTextFieldState(patient.lastname || '', getError);
 
 	const isMounted = useIsMounted();
 
@@ -70,7 +67,7 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="patient-deletion-dialog-title"
 			onClose={onClose}
 		>

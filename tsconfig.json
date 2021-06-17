@@ -1,18 +1,43 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "allowJs": true,
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "outDir": "types",
-    "checkJs": true,
-    "jsx": "preserve",
+    "noEmit": true,
     "target": "esnext",
     "module": "esnext",
+    "lib": ["esnext", "dom"],
+    "allowJs": true,
+    "checkJs": true,
+    "jsx": "preserve",
+    "incremental": true,
+
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strictNullChecks": false,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "/*": ["*"]
+    },
+
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "types",
+      "node_modules/@types"
+    ],
+    "types": ["meteor", "mocha"],
+    "esModuleInterop": true,
+    "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true
   },
   "include": [
+    "types/**/*",
     "server/**/*",
     "client/**/*",
     "imports/**/*"

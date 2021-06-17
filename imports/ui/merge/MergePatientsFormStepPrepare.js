@@ -15,14 +15,13 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog.js';
-
 import PatientSheet from '../patients/PatientSheet.js';
 
 import {Patients, patients} from '../../api/patients.js';
 import {Consultations} from '../../api/consultations.js';
 import {Attachments} from '../../api/attachments.js';
 import {Documents} from '../../api/documents.js';
+import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog.js';
 
 const MergePatientsFormStepPrepare = (props) => {
 	const {

@@ -4,8 +4,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 import ReactivePatientChip from '../patients/ReactivePatientChip.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard.js';
 
 const useStyles = makeStyles((theme) => ({
 	container: {

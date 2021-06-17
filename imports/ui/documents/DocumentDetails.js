@@ -7,9 +7,8 @@ import React from 'react';
 import Loading from '../navigation/Loading.js';
 import NoContent from '../navigation/NoContent.js';
 
-import DocumentCard from './DocumentCard.js';
-
 import {Documents} from '../../api/documents.js';
+import DocumentCard from './DocumentCard.js';
 
 const DocumentDetails = ({documentId, loading, document}) => {
 	if (loading) {

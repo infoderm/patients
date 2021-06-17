@@ -1,10 +1,10 @@
 import React from 'react';
 
-import TextField from './TextField.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import TextField from './TextField.js';
 
 import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify.js';
 

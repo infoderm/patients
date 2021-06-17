@@ -68,9 +68,8 @@ const ConsultationPaymentDialog = (props) => {
 
 	const {open, onClose, consultation} = props;
 
-	const {loading: loadingAccountHolder, value: accountHolder} = useSetting(
-		'account-holder'
-	);
+	const {loading: loadingAccountHolder, value: accountHolder} =
+		useSetting('account-holder');
 	const {loading: loadingIban, value: iban} = useSetting('iban');
 
 	const {currency, price, paid, datetime} = consultation;
@@ -82,12 +81,11 @@ const ConsultationPaymentDialog = (props) => {
 		consultation.patientId,
 		JSON.stringify(ConsultationPaymentDialog.projection)
 	];
-	const {loading: loadingPatient, found, fields: patient} = usePatient(
-		{},
-		consultation.patientId,
-		options,
-		deps
-	);
+	const {
+		loading: loadingPatient,
+		found,
+		fields: patient
+	} = usePatient({}, consultation.patientId, options, deps);
 
 	const loading = loadingAccountHolder || loadingIban || loadingPatient;
 
@@ -122,7 +120,7 @@ const ConsultationPaymentDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="consultation-debt-settling-dialog-title"
 			onClose={onClose}
 		>

@@ -31,8 +31,8 @@ import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
-import Tooltip from './accessibility/Tooltip.js';
 import {setSetting} from '../client/settings.js';
+import Tooltip from './accessibility/Tooltip.js';
 
 export const drawerWidthOpen = 215;
 

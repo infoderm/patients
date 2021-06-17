@@ -1,35 +1,36 @@
 import React, {useState, useEffect} from 'react';
 
 import classNames from 'classnames';
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 import blue from '@material-ui/core/colors/blue';
 
-const styles = () => ({
-	root: {
-		display: 'flex',
-		zIndex: 999999999,
-		visibility: 'hidden',
-		opacity: 0,
-		transition: 'all 0.5s ease-out',
-		alignItems: 'center',
-		justifyContent: 'center',
-		color: 'white',
-		position: 'fixed',
-		top: 0,
-		left: 0,
-		width: '100%',
-		height: '100vh',
-		backgroundColor: blue[900]
-	},
-	visible: {
-		visibility: 'visible',
-		opacity: 0.5
-	}
-});
+const styles = () =>
+	createStyles({
+		root: {
+			display: 'flex',
+			zIndex: 999_999_999,
+			visibility: 'hidden',
+			opacity: 0,
+			transition: 'all 0.5s ease-out',
+			alignItems: 'center',
+			justifyContent: 'center',
+			color: 'white',
+			position: 'fixed',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100vh',
+			backgroundColor: blue[900]
+		},
+		visible: {
+			visibility: 'visible',
+			opacity: 0.5
+		}
+	});
 
 const useStyles = makeStyles(styles);
 

@@ -5,21 +5,14 @@ import Typography from '@material-ui/core/Typography';
 
 import React from 'react';
 
-import PatientSheet from './PatientSheet.js';
-
 import {Patients} from '../../api/patients.js';
 import {Consultations} from '../../api/consultations.js';
+import PatientSheet from './PatientSheet.js';
 
 class PatientDetailsPicker extends React.Component {
 	render() {
-		const {
-			patientId,
-			loading,
-			patient,
-			consultations,
-			onError,
-			onLoad
-		} = this.props;
+		const {patientId, loading, patient, consultations, onError, onLoad} =
+			this.props;
 
 		if (loading) {
 			return <div>Loading...</div>;

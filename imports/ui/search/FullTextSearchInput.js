@@ -34,7 +34,7 @@ export default function FullTextSearchInput({className}) {
 		setPending(
 			setTimeout(() => {
 				const url = `/search/${myEncodeURIComponent(newValue)}`;
-				const now = new Date();
+				const now = Date.now();
 				const timeSinceLastHistoryUpdate = now - lastHistoryUpdate;
 				if (timeSinceLastHistoryUpdate >= THRESHOLD_HISTORY_PUSH) {
 					history.push(url);

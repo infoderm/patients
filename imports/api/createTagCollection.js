@@ -7,11 +7,11 @@ import makeObservedQuery from './makeObservedQuery.js';
 import observeQuery from './observeQuery.js';
 import pageQuery from './pageQuery.js';
 
+import {containsNonAlphabetical} from './string.js';
+
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
 export const FIND_OBSERVE_SUFFIX = '.find.observe';
-
-import {containsNonAlphabetical} from './string.js';
 
 const computedFields = (name) => ({
 	containsNonAlphabetical: containsNonAlphabetical(name)

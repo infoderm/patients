@@ -51,7 +51,7 @@ const DocumentSuperDeletionDialog = ({open, onClose, document}) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="document-super-deletion-dialog-title"
 			onClose={onClose}
 		>

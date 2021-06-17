@@ -9,8 +9,8 @@ import Chip from '@material-ui/core/Chip';
 
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
-import withDocumentVersions from './withDocumentVersions.js';
 import {myEncodeURIComponent} from '../../client/uri.js';
+import useDocumentVersions from './useDocumentVersions.js';
 
 const useStyles = makeStyles((theme) => ({
 	chip: {
@@ -19,15 +19,14 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const DocumentVersionsChip = ({
-	document: {identifier, reference, lastVersion},
-	loading,
-	versions,
-	...rest
-}) => {
+const DocumentVersionsChip = ({document, ...rest}) => {
 	const classes = useStyles();
 
+	const {loading, versions} = useDocumentVersions(document);
+
 	if (loading || versions.length <= 1) return null;
+
+	const {identifier, reference, lastVersion} = document;
 
 	return (
 		<Chip
@@ -44,14 +43,7 @@ const DocumentVersionsChip = ({
 };
 
 DocumentVersionsChip.propTypes = {
-	loading: PropTypes.bool.isRequired,
-	versions: PropTypes.array.isRequired
+	document: PropTypes.object.isRequired
 };
 
-const Component = withDocumentVersions(DocumentVersionsChip);
-
-Component.propTypes = {
-	...withDocumentVersions.propTypes
-};
-
-export default Component;
+export default DocumentVersionsChip;

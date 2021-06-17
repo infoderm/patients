@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {ChromePicker} from 'react-color';
 
 const PickerDialog = ({value, onClick, onChange}) => (
-	<div style={{position: 'absolute', zIndex: '2'}}>
+	<div style={{position: 'absolute', zIndex: 2}}>
 		<div
 			style={{
 				position: 'fixed',

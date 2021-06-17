@@ -10,6 +10,7 @@ export default function insertPatient(history, xmlString) {
 
 	dialog((resolve) => (
 		<EidCardDialog
+			open={false}
 			history={history}
 			eidInfo={eidInfo}
 			onClose={() => {

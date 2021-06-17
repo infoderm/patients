@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 const InformationDialog = ({open, onClose, title, text, close, CloseIcon}) => (
-	<Dialog open={open} component="form" onClose={onClose}>
+	<Dialog open={open} /* component="form" */ onClose={onClose}>
 		<DialogTitle>{title}</DialogTitle>
 		<DialogContent>
 			<DialogContentText>{text}</DialogContentText>

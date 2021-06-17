@@ -8,21 +8,20 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 
+import debounce from 'debounce';
 import TagCard from '../tags/TagCard.js';
 
 import StaticPatientChip from '../patients/StaticPatientChip.js';
-
-import AllergyDeletionDialog from './AllergyDeletionDialog.js';
-import AllergyRenamingDialog from './AllergyRenamingDialog.js';
-import withAllergy from './withAllergy.js';
 
 import {Patients} from '../../api/patients.js';
 import {allergies} from '../../api/allergies.js';
 
 import ColorPicker from '../input/ColorPicker';
-import debounce from 'debounce';
 
 import {myEncodeURIComponent} from '../../client/uri.js';
+import withAllergy from './withAllergy.js';
+import AllergyRenamingDialog from './AllergyRenamingDialog.js';
+import AllergyDeletionDialog from './AllergyDeletionDialog.js';
 
 const useStyles = makeStyles((theme) => ({
 	avatar: {
@@ -89,7 +88,6 @@ const AllergyCard = ({item, loading}) => {
 			}
 			actions={() => (
 				<ColorPicker
-					name="color"
 					defaultValue={item.color || '#e0e0e0'}
 					onChange={debounce(onChange, 1000)}
 				/>

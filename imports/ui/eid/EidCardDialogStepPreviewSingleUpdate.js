@@ -177,9 +177,11 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	const selectedPatient = {_id: patientId};
 	const selectedPatients = [selectedPatient];
 
-	const {loading, found, fields: patientState} = usePatient({}, patientId, {}, [
-		patientId
-	]);
+	const {
+		loading,
+		found,
+		fields: patientState
+	} = usePatient({}, patientId, {}, [patientId]);
 
 	const differences =
 		loading || !found

@@ -48,7 +48,7 @@ const DocumentRestorationDialog = ({open, onClose, document}) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="document-restoration-dialog-title"
 			onClose={onClose}
 		>

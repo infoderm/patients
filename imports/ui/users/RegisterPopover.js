@@ -1,3 +1,4 @@
+import {Meteor} from 'meteor/meteor';
 import {Accounts} from 'meteor/accounts-base';
 
 import React, {useState} from 'react';
@@ -7,8 +8,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
-import {useStyles} from './Popover.js';
 import {useSnackbar} from 'notistack';
+import {useStyles} from './Popover.js';
 
 const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 	const classes = useStyles();
@@ -27,20 +28,35 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 		Accounts.createUser({username, password}, (err) => {
 			closeSnackbar(key);
 			if (err) {
-				const {message, reason} = err;
+				const {message} = err;
 				enqueueSnackbar(message, {variant: 'error'});
-				if (reason === 'Need to set a username or email') {
-					setErrorUsername('Please enter a username');
-					setErrorPassword('');
-				} else if (reason === 'Username already exists.') {
-					setErrorUsername(reason);
-					setErrorPassword('');
-				} else if (reason === 'Password may not be empty') {
-					setErrorUsername('');
-					setErrorPassword(reason);
-				} else {
-					setErrorUsername('');
-					setErrorPassword('');
+				const reason = err instanceof Meteor.Error ? err.reason : undefined;
+				switch (reason) {
+					case 'Need to set a username or email': {
+						setErrorUsername('Please enter a username');
+						setErrorPassword('');
+
+						break;
+					}
+
+					case 'Username already exists.': {
+						setErrorUsername(reason);
+						setErrorPassword('');
+
+						break;
+					}
+
+					case 'Password may not be empty': {
+						setErrorUsername('');
+						setErrorPassword(reason);
+
+						break;
+					}
+
+					default: {
+						setErrorUsername('');
+						setErrorPassword('');
+					}
 				}
 			} else {
 				enqueueSnackbar('Welcome!', {variant: 'success'});

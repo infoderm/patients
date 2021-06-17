@@ -97,6 +97,12 @@ const init = (consultation) => ({
 	})
 });
 
+/**
+ * reducer.
+ *
+ * @param {Object} state
+ * @param {{type: string, key?: string, value?: any}} action
+ */
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'update':
@@ -181,9 +187,11 @@ const ConsultationEditor = ({consultation}) => {
 		priceWarning
 	} = state;
 
-	const update = (key, transform = (x) => x) => (e) => {
-		dispatch({type: 'update', key, value: transform(e.target.value)});
-	};
+	const update =
+		(key, transform = (x) => x) =>
+		(e) => {
+			dispatch({type: 'update', key, value: transform(e.target.value)});
+		};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();

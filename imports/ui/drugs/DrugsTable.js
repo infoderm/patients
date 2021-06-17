@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -42,13 +42,8 @@ class EnhancedTableHead extends React.Component {
 	};
 
 	render() {
-		const {
-			onSelectAllClick,
-			order,
-			orderBy,
-			numSelected,
-			rowCount
-		} = this.props;
+		const {onSelectAllClick, order, orderBy, numSelected, rowCount} =
+			this.props;
 
 		return (
 			<TableHead>
@@ -64,7 +59,7 @@ class EnhancedTableHead extends React.Component {
 						return (
 							<TableCell
 								key={column.id}
-								numeric={column.numeric ? 'true' : 'false'}
+								align={column.numeric ? 'right' : undefined}
 								padding={column.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === column.id ? order : false}
 							>
@@ -124,8 +119,10 @@ const toolbarStyles = (theme) => ({
 	}
 });
 
-let EnhancedTableToolbar = (props) => {
-	const {onDelete, numSelected, classes} = props;
+const useStyles = makeStyles(toolbarStyles);
+
+const EnhancedTableToolbar = ({onDelete, numSelected}) => {
+	const classes = useStyles();
 
 	return (
 		<Toolbar
@@ -161,25 +158,23 @@ let EnhancedTableToolbar = (props) => {
 };
 
 EnhancedTableToolbar.propTypes = {
-	classes: PropTypes.object.isRequired,
 	onDelete: PropTypes.func.isRequired,
 	numSelected: PropTypes.number.isRequired
 };
 
-EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
-
-const styles = (theme) => ({
-	root: {
-		width: '100%',
-		marginTop: theme.spacing(3)
-	},
-	table: {
-		minWidth: 800
-	},
-	tableWrapper: {
-		overflowX: 'auto'
-	}
-});
+const styles = (theme) =>
+	createStyles({
+		root: {
+			width: '100%',
+			marginTop: theme.spacing(3)
+		},
+		table: {
+			minWidth: 800
+		},
+		tableWrapper: {
+			overflowX: 'auto'
+		}
+	});
 
 function sortRows(data, order, orderBy) {
 	return order === 'desc'
@@ -212,7 +207,7 @@ class EnhancedTable extends React.Component {
 		});
 	}
 
-	handleRequestSort = (event, property) => {
+	handleRequestSort = (_event, property) => {
 		this.setState((state) => {
 			const orderBy = property;
 			let order = 'desc';
@@ -226,7 +221,7 @@ class EnhancedTable extends React.Component {
 		});
 	};
 
-	handleSelectAllClick = (event, checked) => {
+	handleSelectAllClick = (_event, checked) => {
 		if (checked) {
 			this.setState((state) => ({
 				selected: new Set(state.data.map((n) => n._id))
@@ -237,13 +232,13 @@ class EnhancedTable extends React.Component {
 		this.setState({selected: new Set()});
 	};
 
-	handleRowClick = (event, id) => {
+	handleRowClick = (_event, id) => {
 		const {selected} = this.state;
 		if (!selected.delete(id)) selected.add(id);
 		this.setState({selected});
 	};
 
-	handleChangePage = (event, page) => {
+	handleChangePage = (_event, page) => {
 		this.setState({page});
 	};
 

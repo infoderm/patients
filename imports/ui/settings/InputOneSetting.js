@@ -32,7 +32,7 @@ const InputOneSetting = (props) => {
 		<div className={className}>
 			{title && <Typography variant="h4">{title}</Typography>}
 			<TextField
-				readOnly={loading}
+				disabled={loading}
 				label={label}
 				value={value}
 				error={error}
@@ -43,6 +43,7 @@ const InputOneSetting = (props) => {
 };
 
 InputOneSetting.propTypes = {
+	className: PropTypes.string,
 	title: PropTypes.string,
 	label: PropTypes.string,
 	setting: PropTypes.string.isRequired,

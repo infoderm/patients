@@ -53,7 +53,7 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="document-linking-dialog-title"
 			onClose={onClose}
 		>

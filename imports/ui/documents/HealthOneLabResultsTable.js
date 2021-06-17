@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, createStyles} from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -10,53 +10,52 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const styles = (theme) => ({
-	root: {
-		maxWidth: 1200,
-		margin: '0 auto',
-		marginTop: theme.spacing(3),
-		overflowX: 'auto'
-	},
-	table: {
-		minWidth: 700
-	},
-	anomalyRow: {
-		backgroundColor: '#fa8'
-	},
-	unknownFlagRow: {
-		backgroundColor: '#f8a'
-	},
-	headerRow: {
-		backgroundColor: '#ddd'
-	},
-	subheaderRow: {
-		backgroundColor: '#eee'
-	},
-	endRow: {
-		'& th': {
-			color: '#666 !important'
+const styles = (theme) =>
+	createStyles({
+		root: {
+			maxWidth: 1200,
+			margin: '0 auto',
+			marginTop: theme.spacing(3),
+			overflowX: 'auto'
 		},
-		'& td': {
-			color: '#666 !important'
-		}
-	},
-	commentRow: {
-		'& th': {
-			color: '#666 !important'
+		table: {
+			minWidth: 700
 		},
-		'& td': {
-			color: '#666 !important'
+		anomalyRow: {
+			backgroundColor: '#fa8'
+		},
+		unknownFlagRow: {
+			backgroundColor: '#f8a'
+		},
+		headerRow: {
+			backgroundColor: '#ddd'
+		},
+		subheaderRow: {
+			backgroundColor: '#eee'
+		},
+		endRow: {
+			'& th': {
+				color: '#666 !important'
+			},
+			'& td': {
+				color: '#666 !important'
+			}
+		},
+		commentRow: {
+			'& th': {
+				color: '#666 !important'
+			},
+			'& td': {
+				color: '#666 !important'
+			}
+		},
+		row: {},
+		normalCell: {
+			color: '#444'
 		}
-	},
-	row: {},
-	normalCell: {
-		color: '#444'
-	}
-});
+	});
 
-const HealthOneLabResultsTable = (props) => {
-	const {classes, document} = props;
-
+const HealthOneLabResultsTable = ({classes, document}) => {
 	if (!document.results || document.results.length === 0) {
 		return <Typography>No results</Typography>;
 	}
@@ -65,35 +64,76 @@ const HealthOneLabResultsTable = (props) => {
 
 	for (const result of document.results) {
 		let className = classes.row;
-		if (result.flag === '*') {
-			className = classes.anomalyRow;
-		} else if (result.flag === '+') {
-			className = classes.anomalyRow;
-		} else if (result.flag === '++') {
-			className = classes.anomalyRow;
-		} else if (result.flag === '-') {
-			className = classes.anomalyRow;
-		} else if (result.flag === '--') {
-			className = classes.anomalyRow;
-		} else if (result.flag === 'C') {
-			className = classes.commentRow;
-		} else if (result.flag !== '') {
-			className = classes.unknownFlagRow;
-		} else if (result.code && result.code.startsWith('t_')) {
-			className =
-				result.name && /^[A-Z ]*$/.test(result.name)
-					? classes.headerRow
-					: classes.subheaderRow;
-		} else if (result.code === 'CORCOP') {
-			className = classes.commentRow;
-		} else if (result.code === 'TITRE') {
-			if (result.name === '') {
-				continue;
+		switch (result.flag) {
+			case '*': {
+				className = classes.anomalyRow;
+
+				break;
 			}
 
-			className = classes.headerRow;
-		} else if (result.code === 'TEXTEF') {
-			className = classes.endRow;
+			case '+': {
+				className = classes.anomalyRow;
+
+				break;
+			}
+
+			case '++': {
+				className = classes.anomalyRow;
+
+				break;
+			}
+
+			case '-': {
+				className = classes.anomalyRow;
+
+				break;
+			}
+
+			case '--': {
+				className = classes.anomalyRow;
+
+				break;
+			}
+
+			case 'C': {
+				className = classes.commentRow;
+
+				break;
+			}
+
+			default:
+				if (result.flag !== '') {
+					className = classes.unknownFlagRow;
+				} else if (result.code && result.code.startsWith('t_')) {
+					className =
+						result.name && /^[A-Z ]*$/.test(result.name)
+							? classes.headerRow
+							: classes.subheaderRow;
+				} else
+					switch (result.code) {
+						case 'CORCOP': {
+							className = classes.commentRow;
+
+							break;
+						}
+
+						case 'TITRE': {
+							if (result.name === '') {
+								continue;
+							}
+
+							className = classes.headerRow;
+
+							break;
+						}
+
+						case 'TEXTEF': {
+							className = classes.endRow;
+
+							break;
+						}
+						// No default
+					}
 		}
 
 		rows.push({
@@ -163,7 +203,8 @@ const HealthOneLabResultsTable = (props) => {
 };
 
 HealthOneLabResultsTable.propTypes = {
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
+	document: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(HealthOneLabResultsTable);

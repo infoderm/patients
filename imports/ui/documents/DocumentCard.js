@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, createStyles} from '@material-ui/core/styles';
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -44,16 +44,17 @@ import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
 import HealthOneReportContents from './HealthOneReportContents.js';
 import DocumentSource from './DocumentSource.js';
 
-const styles = () => ({
-	chips: {
-		display: 'flex',
-		justifyContent: 'center',
-		flexWrap: 'wrap'
-	},
-	list: {
-		width: '100%'
-	}
-});
+const styles = () =>
+	createStyles({
+		chips: {
+			display: 'flex',
+			justifyContent: 'center',
+			flexWrap: 'wrap'
+		},
+		list: {
+			width: '100%'
+		}
+	});
 
 class DocumentCard extends React.Component {
 	constructor(props) {

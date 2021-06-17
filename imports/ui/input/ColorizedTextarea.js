@@ -28,15 +28,8 @@ const ReadOnlyColorizedTextArea = (props) => {
 };
 
 const ColorizedTextarea = (props) => {
-	const {
-		readOnly,
-		dict,
-		placeholder,
-		rows,
-		margin,
-		onChange,
-		...common
-	} = props;
+	const {readOnly, dict, placeholder, rows, margin, onChange, ...common} =
+		props;
 
 	if (readOnly) {
 		return <ReadOnlyColorizedTextArea dict={dict} {...common} />;

@@ -9,12 +9,11 @@ const EditConsultationForm = ({match}) => {
 	const options = {};
 	const deps = [query];
 
-	const {loading, found, fields: consultation} = useConsultation(
-		init,
-		query,
-		options,
-		deps
-	);
+	const {
+		loading,
+		found,
+		fields: consultation
+	} = useConsultation(init, query, options, deps);
 
 	return (
 		<ConsultationEditor

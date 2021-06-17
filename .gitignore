@@ -1,4 +1,4 @@
 node_modules/
 /public
 /.coverage
-/types
+tsconfig.tsbuildinfo

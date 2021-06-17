@@ -63,7 +63,13 @@ ValuePicker.defaultProps = {
 ValuePicker.propTypes = {
 	options: PropTypes.array.isRequired,
 	optionToString: PropTypes.func,
-	pairToKey: PropTypes.func
+	pairToKey: PropTypes.func,
+
+	// Select
+	readOnly: PropTypes.bool,
+	label: PropTypes.node,
+	value: PropTypes.any,
+	onChange: PropTypes.func
 };
 
 export default ValuePicker;

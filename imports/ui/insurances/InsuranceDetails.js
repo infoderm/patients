@@ -7,10 +7,9 @@ import PagedPatientsList from '../patients/PagedPatientsList.js';
 
 import {usePatientsFind} from '../../api/patients.js';
 
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 import {InsuranceCardWithoutItem} from './InsuranceCard.js';
 import useInsurance from './useInsurance.js';
-
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
 
 export default function InsuranceDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;

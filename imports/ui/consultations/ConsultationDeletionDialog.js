@@ -40,22 +40,19 @@ const ConsultationDeletionDialog = (props) => {
 		consultation.patientId,
 		JSON.stringify(ConsultationDeletionDialog.projection)
 	];
-	const {loading, found, fields: patient} = usePatient(
-		{},
-		consultation.patientId,
-		options,
-		deps
-	);
+	const {
+		loading,
+		found,
+		fields: patient
+	} = usePatient({}, consultation.patientId, options, deps);
 
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
 
-	const {
-		validate,
-		props: ConfirmationTextFieldProps
-	} = useConfirmationTextFieldState(patient.lastname, getError);
+	const {validate, props: ConfirmationTextFieldProps} =
+		useConfirmationTextFieldState(patient.lastname, getError);
 
 	const isMounted = useIsMounted();
 
@@ -89,7 +86,7 @@ const ConsultationDeletionDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="consultation-deletion-dialog-title"
 			onClose={onClose}
 		>

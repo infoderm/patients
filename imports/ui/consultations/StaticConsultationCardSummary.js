@@ -19,9 +19,8 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import dateFormat from 'date-fns/format';
 
-import {msToString, msToStringShort} from '../../client/duration.js';
-
 import Currency from 'currency-formatter';
+import {msToString, msToStringShort} from '../../client/duration.js';
 
 const useStyles = makeStyles((theme) => ({
 	summary: {

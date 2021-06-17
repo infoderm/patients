@@ -8,7 +8,7 @@ import {Prompt} from 'react-router';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
@@ -16,7 +16,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import Fab from '@material-ui/core/Fab';
-import FixedFab, {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -28,7 +27,6 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '../input/TextField.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -37,6 +35,8 @@ import dateFormat from 'date-fns/format';
 import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import startOfToday from 'date-fns/startOfToday';
+import TextField from '../input/TextField.js';
+import FixedFab, {computeFixedFabStyle} from '../button/FixedFab.js';
 
 import {useInsurancesFind} from '../../api/insurances.js';
 import {useDoctorsFind} from '../../api/doctors.js';
@@ -64,64 +64,65 @@ import AttachFileButton from '../attachments/AttachFileButton.js';
 
 import PatientDeletionDialog from './PatientDeletionDialog.js';
 
-const styles = (theme) => ({
-	root: {
-		padding: theme.spacing(3),
-		paddingBottom: theme.spacing(5)
-	},
-	photoPlaceHolder: {
-		display: 'inline-flex',
-		fontSize: '4rem',
-		margin: 0,
-		width: 140,
-		height: 200,
-		alignItems: 'center',
-		justifyContent: 'center',
-		color: '#fff',
-		backgroundColor: '#999',
-		verticalAlign: 'top',
-		marginBottom: theme.spacing(2)
-	},
-	left: {
-		textAlign: 'center'
-	},
-	photo: {
-		width: 140,
-		height: 200,
-		verticalAlign: 'top',
-		marginBottom: theme.spacing(2)
-	},
-	formControl: {
-		overflow: 'auto',
-		'& input, & div': {
-			color: 'black !important'
-		}
-	},
-	setPicker: {
-		height: '100%'
-	},
-	multiline: {
-		height: '100%',
-		overflow: 'auto',
-		'& textarea': {
-			color: 'black !important'
-		}
-	},
-	button: {
-		margin: theme.spacing(1)
-	},
-	problem: {
-		color: 'red'
-	},
-	noShowsAdornment: {
-		color: '#999'
-	},
-	editButton: computeFixedFabStyle({theme, col: 1}),
-	saveButton: computeFixedFabStyle({theme, col: 1}),
-	undoButton: computeFixedFabStyle({theme, col: 2}),
-	attachButton: computeFixedFabStyle({theme, col: 2}),
-	deleteButton: computeFixedFabStyle({theme, col: 4})
-});
+const styles = (theme) =>
+	createStyles({
+		root: {
+			padding: theme.spacing(3),
+			paddingBottom: theme.spacing(5)
+		},
+		photoPlaceHolder: {
+			display: 'inline-flex',
+			fontSize: '4rem',
+			margin: 0,
+			width: 140,
+			height: 200,
+			alignItems: 'center',
+			justifyContent: 'center',
+			color: '#fff',
+			backgroundColor: '#999',
+			verticalAlign: 'top',
+			marginBottom: theme.spacing(2)
+		},
+		left: {
+			textAlign: 'center'
+		},
+		photo: {
+			width: 140,
+			height: 200,
+			verticalAlign: 'top',
+			marginBottom: theme.spacing(2)
+		},
+		formControl: {
+			overflow: 'auto',
+			'& input, & div': {
+				color: 'black !important'
+			}
+		},
+		setPicker: {
+			height: '100%'
+		},
+		multiline: {
+			height: '100%',
+			overflow: 'auto',
+			'& textarea': {
+				color: 'black !important'
+			}
+		},
+		button: {
+			margin: theme.spacing(1)
+		},
+		problem: {
+			color: 'red'
+		},
+		noShowsAdornment: {
+			color: '#999'
+		},
+		editButton: computeFixedFabStyle({theme, col: 1}),
+		saveButton: computeFixedFabStyle({theme, col: 1}),
+		undoButton: computeFixedFabStyle({theme, col: 2}),
+		attachButton: computeFixedFabStyle({theme, col: 2}),
+		deleteButton: computeFixedFabStyle({theme, col: 4})
+	});
 
 const useStyles = makeStyles(styles);
 
@@ -132,6 +133,12 @@ const initialState = {
 	deleting: false
 };
 
+/**
+ * reducer.
+ *
+ * @param {Object} state
+ * @param {{type: string, key?: string, value?: any, payload?: any}} action
+ */
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'update':
@@ -216,9 +223,11 @@ const PatientPersonalInformation = (props) => {
 	const minRows = 8;
 	const maxRows = 100;
 
-	const update = (key, f = (v) => v) => (e) => {
-		dispatch({type: 'update', key, value: f(e.target.value)});
-	};
+	const update =
+		(key, f = (v) => v) =>
+		(e) => {
+			dispatch({type: 'update', key, value: f(e.target.value)});
+		};
 
 	const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
 

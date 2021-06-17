@@ -1,3 +1,4 @@
+import {Meteor} from 'meteor/meteor';
 import {Accounts} from 'meteor/accounts-base';
 
 import React, {useState} from 'react';
@@ -7,8 +8,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
-import {useStyles} from './Popover.js';
 import {useSnackbar} from 'notistack';
+import {useStyles} from './Popover.js';
 
 const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 	const classes = useStyles();
@@ -27,8 +28,9 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 		Accounts.changePassword(oldPassword, newPassword, (err) => {
 			closeSnackbar(key);
 			if (err) {
-				const {message, reason} = err;
+				const {message} = err;
 				enqueueSnackbar(message, {variant: 'error'});
+				const reason = err instanceof Meteor.Error ? err.reason : undefined;
 				if (reason === 'Incorrect password' || reason === 'Match failed') {
 					setErrorOldPassword('Incorrect password');
 					setErrorNewPassword('');

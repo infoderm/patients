@@ -24,13 +24,12 @@ import LinkOffIcon from '@material-ui/icons/LinkOff';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
+import {link} from '../../api/attachments.js';
 import AttachmentThumbnail from './AttachmentThumbnail.js';
 import AttachmentEditionDialog from './AttachmentEditionDialog.js';
 import AttachmentLinkingDialog from './AttachmentLinkingDialog.js';
 import AttachmentDeletionDialog from './AttachmentDeletionDialog.js';
 import AttachmentSuperDeletionDialog from './AttachmentSuperDeletionDialog.js';
-
-import {link} from '../../api/attachments.js';
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -63,6 +62,12 @@ const initialState = {
 	superDeleting: false
 };
 
+/**
+ * reducer.
+ *
+ * @param {object} state
+ * @param {{type: string, event?: any}} action
+ */
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'openMenu':
@@ -223,7 +228,7 @@ const AttachmentCard = (props) => {
 			/>
 			<AttachmentThumbnail
 				className={classes.thumbnail}
-				height="600"
+				height={600}
 				attachmentId={attachment._id}
 				{...anchorProps}
 			/>

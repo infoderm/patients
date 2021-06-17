@@ -7,16 +7,15 @@ import Button from '@material-ui/core/Button';
 
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
-import withDocumentVersions from './withDocumentVersions.js';
 import {myEncodeURIComponent} from '../../client/uri.js';
+import useDocumentVersions from './useDocumentVersions.js';
 
-const DocumentVersionsButton = ({
-	document: {identifier, reference},
-	loading,
-	versions,
-	...rest
-}) => {
+const DocumentVersionsButton = ({document, ...rest}) => {
+	const {loading, versions} = useDocumentVersions(document);
+
 	if (loading || versions.length <= 1) return null;
+
+	const {identifier, reference} = document;
 
 	return (
 		<Button
@@ -34,14 +33,7 @@ const DocumentVersionsButton = ({
 };
 
 DocumentVersionsButton.propTypes = {
-	loading: PropTypes.bool.isRequired,
-	versions: PropTypes.array.isRequired
+	document: PropTypes.object.isRequired
 };
 
-const Component = withDocumentVersions(DocumentVersionsButton);
-
-Component.propTypes = {
-	...withDocumentVersions.propTypes
-};
-
-export default Component;
+export default DocumentVersionsButton;

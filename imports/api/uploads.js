@@ -1,3 +1,4 @@
+import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
 import {Meteor} from 'meteor/meteor';
 import {FilesCollection} from 'meteor/ostrio:files';
 import {check} from 'meteor/check';
@@ -5,18 +6,16 @@ import {check} from 'meteor/check';
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import unconditionallyUpdateById from './unconditionallyUpdateById.js';
-
 import gridfs from 'gridfs-stream'; // We'll use this package to work with GridFS
-import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
 import {MongoInternals} from 'meteor/mongo';
+import unconditionallyUpdateById from './unconditionallyUpdateById.js';
 
 // Set up gfs instance
 let gfs;
 if (Meteor.isServer) {
 	gfs = gridfs(
 		MongoInternals.defaultRemoteCollectionDriver().mongo.db,
-		MongoInternals.NpmModule
+		MongoInternals.NpmModules.mongodb.module
 	);
 }
 

@@ -55,7 +55,7 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="attachment-linking-dialog-title"
 			onClose={onClose}
 		>

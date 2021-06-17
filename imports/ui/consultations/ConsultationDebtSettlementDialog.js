@@ -40,12 +40,11 @@ const ConsultationDebtSettlementDialog = (props) => {
 		consultation.patientId,
 		JSON.stringify(ConsultationDebtSettlementDialog.projection)
 	];
-	const {loading, found, fields: patient} = usePatient(
-		{},
-		consultation.patientId,
-		options,
-		deps
-	);
+	const {
+		loading,
+		found,
+		fields: patient
+	} = usePatient({}, consultation.patientId, options, deps);
 
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -85,7 +84,7 @@ const ConsultationDebtSettlementDialog = (props) => {
 	return (
 		<Dialog
 			open={open}
-			component="form"
+			// component="form"
 			aria-labelledby="consultation-debt-settling-dialog-title"
 			onClose={onClose}
 		>
