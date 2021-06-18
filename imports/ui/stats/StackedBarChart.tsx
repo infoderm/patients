@@ -41,8 +41,8 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 		return <>Cannot display chart on such small dimensions</>;
 	}
 
-	margin ??= {};
-	margin.top ??= 40;
+	margin = margin ?? {};
+	margin.top = margin.top ?? 40;
 
 	// Accessors
 	const keysFn = (item) => Object.keys(item).filter((d) => d !== 'key');
