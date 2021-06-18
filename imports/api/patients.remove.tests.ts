@@ -8,11 +8,11 @@ import {Random} from 'meteor/random';
 import {Patients} from './patients.mock';
 import {Consultations} from './consultations.mock';
 
-const methods = (
-	Meteor as unknown as {server: {method_handlers: Record<string, Function>}}
-).server.method_handlers;
-
 if (Meteor.isServer) {
+	const methods = (
+		Meteor as unknown as {server: {method_handlers: Record<string, Function>}}
+	).server.method_handlers;
+
 	describe('Patients', () => {
 		describe('methods', () => {
 			beforeEach(() => {

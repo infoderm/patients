@@ -17,11 +17,11 @@ import {Attachments} from './attachments.mock';
 
 const setLike = (x) => sorted(totalOrder, x);
 
-const methods = (
-	Meteor as unknown as {server: {method_handlers: Record<string, Function>}}
-).server.method_handlers;
-
 if (Meteor.isServer) {
+	const methods = (
+		Meteor as unknown as {server: {method_handlers: Record<string, Function>}}
+	).server.method_handlers;
+
 	describe('Patients', () => {
 		describe('methods', () => {
 			beforeEach(() => {
