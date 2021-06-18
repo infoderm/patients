@@ -20,17 +20,8 @@
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": false,
 
-    "baseUrl": ".",
-    "paths": {
-      "/*": ["*"]
-    },
-
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "typeRoots": [
-      "types",
-      "node_modules/@types"
-    ],
     "types": ["meteor", "mocha"],
     "esModuleInterop": true,
     "preserveSymlinks": true,
