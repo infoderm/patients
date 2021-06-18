@@ -18,7 +18,7 @@ const useThumbnail = (
 ) => {
 	const [src, setSrc] = useState(eee);
 
-	useEffect(() => {
+	useEffect((): (() => void) | void => {
 		if (!url) return;
 
 		if (isImage) {

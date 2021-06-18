@@ -135,32 +135,29 @@ const EidCardDialogStepSelection = ({
 			const newSelected = new Set(selected);
 			newSelected.delete(_id);
 			setSelected(newSelected);
+		} else if (selected.size === 1) {
+			dialog((resolve) => (
+				<InformationDialog
+					title="Attention!"
+					text={
+						<>
+							Il n&apos;est pour le moment{' '}
+							<strong>pas possible de fusionner</strong> plusieurs dossiers via
+							ce dialogue. Choisissez <strong>un seul dossier</strong> à éditer
+							ou mettre à jour. Vous pouvez ensuite utiliser la fonctionalité{' '}
+							<i>merge</i> si vous souhaitez fusionner ce dossier avec un autre.
+							Si vous souhaitez reinitialiser la selection du dossier, cliquez
+							sur le bouton <i>reset</i> du dialogue précédent.
+						</>
+					}
+					close="OK"
+					CloseIcon={DoneIcon}
+					onClose={() => {
+						resolve();
+					}}
+				/>
+			));
 		} else {
-			if (selected.size === 1) {
-				return dialog((resolve) => (
-					<InformationDialog
-						title="Attention!"
-						text={
-							<>
-								Il n&apos;est pour le moment{' '}
-								<strong>pas possible de fusionner</strong> plusieurs dossiers
-								via ce dialogue. Choisissez <strong>un seul dossier</strong> à
-								éditer ou mettre à jour. Vous pouvez ensuite utiliser la
-								fonctionalité <i>merge</i> si vous souhaitez fusionner ce
-								dossier avec un autre. Si vous souhaitez reinitialiser la
-								selection du dossier, cliquez sur le bouton <i>reset</i> du
-								dialogue précédent.
-							</>
-						}
-						close="OK"
-						CloseIcon={DoneIcon}
-						onClose={() => {
-							resolve();
-						}}
-					/>
-				));
-			}
-
 			const newSelected = new Set(selected);
 			newSelected.add(_id);
 			setSelected(newSelected);
