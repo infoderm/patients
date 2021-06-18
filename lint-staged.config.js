@@ -10,7 +10,10 @@ const tsc = (paths) => {
 	const originalTSConfig = JSON.parse(
 		fs.readFileSync(originalTSConfigPath, encoding)
 	);
-	const lintStagedTSConfig = {...originalTSConfig, include: paths};
+	const lintStagedTSConfig = {
+		...originalTSConfig,
+		include: ['types/**/*', ...paths]
+	};
 	fs.writeFileSync(lintStagedTSConfigPath, JSON.stringify(lintStagedTSConfig));
 	return `npm run tsc -- --noEmit --project ${lintStagedTSConfigPath}`;
 };
