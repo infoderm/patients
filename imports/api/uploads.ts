@@ -6,10 +6,10 @@ import {check} from 'meteor/check';
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import unconditionallyUpdateById from '../unconditionallyUpdateById';
+import unconditionallyUpdateById from './unconditionallyUpdateById';
 
-import createBucket from '../gridfs/createBucket';
-import createObjectID from '../gridfs/createObjectID';
+import createBucket from './gridfs/createBucket';
+import createObjectID from './gridfs/createObjectID';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
