@@ -43,6 +43,12 @@ the production machine.
 
     meteor npm run test
 
+To run client tests non-interactively you can use
+
+> NB: this uses `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium`
+
+    meteor npm run test:dev:non-interactive
+
 ### Run once
 
 > You can set host and port via the `$HOST` and `$PORT` environment variables (default `localhost:12348`).
