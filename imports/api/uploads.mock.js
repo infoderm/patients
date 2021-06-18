@@ -2,7 +2,7 @@ import faker from 'faker';
 
 import {Uploads} from './uploads';
 
-const randomDimension = () => faker.random.number({min: 32, max: 128});
+const randomDimension = () => faker.datatype.number({min: 32, max: 128});
 
 export {Uploads};
 

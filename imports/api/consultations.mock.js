@@ -15,9 +15,9 @@ Factory.define('consultation', Consultations, {
 	more: () => faker.lorem.paragraph(),
 
 	currency: () => 'EUR',
-	price: () => faker.random.number(150),
+	price: () => faker.datatype.number(150),
 	paid: () => 0,
-	book: () => `${faker.random.number(100)}`,
+	book: () => `${faker.datatype.number(100)}`,
 
 	isDone: () => true
 });
