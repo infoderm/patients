@@ -6,18 +6,12 @@ import {check} from 'meteor/check';
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import gridfs from 'gridfs-stream'; // We'll use this package to work with GridFS
-import {MongoInternals} from 'meteor/mongo';
-import unconditionallyUpdateById from './unconditionallyUpdateById';
+import unconditionallyUpdateById from '../unconditionallyUpdateById';
 
-// Set up gfs instance
-let gfs;
-if (Meteor.isServer) {
-	gfs = gridfs(
-		MongoInternals.defaultRemoteCollectionDriver().mongo.db,
-		MongoInternals.NpmModules.mongodb.module
-	);
-}
+import createBucket from '../gridfs/createBucket';
+import createObjectID from '../gridfs/createObjectID';
+
+const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
 export const Uploads = new FilesCollection({
 	collectionName: 'uploads',
@@ -41,6 +35,11 @@ export const Uploads = new FilesCollection({
 			}
 		});
 
+		const unlink = (versionName: string) => {
+			// Unlink files from FS
+			this.unlink(this.collection.findOne(upload._id), versionName);
+		};
+
 		// Move file to GridFS
 		Object.keys(upload.versions).forEach((versionName) => {
 			const metadata = {
@@ -49,32 +48,43 @@ export const Uploads = new FilesCollection({
 				uploadId: upload._id,
 				storedAt: new Date()
 			};
-			const writeStream = gfs.createWriteStream({
-				filename: upload.name,
+
+			const writeStream = bucket.openUploadStream(upload.name, {
+				contentType: upload.type || 'binary/octet-stream',
 				metadata
 			});
 
-			fs.createReadStream(upload.versions[versionName].path).pipe(writeStream);
+			const {path} = upload.versions[versionName];
+			const readStream = fs.createReadStream(path);
 
-			writeStream.on(
-				'close',
-				Meteor.bindEnvironment((file) => {
-					const property = `versions.${versionName}.meta.gridFsFileId`;
-
-					// Convert ObjectID to String. Because Meteor (EJSON?) seems to convert it to a
-					// LocalCollection.ObjectID, which GFS doesn't understand.
-					this.collection.update(upload._id, {
-						$set: {[property]: file._id.toString()}
-					});
-					this.unlink(this.collection.findOne(upload._id), versionName); // Unlink file by version from FS
+			readStream
+				.pipe(writeStream)
+				// we unlink the file from the fs on any error
+				// that occurred during the upload to prevent zombie files
+				.on('error', (err) => {
+					console.error(err);
+					unlink(versionName);
 				})
-			);
+				// once we are finished, we attach the gridFS Object id on the
+				// FilesCollection document's meta section and finally unlink the
+				// upload file from the filesystem
+				.on(
+					'finish',
+					Meteor.bindEnvironment((version) => {
+						const property = `versions.${versionName}.meta.gridFsFileId`;
+						this.collection.update(upload._id, {
+							$set: {[property]: version._id.toHexString()}
+						});
+						unlink(versionName);
+					})
+				);
 		});
 	},
 	interceptDownload(http, upload, versionName) {
-		const _id = upload.versions[versionName].meta?.gridFsFileId;
-		if (_id) {
-			const readStream = gfs.createReadStream({_id});
+		const {gridFsFileId} = upload.versions[versionName].meta ?? {};
+		if (gridFsFileId) {
+			const gfsId = createObjectID(gridFsFileId);
+			const readStream = bucket.openDownloadStream(gfsId);
 			readStream.on('error', (error) => {
 				// File not found Error handling without Server Crash
 				http.response.statusCode = 404;
@@ -91,7 +101,7 @@ export const Uploads = new FilesCollection({
 			readStream.pipe(http.response);
 		}
 
-		return Boolean(_id); // Serve file from either GridFS or FS if it wasn't uploaded yet
+		return Boolean(gridFsFileId); // Serve file from either GridFS or FS if it wasn't uploaded yet
 	},
 	onBeforeRemove(cursor) {
 		return all(map((x) => x.userId === this.userId, cursor.fetch()));
@@ -99,9 +109,10 @@ export const Uploads = new FilesCollection({
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {
 			Object.keys(upload.versions).forEach((versionName) => {
-				const _id = upload.versions[versionName].meta?.gridFsFileId;
-				if (_id) {
-					gfs.remove({_id}, (error) => {
+				const {gridFsFileId} = upload.versions[versionName].meta ?? {};
+				if (gridFsFileId) {
+					const gfsId = createObjectID(gridFsFileId);
+					bucket.delete(gfsId, (error) => {
 						if (error) {
 							throw error;
 						}
