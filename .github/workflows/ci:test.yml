@@ -74,6 +74,12 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-
 
+      - name: Lint 👕
+        run: meteor npm run lint
+
+      - name: TypeScript check ☑️
+        run: meteor npm run tsc
+
       - name: Test 🔬
         run: meteor npm run ci:test
 

@@ -126,7 +126,7 @@
     "test": "meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
     "test:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer npm run test",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ COVERAGE_OUT_LCOVONLY=1 npm run test -- --extra-packages lmieulet:meteor-coverage",
-    "ci:test": "npm run lint && npm run tsc && TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
+    "ci:test": "TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
     "upgrade-deps": "ncu --upgrade",
     "upgrade": "meteor update && npm run upgrade-deps && meteor npm install",
     "setup-deploy": "mup setup",
