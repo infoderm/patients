@@ -13,6 +13,9 @@ import createObjectID from '../gridfs/createObjectID';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
+const _100MB = 128 * 1024 * 1024;
+const MAXIMUM_UPLOAD_SIZE = _100MB; // TODO allow user configuration
+
 export const Uploads = new FilesCollection({
 	collectionName: 'uploads',
 	allowClientCode: true,
@@ -21,7 +24,7 @@ export const Uploads = new FilesCollection({
 			return 'Must be logged in to upload a file.';
 		}
 
-		if (file.size > 128 * 1024 * 1024) {
+		if (file.size > MAXIMUM_UPLOAD_SIZE) {
 			return 'Please upload file with size equal or less than 100MB.';
 		}
 
