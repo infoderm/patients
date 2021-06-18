@@ -15,10 +15,15 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
 
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": false,
+
+    "allowUnreachableCode": false,
 
     "moduleResolution": "node",
     "resolveJsonModule": true,
