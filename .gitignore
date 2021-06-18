@@ -2,3 +2,5 @@ node_modules/
 /public
 /.coverage
 tsconfig.tsbuildinfo
+lint-staged.tsconfig.json
+lint-staged.tsconfig.tsbuildinfo
