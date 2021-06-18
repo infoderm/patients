@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {useMangledDocuments} from '../../api/issues.js';
+import {useMangledDocuments} from '../../api/issues';
 
-import DocumentsPage from '../documents/DocumentsPage.js';
+import DocumentsPage from '../documents/DocumentsPage';
 
 const MangledDocuments = (props) => {
 	const options = {

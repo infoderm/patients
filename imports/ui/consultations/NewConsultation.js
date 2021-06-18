@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Loading from '../navigation/Loading.js';
+import Loading from '../navigation/Loading';
 
-import ConsultationEditor from './ConsultationEditor.js';
+import ConsultationEditor from './ConsultationEditor';
 
-import useBookPrefill from './useBookPrefill.js';
+import useBookPrefill from './useBookPrefill';
 
 const NewConsultationEditor = ({match}) => {
 	const {loading, bookNumber} = useBookPrefill();

@@ -28,7 +28,7 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import Currency from 'currency-formatter';
 
-import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink.js';
+import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
 
 const useStyles = makeStyles(() => ({
 	details: {

@@ -22,21 +22,21 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
 import DoneIcon from '@material-ui/icons/Done';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SearchBox from '../input/SearchBox.js';
+import SearchBox from '../input/SearchBox';
 
-import mergeFields from '../../util/mergeFields.js';
+import mergeFields from '../../util/mergeFields';
 
-import {patients, usePatientsFind} from '../../api/patients.js';
+import {patients, usePatientsFind} from '../../api/patients';
 
-import dialog from '../modal/dialog.js';
-import InformationDialog from '../modal/InformationDialog.js';
+import dialog from '../modal/dialog';
+import InformationDialog from '../modal/InformationDialog';
 
-import makePatientsSuggestions from '../patients/makePatientsSuggestions.js';
-import GenericStaticPatientCard from '../patients/GenericStaticPatientCard.js';
-import SelectablePatientCard from '../patients/SelectablePatientCard.js';
-import ReactivePatientCard from '../patients/ReactivePatientCard.js';
-import GenericNewPatientCard from '../patients/GenericNewPatientCard.js';
-import PatientsGrid from '../patients/PatientsGrid.js';
+import makePatientsSuggestions from '../patients/makePatientsSuggestions';
+import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
+import SelectablePatientCard from '../patients/SelectablePatientCard';
+import ReactivePatientCard from '../patients/ReactivePatientCard';
+import GenericNewPatientCard from '../patients/GenericNewPatientCard';
+import PatientsGrid from '../patients/PatientsGrid';
 
 const DEFAULT_LIMIT = 5;
 const DEFAULT_FIELDS = {

@@ -20,8 +20,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
-import {useSetting} from '../../client/settings.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
+import {useSetting} from '../../client/settings';
+import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

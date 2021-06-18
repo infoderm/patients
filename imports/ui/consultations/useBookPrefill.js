@@ -1,5 +1,5 @@
-import {filterNotInRareBooks} from '../../api/consultations.js';
-import useLastConsultationOfThisYear from './useLastConsultationOfThisYear.js';
+import {filterNotInRareBooks} from '../../api/consultations';
+import useLastConsultationOfThisYear from './useLastConsultationOfThisYear';
 
 export default function useBookPrefill() {
 	const {loading, consultation} = useLastConsultationOfThisYear(

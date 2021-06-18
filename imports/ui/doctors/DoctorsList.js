@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TagList from '../tags/TagList.js';
+import TagList from '../tags/TagList';
 
-import {useDoctors} from '../../api/doctors.js';
-import {escapeStringRegexp} from '../../api/string.js';
+import {useDoctors} from '../../api/doctors';
+import {escapeStringRegexp} from '../../api/string';
 
-import AlphabetJumper from '../navigation/AlphabetJumper.js';
-import DoctorCard from './DoctorCard.js';
+import AlphabetJumper from '../navigation/AlphabetJumper';
+import DoctorCard from './DoctorCard';
 
 export default function DoctorsList({match, prefix, page, perpage}) {
 	page =

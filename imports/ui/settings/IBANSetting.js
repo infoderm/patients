@@ -1,7 +1,7 @@
 import React from 'react';
 
 import IBAN from 'iban';
-import InputOneSetting from './InputOneSetting.js';
+import InputOneSetting from './InputOneSetting';
 
 export default function IBANSetting({className}) {
 	return (

@@ -4,24 +4,24 @@ import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import TabJumper from '../navigation/TabJumper.js';
-import NoMatch from '../navigation/NoMatch.js';
-import Loading from '../navigation/Loading.js';
+import TabJumper from '../navigation/TabJumper';
+import NoMatch from '../navigation/NoMatch';
+import Loading from '../navigation/Loading';
 
-import PatientHeader from './PatientHeader.js';
-import PatientPersonalInformation from './PatientPersonalInformation.js';
+import PatientHeader from './PatientHeader';
+import PatientPersonalInformation from './PatientPersonalInformation';
 
 const ConsultationsForPatient = lazy(() =>
-	import('../consultations/ConsultationsForPatient.js')
+	import('../consultations/ConsultationsForPatient')
 );
 const AppointmentsForPatient = lazy(() =>
-	import('../appointments/AppointmentsForPatient.js')
+	import('../appointments/AppointmentsForPatient')
 );
 const DocumentsForPatient = lazy(() =>
-	import('../documents/DocumentsForPatient.js')
+	import('../documents/DocumentsForPatient')
 );
 const AttachmentsForPatient = lazy(() =>
-	import('../attachments/AttachmentsForPatient.js')
+	import('../attachments/AttachmentsForPatient')
 );
 
 const useStyles = makeStyles((theme) => ({

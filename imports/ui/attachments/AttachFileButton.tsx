@@ -6,9 +6,9 @@ import Button from '@material-ui/core/Button';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
 
-import InputFileButton from '../input/InputFileButton.js';
+import InputFileButton from '../input/InputFileButton';
 
-import {Uploads} from '../../api/uploads.js';
+import {Uploads} from '../../api/uploads';
 
 const AttachFileButton = ({
 	method,

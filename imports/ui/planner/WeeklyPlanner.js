@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactiveWeeklyCalendar from '../calendar/ReactiveWeeklyCalendar.js';
-import Planner from './Planner.js';
+import ReactiveWeeklyCalendar from '../calendar/ReactiveWeeklyCalendar';
+import Planner from './Planner';
 
 const WeeklyPlanner = (props) => (
 	<Planner Calendar={ReactiveWeeklyCalendar} {...props} />

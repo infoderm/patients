@@ -1,6 +1,6 @@
 import React from 'react';
-import PropsOf from '../../util/PropsOf.js';
-import Tooltip from './Tooltip.js';
+import PropsOf from '../../util/PropsOf';
+import Tooltip from './Tooltip';
 
 type ComponentProps<C> = Omit<PropsOf<C>, 'tooltip'>;
 type Transform<C> = (props: ComponentProps<C>, x: string) => string;

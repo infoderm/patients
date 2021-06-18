@@ -3,7 +3,7 @@ import {useTracker} from 'meteor/react-meteor-data';
 
 import {useDebounce} from 'use-debounce';
 
-import {TIMEOUT_REACTIVITY_DEBOUNCE} from '../constants.js';
+import {TIMEOUT_REACTIVITY_DEBOUNCE} from '../constants';
 
 const useLoggingIn = () => {
 	const loggingIn = useTracker(() => Meteor.loggingIn(), []);

@@ -1,5 +1,5 @@
-import {Patients} from '../../api/patients.js';
-import makeHistogram from './makeHistogram.js';
+import {Patients} from '../../api/patients';
+import makeHistogram from './makeHistogram';
 
 const useAgeStats = makeHistogram(Patients, ['key', 'sex']);
 

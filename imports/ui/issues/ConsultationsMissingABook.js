@@ -1,9 +1,9 @@
 import React from 'react';
 
-import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
-import ReactivePatientChip from '../patients/ReactivePatientChip.js';
+import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
+import ReactivePatientChip from '../patients/ReactivePatientChip';
 
-import {useConsultationsMissingABook} from '../../api/issues.js';
+import {useConsultationsMissingABook} from '../../api/issues';
 
 const ConsultationsMissingABook = (props) => {
 	const {loading, results: consultations} = useConsultationsMissingABook();

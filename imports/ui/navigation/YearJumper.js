@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {range} from '@iterable-iterator/range';
 import {list} from '@iterable-iterator/list';
 
-import TabJumper from './TabJumper.js';
+import TabJumper from './TabJumper';
 
 export default function YearJumper({current, ...rest}) {
 	const now = new Date();

@@ -3,7 +3,7 @@ import {useTracker} from 'meteor/react-meteor-data';
 
 import isValid from 'date-fns/isValid';
 
-import {Events, intersectsInterval} from '../../api/events.js';
+import {Events, intersectsInterval} from '../../api/events';
 
 const useIntersectingEvents = (begin, end, filter, options, deps) => {
 	const query = {

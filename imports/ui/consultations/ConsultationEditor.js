@@ -11,19 +11,19 @@ import SaveIcon from '@material-ui/icons/Save';
 import dateFormat from 'date-fns/format';
 import dateParseISO from 'date-fns/parseISO';
 
-import call from '../../api/call.js';
+import call from '../../api/call';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
-import dialog from '../modal/dialog.js';
-import ConfirmationDialog from '../modal/ConfirmationDialog.js';
+import dialog from '../modal/dialog';
+import ConfirmationDialog from '../modal/ConfirmationDialog';
 
-import {computeFixedFabStyle} from '../button/FixedFab.js';
+import {computeFixedFabStyle} from '../button/FixedFab';
 
-import ConsultationEditorHeader from './ConsultationEditorHeader.js';
-import ConsultationForm from './ConsultationForm.js';
-import PrecedingConsultationsList from './PrecedingConsultationsList.js';
+import ConsultationEditorHeader from './ConsultationEditorHeader';
+import ConsultationForm from './ConsultationForm';
+import PrecedingConsultationsList from './PrecedingConsultationsList';
 
 const styles = (theme) => ({
 	container: {

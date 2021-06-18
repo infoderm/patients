@@ -3,13 +3,13 @@ import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 
-import {Patients} from '../../api/patients.js';
-import {Documents} from '../../api/documents.js';
+import {Patients} from '../../api/patients';
+import {Documents} from '../../api/documents';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
-import DocumentsForPatientStatic from './DocumentsForPatientStatic.js';
+import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 
 const DocumentsForPatient = (props) => {
 	const {loading, patient, ...rest} = props;

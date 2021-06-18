@@ -35,34 +35,34 @@ import dateFormat from 'date-fns/format';
 import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import startOfToday from 'date-fns/startOfToday';
-import TextField from '../input/TextField.js';
-import FixedFab, {computeFixedFabStyle} from '../button/FixedFab.js';
+import TextField from '../input/TextField';
+import FixedFab, {computeFixedFabStyle} from '../button/FixedFab';
 
-import {useInsurancesFind} from '../../api/insurances.js';
-import {useDoctorsFind} from '../../api/doctors.js';
-import {useAllergiesFind} from '../../api/allergies.js';
-import {useSetting} from '../../client/settings.js';
+import {useInsurancesFind} from '../../api/insurances';
+import {useDoctorsFind} from '../../api/doctors';
+import {useAllergiesFind} from '../../api/allergies';
+import {useSetting} from '../../client/settings';
 
-import eidParseBirthdate from '../../api/eidParseBirthdate.js';
-import useNoShowsForPatient from '../../api/useNoShowsForPatient.js';
+import eidParseBirthdate from '../../api/eidParseBirthdate';
+import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
 import {
 	// makeAnyIndex,
 	makeRegExpIndex
-} from '../../api/string.js';
+} from '../../api/string';
 
-import SetPicker from '../input/SetPicker.js';
-import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
-import ColorizedTextarea from '../input/ColorizedTextarea.js';
+import SetPicker from '../input/SetPicker';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
+import ColorizedTextarea from '../input/ColorizedTextarea';
 
-import AllergyChip from '../allergies/AllergyChip.js';
-import DoctorChip from '../doctors/DoctorChip.js';
-import InsuranceChip from '../insurances/InsuranceChip.js';
+import AllergyChip from '../allergies/AllergyChip';
+import DoctorChip from '../doctors/DoctorChip';
+import InsuranceChip from '../insurances/InsuranceChip';
 
-import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton.js';
-import AttachFileButton from '../attachments/AttachFileButton.js';
+import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
+import AttachFileButton from '../attachments/AttachFileButton';
 
-import PatientDeletionDialog from './PatientDeletionDialog.js';
+import PatientDeletionDialog from './PatientDeletionDialog';
 
 const styles = (theme) =>
 	createStyles({

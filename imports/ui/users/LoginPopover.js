@@ -9,7 +9,7 @@ import Popover from '@material-ui/core/Popover';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {useSnackbar} from 'notistack';
-import {useStyles} from './Popover.js';
+import {useStyles} from './Popover';
 
 const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 	const classes = useStyles();

@@ -16,15 +16,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {capitalized, normalized, normalizeInput} from '../../api/string.js';
+import {capitalized, normalized, normalizeInput} from '../../api/string';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
-} from '../input/ConfirmationTextField.js';
-import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
-import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
-import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
+} from '../input/ConfirmationTextField';
+import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
+import withLazyOpening from '../modal/withLazyOpening';
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
 const useStyles = makeStyles((theme) => ({
 	root: {

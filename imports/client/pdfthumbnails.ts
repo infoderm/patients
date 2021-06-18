@@ -1,4 +1,4 @@
-import {fetchPDF} from './pdf.js';
+import {fetchPDF} from './pdf';
 
 function createContext(
 	page: any,

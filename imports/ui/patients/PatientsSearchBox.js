@@ -2,10 +2,10 @@ import React from 'react';
 
 import {useHistory} from 'react-router-dom';
 
-import {patients} from '../../api/patients.js';
+import {patients} from '../../api/patients';
 
-import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions.js';
-import usePatientsSuggestions from './usePatientsSuggestions.js';
+import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions';
+import usePatientsSuggestions from './usePatientsSuggestions';
 
 const PatientsSearchBox = ({className}) => {
 	const history = useHistory();

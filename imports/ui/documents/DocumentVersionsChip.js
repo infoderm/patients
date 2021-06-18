@@ -9,8 +9,8 @@ import Chip from '@material-ui/core/Chip';
 
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
-import useDocumentVersions from './useDocumentVersions.js';
+import {myEncodeURIComponent} from '../../client/uri';
+import useDocumentVersions from './useDocumentVersions';
 
 const useStyles = makeStyles((theme) => ({
 	chip: {

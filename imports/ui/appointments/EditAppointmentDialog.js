@@ -3,9 +3,9 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import usePatient from '../patients/usePatient.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
-import AppointmentDialog from './AppointmentDialog.js';
+import usePatient from '../patients/usePatient';
+import withLazyOpening from '../modal/withLazyOpening';
+import AppointmentDialog from './AppointmentDialog';
 
 const EditAppointmentDialog = ({open, onClose, appointment}) => {
 	const onSubmit = (args, callback) => {

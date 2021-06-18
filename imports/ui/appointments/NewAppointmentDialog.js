@@ -3,7 +3,7 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import AppointmentDialog from './AppointmentDialog.js';
+import AppointmentDialog from './AppointmentDialog';
 
 const onSubmit = (args, callback) => {
 	Meteor.call('appointments.schedule', args, callback);

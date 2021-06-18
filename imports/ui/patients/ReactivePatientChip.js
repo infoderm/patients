@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import StaticPatientChip from './StaticPatientChip.js';
+import StaticPatientChip from './StaticPatientChip';
 
-import usePatient from './usePatient.js';
+import usePatient from './usePatient';
 
 const ReactivePatientChip = ({patient, ...props}) => {
 	const patientId = patient._id;

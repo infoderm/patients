@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
-import GenericStaticPatientCard from './GenericStaticPatientCard.js';
+import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 const StaticPatientCard = (props) => (
 	<GenericStaticPatientCard

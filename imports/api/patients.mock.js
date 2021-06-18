@@ -13,7 +13,7 @@ import {
 	PatientFields,
 	BIRTHDATE_FORMAT,
 	SEX_ALLOWED
-} from './patients.js';
+} from './patients';
 
 export {Patients, patients, PatientDocument, PatientFields};
 

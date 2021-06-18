@@ -1,9 +1,9 @@
 import React from 'react';
 
-import dialog from '../ui/modal/dialog.js';
-import EidCardDialog from '../ui/eid/EidCardDialog.js';
+import dialog from '../ui/modal/dialog';
+import EidCardDialog from '../ui/eid/EidCardDialog';
 
-import eidParseXML from '../api/eidParseXML.js';
+import eidParseXML from '../api/eidParseXML';
 
 export default function insertPatient(history, xmlString) {
 	const eidInfo = eidParseXML(xmlString);

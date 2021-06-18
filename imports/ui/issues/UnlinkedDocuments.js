@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {useUnlinkedDocuments} from '../../api/issues.js';
+import {useUnlinkedDocuments} from '../../api/issues';
 
-import DocumentsPage from '../documents/DocumentsPage.js';
+import DocumentsPage from '../documents/DocumentsPage';
 
 const UnlinkedDocuments = (props) => {
 	const options = {

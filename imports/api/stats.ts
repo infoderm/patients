@@ -4,9 +4,9 @@ import {Mongo} from 'meteor/mongo';
 import startOfToday from 'date-fns/startOfToday';
 import intervalToDuration from 'date-fns/intervalToDuration';
 
-import eidParseBirthdate from './eidParseBirthdate.js';
-import {Patients} from './patients.js';
-import {Consultations} from './consultations.js';
+import eidParseBirthdate from './eidParseBirthdate';
+import {Patients} from './patients';
+import {Consultations} from './consultations';
 
 interface PollResult {
 	total: number;

@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {books} from '../../api/books.js';
+import {books} from '../../api/books';
 
 const Collection = books.cache.Stats;
 const subscription = books.options.parentPublicationStats;

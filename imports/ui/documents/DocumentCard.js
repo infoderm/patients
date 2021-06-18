@@ -30,19 +30,19 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-import saveTextAs from '../../client/saveTextAs.js';
+import saveTextAs from '../../client/saveTextAs';
 
-import DocumentChips from './DocumentChips.js';
-import DocumentVersionsButton from './DocumentVersionsButton.js';
+import DocumentChips from './DocumentChips';
+import DocumentVersionsButton from './DocumentVersionsButton';
 
-import DocumentDeletionDialog from './DocumentDeletionDialog.js';
-import DocumentSuperDeletionDialog from './DocumentSuperDeletionDialog.js';
-import DocumentRestorationDialog from './DocumentRestorationDialog.js';
-import DocumentLinkingDialog from './DocumentLinkingDialog.js';
-import DocumentUnlinkingDialog from './DocumentUnlinkingDialog.js';
-import HealthOneLabResultsTable from './HealthOneLabResultsTable.js';
-import HealthOneReportContents from './HealthOneReportContents.js';
-import DocumentSource from './DocumentSource.js';
+import DocumentDeletionDialog from './DocumentDeletionDialog';
+import DocumentSuperDeletionDialog from './DocumentSuperDeletionDialog';
+import DocumentRestorationDialog from './DocumentRestorationDialog';
+import DocumentLinkingDialog from './DocumentLinkingDialog';
+import DocumentUnlinkingDialog from './DocumentUnlinkingDialog';
+import HealthOneLabResultsTable from './HealthOneLabResultsTable';
+import HealthOneReportContents from './HealthOneReportContents';
+import DocumentSource from './DocumentSource';
 
 const styles = () =>
 	createStyles({

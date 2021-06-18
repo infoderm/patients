@@ -5,9 +5,9 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import {Consultations} from '../../api/consultations.js';
+import {Consultations} from '../../api/consultations';
 
-import PagedConsultationsList from './PagedConsultationsList.js';
+import PagedConsultationsList from './PagedConsultationsList';
 
 const ConsultationsPager = (props) => {
 	const {loading, page, perpage, root, url, items, itemProps, ...rest} = props;

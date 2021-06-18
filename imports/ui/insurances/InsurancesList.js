@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TagList from '../tags/TagList.js';
+import TagList from '../tags/TagList';
 
-import {useInsurances} from '../../api/insurances.js';
-import {escapeStringRegexp} from '../../api/string.js';
+import {useInsurances} from '../../api/insurances';
+import {escapeStringRegexp} from '../../api/string';
 
-import AlphabetJumper from '../navigation/AlphabetJumper.js';
-import InsuranceCard from './InsuranceCard.js';
+import AlphabetJumper from '../navigation/AlphabetJumper';
+import InsuranceCard from './InsuranceCard';
 
 export default function InsurancesList({match, prefix, page, perpage}) {
 	page =

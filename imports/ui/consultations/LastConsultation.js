@@ -1,8 +1,8 @@
 import React from 'react';
 
-import StaticConsultationDetails from './StaticConsultationDetails.js';
-import ConsultationEditor from './ConsultationEditor.js';
-import useLastConsultation from './useLastConsultation.js';
+import StaticConsultationDetails from './StaticConsultationDetails';
+import ConsultationEditor from './ConsultationEditor';
+import useLastConsultation from './useLastConsultation';
 
 const LastConsultation = () => {
 	const {loading, consultation} = useLastConsultation();

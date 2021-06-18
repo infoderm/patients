@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import List from '@material-ui/core/List';
 
-import DocumentListItem from './DocumentListItem.js';
+import DocumentListItem from './DocumentListItem';
 
 export default function DocumentsPage({documents}) {
 	return (

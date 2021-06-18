@@ -1,7 +1,7 @@
 import React from 'react';
 
-import useAttachments from '../attachments/useAttachments.js';
-import AttachmentsGrid from '../attachments/AttachmentsGrid.js';
+import useAttachments from '../attachments/useAttachments';
+import AttachmentsGrid from '../attachments/AttachmentsGrid';
 
 const UnattachedUploads = (props) => {
 	const query = {

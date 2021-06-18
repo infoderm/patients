@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {useState, useEffect} from 'react';
 
-import useRandom from '../ui/hooks/useRandom.js';
+import useRandom from '../ui/hooks/useRandom';
 
 /**
  * WARNING: Does not work properly if used multiple times with the same

@@ -1,5 +1,5 @@
-import makeCachedFindOne from '../../api/makeCachedFindOne.js';
-import {Patients} from '../../api/patients.js';
+import makeCachedFindOne from '../../api/makeCachedFindOne';
+import {Patients} from '../../api/patients';
 
 const useCachedPatient = makeCachedFindOne(Patients, 'patient');
 

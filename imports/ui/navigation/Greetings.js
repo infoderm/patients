@@ -4,8 +4,8 @@ import startOfDay from 'date-fns/startOfDay';
 import addHours from 'date-fns/addHours';
 import isAfter from 'date-fns/isAfter';
 
-import {TIME_BREAK, TIME_EVENING} from '../../client/constants.js';
-import NoContent from './NoContent.js';
+import {TIME_BREAK, TIME_EVENING} from '../../client/constants';
+import NoContent from './NoContent';
 
 export default function Greetings() {
 	const now = new Date();

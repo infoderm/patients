@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
-import SetPicker from '../input/SetPicker.js';
+import SetPicker from '../input/SetPicker';
 
-import {useSetting} from '../../client/settings.js';
+import {useSetting} from '../../client/settings';
 
-import PropsOf from '../../util/PropsOf.js';
+import PropsOf from '../../util/PropsOf';
 
 interface BaseProps {
 	className?: string;

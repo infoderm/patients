@@ -5,13 +5,13 @@ import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import usePatient from '../patients/usePatient.js';
+import usePatient from '../patients/usePatient';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
-import FixedFab from '../button/FixedFab.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
+import FixedFab from '../button/FixedFab';
 
-import ConsultationsPager from '../consultations/ConsultationsPager.js';
+import ConsultationsPager from '../consultations/ConsultationsPager';
 
 const ConsultationsForPatient = (props) => {
 	const [showCancelled, setShowCancelled] = useState(true);

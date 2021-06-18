@@ -16,14 +16,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {normalized} from '../../api/string.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
-import useIsMounted from '../hooks/useIsMounted.js';
+import {normalized} from '../../api/string';
+import withLazyOpening from '../modal/withLazyOpening';
+import useIsMounted from '../hooks/useIsMounted';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
-} from '../input/ConfirmationTextField.js';
-import StaticPatientCard from './StaticPatientCard.js';
+} from '../input/ConfirmationTextField';
+import StaticPatientCard from './StaticPatientCard';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

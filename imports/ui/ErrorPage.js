@@ -8,7 +8,7 @@ import RotateRightIcon from '@material-ui/icons/RotateRight';
 import HomeIcon from '@material-ui/icons/Home';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
-import NoContent from './navigation/NoContent.js';
+import NoContent from './navigation/NoContent';
 
 const useStyles = makeStyles(() => ({
 	explanation: {

@@ -18,16 +18,16 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import {settings} from '../client/settings.js';
+import {settings} from '../client/settings';
 
-import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone.js';
-import Header from './Header.js';
-import Content from './Content.js';
-import NavigationDrawer from './NavigationDrawer.js';
-import ErrorBoundary from './ErrorBoundary.js';
+import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
+import Header from './Header';
+import Content from './Content';
+import NavigationDrawer from './NavigationDrawer';
+import ErrorBoundary from './ErrorBoundary';
 
-import useLoggingIn from './users/useLoggingIn.js';
-import useUser from './users/useUser.js';
+import useLoggingIn from './users/useLoggingIn';
+import useUser from './users/useUser';
 
 let muitheme = createMuiTheme();
 muitheme = responsiveFontSizes(muitheme);

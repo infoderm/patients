@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InputManySetting from './InputManySetting.js';
+import InputManySetting from './InputManySetting';
 
 const KEY = 'appointment-cancellation-reason';
 

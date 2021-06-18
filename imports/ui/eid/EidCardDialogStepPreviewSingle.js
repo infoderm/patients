@@ -1,7 +1,7 @@
 import React from 'react';
 
-import EidCardDialogStepPreviewSingleCreate from './EidCardDialogStepPreviewSingleCreate.js';
-import EidCardDialogStepPreviewSingleUpdate from './EidCardDialogStepPreviewSingleUpdate.js';
+import EidCardDialogStepPreviewSingleCreate from './EidCardDialogStepPreviewSingleCreate';
+import EidCardDialogStepPreviewSingleUpdate from './EidCardDialogStepPreviewSingleUpdate';
 
 const EidCardDialogStepPreviewSingle = (props) => {
 	return props.patientId === '?' ? (

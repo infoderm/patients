@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {myDecodeURIComponent} from '../../client/uri.js';
-import {normalizeSearch} from '../../api/string.js';
-import mergeFields from '../../util/mergeFields.js';
+import {myDecodeURIComponent} from '../../client/uri';
+import {normalizeSearch} from '../../api/string';
+import mergeFields from '../../util/mergeFields';
 
-import Refresh from '../navigation/Refresh.js';
-import {usePatientsAdvancedFind} from '../../api/patients.js';
-import PropsOf from '../../util/PropsOf.js';
-import StaticPatientsList from './StaticPatientsList.js';
-import ReactivePatientCard from './ReactivePatientCard.js';
+import Refresh from '../navigation/Refresh';
+import {usePatientsAdvancedFind} from '../../api/patients';
+import PropsOf from '../../util/PropsOf';
+import StaticPatientsList from './StaticPatientsList';
+import ReactivePatientCard from './ReactivePatientCard';
 
 type Props = {
 	match: any;

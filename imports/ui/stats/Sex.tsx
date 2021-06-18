@@ -13,7 +13,7 @@ import pink from '@material-ui/core/colors/pink';
 import purple from '@material-ui/core/colors/purple';
 import grey from '@material-ui/core/colors/grey';
 
-import useSexStats from './useSexStats.js';
+import useSexStats from './useSexStats';
 
 // const legendGlyphSize = 15;
 

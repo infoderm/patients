@@ -2,11 +2,11 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
-import Paginator from '../navigation/Paginator.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
+import Paginator from '../navigation/Paginator';
 
-import TagGrid from './TagGrid.js';
+import TagGrid from './TagGrid';
 
 const TagList = (props) => {
 	const {useTags, query, sort, page, perpage, Card, root, url} = props;

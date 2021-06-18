@@ -1,7 +1,7 @@
 import React from 'react';
 
-import useConsultation from './useConsultation.js';
-import ConsultationEditor from './ConsultationEditor.js';
+import useConsultation from './useConsultation';
+import ConsultationEditor from './ConsultationEditor';
 
 const EditConsultationForm = ({match}) => {
 	const init = {};

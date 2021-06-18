@@ -3,11 +3,11 @@ import PropTypes, {InferProps} from 'prop-types';
 
 import CardMedia from '@material-ui/core/CardMedia';
 
-import PropsOf from '../../util/PropsOf.js';
+import PropsOf from '../../util/PropsOf';
 
-import {link} from '../../api/attachments.js';
-import useAttachment from './useAttachment.js';
-import useThumbnail from './useThumbnail.js';
+import {link} from '../../api/attachments';
+import useAttachment from './useAttachment';
+import useThumbnail from './useThumbnail';
 
 const propTypes = {
 	attachmentId: PropTypes.string.isRequired,

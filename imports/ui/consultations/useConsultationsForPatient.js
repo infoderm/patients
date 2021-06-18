@@ -1,4 +1,4 @@
-import {useConsultationsAndAppointments} from '../../api/consultations.js';
+import {useConsultationsAndAppointments} from '../../api/consultations';
 
 /**
  * useConsultationsForPatient.

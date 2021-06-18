@@ -4,9 +4,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import TextField from './TextField.js';
+import TextField from './TextField';
 
-import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify.js';
+import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify';
 
 const CopiableTextField = (props) => {
 	const {value, readOnly} = props;

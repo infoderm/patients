@@ -3,17 +3,17 @@ import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {thisYearsInterval} from '../util/datetime.js';
+import {thisYearsInterval} from '../util/datetime';
 
 import {
 	Consultations,
 	consultations,
 	findLastConsultationInInterval,
 	filterNotInRareBooks
-} from './consultations.js';
-import {patients} from './patients.js';
+} from './consultations';
+import {patients} from './patients';
 
-import unconditionallyUpdateById from './unconditionallyUpdateById.js';
+import unconditionallyUpdateById from './unconditionallyUpdateById';
 
 export const Appointments = Consultations;
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import NoContent from '../navigation/NoContent.js';
-import Paginator from '../navigation/Paginator.js';
+import NoContent from '../navigation/NoContent';
+import Paginator from '../navigation/Paginator';
 
-import DocumentCard from '../documents/DocumentCard.js';
+import DocumentCard from '../documents/DocumentCard';
 
 export default function DocumentsForPatientStatic({
 	patientId,

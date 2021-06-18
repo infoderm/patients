@@ -7,8 +7,8 @@ import pink from '@material-ui/core/colors/pink';
 import purple from '@material-ui/core/colors/purple';
 import grey from '@material-ui/core/colors/grey';
 
-import StackedBarChart from './StackedBarChart.js';
-import useFrequencyStats from './useFrequencyStats.js';
+import StackedBarChart from './StackedBarChart';
+import useFrequencyStats from './useFrequencyStats';
 
 const Chart = (props) => {
 	const {loading, count} = useFrequencyStats();

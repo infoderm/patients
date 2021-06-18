@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
-import Paginator from '../navigation/Paginator.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
+import Paginator from '../navigation/Paginator';
 
-import DocumentsPage from './DocumentsPage.js';
+import DocumentsPage from './DocumentsPage';
 
 export default function StaticDocumentList({
 	page,

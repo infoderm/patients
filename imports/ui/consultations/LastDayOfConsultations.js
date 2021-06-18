@@ -3,11 +3,11 @@ import React from 'react';
 import startOfToday from 'date-fns/startOfToday';
 import startOfDay from 'date-fns/startOfDay';
 
-import Loading from '../navigation/Loading.js';
+import Loading from '../navigation/Loading';
 
-import ConsultationsOfTheDay from './ConsultationsOfTheDay.js';
+import ConsultationsOfTheDay from './ConsultationsOfTheDay';
 
-import useLastConsultation from './useLastConsultation.js';
+import useLastConsultation from './useLastConsultation';
 
 const LastDayOfConsultations = () => {
 	const {loading, consultation} = useLastConsultation();

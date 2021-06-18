@@ -6,8 +6,8 @@ import addMilliseconds from 'date-fns/addMilliseconds';
 import addMinutes from 'date-fns/addMinutes';
 import isAfter from 'date-fns/isAfter';
 
-import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations.js';
-import {Patients} from './patients.js';
+import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations';
+import {Patients} from './patients';
 
 const events = 'events';
 export const Events = new Mongo.Collection(events);

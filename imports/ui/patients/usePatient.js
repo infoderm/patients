@@ -1,5 +1,5 @@
-import makeFindOne from '../../api/makeFindOne.js';
-import {Patients} from '../../api/patients.js';
+import makeFindOne from '../../api/makeFindOne';
+import {Patients} from '../../api/patients';
 
 const usePatient = makeFindOne(Patients, 'patient');
 

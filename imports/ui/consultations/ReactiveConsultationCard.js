@@ -1,7 +1,7 @@
 import React from 'react';
-import useAttachments from '../attachments/useAttachments.js';
+import useAttachments from '../attachments/useAttachments';
 
-import StaticConsultationCard from './StaticConsultationCard.js';
+import StaticConsultationCard from './StaticConsultationCard';
 
 const ReactiveConsultationCard = ({consultation, ...rest}) => {
 	const query = {'meta.attachedToConsultations': consultation._id};

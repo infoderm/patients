@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import NoContent from './NoContent.js';
+import NoContent from './NoContent';
 
 export default function NoMatch({location}) {
 	return (

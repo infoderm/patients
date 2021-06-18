@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TagList from '../tags/TagList.js';
+import TagList from '../tags/TagList';
 
-import {useAllergies} from '../../api/allergies.js';
-import {escapeStringRegexp} from '../../api/string.js';
+import {useAllergies} from '../../api/allergies';
+import {escapeStringRegexp} from '../../api/string';
 
-import AlphabetJumper from '../navigation/AlphabetJumper.js';
-import AllergyCard from './AllergyCard.js';
+import AlphabetJumper from '../navigation/AlphabetJumper';
+import AllergyCard from './AllergyCard';
 
 export default function AllergiesList({match, prefix, page, perpage}) {
 	page =

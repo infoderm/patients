@@ -17,13 +17,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import {onlyASCII} from '../../api/string.js';
+import {onlyASCII} from '../../api/string';
 
-import {useSetting} from '../../client/settings.js';
+import {useSetting} from '../../client/settings';
 
-import usePatient from '../patients/usePatient.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
-import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode.js';
+import usePatient from '../patients/usePatient';
+import withLazyOpening from '../modal/withLazyOpening';
+import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode';
 
 const SIZE_CODE = 256;
 const SIZE_PROGRESS = 128;

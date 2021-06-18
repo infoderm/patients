@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
-import TextField from '../input/TextField.js';
-import CopiableTextField from '../input/CopiableTextField.js';
+import TextField from '../input/TextField';
+import CopiableTextField from '../input/CopiableTextField';
 
-import useStyles from '../styles/subheader.js';
+import useStyles from '../styles/subheader';
 
-import useCachedPatient from './useCachedPatient.js';
+import useCachedPatient from './useCachedPatient';
 
 const PatientHeader = ({patientId}) => {
 	const init = {_id: patientId};

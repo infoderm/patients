@@ -4,11 +4,11 @@ import {Mongo} from 'meteor/mongo';
 
 import React from 'react';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
-import {Documents} from '../../api/documents.js';
-import DocumentCard from './DocumentCard.js';
+import {Documents} from '../../api/documents';
+import DocumentCard from './DocumentCard';
 
 const DocumentDetails = ({documentId, loading, document}) => {
 	if (loading) {

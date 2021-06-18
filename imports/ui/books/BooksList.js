@@ -6,15 +6,15 @@ import SwapVertIcon from '@material-ui/icons/SwapVert';
 
 import dateFormat from 'date-fns/format';
 
-import TagList from '../tags/TagList.js';
+import TagList from '../tags/TagList';
 
-import {useBooks} from '../../api/books.js';
-import {useSettingCached} from '../../client/settings.js';
+import {useBooks} from '../../api/books';
+import {useSettingCached} from '../../client/settings';
 
-import YearJumper from '../navigation/YearJumper.js';
-import FixedFab from '../button/FixedFab.js';
-import BookCard from './BookCard.js';
-import BooksDownloadDialog from './BooksDownloadDialog.js';
+import YearJumper from '../navigation/YearJumper';
+import FixedFab from '../button/FixedFab';
+import BookCard from './BookCard';
+import BooksDownloadDialog from './BooksDownloadDialog';
 
 export default function BooksList({match, year, page, perpage}) {
 	const [downloading, setDownloading] = useState(false);

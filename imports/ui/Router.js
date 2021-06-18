@@ -6,84 +6,76 @@ import startOfToday from 'date-fns/startOfToday';
 import dateParseISO from 'date-fns/parseISO';
 import dateFormat from 'date-fns/format';
 
-import Greetings from './navigation/Greetings.js';
-import NoMatch from './navigation/NoMatch.js';
-import Loading from './navigation/Loading.js';
+import Greetings from './navigation/Greetings';
+import NoMatch from './navigation/NoMatch';
+import Loading from './navigation/Loading';
 
 const FullTextSearchResults = lazy(() =>
 	import('./search/FullTextSearchResults')
 );
 
-const PatientRecord = lazy(() => import('./patients/PatientRecord.js'));
-const NewPatientForm = lazy(() => import('./patients/NewPatientForm.js'));
+const PatientRecord = lazy(() => import('./patients/PatientRecord'));
+const NewPatientForm = lazy(() => import('./patients/NewPatientForm'));
 
 const ConsultationsOfTheDay = lazy(() =>
-	import('./consultations/ConsultationsOfTheDay.js')
+	import('./consultations/ConsultationsOfTheDay')
 );
 const TodaysConsultations = lazy(() =>
-	import('./consultations/TodaysConsultations.js')
+	import('./consultations/TodaysConsultations')
 );
 const LastDayOfConsultations = lazy(() =>
-	import('./consultations/LastDayOfConsultations.js')
+	import('./consultations/LastDayOfConsultations')
 );
-const LastConsultation = lazy(() =>
-	import('./consultations/LastConsultation.js')
-);
+const LastConsultation = lazy(() => import('./consultations/LastConsultation'));
 const ConsultationDetails = lazy(() =>
-	import('./consultations/ConsultationDetails.js')
+	import('./consultations/ConsultationDetails')
 );
-const EditConsultation = lazy(() =>
-	import('./consultations/EditConsultation.js')
-);
-const NewConsultation = lazy(() =>
-	import('./consultations/NewConsultation.js')
-);
+const EditConsultation = lazy(() => import('./consultations/EditConsultation'));
+const NewConsultation = lazy(() => import('./consultations/NewConsultation'));
 
 const MonthlyPlanner = lazy(() =>
-	import('./planner/PreconfiguredMonthlyPlanner.js')
+	import('./planner/PreconfiguredMonthlyPlanner')
 );
 const WeeklyPlanner = lazy(() =>
-	import('./planner/PreconfiguredWeeklyPlanner.js')
+	import('./planner/PreconfiguredWeeklyPlanner')
 );
 
-const BooksList = lazy(() => import('./books/BooksList.js'));
-const BookDetails = lazy(() => import('./books/BookDetails.js'));
+const BooksList = lazy(() => import('./books/BooksList'));
+const BookDetails = lazy(() => import('./books/BookDetails'));
 
-const DocumentsList = lazy(() => import('./documents/DocumentsList.js'));
+const DocumentsList = lazy(() => import('./documents/DocumentsList'));
 const DocumentVersionsList = lazy(() =>
-	import('./documents/DocumentVersionsList.js')
+	import('./documents/DocumentVersionsList')
 );
 const DocumentsFromIdentifierList = lazy(() =>
-	import('./documents/DocumentsFromIdentifierList.js')
+	import('./documents/DocumentsFromIdentifierList')
 );
-const DocumentDetails = lazy(() => import('./documents/DocumentDetails.js'));
+const DocumentDetails = lazy(() => import('./documents/DocumentDetails'));
 
 const PaidConsultationsList = lazy(() =>
-	import('./consultations/PaidConsultationsList.js')
+	import('./consultations/PaidConsultationsList')
 );
-const SEPAPaymentDetails = lazy(() =>
-	import('./payment/SEPAPaymentDetails.js')
-);
+const SEPAPaymentDetails = lazy(() => import('./payment/SEPAPaymentDetails'));
 const UnpaidConsultationsList = lazy(() =>
-	import('./consultations/UnpaidConsultationsList.js')
+	import('./consultations/UnpaidConsultationsList')
 );
-const Stats = lazy(() => import('./stats/Stats.js'));
-const Issues = lazy(() => import('./issues/Issues.js'));
-const MergePatientsForm = lazy(() => import('./merge/MergePatientsForm.js'));
+const Stats = lazy(() => import('./stats/Stats'));
+const Issues = lazy(() => import('./issues/Issues'));
+const MergePatientsForm = lazy(() => import('./merge/MergePatientsForm'));
 
-const DoctorsList = lazy(() => import('./doctors/DoctorsList.js'));
-const DoctorDetails = lazy(() => import('./doctors/DoctorDetails.js'));
+const DoctorsList = lazy(() => import('./doctors/DoctorsList'));
+const DoctorDetails = lazy(() => import('./doctors/DoctorDetails'));
 
-const InsurancesList = lazy(() => import('./insurances/InsurancesList.js'));
-const InsuranceDetails = lazy(() => import('./insurances/InsuranceDetails.js'));
+const InsurancesList = lazy(() => import('./insurances/InsurancesList'));
+const InsuranceDetails = lazy(() => import('./insurances/InsuranceDetails'));
 
-const AllergiesList = lazy(() => import('./allergies/AllergiesList.js'));
-const AllergyDetails = lazy(() => import('./allergies/AllergyDetails.js'));
+const AllergiesList = lazy(() => import('./allergies/AllergiesList'));
+const AllergyDetails = lazy(() => import('./allergies/AllergyDetails'));
 
-const DrugsSearch = lazy(() => import('./drugs/DrugsSearch.js'));
-const DrugDetails = lazy(() => import('./drugs/DrugDetails.js'));
+const DrugsSearch = lazy(() => import('./drugs/DrugsSearch'));
+const DrugDetails = lazy(() => import('./drugs/DrugDetails'));
 
-const Settings = lazy(() => import('./settings/Settings.js'));
+const Settings = lazy(() => import('./settings/Settings'));
 
 const ConsultationsOfTheDayFromMatch = ({match}) => (
 	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))} />

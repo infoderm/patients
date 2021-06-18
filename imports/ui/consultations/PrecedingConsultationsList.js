@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
-import {useConsultationsFind} from '../../api/consultations.js';
-import ConsultationsList from './ConsultationsList.js';
+import {useConsultationsFind} from '../../api/consultations';
+import ConsultationsList from './ConsultationsList';
 
 const PrecedingConsultationsList = ({consultation}) => {
 	const query = {

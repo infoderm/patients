@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 import dateFormat from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import isBefore from 'date-fns/isBefore';
-import Tooltip from '../accessibility/Tooltip.js';
+import Tooltip from '../accessibility/Tooltip';
 
 const eventBackgroundColor = ({begin, calendar, isCancelled}) => {
 	if (isCancelled) return '#ff7961';

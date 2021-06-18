@@ -3,17 +3,17 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import CurrencySetting from './CurrencySetting.js';
-import TextTransformSetting from './TextTransformSetting.js';
-import LanguageSetting from './LanguageSetting.js';
-import NavigationDrawerIsOpenSetting from './NavigationDrawerIsOpenSetting.js';
-import AppointmentDurationSetting from './AppointmentDurationSetting.js';
-import AppointmentCancellationReasonSetting from './AppointmentCancellationReasonSetting.js';
-import DisplayedWeekDaysSetting from './DisplayedWeekDaysSetting.js';
-import ImportantStringsSetting from './ImportantStringsSetting.js';
-import WeekStartsOnSetting from './WeekStartsOnSetting.js';
-import IBANSetting from './IBANSetting.js';
-import AccountHolderSetting from './AccountHolderSetting.js';
+import CurrencySetting from './CurrencySetting';
+import TextTransformSetting from './TextTransformSetting';
+import LanguageSetting from './LanguageSetting';
+import NavigationDrawerIsOpenSetting from './NavigationDrawerIsOpenSetting';
+import AppointmentDurationSetting from './AppointmentDurationSetting';
+import AppointmentCancellationReasonSetting from './AppointmentCancellationReasonSetting';
+import DisplayedWeekDaysSetting from './DisplayedWeekDaysSetting';
+import ImportantStringsSetting from './ImportantStringsSetting';
+import WeekStartsOnSetting from './WeekStartsOnSetting';
+import IBANSetting from './IBANSetting';
+import AccountHolderSetting from './AccountHolderSetting';
 
 const useStyles = makeStyles((theme) => ({
 	setting: {

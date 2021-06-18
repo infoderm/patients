@@ -1,7 +1,7 @@
 import {useDebounce} from 'use-debounce';
-import {escapeStringRegexp} from '../../api/string.js';
+import {escapeStringRegexp} from '../../api/string';
 
-import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 
 const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input

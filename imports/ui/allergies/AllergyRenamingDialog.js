@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagRenamingDialog from '../tags/TagRenamingDialog.js';
+import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {useAllergiesFind} from '../../api/allergies.js';
+import {useAllergiesFind} from '../../api/allergies';
 
 export default function AllergyRenamingDialog({open, onClose, onRename, tag}) {
 	return (

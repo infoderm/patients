@@ -30,18 +30,18 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 
-import diff from '../../util/diff.js';
+import diff from '../../util/diff';
 
-import call from '../../api/call.js';
-import {patients} from '../../api/patients.js';
+import call from '../../api/call';
+import {patients} from '../../api/patients';
 
-import dialog from '../modal/dialog.js';
-import ConfirmationDialog from '../modal/ConfirmationDialog.js';
+import dialog from '../modal/dialog';
+import ConfirmationDialog from '../modal/ConfirmationDialog';
 
-import GenericStaticPatientCard from '../patients/GenericStaticPatientCard.js';
-import ReactivePatientCard from '../patients/ReactivePatientCard.js';
-import PatientsGrid from '../patients/PatientsGrid.js';
-import usePatient from '../patients/usePatient.js';
+import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
+import ReactivePatientCard from '../patients/ReactivePatientCard';
+import PatientsGrid from '../patients/PatientsGrid';
+import usePatient from '../patients/usePatient';
 
 const computeDifferences = function* (state, changes) {
 	for (const key of Object.keys(changes)) {

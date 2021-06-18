@@ -2,7 +2,7 @@ import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
 
-import {link} from '../../api/attachments.js';
+import {link} from '../../api/attachments';
 
 const StaticAttachmentLink = ({loading, attachmentId, attachment, ...rest}) => {
 	if (loading) {

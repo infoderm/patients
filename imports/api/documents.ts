@@ -6,7 +6,7 @@ import {check} from 'meteor/check';
 import {zip} from '@iterable-iterator/zip';
 
 import pageQuery from './pageQuery';
-import {Patients, patients} from './patients.js';
+import {Patients, patients} from './patients';
 
 export const Documents = new Mongo.Collection<any>('documents');
 

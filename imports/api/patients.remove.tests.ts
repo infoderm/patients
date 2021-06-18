@@ -5,8 +5,8 @@ import {assert} from 'chai';
 import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
-import {Patients} from './patients.mock.js';
-import {Consultations} from './consultations.mock.js';
+import {Patients} from './patients.mock';
+import {Consultations} from './consultations.mock';
 
 const methods = (
 	Meteor as unknown as {server: {method_handlers: Record<string, Function>}}

@@ -6,9 +6,9 @@ import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 
-import NoContent from '../navigation/NoContent.js';
+import NoContent from '../navigation/NoContent';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 export default function ConsultationsForPatientStatic({
 	classes,

@@ -7,17 +7,17 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import blue from '@material-ui/core/colors/blue';
 
-import TagCard from '../tags/TagCard.js';
-import withItem from '../tags/withItem.js';
+import TagCard from '../tags/TagCard';
+import withItem from '../tags/withItem';
 
-import StaticPatientChip from '../patients/StaticPatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip';
 
-import {Patients} from '../../api/patients.js';
-import {Doctors, doctors} from '../../api/doctors.js';
+import {Patients} from '../../api/patients';
+import {Doctors, doctors} from '../../api/doctors';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
-import DoctorRenamingDialog from './DoctorRenamingDialog.js';
-import DoctorDeletionDialog from './DoctorDeletionDialog.js';
+import {myEncodeURIComponent} from '../../client/uri';
+import DoctorRenamingDialog from './DoctorRenamingDialog';
+import DoctorDeletionDialog from './DoctorDeletionDialog';
 
 const styles = (theme) =>
 	createStyles({

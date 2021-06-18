@@ -8,9 +8,9 @@ import Accordion from '@material-ui/core/Accordion';
 
 import Divider from '@material-ui/core/Divider';
 
-import StaticConsultationCardSummary from './StaticConsultationCardSummary.js';
-import StaticConsultationCardDetails from './StaticConsultationCardDetails.js';
-import StaticConsultationCardActions from './StaticConsultationCardActions.js';
+import StaticConsultationCardSummary from './StaticConsultationCardSummary';
+import StaticConsultationCardDetails from './StaticConsultationCardDetails';
+import StaticConsultationCardActions from './StaticConsultationCardActions';
 
 const useStyles = makeStyles(() => ({
 	card: {

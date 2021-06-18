@@ -12,10 +12,10 @@ import addWeeks from 'date-fns/addWeeks';
 import subWeeks from 'date-fns/subWeeks';
 import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
 
-import {Events} from '../../api/events.js';
+import {Events} from '../../api/events';
 
-import StaticWeeklyCalendar from './StaticWeeklyCalendar.js';
-import {weekly} from './ranges.js';
+import StaticWeeklyCalendar from './StaticWeeklyCalendar';
+import {weekly} from './ranges';
 
 const DayHeader = ({className, day, weekOptions}) => {
 	const firstDayOfWeek = startOfWeek(day, weekOptions);

@@ -11,12 +11,12 @@ import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
-import {setSetting} from '../client/settings.js';
+import {setSetting} from '../client/settings';
 
-import FullTextSearchInput from './search/FullTextSearchInput.js';
-import AccountsUI from './users/AccountsUI.js';
+import FullTextSearchInput from './search/FullTextSearchInput';
+import AccountsUI from './users/AccountsUI';
 
-import {drawerWidthOpen} from './NavigationDrawer.js';
+import {drawerWidthOpen} from './NavigationDrawer';
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {

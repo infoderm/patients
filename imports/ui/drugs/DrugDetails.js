@@ -5,10 +5,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
-import {Drugs} from '../../api/drugs.js';
+import {Drugs} from '../../api/drugs';
 
 const styles = (theme) => ({
 	container: {

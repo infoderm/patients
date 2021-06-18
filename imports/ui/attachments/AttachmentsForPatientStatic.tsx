@@ -6,12 +6,12 @@ import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
-import NoContent from '../navigation/NoContent.js';
-import Paginator from '../navigation/Paginator.js';
-import {computeFixedFabStyle} from '../button/FixedFab.js';
+import NoContent from '../navigation/NoContent';
+import Paginator from '../navigation/Paginator';
+import {computeFixedFabStyle} from '../button/FixedFab';
 
-import AttachFileButton from './AttachFileButton.js';
-import AttachmentsGallery from './AttachmentsGallery.js';
+import AttachFileButton from './AttachFileButton';
+import AttachmentsGallery from './AttachmentsGallery';
 
 const useStyles = makeStyles((theme) => ({
 	attachButton: computeFixedFabStyle({theme, col: 4})

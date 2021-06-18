@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 
-import Center from '../grid/Center.js';
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Center from '../grid/Center';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
 const ListWithHeader = (props) => {
 	const {name, Card, List, useItem, listProps, root, page, perpage} = props;

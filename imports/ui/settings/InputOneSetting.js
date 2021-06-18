@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
-import {useSetting} from '../../client/settings.js';
+import {useSetting} from '../../client/settings';
 
 // TODO validate should have three possible outcomes
 //       1 valid input (sync)

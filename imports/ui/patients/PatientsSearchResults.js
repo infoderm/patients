@@ -4,11 +4,11 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
-import {myDecodeURIComponent} from '../../client/uri.js';
-import mergeFields from '../../util/mergeFields.js';
+import {myDecodeURIComponent} from '../../client/uri';
+import mergeFields from '../../util/mergeFields';
 
-import StaticPatientsList from './StaticPatientsList.js';
-import ReactivePatientCard from './ReactivePatientCard.js';
+import StaticPatientsList from './StaticPatientsList';
+import ReactivePatientCard from './ReactivePatientCard';
 
 const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 	page =

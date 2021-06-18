@@ -1,13 +1,13 @@
 import React from 'react';
 
-import usePatient from '../patients/usePatient.js';
+import usePatient from '../patients/usePatient';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
-import FixedFab from '../button/FixedFab.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
+import FixedFab from '../button/FixedFab';
 
-import ConsultationsPager from './ConsultationsPager.js';
-import ManageConsultationsForPatientButton from './ManageConsultationsForPatientButton.js';
+import ConsultationsPager from './ConsultationsPager';
+import ManageConsultationsForPatientButton from './ManageConsultationsForPatientButton';
 
 const ConsultationsForPatient = (props) => {
 	const {patientId, page, perpage} = props;

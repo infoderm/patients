@@ -5,29 +5,25 @@ import {Mongo} from 'meteor/mongo';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {Settings} from '../imports/api/settings.js';
-import {
-	Patients,
-	PatientsSearchIndex,
-	patients
-} from '../imports/api/patients.js';
-import {Drugs} from '../imports/api/drugs.js';
-import {Consultations, isUnpaid} from '../imports/api/consultations.js';
-import {Events} from '../imports/api/events.js';
-import {Attachments} from '../imports/api/attachments.js';
+import {Settings} from '../imports/api/settings';
+import {Patients, PatientsSearchIndex, patients} from '../imports/api/patients';
+import {Drugs} from '../imports/api/drugs';
+import {Consultations, isUnpaid} from '../imports/api/consultations';
+import {Events} from '../imports/api/events';
+import {Attachments} from '../imports/api/attachments';
 // eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/appointments.js';
-import {Insurances, insurances} from '../imports/api/insurances.js';
-import {Doctors, doctors} from '../imports/api/doctors.js';
-import {Allergies, allergies} from '../imports/api/allergies.js';
-import {Books, books} from '../imports/api/books.js';
-import {Documents, documents} from '../imports/api/documents.js';
+import '../imports/api/appointments';
+import {Insurances, insurances} from '../imports/api/insurances';
+import {Doctors, doctors} from '../imports/api/doctors';
+import {Allergies, allergies} from '../imports/api/allergies';
+import {Books, books} from '../imports/api/books';
+import {Documents, documents} from '../imports/api/documents';
 // eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/issues.js';
+import '../imports/api/issues';
 // eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/stats.js';
+import '../imports/api/stats';
 // eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/noShows.js';
+import '../imports/api/noShows';
 
 Meteor.startup(() => {
 	// Code to run on server at startup

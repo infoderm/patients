@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {patients} from '../../api/patients.js';
+import {patients} from '../../api/patients';
 
-import SetPicker from '../input/SetPicker.js';
+import SetPicker from '../input/SetPicker';
 
-import PropsOf from '../../util/PropsOf.js';
-import ReactivePatientChip from './ReactivePatientChip.js';
+import PropsOf from '../../util/PropsOf';
+import ReactivePatientChip from './ReactivePatientChip';
 import usePatientsSuggestions from './usePatientsSuggestions';
 
 type Props = Omit<

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SelectOneSetting from './SelectOneSetting.js';
+import SelectOneSetting from './SelectOneSetting';
 
 const LanguageSetting = ({className}) => {
 	const LANGUAGES = {

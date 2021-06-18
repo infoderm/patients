@@ -9,8 +9,8 @@ import Typography from '@material-ui/core/Typography';
 
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import MergePatientsFormStepSelect from './MergePatientsFormStepSelect.js';
-import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare.js';
+import MergePatientsFormStepSelect from './MergePatientsFormStepSelect';
+import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare';
 
 const MergePatientsForm = () => {
 	const [step, setStep] = useState('select');

@@ -1,6 +1,6 @@
-import withItem from '../tags/withItem.js';
+import withItem from '../tags/withItem';
 
-import {Allergies, allergies} from '../../api/allergies.js';
+import {Allergies, allergies} from '../../api/allergies';
 
 const withAllergy = withItem(Allergies, allergies.options.singlePublication);
 

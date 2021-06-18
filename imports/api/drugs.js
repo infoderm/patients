@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import mergeFields from '../util/mergeFields.js';
+import mergeFields from '../util/mergeFields';
 
 export const Drugs = new Mongo.Collection('drugs');
 

@@ -1,3 +1,3 @@
-import {Attachments} from './attachments.js';
+import {Attachments} from './attachments';
 
 export {Attachments};

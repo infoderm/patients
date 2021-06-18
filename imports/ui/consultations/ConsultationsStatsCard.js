@@ -17,7 +17,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 
-import {consultations} from '../../api/consultations.js';
+import {consultations} from '../../api/consultations';
 
 const useStyles = makeStyles((theme) => ({
 	card: {

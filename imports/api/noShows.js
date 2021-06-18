@@ -4,7 +4,7 @@ import {check} from 'meteor/check';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import {Appointments} from './appointments.js';
+import {Appointments} from './appointments';
 
 const noShows = 'noShows';
 export const NoShows = new Mongo.Collection(noShows);

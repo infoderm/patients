@@ -17,7 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import withLazyOpening from '../modal/withLazyOpening.js';
+import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

@@ -5,7 +5,7 @@ import {
 	Count,
 	countPublicationName,
 	countPublicationKey
-} from '../../api/stats.js';
+} from '../../api/stats';
 
 const makeHistogram = (QueriedCollection, values) => (query?: object) => {
 	const publication = countPublicationName(QueriedCollection, {values});

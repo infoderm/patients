@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InputOneSetting from './InputOneSetting.js';
+import InputOneSetting from './InputOneSetting';
 
 export default function IBANSetting({className}) {
 	return (
