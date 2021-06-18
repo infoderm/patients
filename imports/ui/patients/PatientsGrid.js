@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
-import StaticPatientCard from './StaticPatientCard.js';
+import StaticPatientCard from './StaticPatientCard';
 
 const PatientsGrid = ({patients, Card, CardProps, selected}) => (
 	<Grid container spacing={3}>

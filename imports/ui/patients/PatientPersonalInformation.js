@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
 
-import PatientPersonalInformationStatic from './PatientPersonalInformationStatic.js';
+import PatientPersonalInformationStatic from './PatientPersonalInformationStatic';
 
-import usePatient from './usePatient.js';
+import usePatient from './usePatient';
 
 const PatientPersonalInformation = ({patientId}) => {
 	const init = {};

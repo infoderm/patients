@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {useDoctors} from '../../api/doctors.js';
-import TagGrid from '../tags/TagGrid.js';
-import DoctorCard from '../doctors/DoctorCard.js';
+import {useDoctors} from '../../api/doctors';
+import TagGrid from '../tags/TagGrid';
+import DoctorCard from '../doctors/DoctorCard';
 
 const DoctorsWithNonAlphabeticalSymbols = (props) => {
 	const query = {containsNonAlphabetical: true};

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagRenamingDialog from '../tags/TagRenamingDialog.js';
+import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {useInsurancesFind} from '../../api/insurances.js';
+import {useInsurancesFind} from '../../api/insurances';
 
 export default function InsuranceRenamingDialog({
 	open,

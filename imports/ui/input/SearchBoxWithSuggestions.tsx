@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import Downshift from 'downshift';
 
-import PropsOf from '../../util/PropsOf.js';
-import SearchBoxWithSuggestionsInternals from './SearchBoxWithSuggestionsInternals.js';
+import PropsOf from '../../util/PropsOf';
+import SearchBoxWithSuggestionsInternals from './SearchBoxWithSuggestionsInternals';
 
 type Props = {
 	useSuggestions: (x: string) => {loading?: boolean; results: any[]};

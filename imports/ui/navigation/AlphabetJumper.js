@@ -2,7 +2,7 @@ import React from 'react';
 
 import {list} from '@iterable-iterator/list';
 
-import TabJumper from './TabJumper.js';
+import TabJumper from './TabJumper';
 
 export default function AlphabetJumper(props) {
 	const alphabet = 'abcdefghijklmnopqrstuvwxyz';

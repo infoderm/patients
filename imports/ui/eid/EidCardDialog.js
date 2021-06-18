@@ -4,8 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
-import EidCardDialogStepSelection from './EidCardDialogStepSelection.js';
-import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle.js';
+import EidCardDialogStepSelection from './EidCardDialogStepSelection';
+import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
 const EidCardDialog = ({eidInfo, history, open, onClose}) => {
 	const [selected, setSelected] = useState(new Set());

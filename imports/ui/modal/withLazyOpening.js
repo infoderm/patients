@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useAny from '../hooks/useAny.js';
+import useAny from '../hooks/useAny';
 
 const withLazyOpening = (Openable) => (props) => {
 	const {open} = props;

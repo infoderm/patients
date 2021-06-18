@@ -1,4 +1,4 @@
-import makePatientsSuggestions from './makePatientsSuggestions.js';
+import makePatientsSuggestions from './makePatientsSuggestions';
 
 const usePatientsSuggestions = makePatientsSuggestions();
 

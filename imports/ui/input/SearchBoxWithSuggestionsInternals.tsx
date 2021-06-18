@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SearchBoxInternalsContainer from './SearchBoxInternalsContainer.js';
-import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment.js';
-import SearchBoxInternalsInput from './SearchBoxInternalsInput.js';
-import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions.js';
+import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
+import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
+import SearchBoxInternalsInput from './SearchBoxInternalsInput';
+import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions';
 
 export default function SearchBoxWithSuggestionsInternals(props) {
 	const {

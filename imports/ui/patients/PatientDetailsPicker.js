@@ -5,9 +5,9 @@ import Typography from '@material-ui/core/Typography';
 
 import React from 'react';
 
-import {Patients} from '../../api/patients.js';
-import {Consultations} from '../../api/consultations.js';
-import PatientSheet from './PatientSheet.js';
+import {Patients} from '../../api/patients';
+import {Consultations} from '../../api/consultations';
+import PatientSheet from './PatientSheet';
 
 class PatientDetailsPicker extends React.Component {
 	render() {

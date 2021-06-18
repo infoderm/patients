@@ -7,16 +7,16 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
-import TagCard from '../tags/TagCard.js';
+import TagCard from '../tags/TagCard';
 
-import StaticPatientChip from '../patients/StaticPatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip';
 
-import {Patients} from '../../api/patients.js';
-import {insurances} from '../../api/insurances.js';
-import {myEncodeURIComponent} from '../../client/uri.js';
-import withInsurance from './withInsurance.js';
-import InsuranceDeletionDialog from './InsuranceDeletionDialog.js';
-import InsuranceRenamingDialog from './InsuranceRenamingDialog.js';
+import {Patients} from '../../api/patients';
+import {insurances} from '../../api/insurances';
+import {myEncodeURIComponent} from '../../client/uri';
+import withInsurance from './withInsurance';
+import InsuranceDeletionDialog from './InsuranceDeletionDialog';
+import InsuranceRenamingDialog from './InsuranceRenamingDialog';
 
 const styles = (theme) =>
 	createStyles({

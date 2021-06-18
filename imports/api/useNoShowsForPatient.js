@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {NoShows} from './noShows.js';
+import {NoShows} from './noShows';
 
 const useNoShowsForPatient = (patientId) => {
 	const loading = useTracker(() => {

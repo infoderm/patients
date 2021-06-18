@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Jumper from './Jumper.js';
+import Jumper from './Jumper';
 
 export default function TabJumper({tabs, current, toURL}) {
 	const items = tabs.map((x) => ({

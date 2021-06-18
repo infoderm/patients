@@ -17,16 +17,16 @@ import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 
-import {TIME_BREAK} from '../../client/constants.js';
+import {TIME_BREAK} from '../../client/constants';
 
-import Prev from '../navigation/Prev.js';
-import Next from '../navigation/Next.js';
-import FixedFab from '../button/FixedFab.js';
+import Prev from '../navigation/Prev';
+import Next from '../navigation/Next';
+import FixedFab from '../button/FixedFab';
 
-import ReactivePatientChip from '../patients/ReactivePatientChip.js';
+import ReactivePatientChip from '../patients/ReactivePatientChip';
 
-import {useConsultationsAndAppointments} from '../../api/consultations.js';
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
+import {useConsultationsAndAppointments} from '../../api/consultations';
+import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 const useStyles = makeStyles((theme) => ({
 	container: {

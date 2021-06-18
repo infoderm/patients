@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import CalendarHeader from './CalendarHeader.js';
-import WeeklyCalendarData from './WeeklyCalendarData.js';
+import CalendarHeader from './CalendarHeader';
+import WeeklyCalendarData from './WeeklyCalendarData';
 
 const StaticWeeklyCalendar = (props) => {
 	const {

@@ -7,9 +7,9 @@ import pink from '@material-ui/core/colors/pink';
 import purple from '@material-ui/core/colors/purple';
 import grey from '@material-ui/core/colors/grey';
 
-import StackedBarChart from './StackedBarChart.js';
+import StackedBarChart from './StackedBarChart';
 
-import useAgeStats from './useAgeStats.js';
+import useAgeStats from './useAgeStats';
 
 const Chart = (props) => {
 	const {loading, count} = useAgeStats();

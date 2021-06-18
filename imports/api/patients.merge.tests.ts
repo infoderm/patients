@@ -8,12 +8,12 @@ import {Random} from 'meteor/random';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
-import {Patients, patients, PatientDocument} from './patients.mock.js';
-import {Consultations} from './consultations.mock.js';
-import {Documents} from './documents.mock.js';
+import {Patients, patients, PatientDocument} from './patients.mock';
+import {Consultations} from './consultations.mock';
+import {Documents} from './documents.mock';
 // eslint-disable-next-line import/no-unassigned-import
-import './uploads.mock.js';
-import {Attachments} from './attachments.mock.js';
+import './uploads.mock';
+import {Attachments} from './attachments.mock';
 
 const setLike = (x) => sorted(totalOrder, x);
 

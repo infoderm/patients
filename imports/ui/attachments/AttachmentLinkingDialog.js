@@ -15,9 +15,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import withLazyOpening from '../modal/withLazyOpening.js';
-import useIsMounted from '../hooks/useIsMounted.js';
-import PatientPicker from '../patients/PatientPicker.js';
+import withLazyOpening from '../modal/withLazyOpening';
+import useIsMounted from '../hooks/useIsMounted';
+import PatientPicker from '../patients/PatientPicker';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

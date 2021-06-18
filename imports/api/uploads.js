@@ -8,7 +8,7 @@ import {map} from '@iterable-iterator/map';
 
 import gridfs from 'gridfs-stream'; // We'll use this package to work with GridFS
 import {MongoInternals} from 'meteor/mongo';
-import unconditionallyUpdateById from './unconditionallyUpdateById.js';
+import unconditionallyUpdateById from './unconditionallyUpdateById';
 
 // Set up gfs instance
 let gfs;

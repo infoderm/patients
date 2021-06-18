@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSnackbar} from 'notistack';
-import useOnDrop from '../../client/useOnDrop.js';
-import WholeWindowDropZone from './WholeWindowDropZone.js';
+import useOnDrop from '../../client/useOnDrop';
+import WholeWindowDropZone from './WholeWindowDropZone';
 
 export default function CustomWholeWindowDropZone() {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

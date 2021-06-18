@@ -19,8 +19,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import usePatient from '../patients/usePatient.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
+import usePatient from '../patients/usePatient';
+import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

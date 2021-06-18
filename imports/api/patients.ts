@@ -7,18 +7,18 @@ import {map} from '@iterable-iterator/map';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
-import {Consultations} from './consultations.js';
-import {Documents} from './documents.js';
-import {Attachments} from './attachments.js';
+import {Consultations} from './consultations';
+import {Documents} from './documents';
+import {Attachments} from './attachments';
 
-import {insurances} from './insurances.js';
-import {doctors} from './doctors.js';
-import {allergies} from './allergies.js';
+import {insurances} from './insurances';
+import {doctors} from './doctors';
+import {allergies} from './allergies';
 
-import {makeIndex, shatter, normalized, normalizeSearch} from './string.js';
+import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 
-import observeQuery from './observeQuery.js';
-import makeObservedQuery from './makeObservedQuery.js';
+import observeQuery from './observeQuery';
+import makeObservedQuery from './makeObservedQuery';
 
 export interface PatientFields {
 	niss: string;

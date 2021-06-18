@@ -1,12 +1,12 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf.js';
+import PropsOf from '../../util/PropsOf';
 
-import Loading from '../navigation/Loading.js';
+import Loading from '../navigation/Loading';
 
-import AttachmentsForPatientStatic from '../attachments/AttachmentsForPatientStatic.js';
+import AttachmentsForPatientStatic from './AttachmentsForPatientStatic';
 
-import useAttachmentsForPatients from './useAttachmentsForPatients.js';
+import useAttachmentsForPatients from './useAttachmentsForPatients';
 
 type Props = Omit<
 	PropsOf<typeof AttachmentsForPatientStatic>,

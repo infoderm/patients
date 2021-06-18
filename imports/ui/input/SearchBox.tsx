@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
-import SearchBoxInternalsContainer from './SearchBoxInternalsContainer.js';
-import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment.js';
-import SearchBoxInternalsInput from './SearchBoxInternalsInput.js';
+import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
+import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
+import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
 const SearchBox = ({
 	className,

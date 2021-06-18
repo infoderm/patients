@@ -1,4 +1,4 @@
-import useAny from './useAny.js';
+import useAny from './useAny';
 
 const useAll = (value) => !useAny(!value);
 

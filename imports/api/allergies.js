@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
-import createTagCollection from './createTagCollection.js';
+import createTagCollection from './createTagCollection';
 
 const {
 	Collection: Allergies,

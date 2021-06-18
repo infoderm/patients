@@ -6,7 +6,7 @@ import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import {useTheme} from '@material-ui/core/styles';
 import Fab, {FabProps} from '@material-ui/core/Fab';
 
-import addTooltip from '../accessibility/addTooltip.js';
+import addTooltip from '../accessibility/addTooltip';
 
 interface Options {
 	theme: Theme;

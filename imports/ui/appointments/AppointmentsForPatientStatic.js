@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import NoContent from '../navigation/NoContent.js';
+import NoContent from '../navigation/NoContent';
 
-import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard.js';
+import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
 
 export default function AppointmentsForPatientStatic({
 	patientId,

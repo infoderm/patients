@@ -16,10 +16,10 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 import Chip from '@material-ui/core/Chip';
 
-import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
-import TextField from './TextField.js';
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
+import TextField from './TextField';
 
-import Suggestions from './Suggestions.js';
+import Suggestions from './Suggestions';
 
 function renderInput(inputProps) {
 	const {InputProps, classes, ref, ...other} = inputProps;

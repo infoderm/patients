@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagRenamingDialog from '../tags/TagRenamingDialog.js';
+import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {useDoctorsFind} from '../../api/doctors.js';
+import {useDoctorsFind} from '../../api/doctors';
 
 export default function DoctorRenamingDialog({open, onClose, onRename, tag}) {
 	return (

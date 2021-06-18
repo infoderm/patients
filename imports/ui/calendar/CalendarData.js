@@ -17,9 +17,9 @@ import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
 
-import {ALL_WEEK_DAYS} from './constants.js';
+import {ALL_WEEK_DAYS} from './constants';
 
-import EventFragment from './EventFragment.js';
+import EventFragment from './EventFragment';
 
 const ColumnHeader = ({classes, day, col}) => {
 	return (

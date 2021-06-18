@@ -2,12 +2,12 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Loading from '../navigation/Loading.js';
-import Paginator from '../navigation/Paginator.js';
-import Refresh from '../navigation/Refresh.js';
-import NoContent from '../navigation/NoContent.js';
+import Loading from '../navigation/Loading';
+import Paginator from '../navigation/Paginator';
+import Refresh from '../navigation/Refresh';
+import NoContent from '../navigation/NoContent';
 
-import ConsultationsList from './ConsultationsList.js';
+import ConsultationsList from './ConsultationsList';
 
 export default function PagedConsultationsList(props) {
 	const {

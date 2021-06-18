@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import {ALL_WEEK_DAYS} from '../ui/calendar/constants.js';
+import {ALL_WEEK_DAYS} from '../ui/calendar/constants';
 
 const Settings = new Mongo.Collection('settings');
 

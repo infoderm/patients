@@ -1,5 +1,5 @@
 import React from 'react';
-import WeeklyPlanner from './WeeklyPlanner.js';
+import WeeklyPlanner from './WeeklyPlanner';
 
 const PreconfiguredWeeklyPlanner = (props) => (
 	<WeeklyPlanner

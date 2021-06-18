@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
 import {useSnackbar} from 'notistack';
-import {useStyles} from './Popover.js';
+import {useStyles} from './Popover';
 
 const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 	const classes = useStyles();

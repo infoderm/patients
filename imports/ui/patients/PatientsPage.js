@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
-import PatientGridItem from '../patients/PatientGridItem.js';
-import StaticPatientCard from './StaticPatientCard.js';
+import PatientGridItem from '../patients/PatientGridItem';
+import StaticPatientCard from './StaticPatientCard';
 
 export default function PatientsPage({patients, Card, NewCard}) {
 	return (

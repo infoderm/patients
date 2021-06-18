@@ -11,12 +11,12 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import WarningIcon from '@material-ui/icons/Warning';
-import TextField from '../input/TextField.js';
+import TextField from '../input/TextField';
 
-import useBookStats from '../books/useBookStats.js';
-import {books, useBooksFind} from '../../api/books.js';
-import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions.js';
-import makeSubstringSuggestions from '../input/makeSubstringSuggestions.js';
+import useBookStats from '../books/useBookStats';
+import {books, useBooksFind} from '../../api/books';
+import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
+import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 
 const styles = (theme) => ({
 	multiline: {

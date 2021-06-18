@@ -1,9 +1,9 @@
 import React from 'react';
 
-import useStyles from './styles/main.js';
-import NoContent from './navigation/NoContent.js';
-import Router from './Router.js';
-import ErrorBoundary from './ErrorBoundary.js';
+import useStyles from './styles/main';
+import NoContent from './navigation/NoContent';
+import Router from './Router';
+import ErrorBoundary from './ErrorBoundary';
 
 const Child = ({loading, loggingIn, currentUser}) => {
 	if (loading) return <NoContent>Loading...</NoContent>;

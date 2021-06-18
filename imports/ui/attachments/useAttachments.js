@@ -1,5 +1,5 @@
-import {Attachments} from '../../api/attachments.js';
-import makeQuery from '../../api/makeQuery.js';
+import {Attachments} from '../../api/attachments';
+import makeQuery from '../../api/makeQuery';
 
 const useAttachments = makeQuery(Attachments, 'attachments');
 export default useAttachments;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagDeletionDialog from '../tags/TagDeletionDialog.js';
+import TagDeletionDialog from '../tags/TagDeletionDialog';
 
 export default function DoctorDeletionDialog({open, onClose, tag}) {
 	return (

@@ -6,9 +6,9 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
-import Sex from './Sex.js';
-import Age from './Age.js';
-import Frequency from './Frequency.js';
+import Sex from './Sex';
+import Age from './Age';
+import Frequency from './Frequency';
 
 const useStyles = makeStyles(() => ({
 	content: {

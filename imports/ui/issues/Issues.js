@@ -3,13 +3,13 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 
-import ConsultationsMissingAPrice from './ConsultationsMissingAPrice.js';
-import ConsultationsMissingABook from './ConsultationsMissingABook.js';
-import UnlinkedDocuments from './UnlinkedDocuments.js';
-import UnparsedDocuments from './UnparsedDocuments.js';
-import MangledDocuments from './MangledDocuments.js';
-import UnattachedUploads from './UnattachedUploads.js';
-import DoctorsWithNonAlphabeticalSymbols from './DoctorsWithNonAlphabeticalSymbols.js';
+import ConsultationsMissingAPrice from './ConsultationsMissingAPrice';
+import ConsultationsMissingABook from './ConsultationsMissingABook';
+import UnlinkedDocuments from './UnlinkedDocuments';
+import UnparsedDocuments from './UnparsedDocuments';
+import MangledDocuments from './MangledDocuments';
+import UnattachedUploads from './UnattachedUploads';
+import DoctorsWithNonAlphabeticalSymbols from './DoctorsWithNonAlphabeticalSymbols';
 
 const useStyles = makeStyles((theme) => ({
 	container: {

@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
-import DocumentChips from './DocumentChips.js';
+import DocumentChips from './DocumentChips';
 
 const useStyles = makeStyles((theme) => ({
 	item: {

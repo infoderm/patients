@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import {useHistory} from 'react-router-dom';
-import handleDrop from './handleDrop.js';
+import handleDrop from './handleDrop';
 
 const useOnDrop = () => {
 	const history = useHistory();

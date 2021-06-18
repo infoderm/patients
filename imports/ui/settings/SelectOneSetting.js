@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 
-import {useSetting} from '../../client/settings.js';
+import {useSetting} from '../../client/settings';
 
-import ValuePicker from '../input/ValuePicker.js';
+import ValuePicker from '../input/ValuePicker';
 
 const SelectOneSetting = (props) => {
 	const {className, setting, options, optionToString, label, title} = props;

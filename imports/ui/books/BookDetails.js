@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagDetails from '../tags/TagDetails.js';
+import TagDetails from '../tags/TagDetails';
 
-import ReactivePatientChip from '../patients/ReactivePatientChip.js';
-import PagedConsultationsList from '../consultations/PagedConsultationsList.js';
+import ReactivePatientChip from '../patients/ReactivePatientChip';
+import PagedConsultationsList from '../consultations/PagedConsultationsList';
 
-import {useConsultationsFind} from '../../api/consultations.js';
+import {useConsultationsFind} from '../../api/consultations';
 
-import {books} from '../../api/books.js';
+import {books} from '../../api/books';
 
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
 
 export default function BookDetails({match, year, book, page, perpage}) {
 	year = (match && match.params.year) || year;

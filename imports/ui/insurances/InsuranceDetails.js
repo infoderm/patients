@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagDetails from '../tags/TagDetails.js';
+import TagDetails from '../tags/TagDetails';
 
-import PagedPatientsList from '../patients/PagedPatientsList.js';
+import PagedPatientsList from '../patients/PagedPatientsList';
 
-import {usePatientsFind} from '../../api/patients.js';
+import {usePatientsFind} from '../../api/patients';
 
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri.js';
-import {InsuranceCardWithoutItem} from './InsuranceCard.js';
-import useInsurance from './useInsurance.js';
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
+import {InsuranceCardWithoutItem} from './InsuranceCard';
+import useInsurance from './useInsurance';
 
 export default function InsuranceDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;

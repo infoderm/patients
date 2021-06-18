@@ -21,11 +21,11 @@ import BookmarkIcon from '@material-ui/icons/Bookmark';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import {blue, green} from '@material-ui/core/colors';
 
-import call from '../../api/call.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
+import call from '../../api/call';
+import withLazyOpening from '../modal/withLazyOpening';
 
-import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient.js';
-import useConsultationsForPatient from '../consultations/useConsultationsForPatient.js';
+import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient';
+import useConsultationsForPatient from '../consultations/useConsultationsForPatient';
 
 const formatDatetime = (datetime) => {
 	if (isToday(datetime)) {

@@ -2,8 +2,8 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Prev from './Prev.js';
-import Next from './Next.js';
+import Prev from './Prev';
+import Next from './Next';
 
 export default function Paginator({root, page, end, disabled}) {
 	if (page === 1 && end) {

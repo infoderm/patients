@@ -3,11 +3,11 @@ import React from 'react';
 import {list} from '@iterable-iterator/list';
 import {filter} from '@iterable-iterator/filter';
 
-import {msToString, units} from '../../client/duration.js';
+import {msToString, units} from '../../client/duration';
 
-// import {settings} from '../../client/settings.js';
+// import {settings} from '../../client/settings';
 
-import InputManySetting from './InputManySetting.js';
+import InputManySetting from './InputManySetting';
 
 const durationUnits = units;
 

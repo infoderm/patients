@@ -1,6 +1,6 @@
-import makeItem from '../tags/makeItem.js';
+import makeItem from '../tags/makeItem';
 
-import {Doctors, doctors} from '../../api/doctors.js';
+import {Doctors, doctors} from '../../api/doctors';
 
 const useDoctor = makeItem(Doctors, doctors.options.singlePublication);
 

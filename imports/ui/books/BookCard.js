@@ -9,13 +9,13 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import orange from '@material-ui/core/colors/orange';
 
-import TagCard from '../tags/TagCard.js';
+import TagCard from '../tags/TagCard';
 
-import {books} from '../../api/books.js';
+import {books} from '../../api/books';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
+import {myEncodeURIComponent} from '../../client/uri';
 
-import BookRenamingDialog from './BookRenamingDialog.js';
+import BookRenamingDialog from './BookRenamingDialog';
 
 const useStyles = makeStyles(() => ({
 	avatar: {

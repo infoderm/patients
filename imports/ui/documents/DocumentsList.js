@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 
-import useDocuments from '../../api/hooks/useDocuments.js';
-import {computeFixedFabStyle} from '../button/FixedFab.js';
+import useDocuments from '../../api/hooks/useDocuments';
+import {computeFixedFabStyle} from '../button/FixedFab';
 
-import StaticDocumentList from './StaticDocumentList.js';
-import HealthOneDocumentImportButton from './HealthOneDocumentImportButton.js';
+import StaticDocumentList from './StaticDocumentList';
+import HealthOneDocumentImportButton from './HealthOneDocumentImportButton';
 
 const styles = (theme) => ({
 	importButton: computeFixedFabStyle({theme, col: 4})

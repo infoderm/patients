@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {monthly} from './ranges.js';
-import CalendarData from './CalendarData.js';
+import {monthly} from './ranges';
+import CalendarData from './CalendarData';
 
 const MonthlyCalendarData = (props) => {
 	const {year, month, weekOptions, ...rest} = props;

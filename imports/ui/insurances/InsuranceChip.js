@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
+import {myEncodeURIComponent} from '../../client/uri';
 
 const InsuranceChip = ({item, ...rest}) => {
 	let style;

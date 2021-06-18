@@ -20,17 +20,17 @@ import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 import RestoreIcon from '@material-ui/icons/Restore';
 
-import AttachFileButton from '../attachments/AttachFileButton.js';
+import AttachFileButton from '../attachments/AttachFileButton';
 
-import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog.js';
-import AppointmentCancellationDialog from '../appointments/AppointmentCancellationDialog.js';
-import AppointmentUncancellationDialog from '../appointments/AppointmentUncancellationDialog.js';
-import EditAppointmentDialog from '../appointments/EditAppointmentDialog.js';
+import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog';
+import AppointmentCancellationDialog from '../appointments/AppointmentCancellationDialog';
+import AppointmentUncancellationDialog from '../appointments/AppointmentUncancellationDialog';
+import EditAppointmentDialog from '../appointments/EditAppointmentDialog';
 
-import ConsultationPaymentDialog from './ConsultationPaymentDialog.js';
-import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog.js';
-import ConsultationDeletionDialog from './ConsultationDeletionDialog.js';
-import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog.js';
+import ConsultationPaymentDialog from './ConsultationPaymentDialog';
+import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
+import ConsultationDeletionDialog from './ConsultationDeletionDialog';
+import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
 
 const StaticConsultationCardActions = (props) => {
 	const [paying, setPaying] = useState(false);

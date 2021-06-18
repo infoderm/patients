@@ -3,7 +3,7 @@ import React from 'react';
 import {range} from '@iterable-iterator/range';
 import {list} from '@iterable-iterator/list';
 
-import SelectOneSetting from './SelectOneSetting.js';
+import SelectOneSetting from './SelectOneSetting';
 
 const WeekStartsOnSetting = ({className}) => {
 	const options = list(range(7));

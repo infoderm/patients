@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Dashboard from './Dashboard.js';
-import SignInForm from './SignInForm.js';
+import Dashboard from './Dashboard';
+import SignInForm from './SignInForm';
 
 export default function AccountsUI({currentUser, ...rest}) {
 	return (

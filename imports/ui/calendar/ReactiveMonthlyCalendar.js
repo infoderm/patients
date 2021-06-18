@@ -11,10 +11,10 @@ import dateFormat from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
 
-import {Events} from '../../api/events.js';
+import {Events} from '../../api/events';
 
-import StaticMonthlyCalendar from './StaticMonthlyCalendar.js';
-import {monthly} from './ranges.js';
+import StaticMonthlyCalendar from './StaticMonthlyCalendar';
+import {monthly} from './ranges';
 
 const DayHeader = ({className, day}) => {
 	const firstDayOfMonth = startOfMonth(day);

@@ -9,9 +9,9 @@ import Chip from '@material-ui/core/Chip';
 
 import color from 'color';
 
-import {Allergies, allergies} from '../../api/allergies.js';
+import {Allergies, allergies} from '../../api/allergies';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
+import {myEncodeURIComponent} from '../../client/uri';
 
 const AllergyChip = ({item, ...rest}) => {
 	const style = {};

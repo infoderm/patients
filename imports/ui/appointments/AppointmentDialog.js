@@ -28,19 +28,19 @@ import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {msToString} from '../../client/duration.js';
+import {msToString} from '../../client/duration';
 
-import {patients} from '../../api/patients.js';
-import {useSetting} from '../../client/settings.js';
+import {patients} from '../../api/patients';
+import {useSetting} from '../../client/settings';
 
-import useIntersectingEvents from '../events/useIntersectingEvents.js';
+import useIntersectingEvents from '../events/useIntersectingEvents';
 
-import usePatient from '../patients/usePatient.js';
+import usePatient from '../patients/usePatient';
 
-import useStateWithInitOverride from '../hooks/useStateWithInitOverride.js';
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
-import withLazyOpening from '../modal/withLazyOpening.js';
-import PatientPicker from '../patients/PatientPicker.js';
+import withLazyOpening from '../modal/withLazyOpening';
+import PatientPicker from '../patients/PatientPicker';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

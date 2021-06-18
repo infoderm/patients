@@ -2,12 +2,12 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import makeQuery from './makeQuery.js';
-import makeObservedQuery from './makeObservedQuery.js';
-import observeQuery from './observeQuery.js';
-import pageQuery from './pageQuery.js';
+import makeQuery from './makeQuery';
+import makeObservedQuery from './makeObservedQuery';
+import observeQuery from './observeQuery';
+import pageQuery from './pageQuery';
 
-import {containsNonAlphabetical} from './string.js';
+import {containsNonAlphabetical} from './string';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';

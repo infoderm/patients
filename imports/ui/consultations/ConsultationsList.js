@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ReactiveConsultationCard from './ReactiveConsultationCard.js';
+import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 export default function ConsultationsList({
 	items,

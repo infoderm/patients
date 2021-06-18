@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 
-import {thumbnail} from '../../client/pdfthumbnails.js';
+import {thumbnail} from '../../client/pdfthumbnails';
 
 const eee =
 	'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII=';

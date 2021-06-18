@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {useUnparsedDocuments} from '../../api/issues.js';
+import {useUnparsedDocuments} from '../../api/issues';
 
-import DocumentsPage from '../documents/DocumentsPage.js';
+import DocumentsPage from '../documents/DocumentsPage';
 
 const UnparsedDocuments = (props) => {
 	const options = {

@@ -1,4 +1,4 @@
-import createTagCollection from './createTagCollection.js';
+import createTagCollection from './createTagCollection';
 
 const {
 	Collection: Doctors,

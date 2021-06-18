@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import StaticPatientCard from './StaticPatientCard.js';
+import StaticPatientCard from './StaticPatientCard';
 
-import useCachedPatient from './useCachedPatient.js';
+import useCachedPatient from './useCachedPatient';
 
 const ReactivePatientCard = ({patient, Card, ...rest}) => {
 	const patientId = patient._id;

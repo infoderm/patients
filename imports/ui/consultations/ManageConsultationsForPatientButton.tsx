@@ -5,8 +5,8 @@ import Button from '@material-ui/core/Button';
 import PropTypes, {InferProps} from 'prop-types';
 import AssistantIcon from '@material-ui/icons/Assistant';
 
-import PropsOf from '../../util/PropsOf.js';
-import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog.js';
+import PropsOf from '../../util/PropsOf';
+import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';
 
 const ManageConsultationsForPatientButton = ({
 	Button,

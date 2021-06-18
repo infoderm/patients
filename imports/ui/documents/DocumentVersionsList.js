@@ -3,11 +3,11 @@ import {withTracker} from 'meteor/react-meteor-data';
 
 import PropTypes from 'prop-types';
 
-import {Documents} from '../../api/documents.js';
+import {Documents} from '../../api/documents';
 
-import {myDecodeURIComponent} from '../../client/uri.js';
+import {myDecodeURIComponent} from '../../client/uri';
 
-import StaticDocumentList from './StaticDocumentList.js';
+import StaticDocumentList from './StaticDocumentList';
 
 const DocumentsVersionsList = withTracker(({match, page, perpage}) => {
 	page =

@@ -1,7 +1,7 @@
-import {Patients} from './patients.js';
-import {Consultations} from './consultations.js';
-import {Documents} from './documents.js';
-import makeFilteredCollection from './makeFilteredCollection.js';
+import {Patients} from './patients';
+import {Consultations} from './consultations';
+import {Documents} from './documents';
+import makeFilteredCollection from './makeFilteredCollection';
 
 export const usePatientsMissingABirthdate = makeFilteredCollection(
 	Patients,

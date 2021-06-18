@@ -2,10 +2,10 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
-import PatientGridItem from '../patients/PatientGridItem.js';
-import StaticPatientCard from '../patients/StaticPatientCard.js';
+import PatientGridItem from '../patients/PatientGridItem';
+import StaticPatientCard from '../patients/StaticPatientCard';
 
-import {usePatientsMissingAGender} from '../../api/issues.js';
+import {usePatientsMissingAGender} from '../../api/issues';
 
 const PatientsMissingAGender = (props) => {
 	const {loading, results: patients} = usePatientsMissingAGender();

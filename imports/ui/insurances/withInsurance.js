@@ -1,6 +1,6 @@
-import withItem from '../tags/withItem.js';
+import withItem from '../tags/withItem';
 
-import {Insurances, insurances} from '../../api/insurances.js';
+import {Insurances, insurances} from '../../api/insurances';
 
 const withInsurance = withItem(
 	Insurances,

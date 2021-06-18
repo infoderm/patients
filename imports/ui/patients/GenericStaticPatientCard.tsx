@@ -20,7 +20,7 @@ import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
-import eidFormatBirthdate from '../../api/eidFormatBirthdate.js';
+import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 
 const useStyles = makeStyles((theme) => ({
 	card: {

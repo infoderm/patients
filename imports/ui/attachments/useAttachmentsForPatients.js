@@ -1,5 +1,5 @@
-import {useConsultationsAndAppointments} from '../../api/consultations.js';
-import useAttachments from './useAttachments.js';
+import {useConsultationsAndAppointments} from '../../api/consultations';
+import useAttachments from './useAttachments';
 
 const useAttachmentsForPatients = ($in) => {
 	const cQuery = {

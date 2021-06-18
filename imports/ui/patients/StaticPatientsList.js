@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
-import Loading from '../navigation/Loading.js';
-import NoContent from '../navigation/NoContent.js';
-import Paginator from '../navigation/Paginator.js';
+import Loading from '../navigation/Loading';
+import NoContent from '../navigation/NoContent';
+import Paginator from '../navigation/Paginator';
 
-import PatientGridItem from '../patients/PatientGridItem.js';
-import PatientsPage from './PatientsPage.js';
-import NewPatientCard from './NewPatientCard.js';
+import PatientGridItem from '../patients/PatientGridItem';
+import PatientsPage from './PatientsPage';
+import NewPatientCard from './NewPatientCard';
 
 export default function StaticPatientsList({
 	page,

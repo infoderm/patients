@@ -1,6 +1,6 @@
-import makeItem from '../tags/makeItem.js';
+import makeItem from '../tags/makeItem';
 
-import {Insurances, insurances} from '../../api/insurances.js';
+import {Insurances, insurances} from '../../api/insurances';
 
 const useInsurance = makeItem(Insurances, insurances.options.singlePublication);
 

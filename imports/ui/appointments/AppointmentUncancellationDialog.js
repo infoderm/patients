@@ -15,7 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
-import withLazyOpening from '../modal/withLazyOpening.js';
+import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

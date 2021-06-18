@@ -5,12 +5,12 @@ import {Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
-import TextField from '../input/TextField.js';
-import CopiableTextField from '../input/CopiableTextField.js';
+import TextField from '../input/TextField';
+import CopiableTextField from '../input/CopiableTextField';
 
-import usePatient from '../patients/usePatient.js';
+import usePatient from '../patients/usePatient';
 
-import useStyles from '../styles/subheader.js';
+import useStyles from '../styles/subheader';
 
 const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const patientId = consultation.patientId;

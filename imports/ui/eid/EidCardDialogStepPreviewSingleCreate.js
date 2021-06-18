@@ -12,13 +12,13 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
-import call from '../../api/call.js';
-import {patients} from '../../api/patients.js';
+import call from '../../api/call';
+import {patients} from '../../api/patients';
 
-import dialog from '../modal/dialog.js';
-import ConfirmationDialog from '../modal/ConfirmationDialog.js';
+import dialog from '../modal/dialog';
+import ConfirmationDialog from '../modal/ConfirmationDialog';
 
-import GenericStaticPatientCard from '../patients/GenericStaticPatientCard.js';
+import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
 
 const EidCardDialogStepPreviewSingleCreate = ({
 	onPrevStep,

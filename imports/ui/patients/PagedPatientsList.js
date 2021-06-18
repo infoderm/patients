@@ -2,11 +2,11 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Paginator from '../navigation/Paginator.js';
-import Refresh from '../navigation/Refresh.js';
+import Paginator from '../navigation/Paginator';
+import Refresh from '../navigation/Refresh';
 
-import ReactivePatientCard from './ReactivePatientCard.js';
-import PatientsPage from './PatientsPage.js';
+import ReactivePatientCard from './ReactivePatientCard';
+import PatientsPage from './PatientsPage';
 
 export default function PagedPatientsList({
 	root,

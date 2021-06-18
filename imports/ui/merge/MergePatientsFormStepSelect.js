@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
-import {patients} from '../../api/patients.js';
+import {patients} from '../../api/patients';
 
-import SetPicker from '../input/SetPicker.js';
+import SetPicker from '../input/SetPicker';
 
-import PatientGridItem from '../patients/PatientGridItem.js';
-import ReactivePatientCard from '../patients/ReactivePatientCard.js';
-import makePatientsSuggestions from '../patients/makePatientsSuggestions.js';
+import PatientGridItem from '../patients/PatientGridItem';
+import ReactivePatientCard from '../patients/ReactivePatientCard';
+import makePatientsSuggestions from '../patients/makePatientsSuggestions';
 
 const MergePatientsFormStepSelect = ({
 	selection,

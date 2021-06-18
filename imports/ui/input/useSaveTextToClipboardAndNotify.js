@@ -1,5 +1,5 @@
 import {useSnackbar} from 'notistack';
-import saveTextToClipboard from '../../client/saveTextToClipboard.js';
+import saveTextToClipboard from '../../client/saveTextToClipboard';
 
 /**
  * useSaveTextToClipboardAndNotify.

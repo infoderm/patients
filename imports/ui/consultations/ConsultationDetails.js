@@ -1,7 +1,7 @@
 import React from 'react';
 
-import StaticConsultationDetails from './StaticConsultationDetails.js';
-import useConsultation from './useConsultation.js';
+import StaticConsultationDetails from './StaticConsultationDetails';
+import useConsultation from './useConsultation';
 
 const ConsultationDetails = ({match, consultationId}) => {
 	const init = {};

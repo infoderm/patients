@@ -9,7 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import {useSnackbar} from 'notistack';
 
-import ChangePasswordPopover from './ChangePasswordPopover.js';
+import ChangePasswordPopover from './ChangePasswordPopover';
 
 const Logout = () => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

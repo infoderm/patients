@@ -10,11 +10,11 @@ import Typography from '@material-ui/core/Typography';
 
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
-import TextField from '../input/TextField.js';
+import TextField from '../input/TextField';
 
-import {settings} from '../../client/settings.js';
+import {settings} from '../../client/settings';
 
-import SEPAPaymentQRCode from './SEPAPaymentQRCode.js';
+import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 
 const styles = (theme) =>
 	createStyles({

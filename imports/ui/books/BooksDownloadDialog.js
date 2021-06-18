@@ -20,11 +20,11 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TuneIcon from '@material-ui/icons/Tune';
 
-import saveTextAs from '../../client/saveTextAs.js';
+import saveTextAs from '../../client/saveTextAs';
 
-import call from '../../api/call.js';
-import {books} from '../../api/books.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
+import call from '../../api/call';
+import {books} from '../../api/books';
+import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

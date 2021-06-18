@@ -7,7 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import PropsOf from '../../util/PropsOf.js';
+import PropsOf from '../../util/PropsOf';
 
 interface BaseProps {
 	itemToString: (x: any) => any;

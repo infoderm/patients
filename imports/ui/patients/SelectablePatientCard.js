@@ -8,7 +8,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import RadioButtonUncheckedOutlinedIcon from '@material-ui/icons/RadioButtonUncheckedOutlined';
 
-import GenericStaticPatientCard from './GenericStaticPatientCard.js';
+import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 const useStyles = makeStyles((theme) => ({
 	root: {

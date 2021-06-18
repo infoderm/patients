@@ -17,15 +17,15 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import RestoreIcon from '@material-ui/icons/Restore';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {normalized} from '../../api/string.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
-import useIsMounted from '../hooks/useIsMounted.js';
+import {normalized} from '../../api/string';
+import withLazyOpening from '../modal/withLazyOpening';
+import useIsMounted from '../hooks/useIsMounted';
 
-import usePatient from '../patients/usePatient.js';
+import usePatient from '../patients/usePatient';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
-} from '../input/ConfirmationTextField.js';
+} from '../input/ConfirmationTextField';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

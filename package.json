@@ -144,6 +144,7 @@
       "no-labels": "off",
       "no-warning-comments": "off",
       "import/extensions": "off",
+      "import/no-cycle": "warn",
       "node/file-extension-in-import": "off",
       "import/no-anonymous-default-export": "off",
       "unicorn/filename-case": "off",

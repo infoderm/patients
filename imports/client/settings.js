@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
-import {Settings, settings as _settings} from '../api/settings.js';
+import {Settings, settings as _settings} from '../api/settings';
 
 const {defaults, methods} = _settings;
 

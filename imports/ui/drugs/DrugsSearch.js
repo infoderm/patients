@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
-import DrugsTable from './DrugsTable.js';
+import DrugsTable from './DrugsTable';
 
 export default function DrugSearch() {
 	const [query, setQuery] = useState('');

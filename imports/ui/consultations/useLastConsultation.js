@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {findLastConsultation} from '../../api/consultations.js';
+import {findLastConsultation} from '../../api/consultations';
 
 export default function useLastConsultation(filter) {
 	return useTracker(() => {

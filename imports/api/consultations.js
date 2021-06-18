@@ -15,13 +15,13 @@ import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
 
-import {Attachments} from './attachments.js';
-import {Books, books} from './books.js';
-import {parseUint32StrictOrString} from './string.js';
+import {Attachments} from './attachments';
+import {Books, books} from './books';
+import {parseUint32StrictOrString} from './string';
 
-import pageQuery from './pageQuery.js';
-import makeQuery from './makeQuery.js';
-import unconditionallyUpdateById from './unconditionallyUpdateById.js';
+import pageQuery from './pageQuery';
+import makeQuery from './makeQuery';
+import unconditionallyUpdateById from './unconditionallyUpdateById';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;

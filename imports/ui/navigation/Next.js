@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-import FixedFab from '../button/FixedFab.js';
+import FixedFab from '../button/FixedFab';
 
 const Next = ({to, ...rest}) => (
 	<FixedFab col={2} color="primary" component={Link} to={to} {...rest}>

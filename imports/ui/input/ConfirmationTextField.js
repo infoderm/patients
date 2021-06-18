@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-import useAny from '../hooks/useAny.js';
+import useAny from '../hooks/useAny';
 
 export const useConfirmationTextFieldState = (
 	expected,

@@ -18,12 +18,12 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 import dateformat from 'date-fns/format';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
+import {myEncodeURIComponent} from '../../client/uri';
 
-import ReactivePatientChip from '../patients/ReactivePatientChip.js';
+import ReactivePatientChip from '../patients/ReactivePatientChip';
 
-import DocumentLinkingDialog from './DocumentLinkingDialog.js';
-import DocumentVersionsChip from './DocumentVersionsChip.js';
+import DocumentLinkingDialog from './DocumentLinkingDialog';
+import DocumentVersionsChip from './DocumentVersionsChip';
 
 const useStyles = makeStyles((theme) => ({
 	chip: {

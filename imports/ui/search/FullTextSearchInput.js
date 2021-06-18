@@ -4,11 +4,11 @@ import {useHistory} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import {fade} from '@material-ui/core/styles/colorManipulator';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
+import {myEncodeURIComponent} from '../../client/uri';
 
-import SearchBox from '../input/SearchBox.js';
+import SearchBox from '../input/SearchBox';
 
-import {TIMEOUT_INPUT_DEBOUNCE} from '../constants.js';
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 
 const THRESHOLD_HISTORY_PUSH = 2000; // 2 seconds
 const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;

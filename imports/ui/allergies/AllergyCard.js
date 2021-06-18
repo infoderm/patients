@@ -9,19 +9,19 @@ import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 
 import debounce from 'debounce';
-import TagCard from '../tags/TagCard.js';
+import TagCard from '../tags/TagCard';
 
-import StaticPatientChip from '../patients/StaticPatientChip.js';
+import StaticPatientChip from '../patients/StaticPatientChip';
 
-import {Patients} from '../../api/patients.js';
-import {allergies} from '../../api/allergies.js';
+import {Patients} from '../../api/patients';
+import {allergies} from '../../api/allergies';
 
 import ColorPicker from '../input/ColorPicker';
 
-import {myEncodeURIComponent} from '../../client/uri.js';
-import withAllergy from './withAllergy.js';
-import AllergyRenamingDialog from './AllergyRenamingDialog.js';
-import AllergyDeletionDialog from './AllergyDeletionDialog.js';
+import {myEncodeURIComponent} from '../../client/uri';
+import withAllergy from './withAllergy';
+import AllergyRenamingDialog from './AllergyRenamingDialog';
+import AllergyDeletionDialog from './AllergyDeletionDialog';
 
 const useStyles = makeStyles((theme) => ({
 	avatar: {

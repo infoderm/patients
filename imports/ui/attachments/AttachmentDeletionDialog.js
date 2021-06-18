@@ -17,15 +17,15 @@ import Button from '@material-ui/core/Button';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {normalized} from '../../api/string.js';
+import {normalized} from '../../api/string';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
-} from '../input/ConfirmationTextField.js';
+} from '../input/ConfirmationTextField';
 
-import withLazyOpening from '../modal/withLazyOpening.js';
-import useIsMounted from '../hooks/useIsMounted.js';
-import AttachmentThumbnail from './AttachmentThumbnail.js';
+import withLazyOpening from '../modal/withLazyOpening';
+import useIsMounted from '../hooks/useIsMounted';
+import AttachmentThumbnail from './AttachmentThumbnail';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {

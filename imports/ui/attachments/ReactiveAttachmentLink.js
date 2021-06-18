@@ -1,9 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
-import {Attachments} from '../../api/attachments.js';
+import {Attachments} from '../../api/attachments';
 
-import StaticAttachmentLink from './StaticAttachmentLink.js';
+import StaticAttachmentLink from './StaticAttachmentLink';
 
 const ReactiveAttachmentLink = withTracker(({attachmentId}) => {
 	const _id = attachmentId;

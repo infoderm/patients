@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
-import {Uploads} from './uploads.js';
+import {Uploads} from './uploads';
 
 export const Attachments = Uploads.collection;
 

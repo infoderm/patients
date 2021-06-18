@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {onlyLowerCaseASCII} from '../../api/string.js';
+import {onlyLowerCaseASCII} from '../../api/string';
 
-// import {settings} from '../../client/settings.js';
+// import {settings} from '../../client/settings';
 
-import InputManySetting from './InputManySetting.js';
+import InputManySetting from './InputManySetting';
 
 const KEY = 'important-strings';
 

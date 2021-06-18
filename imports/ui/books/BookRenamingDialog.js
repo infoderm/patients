@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TagRenamingDialog from '../tags/TagRenamingDialog.js';
+import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {books, useBooksFind} from '../../api/books.js';
+import {books, useBooksFind} from '../../api/books';
 
 export default function BookRenamingDialog({open, onClose, onRename, tag}) {
 	return (

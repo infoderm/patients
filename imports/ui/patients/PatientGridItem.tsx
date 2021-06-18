@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 
 import PropTypes, {InferProps} from 'prop-types';
 
-import PropsOf from '../../util/PropsOf.js';
+import PropsOf from '../../util/PropsOf';
 
 const PatientGridItem = ({
 	Card,

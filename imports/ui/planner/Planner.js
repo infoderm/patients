@@ -7,13 +7,13 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 
-import {useSettingCached} from '../../client/settings.js';
+import {useSettingCached} from '../../client/settings';
 
-import {computeFixedFabStyle} from '../button/FixedFab.js';
+import {computeFixedFabStyle} from '../button/FixedFab';
 
-import {ALL_WEEK_DAYS} from '../calendar/constants.js';
+import {ALL_WEEK_DAYS} from '../calendar/constants';
 
-import NewAppointmentDialog from '../appointments/NewAppointmentDialog.js';
+import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
 
 const useStyles = makeStyles((theme) => ({
 	calendar: {

@@ -15,13 +15,13 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {capitalized, normalized} from '../../api/string.js';
-import withLazyOpening from '../modal/withLazyOpening.js';
-import useIsMounted from '../hooks/useIsMounted.js';
+import {capitalized, normalized} from '../../api/string';
+import withLazyOpening from '../modal/withLazyOpening';
+import useIsMounted from '../hooks/useIsMounted';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState
-} from '../input/ConfirmationTextField.js';
+} from '../input/ConfirmationTextField';
 
 const MAGIC = '8324jdkf-tag-deletion-dialog-title';
 let nextAriaId = 0;

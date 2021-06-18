@@ -5,20 +5,16 @@ import {check} from 'meteor/check';
 import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
-import makeQuery from './makeQuery.js';
-import makeObservedQuery from './makeObservedQuery.js';
-import observeQuery from './observeQuery.js';
-import {
-	normalized,
-	normalizeInput,
-	parseUint32StrictOrString
-} from './string.js';
+import makeQuery from './makeQuery';
+import makeObservedQuery from './makeObservedQuery';
+import observeQuery from './observeQuery';
+import {normalized, normalizeInput, parseUint32StrictOrString} from './string';
 
 import {
 	STATS_SUFFIX,
 	FIND_CACHE_SUFFIX,
 	FIND_OBSERVE_SUFFIX
-} from './createTagCollection.js';
+} from './createTagCollection';
 
 const collection = 'books';
 const publication = 'books';

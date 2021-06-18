@@ -1,3 +1,3 @@
-import MonthlyPlanner from './MonthlyPlanner.js';
+import MonthlyPlanner from './MonthlyPlanner';
 
 export default MonthlyPlanner;
