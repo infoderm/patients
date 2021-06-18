@@ -33,7 +33,7 @@ the production machine.
 
 ### :fishing_pole_and_fish: Install pre-commit hook (`.husky/pre-commit`)
 
-This will run the [linter](#shirt-lint) and the [type
+This will run the [linter](#shirt-linter) and the [type
 checker](#ballot_box_with_check-type-checker) on staged
 files before each commit.
 
