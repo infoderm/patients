@@ -20,7 +20,7 @@ export {Patients, patients, PatientDocument, PatientFields};
 const AGE_MAX = 130;
 
 Factory.define('patient', Patients, {
-	niss: () => faker.random.uuid(),
+	niss: () => faker.datatype.uuid(),
 	firstname: () => faker.name.firstName(),
 	lastname: () => faker.name.lastName(),
 
@@ -39,16 +39,16 @@ Factory.define('patient', Patients, {
 	phone: () => faker.phone.phoneNumber(),
 
 	insurances: () =>
-		list(map(() => faker.company.companyName(), range(faker.random.number(2)))),
+		list(map(() => faker.company.companyName(), range(faker.datatype.number(2)))),
 	doctors: () =>
 		list(
 			map(
 				() => `${faker.name.lastName()} ${faker.name.firstName()}`,
-				range(faker.random.number(2))
+				range(faker.datatype.number(2))
 			)
 		),
 	allergies: () =>
-		list(map(() => faker.commerce.product(), range(faker.random.number(4)))),
+		list(map(() => faker.commerce.product(), range(faker.datatype.number(4)))),
 
-	noshow: () => faker.random.number(3)
+	noshow: () => faker.datatype.number(3)
 });
