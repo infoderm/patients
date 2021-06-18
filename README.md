@@ -6,7 +6,7 @@
 > An app to manage patient records, consultations,
 > appointments, lab reports, ...
 
-The stack (provided by  [meteor](https://meteor.com)):
+The stack (provided by  [Meteor](https://meteor.com)):
   - **Database:** [MongoDB](https://mongodb.com)
   - **Server**: [Node.js](https://nodejs.org)
   - **Client**: [React](https://reactjs.org)
@@ -33,7 +33,34 @@ the production machine.
 
 ### :fishing_pole_and_fish: Install pre-commit hook (`.husky/pre-commit`)
 
+This will run the [linter](#shirt-lint) and the [type
+checker](#ballot_box_with_check-type-checker) on staged
+files before each commit.
+
     meteor npm run install-hooks
+
+## :shirt: Linter
+
+To lint source files we use [`xo`](https://github.com/xojs/xo) with
+configuration inside `package.json`. You can run the linter with
+
+    meteor npm run lint
+
+You can attempt to autofix some errors with
+
+    meteor npm run lint-and-fix
+
+## :ballot_box_with_check: Type checker
+
+The entire code base is checked for type errors with `tsc`, the
+[TypeScript](https://www.typescriptlang.org) compiler. You can run the type
+checker with
+
+    meteor npm run tsc
+
+To run it in watch mode during development use
+
+    meteor npm run tsc:watch
 
 ## :microscope: Tests
 
