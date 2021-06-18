@@ -39,7 +39,9 @@ Factory.define('patient', Patients, {
 	phone: () => faker.phone.phoneNumber(),
 
 	insurances: () =>
-		list(map(() => faker.company.companyName(), range(faker.datatype.number(2)))),
+		list(
+			map(() => faker.company.companyName(), range(faker.datatype.number(2)))
+		),
 	doctors: () =>
 		list(
 			map(
