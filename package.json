@@ -101,7 +101,7 @@
     "simpl-schema": "^1.12.0",
     "total-order": "3.0.1",
     "typescript": "^4.3.2",
-    "xo": "^0.40.2"
+    "xo": "^0.40.3"
   },
   "postinstall": {
     "typeface-roboto/index.css": "copy public/typeface-roboto/",
