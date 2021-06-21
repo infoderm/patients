@@ -95,7 +95,7 @@
     "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
     "mup": "^1.5.3",
-    "npm-check-updates": "^11.4.1",
+    "npm-check-updates": "^11.7.1",
     "postinstall": "^0.7.0",
     "puppeteer": "^8.0.0",
     "simpl-schema": "^1.12.0",
