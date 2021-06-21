@@ -3,8 +3,8 @@ import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import makeQuery from './makeQuery';
-import makeObservedQuery from './makeObservedQuery';
-import observeQuery from './observeQuery';
+import makeObservedQueryHook from './makeObservedQueryHook';
+import makeObservedQueryPublication from './makeObservedQueryPublication';
 import pageQuery from './pageQuery';
 
 import {containsNonAlphabetical} from './string';
@@ -40,12 +40,15 @@ export default function createTagCollection(options) {
 	const useTags = makeQuery(Collection, publication);
 
 	// TODO rename to useObservedTags
-	const useTagsFind = makeObservedQuery(TagsCache, cachePublication);
+	const useTagsFind = makeObservedQueryHook(TagsCache, cachePublication);
 
 	if (Meteor.isServer) {
 		Meteor.publish(publication, pageQuery(Collection));
 
-		Meteor.publish(cachePublication, observeQuery(Collection, cacheCollection));
+		Meteor.publish(
+			cachePublication,
+			makeObservedQueryPublication(Collection, cacheCollection)
+		);
 
 		if (singlePublication) {
 			Meteor.publish(singlePublication, function (name) {

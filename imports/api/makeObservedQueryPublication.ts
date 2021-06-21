@@ -1,5 +1,21 @@
-const observeQuery = (QueriedCollection, resultsCollection) =>
-	function (key, query, options, observe) {
+import {Mongo} from 'meteor/mongo';
+
+interface ObserveOptions {
+	added?: boolean;
+	removed?: boolean;
+	changed?: boolean;
+}
+
+const makeObservedQuerySubscription = <T>(
+	QueriedCollection: Mongo.Collection<T>,
+	observedQueryCacheCollectionName: string
+) =>
+	function (
+		key: string,
+		query: Mongo.Selector<T>,
+		options: Mongo.Options<T>,
+		observe?: ObserveOptions
+	) {
 		query = {
 			...query,
 			owner: this.userId
@@ -22,7 +38,7 @@ const observeQuery = (QueriedCollection, resultsCollection) =>
 			this.stop();
 		};
 
-		const observers = {
+		const observers: Mongo.ObserveChangesCallbacks<T> = {
 			added: (_id, fields) => {
 				if (initializing) results.push({_id, ...fields});
 				else if (observe.added) stop();
@@ -39,7 +55,7 @@ const observeQuery = (QueriedCollection, resultsCollection) =>
 		// Instead, we'll send one `added` message right after `observeChanges` has
 		// returned, and mark the subscription as ready.
 		initializing = false;
-		this.added(resultsCollection, uid, {
+		this.added(observedQueryCacheCollectionName, uid, {
 			key,
 			results
 		});
@@ -48,7 +64,9 @@ const observeQuery = (QueriedCollection, resultsCollection) =>
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => handle.stop());
+		this.onStop(() => {
+			handle.stop();
+		});
 	};
 
-export default observeQuery;
+export default makeObservedQuerySubscription;

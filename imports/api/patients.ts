@@ -17,8 +17,9 @@ import {allergies} from './allergies';
 
 import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 
-import observeQuery from './observeQuery';
-import makeObservedQuery from './makeObservedQuery';
+import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
+import makeObservedQueryPublication from './makeObservedQueryPublication';
+import makeObservedQueryHook from './makeObservedQueryHook';
 
 export interface PatientFields {
 	niss: string;
@@ -63,14 +64,15 @@ const collection = 'patients';
 const cacheCollection = 'patients.find.cache';
 const cachePublication = 'patients.find.observe';
 const indexCollection = 'patients.index.collection';
-const indexCacheCollection = 'patients.index.cache.collection';
+const indexObservedQueryCacheCollection = 'patients.index.cache.collection';
 const indexCachePublication = 'patients.index.cache.publication';
 export const Patients = new Mongo.Collection<PatientDocument>(collection);
-export const PatientsCache = new Mongo.Collection(cacheCollection);
-export const PatientsSearchIndex = new Mongo.Collection(indexCollection);
-export const PatientsSearchIndexCache = new Mongo.Collection(
-	indexCacheCollection
+export const PatientsCache: ObservedQueryCacheCollection = new Mongo.Collection(
+	cacheCollection
 );
+export const PatientsSearchIndex = new Mongo.Collection(indexCollection);
+export const PatientsSearchIndexCache: ObservedQueryCacheCollection =
+	new Mongo.Collection(indexObservedQueryCacheCollection);
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
@@ -89,10 +91,16 @@ if (Meteor.isServer) {
 		return Patients.find({owner: this.userId, _id}, options);
 	});
 
-	Meteor.publish(cachePublication, observeQuery(Patients, cacheCollection));
+	Meteor.publish(
+		cachePublication,
+		makeObservedQueryPublication(Patients, cacheCollection)
+	);
 	Meteor.publish(
 		indexCachePublication,
-		observeQuery(PatientsSearchIndex, indexCacheCollection)
+		makeObservedQueryPublication(
+			PatientsSearchIndex,
+			indexObservedQueryCacheCollection
+		)
 	);
 }
 
@@ -663,13 +671,13 @@ function createPatient(string) {
 }
 
 // TODO rename to useObservedPatients
-export const usePatientsFind = makeObservedQuery(
+export const usePatientsFind = makeObservedQueryHook(
 	PatientsCache,
 	cachePublication
 );
 
 // TODO rename to useAdvancedObservedPatients
-export const usePatientsAdvancedFind = makeObservedQuery(
+export const usePatientsAdvancedFind = makeObservedQueryHook(
 	PatientsSearchIndexCache,
 	indexCachePublication
 );

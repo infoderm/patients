@@ -6,8 +6,8 @@ import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
 import makeQuery from './makeQuery';
-import makeObservedQuery from './makeObservedQuery';
-import observeQuery from './observeQuery';
+import makeObservedQueryHook from './makeObservedQueryHook';
+import makeObservedQueryPublication from './makeObservedQueryPublication';
 import {normalized, normalizeInput, parseUint32StrictOrString} from './string';
 
 import {
@@ -29,7 +29,7 @@ const BooksCache = new Mongo.Collection(cacheCollection);
 export const useBooks = makeQuery(Books, publication);
 
 // TODO rename to useObservedBooks
-export const useBooksFind = makeObservedQuery(BooksCache, cachePublication);
+export const useBooksFind = makeObservedQueryHook(BooksCache, cachePublication);
 
 if (Meteor.isServer) {
 	Meteor.publish(publication, function (args) {
@@ -40,7 +40,10 @@ if (Meteor.isServer) {
 		return Books.find(query);
 	});
 
-	Meteor.publish(cachePublication, observeQuery(Books, cacheCollection));
+	Meteor.publish(
+		cachePublication,
+		makeObservedQueryPublication(Books, cacheCollection)
+	);
 }
 
 const sanitizeInput = normalizeInput;
