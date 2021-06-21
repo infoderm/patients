@@ -17,11 +17,16 @@ const InputFileButton = ({
 	...rest
 }: InferProps<typeof InputFileButton.propTypes>) => {
 	const classes = useStyles();
-	const ref = useRef(null);
+	const ref = useRef<HTMLInputElement>(null);
 
 	return (
 		<div className={classes.container}>
-			<Button {...rest} onClick={() => ref.current.click()} />
+			<Button
+				{...rest}
+				onClick={() => {
+					ref.current.click();
+				}}
+			/>
 			<input
 				ref={ref}
 				multiple

@@ -10,7 +10,7 @@ const makeObservedQuery =
 		const [loading, setLoading] = useState(true);
 		const [results, setResults] = useState([]);
 		const [dirty, setDirty] = useState(false);
-		const handleRef = useRef(null);
+		const handleRef = useRef<Meteor.SubscriptionHandle>(null);
 
 		useEffect(() => {
 			setDirty(false);

@@ -1,5 +1,6 @@
+import {DependencyList, useState, useEffect} from 'react';
 import {Meteor} from 'meteor/meteor';
-import {useState, useEffect} from 'react';
+import {Mongo} from 'meteor/mongo';
 
 import useRandom from '../ui/hooks/useRandom';
 
@@ -8,7 +9,13 @@ import useRandom from '../ui/hooks/useRandom';
  * parameters on the same page.
  */
 const makeCachedFindOneOpt =
-	(Collection, subscription) => (init, query, options, deps) => {
+	<T, U>(Collection: Mongo.Collection<T, U>, subscription: string) =>
+	(
+		init: Partial<U>,
+		query: Mongo.Selector<T>,
+		options: Mongo.Options<T>,
+		deps: DependencyList
+	) => {
 		console.debug({init, query, options, deps});
 
 		const [loading, setLoading] = useState(true);
@@ -24,9 +31,9 @@ const makeCachedFindOneOpt =
 			setFields(init);
 			let current = init;
 
-			let queryHandle;
+			let queryHandle: Meteor.LiveQueryHandle;
 			const handle = Meteor.subscribe(subscription, query, options, {
-				onStop: (e) => {
+				onStop: (e: Meteor.Error) => {
 					console.debug('onStop()', {e, queryHandle});
 					if (queryHandle) queryHandle.stop();
 					else reset();
