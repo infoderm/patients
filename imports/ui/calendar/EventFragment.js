@@ -29,16 +29,19 @@ const EventFragment = (props) => {
 		color: '#111'
 	};
 
-	const text = `${dateFormat(event.begin, 'HH:mm')}-${dateFormat(
-		event.end,
-		'HH:mm'
-	)} ${event.title}`;
+	const time =
+		dateFormat(event.begin, 'HH:mm') +
+		(event.calendar === 'consultations'
+			? ''
+			: `-${dateFormat(event.end, 'HH:mm')}`);
+
+	const repr = `${time} ${event.title}`;
 
 	return (
-		<Tooltip title={text} aria-label={text}>
+		<Tooltip title={repr} aria-label={repr}>
 			<div className={className}>
 				<Link to={event.uri} style={style} {...eventProps}>
-					{text}
+					{repr}
 				</Link>
 			</div>
 		</Tooltip>
