@@ -118,8 +118,7 @@ const AppointmentDialog = (props) => {
 
 	const datetime = new Date(`${date}T${time}`);
 	const appointmentIsInThePast = isBefore(new Date(date), startOfToday());
-	const displayAppointmentIsInThePast =
-		!initialAppointment && appointmentIsInThePast;
+	const displayAppointmentIsInThePast = appointmentIsInThePast;
 
 	const _id = initialAppointment?._id;
 	const begin = datetime;
