@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 
-import color from 'color';
+import {colord} from 'colord';
 import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
 
@@ -42,7 +42,7 @@ const ColorPicker = ({
 				}
 				style={{
 					backgroundColor: value,
-					color: color(value).isLight() ? '#111' : '#ddd'
+					color: colord(value).isLight() ? '#111' : '#ddd'
 				}}
 				label={value}
 				onClick={() => setShowPicker(true)}

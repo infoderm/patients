@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
 
-import color from 'color';
+import {colord} from 'colord';
 
 import {Allergies, allergies} from '../../api/allergies';
 
@@ -21,7 +21,7 @@ const AllergyChip = ({item, ...rest}) => {
 	if (item) {
 		if (item.color) {
 			style.backgroundColor = item.color;
-			style.color = color(item.color).isLight() ? '#111' : '#ddd';
+			style.color = colord(item.color).isLight() ? '#111' : '#ddd';
 		}
 
 		if (!rest.onDelete) {
