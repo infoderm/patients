@@ -2,17 +2,19 @@ import React from 'react';
 import PropsOf from '../../util/PropsOf';
 import Tooltip from './Tooltip';
 
-type ComponentProps<C> = Omit<PropsOf<C>, 'tooltip'>;
-type Transform<C> = (props: ComponentProps<C>, x: string) => string;
-type Props<C> = {tooltip?: string} & PropsOf<C>;
+type ComponentWithoutTooltip<C> = PropsOf<C> extends {tooltip?: any}
+	? never
+	: C;
+type Transform<C> = (props: PropsOf<C>, x: string) => string;
+type Props<C> = PropsOf<C> & {tooltip?: string};
 
 const addTooltip =
 	<C extends React.ElementType>(
-		Component: C,
+		Component: ComponentWithoutTooltip<C>,
 		transform: Transform<C> = (_props, x) => x
 	) =>
 	({tooltip, ...rest}: Props<C>) => {
-		const title = transform(rest, tooltip);
+		const title = transform(rest as PropsOf<C>, tooltip);
 
 		return title ? (
 			<Tooltip title={title} aria-label={title}>
