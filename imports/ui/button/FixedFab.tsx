@@ -15,16 +15,19 @@ interface Options {
 	style?: object;
 }
 
+const DEFAULT_ROW = 1;
+const DEFAULT_COL = 1;
+
 export const computeFixedFabStyle = ({
 	style,
 	theme,
-	row,
-	col
+	row = DEFAULT_ROW,
+	col = DEFAULT_COL
 }: Options): CSSProperties => ({
 	...style,
 	position: 'fixed',
-	bottom: theme?.spacing(3 + 9 * ((row ?? FixedFab.defaultProps.row) - 1)),
-	right: theme?.spacing(3 + 9 * ((col ?? FixedFab.defaultProps.col) - 1))
+	bottom: theme?.spacing(3 + 9 * (row - 1)),
+	right: theme?.spacing(3 + 9 * (col - 1))
 });
 
 const propTypes = {
@@ -43,8 +46,8 @@ type Props = InferProps<typeof propTypes>;
 const FixedFab = React.forwardRef(
 	(
 		{
-			col,
-			row,
+			col = DEFAULT_COL,
+			row = DEFAULT_ROW,
 			style,
 			children,
 			component,
@@ -57,12 +60,7 @@ const FixedFab = React.forwardRef(
 		const computedStyle = computeFixedFabStyle({theme, col, row, style});
 
 		return (
-			<Fab
-				style={computedStyle}
-				component={component}
-				{...rest}
-				ref={ref as any}
-			>
+			<Fab style={computedStyle} component={component} {...rest} ref={ref}>
 				{children}
 			</Fab>
 		);
@@ -70,10 +68,5 @@ const FixedFab = React.forwardRef(
 );
 
 FixedFab.propTypes = propTypes;
-
-FixedFab.defaultProps = {
-	col: 1,
-	row: 1
-};
 
 export default addTooltip(FixedFab);
