@@ -55,7 +55,7 @@ function* quantityToDigits(
 	units: UnitsArray,
 	restUnit: string,
 	quantity: number
-) {
+): IterableIterator<[string, number]> {
 	let rest = quantity;
 
 	for (const [key, size] of units) {
@@ -71,7 +71,9 @@ function* quantityToDigits(
 	}
 }
 
-function* msToParts(ms, options) {
+type Options = typeof DEFAULT_OPTIONS;
+
+function* msToParts(ms: number, options: Options) {
 	const digits = quantityToDigits(options.units, options.restUnit, ms);
 	const keyToString = options.keyToString;
 
@@ -80,13 +82,16 @@ function* msToParts(ms, options) {
 	}
 }
 
-export const msToString = (dirtyMs, dirtyOptions) => {
+export const msToString = (dirtyMs: number, dirtyOptions?: Options) => {
 	const options = Object.assign({}, DEFAULT_OPTIONS, dirtyOptions);
 	const ms = dirtyMs;
 	return [...msToParts(ms, options)].join(options.separator);
 };
 
-export const msToStringShort = (dirtyMs, dirtyOptions): string => {
+export const msToStringShort = (
+	dirtyMs: number,
+	dirtyOptions?: Options
+): string => {
 	const options = Object.assign({}, DEFAULT_OPTIONS, dirtyOptions);
 	const ms = dirtyMs;
 	return msToParts(ms, options).next().value as string;
