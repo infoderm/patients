@@ -54,6 +54,7 @@ const Planner = (props) => {
 			<NewAppointmentDialog
 				noInitialTime
 				initialDatetime={selectedSlot}
+				patientId={match.params.patientId}
 				open={creatingAppointment}
 				onClose={() => setCreatingAppointment(false)}
 			/>

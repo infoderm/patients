@@ -88,6 +88,7 @@ const CurrentMonthlyPlanner = ({match, ...rest}) => {
 	const matchWithParams = {
 		...match,
 		params: {
+			...match?.params,
 			year,
 			month
 		}
@@ -102,6 +103,7 @@ const CurrentWeeklyPlanner = ({match, ...rest}) => {
 	const matchWithParams = {
 		...match,
 		params: {
+			...match?.params,
 			year,
 			week
 		}
@@ -201,6 +203,22 @@ export default function Router() {
 					exact
 					path="/new/consultation/for/:id"
 					component={NewConsultation}
+				/>
+
+				<Route
+					exact
+					path="/new/appointment/for/:patientId"
+					component={CurrentWeeklyPlanner}
+				/>
+				<Route
+					exact
+					path="/new/appointment/for/:patientId/month/:year/:month"
+					component={MonthlyPlanner}
+				/>
+				<Route
+					exact
+					path="/new/appointment/for/:patientId/week/:year/:week"
+					component={WeeklyPlanner}
 				/>
 
 				<Route exact path="/books" component={BooksList} />

@@ -3,7 +3,7 @@ import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
 
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useHistory, match} from 'react-router-dom';
 
 import isSameDay from 'date-fns/isSameDay';
 import startOfMonth from 'date-fns/startOfMonth';
@@ -41,6 +41,7 @@ const WeekNumber = ({className, day, weekOptions}) => {
 const ReactiveMonthlyCalendar = (props) => {
 	const {
 		className,
+		baseURL,
 		title,
 		year,
 		month,
@@ -71,9 +72,9 @@ const ReactiveMonthlyCalendar = (props) => {
 			title={title}
 			year={year}
 			month={month}
-			prev={() => history.push(`/calendar/month/${previousMonth}`)}
-			next={() => history.push(`/calendar/month/${nextMonth}`)}
-			weekly={() => history.push(`/calendar/week/${firstWeekOfMonth}`)}
+			prev={() => history.push(`${baseURL}/month/${previousMonth}`)}
+			next={() => history.push(`${baseURL}/month/${nextMonth}`)}
+			weekly={() => history.push(`${baseURL}/week/${firstWeekOfMonth}`)}
 			events={displayedEvents}
 			DayHeader={DayHeader}
 			WeekNumber={WeekNumber}
@@ -85,7 +86,7 @@ const ReactiveMonthlyCalendar = (props) => {
 	);
 };
 
-export default withTracker(({match}) => {
+export default withTracker(({match}: {match: match}) => {
 	const year = Number.parseInt(match.params.year, 10);
 	const month = Number.parseInt(match.params.month, 10);
 
@@ -102,10 +103,14 @@ export default withTracker(({match}) => {
 	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
 
 	const title = dateFormat(firstDayOfMonth, 'yyyy MMMM');
+	const baseURL = match.params.patientId
+		? `/new/appointment/for/${match.params.patientId}`
+		: '/calendar';
 
 	Meteor.subscribe('events.interval', begin, end);
 
 	return {
+		baseURL,
 		title,
 		year,
 		month,

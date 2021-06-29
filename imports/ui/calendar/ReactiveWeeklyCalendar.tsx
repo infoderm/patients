@@ -33,6 +33,7 @@ const DayHeader = ({className, day, weekOptions}) => {
 const ReactiveWeeklyCalendar = (props) => {
 	const {
 		className,
+		baseURL,
 		title,
 		year,
 		week,
@@ -59,9 +60,9 @@ const ReactiveWeeklyCalendar = (props) => {
 			title={title}
 			year={year}
 			week={week}
-			prev={() => history.push(`/calendar/week/${prevWeek}`)}
-			next={() => history.push(`/calendar/week/${nextWeek}`)}
-			monthly={() => history.push(`/calendar/month/${monthOfWeek}`)}
+			prev={() => history.push(`${baseURL}/week/${prevWeek}`)}
+			next={() => history.push(`${baseURL}/week/${nextWeek}`)}
+			monthly={() => history.push(`${baseURL}/month/${monthOfWeek}`)}
 			events={displayedEvents}
 			DayHeader={DayHeader}
 			weekOptions={weekOptions}
@@ -98,10 +99,14 @@ export default withTracker(({match}: {match: match}) => {
 	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
 
 	const title = dateFormat(someDayOfWeek, "yyyy MMMM / 'Week' w", weekOptions);
+	const baseURL = match.params.patientId
+		? `/new/appointment/for/${match.params.patientId}`
+		: '/calendar';
 
 	Meteor.subscribe('events.interval', begin, end);
 
 	return {
+		baseURL,
 		title,
 		year,
 		week,

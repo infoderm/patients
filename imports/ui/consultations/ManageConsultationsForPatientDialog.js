@@ -19,7 +19,8 @@ import Dialog from '@material-ui/core/Dialog';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import AlarmIcon from '@material-ui/icons/Alarm';
-import {blue, green} from '@material-ui/core/colors';
+import TodayIcon from '@material-ui/icons/Today';
+import {blue, green, orange} from '@material-ui/core/colors';
 
 import call from '../../api/call';
 import withLazyOpening from '../modal/withLazyOpening';
@@ -43,6 +44,10 @@ const useStyles = makeStyles({
 	avatarEdit: {
 		backgroundColor: blue[100],
 		color: blue[600]
+	},
+	avatarSchedule: {
+		backgroundColor: orange[100],
+		color: orange[600]
 	}
 });
 
@@ -61,6 +66,10 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 
 	const createNewConsultation = () => {
 		history.push(`/new/consultation/for/${patientId}`);
+	};
+
+	const scheduleNewAppointment = () => {
+		history.push(`/new/appointment/for/${patientId}`);
 	};
 
 	const editExistingConsultation = (_id) => () => {
@@ -123,6 +132,18 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 						/>
 					</ListItem>
 				))}
+				<ListItem button onClick={scheduleNewAppointment}>
+					<ListItemAvatar>
+						<Avatar
+							className={classNames({
+								[classes.avatarSchedule]: appointments.length === 0
+							})}
+						>
+							<TodayIcon />
+						</Avatar>
+					</ListItemAvatar>
+					<ListItemText primary="Programmer un nouveau rendez-vous" />
+				</ListItem>
 				<ListItem button onClick={createNewConsultation}>
 					<ListItemAvatar>
 						<Avatar>

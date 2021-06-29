@@ -1,26 +1,24 @@
 import {Meteor} from 'meteor/meteor';
 
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
+
+import PropsOf from '../../util/PropsOf';
 
 import AppointmentDialog from './AppointmentDialog';
+import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
 const onSubmit = (args, callback) => {
 	Meteor.call('appointments.schedule', args, callback);
 };
 
-const propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	noInitialTime: PropTypes.bool,
-	initialDatetime: PropTypes.instanceOf(Date).isRequired,
-	initialPatient: PropTypes.object
-};
-
 export default function NewAppointmentDialog(
-	props: InferProps<typeof propTypes>
+	props:
+		| PropsOf<typeof AppointmentDialog>
+		| PropsOf<typeof AppointmentFromPatientIdDialog>
 ) {
-	return <AppointmentDialog onSubmit={onSubmit} {...props} />;
+	return props.patientId === undefined ? (
+		<AppointmentDialog onSubmit={onSubmit} {...props} />
+	) : (
+		<AppointmentFromPatientIdDialog onSubmit={onSubmit} {...props} />
+	);
 }
-
-NewAppointmentDialog.propTypes = propTypes;
