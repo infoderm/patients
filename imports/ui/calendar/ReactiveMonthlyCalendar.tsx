@@ -51,6 +51,7 @@ const ReactiveMonthlyCalendar = (props) => {
 		firstDayOfPrevMonth,
 		displayedWeekDays,
 		showCancelledEvents,
+		showNoShowEvents,
 		onSlotClick,
 		events,
 		...rest
@@ -63,7 +64,9 @@ const ReactiveMonthlyCalendar = (props) => {
 	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/ww');
 
 	const displayedEvents = events.filter(
-		(x) => showCancelledEvents || !x.isCancelled
+		(x) =>
+			(showCancelledEvents || !x.isCancelled) &&
+			(showNoShowEvents || !x.isNoShow)
 	);
 
 	return (

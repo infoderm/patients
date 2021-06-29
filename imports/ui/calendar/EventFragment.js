@@ -13,7 +13,7 @@ const eventBackgroundColor = ({begin, calendar, isCancelled}) => {
 	const isPast = isBefore(begin, today); // TODO make reactive?
 	switch (calendar) {
 		case 'appointments':
-			return isPast ? '#997C79' : '#fff5d6';
+			return isPast ? '#ccc' : '#fff5d6';
 		case 'consultations':
 			return '#757de8';
 		default:

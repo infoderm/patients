@@ -5,6 +5,8 @@ import {check} from 'meteor/check';
 import addMilliseconds from 'date-fns/addMilliseconds';
 import addMinutes from 'date-fns/addMinutes';
 import isAfter from 'date-fns/isAfter';
+import isBefore from 'date-fns/isBefore';
+import startOfToday from 'date-fns/startOfToday';
 
 import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './patients';
@@ -65,6 +67,8 @@ if (Meteor.isServer) {
 			? addMilliseconds(begin, duration)
 			: addMinutes(begin, DEFAULT_DURATION_IN_MINUTES);
 
+		const isNoShow = !isDone && !isCancelled && isBefore(begin, startOfToday());
+
 		return {
 			owner,
 			calendar: isDone ? 'consultations' : 'appointments',
@@ -72,6 +76,7 @@ if (Meteor.isServer) {
 			begin,
 			end,
 			isCancelled,
+			isNoShow,
 			uri: `/consultation/${_id}`
 		};
 	};

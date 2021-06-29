@@ -8,6 +8,9 @@ import Accordion from '@material-ui/core/Accordion';
 
 import Divider from '@material-ui/core/Divider';
 
+import startOfToday from 'date-fns/startOfToday';
+import isBefore from 'date-fns/isBefore';
+
 import StaticConsultationCardSummary from './StaticConsultationCardSummary';
 import StaticConsultationCardDetails from './StaticConsultationCardDetails';
 import StaticConsultationCardActions from './StaticConsultationCardActions';
@@ -18,6 +21,9 @@ const useStyles = makeStyles(() => ({
 	},
 	appointment: {
 		backgroundColor: '#FFF5D6'
+	},
+	didNotOrWillNotHappen: {
+		backgroundColor: '#ccc'
 	}
 }));
 
@@ -28,7 +34,14 @@ const StaticConsultationCard = (props) => {
 		loading,
 		found,
 		defaultExpanded,
-		consultation: {isDone, currency, price, paid}
+		consultation: {
+			isDone,
+			isCancelled,
+			currency,
+			price,
+			paid,
+			scheduledDatetime
+		}
 	} = props;
 
 	const deleted = !loading && !found;
@@ -39,8 +52,18 @@ const StaticConsultationCard = (props) => {
 
 	const cardOpacity = {opacity: deleted ? 0.4 : 1};
 
+	const isAppointment = !isDone;
+	const isNoShow =
+		isAppointment &&
+		!isCancelled &&
+		isBefore(scheduledDatetime, startOfToday());
+
+	const didNotOrWillNotHappen = isCancelled || isNoShow;
+
 	const extraProps = {
 		deleted,
+		didNotOrWillNotHappen,
+		isNoShow,
 		missingPaymentData,
 		owes,
 		owed
@@ -51,7 +74,8 @@ const StaticConsultationCard = (props) => {
 			defaultExpanded={defaultExpanded}
 			TransitionProps={{unmountOnExit: true}}
 			className={classNames(classes.card, {
-				[classes.appointment]: !isDone
+				[classes.appointment]: isAppointment,
+				[classes.didNotOrWillNotHappen]: didNotOrWillNotHappen
 			})}
 			style={cardOpacity}
 		>

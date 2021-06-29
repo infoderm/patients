@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
+import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
 import InfoIcon from '@material-ui/icons/Info';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassFullIcon from '@material-ui/icons/HourglassFull';
@@ -89,6 +90,7 @@ const StaticConsultationCardDetails = (props) => {
 	const {
 		deleted,
 		missingPaymentData,
+		isNoShow,
 		consultation: {
 			isDone,
 			isCancelled,
@@ -118,6 +120,13 @@ const StaticConsultationCardDetails = (props) => {
 						Icon={AlarmOffIcon}
 						primary="Rendez-vous annulé"
 						secondary={`${cancellationDatetime}: ${cancellationReason}`}
+					/>
+				)}
+				{isNoShow && (
+					<ConsultationsCardListItem
+						Icon={PhoneDisabledIcon}
+						primary="PVPP"
+						secondary="Le patient ne s'est pas présenté et n'a pas annulé."
 					/>
 				)}
 				<ConsultationsCardListItem

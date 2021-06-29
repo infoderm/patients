@@ -8,6 +8,7 @@ import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import addHours from 'date-fns/addHours';
 import isBefore from 'date-fns/isBefore';
+import startOfToday from 'date-fns/startOfToday';
 
 import {count} from '@iterable-iterator/cardinality';
 
@@ -16,6 +17,7 @@ import Divider from '@material-ui/core/Divider';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
+import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
 
 import {TIME_BREAK} from '../../client/constants';
 
@@ -39,6 +41,7 @@ const ConsultationsOfTheDay = ({day}) => {
 	const [showAppointments, setShowAppointments] = useState(true);
 	const [showCancelledAppointments, setShowCancelledAppointments] =
 		useState(false);
+	const [showNoShowAppointments, setShowNoShowAppointments] = useState(false);
 
 	const prevDay = subDays(day, 1);
 	const nextDay = addDays(day, 1);
@@ -57,20 +60,29 @@ const ConsultationsOfTheDay = ({day}) => {
 	const dayBefore = format(prevDay, 'yyyy-MM-dd');
 	const dayAfter = format(nextDay, 'yyyy-MM-dd');
 
+	const thisMorning = startOfToday();
 	const pause = addHours(day, TIME_BREAK);
 	const am = consultations.filter(
 		(c) =>
 			isBefore(c.datetime, pause) &&
 			(showConsultations || c.isDone === false) &&
 			(showAppointments || c.isDone !== false) &&
-			(showCancelledAppointments || c.isCancelled !== true)
+			(showCancelledAppointments || c.isCancelled !== true) &&
+			(showNoShowAppointments ||
+				c.isDone !== false ||
+				c.isCancelled ||
+				!isBefore(c.scheduledDatetime, thisMorning))
 	);
 	const pm = consultations.filter(
 		(c) =>
 			!isBefore(c.datetime, pause) &&
 			(showConsultations || c.isDone === false) &&
 			(showAppointments || c.isDone !== false) &&
-			(showCancelledAppointments || c.isCancelled !== true)
+			(showCancelledAppointments || c.isCancelled !== true) &&
+			(showNoShowAppointments ||
+				c.isDone !== false ||
+				c.isCancelled ||
+				!isBefore(c.scheduledDatetime, thisMorning))
 	);
 	const cam = count(am);
 	const cpm = count(pm);
@@ -113,7 +125,7 @@ const ConsultationsOfTheDay = ({day}) => {
 				)}
 			</div>
 			<FixedFab
-				col={6}
+				col={5}
 				color={showConsultations ? 'primary' : 'default'}
 				tooltip={
 					showConsultations ? 'Hide consultations' : 'Show consultations'
@@ -123,7 +135,7 @@ const ConsultationsOfTheDay = ({day}) => {
 				<FolderSharedIcon />
 			</FixedFab>
 			<FixedFab
-				col={5}
+				col={4}
 				color={showAppointments ? 'primary' : 'default'}
 				tooltip={showAppointments ? 'Hide appointments' : 'Show appointments'}
 				onClick={() => setShowAppointments(!showAppointments)}
@@ -132,7 +144,7 @@ const ConsultationsOfTheDay = ({day}) => {
 			</FixedFab>
 			{showAppointments && (
 				<FixedFab
-					col={4}
+					col={7}
 					color={showCancelledAppointments ? 'primary' : 'default'}
 					tooltip={
 						showCancelledAppointments
@@ -144,6 +156,20 @@ const ConsultationsOfTheDay = ({day}) => {
 					}
 				>
 					<AlarmOffIcon />
+				</FixedFab>
+			)}
+			{showAppointments && (
+				<FixedFab
+					col={6}
+					color={showNoShowAppointments ? 'primary' : 'default'}
+					tooltip={
+						showNoShowAppointments
+							? 'Hide no-show appointments'
+							: 'Show no-show appointments'
+					}
+					onClick={() => setShowNoShowAppointments(!showNoShowAppointments)}
+				>
+					<PhoneDisabledIcon />
 				</FixedFab>
 			)}
 			<Prev to={`/calendar/day/${dayBefore}`} />

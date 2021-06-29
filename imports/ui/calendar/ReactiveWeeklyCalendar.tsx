@@ -43,6 +43,7 @@ const ReactiveWeeklyCalendar = (props) => {
 		monthOfWeek,
 		displayedWeekDays,
 		showCancelledEvents,
+		showNoShowEvents,
 		onSlotClick,
 		events,
 		...rest
@@ -51,7 +52,9 @@ const ReactiveWeeklyCalendar = (props) => {
 	const history = useHistory();
 
 	const displayedEvents = events.filter(
-		(x) => showCancelledEvents || !x.isCancelled
+		(x) =>
+			(showCancelledEvents || !x.isCancelled) &&
+			(showNoShowEvents || !x.isNoShow)
 	);
 
 	return (

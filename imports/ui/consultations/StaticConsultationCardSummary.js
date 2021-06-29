@@ -46,9 +46,12 @@ const useStyles = makeStyles((theme) => ({
 		color: '#fff',
 		fontWeight: 'bold'
 	},
-	cancelledChip: {
+	didNotHappenChip: {
 		backgroundColor: '#ff7961',
 		color: '#fff'
+	},
+	boldChip: {
+		fontWeight: 'bold'
 	}
 }));
 
@@ -68,6 +71,8 @@ const StaticConsultationCardSummary = (props) => {
 	const classes = useStyles();
 
 	const {
+		isNoShow,
+		didNotOrWillNotHappen,
 		missingPaymentData,
 		owes,
 		owed,
@@ -99,7 +104,7 @@ const StaticConsultationCardSummary = (props) => {
 				<Chip
 					label={dateFormat(datetime, 'iii do MMMM yyyy')}
 					className={classNames(classes.chip, {
-						[classes.cancelledChip]: isCancelled
+						[classes.didNotHappenChip]: didNotOrWillNotHappen
 					})}
 					component={Link}
 					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
@@ -107,7 +112,7 @@ const StaticConsultationCardSummary = (props) => {
 				<Chip
 					label={dateFormat(datetime, 'hh:mma')}
 					className={classNames(classes.chip, {
-						[classes.cancelledChip]: isCancelled
+						[classes.didNotHappenChip]: didNotOrWillNotHappen
 					})}
 					component={Link}
 					to={`/consultation/${_id}`}
@@ -127,6 +132,24 @@ const StaticConsultationCardSummary = (props) => {
 						loading={loadingPatient}
 						found={Boolean(patient)}
 						patient={patient || {_id: patientId}}
+					/>
+				)}
+				{isCancelled && (
+					<Chip
+						label="cancelled"
+						className={classNames(classes.chip, {
+							[classes.didNotHappenChip]: true,
+							[classes.boldChip]: true
+						})}
+					/>
+				)}
+				{isNoShow && (
+					<Chip
+						label="PVPP"
+						className={classNames(classes.chip, {
+							[classes.didNotHappenChip]: true,
+							[classes.boldChip]: true
+						})}
 					/>
 				)}
 				{attachments === undefined || attachments.length === 0 ? (
