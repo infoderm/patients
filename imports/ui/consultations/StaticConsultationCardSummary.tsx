@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
@@ -21,6 +20,8 @@ import dateFormat from 'date-fns/format';
 import Currency from 'currency-formatter';
 
 import {useDateFormat} from '../../i18n/datetime';
+import {PatientDocument} from '../../api/patients';
+import {ConsultationDocument} from '../../api/consultations';
 import {msToString, msToStringShort} from '../../client/duration';
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +69,25 @@ function paymentMethodIcon(payment_method) {
 	}
 }
 
-const StaticConsultationCardSummary = (props) => {
+interface StaticConsultationCardSummaryProps {
+	isNoShow: boolean;
+	patient: PatientDocument;
+	consultation: ConsultationDocument;
+	PatientChip: React.ElementType;
+	showDate: boolean;
+	showTime: boolean;
+	showPrice: boolean;
+	loadingPatient: boolean;
+	missingPaymentData: boolean;
+	didNotOrWillNotHappen: boolean;
+	owes: boolean;
+	owed: number;
+	attachments: any[];
+}
+
+const StaticConsultationCardSummary = (
+	props: StaticConsultationCardSummaryProps
+) => {
 	const classes = useStyles();
 
 	const {
@@ -78,7 +97,9 @@ const StaticConsultationCardSummary = (props) => {
 		owes,
 		owed,
 		PatientChip,
-		showPrice,
+		showDate = true,
+		showTime = true,
+		showPrice = false,
 		loadingPatient,
 		patient,
 		consultation: {
@@ -104,26 +125,30 @@ const StaticConsultationCardSummary = (props) => {
 			expandIcon={<ExpandMoreIcon />}
 		>
 			<div className={classes.chips}>
-				<Chip
-					label={localizedDateFormat(datetime, 'PPPP')}
-					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: didNotOrWillNotHappen
-					})}
-					component={Link}
-					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
-				/>
-				<Chip
-					label={localizedDateFormat(datetime, 'p')}
-					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: didNotOrWillNotHappen
-					})}
-					component={Link}
-					to={`/consultation/${_id}`}
-				/>
+				{showDate && (
+					<Chip
+						label={localizedDateFormat(datetime, 'PPPP')}
+						className={classNames(classes.chip, {
+							[classes.didNotHappenChip]: didNotOrWillNotHappen
+						})}
+						component={Link}
+						to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
+					/>
+				)}
+				{showTime && (
+					<Chip
+						label={localizedDateFormat(datetime, 'p')}
+						className={classNames(classes.chip, {
+							[classes.didNotHappenChip]: didNotOrWillNotHappen
+						})}
+						component={Link}
+						to={`/consultation/${_id}`}
+					/>
+				)}
 				{isDone
 					? doneDatetime && (
 							<Chip
-								label={msToStringShort(doneDatetime - datetime)}
+								label={msToStringShort(Number(doneDatetime) - Number(datetime))}
 								className={classes.chip}
 							/>
 					  )
@@ -184,17 +209,6 @@ const StaticConsultationCardSummary = (props) => {
 			</div>
 		</AccordionSummary>
 	);
-};
-
-StaticConsultationCardSummary.defaultProps = {
-	PatientChip: undefined,
-	showPrice: false
-};
-
-StaticConsultationCardSummary.propTypes = {
-	consultation: PropTypes.object.isRequired,
-	PatientChip: PropTypes.elementType,
-	showPrice: PropTypes.bool
 };
 
 export default StaticConsultationCardSummary;

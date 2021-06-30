@@ -32,7 +32,51 @@ const collection = 'consultations';
 const stats = collection + '.stats';
 const statsPublication = stats;
 
-export const Consultations = new Mongo.Collection(collection);
+interface ConsultationFields {
+	patientId: string;
+	datetime: Date;
+	scheduledDatetime?: Date;
+	realDatetime?: Date;
+	begin: Date;
+	duration?: number;
+	reason: string;
+	done?: string;
+	todo?: string;
+	treatment?: string;
+	next?: string;
+	more?: string;
+
+	currency?: string;
+	price?: number;
+	paid?: number;
+	unpaid?: boolean;
+	book?: string;
+	payment_method?: string;
+	isDone: boolean;
+	isCancelled?: boolean;
+
+	attachments?: string[];
+}
+
+interface ConsultationComputedFields {
+	doneDatetime?: Date;
+	end: Date;
+}
+
+interface ConsultationMetadata {
+	_id: string;
+	owner: string;
+	createdAt: Date;
+	lastModifiedAt?: Date;
+}
+
+export type ConsultationDocument = ConsultationFields &
+	ConsultationComputedFields &
+	ConsultationMetadata;
+
+export const Consultations = new Mongo.Collection<ConsultationDocument>(
+	collection
+);
 const Stats = new Mongo.Collection(stats);
 
 export const useConsultationsFind = makeQuery(Consultations, 'consultations');
@@ -42,7 +86,8 @@ export const useConsultationsAndAppointments = makeQuery(
 	'consultationsAndAppointments'
 );
 
-export const isUnpaid = ({price, paid}) => paid !== price;
+export const isUnpaid = ({price = undefined, paid = undefined}) =>
+	paid !== price;
 
 const statsKey = (query, init) => JSON.stringify({query, init});
 
@@ -74,7 +119,7 @@ export const filterNotInRareBooks = () => ({
 	}
 });
 
-function setupConsultationsStatsPublication(collection, query, init) {
+function setupConsultationsStatsPublication(collection, query, init?) {
 	// Generate unique key depending on parameters
 	const key = statsKey(query, init);
 	const selector = {
@@ -291,7 +336,9 @@ if (Meteor.isServer) {
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => handle.stop());
+		this.onStop(() => {
+			handle.stop();
+		});
 	});
 
 	Meteor.publish(statsPublication, function (query) {
@@ -307,7 +354,9 @@ if (Meteor.isServer) {
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => handle.stop());
+		this.onStop(() => {
+			handle.stop();
+		});
 	});
 }
 
@@ -471,7 +520,7 @@ const methods = {
 		for (const i of range(maxRows)) {
 			const line = [];
 			for (const bookSlug of header) {
-				if (data[bookSlug] !== undefined && data[bookSlug][i] !== undefined) {
+				if (data[bookSlug]?.[i] !== undefined) {
 					line.push(data[bookSlug][i]);
 				} else {
 					line.push('');

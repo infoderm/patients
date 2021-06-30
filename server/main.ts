@@ -84,27 +84,6 @@ Meteor.startup(() => {
 			})
 		);
 
-	// Add .isDone field to consultations
-	Consultations.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach((consultation) => {
-			if (consultation.scheduledAt) {
-				consultation.createdAt = consultation.scheduledAt;
-				consultation.datetime = consultation.scheduledDatetime;
-				consultation.reason = consultation.scheduledReason;
-				delete consultation.scheduledAt;
-				delete consultation.scheduledDatetime;
-				delete consultation.scheduledReason;
-			}
-
-			if (consultation.isDone !== false) {
-				consultation.isDone = true;
-			}
-
-			Consultations.rawCollection().save(consultation);
-		});
-
 	// Add .unpaid field to consultations
 	Consultations.rawCollection()
 		.find()
