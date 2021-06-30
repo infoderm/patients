@@ -27,6 +27,7 @@ import FixedFab from '../button/FixedFab';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
+import {useDateFormat} from '../../i18n/datetime';
 import {useConsultationsAndAppointments} from '../../api/consultations';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
@@ -42,6 +43,8 @@ const ConsultationsOfTheDay = ({day}) => {
 	const [showCancelledAppointments, setShowCancelledAppointments] =
 		useState(false);
 	const [showNoShowAppointments, setShowNoShowAppointments] = useState(false);
+
+	const localizedDateFormat = useDateFormat();
 
 	const prevDay = subDays(day, 1);
 	const nextDay = addDays(day, 1);
@@ -87,9 +90,9 @@ const ConsultationsOfTheDay = ({day}) => {
 	const cam = count(am);
 	const cpm = count(pm);
 
-	const heading = `${format(
+	const heading = `${localizedDateFormat(
 		day,
-		'iiii do MMMM yyyy'
+		'PPPP'
 	)} (AM: ${cam}, PM: ${cpm})`;
 
 	return (
