@@ -29,6 +29,7 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import Currency from 'currency-formatter';
 
+import {useDateFormat} from '../../i18n/datetime';
 import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
 
 const useStyles = makeStyles(() => ({
@@ -111,6 +112,8 @@ const StaticConsultationCardDetails = (props) => {
 		attachments
 	} = props;
 
+	const localizedDatetime = useDateFormat('PPPPpppp');
+
 	return (
 		<AccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
@@ -119,7 +122,9 @@ const StaticConsultationCardDetails = (props) => {
 					<ConsultationsCardListItem
 						Icon={AlarmOffIcon}
 						primary="Rendez-vous annulé"
-						secondary={`${cancellationDatetime}: ${cancellationReason}`}
+						secondary={`${localizedDatetime(
+							cancellationDatetime
+						)}: ${cancellationReason}`}
 					/>
 				)}
 				{isNoShow && (
