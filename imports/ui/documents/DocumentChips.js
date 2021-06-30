@@ -16,7 +16,7 @@ import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
 import DoneIcon from '@material-ui/icons/Done';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
-import dateformat from 'date-fns/format';
+import {useDateFormat} from '../../i18n/datetime';
 
 import {myEncodeURIComponent} from '../../client/uri';
 
@@ -80,18 +80,14 @@ const DocumentChips = (props) => {
 
 	const classes = useStyles();
 
+	const localizedDate = useDateFormat('PPPP');
+
 	return (
 		<>
 			{parsed ? (
-				<Chip
-					label={dateformat(datetime, 'iii do MMMM yyyy')}
-					className={classes.chip}
-				/>
+				<Chip label={localizedDate(datetime)} className={classes.chip} />
 			) : (
-				<Chip
-					label={dateformat(createdAt, 'iii do MMMM yyyy')}
-					className={classes.chip}
-				/>
+				<Chip label={localizedDate(createdAt)} className={classes.chip} />
 			)}
 			{parsed && (
 				<Chip
