@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import dateFormat from 'date-fns/format';
-
 import {makeStyles} from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +12,8 @@ import TagCard from '../tags/TagCard';
 import {books} from '../../api/books';
 
 import {myEncodeURIComponent} from '../../client/uri';
+
+import {useDateFormatRange} from '../../i18n/datetime';
 
 import BookRenamingDialog from './BookRenamingDialog';
 
@@ -29,6 +29,8 @@ const useStyles = makeStyles(() => ({
 
 export default function BookCard({item}) {
 	const classes = useStyles();
+
+	const dateFormatRange = useDateFormatRange('PPP');
 
 	const [year, book] = books.split(item.name);
 
@@ -48,18 +50,17 @@ export default function BookCard({item}) {
 					return (
 						<Typography className={classes.content} variant="body1">
 							Total ... <br />
-							From ...
+							... — ...
 						</Typography>
 					);
 				if (count === 0) {
 					return null;
 				}
 
-				const fmt = 'MMM do, yyyy';
 				return (
 					<Typography className={classes.content} variant="body1">
 						Total {total} € <br />
-						From {dateFormat(first, fmt)} to {dateFormat(last, fmt)}.
+						{dateFormatRange(first, last)}
 					</Typography>
 				);
 			}}

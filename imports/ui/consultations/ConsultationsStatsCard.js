@@ -5,8 +5,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import dateFormat from 'date-fns/format';
-
 import {makeStyles} from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
@@ -16,6 +14,8 @@ import CardActions from '@material-ui/core/CardActions';
 
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
+
+import {useDateFormatRange} from '../../i18n/datetime';
 
 import {consultations} from '../../api/consultations';
 
@@ -78,6 +78,8 @@ const subheader = ({count}) =>
 const ConsultationsStatsCard = (props) => {
 	const classes = useStyles();
 
+	const dateFormatRange = useDateFormatRange('PPP');
+
 	const {title, avatar, url, actions, stats, abbr} = props;
 
 	const content = ({count, total, first, last}) => {
@@ -85,18 +87,17 @@ const ConsultationsStatsCard = (props) => {
 			return (
 				<Typography className={classes.paragraph} variant="body1">
 					Total ... <br />
-					From ...
+					... — ...
 				</Typography>
 			);
 		if (count === 0) {
 			return null;
 		}
 
-		const fmt = 'MMM do, yyyy';
 		return (
 			<Typography className={classes.content} variant="body1">
 				Total {total} € <br />
-				From {dateFormat(first, fmt)} to {dateFormat(last, fmt)}.
+				{dateFormatRange(first, last)}
 			</Typography>
 		);
 	};
