@@ -115,3 +115,8 @@ export const useDaysNames = (days: number[]) => {
 };
 
 export const useDaysOfWeek = () => useDaysNames(list(range(7)));
+
+export const useIntlDateTimeFormat = (options?) => {
+	const locale = useLocaleKey();
+	return new Intl.DateTimeFormat(locale, options);
+};
