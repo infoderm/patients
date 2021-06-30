@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
@@ -7,28 +7,32 @@ import Paper from '@material-ui/core/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import addDays from 'date-fns/addDays';
+import getDay from 'date-fns/getDay';
+import getMonth from 'date-fns/getMonth';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
-import dateFormat from 'date-fns/format';
 import dateParse from 'date-fns/parse';
+import dateFormat from 'date-fns/format';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
+import {useDateFormat} from '../../i18n/datetime';
 
 import {ALL_WEEK_DAYS} from './constants';
 
 import EventFragment from './EventFragment';
 
 const ColumnHeader = ({classes, day, col}) => {
+	const getDayName = useDateFormat('cccc');
 	return (
 		<div
 			className={classNames(classes.columnHeader, {
 				[classes[`col${col}`]]: true
 			})}
 		>
-			{dateFormat(day, 'iiii')}
+			{getDayName(day)}
 		</div>
 	);
 };
@@ -40,78 +44,82 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 				[classes[`col${col}`]]: true,
 				[classes[`row${row}`]]: true
 			})}
-			onClick={() => onSlotClick && onSlotClick(day)}
+			onClick={() => {
+				onSlotClick?.(day);
+			}}
 		/>
 	);
 };
 
-/**
- * setTime.
- *
- * @param {Date} datetime
- * @param {string} HHmm
- */
-const setTime = (datetime, HHmm) => dateParse(HHmm, 'HH:mm', datetime);
+const setTime = (datetime: Date, HHmm: string) =>
+	dateParse(HHmm, 'HH:mm', datetime);
 
 /**
  * Compute day key.
- *
- * @param {Date} datetime
- * @return {string}
  */
-const dayKey = (datetime) => dateFormat(datetime, 'yyyyMMdd');
+const dayKey = (datetime: Date) => dateFormat(datetime, 'yyyyMMdd');
 
 /**
  * Generate days in range.
- *
- * @param {Date} begin
- * @param {Date} end
- * @param {Set} displayedWeekDays
- * @return {IterableIterator<Date>}
  */
-function* generateDays(begin, end, displayedWeekDays = new Set(ALL_WEEK_DAYS)) {
-	let i = 0;
+function* generateDays(
+	begin: Date,
+	end: Date,
+	displayedWeekDays: Set<number> = new Set(ALL_WEEK_DAYS)
+): IterableIterator<Date> {
 	let current = begin;
 	while (current < end) {
-		if (displayedWeekDays.has(Math.trunc(i % 7))) yield current;
-		current = addDays(begin, ++i);
+		if (displayedWeekDays.has(getDay(current))) yield current;
+		current = addDays(current, 1);
 	}
+}
+
+interface DayProps {
+	day: Date;
+	row: number;
+	col: number;
+	isFirstDisplayedDayOfMonth: boolean;
 }
 
 /**
  * Generate props for each day in range.
- *
- * @param {Date} begin
- * @param {Date} end
- * @param {Set} displayedWeekDays
- * @return {IterableIterator<{day: Date, row: number, col: number}>}
  */
 function* generateDaysProps(
-	begin,
-	end,
-	displayedWeekDays = new Set(ALL_WEEK_DAYS)
-) {
+	begin: Date,
+	end: Date,
+	displayedWeekDays: Set<number> = new Set(ALL_WEEK_DAYS)
+): IterableIterator<DayProps> {
 	const rowSize = displayedWeekDays.size;
 	const days = generateDays(begin, end, displayedWeekDays);
+	let currentMonth = -1;
 	for (const [ith, day] of enumerate(days)) {
 		const col = (ith % rowSize) + 1;
 		const row = (ith - col + 1) / rowSize + 1;
+		const monthOfDay = getMonth(day);
+		let isFirstDisplayedDayOfMonth = false;
+		if (monthOfDay !== currentMonth) {
+			currentMonth = monthOfDay;
+			isFirstDisplayedDayOfMonth = true;
+		}
+
 		yield {
 			day,
 			row,
-			col
+			col,
+			isFirstDisplayedDayOfMonth
 		};
 	}
 }
 
-/**
- * createOccupancyMap.
- *
- * @param {Date} begin
- * @param {Date} end
- * @return {Map<string, {usedSlots: number, totalEvents: number, shownEvents: number}>}
- */
-function createOccupancyMap(begin, end) {
+interface Occupancy {
+	usedSlots: number;
+	totalEvents: number;
+	shownEvents: number;
+}
+
+type OccupancyMap = Map<string, Occupancy>;
+
+function createOccupancyMap(begin: Date, end: Date): OccupancyMap {
 	const occupancy = new Map();
 
 	for (const day of generateDays(begin, end)) {
@@ -121,21 +129,25 @@ function createOccupancyMap(begin, end) {
 	return occupancy;
 }
 
+interface Event {
+	begin: Date;
+	end: Date;
+}
+
 /**
  * Assumes the input events are sorted by begin datetime.
- *
- * @param {Map<string, {usedSlots: number, totalEvents: number, shownEvents: number}>} occupancy
- * @param {Date} begin
- * @param {Date} end
- * @param {object} options
- * @param {Iterable<{begin: Date, end: Date}>} events
- * @return {IterableIterator<{event, day: string, slot: number, slots: number}>}
  */
-function* generateEventProps(occupancy, begin, end, options, events) {
+function* generateEventProps(
+	occupancy: OccupancyMap,
+	begin: Date,
+	end: Date,
+	options: any,
+	events: Iterable<Event>
+): IterableIterator<{event: Event; day: string; slot: number; slots: number}> {
 	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
 
-	let previousEvent;
-	let previousDay;
+	let previousEvent: {end: Date};
+	let previousDay: string;
 	for (const event of events) {
 		if (
 			(event.end && isBefore(event.end, begin)) ||
@@ -208,7 +220,7 @@ function* generateEventProps(occupancy, begin, end, options, events) {
  * @param {Date} end
  * @return {IterableIterator<{day: string, count: number}>}
  */
-function* generateMoreProps(occupancy, begin, end) {
+function* generateMoreProps(occupancy, begin: Date, end: Date) {
 	for (const day of generateDays(begin, end)) {
 		const key = dayKey(day);
 		const {totalEvents, shownEvents} = occupancy.get(key);
@@ -226,19 +238,32 @@ const More = ({className, count}) => (
 	<div className={className}>{count} more</div>
 );
 
-const CalendarDataGrid = (props) => {
-	const {
-		useStyles,
-		rowSize,
-		days,
-		events,
-		mores,
-		DayHeader,
-		WeekNumber,
-		weekOptions,
-		onSlotClick
-	} = props;
+const CalendarDataGridPropTypes = {
+	DayHeader: PropTypes.elementType,
+	WeekNumber: PropTypes.elementType,
+	useStyles: PropTypes.func.isRequired,
+	rowSize: PropTypes.number.isRequired,
+	days: PropTypes.array.isRequired,
+	events: PropTypes.array.isRequired,
+	mores: PropTypes.array.isRequired,
+	weekOptions: PropTypes.object.isRequired,
+	onSlotClick: PropTypes.func,
+	onEventClick: PropTypes.func
+};
 
+type CalendarDataGridProps = InferProps<typeof CalendarDataGridPropTypes>;
+
+const CalendarDataGrid = ({
+	useStyles,
+	rowSize,
+	days,
+	events,
+	mores,
+	DayHeader,
+	WeekNumber,
+	weekOptions,
+	onSlotClick
+}: CalendarDataGridProps) => {
 	const classes = useStyles();
 
 	return (
@@ -286,7 +311,6 @@ const CalendarDataGrid = (props) => {
 							[classes[`col${props.col}`]]: true,
 							[classes[`row${props.row}`]]: true
 						})}
-						weekOptions={weekOptions}
 						{...props}
 					/>
 				))}
@@ -319,37 +343,43 @@ const CalendarDataGrid = (props) => {
 	);
 };
 
-CalendarDataGrid.propTypes = {
+CalendarDataGrid.propTypes = CalendarDataGridPropTypes;
+
+const CalendarDataPropTypes = {
+	begin: PropTypes.instanceOf(Date).isRequired,
+	end: PropTypes.instanceOf(Date).isRequired,
+	events: PropTypes.array.isRequired,
+	skipIdle: PropTypes.bool,
+	maxLines: PropTypes.number.isRequired,
+	minEventDuration: PropTypes.number,
+	dayBegins: PropTypes.string,
+	weekOptions: PropTypes.object,
 	DayHeader: PropTypes.elementType,
 	WeekNumber: PropTypes.elementType,
-	useStyles: PropTypes.func.isRequired,
-	rowSize: PropTypes.number.isRequired,
-	days: PropTypes.array.isRequired,
-	events: PropTypes.array.isRequired,
-	mores: PropTypes.array.isRequired,
-	weekOptions: PropTypes.object.isRequired,
+	lineHeight: PropTypes.any,
+	displayedWeekDays: PropTypes.array,
 	onSlotClick: PropTypes.func,
 	onEventClick: PropTypes.func
 };
 
-const CalendarData = (props) => {
-	const {
-		events,
-		begin,
-		end,
-		lineHeight,
-		maxLines,
-		skipIdle,
-		minEventDuration,
-		dayBegins,
-		DayHeader,
-		WeekNumber,
-		weekOptions,
-		displayedWeekDays,
-		onSlotClick,
-		onEventClick
-	} = props;
+type CalendarDataProps = InferProps<typeof CalendarDataPropTypes>;
 
+const CalendarData = ({
+	events,
+	begin,
+	end,
+	lineHeight = '25px',
+	maxLines,
+	skipIdle = false,
+	minEventDuration,
+	dayBegins,
+	DayHeader,
+	WeekNumber,
+	weekOptions,
+	displayedWeekDays = ALL_WEEK_DAYS,
+	onSlotClick,
+	onEventClick
+}: CalendarDataProps) => {
 	const days = differenceInDays(end, begin); // Should be a multiple of 7
 	if (days % 7 !== 0) console.warn(`days (= ${days}) is not a multiple of 7`);
 
@@ -468,7 +498,7 @@ const CalendarData = (props) => {
 
 	for (const i of range(1, rowSize + 1)) {
 		gridStyles[`col${i}`] = {
-			gridColumnStart: colOffset + i
+			gridColumnStart: colOffset + (i as number)
 		};
 	}
 
@@ -483,7 +513,7 @@ const CalendarData = (props) => {
 		for (const j of range(1, maxLines)) {
 			gridStyles[`day${dayId}slot${j}`] = {
 				gridColumnStart: colOffset + col,
-				gridRowStart: (row - 1) * maxLines + 1 + j
+				gridRowStart: (row - 1) * maxLines + 1 + (j as number)
 			};
 		}
 
@@ -524,24 +554,6 @@ const CalendarData = (props) => {
 	);
 };
 
-CalendarData.defaultProps = {
-	skipIdle: false,
-	lineHeight: '25px',
-	displayedWeekDays: ALL_WEEK_DAYS
-};
-
-CalendarData.propTypes = {
-	begin: PropTypes.instanceOf(Date).isRequired,
-	end: PropTypes.instanceOf(Date).isRequired,
-	events: PropTypes.array.isRequired,
-	skipIdle: PropTypes.bool,
-	maxLines: PropTypes.number.isRequired,
-	minEventDuration: PropTypes.number,
-	dayBegins: PropTypes.string,
-	lineHeight: PropTypes.any,
-	displayedWeekDays: PropTypes.array,
-	onSlotClick: PropTypes.func,
-	onEventClick: PropTypes.func
-};
+CalendarData.propTypes = CalendarDataPropTypes;
 
 export default CalendarData;
