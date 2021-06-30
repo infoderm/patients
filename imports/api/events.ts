@@ -11,8 +11,26 @@ import startOfToday from 'date-fns/startOfToday';
 import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './patients';
 
+export interface Event {
+	owner: string;
+	calendar: string;
+	title: string;
+	begin: Date;
+	end: Date;
+	isCancelled: boolean;
+	isNoShow: boolean;
+	uri: string;
+}
+
 const events = 'events';
-export const Events = new Mongo.Collection(events);
+export const Events = new Mongo.Collection<Event>(events);
+
+export const beginsInInterval = (begin, end) => ({
+	begin: {
+		$gte: begin,
+		$lt: end
+	}
+});
 
 export const intersectsInterval = (begin, end) => ({
 	$or: [
@@ -52,7 +70,7 @@ if (Meteor.isServer) {
 			doneDatetime,
 			createdAt
 		}
-	) => {
+	): Event => {
 		const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
 		const begin = datetime;
 		const end = isDone
@@ -102,24 +120,25 @@ if (Meteor.isServer) {
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => handle.stop());
+		this.onStop(() => {
+			handle.stop();
+		});
 	};
 
 	Meteor.publish('events.interval', function (begin, end) {
 		check(begin, Date);
 		check(end, Date);
 		const query = {
-			owner: this.userId,
-			datetime: {
-				$gte: begin,
-				$lt: end
-			}
+			...beginsInInterval(begin, end),
+			owner: this.userId
 		};
 
 		const options = {
 			fields: {
 				_id: 1,
 				patientId: 1,
+				begin: 1,
+				end: 1,
 				datetime: 1,
 				isDone: 1,
 				isCancelled: 1,
@@ -128,7 +147,7 @@ if (Meteor.isServer) {
 				createdAt: 1
 			}
 		};
-		return publishEvents.call(this, query, options);
+		publishEvents.call(this, query, options);
 	});
 
 	Meteor.publish('events.intersects', function (begin, end) {
@@ -153,6 +172,6 @@ if (Meteor.isServer) {
 				createdAt: 1
 			}
 		};
-		return publishEvents.call(this, query, options);
+		publishEvents.call(this, query, options);
 	});
 }
