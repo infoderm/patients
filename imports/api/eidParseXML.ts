@@ -1,12 +1,6 @@
 import {xml2json} from 'xml-js';
 
-/**
- * eidParseXML.
- *
- * @param {string} xmlString
- * @return {Object}
- */
-const eidParseXML = (xmlString) => {
+const eidParseXML = (xmlString: string) => {
 	// TODO validate using xsd
 	const jsonString = xml2json(xmlString, {compact: true, spaces: 4});
 	const json = JSON.parse(jsonString);
