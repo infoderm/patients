@@ -18,8 +18,9 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import dateFormat from 'date-fns/format';
-
 import Currency from 'currency-formatter';
+
+import {useDateFormat} from '../../i18n/datetime';
 import {msToString, msToStringShort} from '../../client/duration';
 
 const useStyles = makeStyles((theme) => ({
@@ -95,6 +96,8 @@ const StaticConsultationCardSummary = (props) => {
 		attachments
 	} = props;
 
+	const localizedDateFormat = useDateFormat();
+
 	return (
 		<AccordionSummary
 			className={classes.summary}
@@ -102,7 +105,7 @@ const StaticConsultationCardSummary = (props) => {
 		>
 			<div className={classes.chips}>
 				<Chip
-					label={dateFormat(datetime, 'iii do MMMM yyyy')}
+					label={localizedDateFormat(datetime, 'PPPP')}
 					className={classNames(classes.chip, {
 						[classes.didNotHappenChip]: didNotOrWillNotHappen
 					})}
@@ -110,7 +113,7 @@ const StaticConsultationCardSummary = (props) => {
 					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
 				/>
 				<Chip
-					label={dateFormat(datetime, 'hh:mma')}
+					label={localizedDateFormat(datetime, 'p')}
 					className={classNames(classes.chip, {
 						[classes.didNotHappenChip]: didNotOrWillNotHappen
 					})}
