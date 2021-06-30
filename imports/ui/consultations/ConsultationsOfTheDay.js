@@ -108,6 +108,7 @@ const ConsultationsOfTheDay = ({day}) => {
 								key={consultation._id}
 								consultation={consultation}
 								PatientChip={ReactivePatientChip}
+								showDate={false}
 							/>
 						))}
 					</div>
@@ -122,6 +123,7 @@ const ConsultationsOfTheDay = ({day}) => {
 								key={consultation._id}
 								consultation={consultation}
 								PatientChip={ReactivePatientChip}
+								showDate={false}
 							/>
 						))}
 					</div>
