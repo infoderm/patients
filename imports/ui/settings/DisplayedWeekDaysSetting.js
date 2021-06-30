@@ -1,31 +1,43 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {list} from '@iterable-iterator/list';
 import {filter} from '@iterable-iterator/filter';
 import {range} from '@iterable-iterator/range';
 
+import {key} from '@total-order/key';
+import {increasing} from '@total-order/primitive';
+
+import {useDaysNames} from '../../i18n/datetime';
+
+import {useSettingCached} from '../../client/settings';
 import InputManySetting from './InputManySetting';
 
 const KEY = 'displayed-week-days';
 
-const formatDayOfWeek = (i) => {
-	const day = 5 + i;
-	// TODO use date-fns
-	return new Date(1970, 0, day).toLocaleString('en', {weekday: 'long'});
-};
-
-const makeSuggestions = (value) => (inputValue) => ({
-	results: list(
-		filter(
-			(i) =>
-				!value.includes(i) &&
-				formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()),
-			range(7)
-		)
-	)
-});
-
 export default function DisplayedWeekDaysSetting({className}) {
+	const {value: weekStartsOn} = useSettingCached('week-starts-on');
+
+	const compare = useMemo(() => {
+		return key(increasing, (x) => (7 + x - weekStartsOn) % 7);
+	}, [key, increasing, weekStartsOn]);
+
+	const options = list(range(7));
+
+	const DAYS = useDaysNames(options);
+
+	const formatDayOfWeek = (i) => DAYS[i];
+
+	const makeSuggestions = (value) => (inputValue) => ({
+		results: list(
+			filter(
+				(i) =>
+					!value.includes(i) &&
+					formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()),
+				options
+			)
+		)
+	});
+
 	return (
 		<InputManySetting
 			className={className}
@@ -36,7 +48,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 			createNewItem={undefined}
 			makeSuggestions={makeSuggestions}
 			placeholder="Give additional week days"
-			sort={(items) => items.sort()}
+			sort={(items) => items.sort(compare)}
 		/>
 	);
 }
