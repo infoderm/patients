@@ -29,8 +29,10 @@ export const localeDescriptions: Readonly<Record<string, string>> = {
 	'nl-BE': 'Nederlands (Belgïe)'
 };
 
+const useLocaleKey = () => useSettingCached('lang').value;
+
 const useLocale = () => {
-	const {value: key} = useSettingCached('lang');
+	const key = useLocaleKey();
 	return locales[key];
 };
 
