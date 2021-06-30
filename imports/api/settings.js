@@ -57,7 +57,7 @@ const defaults = {
 	'navigation-drawer-is-open': 'closed',
 	'books-sorting-order': -1,
 	currency: 'EUR',
-	lang: 'en',
+	lang: 'en-US',
 	'appointment-duration': [15 * 60 * 1000, 30 * 60 * 1000],
 	'appointment-cancellation-reason': ['patient-cancelled', 'doctor-cancelled'],
 	'important-strings': [],

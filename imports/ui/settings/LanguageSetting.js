@@ -1,14 +1,9 @@
 import React from 'react';
 
+import {localeDescriptions as LANGUAGES} from '../../i18n/datetime';
 import SelectOneSetting from './SelectOneSetting';
 
 const LanguageSetting = ({className}) => {
-	const LANGUAGES = {
-		en: 'English',
-		fr: 'Français',
-		nl: 'Nederlands'
-	};
-
 	const options = [...Object.keys(LANGUAGES)];
 
 	const optionToString = (x) => LANGUAGES[x];

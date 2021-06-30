@@ -12,10 +12,16 @@ import {enUS, nlBE, fr} from 'date-fns/locale';
 
 import {useSettingCached} from '../client/settings';
 
-const locales = {
+export const locales: Readonly<Record<string, any>> = {
 	'en-US': enUS,
 	'nl-BE': nlBE,
 	'fr-BE': fr
+};
+
+export const localeDescriptions: Readonly<Record<string, string>> = {
+	'en-US': 'English (US)',
+	'fr-BE': 'Français (Belgique)',
+	'nl-BE': 'Nederlands (Belgïe)'
 };
 
 const useLocale = () => {
