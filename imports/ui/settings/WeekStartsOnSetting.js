@@ -3,20 +3,13 @@ import React from 'react';
 import {range} from '@iterable-iterator/range';
 import {list} from '@iterable-iterator/list';
 
+import {useDaysNames} from '../../i18n/datetime';
 import SelectOneSetting from './SelectOneSetting';
 
 const WeekStartsOnSetting = ({className}) => {
 	const options = list(range(7));
 
-	const DAYS = [
-		'Sunday',
-		'Monday',
-		'Tuesday',
-		'Wednesday',
-		'Thursday',
-		'Friday',
-		'Saturday'
-	];
+	const DAYS = useDaysNames(options);
 
 	const optionToString = (x) => DAYS[x];
 
