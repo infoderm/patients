@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 import keycode from 'keycode';
 import Downshift from 'downshift';
@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-import Chip from '@material-ui/core/Chip';
+import DefaultChip from '@material-ui/core/Chip';
 
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import TextField from './TextField';
@@ -66,37 +66,39 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-interface Props {
-	className?: string;
-	useSuggestions: (x: string) => {loading?: boolean; results: any[]};
-	itemToString: (x: any) => string;
-	itemToKey: (x: any) => any;
-	Chip?: any;
-	chipProps?: any;
-	withoutToggle?: boolean;
-	TextFieldProps?: any;
-	inputProps?: object;
-	InputProps?: object;
-	placeholder?: string;
-	readOnly?: boolean;
-	value: any[];
-	onChange: any;
-	maxCount?: number;
-	createNewItem?: any;
-	multiset?: boolean;
-	sort?: (x: any[]) => void;
-	inputTransform?: (x: string) => string;
-}
+const SetPickerPropTypes = {
+	className: PropTypes.string,
+	Chip: PropTypes.elementType,
+	chipProps: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+	withoutToggle: PropTypes.bool,
+	value: PropTypes.array.isRequired,
+	readOnly: PropTypes.bool,
+	useSuggestions: PropTypes.func.isRequired,
+	itemToKey: PropTypes.func.isRequired,
+	itemToString: PropTypes.func.isRequired,
+	inputTransform: PropTypes.func,
+	onChange: PropTypes.func,
+	sort: PropTypes.func,
+	createNewItem: PropTypes.func,
+	maxCount: PropTypes.number,
+	multiset: PropTypes.bool,
+	TextFieldProps: PropTypes.object,
+	InputProps: PropTypes.object,
+	inputProps: PropTypes.object,
+	placeholder: PropTypes.string
+};
 
-const SetPicker = (props: Props) => {
+type SetPickerProps = InferProps<typeof SetPickerPropTypes>;
+
+const SetPicker = (props: SetPickerProps) => {
 	const {
 		className,
 		useSuggestions,
 		itemToString,
 		itemToKey,
-		Chip,
+		Chip = DefaultChip,
 		chipProps,
-		withoutToggle,
+		withoutToggle = false,
 		TextFieldProps,
 		inputProps,
 		InputProps,
@@ -104,11 +106,11 @@ const SetPicker = (props: Props) => {
 		readOnly,
 		value,
 		onChange,
-		maxCount,
+		maxCount = Number.POSITIVE_INFINITY,
 		createNewItem,
-		multiset,
+		multiset = false,
 		sort,
-		inputTransform
+		inputTransform = (x: string): string => x
 	} = props;
 
 	const classes = useStyles();
@@ -118,7 +120,8 @@ const SetPicker = (props: Props) => {
 	);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
-	const count = value.length;
+	const displayedValue = sort ? sort(value.slice()) : value;
+	const count = displayedValue.length;
 	const full = count >= maxCount;
 
 	const resetInputValue = () => setInputValue(inputTransform(''));
@@ -134,10 +137,10 @@ const SetPicker = (props: Props) => {
 
 		switch (keycode(event)) {
 			case 'backspace':
-				if (value.length > 0 && inputValue.length === 0) {
+				if (count > 0 && inputValue.length === 0) {
 					onChange({
 						target: {
-							value: value.slice(0, -1)
+							value: displayedValue.slice(0, -1)
 						}
 					});
 				}
@@ -146,7 +149,7 @@ const SetPicker = (props: Props) => {
 			case 'enter':
 				if (
 					inputValue.length > 0 &&
-					value.length < maxCount &&
+					!full &&
 					highlightedIndex === -1 &&
 					createNewItem
 				) {
@@ -154,10 +157,10 @@ const SetPicker = (props: Props) => {
 					// and/or handle item creation failure
 					const item = createNewItem(inputValue.trim());
 					const itemString = itemToString(item);
-					const newValue = value.slice();
+					const newValue = displayedValue.slice();
 					if (
 						multiset ||
-						all(map((x) => x !== itemString, map(itemToString, value)))
+						all(map((x) => x !== itemString, map(itemToString, displayedValue)))
 					) {
 						newValue.push(item);
 						if (sort) {
@@ -181,22 +184,24 @@ const SetPicker = (props: Props) => {
 	};
 
 	const handleInputChange = (event) => {
-		if (value.length < maxCount) {
-			setInputValue(inputTransform(event.target.value.trimStart()));
-		} else {
+		if (full) {
 			resetInputValue();
+		} else {
+			setInputValue(inputTransform(event.target.value.trimStart()));
 		}
 	};
 
 	const handleChange = (item) => {
-		if (value.length >= maxCount) {
+		if (full) {
 			return;
 		}
 
-		const newValue = value.slice();
+		const newValue = displayedValue.slice();
 		if (
 			multiset ||
-			all(map((x) => x !== itemToString(item), map(itemToString, value)))
+			all(
+				map((x) => x !== itemToString(item), map(itemToString, displayedValue))
+			)
 		) {
 			newValue.push(item);
 			if (sort) {
@@ -237,7 +242,7 @@ const SetPicker = (props: Props) => {
 	};
 
 	const handleDelete = (index) => () => {
-		const newValue = value.slice();
+		const newValue = displayedValue.slice();
 		newValue.splice(index, 1);
 		onChange({
 			target: {
@@ -252,7 +257,7 @@ const SetPicker = (props: Props) => {
 		<Downshift
 			inputValue={inputValue}
 			stateReducer={stateReducer}
-			selectedItem={value}
+			selectedItem={displayedValue}
 			itemToString={itemToString}
 			onChange={handleChange}
 			onStateChange={handleStateChange}
@@ -277,7 +282,7 @@ const SetPicker = (props: Props) => {
 						},
 						InputProps: getInputProps({
 							...InputProps,
-							startAdornment: value.map((item, index) => (
+							startAdornment: displayedValue.map((item, index) => (
 								<Chip
 									key={itemToString(item)}
 									{...(chipProps instanceof Function
@@ -328,32 +333,6 @@ const SetPicker = (props: Props) => {
 	);
 };
 
-SetPicker.defaultProps = {
-	Chip,
-	maxCount: Number.POSITIVE_INFINITY,
-	multiset: false,
-	withoutToggle: false,
-	inputTransform: (x: string): string => x
-};
-
-SetPicker.propTypes = {
-	className: PropTypes.string,
-	Chip: PropTypes.elementType,
-	chipProps: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-	withoutToggle: PropTypes.bool,
-	value: PropTypes.array.isRequired,
-	readOnly: PropTypes.bool,
-	useSuggestions: PropTypes.func.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired,
-	inputTransform: PropTypes.func,
-	onChange: PropTypes.func,
-	sort: PropTypes.func,
-	createNewItem: PropTypes.func,
-	maxCount: PropTypes.number,
-	multiset: PropTypes.bool,
-	TextFieldProps: PropTypes.object,
-	placeholder: PropTypes.string
-};
+SetPicker.propTypes = SetPickerPropTypes;
 
 export default SetPicker;
