@@ -120,3 +120,11 @@ export const useIntlDateTimeFormat = (options?) => {
 	const locale = useLocaleKey();
 	return new Intl.DateTimeFormat(locale, options);
 };
+
+export const useDateFormatRange = (format, options) => {
+	const formatPart = useDateFormat(format, options);
+	return useMemo(() => {
+		return (startDate, endDate) =>
+			`${formatPart(startDate)} — ${formatPart(endDate)}`;
+	}, [formatPart]);
+};
