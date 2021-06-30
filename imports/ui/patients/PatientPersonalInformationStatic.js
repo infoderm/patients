@@ -32,9 +32,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import dateFormat from 'date-fns/format';
-import formatDuration from 'date-fns/formatDuration';
-import intervalToDuration from 'date-fns/intervalToDuration';
-import startOfToday from 'date-fns/startOfToday';
 import TextField from '../input/TextField';
 import FixedFab, {computeFixedFabStyle} from '../button/FixedFab';
 
@@ -50,6 +47,8 @@ import {
 	// makeAnyIndex,
 	makeRegExpIndex
 } from '../../api/string';
+
+import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
 
 import SetPicker from '../input/SetPicker';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
@@ -210,6 +209,9 @@ const PatientPersonalInformation = (props) => {
 
 	const {value: reifiedNoShows} = useNoShowsForPatient(props.patient._id);
 
+	const localizeBirthdate = useDateFormat('PPP');
+	const localizeAge = useDateFormatAge();
+
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -232,14 +234,7 @@ const PatientPersonalInformation = (props) => {
 	const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
 
 	const _birthdate = eidParseBirthdate(patient.birthdate);
-	const thisMorning = startOfToday();
-	const ageInterval = {start: _birthdate, end: thisMorning};
-	const detailedAge = formatDuration(intervalToDuration(ageInterval), {
-		delimiter: ','
-	});
-	const shortAge = detailedAge.split(',')[0];
-	const displayedAge =
-		(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
+	const displayedAge = localizeAge(_birthdate);
 
 	const totalNoShow = (patient.noshow || 0) + (reifiedNoShows || 0);
 
@@ -267,7 +262,7 @@ const PatientPersonalInformation = (props) => {
 						''
 					) : (
 						<Typography variant="h5">
-							{dateFormat(_birthdate, 'd MMM yyyy')}
+							{localizeBirthdate(_birthdate)}
 						</Typography>
 					)}
 					{!patient.birthdate ? (

@@ -7,12 +7,17 @@ import dateFormat from 'date-fns/format';
 import dateFormatDistance from 'date-fns/formatDistance';
 import dateFormatDistanceStrict from 'date-fns/formatDistanceStrict';
 import dateFormatRelative from 'date-fns/formatRelative';
+import dateFormatDuration from 'date-fns/formatDuration';
+
+import intervalToDuration from 'date-fns/intervalToDuration';
+
+import startOfToday from 'date-fns/startOfToday';
 
 import {enUS, nlBE, fr} from 'date-fns/locale';
 
 import {useSettingCached} from '../client/settings';
 
-export const locales: Readonly<Record<string, any>> = {
+export const locales: Readonly<Record<string, Locale>> = {
 	'en-US': enUS,
 	'nl-BE': nlBE,
 	'fr-BE': fr
@@ -65,6 +70,36 @@ export const useDateFormatDistanceStrict = (defaultOptions?) =>
 	);
 export const useDateFormatRelative = (defaultOptions?) =>
 	useLocalizedDateFormatDistanceOrRelative(dateFormatRelative, defaultOptions);
+
+export const useDateFormatDuration = (defaultOptions?) => {
+	const locale = useLocale();
+	return useMemo(
+		() => (duration: Duration, options?) =>
+			dateFormatDuration(duration, {
+				locale,
+				...defaultOptions,
+				...options
+			}),
+		[locale]
+	);
+};
+
+export const useDateFormatAge = (defaultOptions?) => {
+	const tuple = useDateFormatDuration({...defaultOptions, delimiter: ','});
+	return useMemo(
+		() => (birthdate: Date, options?) => {
+			const thisMorning = startOfToday();
+			const ageInterval = {start: birthdate, end: thisMorning};
+			const duration = intervalToDuration(ageInterval);
+			const detailedAge = tuple(duration, options);
+			const shortAge = detailedAge.split(',')[0];
+			const displayedAge =
+				(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
+			return displayedAge;
+		},
+		[tuple]
+	);
+};
 
 const someDateAtGivenDayOfWeek = (i: number) => {
 	// 0 is Sunday
