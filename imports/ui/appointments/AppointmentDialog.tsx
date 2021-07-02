@@ -174,12 +174,12 @@ const AppointmentDialog = (props) => {
 	const phoneIsReadOnly = !phoneIsDisabled && selectedPatientExists;
 	const phonePlaceholder = patientIsSelected
 		? selectedPatientExists
-			? 'Add a phone number to this patient by editing its information'
+			? 'Add a phone number to this patient by editing their information'
 			: 'Enter a phone number'
 		: 'Select a patient first';
 	const phoneHelperText =
 		selectedPatientExists && phone
-			? "Edit this patient's phone number by editing its information"
+			? "Edit this patient's phone number by editing their information"
 			: '';
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
 
