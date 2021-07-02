@@ -12,6 +12,7 @@ import NoContent from '../navigation/NoContent';
 import FixedFab from '../button/FixedFab';
 
 import ConsultationsPager from '../consultations/ConsultationsPager';
+import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 
 const ConsultationsForPatient = (props) => {
 	const [showCancelled, setShowCancelled] = useState(true);
@@ -79,8 +80,15 @@ const ConsultationsForPatient = (props) => {
 				sort={sort}
 				defaultExpandedFirst={page === 1}
 			/>
-			<FixedFab
+			<ManageConsultationsForPatientButton
+				Button={FixedFab}
 				col={4}
+				color="primary"
+				patientId={patientId}
+				tooltip="Ask for directions"
+			/>
+			<FixedFab
+				col={5}
 				tooltip={showNoShow ? 'Hide no-shows' : 'Show no-shows'}
 				color={showNoShow ? 'primary' : 'default'}
 				onClick={() => {
@@ -90,7 +98,7 @@ const ConsultationsForPatient = (props) => {
 				<PhoneDisabledIcon />
 			</FixedFab>
 			<FixedFab
-				col={5}
+				col={6}
 				tooltip={
 					showCancelled
 						? 'Hide cancelled appointments'

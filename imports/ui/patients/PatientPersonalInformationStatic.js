@@ -15,8 +15,6 @@ import Grid from '@material-ui/core/Grid';
 
 import Typography from '@material-ui/core/Typography';
 
-import Fab from '@material-ui/core/Fab';
-
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -35,7 +33,7 @@ import {DatePicker} from '@material-ui/pickers';
 
 import isValid from 'date-fns/isValid';
 import TextField from '../input/TextField';
-import FixedFab, {computeFixedFabStyle} from '../button/FixedFab';
+import FixedFab from '../button/FixedFab';
 
 import {useInsurancesFind} from '../../api/insurances';
 import {useDoctorsFind} from '../../api/doctors';
@@ -122,12 +120,7 @@ const styles = (theme) =>
 		},
 		noShowsAdornment: {
 			color: '#999'
-		},
-		editButton: computeFixedFabStyle({theme, col: 1}),
-		saveButton: computeFixedFabStyle({theme, col: 1}),
-		undoButton: computeFixedFabStyle({theme, col: 2}),
-		attachButton: computeFixedFabStyle({theme, col: 2}),
-		deleteButton: computeFixedFabStyle({theme, col: 4})
+		}
 	});
 
 const useStyles = makeStyles(styles);
@@ -652,34 +645,34 @@ const PatientPersonalInformation = (props) => {
 			</Grid>
 			{editing ? (
 				<>
-					<Fab
-						className={classes.saveButton}
+					<FixedFab
+						col={2}
 						color="primary"
 						disabled={!dirty}
 						onClick={saveDetails}
 					>
 						<SaveIcon />
-					</Fab>
-					<Fab
-						className={classes.undoButton}
+					</FixedFab>
+					<FixedFab
+						col={3}
 						color={dirty ? 'secondary' : 'default'}
 						onClick={() => dispatch({type: 'init', payload: props.patient})}
 					>
 						<UndoIcon />
-					</Fab>
+					</FixedFab>
 				</>
 			) : (
 				<>
-					<Fab
-						className={classes.editButton}
+					<FixedFab
+						col={2}
 						color="default"
 						onClick={() => dispatch({type: 'editing'})}
 					>
 						<EditIcon />
-					</Fab>
+					</FixedFab>
 					<AttachFileButton
-						Button={Fab}
-						className={classes.attachButton}
+						Button={FixedFab}
+						col={3}
 						color="default"
 						method="patients.attach"
 						item={patient._id}
@@ -688,18 +681,18 @@ const PatientPersonalInformation = (props) => {
 					</AttachFileButton>
 					<ManageConsultationsForPatientButton
 						Button={FixedFab}
-						col={3}
+						col={4}
 						color="primary"
 						patientId={patient._id}
 						tooltip="More actions!"
 					/>
-					<Fab
-						className={classes.deleteButton}
+					<FixedFab
+						col={5}
 						color="secondary"
 						onClick={() => dispatch({type: 'deleting'})}
 					>
 						<DeleteIcon />
-					</Fab>
+					</FixedFab>
 				</>
 			)}
 			<PatientDeletionDialog
