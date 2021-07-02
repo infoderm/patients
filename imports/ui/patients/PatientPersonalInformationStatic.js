@@ -344,7 +344,6 @@ const PatientPersonalInformation = (props) => {
 									</Grid>
 									<Grid item xs={2}>
 										<DatePicker
-											className={classes.formControl}
 											disabled={!editing}
 											mask={localizedDateMask}
 											value={_birthdate}
