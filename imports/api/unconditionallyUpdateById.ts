@@ -1,7 +1,16 @@
 import {Meteor} from 'meteor/meteor';
+import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-const unconditionallyUpdateById = (Collection, op, ownerKey = 'owner') =>
+type OpFunction<T> = (existing: T, ...rest: any[]) => Mongo.Modifier<T>;
+
+type Op<T> = OpFunction<T> | Mongo.Modifier<T>;
+
+const unconditionallyUpdateById = <T>(
+	Collection: Mongo.Collection<T>,
+	op: Op<T>,
+	ownerKey = 'owner'
+) =>
 	function (this: Meteor.MethodThisType, _id: string, ...rest: any[]) {
 		check(_id, String);
 
@@ -9,7 +18,8 @@ const unconditionallyUpdateById = (Collection, op, ownerKey = 'owner') =>
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const existing = Collection.findOne({_id, [ownerKey]: this.userId});
+		const selector = {_id, [ownerKey]: this.userId} as Mongo.Selector<T>;
+		const existing = Collection.findOne(selector);
 		if (!existing) {
 			throw new Meteor.Error('not-found');
 		}

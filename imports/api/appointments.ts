@@ -6,6 +6,7 @@ import addMilliseconds from 'date-fns/addMilliseconds';
 import {thisYearsInterval} from '../util/datetime';
 
 import {
+	ConsultationDocument,
 	Consultations,
 	consultations,
 	findLastConsultationInInterval,
@@ -143,7 +144,7 @@ const methods = {
 			patientId: args.consultationFields.patientId
 		};
 	},
-	'appointments.cancel': unconditionallyUpdateById(
+	'appointments.cancel': unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
 		(
 			_existing,
@@ -162,9 +163,8 @@ const methods = {
 			};
 		}
 	),
-	'appointments.beginConsultation': unconditionallyUpdateById(
-		Appointments,
-		function () {
+	'appointments.beginConsultation':
+		unconditionallyUpdateById<ConsultationDocument>(Appointments, function () {
 			const book = findLastConsultationInInterval(thisYearsInterval(), {
 				...filterNotInRareBooks(),
 				owner: this.userId
@@ -183,8 +183,7 @@ const methods = {
 					book
 				}
 			};
-		}
-	),
+		}),
 	'appointments.uncancel': unconditionallyUpdateById(Appointments, {
 		$set: {isCancelled: false}
 	}),
