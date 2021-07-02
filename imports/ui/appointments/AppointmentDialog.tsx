@@ -8,7 +8,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -27,6 +26,7 @@ import dateFormat from 'date-fns/format';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
+import TextField from '../input/TextField';
 
 import {msToString} from '../../client/duration';
 
@@ -168,6 +168,21 @@ const AppointmentDialog = (props) => {
 		}
 	};
 
+	const patientIsSelected = patientList.length === 1;
+	const selectedPatientExists = patientIsSelected && patientList[0]._id !== '?';
+	const phoneIsDisabled = !patientIsSelected;
+	const phoneIsReadOnly = !phoneIsDisabled && selectedPatientExists;
+	const phonePlaceholder = patientIsSelected
+		? selectedPatientExists
+			? 'Add a phone number to this patient by editing its information'
+			: 'Enter a phone number'
+		: 'Select a patient first';
+	const phoneHelperText =
+		selectedPatientExists && phone
+			? "Edit this patient's phone number by editing its information"
+			: '';
+	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
+
 	return (
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
@@ -252,13 +267,16 @@ const AppointmentDialog = (props) => {
 						<TextField
 							multiline
 							label="Numéro de téléphone"
-							placeholder="Numéro de téléphone"
+							placeholder={phonePlaceholder}
+							helperText={phoneHelperText}
+							error={phoneError}
 							rows={1}
 							className={classes.multiline}
 							value={phone}
-							InputLabelProps={{shrink: Boolean(phone)}}
+							InputLabelProps={{shrink: true}}
 							margin="normal"
-							disabled={patientList.length !== 1 || patientList[0]._id !== '?'}
+							readOnly={phoneIsReadOnly}
+							disabled={phoneIsDisabled}
 							onChange={(e) => setPhone(e.target.value)}
 						/>
 					</Grid>
