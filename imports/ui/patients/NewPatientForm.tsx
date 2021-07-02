@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 
 import {useHistory} from 'react-router-dom';
@@ -23,6 +21,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
+import call from '../../api/call';
 
 const styles = (theme) => ({
 	container: {
@@ -49,7 +49,7 @@ const NewPatientForm = () => {
 	const history = useHistory();
 	const classes = useStyles();
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		const patient = {
@@ -61,13 +61,12 @@ const NewPatientForm = () => {
 			noshow
 		};
 
-		Meteor.call('patients.insert', patient, (err, _id) => {
-			if (err) {
-				console.error(err);
-			} else {
-				history.push({pathname: `/patient/${_id}`});
-			}
-		});
+		try {
+			const _id = await call('patients.insert', patient);
+			history.push({pathname: `/patient/${_id}`});
+		} catch (error: unknown) {
+			console.error(error);
+		}
 	};
 
 	return (
