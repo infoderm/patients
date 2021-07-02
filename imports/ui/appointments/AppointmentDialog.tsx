@@ -18,15 +18,19 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import {Alert, AlertTitle} from '@material-ui/lab';
+import {DatePicker, TimePicker} from '@material-ui/pickers';
 
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import dateFormat from 'date-fns/format';
+import isValid from 'date-fns/isValid';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
 import TextField from '../input/TextField';
+
+import {useDateMask} from '../../i18n/datetime';
 
 import {msToString} from '../../client/duration';
 
@@ -69,6 +73,13 @@ const usePhone = (patientList) => {
 	return useStateWithInitOverride(initPhone);
 };
 
+const serializeDate = (datetime: Date) => dateFormat(datetime, 'yyyy-MM-dd');
+const serializeTime = (datetime: Date) => dateFormat(datetime, 'HH:mm');
+const unserializeDate = (date: string) => new Date(date);
+const unserializeDatetime = (date: string, time: string) =>
+	new Date(`${date}T${time}`);
+const unserializeTime = (time: string) =>
+	unserializeDatetime('1970-01-01', time);
 const AppointmentDialog = (props) => {
 	const classes = useStyles();
 	const history = useHistory();
@@ -88,10 +99,16 @@ const AppointmentDialog = (props) => {
 	);
 
 	const [date, setDate] = useStateWithInitOverride(
-		dateFormat(initialDatetime, 'yyyy-MM-dd')
+		serializeDate(initialDatetime)
+	);
+	const [validDate, setValidDate] = useStateWithInitOverride(
+		isValid(initialDatetime)
 	);
 	const [time, setTime] = useStateWithInitOverride(
-		noInitialTime ? '' : dateFormat(initialDatetime, 'HH:mm')
+		noInitialTime ? '' : serializeTime(initialDatetime)
+	);
+	const [validTime, setValidTime] = useStateWithInitOverride(
+		!noInitialTime && isValid(initialDatetime)
 	);
 	const [duration, setDuration] = useStateWithInitOverride(
 		appointmentDuration.includes(initialAppointment?.duration)
@@ -116,8 +133,13 @@ const AppointmentDialog = (props) => {
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
-	const datetime = new Date(`${date}T${time}`);
-	const appointmentIsInThePast = isBefore(new Date(date), startOfToday());
+	const localizedDateMask = useDateMask();
+
+	const datetime = unserializeDatetime(date, time);
+	const appointmentIsInThePast = isBefore(
+		unserializeDate(date),
+		startOfToday()
+	);
 	const displayAppointmentIsInThePast = appointmentIsInThePast;
 
 	const _id = initialAppointment?._id;
@@ -196,38 +218,57 @@ const AppointmentDialog = (props) => {
 				Schedule an appointment
 			</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
-				<Grid container>
+				<Grid container spacing={3}>
 					<Grid item xs={4}>
-						<TextField
-							type="date"
+						<DatePicker
+							mask={localizedDateMask}
+							value={unserializeDate(date)}
 							label="Date"
-							InputLabelProps={{
-								shrink: true
+							renderInput={(props) => (
+								<TextField
+									{...props}
+									InputLabelProps={{shrink: true}}
+									error={!validDate || displayAppointmentIsInThePast}
+									helperText={
+										displayAppointmentIsInThePast
+											? 'Date dans le passé!'
+											: undefined
+									}
+								/>
+							)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setDate(serializeDate(pickedDatetime));
+									setValidDate(true);
+								} else {
+									setValidDate(false);
+								}
 							}}
-							value={date}
-							error={!date || displayAppointmentIsInThePast}
-							helperText={
-								displayAppointmentIsInThePast
-									? 'Date dans le passé!'
-									: undefined
-							}
-							onChange={(e) => setDate(e.target.value)}
 						/>
 					</Grid>
 					<Grid item xs={4}>
-						<TextField
-							type="time"
+						<TimePicker
+							renderInput={(props) => (
+								<TextField
+									{...props}
+									InputLabelProps={{shrink: true}}
+									error={!validTime}
+								/>
+							)}
 							label="Time"
-							InputLabelProps={{
-								shrink: true
+							value={unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
 							}}
-							value={time}
-							error={!time}
-							onChange={(e) => setTime(e.target.value)}
 						/>
 					</Grid>
 					<Grid item xs={4}>
-						<FormControl>
+						<FormControl fullWidth>
 							<InputLabel htmlFor="duration">Duration</InputLabel>
 							<Select
 								readOnly={loading}
@@ -308,7 +349,7 @@ const AppointmentDialog = (props) => {
 					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
-					disabled={patientList.length !== 1 || !date || !time}
+					disabled={patientList.length !== 1 || !validDate || !validTime}
 					color="primary"
 					onClick={createAppointment}
 				>
