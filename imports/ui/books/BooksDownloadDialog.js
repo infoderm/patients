@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import addYears from 'date-fns/addYears';
 
-import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
@@ -26,12 +25,6 @@ import call from '../../api/call';
 import {books} from '../../api/books';
 import withLazyOpening from '../modal/withLazyOpening';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-}));
-
 const BooksDownloadDialog = ({
 	open,
 	onClose,
@@ -39,7 +32,6 @@ const BooksDownloadDialog = ({
 	initialBegin,
 	initialEnd
 }) => {
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [advancedFunctionality, setAdvancedFunctionality] = useState(
@@ -170,21 +162,24 @@ const BooksDownloadDialog = ({
 				)}
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					disabled={advancedFunctionality}
 					color="default"
+					endIcon={<TuneIcon />}
 					onClick={() => setAdvancedFunctionality(true)}
 				>
 					Advanced
-					<TuneIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="primary" onClick={downloadData}>
+				<Button color="primary" endIcon={<SaveIcon />} onClick={downloadData}>
 					Download
-					<SaveIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>
