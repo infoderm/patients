@@ -5,6 +5,11 @@ import {Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
+
+import {MobileDateTimePicker as DateTimePicker} from '@material-ui/pickers';
+
+import {useDateMask} from '../../i18n/datetime';
+
 import TextField from '../input/TextField';
 import CopiableTextField from '../input/CopiableTextField';
 
@@ -31,7 +36,9 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 
 	const classes = useStyles();
 
-	const {date, time} = state;
+	const localizedDateMask = useDateMask();
+
+	const {datetime, doneDatetime} = state;
 
 	return (
 		<Grid container className={classes.container} spacing={3}>
@@ -85,25 +92,30 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 				</Grid>
 			)}
 			<Grid item xs={2}>
-				<TextField
-					type="date"
-					label="Date"
-					InputLabelProps={{
-						shrink: true
+				<DateTimePicker
+					mask={localizedDateMask}
+					value={datetime}
+					label="Begin"
+					renderInput={(props) => (
+						<TextField {...props} InputLabelProps={{shrink: true}} />
+					)}
+					onChange={(value) => {
+						update('datetime')({target: {value}});
 					}}
-					value={date}
-					onChange={update('date')}
 				/>
 			</Grid>
-			<Grid item xs={1}>
-				<TextField
-					type="time"
-					label="Time"
-					InputLabelProps={{
-						shrink: true
+			<Grid item xs={2}>
+				<DateTimePicker
+					disabled
+					mask={localizedDateMask}
+					value={doneDatetime}
+					label="End"
+					renderInput={(props) => (
+						<TextField {...props} InputLabelProps={{shrink: true}} />
+					)}
+					onChange={(value) => {
+						update('doneDatetime')({target: {value}});
 					}}
-					value={time}
-					onChange={update('time')}
 				/>
 			</Grid>
 		</Grid>

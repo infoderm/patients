@@ -8,7 +8,6 @@ import Fab from '@material-ui/core/Fab';
 import CompareIcon from '@material-ui/icons/Compare';
 import SaveIcon from '@material-ui/icons/Save';
 
-import dateFormat from 'date-fns/format';
 import dateParseISO from 'date-fns/parseISO';
 
 import call from '../../api/call';
@@ -46,8 +45,7 @@ const datetimeParse = (date, time) => dateParseISO(`${date}T${time}:00`);
 const defaultState = {
 	_id: undefined,
 	datetime: datetimeParse(defaultDate, defaultTime),
-	date: defaultDate,
-	time: defaultTime,
+	doneDatetime: undefined,
 	reason: '',
 	done: '',
 	todo: '',
@@ -79,8 +77,7 @@ const init = (consultation) => ({
 	...removeUndefined({
 		_id: consultation._id,
 		datetime: consultation.datetime,
-		date: dateFormat(consultation.datetime, 'yyyy-MM-dd'),
-		time: dateFormat(consultation.datetime, 'HH:mm'),
+		doneDatetime: consultation.doneDatetime,
 		reason: consultation.reason,
 		done: consultation.done,
 		todo: consultation.todo,
@@ -109,22 +106,8 @@ const reducer = (state, action) => {
 			switch (action.key) {
 				case '_id':
 					throw new Error('Cannot update _id.');
-				case 'datetime':
-					throw new Error('Cannot update datetime directly.');
-				case 'date':
-					return {
-						...state,
-						date: action.value,
-						datetime: datetimeParse(action.value, state.time),
-						dirty: true
-					};
-				case 'time':
-					return {
-						...state,
-						time: action.value,
-						datetime: datetimeParse(state.date, action.value),
-						dirty: true
-					};
+				case 'dirty':
+					throw new Error('Cannot update dirty.');
 				case 'paid':
 					return {...state, paid: action.value, syncPaid: false, dirty: true};
 				case 'price':
@@ -139,6 +122,10 @@ const reducer = (state, action) => {
 						dirty: true
 					};
 				default:
+					if (!Object.prototype.hasOwnProperty.call(defaultState, action.key)) {
+						throw new Error(`Unknown key ${action.key}`);
+					}
+
 					return {...state, [action.key]: action.value, dirty: true};
 			}
 
