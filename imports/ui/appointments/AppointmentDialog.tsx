@@ -18,7 +18,10 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import {Alert, AlertTitle} from '@material-ui/lab';
-import {DatePicker, TimePicker} from '@material-ui/pickers';
+import {
+	MobileDatePicker as DatePicker,
+	MobileTimePicker as TimePicker
+} from '@material-ui/pickers';
 
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CancelIcon from '@material-ui/icons/Cancel';

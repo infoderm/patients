@@ -29,7 +29,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import {DatePicker} from '@material-ui/pickers';
+import {MobileDatePicker as DatePicker} from '@material-ui/pickers';
 
 import isValid from 'date-fns/isValid';
 import TextField from '../input/TextField';
