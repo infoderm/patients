@@ -20,7 +20,7 @@ import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
-import eidFormatBirthdate from '../../api/eidFormatBirthdate';
+import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
 
 const useStyles = makeStyles((theme) => ({
@@ -140,7 +140,7 @@ const GenericStaticPatientCard = ({
 						</Avatar>
 					}
 					title={`${lastname.toUpperCase()} ${firstname}`}
-					subheader={eidFormatBirthdate(birthdate, localizeBirthdate)}
+					subheader={eidDisplayBirthdate(birthdate, localizeBirthdate)}
 				/>
 				<CardContent className={classes.content} />
 				<CardActions disableSpacing className={classes.actions}>

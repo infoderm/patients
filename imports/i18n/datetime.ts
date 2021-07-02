@@ -29,11 +29,22 @@ export const localeDescriptions: Readonly<Record<string, string>> = {
 	'nl-BE': 'Nederlands (Belgïe)'
 };
 
-const useLocaleKey = () => useSettingCached('lang').value;
+export const maskMap = {
+	'en-US': '__/__/____',
+	'nl-BE': '__-__-____',
+	'fr-BE': '__/__/____'
+};
 
-const useLocale = () => {
+export const useLocaleKey = () => useSettingCached('lang').value;
+
+export const useLocale = () => {
 	const key = useLocaleKey();
 	return locales[key];
+};
+
+export const useDateMask = () => {
+	const key = useLocaleKey();
+	return maskMap[key];
 };
 
 export const useDateFormat = (defaultFormat = 'PP', defaultOptions?) => {

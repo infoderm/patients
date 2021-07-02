@@ -31,7 +31,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import dateFormat from 'date-fns/format';
+import {DatePicker} from '@material-ui/pickers';
+
+import isValid from 'date-fns/isValid';
 import TextField from '../input/TextField';
 import FixedFab, {computeFixedFabStyle} from '../button/FixedFab';
 
@@ -41,6 +43,7 @@ import {useAllergiesFind} from '../../api/allergies';
 import {useSetting} from '../../client/settings';
 
 import eidParseBirthdate from '../../api/eidParseBirthdate';
+import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
 import {
@@ -48,7 +51,11 @@ import {
 	makeRegExpIndex
 } from '../../api/string';
 
-import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
+import {
+	useDateFormat,
+	useDateFormatAge,
+	useDateMask
+} from '../../i18n/datetime';
 
 import SetPicker from '../input/SetPicker';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
@@ -211,6 +218,7 @@ const PatientPersonalInformation = (props) => {
 
 	const localizeBirthdate = useDateFormat('PPP');
 	const localizeAge = useDateFormatAge();
+	const localizedDateMask = useDateMask();
 
 	if (loading) {
 		return <div>Loading...</div>;
@@ -342,18 +350,28 @@ const PatientPersonalInformation = (props) => {
 										</FormControl>
 									</Grid>
 									<Grid item xs={2}>
-										<TextField
-											fullWidth
+										<DatePicker
 											className={classes.formControl}
-											type="date"
 											disabled={!editing}
+											mask={localizedDateMask}
+											value={_birthdate}
 											label="Birth date"
-											InputLabelProps={{
-												shrink: true
+											renderInput={(props) => (
+												<TextField
+													margin="normal"
+													InputLabelProps={{shrink: true}}
+													{...props}
+												/>
+											)}
+											onChange={(date) => {
+												if (isValid(date)) {
+													dispatch({
+														type: 'update',
+														key: 'birthdate',
+														value: eidFormatBirthdate(date)
+													});
+												}
 											}}
-											value={dateFormat(_birthdate, 'yyyy-MM-dd')}
-											margin="normal"
-											onChange={update('birthdate')}
 										/>
 									</Grid>
 								</>
