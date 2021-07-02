@@ -5,6 +5,7 @@ import addYears from 'date-fns/addYears';
 
 import {useSnackbar} from 'notistack';
 
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,6 +19,8 @@ import {MobileDatePicker as DatePicker} from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TuneIcon from '@material-ui/icons/Tune';
+
+import GridContainerInsideDialogContent from '../grid/GridContainerInsideDialogContent';
 
 import saveTextAs from '../../client/saveTextAs';
 
@@ -106,60 +109,65 @@ const BooksDownloadDialog = ({
 					{advancedFunctionality ? 'Tune parameters' : 'Choose year'} then click
 					download.
 				</DialogContentText>
-				{advancedFunctionality ? (
-					<>
-						<div>
+				<GridContainerInsideDialogContent spacing={3}>
+					{advancedFunctionality ? (
+						<>
+							<Grid item xs={6}>
+								<DatePicker
+									renderInput={(props) => <TextField fullWidth {...props} />}
+									label="Begin"
+									value={begin}
+									onChange={(date) => setBegin(date)}
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<DatePicker
+									renderInput={(props) => <TextField fullWidth {...props} />}
+									label="End"
+									value={end}
+									onChange={(date) => setEnd(date)}
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<TextField
+									fullWidth
+									label="First book"
+									value={firstBook}
+									error={!/^\d+$/.test(firstBook)}
+									onChange={(e) => setFirstBook(e.target.value)}
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<TextField
+									fullWidth
+									label="Last book"
+									value={lastBook}
+									error={!/^\d+$/.test(lastBook)}
+									onChange={(e) => setLastBook(e.target.value)}
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<TextField
+									fullWidth
+									label="Max rows"
+									value={maxRows}
+									error={!/^\d+$/.test(maxRows)}
+									onChange={(e) => setMaxRows(e.target.value)}
+								/>
+							</Grid>
+						</>
+					) : (
+						<Grid item xs={12}>
 							<DatePicker
-								renderInput={(props) => <TextField {...props} />}
-								label="Begin"
+								renderInput={(props) => <TextField fullWidth {...props} />}
+								views={['year']}
+								label="Year"
 								value={begin}
-								onChange={(date) => setBegin(date)}
+								onChange={(date) => setYear(date.getFullYear())}
 							/>
-						</div>
-						<div>
-							<DatePicker
-								renderInput={(props) => <TextField {...props} />}
-								label="End"
-								value={end}
-								onChange={(date) => setEnd(date)}
-							/>
-						</div>
-						<div>
-							<TextField
-								label="First book"
-								value={firstBook}
-								error={!/^\d+$/.test(firstBook)}
-								onChange={(e) => setFirstBook(e.target.value)}
-							/>
-						</div>
-						<div>
-							<TextField
-								label="Last book"
-								value={lastBook}
-								error={!/^\d+$/.test(lastBook)}
-								onChange={(e) => setLastBook(e.target.value)}
-							/>
-						</div>
-						<div>
-							<TextField
-								label="Max rows"
-								value={maxRows}
-								error={!/^\d+$/.test(maxRows)}
-								onChange={(e) => setMaxRows(e.target.value)}
-							/>
-						</div>
-					</>
-				) : (
-					<div>
-						<DatePicker
-							renderInput={(props) => <TextField {...props} />}
-							views={['year']}
-							label="Year"
-							value={begin}
-							onChange={(date) => setYear(date.getFullYear())}
-						/>
-					</div>
-				)}
+						</Grid>
+					)}
+				</GridContainerInsideDialogContent>
 			</DialogContent>
 			<DialogActions>
 				<Button
