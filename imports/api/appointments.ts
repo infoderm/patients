@@ -145,13 +145,19 @@ const methods = {
 	},
 	'appointments.cancel': unconditionallyUpdateById(
 		Appointments,
-		(_existing, reason) => {
-			check(reason, String);
+		(
+			_existing,
+			cancellationReason: string,
+			cancellationExplanation: string
+		) => {
+			check(cancellationReason, String);
+			check(cancellationExplanation, String);
 			return {
 				$set: {
 					isCancelled: true,
 					cancellationDatetime: new Date(),
-					cancellationReason: reason
+					cancellationReason,
+					cancellationExplanation
 				}
 			};
 		}

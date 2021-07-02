@@ -54,6 +54,9 @@ interface ConsultationFields {
 	payment_method?: string;
 	isDone: boolean;
 	isCancelled?: boolean;
+	cancellationDatetime?: Date;
+	cancellationReason?: string;
+	cancellationExplanation?: string;
 
 	attachments?: string[];
 }

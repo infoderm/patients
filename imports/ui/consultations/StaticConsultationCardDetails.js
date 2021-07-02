@@ -97,6 +97,7 @@ const StaticConsultationCardDetails = (props) => {
 			isCancelled,
 			cancellationDatetime,
 			cancellationReason,
+			cancellationExplanation,
 			reason,
 			done,
 			todo,
@@ -122,9 +123,9 @@ const StaticConsultationCardDetails = (props) => {
 					<ConsultationsCardListItem
 						Icon={AlarmOffIcon}
 						primary="Rendez-vous annulé"
-						secondary={`${localizedDatetime(
+						secondary={`${cancellationReason} ${localizedDatetime(
 							cancellationDatetime
-						)}: ${cancellationReason}`}
+						)}\nExplanation: ${cancellationExplanation || 'unknown'}`}
 					/>
 				)}
 				{isNoShow && (

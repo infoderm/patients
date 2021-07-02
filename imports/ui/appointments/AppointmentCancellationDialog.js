@@ -1,9 +1,5 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-
-import {makeStyles} from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,18 +12,15 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
+import call from '../../api/call';
+
 import {useSetting} from '../../client/settings';
 import withLazyOpening from '../modal/withLazyOpening';
-
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-}));
 
 const AppointmentCancellationDialog = (props) => {
 	const {open, onClose, appointment} = props;
@@ -36,19 +29,17 @@ const AppointmentCancellationDialog = (props) => {
 		'appointment-cancellation-reason'
 	);
 	const [reason, setReason] = useState(loading ? '' : reasons[0] || '');
+	const [explanation, setExplanation] = useState('');
 
-	const classes = useStyles();
-
-	const cancelThisAppointment = (event) => {
+	const cancelThisAppointment = async (event) => {
 		event.preventDefault();
-		Meteor.call('appointments.cancel', appointment._id, reason, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Appointment #${appointment._id} cancelled.`);
-				onClose();
-			}
-		});
+		try {
+			await call('appointments.cancel', appointment._id, reason, explanation);
+			console.log(`Appointment #${appointment._id} cancelled.`);
+			onClose();
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	return (
@@ -66,7 +57,7 @@ const AppointmentCancellationDialog = (props) => {
 					If you do not want to cancel this appointment, click cancel. If you
 					really want to cancel this appointment from the system, click cancel.
 				</DialogContentText>
-				<FormControl fullWidth>
+				<FormControl fullWidth margin="normal">
 					<InputLabel htmlFor="cancellation-reason">
 						Cancellation Reason
 					</InputLabel>
@@ -86,19 +77,35 @@ const AppointmentCancellationDialog = (props) => {
 						))}
 					</Select>
 				</FormControl>
+				<TextField
+					fullWidth
+					margin="normal"
+					label="Explanation for cancellation"
+					placeholder="Please give an explanation for the cancellation (optional)"
+					value={explanation}
+					error={!explanation}
+					InputLabelProps={{
+						shrink: true
+					}}
+					onChange={(e) => setExplanation(e.target.value)}
+				/>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<AlarmOnIcon />}
+					onClick={onClose}
+				>
 					Do not cancel
-					<AlarmOnIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					color="secondary"
 					disabled={!reason}
+					endIcon={<AlarmOffIcon />}
 					onClick={cancelThisAppointment}
 				>
 					Cancel Appointment
-					<AlarmOffIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>
