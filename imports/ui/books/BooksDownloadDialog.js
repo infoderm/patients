@@ -57,7 +57,7 @@ const BooksDownloadDialog = ({
 		setFirstBook(String(books.DOWNLOAD_FIRST_BOOK));
 		setLastBook(String(books.DOWNLOAD_LAST_BOOK));
 		setMaxRows(String(books.DOWNLOAD_MAX_ROWS));
-	}, [initialAdvancedFunctionality, initialBegin, initialEnd]);
+	}, [initialAdvancedFunctionality, Number(initialBegin), Number(initialEnd)]);
 
 	const downloadData = async (event) => {
 		event.preventDefault();
