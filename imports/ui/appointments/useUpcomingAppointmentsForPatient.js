@@ -15,6 +15,7 @@ const useUpcomingAppointmentsForPatient = (patientId, {limit}) => {
 	const query = {
 		patientId,
 		isDone: false,
+		isCancelled: {$ne: true},
 		datetime: {
 			$gte: earlyMorning
 		}
@@ -28,6 +29,7 @@ const useUpcomingAppointmentsForPatient = (patientId, {limit}) => {
 		fields: {
 			patientId: 1,
 			isDone: 1,
+			isCancelled: 1,
 			datetime: 1
 		}
 	};
