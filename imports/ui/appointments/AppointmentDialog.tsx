@@ -127,8 +127,8 @@ const AppointmentDialog = (props) => {
 		begin,
 		end,
 		{
-			_id: {$not: _id},
-			isCancelled: {$not: true}
+			_id: {$ne: _id},
+			isCancelled: {$ne: true}
 		},
 		{limit: 1},
 		[_id, Number(datetime), duration]
