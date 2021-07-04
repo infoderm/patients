@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -56,6 +56,8 @@ const styles = () =>
 		}
 	});
 
+const useStyles = makeStyles(styles);
+
 const DocumentCard = (props) => {
 	const [linking, setLinking] = useState(false);
 	const [unlinking, setUnlinking] = useState(false);
@@ -63,14 +65,10 @@ const DocumentCard = (props) => {
 	const [restoring, setRestoring] = useState(false);
 	const [superdeleting, setSuperdeleting] = useState(false);
 
-	const {
-		PatientChip,
-		VersionsChip,
-		VersionsButton,
-		defaultExpanded,
-		classes,
-		document
-	} = props;
+	const classes = useStyles();
+
+	const {PatientChip, VersionsChip, VersionsButton, defaultExpanded, document} =
+		props;
 
 	const {patientId, parsed, format, kind, deleted} = document;
 
@@ -226,7 +224,6 @@ DocumentCard.defaultProps = {
 };
 
 DocumentCard.propTypes = {
-	classes: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	PatientChip: PropTypes.elementType,
 	VersionsChip: PropTypes.elementType,
@@ -234,4 +231,4 @@ DocumentCard.propTypes = {
 	defaultExpanded: PropTypes.bool
 };
 
-export default withStyles(styles, {withTheme: true})(DocumentCard);
+export default DocumentCard;
