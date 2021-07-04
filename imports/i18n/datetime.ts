@@ -15,7 +15,7 @@ import startOfToday from 'date-fns/startOfToday';
 
 import {enUS, nlBE, fr} from 'date-fns/locale';
 
-import {useSettingCached} from '../client/settings';
+import useLocaleKey from './useLocale';
 
 export const locales: Readonly<Record<string, Locale>> = {
 	'en-US': enUS,
@@ -34,8 +34,6 @@ export const maskMap = {
 	'nl-BE': '__-__-____',
 	'fr-BE': '__/__/____'
 };
-
-export const useLocaleKey = () => useSettingCached('lang').value;
 
 export const useLocale = () => {
 	const key = useLocaleKey();
