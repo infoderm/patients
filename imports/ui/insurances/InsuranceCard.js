@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
@@ -32,7 +32,11 @@ const styles = (theme) =>
 		}
 	});
 
-const InsuranceCard = ({classes, item, loading}) => {
+const useStyles = makeStyles(styles);
+
+const InsuranceCardWithoutItem = ({item, loading}) => {
+	const classes = useStyles();
+
 	if (loading) return null;
 	if (item === undefined) return null;
 
@@ -75,19 +79,14 @@ const InsuranceCard = ({classes, item, loading}) => {
 	);
 };
 
-InsuranceCard.defaultProps = {
+InsuranceCardWithoutItem.defaultProps = {
 	loading: false
 };
 
-InsuranceCard.propTypes = {
-	classes: PropTypes.object.isRequired,
+InsuranceCardWithoutItem.propTypes = {
 	item: PropTypes.object,
 	loading: PropTypes.bool
 };
-
-const InsuranceCardWithoutItem = withStyles(styles, {withTheme: true})(
-	InsuranceCard
-);
 
 export default InsuranceCardWithoutItem;
 
