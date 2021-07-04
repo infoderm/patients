@@ -3,8 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Currency from 'currency-formatter';
-
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
@@ -18,6 +16,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import {useCurrencyFormat} from '../../i18n/currency';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
@@ -47,6 +47,8 @@ const ConsultationDebtSettlementDialog = (props) => {
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const classes = useStyles();
+	const currencyFormat = useCurrencyFormat(currency);
+
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const clearDebtForThisConsultation = (onClose, consultation) => (event) => {
@@ -94,14 +96,12 @@ const ConsultationDebtSettlementDialog = (props) => {
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
-					Before settlement, the patient had paid{' '}
-					<b>{Currency.format(paid, {code: currency})}</b> out of{' '}
-					<b>{Currency.format(price, {code: currency})}</b>. The patient thus{' '}
-					<b>owed {Currency.format(owed, {code: currency})}</b> for this
-					consultation.{' '}
+					Before settlement, the patient had paid <b>{currencyFormat(paid)}</b>{' '}
+					out of <b>{currencyFormat(price)}</b>. The patient thus{' '}
+					<b>owed {currencyFormat(owed)}</b> for this consultation.{' '}
 					<b>
-						Once settled, the patient will owe{' '}
-						{Currency.format(0, {code: currency})} for this consultation.
+						Once settled, the patient will owe {currencyFormat(0)} for this
+						consultation.
 					</b>{' '}
 					If you do not want to settle debt for this consultation, click cancel.
 					If you really want to settle debt for this consultation, click clear
@@ -117,7 +117,7 @@ const ConsultationDebtSettlementDialog = (props) => {
 					color="primary"
 					onClick={clearDebtForThisConsultation(onClose, consultation)}
 				>
-					Clear debt ({Currency.format(owed, {code: currency})})
+					Clear debt ({currencyFormat(owed)})
 					<CheckIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>

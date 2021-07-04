@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Currency from 'currency-formatter';
 import dateFormat from 'date-fns/format';
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -16,6 +15,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CloseIcon from '@material-ui/icons/Close';
+
+import {useCurrencyFormat} from '../../i18n/currency';
 
 import {onlyASCII} from '../../api/string';
 
@@ -74,6 +75,8 @@ const ConsultationPaymentDialog = (props) => {
 
 	const {currency, price, paid, datetime} = consultation;
 
+	const currencyFormat = useCurrencyFormat(currency);
+
 	const owed = price - paid;
 
 	const options = {fields: ConsultationPaymentDialog.projection};
@@ -130,11 +133,10 @@ const ConsultationPaymentDialog = (props) => {
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
-					Before payment, the patient had paid{' '}
-					<b>{Currency.format(paid, {code: currency})}</b> out of{' '}
-					<b>{Currency.format(price, {code: currency})}</b>. The patient thus{' '}
-					<b>owes {Currency.format(owed, {code: currency})}</b> for this
-					consultation. This is the amount that is programmed for this payment.
+					Before payment, the patient had paid <b>{currencyFormat(paid)}</b> out
+					of <b>{currencyFormat(price)}</b>. The patient thus{' '}
+					<b>owes {currencyFormat(owed)}</b> for this consultation. This is the
+					amount that is programmed for this payment.
 				</DialogContentText>
 				<div className={classes.codeContainer}>
 					<div className={classes.codeProgress}>

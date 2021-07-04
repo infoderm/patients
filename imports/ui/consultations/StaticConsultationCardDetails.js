@@ -27,9 +27,8 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
-import Currency from 'currency-formatter';
-
 import {useDateFormat} from '../../i18n/datetime';
+import {useCurrencyFormat} from '../../i18n/currency';
 import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
 
 const useStyles = makeStyles(() => ({
@@ -114,6 +113,7 @@ const StaticConsultationCardDetails = (props) => {
 	} = props;
 
 	const localizedDatetime = useDateFormat('PPPPpppp');
+	const currencyFormat = useCurrencyFormat(currency);
 
 	return (
 		<AccordionDetails className={classes.details}>
@@ -179,9 +179,9 @@ const StaticConsultationCardDetails = (props) => {
 					<ConsultationsCardListItem
 						Icon={EuroSymbolIcon}
 						primary="Paiement"
-						secondary={`À payé ${Currency.format(paid, {
-							code: currency
-						})} de ${Currency.format(price, {code: currency})}.`}
+						secondary={`À payé ${currencyFormat(paid)} de ${currencyFormat(
+							price
+						)}.`}
 					/>
 				)}
 				{isDone && !missingPaymentData && (

@@ -17,9 +17,9 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 
 import dateFormat from 'date-fns/format';
-import Currency from 'currency-formatter';
 
 import {useDateFormat} from '../../i18n/datetime';
+import {useCurrencyFormat} from '../../i18n/currency';
 import {PatientDocument} from '../../api/patients';
 import {ConsultationDocument} from '../../api/consultations';
 import {msToString, msToStringShort} from '../../client/duration';
@@ -118,6 +118,7 @@ const StaticConsultationCardSummary = (
 	} = props;
 
 	const localizedDateFormat = useDateFormat();
+	const currencyFormat = useCurrencyFormat(currency);
 
 	return (
 		<AccordionSummary
@@ -197,12 +198,12 @@ const StaticConsultationCardSummary = (
 					<Chip
 						className={classes.pricechip}
 						avatar={<Avatar>{paymentMethodIcon(payment_method)}</Avatar>}
-						label={Currency.format(price, {code: currency})}
+						label={currencyFormat(price)}
 					/>
 				)}
 				{owes && (
 					<Chip
-						label={`Doit ${Currency.format(owed, {code: currency})}`}
+						label={`Doit ${currencyFormat(owed)}`}
 						className={classes.debtchip}
 					/>
 				)}
