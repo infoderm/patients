@@ -32,27 +32,23 @@ const Logout = () => {
 	return <MenuItem onClick={logout}>Logout</MenuItem>;
 };
 
-class OptionsPopover extends React.Component {
-	render() {
-		const {anchorEl, handleClose, changeMode} = this.props;
+const OptionsPopover = ({anchorEl, handleClose, changeMode}) => {
+	const handleModeChangePassword = () => {
+		changeMode('change-password');
+	};
 
-		const handleModeChangePassword = () => {
-			changeMode('change-password');
-		};
-
-		return (
-			<Menu
-				id="dashboard-options"
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				onClose={handleClose}
-			>
-				<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
-				<Logout />
-			</Menu>
-		);
-	}
-}
+	return (
+		<Menu
+			id="dashboard-options"
+			anchorEl={anchorEl}
+			open={Boolean(anchorEl)}
+			onClose={handleClose}
+		>
+			<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
+			<Logout />
+		</Menu>
+	);
+};
 
 const Dashboard = ({currentUser}) => {
 	const [mode, setMode] = useState('options');
