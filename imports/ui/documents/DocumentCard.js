@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {withStyles, createStyles} from '@material-ui/core/styles';
@@ -56,21 +56,25 @@ const styles = () =>
 		}
 	});
 
-class DocumentCard extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			linking: false,
-			unlinking: false,
-			deleting: false,
-			restoring: false,
-			superdeleting: false
-		};
-	}
+const DocumentCard = (props) => {
+	const [linking, setLinking] = useState(false);
+	const [unlinking, setUnlinking] = useState(false);
+	const [deleting, setDeleting] = useState(false);
+	const [restoring, setRestoring] = useState(false);
+	const [superdeleting, setSuperdeleting] = useState(false);
 
-	download = (_event) => {
-		const {document} = this.props;
+	const {
+		PatientChip,
+		VersionsChip,
+		VersionsButton,
+		defaultExpanded,
+		classes,
+		document
+	} = props;
 
+	const {patientId, parsed, format, kind, deleted} = document;
+
+	const download = (_event) => {
 		const extensions = {
 			healthone: 'HLT'
 			// 'medar' : 'MDR' ,
@@ -88,163 +92,131 @@ class DocumentCard extends React.Component {
 		saveTextAs(document.decoded || document.source, filename);
 	};
 
-	render() {
-		const {
-			PatientChip,
-			VersionsChip,
-			VersionsButton,
-			defaultExpanded,
-			classes,
-			document: {patientId, parsed, format, kind, deleted}
-		} = this.props;
-
-		const {document} = this.props;
-
-		const {linking, unlinking, deleting, restoring, superdeleting} = this.state;
-
-		return (
-			<Accordion
-				defaultExpanded={defaultExpanded}
-				TransitionProps={{unmountOnExit: true}}
-			>
-				<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-					<div className={classes.chips}>
-						<DocumentChips
-							document={document}
-							VersionsChip={VersionsChip}
-							PatientChip={PatientChip}
-						/>
-					</div>
-				</AccordionSummary>
-				<AccordionDetails>
-					<List className={classes.list}>
-						{parsed && format === 'healthone' && kind === 'lab' && (
-							<ListItem>
-								<ListItemAvatar>
-									<Avatar>
-										<TableChartIcon />
-									</Avatar>
-								</ListItemAvatar>
-								<ListItemText
-									disableTypography
-									primary={<Typography variant="subtitle1">Results</Typography>}
-									secondary={<HealthOneLabResultsTable document={document} />}
-								/>
-							</ListItem>
-						)}
-						{parsed && format === 'healthone' && kind === 'report' && (
-							<ListItem>
-								<ListItemAvatar>
-									<Avatar>
-										<SubjectIcon />
-									</Avatar>
-								</ListItemAvatar>
-								<ListItemText
-									disableTypography
-									primary={
-										<Typography variant="subtitle1">Contents</Typography>
-									}
-									secondary={<HealthOneReportContents document={document} />}
-								/>
-							</ListItem>
-						)}
-						{(!parsed || format !== 'healthone') && (
-							<ListItem>
-								<ListItemAvatar>
-									<Avatar>
-										<FileCopyIcon />
-									</Avatar>
-								</ListItemAvatar>
-								<ListItemText
-									disableTypography
-									primary={<Typography variant="subtitle1">Source</Typography>}
-									secondary={<DocumentSource document={document} />}
-								/>
-							</ListItem>
-						)}
-					</List>
-				</AccordionDetails>
-				<Divider />
-				<AccordionActions>
-					{VersionsButton && <VersionsButton document={document} />}
-					<Button color="primary" onClick={this.download}>
-						Download
-						<CloudDownloadIcon />
+	return (
+		<Accordion
+			defaultExpanded={defaultExpanded}
+			TransitionProps={{unmountOnExit: true}}
+		>
+			<AccordionSummary expandIcon={<ExpandMoreIcon />}>
+				<div className={classes.chips}>
+					<DocumentChips
+						document={document}
+						VersionsChip={VersionsChip}
+						PatientChip={PatientChip}
+					/>
+				</div>
+			</AccordionSummary>
+			<AccordionDetails>
+				<List className={classes.list}>
+					{parsed && format === 'healthone' && kind === 'lab' && (
+						<ListItem>
+							<ListItemAvatar>
+								<Avatar>
+									<TableChartIcon />
+								</Avatar>
+							</ListItemAvatar>
+							<ListItemText
+								disableTypography
+								primary={<Typography variant="subtitle1">Results</Typography>}
+								secondary={<HealthOneLabResultsTable document={document} />}
+							/>
+						</ListItem>
+					)}
+					{parsed && format === 'healthone' && kind === 'report' && (
+						<ListItem>
+							<ListItemAvatar>
+								<Avatar>
+									<SubjectIcon />
+								</Avatar>
+							</ListItemAvatar>
+							<ListItemText
+								disableTypography
+								primary={<Typography variant="subtitle1">Contents</Typography>}
+								secondary={<HealthOneReportContents document={document} />}
+							/>
+						</ListItem>
+					)}
+					{(!parsed || format !== 'healthone') && (
+						<ListItem>
+							<ListItemAvatar>
+								<Avatar>
+									<FileCopyIcon />
+								</Avatar>
+							</ListItemAvatar>
+							<ListItemText
+								disableTypography
+								primary={<Typography variant="subtitle1">Source</Typography>}
+								secondary={<DocumentSource document={document} />}
+							/>
+						</ListItem>
+					)}
+				</List>
+			</AccordionDetails>
+			<Divider />
+			<AccordionActions>
+				{VersionsButton && <VersionsButton document={document} />}
+				<Button color="primary" onClick={download}>
+					Download
+					<CloudDownloadIcon />
+				</Button>
+				<Button color="primary" onClick={() => setLinking(true)}>
+					Link
+					<LinkIcon />
+				</Button>
+				{patientId && (
+					<Button color="secondary" onClick={() => setUnlinking(true)}>
+						Unlink
+						<LinkOffIcon />
 					</Button>
-					<Button
-						color="primary"
-						onClick={() => this.setState({linking: true})}
-					>
-						Link
-						<LinkIcon />
+				)}
+				{deleted && (
+					<Button color="primary" onClick={() => setRestoring(true)}>
+						Restore
+						<RestoreFromTrashIcon />
 					</Button>
-					{patientId && (
-						<Button
-							color="secondary"
-							onClick={() => this.setState({unlinking: true})}
-						>
-							Unlink
-							<LinkOffIcon />
-						</Button>
-					)}
-					{deleted && (
-						<Button
-							color="primary"
-							onClick={() => this.setState({restoring: true})}
-						>
-							Restore
-							<RestoreFromTrashIcon />
-						</Button>
-					)}
-					{deleted && (
-						<Button
-							color="secondary"
-							onClick={() => this.setState({superdeleting: true})}
-						>
-							Delete forever
-							<DeleteForeverIcon />
-						</Button>
-					)}
-					{!deleted && (
-						<Button
-							color="secondary"
-							onClick={() => this.setState({deleting: true})}
-						>
-							Delete
-							<DeleteIcon />
-						</Button>
-					)}
-					<DocumentLinkingDialog
-						open={linking}
-						document={document}
-						existingLink={{_id: patientId}}
-						onClose={() => this.setState({linking: false})}
-					/>
-					<DocumentUnlinkingDialog
-						open={unlinking}
-						document={document}
-						onClose={() => this.setState({unlinking: false})}
-					/>
-					<DocumentDeletionDialog
-						open={deleting}
-						document={document}
-						onClose={() => this.setState({deleting: false})}
-					/>
-					<DocumentRestorationDialog
-						open={restoring}
-						document={document}
-						onClose={() => this.setState({restoring: false})}
-					/>
-					<DocumentSuperDeletionDialog
-						open={superdeleting}
-						document={document}
-						onClose={() => this.setState({superdeleting: false})}
-					/>
-				</AccordionActions>
-			</Accordion>
-		);
-	}
-}
+				)}
+				{deleted && (
+					<Button color="secondary" onClick={() => setSuperdeleting(true)}>
+						Delete forever
+						<DeleteForeverIcon />
+					</Button>
+				)}
+				{!deleted && (
+					<Button color="secondary" onClick={() => setDeleting(true)}>
+						Delete
+						<DeleteIcon />
+					</Button>
+				)}
+				<DocumentLinkingDialog
+					open={linking}
+					document={document}
+					existingLink={{_id: patientId}}
+					onClose={() => setLinking(false)}
+				/>
+				<DocumentUnlinkingDialog
+					open={unlinking}
+					document={document}
+					onClose={() => setUnlinking(false)}
+				/>
+				<DocumentDeletionDialog
+					open={deleting}
+					document={document}
+					onClose={() => setDeleting(false)}
+				/>
+				<DocumentRestorationDialog
+					open={restoring}
+					document={document}
+					onClose={() => setRestoring(false)}
+				/>
+				<DocumentSuperDeletionDialog
+					open={superdeleting}
+					document={document}
+					onClose={() => setSuperdeleting(false)}
+				/>
+			</AccordionActions>
+		</Accordion>
+	);
+};
 
 DocumentCard.defaultProps = {
 	PatientChip: DocumentChips.defaultProps.PatientChip,
