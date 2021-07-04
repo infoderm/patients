@@ -2,8 +2,6 @@ import {Meteor} from 'meteor/meteor';
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
@@ -21,12 +19,6 @@ import {useCurrencyFormat} from '../../i18n/currency';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
-
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-}));
 
 const ConsultationDebtSettlementDialog = (props) => {
 	const {open, onClose, consultation} = props;
@@ -46,7 +38,6 @@ const ConsultationDebtSettlementDialog = (props) => {
 		fields: patient
 	} = usePatient({}, consultation.patientId, options, deps);
 
-	const classes = useStyles();
 	const currencyFormat = useCurrencyFormat(currency);
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -109,16 +100,20 @@ const ConsultationDebtSettlementDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					color="primary"
 					onClick={clearDebtForThisConsultation(onClose, consultation)}
 				>
-					Clear debt ({currencyFormat(owed)})
-					<CheckIcon className={classes.rightIcon} />
+					Clear debt ({currencyFormat(owed)}) endIcon=
+					<CheckIcon />
 				</Button>
 			</DialogActions>
 		</Dialog>
