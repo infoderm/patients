@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import {withStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -64,9 +64,10 @@ const styles = (theme) =>
 		}
 	});
 
+const useStyles = makeStyles(styles);
+
 const TagCard = (props) => {
 	const {
-		classes,
 		history,
 		tag,
 		avatar,
@@ -80,6 +81,8 @@ const TagCard = (props) => {
 		DeletionDialog,
 		abbr
 	} = props;
+
+	const classes = useStyles();
 
 	const [deleting, setDeleting] = useState(false);
 	const [renaming, setRenaming] = useState(false);
@@ -157,7 +160,6 @@ TagCard.defaultProps = {
 };
 
 TagCard.propTypes = {
-	classes: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 
 	tag: PropTypes.object.isRequired,
@@ -203,7 +205,7 @@ const ReactiveTagCard = withRouter(
 
 			return result;
 		}
-	)(withStyles(styles, {withTheme: true})(TagCard))
+	)(TagCard)
 );
 
 ReactiveTagCard.defaultProps = {
