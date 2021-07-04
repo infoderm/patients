@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -55,7 +55,11 @@ const styles = (theme) =>
 		}
 	});
 
-const HealthOneLabResultsTable = ({classes, document}) => {
+const useStyles = makeStyles(styles);
+
+const HealthOneLabResultsTable = ({document}) => {
+	const classes = useStyles();
+
 	if (!document.results || document.results.length === 0) {
 		return <Typography>No results</Typography>;
 	}
@@ -203,8 +207,7 @@ const HealthOneLabResultsTable = ({classes, document}) => {
 };
 
 HealthOneLabResultsTable.propTypes = {
-	classes: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(HealthOneLabResultsTable);
+export default HealthOneLabResultsTable;
