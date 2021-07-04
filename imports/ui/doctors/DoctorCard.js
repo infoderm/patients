@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
@@ -33,7 +33,11 @@ const styles = (theme) =>
 		}
 	});
 
-const DoctorCard = ({classes, item, name, loading}) => {
+const useStyles = makeStyles(styles);
+
+const DoctorCardWithoutItem = ({item, name, loading}) => {
+	const classes = useStyles();
+
 	if (loading) {
 		return <>...Loading</>;
 	}
@@ -82,12 +86,9 @@ const DoctorCard = ({classes, item, name, loading}) => {
 	);
 };
 
-DoctorCard.propTypes = {
-	classes: PropTypes.object.isRequired,
+DoctorCardWithoutItem.propTypes = {
 	item: PropTypes.object
 };
-
-const DoctorCardWithoutItem = withStyles(styles, {withTheme: true})(DoctorCard);
 
 export default DoctorCardWithoutItem;
 
