@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
-import React from 'react';
+import React, {useState} from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -64,100 +64,91 @@ const styles = (theme) =>
 		}
 	});
 
-class TagCard extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			deleting: false,
-			renaming: false
-		};
-	}
+const TagCard = (props) => {
+	const {
+		classes,
+		history,
+		tag,
+		avatar,
+		subheader,
+		url,
+		content,
+		actions,
+		stats,
+		items,
+		RenamingDialog,
+		DeletionDialog,
+		abbr
+	} = props;
 
-	openRenamingDialog = () => this.setState({renaming: true});
-	closeRenamingDialog = () => this.setState({renaming: false});
-	openDeletionDialog = () => this.setState({deleting: true});
-	closeDeletionDialog = () => this.setState({deleting: false});
+	const [deleting, setDeleting] = useState(false);
+	const [renaming, setRenaming] = useState(false);
 
-	onRename = (newName) => {
-		const {url, tag, history} = this.props;
+	const openRenamingDialog = () => setRenaming(true);
+	const closeRenamingDialog = () => setRenaming(false);
+	const openDeletionDialog = () => setDeleting(true);
+	const closeDeletionDialog = () => setDeleting(false);
+
+	const onRename = (newName) => {
 		const currentURL = history.location.pathname.replaceAll(' ', '%20');
 		const oldURL = url(tag.name);
 		if (currentURL === oldURL) {
 			const newURL = url(newName);
 			history.push(newURL);
 		} else {
-			return this.closeRenamingDialog();
+			return closeRenamingDialog();
 		}
 	};
 
-	render() {
-		const {
-			classes,
-			tag,
-			avatar,
-			subheader,
-			url,
-			content,
-			actions,
-			stats,
-			items,
-			RenamingDialog,
-			DeletionDialog,
-			abbr
-		} = this.props;
-
-		const {deleting, renaming} = this.state;
-
-		return (
-			<Card className={classes.card}>
-				<div className={classes.details}>
-					<CardHeader
-						className={classes.header}
-						avatar={avatar}
-						title={tag.name}
-						subheader={subheader(stats, items)}
-						component={Link}
-						to={url(tag.name)}
-					/>
-					<CardContent className={classes.content}>
-						{content(stats, items)}
-					</CardContent>
-					<CardActions disableSpacing className={classes.actions}>
-						{RenamingDialog && (
-							<Button color="primary" onClick={this.openRenamingDialog}>
-								Rename
-								<EditIcon />
-							</Button>
-						)}
-						{DeletionDialog && (
-							<Button color="secondary" onClick={this.openDeletionDialog}>
-								Delete
-								<DeleteIcon />
-							</Button>
-						)}
-						{RenamingDialog && (
-							<RenamingDialog
-								open={renaming}
-								tag={tag}
-								onClose={this.closeRenamingDialog}
-								onRename={this.onRename}
-							/>
-						)}
-						{DeletionDialog && (
-							<DeletionDialog
-								open={deleting}
-								tag={tag}
-								onClose={this.closeDeletionDialog}
-							/>
-						)}
-						{actions(stats, items)}
-					</CardActions>
-				</div>
-				<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
-			</Card>
-		);
-	}
-}
+	return (
+		<Card className={classes.card}>
+			<div className={classes.details}>
+				<CardHeader
+					className={classes.header}
+					avatar={avatar}
+					title={tag.name}
+					subheader={subheader(stats, items)}
+					component={Link}
+					to={url(tag.name)}
+				/>
+				<CardContent className={classes.content}>
+					{content(stats, items)}
+				</CardContent>
+				<CardActions disableSpacing className={classes.actions}>
+					{RenamingDialog && (
+						<Button color="primary" onClick={openRenamingDialog}>
+							Rename
+							<EditIcon />
+						</Button>
+					)}
+					{DeletionDialog && (
+						<Button color="secondary" onClick={openDeletionDialog}>
+							Delete
+							<DeleteIcon />
+						</Button>
+					)}
+					{RenamingDialog && (
+						<RenamingDialog
+							open={renaming}
+							tag={tag}
+							onClose={closeRenamingDialog}
+							onRename={onRename}
+						/>
+					)}
+					{DeletionDialog && (
+						<DeletionDialog
+							open={deleting}
+							tag={tag}
+							onClose={closeDeletionDialog}
+						/>
+					)}
+					{actions(stats, items)}
+				</CardActions>
+			</div>
+			<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
+		</Card>
+	);
+};
 
 TagCard.defaultProps = {
 	actions: () => null,
