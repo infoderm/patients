@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
+
+import {useDateFormat} from '../../i18n/datetime';
+
+import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
+
 import TextField from '../input/TextField';
 import CopiableTextField from '../input/CopiableTextField';
 
@@ -25,10 +30,14 @@ const PatientHeader = ({patientId}) => {
 
 	const classes = useStyles();
 
+	const localizeBirthdate = useDateFormat('PPP');
+
+	const textPlaceHolder = loading ? '' : '?';
+
 	return (
 		<Grid container className={classes.container} spacing={3}>
 			<Grid item>
-				{!patient || !patient.photo ? (
+				{!patient.photo ? (
 					<Avatar className={classes.avatar}>
 						<FaceIcon />
 					</Avatar>
@@ -44,21 +53,37 @@ const PatientHeader = ({patientId}) => {
 				<CopiableTextField
 					readOnly
 					label="Lastname"
-					value={!patient ? '?' : patient.lastname || ''}
+					value={patient.lastname ?? ''}
+					placeholder={textPlaceHolder}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<CopiableTextField
 					readOnly
 					label="Firstname"
-					value={!patient ? '?' : patient.firstname || ''}
+					value={patient.firstname ?? ''}
+					placeholder={textPlaceHolder}
 				/>
 			</Grid>
 			<Grid item xs={2}>
 				<CopiableTextField
 					readOnly
 					label="NISS"
-					value={!patient ? '?' : patient.niss || ''}
+					value={patient.niss ?? ''}
+					placeholder={textPlaceHolder}
+				/>
+			</Grid>
+			<Grid item xs={2}>
+				<TextField
+					readOnly
+					label="Birth date"
+					value={
+						eidDisplayBirthdate(patient.birthdate, localizeBirthdate) ?? ''
+					}
+					InputLabelProps={{
+						shrink: true
+					}}
+					placeholder={textPlaceHolder}
 				/>
 			</Grid>
 			<Grid item xs={2}>

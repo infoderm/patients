@@ -40,57 +40,53 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 
 	const {datetime, doneDatetime} = state;
 
+	const textPlaceHolder = loading ? '' : '?';
+
 	return (
 		<Grid container className={classes.container} spacing={3}>
-			{loading || !patient ? null : (
-				<Grid item>
-					{!patient.photo ? (
-						<Avatar
-							className={classes.avatar}
-							component={Link}
-							to={`/patient/${patientId}`}
-						>
-							<FaceIcon />
-						</Avatar>
-					) : (
-						<Avatar
-							alt={`${patient.firstname} ${patient.lastname}`}
-							src={`data:image/png;base64,${patient.photo}`}
-							className={classes.avatar}
-							component={Link}
-							to={`/patient/${patientId}`}
-						/>
-					)}
-				</Grid>
-			)}
-			{loading || !patient ? null : (
-				<Grid item xs={2}>
-					<CopiableTextField
-						readOnly
-						label="Lastname"
-						value={patient.lastname}
+			<Grid item>
+				{!patient.photo ? (
+					<Avatar
+						className={classes.avatar}
+						component={Link}
+						to={`/patient/${patientId}`}
+					>
+						<FaceIcon />
+					</Avatar>
+				) : (
+					<Avatar
+						alt={`${patient.firstname} ${patient.lastname}`}
+						src={`data:image/png;base64,${patient.photo}`}
+						className={classes.avatar}
+						component={Link}
+						to={`/patient/${patientId}`}
 					/>
-				</Grid>
-			)}
-			{loading || !patient ? null : (
-				<Grid item xs={2}>
-					<CopiableTextField
-						readOnly
-						label="Firstname"
-						value={patient.firstname}
-					/>
-				</Grid>
-			)}
-			{loading || !patient ? null : (
-				<Grid item xs={2}>
-					<CopiableTextField readOnly label="NISS" value={patient.niss} />
-				</Grid>
-			)}
-			{!loading && patient ? null : (
-				<Grid item xs={2}>
-					<TextField disabled label="Patient id" value={patientId} />
-				</Grid>
-			)}
+				)}
+			</Grid>
+			<Grid item xs={2}>
+				<CopiableTextField
+					readOnly
+					label="Lastname"
+					value={patient.lastname ?? ''}
+					placeholder={textPlaceHolder}
+				/>
+			</Grid>
+			<Grid item xs={2}>
+				<CopiableTextField
+					readOnly
+					label="Firstname"
+					value={patient.firstname ?? ''}
+					placeholder={textPlaceHolder}
+				/>
+			</Grid>
+			<Grid item xs={2}>
+				<CopiableTextField
+					readOnly
+					label="NISS"
+					value={patient.niss ?? ''}
+					placeholder={textPlaceHolder}
+				/>
+			</Grid>
 			<Grid item xs={2}>
 				<DateTimePicker
 					mask={localizedDateMask}

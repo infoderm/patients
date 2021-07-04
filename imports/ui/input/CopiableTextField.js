@@ -9,11 +9,16 @@ import TextField from './TextField';
 import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify';
 
 const CopiableTextField = (props) => {
-	const {value, readOnly} = props;
+	const {value, placeholder, readOnly, InputLabelProps, InputProps} = props;
 	const copyValueToClipboard = useSaveTextToClipboardAndNotify(value);
 
 	return (
 		<TextField
+			{...props}
+			InputLabelProps={{
+				shrink: Boolean(readOnly && placeholder !== undefined) || undefined,
+				...InputLabelProps
+			}}
 			InputProps={{
 				endAdornment: readOnly && value && (
 					<InputAdornment position="end">
@@ -25,10 +30,9 @@ const CopiableTextField = (props) => {
 							<FileCopyIcon />
 						</IconButton>
 					</InputAdornment>
-				)
+				),
+				...InputProps
 			}}
-			{...props}
-			value={readOnly ? value || '?' : value}
 		/>
 	);
 };
