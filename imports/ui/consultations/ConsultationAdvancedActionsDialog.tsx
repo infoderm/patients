@@ -116,7 +116,7 @@ const ConsultationAdvancedActionsDialog = (props) => {
 			{isDone && scheduledDatetime && (
 				<ConsultationAppointmentRestorationDialog
 					open={restoreAppointment}
-					consultation={props.consultation}
+					consultation={consultation}
 					onClose={() => {
 						setRestoreAppointment(false);
 					}}
