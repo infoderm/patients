@@ -157,6 +157,7 @@ const ConsultationForm = ({consultation, update}) => {
 
 				<Grid item xs={1}>
 					<TextField
+						fullWidth
 						select
 						readOnly={!update}
 						label="Currency"
@@ -167,8 +168,9 @@ const ConsultationForm = ({consultation, update}) => {
 						<MenuItem value="EUR">€</MenuItem>
 					</TextField>
 				</Grid>
-				<Grid item xs={1}>
+				<Grid item xs={2}>
 					<TextField
+						fullWidth
 						select
 						readOnly={!update}
 						label="Payment Method"
@@ -207,6 +209,7 @@ const ConsultationForm = ({consultation, update}) => {
 				</Grid>
 				<Grid item xs={3}>
 					<TextField
+						fullWidth
 						readOnly={!update}
 						label="Payé"
 						value={paid}
