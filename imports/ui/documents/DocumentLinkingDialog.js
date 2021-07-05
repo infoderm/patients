@@ -19,14 +19,11 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	},
+const useStyles = makeStyles({
 	dialogPaper: {
 		overflow: 'visible'
 	}
-}));
+});
 
 const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 	const classes = useStyles();
@@ -77,17 +74,21 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					disabled={patients.length === 0}
 					color="secondary"
+					endIcon={<LinkIcon />}
 					onClick={linkThisDocument}
 				>
 					Link
-					<LinkIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

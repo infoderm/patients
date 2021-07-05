@@ -3,8 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,15 +15,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-}));
-
 const DocumentUnlinkingDialog = (props) => {
 	const {open, onClose, document} = props;
-	const classes = useStyles();
 
 	const unlinkThisDocument = (event) => {
 		event.preventDefault();
@@ -57,13 +48,20 @@ const DocumentUnlinkingDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="secondary" onClick={unlinkThisDocument}>
+				<Button
+					color="secondary"
+					endIcon={<LinkOffIcon />}
+					onClick={unlinkThisDocument}
+				>
 					Unlink
-					<LinkOffIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>
