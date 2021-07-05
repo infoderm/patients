@@ -148,7 +148,7 @@ const StaticConsultationCardActions = (props) => {
 					endIcon={<MoreHorizIcon />}
 					onClick={() => setMore(true)}
 				>
-					More actions
+					More
 				</Button>
 			)}
 			{!owes || payment_method !== 'wire' ? null : (
