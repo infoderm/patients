@@ -223,7 +223,7 @@ const ConsultationEditor = ({consultation}) => {
 			!(await dialog((resolve) => (
 				<ConfirmationDialog
 					title="Confirm"
-					text="This consultation has a price of 0."
+					text={`This consultation has a price of ${price}.`}
 					cancel="Cancel"
 					confirm={
 						consultationId === undefined
