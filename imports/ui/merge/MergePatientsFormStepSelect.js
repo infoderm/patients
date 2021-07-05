@@ -3,6 +3,15 @@ import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+
+import Avatar from '@material-ui/core/Avatar';
+
+import FaceIcon from '@material-ui/icons/Face';
+
+import {dataURL as pngDataURL} from '../../util/png';
+
 import {patients} from '../../api/patients';
 
 import SetPicker from '../input/SetPicker';
@@ -10,6 +19,31 @@ import SetPicker from '../input/SetPicker';
 import PatientGridItem from '../patients/PatientGridItem';
 import ReactivePatientCard from '../patients/ReactivePatientCard';
 import makePatientsSuggestions from '../patients/makePatientsSuggestions';
+
+import usePatient from '../patients/usePatient';
+
+const Suggestion = ({item: patient}) => {
+	const {fields} = usePatient(patient, patient._id, {fields: {photo: 1}}, [
+		patient._id
+	]);
+
+	const patientName = `${patient.lastname} ${patient.firstname}`;
+
+	return (
+		<>
+			<ListItemAvatar>
+				{fields.photo ? (
+					<Avatar src={pngDataURL(fields.photo)} />
+				) : (
+					<Avatar>
+						<FaceIcon />
+					</Avatar>
+				)}
+			</ListItemAvatar>
+			<ListItemText primary={patientName} secondary={patient._id} />
+		</>
+	);
+};
 
 const MergePatientsFormStepSelect = ({
 	selection,
@@ -22,6 +56,7 @@ const MergePatientsFormStepSelect = ({
 			<SetPicker
 				itemToKey={(x) => x._id}
 				itemToString={patients.toString}
+				Item={Suggestion}
 				useSuggestions={makePatientsSuggestions(selection)}
 				TextFieldProps={{
 					label,
