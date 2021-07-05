@@ -6,7 +6,7 @@ import {useHistory} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
-import CompareIcon from '@material-ui/icons/Compare';
+import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
 import SaveIcon from '@material-ui/icons/Save';
 
 import dateParseISO from 'date-fns/parseISO';
@@ -290,7 +290,7 @@ const ConsultationEditor = ({consultation}) => {
 				aria-label="compare"
 				onClick={() => setCompare(!compare)}
 			>
-				<CompareIcon />
+				<VerticalSplitIcon />
 			</Fab>
 			<Fab
 				className={classes.saveButton}
