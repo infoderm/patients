@@ -54,7 +54,9 @@ const ConsultationForm = ({consultation, update}) => {
 		paid,
 		book,
 
-		priceWarning
+		priceWarning,
+		priceError,
+		paidError
 	} = consultation;
 
 	const [initialDatetime] = useState(datetime);
@@ -186,7 +188,7 @@ const ConsultationForm = ({consultation, update}) => {
 						label="Prix"
 						value={price}
 						margin="normal"
-						error={!/^\d+$/.test(price)}
+						error={priceError}
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
@@ -209,7 +211,7 @@ const ConsultationForm = ({consultation, update}) => {
 						label="Payé"
 						value={paid}
 						margin="normal"
-						error={!/^\d+$/.test(paid)}
+						error={paidError}
 						onChange={update && update('paid')}
 					/>
 				</Grid>

@@ -71,6 +71,7 @@ const removeUndefined = (object) => {
 };
 
 const isZero = (x) => Number.parseInt(String(x), 10) === 0;
+const isValidAmount = (amount) => /^\d+$/.test(amount);
 
 const init = (consultation) => ({
 	...defaultState,
@@ -90,7 +91,9 @@ const init = (consultation) => ({
 		price: String(consultation.price),
 		paid: String(consultation.paid),
 		book: consultation.book,
-		priceWarning: isZero(consultation.price)
+		priceWarning: isZero(consultation.price),
+		priceError: !isValidAmount(consultation.price),
+		paidError: !isValidAmount(consultation.paid)
 	})
 });
 
@@ -108,19 +111,34 @@ const reducer = (state, action) => {
 					throw new Error('Cannot update _id.');
 				case 'dirty':
 					throw new Error('Cannot update dirty.');
-				case 'paid':
-					return {...state, paid: action.value, syncPaid: false, dirty: true};
-				case 'price':
+				case 'paid': {
+					const paid = action.value;
 					return {
 						...state,
-						price: action.value,
-						paid:
-							state.syncPaid && state.payment_method === 'cash'
-								? action.value
-								: state.paid,
-						priceWarning: isZero(action.value),
+						paid,
+						paidError: !isValidAmount(paid),
+						syncPaid: false,
 						dirty: true
 					};
+				}
+
+				case 'price': {
+					const price = action.value;
+					const paid =
+						state.syncPaid && state.payment_method === 'cash'
+							? price
+							: state.paid;
+					return {
+						...state,
+						price,
+						priceWarning: isZero(price),
+						priceError: !isValidAmount(price),
+						paid,
+						paidError: !isValidAmount(paid),
+						dirty: true
+					};
+				}
+
 				default:
 					if (!Object.prototype.hasOwnProperty.call(defaultState, action.key)) {
 						throw new Error(`Unknown key ${action.key}`);
