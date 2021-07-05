@@ -395,6 +395,9 @@ function sanitize({
 	if (book !== undefined) check(book, String);
 	if (payment_method !== undefined) check(payment_method, String);
 
+	price = Number.isFinite(price) ? price : 0;
+	paid = Number.isFinite(paid) ? paid : 0;
+
 	reason = reason?.trim();
 	done = done?.trim();
 	todo = todo?.trim();
