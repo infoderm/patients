@@ -12,6 +12,8 @@ import TextField from '../input/TextField';
 
 import {useSetting} from '../../client/settings';
 
+import CurrencyAmountInput from '../input/CurrencyAmountInput';
+
 import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 
 const styles = (theme) =>
@@ -28,6 +30,7 @@ const styles = (theme) =>
 		},
 		qrcodeWrap: {
 			display: 'table',
+			backgroundColor: '#ccc',
 			width: 500,
 			height: 500
 		},
@@ -111,6 +114,10 @@ const SEPAPaymentDetailsStatic = (props) => {
 									label="Amount"
 									value={amountString}
 									error={Number.isNaN(amount)}
+									InputProps={{
+										inputComponent: CurrencyAmountInput,
+										inputProps: {currency}
+									}}
 									onChange={handleAmountChange}
 								/>
 							</div>
