@@ -189,7 +189,9 @@ const ConsultationEditor = ({consultation}) => {
 		book,
 
 		dirty,
-		priceWarning
+		priceWarning,
+		priceError,
+		paidError
 	} = state;
 
 	const update =
@@ -284,7 +286,7 @@ const ConsultationEditor = ({consultation}) => {
 				className={classes.saveButton}
 				color="primary"
 				aria-label="save"
-				disabled={!dirty}
+				disabled={!dirty || priceError || paidError}
 				onClick={handleSubmit}
 			>
 				<SaveIcon />
