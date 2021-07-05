@@ -1,5 +1,3 @@
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState} from 'react';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
@@ -12,7 +10,7 @@ import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import TextField from '../input/TextField';
 
-import {settings} from '../../client/settings';
+import {useSetting} from '../../client/settings';
 
 import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 
@@ -48,7 +46,7 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const SEPAPaymentDetails = (props) => {
+const SEPAPaymentDetailsStatic = (props) => {
 	const classes = useStyles();
 
 	const {accountHolder, iban, currency} = props;
@@ -138,18 +136,18 @@ const SEPAPaymentDetails = (props) => {
 	);
 };
 
-export default withTracker(() => {
-	settings.subscribe('account-holder');
-	settings.subscribe('iban');
-	settings.subscribe('currency');
+const SEPAPaymentDetails = () => {
+	const {value: accountHolder} = useSetting('account-holder');
+	const {value: iban} = useSetting('iban');
+	const {value: currency} = useSetting('currency');
 
-	const accountHolder = settings.get('account-holder');
-	const iban = settings.get('iban');
-	const currency = settings.get('currency');
+	return (
+		<SEPAPaymentDetailsStatic
+			accountHolder={accountHolder}
+			iban={iban}
+			currency={currency}
+		/>
+	);
+};
 
-	return {
-		accountHolder,
-		iban,
-		currency
-	};
-})(SEPAPaymentDetails);
+export default SEPAPaymentDetails;
