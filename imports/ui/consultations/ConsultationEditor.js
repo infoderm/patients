@@ -1,6 +1,7 @@
 import React, {useState, useReducer} from 'react';
 
 import {Prompt} from 'react-router';
+import {useHistory} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -170,6 +171,7 @@ const Loader = ({loading, found, consultation}) => {
 
 const ConsultationEditor = ({consultation}) => {
 	const classes = useStyles();
+	const history = useHistory();
 
 	const [compare, setCompare] = useState(false);
 
@@ -248,10 +250,14 @@ const ConsultationEditor = ({consultation}) => {
 			return;
 
 		try {
-			await (consultationId === undefined
-				? call('consultations.insert', consultation)
-				: call('consultations.update', consultationId, consultation));
-			dispatch({type: 'not-dirty'});
+			if (consultationId === undefined) {
+				const res = await call('consultations.insert', consultation);
+				dispatch({type: 'not-dirty'});
+				history.push({pathname: `/edit/consultation/${res}`});
+			} else {
+				await call('consultations.update', consultationId, consultation);
+				dispatch({type: 'not-dirty'});
+			}
 		} catch (error) {
 			console.error(error);
 		}
