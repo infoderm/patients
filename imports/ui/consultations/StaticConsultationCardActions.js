@@ -12,31 +12,27 @@ import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import EditIcon from '@material-ui/icons/Edit';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import SmartphoneIcon from '@material-ui/icons/Smartphone';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
-import RestoreIcon from '@material-ui/icons/Restore';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import AttachFileButton from '../attachments/AttachFileButton';
 
-import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog';
 import AppointmentCancellationDialog from '../appointments/AppointmentCancellationDialog';
 import AppointmentUncancellationDialog from '../appointments/AppointmentUncancellationDialog';
 import EditAppointmentDialog from '../appointments/EditAppointmentDialog';
 
 import ConsultationPaymentDialog from './ConsultationPaymentDialog';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
-import ConsultationDeletionDialog from './ConsultationDeletionDialog';
-import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
+import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';
 
 const StaticConsultationCardActions = (props) => {
 	const [paying, setPaying] = useState(false);
 	const [settling, setSettling] = useState(false);
-	const [deleting, setDeleting] = useState(false);
-	const [restoreAppointment, setRestoreAppointment] = useState(false);
+	const [more, setMore] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [cancelling, setCancelling] = useState(false);
 	const [uncancelling, setUncancelling] = useState(false);
@@ -47,9 +43,9 @@ const StaticConsultationCardActions = (props) => {
 		found,
 		attachAction,
 		editAction,
-		deleteAction,
+		moreAction,
 		owes,
-		consultation: {_id, scheduledDatetime, isDone, isCancelled, payment_method}
+		consultation: {_id, isDone, isCancelled, payment_method}
 	} = props;
 
 	const beginConsultation = () => {
@@ -146,24 +142,13 @@ const StaticConsultationCardActions = (props) => {
 						Cancel
 					</Button>
 				))}
-			{isDone && scheduledDatetime && (
+			{moreAction && (
 				<Button
-					color="secondary"
 					disabled={!found}
-					onClick={() => setRestoreAppointment(true)}
+					endIcon={<MoreHorizIcon />}
+					onClick={() => setMore(true)}
 				>
-					Restore Appointment
-					<RestoreIcon />
-				</Button>
-			)}
-			{deleteAction && (
-				<Button
-					color="secondary"
-					disabled={!found}
-					onClick={() => setDeleting(true)}
-				>
-					Delete
-					<DeleteIcon />
+					More actions
 				</Button>
 			)}
 			{!owes || payment_method !== 'wire' ? null : (
@@ -180,20 +165,13 @@ const StaticConsultationCardActions = (props) => {
 					onClose={() => setSettling(false)}
 				/>
 			)}
-			{deleteAction &&
-				(isDone ? (
-					<ConsultationDeletionDialog
-						open={deleting}
-						consultation={props.consultation}
-						onClose={() => setDeleting(false)}
-					/>
-				) : (
-					<AppointmentDeletionDialog
-						open={deleting}
-						appointment={props.consultation}
-						onClose={() => setDeleting(false)}
-					/>
-				))}
+			{moreAction && (
+				<ConsultationAdvancedActionsDialog
+					open={more}
+					onClose={() => setMore(false)}
+					{...props}
+				/>
+			)}
 			{!isDone && isCancelled ? (
 				<AppointmentUncancellationDialog
 					open={uncancelling}
@@ -205,13 +183,6 @@ const StaticConsultationCardActions = (props) => {
 					open={cancelling}
 					appointment={props.consultation}
 					onClose={() => setCancelling(false)}
-				/>
-			)}
-			{isDone && scheduledDatetime && (
-				<ConsultationAppointmentRestorationDialog
-					open={restoreAppointment}
-					consultation={props.consultation}
-					onClose={() => setRestoreAppointment(false)}
 				/>
 			)}
 			{editAction && !isDone && !isCancelled && (
@@ -247,14 +218,14 @@ StaticConsultationCardActions.defaultProps = {
 	found: true,
 	attachAction: true,
 	editAction: true,
-	deleteAction: true
+	moreAction: true
 };
 
 StaticConsultationCardActions.propTypes = {
 	found: PropTypes.bool,
 	attachAction: PropTypes.bool,
 	editAction: PropTypes.bool,
-	deleteAction: PropTypes.bool,
+	moreAction: PropTypes.bool,
 	consultation: PropTypes.object.isRequired
 };
 

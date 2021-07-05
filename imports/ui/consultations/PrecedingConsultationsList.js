@@ -34,7 +34,7 @@ const PrecedingConsultationsList = ({consultation}) => {
 			itemProps={{
 				attachAction: false,
 				editAction: false,
-				deleteAction: false
+				moreAction: false
 			}}
 		/>
 	);
