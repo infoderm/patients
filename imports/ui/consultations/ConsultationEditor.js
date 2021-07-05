@@ -88,8 +88,12 @@ const init = (consultation) => ({
 
 		currency: consultation.currency,
 		payment_method: consultation.payment_method,
-		price: String(consultation.price),
-		paid: String(consultation.paid),
+		price: Number.isFinite(consultation.price)
+			? String(consultation.price)
+			: undefined,
+		paid: Number.isFinite(consultation.paid)
+			? String(consultation.paid)
+			: undefined,
 		book: consultation.book,
 		priceWarning: isZero(consultation.price),
 		priceError: !isValidAmount(consultation.price),

@@ -177,8 +177,6 @@ const methods = {
 					doneDatetime: realDatetime,
 					begin: realDatetime,
 					end: realDatetime,
-					price: 0,
-					paid: 0,
 					isDone: true,
 					book
 				}
