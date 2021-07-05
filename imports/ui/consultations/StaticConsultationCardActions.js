@@ -74,9 +74,13 @@ const StaticConsultationCardActions = (props) => {
 				/>
 			)}
 			{!isDone && !isCancelled && (
-				<Button color="primary" disabled={!found} onClick={beginConsultation}>
+				<Button
+					color="primary"
+					disabled={!found}
+					startIcon={<FolderSharedIcon />}
+					onClick={beginConsultation}
+				>
 					Begin consultation
-					<FolderSharedIcon />
 				</Button>
 			)}
 			{editAction &&
@@ -86,19 +90,19 @@ const StaticConsultationCardActions = (props) => {
 						component={Link}
 						to={`/edit/consultation/${_id}`}
 						disabled={!found}
+						endIcon={<EditIcon />}
 					>
 						Edit
-						<EditIcon />
 					</Button>
 				) : (
 					!isCancelled && (
 						<Button
 							color="primary"
 							disabled={!found}
+							endIcon={<ScheduleIcon />}
 							onClick={() => setEditing(true)}
 						>
 							Reschedule
-							<ScheduleIcon />
 						</Button>
 					)
 				))}
@@ -106,20 +110,20 @@ const StaticConsultationCardActions = (props) => {
 				<Button
 					color="primary"
 					disabled={!found}
+					endIcon={<SmartphoneIcon />}
 					onClick={() => setPaying(true)}
 				>
 					Pay by Phone
-					<SmartphoneIcon />
 				</Button>
 			)}
 			{owes && (
 				<Button
 					color="primary"
 					disabled={!found}
+					endIcon={<EuroSymbolIcon />}
 					onClick={() => setSettling(true)}
 				>
 					Settle debt
-					<EuroSymbolIcon />
 				</Button>
 			)}
 			{!isDone &&
@@ -127,19 +131,19 @@ const StaticConsultationCardActions = (props) => {
 					<Button
 						color="primary"
 						disabled={!found}
+						endIcon={<AlarmOnIcon />}
 						onClick={() => setUncancelling(true)}
 					>
 						Uncancel
-						<AlarmOnIcon />
 					</Button>
 				) : (
 					<Button
 						color="secondary"
 						disabled={!found}
+						endIcon={<AlarmOffIcon />}
 						onClick={() => setCancelling(true)}
 					>
 						Cancel
-						<AlarmOffIcon />
 					</Button>
 				))}
 			{isDone && scheduledDatetime && (
@@ -224,9 +228,9 @@ const StaticConsultationCardActions = (props) => {
 					target="_blank"
 					to={`/consultation/${_id}`}
 					disabled={!found}
+					endIcon={<OpenInNewIcon />}
 				>
 					Open in new tab
-					<OpenInNewIcon />
 				</Button>
 			)}
 		</AccordionActions>

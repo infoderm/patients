@@ -110,10 +110,10 @@ const ConsultationDebtSettlementDialog = (props) => {
 				</Button>
 				<Button
 					color="primary"
+					endIcon={<CheckIcon />}
 					onClick={clearDebtForThisConsultation(onClose, consultation)}
 				>
-					Clear debt ({currencyFormat(owed)}) endIcon=
-					<CheckIcon />
+					Clear debt ({currencyFormat(owed)})
 				</Button>
 			</DialogActions>
 		</Dialog>

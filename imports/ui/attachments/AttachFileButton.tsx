@@ -142,14 +142,16 @@ const AttachFileButton = ({
 		}
 	};
 
+	const extraProps = children ? {} : {endIcon: <AttachFileIcon />};
+
+	const buttonProps = {
+		...extraProps,
+		...rest
+	};
+
 	return (
-		<InputFileButton onChange={upload} {...rest}>
-			{children || (
-				<>
-					Attach File
-					<AttachFileIcon />
-				</>
-			)}
+		<InputFileButton onChange={upload} {...buttonProps}>
+			{children ?? 'Attach File'}
 		</InputFileButton>
 	);
 };
