@@ -1,21 +1,12 @@
 import React, {useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import LoginPopover from './LoginPopover';
 import RegisterPopover from './RegisterPopover';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
-}));
-
 const SignInForm = () => {
-	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [mode, setMode] = useState('choice');
 
@@ -44,10 +35,10 @@ const SignInForm = () => {
 				}
 				aria-haspopup="true"
 				style={{color: 'inherit'}}
+				endIcon={<AccountCircleIcon />}
 				onClick={handleClick}
 			>
 				Sign in
-				<AccountCircleIcon className={classes.rightIcon} />
 			</Button>
 			{mode === 'login' ? (
 				<LoginPopover
