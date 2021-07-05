@@ -8,8 +8,7 @@ import Accordion from '@material-ui/core/Accordion';
 
 import Divider from '@material-ui/core/Divider';
 
-import startOfToday from 'date-fns/startOfToday';
-import isBefore from 'date-fns/isBefore';
+import virtualFields from '../../api/consultations/virtualFields';
 
 import StaticConsultationCardSummary from './StaticConsultationCardSummary';
 import StaticConsultationCardDetails from './StaticConsultationCardDetails';
@@ -30,35 +29,18 @@ const useStyles = makeStyles(() => ({
 const StaticConsultationCard = (props) => {
 	const classes = useStyles();
 
-	const {
-		loading,
-		found,
-		defaultExpanded,
-		consultation: {
-			isDone,
-			isCancelled,
-			currency,
-			price,
-			paid,
-			scheduledDatetime
-		}
-	} = props;
+	const {loading, found, defaultExpanded, consultation} = props;
 
 	const deleted = !loading && !found;
-	const missingPaymentData =
-		currency === undefined || price === undefined || paid === undefined;
-	const owes = !(missingPaymentData || paid === price);
-	const owed = owes ? price - paid : 0;
 
-	const cardOpacity = {opacity: deleted ? 0.4 : 1};
-
-	const isAppointment = !isDone;
-	const isNoShow =
-		isAppointment &&
-		!isCancelled &&
-		isBefore(scheduledDatetime, startOfToday());
-
-	const didNotOrWillNotHappen = isCancelled || isNoShow;
+	const {
+		didNotOrWillNotHappen,
+		isAppointment,
+		isNoShow,
+		missingPaymentData,
+		owes,
+		owed
+	} = virtualFields(consultation);
 
 	const extraProps = {
 		deleted,
@@ -68,6 +50,8 @@ const StaticConsultationCard = (props) => {
 		owes,
 		owed
 	};
+
+	const cardOpacity = {opacity: deleted ? 0.4 : 1};
 
 	return (
 		<Accordion
