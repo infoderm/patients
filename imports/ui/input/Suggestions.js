@@ -22,16 +22,17 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-function renderSuggestion({
+const renderSuggestion = ({
 	loading,
 	suggestion,
 	index,
 	getItemProps,
 	highlightedIndex,
 	selectedItem,
+	itemToKey,
 	itemToString,
-	itemToKey
-}) {
+	Item
+}) => {
 	const isHighlighted = highlightedIndex === index;
 	const isSelected = (
 		Array.isArray(selectedItem)
@@ -54,10 +55,10 @@ function renderSuggestion({
 				fontWeight: isSelected ? 500 : 400
 			}}
 		>
-			{itemToString(suggestion)}
+			{Item ? <Item item={suggestion} /> : itemToString(suggestion)}
 		</MenuItem>
 	);
-}
+};
 
 renderSuggestion.propTypes = {
 	highlightedIndex: PropTypes.number.isRequired,
@@ -76,6 +77,7 @@ const Suggestions = (props) => {
 		selectedItem,
 		itemToKey,
 		itemToString,
+		Item,
 		...rest
 	} = props;
 
@@ -98,8 +100,9 @@ const Suggestions = (props) => {
 							getItemProps,
 							highlightedIndex,
 							selectedItem,
+							itemToKey,
 							itemToString,
-							itemToKey
+							Item
 						})
 					)}
 			</div>
@@ -120,6 +123,7 @@ Suggestions.propTypes = {
 	highlightedIndex: PropTypes.number,
 	itemToKey: PropTypes.func.isRequired,
 	itemToString: PropTypes.func.isRequired,
+	Item: PropTypes.elementType,
 	selectedItem: PropTypes.any
 };
 

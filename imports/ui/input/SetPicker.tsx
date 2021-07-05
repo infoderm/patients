@@ -76,6 +76,7 @@ const SetPickerPropTypes = {
 	useSuggestions: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	itemToString: PropTypes.func.isRequired,
+	Item: PropTypes.elementType,
 	inputTransform: PropTypes.func,
 	onChange: PropTypes.func,
 	sort: PropTypes.func,
@@ -94,8 +95,9 @@ const SetPicker = (props: SetPickerProps) => {
 	const {
 		className,
 		useSuggestions,
-		itemToString,
 		itemToKey,
+		itemToString,
+		Item,
 		Chip = DefaultChip,
 		chipProps,
 		withoutToggle = false,
@@ -324,8 +326,9 @@ const SetPicker = (props: SetPickerProps) => {
 						getItemProps={getItemProps}
 						highlightedIndex={highlightedIndex}
 						selectedItem={selectedItem2}
-						itemToString={itemToString}
 						itemToKey={itemToKey}
+						itemToString={itemToString}
+						Item={Item}
 					/>
 				</div>
 			)}
