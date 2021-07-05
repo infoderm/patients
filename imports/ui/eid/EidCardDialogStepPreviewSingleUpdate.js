@@ -31,6 +31,7 @@ import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 
 import diff from '../../util/diff';
+import {dataURL as pngDataURL} from '../../util/png';
 
 import call from '../../api/call';
 import {patients} from '../../api/patients';
@@ -108,8 +109,6 @@ const TextDifference = ({field, oldValue, newValue}) => {
 		</TableRow>
 	);
 };
-
-const pngDataURL = (base64) => `data:image/png;base64,${base64}`;
 
 const ImageDifference = ({field, oldValue, newValue}) => {
 	return (

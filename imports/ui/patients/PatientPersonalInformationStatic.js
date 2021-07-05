@@ -35,6 +35,8 @@ import isValid from 'date-fns/isValid';
 import TextField from '../input/TextField';
 import FixedFab from '../button/FixedFab';
 
+import {dataURL as pngDataURL} from '../../util/png';
+
 import {useInsurancesFind} from '../../api/insurances';
 import {useDoctorsFind} from '../../api/doctors';
 import {useAllergiesFind} from '../../api/allergies';
@@ -250,7 +252,7 @@ const PatientPersonalInformation = (props) => {
 					{patient.photo ? (
 						<img
 							className={classes.photo}
-							src={`data:image/png;base64,${patient.photo}`}
+							src={pngDataURL(patient.photo)}
 							title={`${patient.firstname} ${patient.lastname}`}
 						/>
 					) : (

@@ -8,6 +8,8 @@ import FaceIcon from '@material-ui/icons/Face';
 
 import {MobileDateTimePicker as DateTimePicker} from '@material-ui/pickers';
 
+import {dataURL as pngDataURL} from '../../util/png';
+
 import {useDateMask} from '../../i18n/datetime';
 
 import TextField from '../input/TextField';
@@ -56,7 +58,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 				) : (
 					<Avatar
 						alt={`${patient.firstname} ${patient.lastname}`}
-						src={`data:image/png;base64,${patient.photo}`}
+						src={pngDataURL(patient.photo)}
 						className={classes.avatar}
 						component={Link}
 						to={`/patient/${patientId}`}

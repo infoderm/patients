@@ -8,6 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 
+import {dataURL as pngDataURL} from '../../util/png';
+
 import SetPicker from '../input/SetPicker';
 
 const useStyles = makeStyles((theme) => ({
@@ -97,7 +99,7 @@ const PatientSheet = (props) => {
 					{patient.photo ? (
 						<img
 							className={classes.photo}
-							src={`data:image/png;base64,${patient.photo}`}
+							src={pngDataURL(patient.photo)}
 							title={`${patient.firstname} ${patient.lastname}`}
 						/>
 					) : (

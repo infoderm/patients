@@ -7,6 +7,8 @@ import FaceIcon from '@material-ui/icons/Face';
 
 import {useDateFormat} from '../../i18n/datetime';
 
+import {dataURL as pngDataURL} from '../../util/png';
+
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 
 import TextField from '../input/TextField';
@@ -44,7 +46,7 @@ const PatientHeader = ({patientId}) => {
 				) : (
 					<Avatar
 						alt={`${patient.firstname} ${patient.lastname}`}
-						src={`data:image/png;base64,${patient.photo}`}
+						src={pngDataURL(patient.photo)}
 						className={classes.avatar}
 					/>
 				)}

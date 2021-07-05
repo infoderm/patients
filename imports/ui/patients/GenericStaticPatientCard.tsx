@@ -20,6 +20,8 @@ import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
+import {dataURL as pngDataURL} from '../../util/png';
+
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -163,7 +165,7 @@ const GenericStaticPatientCard = ({
 					<CardMedia
 						component={animated.div}
 						className={classes.photo}
-						image={`data:image/png;base64,${item}`}
+						image={pngDataURL(item)}
 						title={`${firstname} ${lastname}`}
 						style={style as unknown as React.CSSProperties}
 					/>

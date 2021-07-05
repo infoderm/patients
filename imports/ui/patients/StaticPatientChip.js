@@ -9,6 +9,8 @@ import {Link} from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 
+import {dataURL as pngDataURL} from '../../util/png';
+
 const useStyles = makeStyles((theme) => ({
 	chip: {
 		marginRight: theme.spacing(1),
@@ -57,7 +59,7 @@ export default function StaticPatientChip({
 			key={patient._id}
 			avatar={
 				!loading && found && patient.photo ? (
-					<Avatar src={`data:image/png;base64,${patient.photo}`} />
+					<Avatar src={pngDataURL(patient.photo)} />
 				) : null
 			}
 			label={
