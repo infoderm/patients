@@ -36,6 +36,26 @@ export const makeIndex = (data: string) => {
 	};
 };
 
+export const firstNonNumericIndex = (string: string) => {
+	return string.search(/[^0123456789]/);
+};
+
+export const longestNumericPrefix = (string: string) => {
+	return string.slice(0, firstNonNumericIndex(string));
+};
+
+export function* yieldNumeric(iterable: Iterable<string>) {
+	for (const item of iterable) {
+		if (item >= '0' && item <= '9') {
+			yield item;
+		}
+	}
+}
+
+export const onlyNumeric = (string: string) => {
+	return Array.from(yieldNumeric(string)).join('');
+};
+
 const patternsStatistics = (patterns: Iterable<string>) => {
 	const minLength = min(increasing, map(len, patterns), 0);
 	return {
