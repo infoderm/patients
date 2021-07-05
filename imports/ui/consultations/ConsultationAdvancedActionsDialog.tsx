@@ -15,7 +15,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import RestoreIcon from '@material-ui/icons/Restore';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 
-import {blue, red} from '@material-ui/core/colors';
+import blue from '@material-ui/core/colors/blue';
+import red from '@material-ui/core/colors/red';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 

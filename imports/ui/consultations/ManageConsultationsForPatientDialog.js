@@ -20,7 +20,10 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import TodayIcon from '@material-ui/icons/Today';
-import {blue, green, orange} from '@material-ui/core/colors';
+
+import blue from '@material-ui/core/colors/blue';
+import green from '@material-ui/core/colors/green';
+import orange from '@material-ui/core/colors/orange';
 
 import call from '../../api/call';
 import withLazyOpening from '../modal/withLazyOpening';
