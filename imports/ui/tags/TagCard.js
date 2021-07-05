@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React, {useState} from 'react';
-import {withRouter, Link} from 'react-router-dom';
+import {useHistory, Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
@@ -70,7 +70,6 @@ const useStyles = makeStyles(styles);
 
 const TagCard = (props) => {
 	const {
-		history,
 		tag,
 		avatar,
 		subheader,
@@ -85,6 +84,7 @@ const TagCard = (props) => {
 	} = props;
 
 	const classes = useStyles();
+	const history = useHistory();
 
 	const [deleting, setDeleting] = useState(false);
 	const [renaming, setRenaming] = useState(false);
@@ -164,8 +164,6 @@ TagCard.defaultProps = {
 };
 
 TagCard.propTypes = {
-	history: PropTypes.object.isRequired,
-
 	tag: PropTypes.object.isRequired,
 	url: PropTypes.func.isRequired,
 	avatar: PropTypes.object.isRequired,
@@ -177,40 +175,38 @@ TagCard.propTypes = {
 	items: PropTypes.array
 };
 
-const ReactiveTagCard = withRouter(
-	withTracker(
-		({
-			tag,
-			subscription,
-			statsSubscription,
-			collection,
-			statsCollection,
-			selector,
-			options,
-			limit
-		}) => {
-			const name = tag.name;
-			const handle = subscription
-				? Meteor.subscribe(subscription, name, {...options, limit})
-				: {ready: () => false};
-			const statsHandle = Meteor.subscribe(statsSubscription, name);
-			const result = {
-				items: undefined,
-				stats: undefined
-			};
+const ReactiveTagCard = withTracker(
+	({
+		tag,
+		subscription,
+		statsSubscription,
+		collection,
+		statsCollection,
+		selector,
+		options,
+		limit
+	}) => {
+		const name = tag.name;
+		const handle = subscription
+			? Meteor.subscribe(subscription, name, {...options, limit})
+			: {ready: () => false};
+		const statsHandle = Meteor.subscribe(statsSubscription, name);
+		const result = {
+			items: undefined,
+			stats: undefined
+		};
 
-			if (handle.ready()) {
-				result.items = collection.find(selector, {...options, limit}).fetch();
-			}
-
-			if (statsHandle.ready()) {
-				result.stats = statsCollection.findOne({name});
-			}
-
-			return result;
+		if (handle.ready()) {
+			result.items = collection.find(selector, {...options, limit}).fetch();
 		}
-	)(TagCard)
-);
+
+		if (statsHandle.ready()) {
+			result.stats = statsCollection.findOne({name});
+		}
+
+		return result;
+	}
+)(TagCard);
 
 ReactiveTagCard.defaultProps = {
 	limit: 0,
