@@ -46,7 +46,7 @@ const ConsultationAdvancedActionsDialog = (props) => {
 	return (
 		<>
 			<Dialog open={open} onClose={onClose}>
-				<DialogTitle>What do you want to do?</DialogTitle>
+				<DialogTitle>What is the problem?</DialogTitle>
 				<DialogContent>
 					<StaticConsultationCardChips
 						{...rest}
@@ -66,11 +66,11 @@ const ConsultationAdvancedActionsDialog = (props) => {
 							}}
 						>
 							<ListItemAvatar>
-								<Avatar className={classes.primary}>
+								<Avatar className={classes.secondary}>
 									<RestoreIcon />
 								</Avatar>
 							</ListItemAvatar>
-							<ListItemText primary="Restore original appointment" />
+							<ListItemText primary="This consultation should not have been started yet" />
 						</ListItem>
 					)}
 					<ListItem
@@ -87,7 +87,9 @@ const ConsultationAdvancedActionsDialog = (props) => {
 						</ListItemAvatar>
 						<ListItemText
 							primary={
-								isDone ? 'Delete this consultation' : 'Delete this appointment'
+								isDone
+									? 'This consultation is a duplicate'
+									: 'This appointment is a duplicate'
 							}
 						/>
 					</ListItem>
