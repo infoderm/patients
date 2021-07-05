@@ -23,11 +23,15 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
 import DoneIcon from '@material-ui/icons/Done';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import green from '@material-ui/core/colors/green';
+import orange from '@material-ui/core/colors/orange';
+import red from '@material-ui/core/colors/red';
 import SearchBox from '../input/SearchBox';
 
 import mergeFields from '../../util/mergeFields';
 
 import {patients, usePatientsFind} from '../../api/patients';
+import {onlyNumeric} from '../../api/string';
 
 import dialog from '../modal/dialog';
 import InformationDialog from '../modal/InformationDialog';
@@ -195,6 +199,16 @@ const EidCardDialogStepSelection = ({
 		}
 	};
 
+	const getCardProps = (patient) => ({
+		highlightNn: !patient.niss
+			? orange[200]
+			: eidPatient.niss === patient.niss
+			? green[200]
+			: eidPatient.niss?.startsWith(onlyNumeric(patient.niss))
+			? false
+			: red[200]
+	});
+
 	return (
 		<>
 			{displayLinearProgress && <LinearProgress />}
@@ -249,9 +263,9 @@ const EidCardDialogStepSelection = ({
 											Card={ReactivePatientCard}
 											CardProps={{
 												Card: SelectablePatientCard,
-												onClick: onCardClick,
-												highlightNn: true
+												onClick: onCardClick
 											}}
+											getCardProps={getCardProps}
 											selected={selected}
 										/>
 									</Grid>
@@ -272,6 +286,7 @@ const EidCardDialogStepSelection = ({
 												Card: SelectablePatientCard,
 												onClick: onCardClick
 											}}
+											getCardProps={getCardProps}
 											selected={selected}
 										/>
 									</Grid>
@@ -325,6 +340,7 @@ const EidCardDialogStepSelection = ({
 													Card: SelectablePatientCard,
 													onClick: onCardClick
 												}}
+												getCardProps={getCardProps}
 												selected={selected}
 											/>
 										</Grid>
