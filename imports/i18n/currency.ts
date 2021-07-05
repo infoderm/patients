@@ -102,11 +102,11 @@ export const useReactNumberFormatOptionsForCurrency = (
 
 		const suffix =
 			currencyPosition === 'suffix'
-				? `${currencySpacing}${currencySymbol}`
+				? `${currencySpacing ?? ''}${currencySymbol}`
 				: '';
 		const prefix =
 			currencyPosition === 'prefix'
-				? `${currencySymbol}${currencySpacing}`
+				? `${currencySymbol}${currencySpacing ?? ''}`
 				: '';
 
 		const thousandSeparator = groupDelimiter;
