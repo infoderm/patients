@@ -11,12 +11,14 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import WarningIcon from '@material-ui/icons/Warning';
+
 import TextField from '../input/TextField';
 
 import useBookStats from '../books/useBookStats';
 import {books, useBooksFind} from '../../api/books';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
+import CurrencyAmountInput from '../input/CurrencyAmountInput';
 
 const styles = (theme) => ({
 	multiline: {
@@ -202,7 +204,9 @@ const ConsultationForm = ({consultation, update}) => {
 										<WarningIcon />
 									</IconButton>
 								</InputAdornment>
-							)
+							),
+							inputComponent: CurrencyAmountInput,
+							inputProps: {currency}
 						}}
 						onChange={update && update('price')}
 					/>
@@ -215,6 +219,10 @@ const ConsultationForm = ({consultation, update}) => {
 						value={paid}
 						margin="normal"
 						error={paidError}
+						InputProps={{
+							inputComponent: CurrencyAmountInput,
+							inputProps: {currency}
+						}}
 						onChange={update && update('paid')}
 					/>
 				</Grid>
