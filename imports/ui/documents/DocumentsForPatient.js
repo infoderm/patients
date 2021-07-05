@@ -1,59 +1,58 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
-import {Patients} from '../../api/patients';
-import {Documents} from '../../api/documents';
+import usePatient from '../patients/usePatient';
+import useDocuments from '../../api/hooks/useDocuments';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 
-const DocumentsForPatient = (props) => {
-	const {loading, patient, ...rest} = props;
+const DocumentsForPatient = ({patientId, page, perpage, ...rest}) => {
+	const {loading: loadingPatient, found: foundPatient} = usePatient(
+		{},
+		patientId,
+		{fields: {_id: 1}},
+		[patientId]
+	);
+	const query = {
+		patientId,
+		deleted: false,
+		lastVersion: true
+	};
+	const options = {
+		sort: {datetime: -1},
+		skip: (page - 1) * perpage,
+		limit: perpage
+	};
+	const deps = [patientId, page, perpage];
+	const {loading: loadingDocuments, results: documents} = useDocuments(
+		query,
+		options,
+		deps
+	);
 
-	if (loading) {
+	if (loadingPatient) {
 		return <Loading />;
 	}
 
-	if (!patient) {
+	if (!foundPatient) {
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	return <DocumentsForPatientStatic {...rest} />;
+	if (loadingDocuments) {
+		return <Loading />;
+	}
+
+	return (
+		<DocumentsForPatientStatic
+			patientId={patientId}
+			page={page}
+			perpage={perpage}
+			documents={documents}
+			{...rest}
+		/>
+	);
 };
 
-export default withTracker(({patientId, page, perpage}) => {
-	const patientHandle = Meteor.subscribe('patient', patientId);
-	const documentsHandle = Meteor.subscribe('patient.documents', patientId);
-
-	const loading = !patientHandle.ready() || !documentsHandle.ready();
-
-	const patient = loading ? null : Patients.findOne(patientId);
-
-	const documents = loading
-		? []
-		: Documents.find(
-				{
-					patientId,
-					deleted: false,
-					lastVersion: true
-				},
-				{
-					sort: {datetime: -1},
-					skip: (page - 1) * perpage,
-					limit: perpage
-				}
-		  ).fetch();
-
-	return {
-		patientId,
-		page,
-		perpage,
-		loading,
-		patient,
-		documents
-	};
-})(DocumentsForPatient);
+export default DocumentsForPatient;
