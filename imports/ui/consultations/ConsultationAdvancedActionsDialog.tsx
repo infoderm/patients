@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import RestoreIcon from '@material-ui/icons/Restore';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
 
 import {blue, red} from '@material-ui/core/colors';
 
@@ -22,6 +23,7 @@ import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog';
 import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
+import ConsultationTransferDialog from './ConsultationTransferDialog';
 
 const useStyles = makeStyles({
 	primary: {
@@ -42,6 +44,7 @@ const ConsultationAdvancedActionsDialog = (props) => {
 	const {isDone, scheduledDatetime} = consultation;
 	const [deleting, setDeleting] = useState(false);
 	const [restoreAppointment, setRestoreAppointment] = useState(false);
+	const [transferring, setTransferring] = useState(false);
 
 	return (
 		<>
@@ -73,6 +76,26 @@ const ConsultationAdvancedActionsDialog = (props) => {
 							<ListItemText primary="This consultation should not have been started yet" />
 						</ListItem>
 					)}
+					<ListItem
+						button
+						onClick={() => {
+							setTransferring(true);
+							onClose();
+						}}
+					>
+						<ListItemAvatar>
+							<Avatar className={classes.secondary}>
+								<LinkOffIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText
+							primary={
+								isDone
+									? 'This consultation is tied to the wrong patient'
+									: 'This appointment is tied to the wrong patient'
+							}
+						/>
+					</ListItem>
 					<ListItem
 						button
 						onClick={() => {
@@ -122,6 +145,14 @@ const ConsultationAdvancedActionsDialog = (props) => {
 					}}
 				/>
 			)}
+
+			<ConsultationTransferDialog
+				open={transferring}
+				consultation={consultation}
+				onClose={() => {
+					setTransferring(false);
+				}}
+			/>
 		</>
 	);
 };
