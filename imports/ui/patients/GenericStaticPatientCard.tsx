@@ -4,7 +4,6 @@ import PropTypes, {InferProps} from 'prop-types';
 import {useTransition, animated} from 'react-spring';
 
 import {makeStyles} from '@material-ui/core/styles';
-import classNames from 'classnames';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -89,9 +88,6 @@ const useStyles = makeStyles((theme) => ({
 		color: '#fff',
 		backgroundColor: pink[500]
 	},
-	highlight: {
-		backgroundColor: yellow[200]
-	},
 	name: {
 		display: 'flex'
 	},
@@ -128,6 +124,13 @@ const GenericStaticPatientCard = ({
 
 	const deleted = !loading && !found;
 
+	const nnStyle = highlightNn
+		? {
+				backgroundColor:
+					typeof highlightNn === 'string' ? highlightNn : yellow[200]
+		  }
+		: {};
+
 	const cardOpacity = {opacity: deleted ? 0.4 : 1};
 
 	return (
@@ -146,12 +149,7 @@ const GenericStaticPatientCard = ({
 				/>
 				<CardContent className={classes.content} />
 				<CardActions disableSpacing className={classes.actions}>
-					<Chip
-						className={classNames({
-							[classes.highlight]: highlightNn
-						})}
-						label={niss || '?'}
-					/>
+					<Chip style={nnStyle} label={niss || '?'} />
 					{showScore && score && (
 						<Chip
 							className={classes.scoreChip}
@@ -199,7 +197,7 @@ GenericStaticPatientCard.defaultProps = {
 GenericStaticPatientCard.propTypes = {
 	loading: PropTypes.bool,
 	found: PropTypes.bool,
-	highlightNn: PropTypes.bool,
+	highlightNn: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
 	showScore: PropTypes.bool,
 	patient: PropTypes.object.isRequired
 };
