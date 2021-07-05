@@ -10,72 +10,82 @@ import Greetings from './navigation/Greetings';
 import NoMatch from './navigation/NoMatch';
 import Loading from './navigation/Loading';
 
-const FullTextSearchResults = lazy(() =>
-	import('./search/FullTextSearchResults')
+const FullTextSearchResults = lazy(
+	async () => import('./search/FullTextSearchResults')
 );
 
-const PatientRecord = lazy(() => import('./patients/PatientRecord'));
-const NewPatientForm = lazy(() => import('./patients/NewPatientForm'));
+const PatientRecord = lazy(async () => import('./patients/PatientRecord'));
+const NewPatientForm = lazy(async () => import('./patients/NewPatientForm'));
 
-const ConsultationsOfTheDay = lazy(() =>
-	import('./consultations/ConsultationsOfTheDay')
+const ConsultationsOfTheDay = lazy(
+	async () => import('./consultations/ConsultationsOfTheDay')
 );
-const TodaysConsultations = lazy(() =>
-	import('./consultations/TodaysConsultations')
+const TodaysConsultations = lazy(
+	async () => import('./consultations/TodaysConsultations')
 );
-const LastDayOfConsultations = lazy(() =>
-	import('./consultations/LastDayOfConsultations')
+const LastDayOfConsultations = lazy(
+	async () => import('./consultations/LastDayOfConsultations')
 );
-const LastConsultation = lazy(() => import('./consultations/LastConsultation'));
-const ConsultationDetails = lazy(() =>
-	import('./consultations/ConsultationDetails')
+const LastConsultation = lazy(
+	async () => import('./consultations/LastConsultation')
 );
-const EditConsultation = lazy(() => import('./consultations/EditConsultation'));
-const NewConsultation = lazy(() => import('./consultations/NewConsultation'));
+const ConsultationDetails = lazy(
+	async () => import('./consultations/ConsultationDetails')
+);
+const EditConsultation = lazy(
+	async () => import('./consultations/EditConsultation')
+);
+const NewConsultation = lazy(
+	async () => import('./consultations/NewConsultation')
+);
 
-const MonthlyPlanner = lazy(() =>
-	import('./planner/PreconfiguredMonthlyPlanner')
+const MonthlyPlanner = lazy(
+	async () => import('./planner/PreconfiguredMonthlyPlanner')
 );
-const WeeklyPlanner = lazy(() =>
-	import('./planner/PreconfiguredWeeklyPlanner')
+const WeeklyPlanner = lazy(
+	async () => import('./planner/PreconfiguredWeeklyPlanner')
 );
 
-const BooksList = lazy(() => import('./books/BooksList'));
-const BookDetails = lazy(() => import('./books/BookDetails'));
+const BooksList = lazy(async () => import('./books/BooksList'));
+const BookDetails = lazy(async () => import('./books/BookDetails'));
 
-const DocumentsList = lazy(() => import('./documents/DocumentsList'));
-const DocumentVersionsList = lazy(() =>
-	import('./documents/DocumentVersionsList')
+const DocumentsList = lazy(async () => import('./documents/DocumentsList'));
+const DocumentVersionsList = lazy(
+	async () => import('./documents/DocumentVersionsList')
 );
-const DocumentsFromIdentifierList = lazy(() =>
-	import('./documents/DocumentsFromIdentifierList')
+const DocumentsFromIdentifierList = lazy(
+	async () => import('./documents/DocumentsFromIdentifierList')
 );
-const DocumentDetails = lazy(() => import('./documents/DocumentDetails'));
+const DocumentDetails = lazy(async () => import('./documents/DocumentDetails'));
 
-const PaidConsultationsList = lazy(() =>
-	import('./consultations/PaidConsultationsList')
+const PaidConsultationsList = lazy(
+	async () => import('./consultations/PaidConsultationsList')
 );
-const SEPAPaymentDetails = lazy(() => import('./payment/SEPAPaymentDetails'));
-const UnpaidConsultationsList = lazy(() =>
-	import('./consultations/UnpaidConsultationsList')
+const SEPAPaymentDetails = lazy(
+	async () => import('./payment/SEPAPaymentDetails')
 );
-const Stats = lazy(() => import('./stats/Stats'));
-const Issues = lazy(() => import('./issues/Issues'));
-const MergePatientsForm = lazy(() => import('./merge/MergePatientsForm'));
+const UnpaidConsultationsList = lazy(
+	async () => import('./consultations/UnpaidConsultationsList')
+);
+const Stats = lazy(async () => import('./stats/Stats'));
+const Issues = lazy(async () => import('./issues/Issues'));
+const MergePatientsForm = lazy(async () => import('./merge/MergePatientsForm'));
 
-const DoctorsList = lazy(() => import('./doctors/DoctorsList'));
-const DoctorDetails = lazy(() => import('./doctors/DoctorDetails'));
+const DoctorsList = lazy(async () => import('./doctors/DoctorsList'));
+const DoctorDetails = lazy(async () => import('./doctors/DoctorDetails'));
 
-const InsurancesList = lazy(() => import('./insurances/InsurancesList'));
-const InsuranceDetails = lazy(() => import('./insurances/InsuranceDetails'));
+const InsurancesList = lazy(async () => import('./insurances/InsurancesList'));
+const InsuranceDetails = lazy(
+	async () => import('./insurances/InsuranceDetails')
+);
 
-const AllergiesList = lazy(() => import('./allergies/AllergiesList'));
-const AllergyDetails = lazy(() => import('./allergies/AllergyDetails'));
+const AllergiesList = lazy(async () => import('./allergies/AllergiesList'));
+const AllergyDetails = lazy(async () => import('./allergies/AllergyDetails'));
 
-const DrugsSearch = lazy(() => import('./drugs/DrugsSearch'));
-const DrugDetails = lazy(() => import('./drugs/DrugDetails'));
+const DrugsSearch = lazy(async () => import('./drugs/DrugsSearch'));
+const DrugDetails = lazy(async () => import('./drugs/DrugDetails'));
 
-const Settings = lazy(() => import('./settings/Settings'));
+const Settings = lazy(async () => import('./settings/Settings'));
 
 const ConsultationsOfTheDayFromMatch = ({match}) => (
 	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))} />

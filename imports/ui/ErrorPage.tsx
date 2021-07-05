@@ -106,7 +106,7 @@ export default function ErrorPage({error, errorInfo, retry}) {
 			<details className={classes.details}>
 				<summary className={classes.summary}>Show error log</summary>
 				<pre className={classes.pre}>
-					{error && error.toString()}
+					{error?.toString()}
 					<br />
 					{errorInfo.componentStack}
 				</pre>

@@ -1,6 +1,10 @@
 import React from 'react';
 
-export default class GenericErrorBoundary extends React.Component {
+interface GenericErrorBoundaryProps {
+	component: React.ElementType;
+}
+
+export default class GenericErrorBoundary extends React.Component<GenericErrorBoundaryProps> {
 	state = {error: null, errorInfo: null};
 
 	componentDidCatch(error, errorInfo) {
@@ -19,7 +23,9 @@ export default class GenericErrorBoundary extends React.Component {
 				<RenderError
 					error={this.state.error}
 					errorInfo={this.state.errorInfo}
-					retry={() => this.setState({error: null, errorInfo: null})}
+					retry={() => {
+						this.setState({error: null, errorInfo: null});
+					}}
 				/>
 			);
 		}

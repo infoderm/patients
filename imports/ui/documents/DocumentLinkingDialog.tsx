@@ -25,24 +25,22 @@ const useStyles = makeStyles({
 	}
 });
 
-const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
+const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 	const classes = useStyles();
 
-	const [patient, setPatient] = useState(existingLink ? [existingLink] : []);
+	const [patients, setPatients] = useState(existingLink ? [existingLink] : []);
 
 	const isMounted = useIsMounted();
 
-	const linkThisAttachment = (event) => {
+	const linkThisDocument = (event) => {
 		event.preventDefault();
-		const attachmentId = attachment._id;
-		const patientId = patient[0]._id;
-		Meteor.call('patients.attach', patientId, attachmentId, (err, _res) => {
+		const documentId = document._id;
+		const patientId = patients[0]._id;
+		Meteor.call('documents.link', documentId, patientId, (err, _res) => {
 			if (err) {
 				console.error(err);
 			} else {
-				console.log(
-					`Attachment #${attachmentId} linked to patient #${patientId}.`
-				);
+				console.log(`Document #${documentId} linked to patient #${patientId}.`);
 				if (isMounted()) onClose();
 			}
 		});
@@ -53,26 +51,28 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 			classes={{paper: classes.dialogPaper}}
 			open={open}
 			// component="form"
-			aria-labelledby="attachment-linking-dialog-title"
+			aria-labelledby="document-linking-dialog-title"
 			onClose={onClose}
 		>
-			<DialogTitle id="attachment-linking-dialog-title">
-				Link attachment {attachment._id}
+			<DialogTitle id="document-linking-dialog-title">
+				Link document {document._id.toString()}
 			</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
 				<DialogContentText>
-					If you do not want to link this attachment, click cancel. If you
-					really want to link this attachment, enter the name of the patient to
-					link it to and click the link button.
+					If you do not want to link this document, click cancel. If you really
+					want to link this document, enter the name of the patient to link it
+					to and click the link button.
 				</DialogContentText>
 				<PatientPicker
 					TextFieldProps={{
 						autoFocus: true,
-						label: 'Patient to link attachment to',
+						label: 'Patient to link document to',
 						margin: 'normal'
 					}}
-					value={patient}
-					onChange={(e) => setPatient(e.target.value)}
+					value={patients}
+					onChange={(e) => {
+						setPatients(e.target.value);
+					}}
 				/>
 			</DialogContent>
 			<DialogActions>
@@ -85,10 +85,10 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 					Cancel
 				</Button>
 				<Button
-					disabled={patient.length === 0}
+					disabled={patients.length === 0}
 					color="secondary"
 					endIcon={<LinkIcon />}
-					onClick={linkThisAttachment}
+					onClick={linkThisDocument}
 				>
 					Link
 				</Button>
@@ -97,15 +97,15 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 	);
 };
 
-AttachmentLinkingDialog.propTypes = {
+DocumentLinkingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	attachment: PropTypes.object,
+	document: PropTypes.object,
 	existingLink: PropTypes.object
 };
 
-AttachmentLinkingDialog.projection = {
+DocumentLinkingDialog.projection = {
 	_id: 1
 };
 
-export default withLazyOpening(AttachmentLinkingDialog);
+export default withLazyOpening(DocumentLinkingDialog);
