@@ -17,6 +17,8 @@ import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import useIsMounted from '../hooks/useIsMounted';
+
 const styles = (theme) =>
 	createStyles({
 		card: {
@@ -92,14 +94,16 @@ const TagCard = (props) => {
 	const openDeletionDialog = () => setDeleting(true);
 	const closeDeletionDialog = () => setDeleting(false);
 
+	const isMounted = useIsMounted();
+
 	const onRename = (newName) => {
 		const currentURL = history.location.pathname.replaceAll(' ', '%20');
 		const oldURL = url(tag.name);
 		if (currentURL === oldURL) {
 			const newURL = url(newName);
 			history.push(newURL);
-		} else {
-			return closeRenamingDialog();
+		} else if (isMounted()) {
+			closeRenamingDialog();
 		}
 	};
 
