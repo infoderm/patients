@@ -1,6 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 
 import {Link} from 'react-router-dom';
@@ -9,14 +6,19 @@ import Chip from '@material-ui/core/Chip';
 
 import {colord} from 'colord';
 
-import {Allergies, allergies} from '../../api/allergies';
-
 import {myEncodeURIComponent} from '../../client/uri';
 
-const AllergyChip = ({item, ...rest}) => {
+import withAllergy from './withAllergy';
+
+const AllergyChipWithoutItem = ({name, loading, item, ...rest}) => {
 	const style = {};
 	let component;
 	let to;
+
+	if (loading) {
+		style.backgroundColor = '#999';
+		style.color = '#eee';
+	}
 
 	if (item) {
 		if (item.color) {
@@ -31,15 +33,15 @@ const AllergyChip = ({item, ...rest}) => {
 		}
 	}
 
-	return <Chip {...rest} style={style} component={component} to={to} />;
+	return (
+		<Chip {...rest} label={name} style={style} component={component} to={to} />
+	);
 };
 
-export default withTracker(({label}) => {
-	const handle = Meteor.subscribe(allergies.options.singlePublication, label);
-	if (handle.ready()) {
-		const item = Allergies.findOne({name: label});
-		return {item};
-	}
+const AllergyChipWithItem = withAllergy(AllergyChipWithoutItem);
 
-	return {};
-})(AllergyChip);
+const AllergyChip = ({label, ...rest}) => (
+	<AllergyChipWithItem name={label} {...rest} />
+);
+
+export default AllergyChip;
