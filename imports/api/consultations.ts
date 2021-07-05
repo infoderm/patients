@@ -592,6 +592,30 @@ const methods = {
 		});
 	},
 
+	'consultations.transfer'(consultationId: string, patientId: string) {
+		check(consultationId, String);
+		check(patientId, String);
+
+		const numUpdated = Consultations.update(
+			{
+				_id: consultationId,
+				owner: this.userId
+			},
+			{
+				$set: {
+					patientId
+				}
+			},
+			{multi: false, upsert: false}
+		);
+
+		if (numUpdated === 0) {
+			throw new Meteor.Error('not-found');
+		}
+
+		return numUpdated;
+	},
+
 	'consultations.attach'(consultationId, uploadId) {
 		check(consultationId, String);
 		check(uploadId, String);
