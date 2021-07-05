@@ -5,10 +5,11 @@ import {patients} from '../../api/patients';
 import SetPicker from '../input/SetPicker';
 
 import PropsOf from '../../util/PropsOf';
+import Optional from '../../util/Optional';
 import ReactivePatientChip from './ReactivePatientChip';
 import usePatientsSuggestions from './usePatientsSuggestions';
 
-type Props = Omit<
+type Props = Optional<
 	PropsOf<typeof SetPicker>,
 	'itemToKey' | 'itemToString' | 'useSuggestions'
 >;
