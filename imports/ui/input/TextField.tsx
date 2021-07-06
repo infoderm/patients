@@ -2,7 +2,9 @@ import React from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import MuiTextField from '@material-ui/core/TextField';
+import MuiTextField, {
+	TextFieldProps as MuiTextFieldProps
+} from '@material-ui/core/TextField';
 
 const styles = () => ({
 	readOnlyInput: {
@@ -17,7 +19,13 @@ const styles = () => ({
 
 const useStyles = makeStyles(styles);
 
-const TextField = (props) => {
+interface AddedProps {
+	readOnly?: boolean;
+}
+
+type Props = MuiTextFieldProps & AddedProps;
+
+const TextField = React.forwardRef<any, Props>((props, ref) => {
 	const classes = useStyles();
 
 	const {readOnly, InputProps, ...rest} = props;
@@ -26,7 +34,7 @@ const TextField = (props) => {
 		? {readOnly: true, className: classes.readOnlyInput, ...InputProps}
 		: InputProps;
 
-	return <MuiTextField InputProps={patchedInputProps} {...rest} />;
-};
+	return <MuiTextField ref={ref} InputProps={patchedInputProps} {...rest} />;
+});
 
 export default TextField;
