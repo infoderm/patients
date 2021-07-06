@@ -17,6 +17,7 @@ interface BaseProps {
 	title: string;
 	label?: string;
 	placeholder?: string;
+	itemToKey?: (x: any) => any;
 	itemToString?: (x: any) => any;
 }
 
