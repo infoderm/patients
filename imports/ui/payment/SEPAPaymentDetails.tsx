@@ -49,6 +49,14 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
+interface Data {
+	name: string;
+	iban: string;
+	currency: string;
+	amount: number;
+	unstructuredReference?: string;
+}
+
 const SEPAPaymentDetailsStatic = (props) => {
 	const classes = useStyles();
 
@@ -66,7 +74,7 @@ const SEPAPaymentDetailsStatic = (props) => {
 		setAmount(Number.parseFloat(e.target.value));
 	};
 
-	const data = {
+	const data: Data = {
 		name: accountHolder,
 		iban,
 		currency,
@@ -115,7 +123,7 @@ const SEPAPaymentDetailsStatic = (props) => {
 									value={amountString}
 									error={Number.isNaN(amount)}
 									InputProps={{
-										inputComponent: CurrencyAmountInput,
+										inputComponent: CurrencyAmountInput as any,
 										inputProps: {currency}
 									}}
 									onChange={handleAmountChange}
@@ -125,7 +133,9 @@ const SEPAPaymentDetailsStatic = (props) => {
 								<TextField
 									label="Reference"
 									value={unstructuredReference}
-									onChange={(e) => setUnstructuredReference(e.target.value)}
+									onChange={(e) => {
+										setUnstructuredReference(e.target.value);
+									}}
 								/>
 							</div>
 						</Grid>
