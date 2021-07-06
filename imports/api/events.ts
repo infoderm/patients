@@ -11,6 +11,11 @@ import startOfToday from 'date-fns/startOfToday';
 import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './patients';
 
+import intersectsInterval from './interval/intersectsInterval';
+import beginsInInterval from './interval/beginsInInterval';
+
+export {intersectsInterval, beginsInInterval};
+
 export interface Event {
 	owner: string;
 	calendar: string;
@@ -24,38 +29,6 @@ export interface Event {
 
 const events = 'events';
 export const Events = new Mongo.Collection<Event>(events);
-
-export const beginsInInterval = (begin, end) => ({
-	begin: {
-		$gte: begin,
-		$lt: end
-	}
-});
-
-export const intersectsInterval = (begin, end) => ({
-	$or: [
-		{
-			begin: {
-				$gte: begin,
-				$lt: end
-			}
-		},
-		{
-			end: {
-				$gt: begin,
-				$lte: end
-			}
-		},
-		{
-			begin: {
-				$lt: begin
-			},
-			end: {
-				$gt: end
-			}
-		}
-	]
-});
 
 if (Meteor.isServer) {
 	const event = (
