@@ -20,7 +20,11 @@ export default function SEPAPaymentQRCode({data, codeProps, ...rest}) {
 			// encoderOptions = 0.92 ;
 			// canvas.toDataURL(type, encoderOptions);
 		);
-	} catch (error) {
-		return <div {...rest}>{error.message}</div>;
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			return <div {...rest}>{error.message}</div>;
+		}
+
+		throw error;
 	}
 }
