@@ -32,7 +32,7 @@ export const Events = new Mongo.Collection<Event>(events);
 
 if (Meteor.isServer) {
 	const event = (
-		_id,
+		_id: string,
 		{
 			owner,
 			patientId,
