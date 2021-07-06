@@ -3,6 +3,7 @@ import React, {useMemo} from 'react';
 import {list} from '@iterable-iterator/list';
 import {filter} from '@iterable-iterator/filter';
 import {range} from '@iterable-iterator/range';
+import {sorted} from '@iterable-iterator/sorted';
 
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
@@ -28,7 +29,8 @@ export default function DisplayedWeekDaysSetting({className}) {
 	const formatDayOfWeek = (i) => DAYS[i];
 
 	const makeSuggestions = (value) => (inputValue) => ({
-		results: list(
+		results: sorted(
+			compare,
 			filter(
 				(i) =>
 					!value.includes(i) &&
