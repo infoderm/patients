@@ -155,9 +155,11 @@ const SetPicker = (props: SetPickerProps) => {
 					highlightedIndex === -1 &&
 					createNewItem
 				) {
-					// TODO avoid creating new item before multiset check
-					// and/or handle item creation failure
+					// TODO avoid creating new item before multiset check,
+					// handle async item creation, use try/catch for error
+					// handling
 					const item = createNewItem(inputValue.trim());
+					if (item === undefined) break;
 					const itemString = itemToString(item);
 					const newValue = displayedValue.slice();
 					if (
