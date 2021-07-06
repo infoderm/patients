@@ -14,6 +14,7 @@ import ImportantStringsSetting from './ImportantStringsSetting';
 import WeekStartsOnSetting from './WeekStartsOnSetting';
 import IBANSetting from './IBANSetting';
 import AccountHolderSetting from './AccountHolderSetting';
+import WorkScheduleSetting from './WorkScheduleSetting';
 
 const useStyles = makeStyles((theme) => ({
 	setting: {
@@ -47,6 +48,7 @@ export default function Settings() {
 			<AppointmentDurationSetting className={classes.setting} />
 			<AppointmentCancellationReasonSetting className={classes.setting} />
 			<DisplayedWeekDaysSetting className={classes.setting} />
+			<WorkScheduleSetting className={classes.setting} />
 		</div>
 	);
 }
