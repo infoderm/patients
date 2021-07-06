@@ -3,11 +3,13 @@ const SECOND = 1000 * MILLISECOND;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
+const WEEK = 7 * DAY;
 
 type UnitsRecord = Record<string, number>;
 type UnitsArray = Array<[string, number]>;
 
 export const units: UnitsRecord = {
+	week: WEEK,
 	day: DAY,
 	hour: HOUR,
 	minute: MINUTE,
@@ -16,6 +18,7 @@ export const units: UnitsRecord = {
 };
 
 const DEFAULT_UNITS: UnitsArray = [
+	['week', WEEK],
 	['day', DAY],
 	['hour', HOUR],
 	['minute', MINUTE],
@@ -25,6 +28,7 @@ const DEFAULT_UNITS: UnitsArray = [
 const DEFAULT_REST_UNIT = 'millisecond';
 
 const DEFAULT_ABBR = {
+	week: 'w',
 	day: 'd',
 	hour: 'h',
 	minute: 'm',
