@@ -88,7 +88,7 @@ const ConsultationForm = ({consultation, update}) => {
 						className={classes.multiline}
 						value={reason}
 						margin="normal"
-						onChange={update && update('reason')}
+						onChange={update?.('reason')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -101,7 +101,7 @@ const ConsultationForm = ({consultation, update}) => {
 						className={classes.multiline}
 						value={done}
 						margin="normal"
-						onChange={update && update('done')}
+						onChange={update?.('done')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -114,7 +114,7 @@ const ConsultationForm = ({consultation, update}) => {
 						className={classes.multiline}
 						value={todo}
 						margin="normal"
-						onChange={update && update('todo')}
+						onChange={update?.('todo')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -127,7 +127,7 @@ const ConsultationForm = ({consultation, update}) => {
 						className={classes.multiline}
 						value={treatment}
 						margin="normal"
-						onChange={update && update('treatment')}
+						onChange={update?.('treatment')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -140,7 +140,7 @@ const ConsultationForm = ({consultation, update}) => {
 						className={classes.multiline}
 						value={next}
 						margin="normal"
-						onChange={update && update('next')}
+						onChange={update?.('next')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -153,7 +153,7 @@ const ConsultationForm = ({consultation, update}) => {
 						className={classes.multiline}
 						value={more}
 						margin="normal"
-						onChange={update && update('more')}
+						onChange={update?.('more')}
 					/>
 				</Grid>
 
@@ -165,7 +165,7 @@ const ConsultationForm = ({consultation, update}) => {
 						label="Currency"
 						value={currency}
 						margin="normal"
-						onChange={update && update('currency')}
+						onChange={update?.('currency')}
 					>
 						<MenuItem value="EUR">€</MenuItem>
 					</TextField>
@@ -178,7 +178,7 @@ const ConsultationForm = ({consultation, update}) => {
 						label="Payment Method"
 						value={payment_method}
 						margin="normal"
-						onChange={update && update('payment_method')}
+						onChange={update?.('payment_method')}
 					>
 						<MenuItem value="cash">cash</MenuItem>
 						<MenuItem value="wire">virement</MenuItem>
@@ -205,10 +205,10 @@ const ConsultationForm = ({consultation, update}) => {
 									</IconButton>
 								</InputAdornment>
 							),
-							inputComponent: CurrencyAmountInput,
+							inputComponent: CurrencyAmountInput as any,
 							inputProps: {currency}
 						}}
-						onChange={update && update('price')}
+						onChange={update?.('price')}
 					/>
 				</Grid>
 				<Grid item xs={3}>
@@ -220,10 +220,10 @@ const ConsultationForm = ({consultation, update}) => {
 						margin="normal"
 						error={paidError}
 						InputProps={{
-							inputComponent: CurrencyAmountInput,
+							inputComponent: CurrencyAmountInput as any,
 							inputProps: {currency}
 						}}
-						onChange={update && update('paid')}
+						onChange={update?.('paid')}
 					/>
 				</Grid>
 				<Grid item xs={3}>
