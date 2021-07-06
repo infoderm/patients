@@ -162,6 +162,12 @@
       "react/no-array-index-key": "off",
       "react/no-unsafe": "off",
       "react/require-default-props": "off",
+      "react/jsx-no-duplicate-props": [
+        "error",
+        {
+          "ignoreCase": false
+        }
+      ],
       "@typescript-eslint/consistent-type-assertions": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-call": "off",
