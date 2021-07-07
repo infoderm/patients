@@ -9,11 +9,11 @@ import {BrowserRouter} from 'react-router-dom';
 import App from '../imports/ui/App';
 import rootNode from '../imports/ui/rootNode';
 
-Meteor.startup(() =>
+Meteor.startup(() => {
 	render(
 		<BrowserRouter>
 			<App />
 		</BrowserRouter>,
 		rootNode()
-	)
-);
+	);
+});
