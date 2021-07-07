@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import keycode from 'keycode';
 import {useCombobox, useMultipleSelection} from 'downshift';
 
-import {all} from '@iterable-iterator/reduce';
+import {any} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
@@ -70,6 +70,32 @@ const SetPickerPropTypes = {
 
 type SetPickerProps = InferProps<typeof SetPickerPropTypes>;
 
+const comboboxStateReducer = (state, {type, changes}) => {
+	switch (type) {
+		case useCombobox.stateChangeTypes.InputChange:
+			return {
+				...changes,
+				highlightedIndex: -1
+			};
+		case useCombobox.stateChangeTypes.InputBlur:
+			return {
+				...changes,
+				highlightedIndex: state.highlightedIndex,
+				inputValue: state.inputValue
+			};
+		case useCombobox.stateChangeTypes.InputKeyDownEnter:
+		case useCombobox.stateChangeTypes.ItemClick:
+			return {
+				...changes,
+				highlightedIndex: state.highlightedIndex,
+				isOpen: true,
+				inputValue: ''
+			};
+		default:
+			return changes;
+	}
+};
+
 const SetPicker = (props: SetPickerProps) => {
 	const {
 		className,
@@ -134,12 +160,26 @@ const SetPicker = (props: SetPickerProps) => {
 	const count = selectedItems.length;
 	const full = count >= maxCount;
 
+	const inputDisabled = readOnly || full;
+
+	useEffect(() => {
+		if (inputDisabled) resetInputValue();
+	}, [inputDisabled]);
+
 	const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({
 		selectedItems,
 		onSelectedItemsChange: ({selectedItems}) => {
+			// This is called when hitting backspace on empty input, or when
+			// pressing delete or backspace key while a chip is focused, so no
+			// need to sort.
 			if (selectedItems) setSelectedItems(selectedItems);
 		}
 	});
+
+	const isSelected = (item) => {
+		const itemString = itemToString(item);
+		return any(map((x) => x === itemString, map(itemToString, selectedItems)));
+	};
 
 	const {
 		isOpen,
@@ -163,30 +203,7 @@ const SetPicker = (props: SetPickerProps) => {
 				setInputValue(inputTransform(inputValue.trimStart()));
 			}
 		},
-		stateReducer: (state, {type, changes}) => {
-			switch (type) {
-				case useCombobox.stateChangeTypes.InputChange:
-					return {
-						...changes,
-						highlightedIndex: -1
-					};
-				case useCombobox.stateChangeTypes.InputBlur:
-					return {
-						...changes,
-						highlightedIndex: state.highlightedIndex
-					};
-				case useCombobox.stateChangeTypes.InputKeyDownEnter:
-				case useCombobox.stateChangeTypes.ItemClick:
-					return {
-						...changes,
-						highlightedIndex: state.highlightedIndex,
-						isOpen: true,
-						inputValue: ''
-					};
-				default:
-					return changes;
-			}
-		},
+		stateReducer: comboboxStateReducer,
 		onStateChange: (changes) => {
 			console.debug(changes);
 			const {type, selectedItem} = changes;
@@ -197,19 +214,12 @@ const SetPicker = (props: SetPickerProps) => {
 			switch (type) {
 				case useCombobox.stateChangeTypes.InputKeyDownEnter:
 				case useCombobox.stateChangeTypes.ItemClick:
+					// This is called when an item in the suggestion list is
+					// clicked or highlighted then the enter key is pressed.
 					if (selectedItem !== undefined) {
-						if (selectedItems.includes(selectedItem)) {
+						if (!multiset && isSelected(selectedItem)) {
 							removeSelectedItem(selectedItem);
-						} else if (
-							!full &&
-							(multiset ||
-								all(
-									map(
-										(x) => x !== itemToString(selectedItem),
-										map(itemToString, selectedItems)
-									)
-								))
-						) {
+						} else if (!full) {
 							addSelectedItem(selectedItem);
 						}
 
@@ -232,42 +242,23 @@ const SetPicker = (props: SetPickerProps) => {
 	 * this handler.
 	 */
 	const handleInputKeyDownEnter = (event) => {
-		if (readOnly) {
-			return;
-		}
-
-		switch (keycode(event)) {
-			case 'enter':
-				if (
-					inputValue.length > 0 &&
-					!full &&
-					highlightedIndex === -1 &&
-					createNewItem
-				) {
-					// TODO avoid creating new item before multiset check,
-					// handle async item creation, use try/catch for error
-					// handling
-					const item = createNewItem(inputValue.trim());
-					if (item === undefined) break;
-					const itemString = itemToString(item);
-					if (
-						multiset ||
-						all(map((x) => x !== itemString, map(itemToString, selectedItems)))
-					) {
-						addSelectedItem(item);
-						resetInputValue();
-					}
-				}
-
-				break;
-			default:
-				break;
+		if (
+			!inputDisabled &&
+			inputValue.length > 0 &&
+			highlightedIndex === -1 &&
+			createNewItem &&
+			keycode(event) === 'enter'
+		) {
+			// TODO avoid creating new item before multiset check,
+			// handle async item creation, use try/catch for error
+			// handling
+			const item = createNewItem(inputValue.trim());
+			if (item !== undefined && (multiset || !isSelected(item))) {
+				addSelectedItem(item);
+				resetInputValue();
+			}
 		}
 	};
-
-	useEffect(() => {
-		if (readOnly || full) resetInputValue();
-	}, [readOnly, full]);
 
 	return (
 		<div className={classNames(classes.container, className)}>

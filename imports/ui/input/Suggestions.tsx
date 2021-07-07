@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const SuggestionPropTypes = {
-	loading: PropTypes.bool.isRequired,
 	highlightedIndex: PropTypes.number.isRequired,
 	index: PropTypes.number.isRequired,
 	item: PropTypes.any.isRequired,
@@ -22,7 +21,6 @@ type SuggestionProps = InferProps<typeof SuggestionPropTypes>;
 const Suggestion = React.forwardRef<any, SuggestionProps>(
 	(
 		{
-			loading,
 			item,
 			index,
 			highlightedIndex,
@@ -42,7 +40,6 @@ const Suggestion = React.forwardRef<any, SuggestionProps>(
 				ref={ref}
 				{...rest}
 				selected={isHighlighted}
-				disabled={loading}
 				component="div"
 				style={{
 					fontWeight: isSelected ? 500 : 400
@@ -117,8 +114,7 @@ const Suggestions = React.forwardRef<any, SuggestionsProps>(
 						suggestions?.map((item, index) => (
 							<Suggestion
 								key={itemToKey(item)}
-								{...getItemProps({item, index})}
-								loading={loading}
+								{...getItemProps({item, index, disabled: loading})}
 								item={item}
 								index={index}
 								highlightedIndex={highlightedIndex}
