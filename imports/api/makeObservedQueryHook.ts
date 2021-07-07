@@ -14,6 +14,7 @@ const makeObservedQuery =
 
 		useEffect(() => {
 			setDirty(false);
+			setLoading(true);
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query, options});
