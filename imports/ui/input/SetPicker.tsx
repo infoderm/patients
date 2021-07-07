@@ -180,14 +180,8 @@ const SetPicker = (props: SetPickerProps) => {
 					return {
 						...changes,
 						highlightedIndex: state.highlightedIndex,
-						isOpen: true
-					};
-				case useCombobox.stateChangeTypes.InputKeyDownEscape:
-					// TODO Make it so that if isOpen was true then we stop event
-					// bubbling.
-					return {
-						...changes,
-						isOpen: false
+						isOpen: true,
+						inputValue: ''
 					};
 				default:
 					return changes;
