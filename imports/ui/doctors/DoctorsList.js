@@ -6,7 +6,7 @@ import {useDoctors} from '../../api/doctors';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import DoctorCard from './DoctorCard';
+import StaticDoctorCard from './StaticDoctorCard';
 
 export default function DoctorsList({match, prefix, page, perpage}) {
 	page =
@@ -24,7 +24,7 @@ export default function DoctorsList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={DoctorCard}
+				Card={StaticDoctorCard}
 				url={match.url}
 				query={query}
 				useTags={useDoctors}

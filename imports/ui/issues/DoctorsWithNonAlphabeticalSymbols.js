@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useDoctors} from '../../api/doctors';
 import TagGrid from '../tags/TagGrid';
-import DoctorCard from '../doctors/DoctorCard';
+import StaticDoctorCard from '../doctors/StaticDoctorCard';
 
 const DoctorsWithNonAlphabeticalSymbols = (props) => {
 	const query = {containsNonAlphabetical: true};
@@ -20,7 +20,7 @@ const DoctorsWithNonAlphabeticalSymbols = (props) => {
 		);
 	}
 
-	return <TagGrid {...props} Card={DoctorCard} tags={tags} />;
+	return <TagGrid {...props} Card={StaticDoctorCard} tags={tags} />;
 };
 
 export default DoctorsWithNonAlphabeticalSymbols;

@@ -14,7 +14,6 @@ import StaticPatientChip from '../patients/StaticPatientChip';
 import {Patients} from '../../api/patients';
 import {insurances} from '../../api/insurances';
 import {myEncodeURIComponent} from '../../client/uri';
-import withInsurance from './withInsurance';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';
 
@@ -34,7 +33,7 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const InsuranceCardWithoutItem = ({item, loading}) => {
+const StaticInsuranceCard = ({item, loading = false}) => {
 	const classes = useStyles();
 
 	if (loading) return null;
@@ -79,17 +78,9 @@ const InsuranceCardWithoutItem = ({item, loading}) => {
 	);
 };
 
-InsuranceCardWithoutItem.defaultProps = {
-	loading: false
-};
-
-InsuranceCardWithoutItem.propTypes = {
+StaticInsuranceCard.propTypes = {
 	item: PropTypes.object,
 	loading: PropTypes.bool
 };
 
-export default InsuranceCardWithoutItem;
-
-const InsuranceCardWithItem = withInsurance(InsuranceCardWithoutItem);
-
-export {InsuranceCardWithoutItem, InsuranceCardWithItem};
+export default StaticInsuranceCard;

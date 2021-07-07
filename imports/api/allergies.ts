@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
+import TagDocument from './tags/TagDocument';
 import createTagCollection from './createTagCollection';
 
 const {
@@ -17,6 +18,10 @@ const {
 });
 
 export {Allergies, allergies, useAllergies, useAllergiesFind};
+
+export interface AllergyDocument extends TagDocument {
+	color?: string;
+}
 
 Meteor.methods({
 	'allergies.changeColor'(tagId, newColor) {

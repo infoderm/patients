@@ -8,7 +8,7 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {usePatientsFind} from '../../api/patients';
 
 import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
-import {DoctorCardWithoutItem} from './DoctorCard';
+import StaticDoctorCard from './StaticDoctorCard';
 import useDoctor from './useDoctor';
 
 export default function DoctorDetails({match, name, page, perpage}) {
@@ -19,7 +19,7 @@ export default function DoctorDetails({match, name, page, perpage}) {
 
 	return (
 		<TagDetails
-			Card={DoctorCardWithoutItem}
+			Card={StaticDoctorCard}
 			useItem={useDoctor}
 			name={name}
 			List={PagedPatientsList}

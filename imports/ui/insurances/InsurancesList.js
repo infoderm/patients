@@ -6,7 +6,7 @@ import {useInsurances} from '../../api/insurances';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import InsuranceCard from './InsuranceCard';
+import StaticInsuranceCard from './StaticInsuranceCard';
 
 export default function InsurancesList({match, prefix, page, perpage}) {
 	page =
@@ -24,7 +24,7 @@ export default function InsurancesList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={InsuranceCard}
+				Card={StaticInsuranceCard}
 				url={match.url}
 				query={query}
 				useTags={useInsurances}

@@ -8,12 +8,11 @@ import Avatar from '@material-ui/core/Avatar';
 import blue from '@material-ui/core/colors/blue';
 
 import TagCard from '../tags/TagCard';
-import withItem from '../tags/withItem';
 
 import StaticPatientChip from '../patients/StaticPatientChip';
 
 import {Patients} from '../../api/patients';
-import {Doctors, doctors} from '../../api/doctors';
+import {doctors} from '../../api/doctors';
 
 import {myEncodeURIComponent} from '../../client/uri';
 import DoctorRenamingDialog from './DoctorRenamingDialog';
@@ -35,7 +34,7 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const DoctorCardWithoutItem = ({item, name, loading}) => {
+const StaticDoctorCard = ({item, name, loading = false}) => {
 	const classes = useStyles();
 
 	if (loading) {
@@ -57,7 +56,7 @@ const DoctorCardWithoutItem = ({item, name, loading}) => {
 			selector={{doctors: item.name}}
 			options={{fields: StaticPatientChip.projection}}
 			limit={1}
-			url={(name) => `/doctor/${myEncodeURIComponent(name)}`}
+			url={(name: string) => `/doctor/${myEncodeURIComponent(name)}`}
 			subheader={({count}) =>
 				count === undefined ? '...' : `soigne ${count} patients`
 			}
@@ -86,15 +85,10 @@ const DoctorCardWithoutItem = ({item, name, loading}) => {
 	);
 };
 
-DoctorCardWithoutItem.propTypes = {
-	item: PropTypes.object
+StaticDoctorCard.propTypes = {
+	item: PropTypes.object,
+	name: PropTypes.string,
+	loading: PropTypes.bool
 };
 
-export default DoctorCardWithoutItem;
-
-const DoctorCardWithItem = withItem(
-	Doctors,
-	doctors.options.singlePublication
-)(DoctorCardWithoutItem);
-
-export {DoctorCardWithoutItem, DoctorCardWithItem};
+export default StaticDoctorCard;

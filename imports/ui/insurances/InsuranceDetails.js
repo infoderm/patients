@@ -8,7 +8,7 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {usePatientsFind} from '../../api/patients';
 
 import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
-import {InsuranceCardWithoutItem} from './InsuranceCard';
+import StaticInsuranceCard from './StaticInsuranceCard';
 import useInsurance from './useInsurance';
 
 export default function InsuranceDetails({match, name, page, perpage}) {
@@ -19,7 +19,7 @@ export default function InsuranceDetails({match, name, page, perpage}) {
 
 	return (
 		<TagDetails
-			Card={InsuranceCardWithoutItem}
+			Card={StaticInsuranceCard}
 			useItem={useInsurance}
 			name={name}
 			List={PagedPatientsList}

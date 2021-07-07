@@ -1,3 +1,4 @@
+import TagDocument from './tags/TagDocument';
 import createTagCollection from './createTagCollection';
 
 const {
@@ -14,3 +15,5 @@ const {
 });
 
 export {Insurances, insurances, useInsurances, useInsurancesFind};
+
+export type InsuranceDocument = TagDocument;

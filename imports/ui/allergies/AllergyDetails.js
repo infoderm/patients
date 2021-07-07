@@ -8,7 +8,7 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {usePatientsFind} from '../../api/patients';
 
 import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
-import {AllergyCardWithoutItem} from './AllergyCard';
+import StaticAllergyCard from './StaticAllergyCard';
 import useAllergy from './useAllergy';
 
 export default function AllergyDetails({match, name, page, perpage}) {
@@ -19,7 +19,7 @@ export default function AllergyDetails({match, name, page, perpage}) {
 
 	return (
 		<TagDetails
-			Card={AllergyCardWithoutItem}
+			Card={StaticAllergyCard}
 			useItem={useAllergy}
 			name={name}
 			List={PagedPatientsList}

@@ -61,9 +61,9 @@ import SetPicker from '../input/SetPicker';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import ColorizedTextarea from '../input/ColorizedTextarea';
 
-import AllergyChip from '../allergies/AllergyChip';
-import DoctorChip from '../doctors/DoctorChip';
-import InsuranceChip from '../insurances/InsuranceChip';
+import ReactiveAllergyChip from '../allergies/ReactiveAllergyChip';
+import ReactiveDoctorChip from '../doctors/ReactiveDoctorChip';
+import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 import AttachFileButton from '../attachments/AttachFileButton';
@@ -434,7 +434,7 @@ const PatientPersonalInformation = (props) => {
 										label: 'Allergies',
 										margin: 'normal'
 									}}
-									Chip={AllergyChip}
+									Chip={ReactiveAllergyChip}
 									chipProps={{
 										avatar: <Avatar>Al</Avatar>
 									}}
@@ -544,7 +544,7 @@ const PatientPersonalInformation = (props) => {
 											height: '100%'
 										}
 									}}
-									Chip={DoctorChip}
+									Chip={ReactiveDoctorChip}
 									chipProps={{
 										avatar: <Avatar>Dr</Avatar>
 									}}
@@ -578,7 +578,7 @@ const PatientPersonalInformation = (props) => {
 											height: '100%'
 										}
 									}}
-									Chip={InsuranceChip}
+									Chip={ReactiveInsuranceChip}
 									chipProps={{
 										avatar: <Avatar>In</Avatar>
 									}}

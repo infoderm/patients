@@ -6,7 +6,7 @@ import {useAllergies} from '../../api/allergies';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import AllergyCard from './AllergyCard';
+import StaticAllergyCard from './StaticAllergyCard';
 
 export default function AllergiesList({match, prefix, page, perpage}) {
 	page =
@@ -24,7 +24,7 @@ export default function AllergiesList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={AllergyCard}
+				Card={StaticAllergyCard}
 				url={match.url}
 				query={query}
 				useTags={useAllergies}
