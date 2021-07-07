@@ -38,9 +38,6 @@ const styles = (theme) =>
 			width: 'auto',
 			flexGrow: 1
 		},
-		divider: {
-			height: theme.spacing(2)
-		},
 		hidden: {
 			display: 'none'
 		}
