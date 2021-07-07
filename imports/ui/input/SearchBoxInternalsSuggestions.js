@@ -26,8 +26,6 @@ export default function SearchBoxInternalsSuggestions(props) {
 
 	const classes = useStyles();
 
-	if (suggestions.loading) return null;
-
 	return (
 		<Paper square className={classes.suggestions}>
 			{suggestions.results.map((item, index) => (
@@ -36,6 +34,7 @@ export default function SearchBoxInternalsSuggestions(props) {
 					{...getItemProps({
 						item,
 						index,
+						disabled: suggestions.loading,
 						selected: highlightedIndex === index,
 						style: {
 							fontWeight: selectedItem === item ? 500 : 400
