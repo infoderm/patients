@@ -162,12 +162,6 @@ export default function NavigationDrawer({
 					to: '/sepa',
 					icon: <CropFreeIcon />,
 					title: 'SEPA'
-				},
-
-				{
-					to: '/stats',
-					icon: <BarChartIcon />,
-					title: 'Stats'
 				}
 			]
 		},
@@ -242,6 +236,12 @@ export default function NavigationDrawer({
 					to: '/settings',
 					icon: <SettingsIcon />,
 					title: 'Settings'
+				},
+
+				{
+					to: '/stats',
+					icon: <BarChartIcon />,
+					title: 'Stats'
 				}
 			]
 		}
