@@ -39,7 +39,7 @@ const ReactiveWeeklyCalendar = (props) => {
 
 	const [begin, end] = weekly(year, week, weekOptions);
 
-	console.debug(begin, end);
+	console.debug({begin, end});
 
 	const someDayOfWeek = new Date(
 		year,
@@ -82,9 +82,15 @@ const ReactiveWeeklyCalendar = (props) => {
 			title={title}
 			year={year}
 			week={week}
-			prev={() => history.push(`${baseURL}/week/${prevWeek}`)}
-			next={() => history.push(`${baseURL}/week/${nextWeek}`)}
-			monthly={() => history.push(`${baseURL}/month/${monthOfWeek}`)}
+			prev={() => {
+				history.push(`${baseURL}/week/${prevWeek}`);
+			}}
+			next={() => {
+				history.push(`${baseURL}/week/${nextWeek}`);
+			}}
+			monthly={() => {
+				history.push(`${baseURL}/month/${monthOfWeek}`);
+			}}
 			events={displayedEvents}
 			DayHeader={DayHeader}
 			weekOptions={weekOptions}

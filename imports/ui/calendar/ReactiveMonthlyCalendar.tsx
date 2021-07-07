@@ -47,7 +47,7 @@ const ReactiveMonthlyCalendar = (props) => {
 
 	const [begin, end] = monthly(year, month, weekOptions);
 
-	console.debug(begin, end);
+	console.debug({begin, end});
 
 	const firstDayOfMonth = new Date(year, month - 1, 1);
 	const firstDayOfPrevMonth = subMonths(firstDayOfMonth, 1);
@@ -83,9 +83,15 @@ const ReactiveMonthlyCalendar = (props) => {
 			title={title}
 			year={year}
 			month={month}
-			prev={() => history.push(`${baseURL}/month/${previousMonth}`)}
-			next={() => history.push(`${baseURL}/month/${nextMonth}`)}
-			weekly={() => history.push(`${baseURL}/week/${firstWeekOfMonth}`)}
+			prev={() => {
+				history.push(`${baseURL}/month/${previousMonth}`);
+			}}
+			next={() => {
+				history.push(`${baseURL}/month/${nextMonth}`);
+			}}
+			weekly={() => {
+				history.push(`${baseURL}/week/${firstWeekOfMonth}`);
+			}}
 			events={displayedEvents}
 			DayHeader={DayHeader}
 			WeekNumber={WeekNumber}
