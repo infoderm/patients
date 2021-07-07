@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(1),
 		left: 0,
 		right: 0
+	},
+	itemText: {
+		overflow: 'hidden',
+		textOverflow: 'ellipsis'
 	}
 }));
 
@@ -41,7 +45,7 @@ export default function SearchBoxInternalsSuggestions(props) {
 						}
 					})}
 				>
-					{itemToString(item)}
+					<span className={classes.itemText}>{itemToString(item)}</span>
 				</MenuItem>
 			))}
 		</Paper>
