@@ -9,15 +9,18 @@ import SearchBoxWithSuggestionsInternals from './SearchBoxWithSuggestionsInterna
 type Props = {
 	useSuggestions: (x: string) => {loading?: boolean; results: any[]};
 	itemToKey: (x: any) => any;
+	expands?: boolean;
 	placeholder?: string;
 	className?: string;
 } & PropsOf<typeof Downshift>;
 
 export default function SearchBoxWithSuggestions(props: Props) {
-	const {useSuggestions, itemToKey, placeholder, className, ...rest} = props;
+	const {useSuggestions, itemToKey, expands, placeholder, className, ...rest} =
+		props;
 	const internalsProps = {
 		useSuggestions,
 		itemToKey,
+		expands,
 		placeholder,
 		className
 	};

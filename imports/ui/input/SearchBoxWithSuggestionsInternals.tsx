@@ -2,15 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
+import SearchBoxInternalsInputContainer from './SearchBoxInternalsInputContainer';
 import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions';
 
 export default function SearchBoxWithSuggestionsInternals(props) {
 	const {
+		className,
 		useSuggestions,
 		itemToKey,
 		itemToString,
+		expands,
 		placeholder,
 		getInputProps,
 		getItemProps,
@@ -24,13 +27,16 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 
 	return (
 		<SearchBoxInternalsContainer>
-			<SearchBoxInternalsAdornment />
-			<SearchBoxInternalsInput
-				inputProps={{
-					placeholder,
-					...getInputProps()
-				}}
-			/>
+			<SearchBoxInternalsInputContainer className={className}>
+				<SearchBoxInternalsAdornment />
+				<SearchBoxInternalsInput
+					expands={expands}
+					inputProps={{
+						placeholder,
+						...getInputProps()
+					}}
+				/>
+			</SearchBoxInternalsInputContainer>
 			{isOpen ? (
 				<SearchBoxInternalsSuggestions
 					{...{

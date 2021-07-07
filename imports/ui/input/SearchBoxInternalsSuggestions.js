@@ -5,10 +5,12 @@ import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	suggestions: {
 		position: 'absolute',
-		width: '100%'
+		marginTop: theme.spacing(1),
+		left: 0,
+		right: 0
 	}
 }));
 

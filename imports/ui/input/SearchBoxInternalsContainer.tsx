@@ -5,12 +5,10 @@ import classNames from 'classnames';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		display: 'flex',
-		alignItems: 'center',
+		display: 'block',
 		position: 'relative',
 		marginLeft: theme.spacing(1),
-		marginRight: theme.spacing(2),
-		borderRadius: 2
+		marginRight: theme.spacing(2)
 	}
 }));
 
@@ -25,6 +23,6 @@ export default function SearchBoxInternalsContainer({
 }: Props) {
 	const classes = useStyles();
 	return (
-		<div className={classNames(className, classes.container)}>{children}</div>
+		<div className={classNames(classes.container, className)}>{children}</div>
 	);
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
+import SearchBoxInternalsInputContainer from './SearchBoxInternalsInputContainer';
 import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
@@ -11,9 +12,11 @@ const SearchBox = ({
 	...rest
 }: InferProps<typeof SearchBox.propTypes>) => {
 	return (
-		<SearchBoxInternalsContainer className={className}>
-			<SearchBoxInternalsAdornment />
-			<SearchBoxInternalsInput expands={expands} inputProps={rest} />
+		<SearchBoxInternalsContainer>
+			<SearchBoxInternalsInputContainer className={className}>
+				<SearchBoxInternalsAdornment />
+				<SearchBoxInternalsInput expands={expands} inputProps={rest} />
+			</SearchBoxInternalsInputContainer>
 		</SearchBoxInternalsContainer>
 	);
 };
