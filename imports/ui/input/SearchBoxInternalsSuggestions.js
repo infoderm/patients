@@ -20,9 +20,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchBoxInternalsSuggestions(props) {
 	const {
+		isOpen,
+		loading,
 		suggestions,
 		itemToKey,
 		itemToString,
+		getMenuProps,
 		getItemProps,
 		selectedItem,
 		highlightedIndex
@@ -31,29 +34,32 @@ export default function SearchBoxInternalsSuggestions(props) {
 	const classes = useStyles();
 
 	return (
-		<Paper square className={classes.suggestions}>
-			{suggestions.results.map((item, index) => (
-				<MenuItem
-					key={itemToKey(item)}
-					{...getItemProps({
-						item,
-						index,
-						disabled: suggestions.loading,
-						selected: highlightedIndex === index,
-						style: {
-							fontWeight: selectedItem === item ? 500 : 400
-						}
-					})}
-				>
-					<span className={classes.itemText}>{itemToString(item)}</span>
-				</MenuItem>
-			))}
+		<Paper square className={classes.suggestions} {...getMenuProps()}>
+			{isOpen &&
+				suggestions.map((item, index) => (
+					<MenuItem
+						key={itemToKey(item)}
+						{...getItemProps({
+							item,
+							index,
+							disabled: loading,
+							selected: highlightedIndex === index,
+							style: {
+								fontWeight: selectedItem === item ? 500 : 400
+							}
+						})}
+					>
+						<span className={classes.itemText}>{itemToString(item)}</span>
+					</MenuItem>
+				))}
 		</Paper>
 	);
 }
 
 SearchBoxInternalsSuggestions.propTypes = {
-	suggestions: PropTypes.object.isRequired,
+	isOpen: PropTypes.bool.isRequired,
+	loading: PropTypes.bool.isRequired,
+	suggestions: PropTypes.array.isRequired,
 	itemToString: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	getItemProps: PropTypes.func.isRequired,

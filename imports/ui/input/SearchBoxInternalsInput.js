@@ -30,21 +30,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchBoxInternalsInput(props) {
-	const {ref, className, inputProps, expands, ...rest} = props;
+	const {className, expands, ...rest} = props;
 
 	const classes = useStyles();
 
 	return (
 		<InputBase
-			{...rest}
 			className={classNames(className, classes.Input)}
-			inputRef={ref}
 			inputProps={{
-				...inputProps,
-				className: classNames(inputProps.className, classes.inputInput, {
+				className: classNames(classes.inputInput, {
 					[classes.dynamic]: expands
 				})
 			}}
+			{...rest}
 		/>
 	);
 }
@@ -54,6 +52,5 @@ SearchBoxInternalsInput.defaultProps = {
 };
 
 SearchBoxInternalsInput.propTypes = {
-	inputProps: PropTypes.object.isRequired,
 	expands: PropTypes.bool
 };

@@ -8,14 +8,13 @@ import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
 const SearchBox = ({
 	className,
-	expands,
 	...rest
 }: InferProps<typeof SearchBox.propTypes>) => {
 	return (
 		<SearchBoxInternalsContainer>
 			<SearchBoxInternalsInputContainer className={className}>
 				<SearchBoxInternalsAdornment />
-				<SearchBoxInternalsInput expands={expands} inputProps={rest} />
+				<SearchBoxInternalsInput {...rest} />
 			</SearchBoxInternalsInputContainer>
 		</SearchBoxInternalsContainer>
 	);

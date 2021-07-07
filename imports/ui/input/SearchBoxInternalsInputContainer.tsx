@@ -16,14 +16,15 @@ type Props = {
 	children: any;
 };
 
-export default function SearchBoxInternalsInputContainer({
-	className,
-	children
-}: Props) {
-	const classes = useStyles();
-	return (
-		<div className={classNames(classes.inputContainer, className)}>
-			{children}
-		</div>
-	);
-}
+const SearchBoxInternalsInputContainer = React.forwardRef<any, Props>(
+	({className, children}, ref) => {
+		const classes = useStyles();
+		return (
+			<div ref={ref} className={classNames(classes.inputContainer, className)}>
+				{children}
+			</div>
+		);
+	}
+);
+
+export default SearchBoxInternalsInputContainer;

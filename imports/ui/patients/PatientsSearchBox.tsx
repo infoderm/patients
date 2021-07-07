@@ -22,10 +22,9 @@ const PatientsSearchBox = ({className}) => {
 	const history = useHistory();
 	const classes = useStyles();
 
-	const handleChange = (selectedItem, {clearSelection}) => {
+	const handleChange = ({selectedItem = null}) => {
 		if (selectedItem) {
 			history.push(`/patient/${selectedItem._id}`);
-			clearSelection();
 		}
 	};
 
@@ -38,7 +37,7 @@ const PatientsSearchBox = ({className}) => {
 				itemToString={(item) => (item ? patients.toString(item) : '')}
 				itemToKey={patients.toKey}
 				placeholder="Search a patient…"
-				onChange={handleChange}
+				onSelectedItemChange={handleChange}
 			/>
 		</div>
 	);
