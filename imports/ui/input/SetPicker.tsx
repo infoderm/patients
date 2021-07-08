@@ -2,7 +2,11 @@ import React, {useEffect} from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 import keycode from 'keycode';
-import {useCombobox, useMultipleSelection} from 'downshift';
+import {
+	useCombobox,
+	useMultipleSelection,
+	UseComboboxGetToggleButtonPropsOptions
+} from 'downshift';
 
 import {any} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
@@ -20,15 +24,53 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import TextField from './TextField';
 
 import Suggestions from './Suggestions';
+import Selection from './Selection';
+
+const toggleButtonStyles = {
+	hidden: {
+		display: 'none'
+	}
+};
+
+const useToggleButtonStyles = makeStyles(toggleButtonStyles);
+
+interface ToggleButtonProps {
+	isOpen: boolean;
+	readOnly: boolean;
+	hasSuggestions: boolean;
+	getToggleButtonProps: (
+		options?: UseComboboxGetToggleButtonPropsOptions
+	) => any;
+}
+
+const ToggleButton = ({
+	isOpen,
+	readOnly,
+	hasSuggestions,
+	getToggleButtonProps
+}: ToggleButtonProps) => {
+	const classes = useToggleButtonStyles();
+
+	return (
+		<InputAdornment position="end">
+			<IconButton
+				{...getToggleButtonProps({
+					className: classNames({
+						[classes.hidden]: readOnly || !hasSuggestions
+					})
+				})}
+			>
+				{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+			</IconButton>
+		</InputAdornment>
+	);
+};
 
 const styles = (theme) =>
 	createStyles({
 		container: {
 			flexGrow: 1,
 			position: 'relative'
-		},
-		chip: {
-			margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`
 		},
 		inputRoot: {
 			flexWrap: 'wrap'
@@ -37,9 +79,6 @@ const styles = (theme) =>
 			margin: `${theme.spacing(1) / 2}px 0`,
 			width: 'auto',
 			flexGrow: 1
-		},
-		hidden: {
-			display: 'none'
 		}
 	});
 
@@ -48,7 +87,7 @@ const useStyles = makeStyles(styles);
 const SetPickerPropTypes = {
 	className: PropTypes.string,
 	Chip: PropTypes.elementType,
-	chipProps: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+	chipProps: PropTypes.oneOfType([PropTypes.func, PropTypes.any]),
 	withoutToggle: PropTypes.bool,
 	value: PropTypes.array.isRequired,
 	readOnly: PropTypes.bool,
@@ -148,11 +187,9 @@ const SetPicker = (props: SetPickerProps) => {
 		setSelectedItems(selectedItems.filter((x) => x !== item));
 	};
 
-	const handleDelete = (index) => () => {
-		removeSelectedItem(selectedItems[index]);
-	};
-
 	const {loading, results: suggestions} = useSuggestions(inputValue);
+
+	const hasSuggestions = Boolean(suggestions?.length);
 
 	const resetInputValue = () => setInputValue(emptyInput);
 
@@ -285,30 +322,24 @@ const SetPicker = (props: SetPickerProps) => {
 						root: classes.inputRoot,
 						input: classes.inputInput
 					},
-					startAdornment: selectedItems.map((item, index) => (
-						<Chip
-							key={itemToString(item)}
-							{...(chipProps instanceof Function
-								? chipProps(item, index)
-								: chipProps)}
-							tabIndex={-1}
-							label={itemToString(item)}
-							className={classes.chip}
-							onDelete={readOnly ? undefined : handleDelete(index)}
-							{...getSelectedItemProps({selectedItem: item, index})}
+					startAdornment: (
+						<Selection
+							readOnly={readOnly}
+							Chip={Chip}
+							chipProps={chipProps}
+							selectedItems={selectedItems}
+							itemToString={itemToString}
+							getSelectedItemProps={getSelectedItemProps}
+							removeSelectedItem={removeSelectedItem}
 						/>
-					)),
+					),
 					endAdornment: withoutToggle ? undefined : (
-						<InputAdornment position="end">
-							<IconButton
-								className={classNames({
-									[classes.hidden]: readOnly || !suggestions?.length
-								})}
-								{...getToggleButtonProps()}
-							>
-								{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-							</IconButton>
-						</InputAdornment>
+						<ToggleButton
+							isOpen={isOpen}
+							readOnly={readOnly}
+							hasSuggestions={hasSuggestions}
+							getToggleButtonProps={getToggleButtonProps}
+						/>
 					),
 					placeholder: readOnly
 						? count > 0
