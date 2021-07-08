@@ -35,7 +35,7 @@ import TextField from '../input/TextField';
 
 import {useDateMask} from '../../i18n/datetime';
 
-import {msToString} from '../../client/duration';
+import {msToString} from '../../api/duration';
 
 import {patients} from '../../api/patients';
 import {useSetting} from '../../client/settings';

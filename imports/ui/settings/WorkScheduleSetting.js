@@ -8,7 +8,7 @@ import {increasing} from '@total-order/primitive';
 
 import {useDaysNames, useDateFormat} from '../../i18n/datetime';
 
-import {units} from '../../client/duration';
+import {units} from '../../api/duration';
 
 import {useSettingCached} from '../../client/settings';
 import InputManySetting from './InputManySetting';

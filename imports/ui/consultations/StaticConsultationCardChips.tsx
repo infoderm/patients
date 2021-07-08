@@ -19,7 +19,7 @@ import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
 import {PatientDocument} from '../../api/patients';
 import {ConsultationDocument} from '../../api/consultations';
-import {msToString, msToStringShort} from '../../client/duration';
+import {msToString, msToStringShort} from '../../api/duration';
 
 const useStyles = makeStyles((theme) => ({
 	chips: {

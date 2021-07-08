@@ -3,7 +3,7 @@ import React from 'react';
 import {list} from '@iterable-iterator/list';
 import {filter} from '@iterable-iterator/filter';
 
-import {msToString, units} from '../../client/duration';
+import {msToString, units} from '../../api/duration';
 
 // import {settings} from '../../client/settings';
 
