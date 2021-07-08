@@ -45,7 +45,10 @@ export default function ErrorPage({error, errorInfo, retry}) {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const reloadRoute = () => history.go(0);
+	const reloadRoute = () => {
+		history.go(0);
+	};
+
 	const goBackHome = () => {
 		history.push('/');
 		retry();
