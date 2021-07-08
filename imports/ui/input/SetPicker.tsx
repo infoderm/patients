@@ -248,7 +248,6 @@ const SetPicker = (props: SetPickerProps) => {
 		},
 		stateReducer: comboboxStateReducer,
 		onStateChange: (changes) => {
-			console.debug(changes);
 			const {type, selectedItem} = changes;
 			if (readOnly) {
 				return;
