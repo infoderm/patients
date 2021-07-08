@@ -40,6 +40,10 @@ const Selection = React.memo(
 			removeSelectedItem(item);
 		};
 
+		const onClick = (e) => {
+			e.stopPropagation();
+		};
+
 		return (
 			<>
 				{selectedItems.map((item, index) => (
@@ -52,7 +56,7 @@ const Selection = React.memo(
 						label={itemToString(item)}
 						className={classes.chip}
 						onDelete={readOnly ? undefined : handleDelete(item)}
-						{...getSelectedItemProps({selectedItem: item, index})}
+						{...getSelectedItemProps({selectedItem: item, index, onClick})}
 					/>
 				))}
 			</>
