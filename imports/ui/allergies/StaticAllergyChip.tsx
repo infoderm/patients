@@ -1,5 +1,9 @@
 import React from 'react';
 
+import {makeStyles} from '@material-ui/core/styles';
+import {darken} from '@material-ui/core/styles/colorManipulator';
+import classNames from 'classnames';
+
 import {Link} from 'react-router-dom';
 
 import Chip, {ChipProps} from '@material-ui/core/Chip';
@@ -17,32 +21,51 @@ interface AddedProps {
 
 type StaticAllergyChipProps = ChipProps & AddedProps;
 
+const styles = {
+	chip: ({loading, color, clickable}) => {
+		const backgroundColor = loading ? '#999' : color;
+		const computedColor = loading
+			? '#eee'
+			: color
+			? colord(color).isLight()
+				? '#111'
+				: '#ddd'
+			: undefined;
+		const cursor = clickable ? 'pointer' : undefined;
+		return {
+			backgroundColor,
+			color: computedColor,
+			cursor,
+			'&:hover, &:focus': {
+				backgroundColor: backgroundColor && darken(backgroundColor, 0.1)
+			}
+		};
+	}
+};
+
+const useStyles = makeStyles(styles);
+
 const StaticAllergyChip = React.forwardRef<any, StaticAllergyChipProps>(
-	({loading = false, item, ...rest}, ref) => {
-		const style: React.CSSProperties = {};
+	({loading = false, item, className, ...rest}, ref) => {
 		let component: React.ElementType;
 		let to: string;
 
-		if (loading) {
-			style.backgroundColor = '#999';
-			style.color = '#eee';
-		}
+		const clickable = Boolean(item && !rest.onDelete);
+		const classes = useStyles({loading, color: item?.color, clickable});
 
-		if (item) {
-			if (item.color) {
-				style.backgroundColor = item.color;
-				style.color = colord(item.color).isLight() ? '#111' : '#ddd';
-			}
-
-			if (!rest.onDelete) {
-				component = Link;
-				to = `/allergy/${myEncodeURIComponent(item.name)}`;
-				style.cursor = 'pointer';
-			}
+		if (clickable) {
+			component = Link;
+			to = `/allergy/${myEncodeURIComponent(item.name)}`;
 		}
 
 		return (
-			<Chip ref={ref} {...rest} style={style} component={component} to={to} />
+			<Chip
+				ref={ref}
+				className={classNames(classes.chip, className)}
+				{...rest}
+				component={component}
+				to={to}
+			/>
 		);
 	}
 );
