@@ -319,7 +319,6 @@ const SetPicker = (props: SetPickerProps) => {
 					...getInputProps(
 						getDropdownProps({
 							refKey: 'inputRef',
-							onClick: isOpen ? undefined : openMenu,
 							onFocus: isOpen ? undefined : openMenu,
 							onKeyDown: handleInputKeyDownEnter
 						})
