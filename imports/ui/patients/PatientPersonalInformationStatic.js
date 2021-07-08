@@ -70,6 +70,18 @@ import AttachFileButton from '../attachments/AttachFileButton';
 
 import PatientDeletionDialog from './PatientDeletionDialog';
 
+const allergyChipProps = {
+	avatar: <Avatar>Al</Avatar>
+};
+
+const doctorChipProps = {
+	avatar: <Avatar>Dr</Avatar>
+};
+
+const insuranceChipProps = {
+	avatar: <Avatar>In</Avatar>
+};
+
 const styles = (theme) =>
 	createStyles({
 		root: {
@@ -435,9 +447,7 @@ const PatientPersonalInformation = (props) => {
 										margin: 'normal'
 									}}
 									Chip={ReactiveAllergyChip}
-									chipProps={{
-										avatar: <Avatar>Al</Avatar>
-									}}
+									chipProps={allergyChipProps}
 									value={list(map((x) => ({name: x}), patient.allergies || []))}
 									placeholder={placeholder}
 									onChange={updateList('allergies')}
@@ -545,9 +555,7 @@ const PatientPersonalInformation = (props) => {
 										}
 									}}
 									Chip={ReactiveDoctorChip}
-									chipProps={{
-										avatar: <Avatar>Dr</Avatar>
-									}}
+									chipProps={doctorChipProps}
 									value={list(map((x) => ({name: x}), patient.doctors || []))}
 									placeholder={placeholder}
 									onChange={updateList('doctors')}
@@ -579,9 +587,7 @@ const PatientPersonalInformation = (props) => {
 										}
 									}}
 									Chip={ReactiveInsuranceChip}
-									chipProps={{
-										avatar: <Avatar>In</Avatar>
-									}}
+									chipProps={insuranceChipProps}
 									value={list(
 										map((x) => ({name: x}), patient.insurances || [])
 									)}
