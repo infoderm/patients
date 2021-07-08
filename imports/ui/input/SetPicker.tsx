@@ -358,7 +358,7 @@ const SetPicker = (props: SetPickerProps) => {
 			/>
 			<Suggestions
 				{...getMenuProps()}
-				hide={!isOpen || full}
+				hide={readOnly || !isOpen || full}
 				loading={loading}
 				suggestions={suggestions}
 				getItemProps={getItemProps}
