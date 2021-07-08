@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 import keycode from 'keycode';
@@ -134,6 +134,34 @@ const comboboxStateReducer = (state, {type, changes}) => {
 	}
 };
 
+const useSelectionManagement = (selectedItems, onChange) => {
+	return useMemo(() => {
+		const setSelectedItems = (value) => {
+			onChange({
+				target: {
+					value
+				}
+			});
+		};
+
+		const addSelectedItem = (item) => {
+			const newValue = selectedItems.slice();
+			newValue.push(item);
+			setSelectedItems(newValue);
+		};
+
+		const removeSelectedItem = (item) => {
+			setSelectedItems(selectedItems.filter((x) => x !== item));
+		};
+
+		return {
+			setSelectedItems,
+			addSelectedItem,
+			removeSelectedItem
+		};
+	}, [selectedItems, onChange]);
+};
+
 const SetPicker = (props: SetPickerProps) => {
 	const {
 		className,
@@ -163,35 +191,20 @@ const SetPicker = (props: SetPickerProps) => {
 
 	const [inputValue, setInputValue] = useStateWithInitOverride(emptyInput);
 
-	const setSelectedItems = (value) => {
-		onChange({
-			target: {
-				value
-			}
-		});
-	};
+	const selectedItems = value;
+	const count = selectedItems.length;
+	const full = count >= maxCount;
 
-	const addSelectedItem = (item) => {
-		const newValue = selectedItems.slice();
-		newValue.push(item);
-		setSelectedItems(newValue);
-	};
+	const inputDisabled = readOnly || full;
 
-	const removeSelectedItem = (item) => {
-		setSelectedItems(selectedItems.filter((x) => x !== item));
-	};
+	const {setSelectedItems, addSelectedItem, removeSelectedItem} =
+		useSelectionManagement(selectedItems, onChange);
 
 	const {loading, results: suggestions} = useSuggestions(inputValue);
 
 	const hasSuggestions = Boolean(suggestions?.length);
 
 	const resetInputValue = () => setInputValue(emptyInput);
-
-	const selectedItems = value;
-	const count = selectedItems.length;
-	const full = count >= maxCount;
-
-	const inputDisabled = readOnly || full;
 
 	useEffect(() => {
 		if (inputDisabled) resetInputValue();

@@ -28,6 +28,8 @@ type Props = BaseProps &
 		'onChange' | 'value' | 'useSuggestions' | 'itemToKey' | 'itemToString'
 	>;
 
+const identity = (x) => x;
+
 const InputManySetting = (props: Props) => {
 	const {
 		className,
@@ -42,10 +44,12 @@ const InputManySetting = (props: Props) => {
 
 	const {loading, value, setValue} = useSetting(setting);
 
-	const onChange = (e) => {
-		const newValue = e.target.value;
-		setValue(sort ? sort(newValue) : newValue);
-	};
+	const onChange = useMemo(() => {
+		return (e) => {
+			const newValue = e.target.value;
+			setValue(sort ? sort(newValue) : newValue);
+		};
+	}, [setValue, sort]);
 
 	const sortedValue = useMemo(() => {
 		return sort ? sort(value) : value;
@@ -57,9 +61,9 @@ const InputManySetting = (props: Props) => {
 			<SetPicker
 				readOnly={loading}
 				useSuggestions={makeSuggestions(value)}
-				itemToKey={(x) => x}
-				itemToString={(x) => x}
-				createNewItem={(x) => x}
+				itemToKey={identity}
+				itemToString={identity}
+				createNewItem={identity}
 				TextFieldProps={{
 					label,
 					margin: 'normal'

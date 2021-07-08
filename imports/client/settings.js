@@ -1,3 +1,4 @@
+import {useMemo} from 'react';
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 import {Settings, settings as _settings} from '../api/settings';
@@ -54,7 +55,9 @@ export const useSetting = (key, getFn = get) => {
 		return getFn(key);
 	}, [key]);
 
-	const setValue = (newValue) => setSetting(key, newValue);
+	const setValue = useMemo(() => {
+		return (newValue) => setSetting(key, newValue);
+	}, [key, setSetting]);
 
 	return {
 		loading,

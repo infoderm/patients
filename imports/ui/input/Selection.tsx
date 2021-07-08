@@ -24,38 +24,40 @@ interface SelectionProps<Item, ChipProps> {
 	removeSelectedItem: (item: Item) => void;
 }
 
-const Selection = ({
-	Chip,
-	chipProps,
-	selectedItems,
-	itemToString,
-	getSelectedItemProps,
-	readOnly,
-	removeSelectedItem
-}: SelectionProps<any, any>) => {
-	const classes = useStyles();
+const Selection = React.memo(
+	({
+		Chip,
+		chipProps,
+		selectedItems,
+		itemToString,
+		getSelectedItemProps,
+		readOnly,
+		removeSelectedItem
+	}: SelectionProps<any, any>) => {
+		const classes = useStyles();
 
-	const handleDelete = (item) => () => {
-		removeSelectedItem(item);
-	};
+		const handleDelete = (item) => () => {
+			removeSelectedItem(item);
+		};
 
-	return (
-		<>
-			{selectedItems.map((item, index) => (
-				<Chip
-					key={itemToString(item)}
-					{...(chipProps instanceof Function
-						? chipProps(item, index)
-						: chipProps)}
-					tabIndex={-1}
-					label={itemToString(item)}
-					className={classes.chip}
-					onDelete={readOnly ? undefined : handleDelete(item)}
-					{...getSelectedItemProps({selectedItem: item, index})}
-				/>
-			))}
-		</>
-	);
-};
+		return (
+			<>
+				{selectedItems.map((item, index) => (
+					<Chip
+						key={itemToString(item)}
+						{...(chipProps instanceof Function
+							? chipProps(item, index)
+							: chipProps)}
+						tabIndex={-1}
+						label={itemToString(item)}
+						className={classes.chip}
+						onDelete={readOnly ? undefined : handleDelete(item)}
+						{...getSelectedItemProps({selectedItem: item, index})}
+					/>
+				))}
+			</>
+		);
+	}
+);
 
 export default Selection;
