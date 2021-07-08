@@ -8,6 +8,8 @@ import InputManySetting from './InputManySetting';
 
 const KEY = 'important-strings';
 
+const sort = (items) => items.slice().sort();
+
 // TODO filter out items that are superstrings of others
 
 const ImportantStringsSetting = ({className}) => {
@@ -19,7 +21,7 @@ const ImportantStringsSetting = ({className}) => {
 			setting={KEY}
 			placeholder="Input important strings to highlight"
 			inputTransform={onlyLowerCaseASCII}
-			sort={(items) => items.sort()}
+			sort={sort}
 		/>
 	);
 };

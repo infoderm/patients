@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
@@ -19,6 +19,7 @@ interface BaseProps {
 	placeholder?: string;
 	itemToKey?: (x: any) => any;
 	itemToString?: (x: any) => any;
+	sort?: (items: any[]) => any[];
 }
 
 type Props = BaseProps &
@@ -35,6 +36,7 @@ const InputManySetting = (props: Props) => {
 		title,
 		label,
 		placeholder,
+		sort,
 		...rest
 	} = props;
 
@@ -42,8 +44,12 @@ const InputManySetting = (props: Props) => {
 
 	const onChange = (e) => {
 		const newValue = e.target.value;
-		setValue(newValue);
+		setValue(sort ? sort(newValue) : newValue);
 	};
+
+	const sortedValue = useMemo(() => {
+		return sort ? sort(value) : value;
+	}, [value, sort]);
 
 	return (
 		<div className={className}>
@@ -58,7 +64,7 @@ const InputManySetting = (props: Props) => {
 					label,
 					margin: 'normal'
 				}}
-				value={value}
+				value={sortedValue}
 				placeholder={loading ? 'loading...' : placeholder}
 				onChange={onChange}
 				{...rest}

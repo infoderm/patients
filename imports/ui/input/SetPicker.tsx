@@ -97,7 +97,6 @@ const SetPickerPropTypes = {
 	Item: PropTypes.elementType,
 	inputTransform: PropTypes.func,
 	onChange: PropTypes.func,
-	sort: PropTypes.func,
 	createNewItem: PropTypes.func,
 	maxCount: PropTypes.number,
 	multiset: PropTypes.bool,
@@ -155,7 +154,6 @@ const SetPicker = (props: SetPickerProps) => {
 		maxCount = Number.POSITIVE_INFINITY,
 		createNewItem,
 		multiset = false,
-		sort,
 		inputTransform = (x: string): string => x
 	} = props;
 
@@ -176,10 +174,6 @@ const SetPicker = (props: SetPickerProps) => {
 	const addSelectedItem = (item) => {
 		const newValue = selectedItems.slice();
 		newValue.push(item);
-		if (sort) {
-			sort(newValue);
-		}
-
 		setSelectedItems(newValue);
 	};
 
@@ -193,7 +187,7 @@ const SetPicker = (props: SetPickerProps) => {
 
 	const resetInputValue = () => setInputValue(emptyInput);
 
-	const selectedItems = sort ? sort(value.slice()) : value;
+	const selectedItems = value;
 	const count = selectedItems.length;
 	const full = count >= maxCount;
 
@@ -207,8 +201,7 @@ const SetPicker = (props: SetPickerProps) => {
 		selectedItems,
 		onSelectedItemsChange: ({selectedItems}) => {
 			// This is called when hitting backspace on empty input, or when
-			// pressing delete or backspace key while a chip is focused, so no
-			// need to sort.
+			// pressing delete or backspace key while a chip is focused.
 			if (selectedItems) setSelectedItems(selectedItems);
 		}
 	});

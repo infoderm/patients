@@ -22,6 +22,10 @@ export default function DisplayedWeekDaysSetting({className}) {
 		return key(increasing, (x) => (7 + x - weekStartsOn) % 7);
 	}, [key, increasing, weekStartsOn]);
 
+	const sort = useMemo(() => {
+		return (items) => items.slice().sort(compare);
+	}, [compare]);
+
 	const options = list(range(7));
 
 	const DAYS = useDaysNames(options);
@@ -50,7 +54,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 			createNewItem={undefined}
 			makeSuggestions={makeSuggestions}
 			placeholder="Give additional week days"
-			sort={(items) => items.sort(compare)}
+			sort={sort}
 		/>
 	);
 }
