@@ -4,11 +4,11 @@ declare class Instance {
 	name: Name;
 	collection: MeteorCollection;
 	attributes: Attributes;
-	afterHooks: Callback[];
+	afterHooks: AfterHook[];
 	sequence: number;
 
 	constructor(name: Name, collection: MeteorCollection, attributes: Attributes);
-	after(fn: Callback): this;
+	after(fn: AfterHook): this;
 }
 
 type MeteorCollection = any;
@@ -17,7 +17,7 @@ type Attributes = object;
 type UserOptions = object;
 type Options = object;
 type Item = {[x: string]: any; _id: string};
-type Callback = (x: Item) => void;
+type AfterHook = (x: Item) => void;
 
 interface Global {
 	define: (
