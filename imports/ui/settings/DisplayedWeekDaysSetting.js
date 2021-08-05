@@ -18,13 +18,12 @@ const KEY = 'displayed-week-days';
 export default function DisplayedWeekDaysSetting({className}) {
 	const {value: weekStartsOn} = useSettingCached('week-starts-on');
 
-	const compare = useMemo(() => {
-		return key(increasing, (x) => (7 + x - weekStartsOn) % 7);
-	}, [key, increasing, weekStartsOn]);
+	const compare = useMemo(
+		() => key(increasing, (x) => (7 + x - weekStartsOn) % 7),
+		[key, increasing, weekStartsOn]
+	);
 
-	const sort = useMemo(() => {
-		return (items) => items.slice().sort(compare);
-	}, [compare]);
+	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);
 
 	const options = list(range(7));
 

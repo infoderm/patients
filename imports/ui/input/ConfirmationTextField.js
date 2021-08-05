@@ -59,26 +59,24 @@ export const useConfirmationTextFieldState = (
 	};
 };
 
-const ConfirmationTextField = ({onAutoFill, ...rest}) => {
-	return (
-		<TextField
-			InputProps={{
-				endAdornment: (
-					<InputAdornment position="end">
-						<IconButton
-							aria-label="autofill"
-							onClick={onAutoFill}
-							onMouseDown={(e) => e.preventDefault()}
-						>
-							<AssignmentIcon />
-						</IconButton>
-					</InputAdornment>
-				)
-			}}
-			{...rest}
-		/>
-	);
-};
+const ConfirmationTextField = ({onAutoFill, ...rest}) => (
+	<TextField
+		InputProps={{
+			endAdornment: (
+				<InputAdornment position="end">
+					<IconButton
+						aria-label="autofill"
+						onClick={onAutoFill}
+						onMouseDown={(e) => e.preventDefault()}
+					>
+						<AssignmentIcon />
+					</IconButton>
+				</InputAdornment>
+			)
+		}}
+		{...rest}
+	/>
+);
 
 ConfirmationTextField.propTypes = {
 	onAutoFill: PropTypes.func.isRequired

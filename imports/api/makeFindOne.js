@@ -8,9 +8,10 @@ const makeFindOne =
 			return !handle.ready();
 		}, deps);
 
-		const upToDate = useTracker(() => {
-			return loading ? undefined : Collection.findOne(query, options);
-		}, [loading, ...deps]);
+		const upToDate = useTracker(
+			() => (loading ? undefined : Collection.findOne(query, options)),
+			[loading, ...deps]
+		);
 
 		const found = Boolean(upToDate);
 

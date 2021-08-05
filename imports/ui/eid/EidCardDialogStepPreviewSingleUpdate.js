@@ -110,21 +110,19 @@ const TextDifference = ({field, oldValue, newValue}) => {
 	);
 };
 
-const ImageDifference = ({field, oldValue, newValue}) => {
-	return (
-		<TableRow>
-			<TableCell component="th" scope="row">
-				{field}
-			</TableCell>
-			<TableCell align="center">
-				{oldValue && <img src={pngDataURL(oldValue)} />}
-			</TableCell>
-			<TableCell align="center">
-				{newValue && <img src={pngDataURL(newValue)} />}
-			</TableCell>
-		</TableRow>
-	);
-};
+const ImageDifference = ({field, oldValue, newValue}) => (
+	<TableRow>
+		<TableCell component="th" scope="row">
+			{field}
+		</TableCell>
+		<TableCell align="center">
+			{oldValue && <img src={pngDataURL(oldValue)} />}
+		</TableCell>
+		<TableCell align="center">
+			{newValue && <img src={pngDataURL(newValue)} />}
+		</TableCell>
+	</TableRow>
+);
 
 const DifferenceRow = (props) => {
 	if (props.field === 'photo') return <ImageDifference {...props} />;

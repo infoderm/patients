@@ -1,4 +1,5 @@
 declare module 'meteor/ostrio:files' {
+	import {Buffer} from 'buffer';
 	import * as http from 'http';
 	import {Meteor} from 'meteor/meteor';
 	import {Mongo} from 'meteor/mongo';

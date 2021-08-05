@@ -22,20 +22,20 @@ const KEY = 'work-schedule';
 export default function DisplayedWeekDaysSetting({className}) {
 	const {value: weekStartsOn} = useSettingCached('week-starts-on');
 
-	const compare = useMemo(() => {
-		return key(
-			increasing,
-			({beginModuloWeek}) =>
-				(durationUnits.week +
-					beginModuloWeek -
-					weekStartsOn * durationUnits.day) %
-				durationUnits.week
-		);
-	}, [key, increasing, weekStartsOn, durationUnits.day, durationUnits.week]);
+	const compare = useMemo(
+		() =>
+			key(
+				increasing,
+				({beginModuloWeek}) =>
+					(durationUnits.week +
+						beginModuloWeek -
+						weekStartsOn * durationUnits.day) %
+					durationUnits.week
+			),
+		[key, increasing, weekStartsOn, durationUnits.day, durationUnits.week]
+	);
 
-	const sort = useMemo(() => {
-		return (items) => items.slice().sort(compare);
-	}, [compare]);
+	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);
 
 	const options = list(range(7));
 
@@ -93,9 +93,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 		return `${beginDayOfWeek} ${beginTime} — ${endDayOfWeek} ${endTime}`;
 	};
 
-	const itemToKey = (item) => {
-		return `${item.beginModuloWeek}-${item.endModuloWeek}`;
-	};
+	const itemToKey = (item) => `${item.beginModuloWeek}-${item.endModuloWeek}`;
 
 	return (
 		<InputManySetting

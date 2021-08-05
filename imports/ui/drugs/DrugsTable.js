@@ -55,30 +55,28 @@ class EnhancedTableHead extends React.Component {
 							onChange={onSelectAllClick}
 						/>
 					</TableCell>
-					{columnData.map((column) => {
-						return (
-							<TableCell
-								key={column.id}
-								align={column.numeric ? 'right' : undefined}
-								padding={column.disablePadding ? 'none' : 'default'}
-								sortDirection={orderBy === column.id ? order : false}
+					{columnData.map((column) => (
+						<TableCell
+							key={column.id}
+							align={column.numeric ? 'right' : undefined}
+							padding={column.disablePadding ? 'none' : 'default'}
+							sortDirection={orderBy === column.id ? order : false}
+						>
+							<Tooltip
+								title="Sort"
+								placement={column.numeric ? 'bottom-end' : 'bottom-start'}
+								enterDelay={300}
 							>
-								<Tooltip
-									title="Sort"
-									placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-									enterDelay={300}
+								<TableSortLabel
+									active={orderBy === column.id}
+									direction={order}
+									onClick={this.createSortHandler(column.id)}
 								>
-									<TableSortLabel
-										active={orderBy === column.id}
-										direction={order}
-										onClick={this.createSortHandler(column.id)}
-									>
-										{column.label}
-									</TableSortLabel>
-								</Tooltip>
-							</TableCell>
-						);
-					}, this)}
+									{column.label}
+								</TableSortLabel>
+							</Tooltip>
+						</TableCell>
+					))}
 				</TableRow>
 			</TableHead>
 		);

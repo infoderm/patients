@@ -65,11 +65,10 @@ const defaultState = {
 	dirty: false
 };
 
-const removeUndefined = (object) => {
-	return Object.fromEntries(
+const removeUndefined = (object) =>
+	Object.fromEntries(
 		Object.entries(object).filter(([_key, value]) => value !== undefined)
 	);
-};
 
 const isZero = (x) => Number.parseInt(String(x), 10) === 0;
 const isValidAmount = (amount) => /^\d+$/.test(amount);

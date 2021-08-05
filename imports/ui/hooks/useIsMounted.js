@@ -5,14 +5,16 @@ const useIsMounted = () => {
 	// Component is certainly mounted from the beginning
 	const componentIsMounted = useRef(true);
 
-	useEffect(() => {
-		// When non-SSR + (ComponentDidMount or ComponentDidUpdate):
-		// do nothing.
-		// when non-SSR + ComponentWillUnmount:
-		return () => {
-			componentIsMounted.current = false;
-		};
-	}, []);
+	useEffect(
+		() =>
+			// When non-SSR + (ComponentDidMount or ComponentDidUpdate):
+			// do nothing.
+			// when non-SSR + ComponentWillUnmount:
+			() => {
+				componentIsMounted.current = false;
+			},
+		[]
+	);
 
 	return () => componentIsMounted.current;
 };

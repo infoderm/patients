@@ -36,13 +36,11 @@ export const makeIndex = (data: string) => {
 	};
 };
 
-export const firstNonNumericIndex = (string: string) => {
-	return string.search(/[^0123456789]/);
-};
+export const firstNonNumericIndex = (string: string) =>
+	string.search(/[^0123456789]/);
 
-export const longestNumericPrefix = (string: string) => {
-	return string.slice(0, firstNonNumericIndex(string));
-};
+export const longestNumericPrefix = (string: string) =>
+	string.slice(0, firstNonNumericIndex(string));
 
 export function* yieldNumeric(iterable: Iterable<string>) {
 	for (const item of iterable) {
@@ -52,9 +50,8 @@ export function* yieldNumeric(iterable: Iterable<string>) {
 	}
 }
 
-export const onlyNumeric = (string: string) => {
-	return Array.from(yieldNumeric(string)).join('');
-};
+export const onlyNumeric = (string: string) =>
+	Array.from(yieldNumeric(string)).join('');
 
 const patternsStatistics = (patterns: Iterable<string>) => {
 	const minLength = min(increasing, map(len, patterns), 0);
@@ -220,11 +217,10 @@ const isNonNegativeIntegerStrict = (string: string, base: number) => {
 	return regex.test(string);
 };
 
-export const parseNonNegativeIntegerStrict = (string: string, base = 10) => {
-	return isNonNegativeIntegerStrict(string, base)
+export const parseNonNegativeIntegerStrict = (string: string, base = 10) =>
+	isNonNegativeIntegerStrict(string, base)
 		? Number.parseInt(string, base)
 		: Number.NaN;
-};
 
 export const parseNonNegativeIntegerStrictOrString = (
 	string: string,

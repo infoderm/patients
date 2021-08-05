@@ -134,8 +134,8 @@ const comboboxStateReducer = (state, {type, changes}) => {
 	}
 };
 
-const useSelectionManagement = (selectedItems, onChange) => {
-	return useMemo(() => {
+const useSelectionManagement = (selectedItems, onChange) =>
+	useMemo(() => {
 		const setSelectedItems = (value) => {
 			onChange({
 				target: {
@@ -160,7 +160,6 @@ const useSelectionManagement = (selectedItems, onChange) => {
 			removeSelectedItem
 		};
 	}, [selectedItems, onChange]);
-};
 
 const SetPicker = (props: SetPickerProps) => {
 	const {

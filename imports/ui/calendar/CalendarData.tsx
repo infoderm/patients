@@ -37,19 +37,17 @@ const ColumnHeader = ({classes, day, col}) => {
 	);
 };
 
-const DayBox = ({classes, day, row, col, onSlotClick}) => {
-	return (
-		<div
-			className={classNames(classes.dayBox, {
-				[classes[`col${col}`]]: true,
-				[classes[`row${row}`]]: true
-			})}
-			onClick={() => {
-				onSlotClick?.(day);
-			}}
-		/>
-	);
-};
+const DayBox = ({classes, day, row, col, onSlotClick}) => (
+	<div
+		className={classNames(classes.dayBox, {
+			[classes[`col${col}`]]: true,
+			[classes[`row${row}`]]: true
+		})}
+		onClick={() => {
+			onSlotClick?.(day);
+		}}
+	/>
+);
 
 const setTime = (datetime: Date, HHmm: string) =>
 	dateParse(HHmm, 'HH:mm', datetime);

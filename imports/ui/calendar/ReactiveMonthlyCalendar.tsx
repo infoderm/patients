@@ -15,15 +15,13 @@ import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';
 import {monthly} from './ranges';
 
-const WeekNumber = ({className, day, weekOptions}) => {
-	return (
-		<div className={className}>
-			<Link to={`/calendar/week/${dateFormat(day, 'yyyy/ww', weekOptions)}`}>
-				{dateFormat(day, 'w', weekOptions)}
-			</Link>
-		</div>
-	);
-};
+const WeekNumber = ({className, day, weekOptions}) => (
+	<div className={className}>
+		<Link to={`/calendar/week/${dateFormat(day, 'yyyy/ww', weekOptions)}`}>
+			{dateFormat(day, 'w', weekOptions)}
+		</Link>
+	</div>
+);
 
 const ReactiveMonthlyCalendar = (props) => {
 	const {

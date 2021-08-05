@@ -17,21 +17,19 @@ import useSexStats from './useSexStats';
 
 // const legendGlyphSize = 15;
 
-const Label = ({x, y, children}) => {
-	return (
-		<text
-			fill="white"
-			textAnchor="middle"
-			x={x}
-			y={y}
-			dy=".33em"
-			fontSize={22}
-			pointerEvents="none"
-		>
-			{children}
-		</text>
-	);
-};
+const Label = ({x, y, children}) => (
+	<text
+		fill="white"
+		textAnchor="middle"
+		x={x}
+		y={y}
+		dy=".33em"
+		fontSize={22}
+		pointerEvents="none"
+	>
+		{children}
+	</text>
+);
 
 const Chart = ({width, height}) => {
 	const {
@@ -104,8 +102,8 @@ const Chart = ({width, height}) => {
 						pieSort={sortArcs}
 						outerRadius={radius}
 					>
-						{(pie) => {
-							return pie.arcs.map((arc, index) => {
+						{(pie) =>
+							pie.arcs.map((arc, index) => {
 								const {sex, label} = arc.data;
 								const [centroidX, centroidY] = pie.path.centroid(arc);
 								const hasSpaceForLabel = true; // Arc.endAngle - arc.startAngle >= 0.1;
@@ -126,8 +124,8 @@ const Chart = ({width, height}) => {
 										)}
 									</g>
 								);
-							});
-						}}
+							})
+						}
 					</Pie>
 				</Group>
 			</svg>

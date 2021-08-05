@@ -132,8 +132,9 @@ export const useIntlDateTimeFormat = (options?) => {
 
 export const useDateFormatRange = (format, options) => {
 	const formatPart = useDateFormat(format, options);
-	return useMemo(() => {
-		return (startDate, endDate) =>
-			`${formatPart(startDate)} — ${formatPart(endDate)}`;
-	}, [formatPart]);
+	return useMemo(
+		() => (startDate, endDate) =>
+			`${formatPart(startDate)} — ${formatPart(endDate)}`,
+		[formatPart]
+	);
 };

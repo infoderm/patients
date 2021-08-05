@@ -184,10 +184,12 @@ const reducer = (state, action) => {
 const PatientPersonalInformation = (props) => {
 	const {value: importantStrings} = useSetting('important-strings');
 
-	const importantStringsDict = useMemo(() => {
-		// return makeAnyIndex(importantStrings);
-		return makeRegExpIndex(importantStrings);
-	}, [importantStrings]);
+	const importantStringsDict = useMemo(
+		() =>
+			// return makeAnyIndex(importantStrings);
+			makeRegExpIndex(importantStrings),
+		[importantStrings]
+	);
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 

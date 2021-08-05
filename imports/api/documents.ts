@@ -1,3 +1,5 @@
+import {Buffer} from 'buffer';
+
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 // Import { Binary } from 'meteor/mongo';

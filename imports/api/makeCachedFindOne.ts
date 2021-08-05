@@ -18,9 +18,10 @@ const makeCachedFindOne =
 			return !handle.ready();
 		}, deps);
 
-		const upToDate = useTracker<U>(() => {
-			return loading ? undefined : Collection.findOne(query, options);
-		}, [loading, ...deps]);
+		const upToDate = useTracker<U>(
+			() => (loading ? undefined : Collection.findOne(query, options)),
+			[loading, ...deps]
+		);
 
 		const found = Boolean(upToDate);
 		const fields = {...ref.current, ...upToDate};

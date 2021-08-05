@@ -51,13 +51,12 @@ export const useSetting = (key, getFn = get) => {
 		return !handle.ready();
 	}, [key]);
 
-	const value = useTracker(() => {
-		return getFn(key);
-	}, [key]);
+	const value = useTracker(() => getFn(key), [key]);
 
-	const setValue = useMemo(() => {
-		return (newValue) => setSetting(key, newValue);
-	}, [key, setSetting]);
+	const setValue = useMemo(
+		() => (newValue) => setSetting(key, newValue),
+		[key]
+	);
 
 	return {
 		loading,

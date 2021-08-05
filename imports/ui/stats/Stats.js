@@ -34,29 +34,27 @@ const Chart = ({title, subheader, children, ...rest}) => {
 	);
 };
 
-const Stats = () => {
-	return (
-		<Grid container spacing={3}>
-			<Chart
-				title="Gender"
-				subheader="Pie chart showing the proportion of gender accross all patients"
-			>
-				<Sex width={400} height={400} />
-			</Chart>
-			<Chart
-				title="Age / Gender"
-				subheader="Bar chart showing the distribution of age split by gender"
-			>
-				<Age width={640} height={400} />
-			</Chart>
-			<Chart
-				title="Frequency / Gender"
-				subheader="Bar chart showing the distribution of consultation frequency split by gender"
-			>
-				<Frequency width={640} height={400} />
-			</Chart>
-		</Grid>
-	);
-};
+const Stats = () => (
+	<Grid container spacing={3}>
+		<Chart
+			title="Gender"
+			subheader="Pie chart showing the proportion of gender accross all patients"
+		>
+			<Sex width={400} height={400} />
+		</Chart>
+		<Chart
+			title="Age / Gender"
+			subheader="Bar chart showing the distribution of age split by gender"
+		>
+			<Age width={640} height={400} />
+		</Chart>
+		<Chart
+			title="Frequency / Gender"
+			subheader="Bar chart showing the distribution of consultation frequency split by gender"
+		>
+			<Frequency width={640} height={400} />
+		</Chart>
+	</Grid>
+);
 
 export default Stats;

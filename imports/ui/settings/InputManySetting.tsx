@@ -44,16 +44,18 @@ const InputManySetting = (props: Props) => {
 
 	const {loading, value, setValue} = useSetting(setting);
 
-	const onChange = useMemo(() => {
-		return (e) => {
+	const onChange = useMemo(
+		() => (e) => {
 			const newValue = e.target.value;
 			setValue(sort ? sort(newValue) : newValue);
-		};
-	}, [setValue, sort]);
+		},
+		[setValue, sort]
+	);
 
-	const sortedValue = useMemo(() => {
-		return sort ? sort(value) : value;
-	}, [value, sort]);
+	const sortedValue = useMemo(
+		() => (sort ? sort(value) : value),
+		[value, sort]
+	);
 
 	return (
 		<div className={className}>
