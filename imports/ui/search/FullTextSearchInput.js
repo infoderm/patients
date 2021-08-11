@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
 	searchBox: {
 		background: fade(theme.palette.common.white, 0.15),
 		'&:hover': {
-			background: fade(theme.palette.common.white, 0.25)
-		}
-	}
+			background: fade(theme.palette.common.white, 0.25),
+		},
+	},
 }));
 
 export default function FullTextSearchInput({className}) {
@@ -43,7 +43,7 @@ export default function FullTextSearchInput({className}) {
 				}
 
 				setLastHistoryUpdate(now);
-			}, DEBOUNCE_HISTORY_UPDATE)
+			}, DEBOUNCE_HISTORY_UPDATE),
 		);
 	};
 

@@ -60,7 +60,7 @@ const renderDiff = function* (parts) {
 					<span
 						key={++key}
 						style={{
-							backgroundColor: red[200]
+							backgroundColor: red[200],
 						}}
 					>
 						{value}
@@ -72,7 +72,7 @@ const renderDiff = function* (parts) {
 					<span
 						key={++key}
 						style={{
-							backgroundColor: green[200]
+							backgroundColor: green[200],
 						}}
 					>
 						{value}
@@ -90,10 +90,10 @@ const renderDiff = function* (parts) {
 const TextDifference = ({field, oldValue, newValue}) => {
 	const diffParts = diff(oldValue ?? '', newValue ?? '');
 	const diffLeft = Array.from(
-		renderDiff(diffParts.filter(([type]) => type !== 1))
+		renderDiff(diffParts.filter(([type]) => type !== 1)),
 	);
 	const diffRight = Array.from(
-		renderDiff(diffParts.filter(([type]) => type !== -1))
+		renderDiff(diffParts.filter(([type]) => type !== -1)),
 	);
 	return (
 		<TableRow>
@@ -134,7 +134,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	patientId,
 	eidInfo,
 	history,
-	onClose
+	onClose,
 }) => {
 	const onOpen = () => {
 		history.push({pathname: `/patient/${patientId}`});
@@ -177,7 +177,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	const {
 		loading,
 		found,
-		fields: patientState
+		fields: patientState,
 	} = usePatient({}, patientId, {}, [patientId]);
 
 	const differences =

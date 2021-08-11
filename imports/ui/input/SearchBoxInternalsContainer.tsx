@@ -8,8 +8,8 @@ const useStyles = makeStyles((theme) => ({
 		display: 'block',
 		position: 'relative',
 		marginLeft: theme.spacing(1),
-		marginRight: theme.spacing(2)
-	}
+		marginRight: theme.spacing(2),
+	},
 }));
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 
 export default function SearchBoxInternalsContainer({
 	className,
-	children
+	children,
 }: Props) {
 	const classes = useStyles();
 	return (

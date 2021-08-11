@@ -9,7 +9,7 @@ type Op<T> = OpFunction<T> | Mongo.Modifier<T>;
 const unconditionallyUpdateById = <T>(
 	Collection: Mongo.Collection<T>,
 	op: Op<T>,
-	ownerKey = 'owner'
+	ownerKey = 'owner',
 ) =>
 	function (this: Meteor.MethodThisType, _id: string, ...rest: any[]) {
 		check(_id, String);

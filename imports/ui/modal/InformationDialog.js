@@ -31,7 +31,7 @@ const InformationDialog = ({open, onClose, title, text, close, CloseIcon}) => (
 
 InformationDialog.defaultProps = {
 	open: false,
-	CloseIcon: CancelIcon
+	CloseIcon: CancelIcon,
 };
 
 InformationDialog.propTypes = {
@@ -40,7 +40,7 @@ InformationDialog.propTypes = {
 	title: PropTypes.string.isRequired,
 	text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
 	close: PropTypes.string.isRequired,
-	CloseIcon: PropTypes.elementType
+	CloseIcon: PropTypes.elementType,
 };
 
 export default InformationDialog;

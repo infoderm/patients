@@ -21,14 +21,14 @@ const styles = (theme) =>
 	createStyles({
 		avatar: {
 			color: '#fff',
-			backgroundColor: red[500]
+			backgroundColor: red[500],
 		},
 		patientChip: {
 			marginRight: theme.spacing(1),
 			backgroundColor: '#aaa',
 			fontWeight: 'normal',
-			color: '#fff'
-		}
+			color: '#fff',
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -80,7 +80,7 @@ const StaticInsuranceCard = ({item, loading = false}) => {
 
 StaticInsuranceCard.propTypes = {
 	item: PropTypes.object,
-	loading: PropTypes.bool
+	loading: PropTypes.bool,
 };
 
 export default StaticInsuranceCard;

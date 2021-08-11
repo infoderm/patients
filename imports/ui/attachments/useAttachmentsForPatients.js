@@ -3,14 +3,14 @@ import useAttachments from './useAttachments';
 
 const useAttachmentsForPatients = ($in) => {
 	const cQuery = {
-		patientId: {$in}
+		patientId: {$in},
 	};
 
 	const cOptions = {
 		fields: {
 			datetime: 1,
-			patientId: 1
-		}
+			patientId: 1,
+		},
 	};
 
 	const cDeps = $in;
@@ -25,18 +25,18 @@ const useAttachmentsForPatients = ($in) => {
 	const query = {
 		$or: [
 			{'meta.attachedToPatients': {$in}},
-			{'meta.attachedToConsultations': consultationId}
-		]
+			{'meta.attachedToConsultations': consultationId},
+		],
 	};
 
 	const options = {
 		fields: {
-			meta: 1
+			meta: 1,
 			// The following does not work because subsequent subscriptions
 			// will not fetch additional meta subdocument fields.
 			// 'meta.attachedToPatients': 1,
 			// 'meta.attachedToConsultations': 1
-		}
+		},
 	};
 
 	const deps = [JSON.stringify(query)];
@@ -44,7 +44,7 @@ const useAttachmentsForPatients = ($in) => {
 	const {loading: loadingAttachments, results: attachments} = useAttachments(
 		query,
 		options,
-		deps
+		deps,
 	);
 
 	// console.debug({query, options, deps, loadingAttachments, attachments});
@@ -64,7 +64,7 @@ const useAttachmentsForPatients = ($in) => {
 						parentId,
 						attachmentId: _id,
 						patientId: parentId,
-						group: Number.POSITIVE_INFINITY
+						group: Number.POSITIVE_INFINITY,
 					});
 				}
 			}
@@ -79,7 +79,7 @@ const useAttachmentsForPatients = ($in) => {
 						parentId,
 						attachmentId: _id,
 						patientId,
-						group: Number(datetime)
+						group: Number(datetime),
 					});
 				}
 			}

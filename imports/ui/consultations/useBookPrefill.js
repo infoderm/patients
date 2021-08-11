@@ -3,7 +3,7 @@ import useLastConsultationOfThisYear from './useLastConsultationOfThisYear';
 
 export default function useBookPrefill() {
 	const {loading, consultation} = useLastConsultationOfThisYear(
-		filterNotInRareBooks()
+		filterNotInRareBooks(),
 	);
 
 	const bookNumber = consultation ? consultation.book : '1';

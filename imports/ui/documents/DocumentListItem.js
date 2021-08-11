@@ -19,13 +19,13 @@ import DocumentChips from './DocumentChips';
 const useStyles = makeStyles((theme) => ({
 	item: {
 		marginTop: theme.spacing(2),
-		marginBottom: theme.spacing(2)
+		marginBottom: theme.spacing(2),
 	},
 	chips: {
 		display: 'flex',
 		justifyContent: 'center',
-		flexWrap: 'wrap'
-	}
+		flexWrap: 'wrap',
+	},
 }));
 
 const DocumentListItem = (props) => {
@@ -65,17 +65,17 @@ const DocumentListItem = (props) => {
 
 DocumentListItem.defaultProps = {
 	PatientChip: DocumentChips.defaultProps.PatientChip,
-	VersionsChip: DocumentChips.defaultProps.VersionsChip
+	VersionsChip: DocumentChips.defaultProps.VersionsChip,
 };
 
 DocumentListItem.propTypes = {
 	document: PropTypes.object.isRequired,
 	PatientChip: PropTypes.elementType,
-	VersionsChip: PropTypes.elementType
+	VersionsChip: PropTypes.elementType,
 };
 
 DocumentListItem.projection = {
-	...DocumentChips.projection
+	...DocumentChips.projection,
 };
 
 export default DocumentListItem;

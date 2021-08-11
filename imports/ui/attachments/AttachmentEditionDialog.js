@@ -21,8 +21,8 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const AttachmentEditionDialog = ({open, onClose, attachment}) => {
@@ -39,7 +39,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 			setFilenameError('');
 			const key = enqueueSnackbar('Saving changes...', {
 				variant: 'info',
-				persist: true
+				persist: true,
 			});
 			Meteor.call(
 				'uploads.updateFilename',
@@ -56,7 +56,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 						enqueueSnackbar(message, {variant: 'success'});
 						onClose();
 					}
-				}
+				},
 			);
 		}
 	};
@@ -103,7 +103,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 AttachmentEditionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	attachment: PropTypes.object.isRequired
+	attachment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AttachmentEditionDialog);

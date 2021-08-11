@@ -17,8 +17,8 @@ import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
 
 const useStyles = makeStyles({
 	calendar: {
-		marginBottom: '6em'
-	}
+		marginBottom: '6em',
+	},
 });
 
 const Planner = (props) => {

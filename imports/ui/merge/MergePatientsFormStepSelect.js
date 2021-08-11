@@ -24,7 +24,7 @@ import usePatient from '../patients/usePatient';
 
 const Suggestion = ({item: patient}) => {
 	const {fields} = usePatient(patient, patient._id, {fields: {photo: 1}}, [
-		patient._id
+		patient._id,
 	]);
 
 	const patientName = `${patient.lastname} ${patient.firstname}`;
@@ -49,7 +49,7 @@ const MergePatientsFormStepSelect = ({
 	selection,
 	setSelection,
 	placeholder,
-	label
+	label,
 }) => (
 	<Grid container spacing={2}>
 		<Grid item xs={12}>
@@ -60,7 +60,7 @@ const MergePatientsFormStepSelect = ({
 				useSuggestions={makePatientsSuggestions(selection)}
 				TextFieldProps={{
 					label,
-					margin: 'normal'
+					margin: 'normal',
 				}}
 				value={selection}
 				placeholder={placeholder}
@@ -81,14 +81,14 @@ const MergePatientsFormStepSelect = ({
 
 MergePatientsFormStepSelect.defaultProps = {
 	label: 'Select patients',
-	placeholder: 'Select patients by entering their names here'
+	placeholder: 'Select patients by entering their names here',
 };
 
 MergePatientsFormStepSelect.propTypes = {
 	selection: PropTypes.array.isRequired,
 	setSelection: PropTypes.func.isRequired,
 	label: PropTypes.string,
-	placeholder: PropTypes.string
+	placeholder: PropTypes.string,
 };
 
 export default MergePatientsFormStepSelect;

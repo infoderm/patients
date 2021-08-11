@@ -13,7 +13,7 @@ export const useConfirmationTextFieldState = (
 	expected,
 	getError,
 	initValue = '',
-	initError = ''
+	initError = '',
 ) => {
 	const [value, setValue] = useState(initValue);
 	const [error, setError] = useState(initError);
@@ -54,8 +54,8 @@ export const useConfirmationTextFieldState = (
 			error: Boolean(error),
 			helperText: error,
 			onAutoFill,
-			onChange
-		}
+			onChange,
+		},
 	};
 };
 
@@ -72,14 +72,14 @@ const ConfirmationTextField = ({onAutoFill, ...rest}) => (
 						<AssignmentIcon />
 					</IconButton>
 				</InputAdornment>
-			)
+			),
 		}}
 		{...rest}
 	/>
 );
 
 ConfirmationTextField.propTypes = {
-	onAutoFill: PropTypes.func.isRequired
+	onAutoFill: PropTypes.func.isRequired,
 };
 
 export default ConfirmationTextField;

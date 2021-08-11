@@ -23,7 +23,7 @@ const AttachmentsGrid = ({
 
 AttachmentsGrid.propTypes = {
 	attachments: PropTypes.array.isRequired,
-	attachmentsInfo: PropTypes.instanceOf(Map)
+	attachmentsInfo: PropTypes.instanceOf(Map),
 };
 
 export default AttachmentsGrid;

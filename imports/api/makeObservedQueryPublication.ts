@@ -8,28 +8,28 @@ interface ObserveOptions {
 
 const makeObservedQuerySubscription = <T>(
 	QueriedCollection: Mongo.Collection<T>,
-	observedQueryCacheCollectionName: string
+	observedQueryCacheCollectionName: string,
 ) =>
 	function (
 		key: string,
 		query: Mongo.Selector<T>,
 		options: Mongo.Options<T>,
-		observe?: ObserveOptions
+		observe?: ObserveOptions,
 	) {
 		query = {
 			...query,
-			owner: this.userId
+			owner: this.userId,
 		};
 		observe = {
 			added: true,
 			removed: true,
-			...observe
+			...observe,
 		};
 		const uid = JSON.stringify({
 			key,
 			query,
 			options,
-			observe
+			observe,
 		});
 		const results = [];
 		let initializing = true;
@@ -42,14 +42,14 @@ const makeObservedQuerySubscription = <T>(
 			added: (_id, fields) => {
 				if (initializing) results.push({_id, ...fields});
 				else if (observe.added) stop();
-			}
+			},
 		};
 
 		if (observe.removed) observers.removed = stop;
 		if (observe.changed) observers.changed = stop;
 
 		const handle = QueriedCollection.find(query, options).observeChanges(
-			observers
+			observers,
 		);
 
 		// Instead, we'll send one `added` message right after `observeChanges` has
@@ -57,7 +57,7 @@ const makeObservedQuerySubscription = <T>(
 		initializing = false;
 		this.added(observedQueryCacheCollectionName, uid, {
 			key,
-			results
+			results,
 		});
 		this.ready();
 

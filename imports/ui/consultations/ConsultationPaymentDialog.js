@@ -32,13 +32,13 @@ const THICKNESS_PROGRESS = 3.6;
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
+		marginLeft: theme.spacing(1),
 	},
 	code: {},
 	codeContainer: {
 		position: 'relative',
 		display: 'block',
-		height: SIZE_CODE
+		height: SIZE_CODE,
 	},
 	codeProgress: {
 		position: 'absolute',
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'center',
 		alignItems: 'center',
 		fontSize: '2rem',
-		zIndex: 1
+		zIndex: 1,
 	},
 	codeWrap: {
 		position: 'absolute',
@@ -60,8 +60,8 @@ const useStyles = makeStyles((theme) => ({
 		right: 0,
 		display: 'flex',
 		justifyContent: 'center',
-		alignItems: 'center'
-	}
+		alignItems: 'center',
+	},
 }));
 
 const ConsultationPaymentDialog = (props) => {
@@ -82,12 +82,12 @@ const ConsultationPaymentDialog = (props) => {
 	const options = {fields: ConsultationPaymentDialog.projection};
 	const deps = [
 		consultation.patientId,
-		JSON.stringify(ConsultationPaymentDialog.projection)
+		JSON.stringify(ConsultationPaymentDialog.projection),
 	];
 	const {
 		loading: loadingPatient,
 		found,
-		fields: patient
+		fields: patient,
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const loading = loadingAccountHolder || loadingIban || loadingPatient;
@@ -102,13 +102,13 @@ const ConsultationPaymentDialog = (props) => {
 		iban,
 		currency,
 		amount: owed,
-		unstructuredReference: unstructuredReference.slice(0, 140)
+		unstructuredReference: unstructuredReference.slice(0, 140),
 	};
 
 	const codeProps = {
 		className: classes.code,
 		level: 'H',
-		size: SIZE_CODE
+		size: SIZE_CODE,
 	};
 
 	const patientIdentifier = found
@@ -117,7 +117,7 @@ const ConsultationPaymentDialog = (props) => {
 
 	const codeStyle = {
 		transition: 'opacity 200ms ease-out',
-		opacity: loading ? 0.4 : found ? 1 : 0.2
+		opacity: loading ? 0.4 : found ? 1 : 0.2,
 	};
 
 	return (
@@ -167,12 +167,12 @@ const ConsultationPaymentDialog = (props) => {
 
 ConsultationPaymentDialog.projection = {
 	firstname: 1,
-	lastname: 1
+	lastname: 1,
 };
 
 ConsultationPaymentDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired
+	onClose: PropTypes.func.isRequired,
 };
 
 export default withLazyOpening(ConsultationPaymentDialog);

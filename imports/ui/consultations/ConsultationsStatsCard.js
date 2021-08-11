@@ -22,13 +22,13 @@ import {consultations} from '../../api/consultations';
 const useStyles = makeStyles((theme) => ({
 	card: {
 		display: 'flex',
-		minHeight: 200
+		minHeight: 200,
 	},
 	details: {
 		display: 'flex',
 		flex: 1,
 		flexDirection: 'column',
-		minWidth: 300
+		minWidth: 300,
 	},
 	header: {
 		flex: 1,
@@ -37,12 +37,12 @@ const useStyles = makeStyles((theme) => ({
 			'& > span': {
 				whiteSpace: 'nowrap',
 				overflow: 'hidden',
-				textOverflow: 'ellipsis'
-			}
-		}
+				textOverflow: 'ellipsis',
+			},
+		},
 	},
 	content: {
-		flex: '1 0 auto'
+		flex: '1 0 auto',
 	},
 	photoPlaceHolder: {
 		display: 'flex',
@@ -54,22 +54,22 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'center',
 		color: '#fff',
 		backgroundColor: '#999',
-		flex: 'none'
+		flex: 'none',
 	},
 	actions: {
 		display: 'flex',
-		paddingLeft: theme.spacing(2)
+		paddingLeft: theme.spacing(2),
 	},
 	name: {
-		display: 'flex'
+		display: 'flex',
 	},
 	avatar: {
 		color: '#111',
-		backgroundColor: 'yellow'
+		backgroundColor: 'yellow',
 	},
 	paragraph: {
-		lineHeight: 1.35
-	}
+		lineHeight: 1.35,
+	},
 }));
 
 const subheader = ({count}) =>
@@ -126,7 +126,7 @@ const ConsultationsStatsCard = (props) => {
 ConsultationsStatsCard.defaultProps = {
 	url: undefined,
 	actions: () => null,
-	stats: {}
+	stats: {},
 };
 
 ConsultationsStatsCard.propTypes = {
@@ -135,7 +135,7 @@ ConsultationsStatsCard.propTypes = {
 	avatar: PropTypes.string.isRequired,
 	actions: PropTypes.func,
 
-	stats: PropTypes.object
+	stats: PropTypes.object,
 };
 
 const ReactiveConsultationsStatsCard = withTracker(({query}) => {
@@ -145,7 +145,7 @@ const ReactiveConsultationsStatsCard = withTracker(({query}) => {
 
 	const handle = Meteor.subscribe(publication, query);
 	const result = {
-		stats: undefined
+		stats: undefined,
 	};
 
 	if (handle.ready()) {
@@ -156,7 +156,7 @@ const ReactiveConsultationsStatsCard = withTracker(({query}) => {
 })(ConsultationsStatsCard);
 
 ReactiveConsultationsStatsCard.propTypes = {
-	query: PropTypes.object.isRequired
+	query: PropTypes.object.isRequired,
 };
 
 export default ReactiveConsultationsStatsCard;

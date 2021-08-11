@@ -47,7 +47,7 @@ StaticMonthlyCalendar.propTypes = {
 	next: PropTypes.func,
 	prev: PropTypes.func,
 	weekly: PropTypes.func,
-	weekOptions: PropTypes.object
+	weekOptions: PropTypes.object,
 };
 
 export default StaticMonthlyCalendar;

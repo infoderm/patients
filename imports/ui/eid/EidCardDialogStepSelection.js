@@ -48,7 +48,7 @@ const DEFAULT_FIELDS = {
 	...SelectablePatientCard.projection,
 	// We fetch the picture through a dedicated subscription to get live
 	// updates while avoiding double loading on init.
-	photo: 0
+	photo: 0,
 };
 
 const usePatientsNnSearch = ({niss: nn}) => {
@@ -58,15 +58,15 @@ const usePatientsNnSearch = ({niss: nn}) => {
 	const fields = mergeFields(
 		{
 			_id: 1,
-			niss: 1
+			niss: 1,
 		},
 		sort,
-		DEFAULT_FIELDS
+		DEFAULT_FIELDS,
 	);
 	const options = {
 		fields,
 		sort,
-		limit
+		limit,
 	};
 	return usePatientsFind(query, options, [nn]);
 };
@@ -78,15 +78,15 @@ const usePatientsNormalizedNameSearch = ({normalizedName}) => {
 	const fields = mergeFields(
 		{
 			_id: 1,
-			normalizedName: 1
+			normalizedName: 1,
 		},
 		sort,
-		DEFAULT_FIELDS
+		DEFAULT_FIELDS,
 	);
 	const options = {
 		fields,
 		sort,
-		limit
+		limit,
 	};
 	return usePatientsFind(query, options, [normalizedName]);
 };
@@ -97,19 +97,19 @@ const useStyles = makeStyles((theme) => ({
 		transform: 'rotate(0deg)',
 		marginLeft: 'auto',
 		transition: theme.transitions.create('transform', {
-			duration: theme.transitions.duration.shortest
-		})
+			duration: theme.transitions.duration.shortest,
+		}),
 	},
 	expandOpen: {
-		transform: 'rotate(180deg)'
+		transform: 'rotate(180deg)',
 	},
 
 	searchBox: {
 		background: fade(theme.palette.primary.light, 0.15),
 		'&:hover': {
-			background: fade(theme.palette.primary.light, 0.25)
-		}
-	}
+			background: fade(theme.palette.primary.light, 0.25),
+		},
+	},
 }));
 
 const EidCardDialogStepSelection = ({
@@ -117,14 +117,14 @@ const EidCardDialogStepSelection = ({
 	onNext,
 	eidInfo,
 	selected,
-	setSelected
+	setSelected,
 }) => {
 	const classes = useStyles();
 
 	const eidPatient = {_id: '?', ...patients.sanitize(eidInfo)};
 
 	const [patientSearchInput, setPatientSearchinput] = useState(
-		eidPatient.normalizedName
+		eidPatient.normalizedName,
 	);
 
 	const {loading: loadingNnMatches, results: nnMatches} =
@@ -132,12 +132,12 @@ const EidCardDialogStepSelection = ({
 
 	const {
 		loading: loadingNormalizedNameMatches,
-		results: normalizedNameMatches
+		results: normalizedNameMatches,
 	} = usePatientsNormalizedNameSearch(eidPatient);
 
 	const usePatientsNameSearch = makePatientsSuggestions(nnMatches, {
 		fields: DEFAULT_FIELDS,
-		limit: DEFAULT_LIMIT
+		limit: DEFAULT_LIMIT,
 	});
 
 	const [nameMatchesExpanded, setNameMatchesExpanded] = useState(false);
@@ -206,7 +206,7 @@ const EidCardDialogStepSelection = ({
 			? green[200]
 			: eidPatient.niss?.startsWith(onlyNumeric(patient.niss))
 			? false
-			: red[200]
+			: red[200],
 	});
 
 	return (
@@ -263,7 +263,7 @@ const EidCardDialogStepSelection = ({
 											Card={ReactivePatientCard}
 											CardProps={{
 												Card: SelectablePatientCard,
-												onClick: onCardClick
+												onClick: onCardClick,
 											}}
 											getCardProps={getCardProps}
 											selected={selected}
@@ -284,7 +284,7 @@ const EidCardDialogStepSelection = ({
 											Card={ReactivePatientCard}
 											CardProps={{
 												Card: SelectablePatientCard,
-												onClick: onCardClick
+												onClick: onCardClick,
 											}}
 											getCardProps={getCardProps}
 											selected={selected}
@@ -298,8 +298,8 @@ const EidCardDialogStepSelection = ({
 										className={classes.expandButton}
 										classes={{
 											endIcon: classNames(classes.expand, {
-												[classes.expandOpen]: nameMatchesExpanded
-											})
+												[classes.expandOpen]: nameMatchesExpanded,
+											}),
 										}}
 										aria-expanded={nameMatchesExpanded}
 										aria-label="show more"
@@ -338,7 +338,7 @@ const EidCardDialogStepSelection = ({
 												Card={ReactivePatientCard}
 												CardProps={{
 													Card: SelectablePatientCard,
-													onClick: onCardClick
+													onClick: onCardClick,
 												}}
 												getCardProps={getCardProps}
 												selected={selected}

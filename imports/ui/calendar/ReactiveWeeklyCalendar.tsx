@@ -34,7 +34,7 @@ const ReactiveWeeklyCalendar = (props) => {
 	const weekOptions = {
 		useAdditionalWeekYearTokens: true,
 		weekStartsOn,
-		firstWeekContainsDate: 1
+		firstWeekContainsDate: 1,
 	};
 
 	const [begin, end] = weekly(year, week, weekOptions);
@@ -44,7 +44,7 @@ const ReactiveWeeklyCalendar = (props) => {
 	const someDayOfWeek = new Date(
 		year,
 		0,
-		weekOptions.firstWeekContainsDate + (week - 1) * 7
+		weekOptions.firstWeekContainsDate + (week - 1) * 7,
 	);
 	const someDayOfPrevWeek = subWeeks(someDayOfWeek, 1);
 	const someDayOfNextWeek = addWeeks(someDayOfWeek, 1);
@@ -57,7 +57,7 @@ const ReactiveWeeklyCalendar = (props) => {
 	const title = localizedDateFormat(
 		someDayOfWeek,
 		"yyyy MMMM / 'Week' w",
-		weekOptions
+		weekOptions,
 	);
 	const baseURL = match.params.patientId
 		? `/new/appointment/for/${match.params.patientId}`
@@ -65,7 +65,7 @@ const ReactiveWeeklyCalendar = (props) => {
 
 	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
-		Number(end)
+		Number(end),
 	]);
 
 	const history = useHistory();
@@ -73,7 +73,7 @@ const ReactiveWeeklyCalendar = (props) => {
 	const displayedEvents = events.filter(
 		(x) =>
 			(showCancelledEvents || !x.isCancelled) &&
-			(showNoShowEvents || !x.isNoShow)
+			(showNoShowEvents || !x.isNoShow),
 	);
 
 	return (

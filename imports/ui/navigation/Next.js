@@ -14,7 +14,7 @@ const Next = ({to, ...rest}) => (
 );
 
 Next.propTypes = {
-	to: PropTypes.string.isRequired
+	to: PropTypes.string.isRequired,
 };
 
 export default Next;

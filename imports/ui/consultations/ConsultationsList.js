@@ -6,7 +6,7 @@ import ReactiveConsultationCard from './ReactiveConsultationCard';
 export default function ConsultationsList({
 	items,
 	itemProps,
-	defaultExpandedFirst
+	defaultExpandedFirst,
 }) {
 	return (
 		<div>
@@ -23,11 +23,11 @@ export default function ConsultationsList({
 }
 
 ConsultationsList.defaultProps = {
-	defaultExpandedFirst: false
+	defaultExpandedFirst: false,
 };
 
 ConsultationsList.propTypes = {
 	items: PropTypes.array.isRequired,
 	itemProps: PropTypes.object,
-	defaultExpandedFirst: PropTypes.bool
+	defaultExpandedFirst: PropTypes.bool,
 };

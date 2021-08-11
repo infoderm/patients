@@ -11,7 +11,7 @@ const ConsultationDetails = ({match, consultationId}) => {
 	const {
 		loading,
 		found,
-		fields: consultation
+		fields: consultation,
 	} = useConsultation(init, query, options, deps);
 
 	return (

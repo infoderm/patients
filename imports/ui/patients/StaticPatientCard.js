@@ -16,7 +16,7 @@ const StaticPatientCard = (props) => (
 StaticPatientCard.projection = GenericStaticPatientCard.projection;
 
 StaticPatientCard.propTypes = {
-	patient: PropTypes.object.isRequired
+	patient: PropTypes.object.isRequired,
 };
 
 export default StaticPatientCard;

@@ -9,8 +9,8 @@ const ReactiveConsultationCard = ({consultation, ...rest}) => {
 	const options = {
 		fields: {
 			_id: 1,
-			'meta.attachedToConsultations': 1
-		}
+			'meta.attachedToConsultations': 1,
+		},
 	};
 
 	const deps = [consultation._id];
@@ -20,7 +20,7 @@ const ReactiveConsultationCard = ({consultation, ...rest}) => {
 	const props = {
 		consultation,
 		attachments,
-		...rest
+		...rest,
 	};
 
 	return <StaticConsultationCard {...props} />;

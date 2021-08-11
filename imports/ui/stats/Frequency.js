@@ -20,12 +20,12 @@ const Chart = (props) => {
 				female: value.female ?? 0,
 				male: value.male ?? 0,
 				other: value.other ?? 0,
-				none: value[''] ?? 0
+				none: value[''] ?? 0,
 		  }));
 
 	const color = scaleOrdinal({
 		domain: ['female', 'male', 'other', 'none'],
-		range: [pink[500], blue[500], purple[500], grey[500]]
+		range: [pink[500], blue[500], purple[500], grey[500]],
 	});
 
 	return <StackedBarChart {...props} data={data} color={color} />;

@@ -25,7 +25,7 @@ const NewConsultationEditor = ({match}) => {
 		payment_method: 'cash',
 		price: '',
 		paid: '',
-		book: bookNumber
+		book: bookNumber,
 	};
 
 	return (

@@ -12,7 +12,7 @@ import useThumbnail from './useThumbnail';
 const propTypes = {
 	attachmentId: PropTypes.string.isRequired,
 	height: PropTypes.number.isRequired,
-	width: PropTypes.number
+	width: PropTypes.number,
 };
 
 type Props = InferProps<typeof propTypes> & PropsOf<typeof CardMedia>;
@@ -22,7 +22,7 @@ const AttachmentThumbnail = ({attachmentId, width, height, ...rest}: Props) => {
 		{},
 		attachmentId,
 		undefined,
-		[attachmentId]
+		[attachmentId],
 	);
 	const attachmentURL = loading ? undefined : link(attachment);
 	const src = useThumbnail(attachmentURL, {...attachment, width, height});

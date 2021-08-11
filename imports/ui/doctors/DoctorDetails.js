@@ -36,10 +36,10 @@ export default function DoctorDetails({match, name, page, perpage}) {
 
 DoctorDetails.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 DoctorDetails.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };

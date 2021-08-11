@@ -20,7 +20,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import {normalized} from '../../api/string';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
 import withLazyOpening from '../modal/withLazyOpening';
@@ -29,11 +29,11 @@ import AttachmentThumbnail from './AttachmentThumbnail';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
+		marginLeft: theme.spacing(1),
 	},
 	thumbnail: {
-		height: 300
-	}
+		height: 300,
+	},
 }));
 
 const AttachmentDeletionDialog = (props) => {
@@ -123,7 +123,7 @@ AttachmentDeletionDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	detach: PropTypes.string.isRequired,
 	itemId: PropTypes.string.isRequired,
-	attachment: PropTypes.object.isRequired
+	attachment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AttachmentDeletionDialog);

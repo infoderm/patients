@@ -24,26 +24,26 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: theme.zIndex.drawer + 1,
 		transition: theme.transitions.create(['width', 'margin'], {
 			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen
-		})
+			duration: theme.transitions.duration.leavingScreen,
+		}),
 	},
 	appBarShift: {
 		marginLeft: drawerWidthOpen,
 		width: `calc(100% - ${drawerWidthOpen}px)`,
 		transition: theme.transitions.create(['width', 'margin'], {
 			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen
-		})
+			duration: theme.transitions.duration.enteringScreen,
+		}),
 	},
 	menuButton: {
-		marginRight: 24
+		marginRight: 24,
 	},
 	hide: {
-		display: 'none'
+		display: 'none',
 	},
 	toolBar: {
 		display: 'flex',
-		flex: 'auto'
+		flex: 'auto',
 	},
 	title: {
 		minWidth: 100,
@@ -51,14 +51,14 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: theme.spacing(3),
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
-		textOverflow: 'ellipsis'
+		textOverflow: 'ellipsis',
 	},
 	searchBox: {
-		flex: 'none'
+		flex: 'none',
 	},
 	accounts: {
-		flex: 'none'
-	}
+		flex: 'none',
+	},
 }));
 
 export default function Header({currentUser, navigationDrawerIsOpen}) {
@@ -73,7 +73,7 @@ export default function Header({currentUser, navigationDrawerIsOpen}) {
 	return (
 		<AppBar
 			className={classNames(classes.appBar, {
-				[classes.appBarShift]: navigationDrawerIsOpen === 'open'
+				[classes.appBarShift]: navigationDrawerIsOpen === 'open',
 			})}
 		>
 			<Toolbar className={classes.toolBar}>
@@ -81,7 +81,7 @@ export default function Header({currentUser, navigationDrawerIsOpen}) {
 					color="inherit"
 					aria-label="Open drawer"
 					className={classNames(classes.menuButton, {
-						[classes.hide]: navigationDrawerIsOpen === 'open'
+						[classes.hide]: navigationDrawerIsOpen === 'open',
 					})}
 					onClick={toggleNavigationDrawerIsOpen}
 				>

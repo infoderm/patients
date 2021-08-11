@@ -20,7 +20,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 
 	const compare = useMemo(
 		() => key(increasing, (x) => (7 + x - weekStartsOn) % 7),
-		[key, increasing, weekStartsOn]
+		[key, increasing, weekStartsOn],
 	);
 
 	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);
@@ -38,9 +38,9 @@ export default function DisplayedWeekDaysSetting({className}) {
 				(i) =>
 					!value.includes(i) &&
 					formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()),
-				options
-			)
-		)
+				options,
+			),
+		),
 	});
 
 	return (

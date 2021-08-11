@@ -7,7 +7,7 @@ const PreconfiguredWeeklyPlanner = (props) => (
 			skipIdle: true,
 			maxLines: 40,
 			minEventDuration: 15 * 60 * 1000,
-			dayBegins: '10:00'
+			dayBegins: '10:00',
 		}}
 		{...props}
 	/>

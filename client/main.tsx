@@ -14,6 +14,6 @@ Meteor.startup(() => {
 		<BrowserRouter>
 			<App />
 		</BrowserRouter>,
-		rootNode()
+		rootNode(),
 	);
 });

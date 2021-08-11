@@ -6,19 +6,19 @@ const makeFilteredCollection = (
 	Collection,
 	filterQuery,
 	filterOptions,
-	name
+	name,
 ) => {
 	if (Meteor.isServer) {
 		Meteor.publish(name, function (publicationQuery, publicationOptions) {
 			const selector = {
 				...filterQuery,
 				...publicationQuery,
-				owner: this.userId
+				owner: this.userId,
 			};
 
 			const options = {
 				...filterOptions,
-				...publicationOptions
+				...publicationOptions,
 			};
 
 			const handle = Collection.find(selector, options).observeChanges({
@@ -32,7 +32,7 @@ const makeFilteredCollection = (
 
 				removed: (_id) => {
 					this.removed(name, _id);
-				}
+				},
 			});
 
 			this.onStop(() => handle.stop());
@@ -47,7 +47,7 @@ const makeFilteredCollection = (
 			const handle = Meteor.subscribe(name, undefined, options);
 			return {
 				loading: !handle.ready(),
-				results: Filtered.find(hookQuery, options).fetch()
+				results: Filtered.find(hookQuery, options).fetch(),
 			};
 		}, deps);
 };

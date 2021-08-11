@@ -38,7 +38,7 @@ const Chart = ({width, height}) => {
 		tooltipTop,
 		tooltipOpen,
 		showTooltip,
-		hideTooltip
+		hideTooltip,
 	} = useTooltip<{sex: string; label: string; count: number; freq: number}>();
 
 	const {loading, total: allCount, count} = useSexStats();
@@ -52,7 +52,7 @@ const Chart = ({width, height}) => {
 		showTooltip({
 			tooltipLeft: coords.x,
 			tooltipTop: coords.y,
-			tooltipData: datum
+			tooltipData: datum,
 		});
 	};
 
@@ -71,7 +71,7 @@ const Chart = ({width, height}) => {
 					sex: s || 'none',
 					label: (s || 'none')[0].toUpperCase(),
 					count: count[s],
-					freq: count[s] / allCount
+					freq: count[s] / allCount,
 				});
 			}
 		}
@@ -84,7 +84,7 @@ const Chart = ({width, height}) => {
 		blue[500],
 		grey[500],
 		grey[500],
-		grey[500]
+		grey[500],
 	];
 
 	const ordinalColorScale = scaleOrdinal({domain, range});

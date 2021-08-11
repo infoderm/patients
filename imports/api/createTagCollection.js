@@ -14,7 +14,7 @@ export const FIND_CACHE_SUFFIX = '.find.cache';
 export const FIND_OBSERVE_SUFFIX = '.find.observe';
 
 const computedFields = (name) => ({
-	containsNonAlphabetical: containsNonAlphabetical(name)
+	containsNonAlphabetical: containsNonAlphabetical(name),
 });
 
 export default function createTagCollection(options) {
@@ -23,7 +23,7 @@ export default function createTagCollection(options) {
 		publication,
 		singlePublication, // Optional
 		parentPublication,
-		key
+		key,
 	} = options;
 
 	const stats = collection + STATS_SUFFIX;
@@ -47,7 +47,7 @@ export default function createTagCollection(options) {
 
 		Meteor.publish(
 			cachePublication,
-			makeObservedQueryPublication(Collection, cacheCollection)
+			makeObservedQueryPublication(Collection, cacheCollection),
 		);
 
 		if (singlePublication) {
@@ -61,7 +61,7 @@ export default function createTagCollection(options) {
 		options: {
 			...options,
 			stats,
-			parentPublicationStats
+			parentPublicationStats,
 		},
 
 		cache: {Stats},
@@ -74,12 +74,12 @@ export default function createTagCollection(options) {
 
 			const selector = {
 				owner,
-				name
+				name,
 			};
 
 			const fields = {
 				...computedFields(name),
-				...selector
+				...selector,
 			};
 
 			return Collection.upsert(selector, {$set: fields});
@@ -93,7 +93,7 @@ export default function createTagCollection(options) {
 
 			const selector = {
 				owner,
-				name
+				name,
 			};
 
 			return Collection.remove(selector);
@@ -109,8 +109,8 @@ export default function createTagCollection(options) {
 						const _options = {
 							...rest,
 							fields: {
-								...fields
-							}
+								...fields,
+							},
 						};
 						for (const key of Object.keys(query)) {
 							_options.fields[key] = 1;
@@ -148,7 +148,7 @@ export default function createTagCollection(options) {
 						removed: () => {
 							count -= 1;
 							this.changed(stats, uid, {count});
-						}
+						},
 
 						// We don't care about `changed` events.
 					});
@@ -184,28 +184,28 @@ export default function createTagCollection(options) {
 					Parent.update(
 						{[key]: oldname, owner},
 						{
-							$addToSet: {[key]: newname}
+							$addToSet: {[key]: newname},
 						},
-						{multi: true}
+						{multi: true},
 					);
 
 					Parent.update(
 						{[key]: newname, owner},
 						{
-							$pull: {[key]: oldname}
+							$pull: {[key]: oldname},
 						},
-						{multi: true}
+						{multi: true},
 					);
 
 					const selector = {
 						owner,
-						name: newname
+						name: newname,
 					};
 
 					const newfields = {
 						...tag,
 						...computedFields(newname),
-						...selector
+						...selector,
 					};
 
 					delete newfields._id;
@@ -227,12 +227,12 @@ export default function createTagCollection(options) {
 					Parent.update(
 						{[key]: tag.name, owner},
 						{$pull: {[key]: tag.name}},
-						{multi: true}
+						{multi: true},
 					);
 					return Collection.remove(tagId);
-				}
+				},
 			});
-		}
+		},
 	};
 
 	return {Collection, operations, useTags, useTagsFind};

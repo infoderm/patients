@@ -33,7 +33,7 @@ import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
 
 const useStyles = makeStyles(() => ({
 	details: {
-		position: 'relative'
+		position: 'relative',
 	},
 	veil: {
 		position: 'absolute',
@@ -45,11 +45,11 @@ const useStyles = makeStyles(() => ({
 		left: 0,
 		right: 0,
 		zIndex: 1,
-		fontSize: '2rem'
+		fontSize: '2rem',
 	},
 	link: {
-		fontWeight: 'bold'
-	}
+		fontWeight: 'bold',
+	},
 }));
 
 function paymentMethodString(payment_method) {
@@ -76,8 +76,8 @@ const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
 			secondary={secondary}
 			secondaryTypographyProps={{
 				style: {
-					whiteSpace: 'pre-wrap'
-				}
+					whiteSpace: 'pre-wrap',
+				},
 			}}
 			{...rest}
 		/>
@@ -107,9 +107,9 @@ const StaticConsultationCardDetails = (props) => {
 			payment_method,
 			price,
 			paid,
-			book
+			book,
 		},
-		attachments
+		attachments,
 	} = props;
 
 	const localizedDatetime = useDateFormat('PPPPpppp');
@@ -124,7 +124,7 @@ const StaticConsultationCardDetails = (props) => {
 						Icon={AlarmOffIcon}
 						primary="Rendez-vous annulé"
 						secondary={`${cancellationReason} ${localizedDatetime(
-							cancellationDatetime
+							cancellationDatetime,
 						)}\nExplanation: ${cancellationExplanation || 'unknown'}`}
 					/>
 				)}
@@ -180,7 +180,7 @@ const StaticConsultationCardDetails = (props) => {
 						Icon={EuroSymbolIcon}
 						primary="Paiement"
 						secondary={`À payé ${currencyFormat(paid)} de ${currencyFormat(
-							price
+							price,
 						)}.`}
 					/>
 				)}
@@ -227,7 +227,7 @@ const StaticConsultationCardDetails = (props) => {
 };
 
 StaticConsultationCardDetails.propTypes = {
-	consultation: PropTypes.object.isRequired
+	consultation: PropTypes.object.isRequired,
 };
 
 export default StaticConsultationCardDetails;

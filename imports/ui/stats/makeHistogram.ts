@@ -4,7 +4,7 @@ import {useTracker} from 'meteor/react-meteor-data';
 import {
 	Count,
 	countPublicationName,
-	countPublicationKey
+	countPublicationKey,
 } from '../../api/stats';
 
 const makeHistogram = (QueriedCollection, values) => (query?: object) => {
@@ -16,7 +16,7 @@ const makeHistogram = (QueriedCollection, values) => (query?: object) => {
 		const results = loading ? undefined : Count.findOne(key);
 		return {
 			loading,
-			...results
+			...results,
 		};
 	}, [publication, key]);
 };

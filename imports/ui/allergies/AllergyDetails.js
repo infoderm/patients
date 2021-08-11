@@ -36,10 +36,10 @@ export default function AllergyDetails({match, name, page, perpage}) {
 
 AllergyDetails.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 AllergyDetails.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };

@@ -30,12 +30,12 @@ const ConsultationDebtSettlementDialog = (props) => {
 	const options = {fields: ConsultationDebtSettlementDialog.projection};
 	const deps = [
 		consultation.patientId,
-		JSON.stringify(ConsultationDebtSettlementDialog.projection)
+		JSON.stringify(ConsultationDebtSettlementDialog.projection),
 	];
 	const {
 		loading,
 		found,
-		fields: patient
+		fields: patient,
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const currencyFormat = useCurrencyFormat(currency);
@@ -47,7 +47,7 @@ const ConsultationDebtSettlementDialog = (props) => {
 
 		const fields = {
 			...consultation,
-			paid: consultation.price
+			paid: consultation.price,
 		};
 
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
@@ -66,7 +66,7 @@ const ConsultationDebtSettlementDialog = (props) => {
 					enqueueSnackbar(message, {variant: 'success'});
 					onClose();
 				}
-			}
+			},
 		);
 	};
 
@@ -122,12 +122,12 @@ const ConsultationDebtSettlementDialog = (props) => {
 
 ConsultationDebtSettlementDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired
+	onClose: PropTypes.func.isRequired,
 };
 
 ConsultationDebtSettlementDialog.projection = {
 	firstname: 1,
-	lastname: 1
+	lastname: 1,
 };
 
 export default withLazyOpening(ConsultationDebtSettlementDialog);

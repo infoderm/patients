@@ -5,7 +5,7 @@ import keycode from 'keycode';
 import {
 	useCombobox,
 	useMultipleSelection,
-	UseComboboxGetToggleButtonPropsOptions
+	UseComboboxGetToggleButtonPropsOptions,
 } from 'downshift';
 
 import {any} from '@iterable-iterator/reduce';
@@ -28,8 +28,8 @@ import Selection from './Selection';
 
 const toggleButtonStyles = {
 	hidden: {
-		display: 'none'
-	}
+		display: 'none',
+	},
 };
 
 const useToggleButtonStyles = makeStyles(toggleButtonStyles);
@@ -39,7 +39,7 @@ interface ToggleButtonProps {
 	readOnly: boolean;
 	hasSuggestions: boolean;
 	getToggleButtonProps: (
-		options?: UseComboboxGetToggleButtonPropsOptions
+		options?: UseComboboxGetToggleButtonPropsOptions,
 	) => any;
 }
 
@@ -47,7 +47,7 @@ const ToggleButton = ({
 	isOpen,
 	readOnly,
 	hasSuggestions,
-	getToggleButtonProps
+	getToggleButtonProps,
 }: ToggleButtonProps) => {
 	const classes = useToggleButtonStyles();
 
@@ -56,8 +56,8 @@ const ToggleButton = ({
 			<IconButton
 				{...getToggleButtonProps({
 					className: classNames({
-						[classes.hidden]: readOnly || !hasSuggestions
-					})
+						[classes.hidden]: readOnly || !hasSuggestions,
+					}),
 				})}
 			>
 				{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -70,16 +70,16 @@ const styles = (theme) =>
 	createStyles({
 		container: {
 			flexGrow: 1,
-			position: 'relative'
+			position: 'relative',
 		},
 		inputRoot: {
-			flexWrap: 'wrap'
+			flexWrap: 'wrap',
 		},
 		inputInput: {
 			margin: `${theme.spacing(1) / 2}px 0`,
 			width: 'auto',
-			flexGrow: 1
-		}
+			flexGrow: 1,
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -103,7 +103,7 @@ const SetPickerPropTypes = {
 	TextFieldProps: PropTypes.object,
 	InputProps: PropTypes.object,
 	inputProps: PropTypes.object,
-	placeholder: PropTypes.string
+	placeholder: PropTypes.string,
 };
 
 type SetPickerProps = InferProps<typeof SetPickerPropTypes>;
@@ -113,13 +113,13 @@ const comboboxStateReducer = (state, {type, changes}) => {
 		case useCombobox.stateChangeTypes.InputChange:
 			return {
 				...changes,
-				highlightedIndex: -1
+				highlightedIndex: -1,
 			};
 		case useCombobox.stateChangeTypes.InputBlur:
 			return {
 				...changes,
 				highlightedIndex: state.highlightedIndex,
-				inputValue: state.inputValue
+				inputValue: state.inputValue,
 			};
 		case useCombobox.stateChangeTypes.InputKeyDownEnter:
 		case useCombobox.stateChangeTypes.ItemClick:
@@ -127,7 +127,7 @@ const comboboxStateReducer = (state, {type, changes}) => {
 				...changes,
 				highlightedIndex: state.highlightedIndex,
 				isOpen: true,
-				inputValue: ''
+				inputValue: '',
 			};
 		default:
 			return changes;
@@ -139,8 +139,8 @@ const useSelectionManagement = (selectedItems, onChange) =>
 		const setSelectedItems = (value) => {
 			onChange({
 				target: {
-					value
-				}
+					value,
+				},
 			});
 		};
 
@@ -157,7 +157,7 @@ const useSelectionManagement = (selectedItems, onChange) =>
 		return {
 			setSelectedItems,
 			addSelectedItem,
-			removeSelectedItem
+			removeSelectedItem,
 		};
 	}, [selectedItems, onChange]);
 
@@ -181,7 +181,7 @@ const SetPicker = (props: SetPickerProps) => {
 		maxCount = Number.POSITIVE_INFINITY,
 		createNewItem,
 		multiset = false,
-		inputTransform = (x: string): string => x
+		inputTransform = (x: string): string => x,
 	} = props;
 
 	const classes = useStyles();
@@ -215,7 +215,7 @@ const SetPicker = (props: SetPickerProps) => {
 			// This is called when hitting backspace on empty input, or when
 			// pressing delete or backspace key while a chip is focused.
 			if (selectedItems) setSelectedItems(selectedItems);
-		}
+		},
 	});
 
 	const isSelected = (item) => {
@@ -233,7 +233,7 @@ const SetPicker = (props: SetPickerProps) => {
 		highlightedIndex,
 		getItemProps,
 		openMenu,
-		selectItem
+		selectItem,
 	} = useCombobox({
 		inputValue,
 		selectedItem: null,
@@ -271,7 +271,7 @@ const SetPicker = (props: SetPickerProps) => {
 				default:
 					break;
 			}
-		}
+		},
 	});
 
 	/**
@@ -311,19 +311,19 @@ const SetPicker = (props: SetPickerProps) => {
 				InputLabelProps={getLabelProps()}
 				inputProps={{
 					...inputProps,
-					readOnly: readOnly || full
+					readOnly: readOnly || full,
 				}}
 				InputProps={{
 					...getInputProps(
 						getDropdownProps({
 							refKey: 'inputRef',
 							onFocus: isOpen ? undefined : openMenu,
-							onKeyDown: handleInputKeyDownEnter
-						})
+							onKeyDown: handleInputKeyDownEnter,
+						}),
 					),
 					classes: {
 						root: classes.inputRoot,
-						input: classes.inputInput
+						input: classes.inputInput,
 					},
 					startAdornment: (
 						<Selection
@@ -351,7 +351,7 @@ const SetPicker = (props: SetPickerProps) => {
 						: full
 						? ''
 						: placeholder,
-					...InputProps
+					...InputProps,
 				}}
 			/>
 			<Suggestions

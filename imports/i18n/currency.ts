@@ -6,7 +6,7 @@ export const useCurrencyFormatObject = (currency: string, options?: any) =>
 	useNumberFormat({
 		style: 'currency',
 		currency,
-		...options
+		...options,
 	});
 
 export const useCurrencyFormat = (currency: string, options?: any) => {
@@ -14,7 +14,7 @@ export const useCurrencyFormat = (currency: string, options?: any) => {
 
 	return useMemo(
 		() => (value: number | bigint) => numberFormat.format(value),
-		[numberFormat]
+		[numberFormat],
 	);
 };
 
@@ -78,14 +78,14 @@ export const useCurrencyOptions = (currency: string, options?: any) => {
 			currencySpacing,
 			groupDelimiter,
 			decimalDelimiter,
-			maximumFractionDigits
+			maximumFractionDigits,
 		};
 	}, [numberFormat]);
 };
 
 export const useReactNumberFormatOptionsForCurrency = (
 	currency: string,
-	options?: any
+	options?: any,
 ) => {
 	const currencyOptions = useCurrencyOptions(currency, options);
 
@@ -97,7 +97,7 @@ export const useReactNumberFormatOptionsForCurrency = (
 			currencySpacing,
 			groupDelimiter,
 			decimalDelimiter,
-			maximumFractionDigits
+			maximumFractionDigits,
 		} = currencyOptions;
 
 		const suffix =
@@ -119,7 +119,7 @@ export const useReactNumberFormatOptionsForCurrency = (
 			thousandsGroupStyle,
 			decimalScale,
 			suffix,
-			prefix
+			prefix,
 		};
 	}, [currencyOptions]);
 };

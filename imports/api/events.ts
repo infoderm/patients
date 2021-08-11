@@ -41,8 +41,8 @@ if (Meteor.isServer) {
 			isCancelled,
 			duration,
 			doneDatetime,
-			createdAt
-		}
+			createdAt,
+		},
 	): Event => {
 		const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
 		const begin = datetime;
@@ -68,7 +68,7 @@ if (Meteor.isServer) {
 			end,
 			isCancelled,
 			isNoShow,
-			uri: `/consultation/${_id}`
+			uri: `/consultation/${_id}`,
 		};
 	};
 
@@ -84,7 +84,7 @@ if (Meteor.isServer) {
 
 			removed: ({_id}) => {
 				this.removed(events, _id);
-			}
+			},
 		});
 
 		// Mark the subscription as ready.
@@ -103,7 +103,7 @@ if (Meteor.isServer) {
 		check(end, Date);
 		const query = {
 			...beginsInInterval(begin, end),
-			owner: this.userId
+			owner: this.userId,
 		};
 
 		const options = {
@@ -117,8 +117,8 @@ if (Meteor.isServer) {
 				isCancelled: 1,
 				duration: 1,
 				doneDatetime: 1,
-				createdAt: 1
-			}
+				createdAt: 1,
+			},
 		};
 		publishEvents.call(this, query, options);
 	});
@@ -129,7 +129,7 @@ if (Meteor.isServer) {
 		if (isAfter(begin, end)) throw new Error('begin is after end');
 		const query = {
 			...intersectsInterval(begin, end),
-			owner: this.userId
+			owner: this.userId,
 		};
 		const options = {
 			fields: {
@@ -142,8 +142,8 @@ if (Meteor.isServer) {
 				isCancelled: 1,
 				duration: 1,
 				doneDatetime: 1,
-				createdAt: 1
-			}
+				createdAt: 1,
+			},
 		};
 		publishEvents.call(this, query, options);
 	});

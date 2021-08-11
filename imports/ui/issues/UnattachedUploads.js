@@ -7,8 +7,8 @@ const UnattachedUploads = (props) => {
 	const query = {
 		$and: [
 			{'meta.attachedToPatients': {$not: {$gt: ''}}},
-			{'meta.attachedToConsultations': {$not: {$gt: ''}}}
-		]
+			{'meta.attachedToConsultations': {$not: {$gt: ''}}},
+		],
 	};
 	const options = {};
 

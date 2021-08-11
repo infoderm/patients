@@ -10,23 +10,23 @@ const useStyles = makeStyles((theme) => ({
 	Input: {
 		display: 'inline-flex',
 		flexGrow: 1,
-		color: 'inherit'
+		color: 'inherit',
 	},
 	inputInput: {
 		paddingTop: theme.spacing(1),
 		paddingRight: theme.spacing(1),
 		paddingBottom: theme.spacing(1),
-		color: 'inherit'
+		color: 'inherit',
 	},
 	dynamic: {
 		transition: theme.transitions.create('width'),
 		[theme.breakpoints.up('sm')]: {
 			width: 220,
 			'&:focus': {
-				width: 320
-			}
-		}
-	}
+				width: 320,
+			},
+		},
+	},
 }));
 
 export default function SearchBoxInternalsInput(props) {
@@ -39,8 +39,8 @@ export default function SearchBoxInternalsInput(props) {
 			className={classNames(className, classes.Input)}
 			inputProps={{
 				className: classNames(classes.inputInput, {
-					[classes.dynamic]: expands
-				})
+					[classes.dynamic]: expands,
+				}),
 			}}
 			{...rest}
 		/>
@@ -48,9 +48,9 @@ export default function SearchBoxInternalsInput(props) {
 }
 
 SearchBoxInternalsInput.defaultProps = {
-	expands: false
+	expands: false,
 };
 
 SearchBoxInternalsInput.propTypes = {
-	expands: PropTypes.bool
+	expands: PropTypes.bool,
 };

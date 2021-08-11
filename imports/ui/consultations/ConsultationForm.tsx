@@ -24,14 +24,14 @@ const styles = (theme) => ({
 	multiline: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing(2)}px)`
+		width: `calc(100% - ${theme.spacing(2)}px)`,
 	},
 	form: {
-		padding: theme.spacing(3)
+		padding: theme.spacing(3),
 	},
 	hidden: {
-		display: 'none'
-	}
+		display: 'none',
+	},
 });
 
 const useStyles = makeStyles(styles);
@@ -58,7 +58,7 @@ const ConsultationForm = ({consultation, update}) => {
 
 		priceWarning,
 		priceError,
-		paidError
+		paidError,
 	} = consultation;
 
 	const [initialDatetime] = useState(datetime);
@@ -198,7 +198,7 @@ const ConsultationForm = ({consultation, update}) => {
 								<InputAdornment position="end">
 									<IconButton
 										className={classNames({
-											[classes.hidden]: !priceWarning
+											[classes.hidden]: !priceWarning,
 										})}
 									>
 										<WarningIcon />
@@ -206,7 +206,7 @@ const ConsultationForm = ({consultation, update}) => {
 								</InputAdornment>
 							),
 							inputComponent: CurrencyAmountInput as any,
-							inputProps: {currency}
+							inputProps: {currency},
 						}}
 						onChange={update?.('price')}
 					/>
@@ -221,7 +221,7 @@ const ConsultationForm = ({consultation, update}) => {
 						error={paidError}
 						InputProps={{
 							inputComponent: CurrencyAmountInput as any,
-							inputProps: {currency}
+							inputProps: {currency},
 						}}
 						onChange={update?.('paid')}
 					/>
@@ -233,23 +233,23 @@ const ConsultationForm = ({consultation, update}) => {
 							useSuggestions={makeSubstringSuggestions(
 								useBooksFind,
 								[],
-								'bookNumber'
+								'bookNumber',
 							)}
 							TextFieldProps={{
 								label: 'Carnet',
 								margin: 'normal',
 								error: bookIsFull,
-								helperText: bookIsFull && 'Check if book is full!'
+								helperText: bookIsFull && 'Check if book is full!',
 							}}
 							InputProps={{
-								endAdornment: bookIsFull && <WarningIcon />
+								endAdornment: bookIsFull && <WarningIcon />,
 							}}
 							inputValue={book}
 							onInputChange={(event, newInputValue) => {
 								if (event) {
 									return update(
 										'book',
-										books.sanitizeInput
+										books.sanitizeInput,
 									)({target: {value: newInputValue}});
 								}
 							}}
@@ -265,7 +265,7 @@ const ConsultationForm = ({consultation, update}) => {
 
 ConsultationForm.propTypes = {
 	consultation: PropTypes.object.isRequired,
-	update: PropTypes.func
+	update: PropTypes.func,
 };
 
 export default ConsultationForm;

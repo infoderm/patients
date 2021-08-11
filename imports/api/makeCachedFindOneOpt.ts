@@ -14,7 +14,7 @@ const makeCachedFindOneOpt =
 		init: Partial<U>,
 		query: Mongo.Selector<T>,
 		options: Mongo.Options<T>,
-		deps: DependencyList
+		deps: DependencyList,
 	) => {
 		console.debug({init, query, options, deps});
 
@@ -53,9 +53,9 @@ const makeCachedFindOneOpt =
 						},
 						removed: (_id) => {
 							setFound(false);
-						}
+						},
 					});
-				}
+				},
 			});
 
 			return () => {

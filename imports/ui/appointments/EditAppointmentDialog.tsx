@@ -12,14 +12,14 @@ const propTypes = {
 	appointment: PropTypes.shape({
 		_id: PropTypes.string.isRequired,
 		patientId: PropTypes.string.isRequired,
-		datetime: PropTypes.instanceOf(Date).isRequired
-	}).isRequired
+		datetime: PropTypes.instanceOf(Date).isRequired,
+	}).isRequired,
 };
 
 const EditAppointmentDialog = ({
 	open,
 	onClose,
-	appointment
+	appointment,
 }: InferProps<typeof propTypes>) => {
 	const onSubmit = (args, callback) => {
 		Meteor.call('appointments.reschedule', appointment._id, args, callback);

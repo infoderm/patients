@@ -12,7 +12,7 @@ const ReactiveAllergyCard = React.forwardRef<any, ReactiveAllergyCardProps>(
 	({name}, ref) => {
 		const {loading, item} = useAllergy(name, [name]);
 		return <StaticAllergyCard ref={ref} loading={loading} item={item} />;
-	}
+	},
 );
 
 export default ReactiveAllergyCard;

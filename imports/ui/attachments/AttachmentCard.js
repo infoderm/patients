@@ -34,24 +34,24 @@ import AttachmentSuperDeletionDialog from './AttachmentSuperDeletionDialog';
 const useStyles = makeStyles((theme) => ({
 	card: {
 		display: 'block',
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
 	},
 	headerContent: {
-		overflow: 'hidden'
+		overflow: 'hidden',
 	},
 	headerContentTitle: {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap'
+		whiteSpace: 'nowrap',
 	},
 	headerContentSubheader: {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap'
+		whiteSpace: 'nowrap',
 	},
 	thumbnail: {
-		height: 300
-	}
+		height: 300,
+	},
 }));
 
 const initialState = {
@@ -59,7 +59,7 @@ const initialState = {
 	editing: false,
 	linking: false,
 	deleting: false,
-	superDeleting: false
+	superDeleting: false,
 };
 
 /**
@@ -105,7 +105,7 @@ const AttachmentCard = (props) => {
 	const headerClasses = {
 		content: classes.headerContent,
 		title: classes.headerContentTitle,
-		subheader: classes.headerContentSubheader
+		subheader: classes.headerContentSubheader,
 	};
 
 	const detached =
@@ -116,14 +116,14 @@ const AttachmentCard = (props) => {
 		component: 'a',
 		href: link(attachment),
 		rel: 'noreferrer',
-		target: '_blank'
+		target: '_blank',
 	};
 
 	const subheader = [
 		attachment.meta.createdAt &&
 			`A ${format(attachment.meta.createdAt, 'yyyy-MM-dd')}`,
 		attachment.meta.lastModified &&
-			`M ${format(attachment.meta.lastModified, 'yyyy-MM-dd')}`
+			`M ${format(attachment.meta.lastModified, 'yyyy-MM-dd')}`,
 	]
 		.filter((x) => Boolean(x))
 		.join('/');
@@ -238,7 +238,7 @@ const AttachmentCard = (props) => {
 
 AttachmentCard.propTypes = {
 	attachment: PropTypes.object.isRequired,
-	info: PropTypes.object
+	info: PropTypes.object,
 };
 
 export default AttachmentCard;

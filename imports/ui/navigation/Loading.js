@@ -5,8 +5,8 @@ import {useTheme, makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
 	loadingAnimation: {
-		margin: 'auto'
-	}
+		margin: 'auto',
+	},
 }));
 
 const Loading = (props) => {

@@ -13,6 +13,6 @@ export default function insertDrugs(fd) {
 		}),
 		complete: () => {
 			console.log(i);
-		}
+		},
 	});
 }

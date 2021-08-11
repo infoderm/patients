@@ -30,20 +30,20 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 		const query = {$text: {$search}};
 
 		const sort = {
-			score: {$meta: 'textScore'}
+			score: {$meta: 'textScore'},
 		};
 		const fields = mergeFields(
 			sort,
 			StaticPatientsList.projection,
 			// We fetch the picture through a dedicated subscription to get live
 			// updates while avoiding double loading on init.
-			{photo: 0}
+			{photo: 0},
 		);
 		const options = {
 			fields,
 			sort,
 			skip: (page - 1) * perpage,
-			limit: perpage
+			limit: perpage,
 		};
 
 		setLoading(true);
@@ -61,7 +61,7 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 				if (err) {
 					console.log('err', err);
 					enqueueSnackbar(`${err.message} (query: ${$search})`, {
-						variant: 'error'
+						variant: 'error',
 					});
 				} else {
 					setPatients(res);
@@ -87,12 +87,12 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 
 PatientsSearchResults.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 PatientsSearchResults.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };
 
 export default PatientsSearchResults;

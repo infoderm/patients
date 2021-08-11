@@ -7,7 +7,7 @@ export default function TabJumper({tabs, current, toURL}) {
 	const items = tabs.map((x) => ({
 		key: x,
 		url: toURL(x),
-		disabled: x === current
+		disabled: x === current,
 	}));
 
 	return <Jumper items={items} />;
@@ -15,5 +15,5 @@ export default function TabJumper({tabs, current, toURL}) {
 
 TabJumper.propTypes = {
 	tabs: PropTypes.array.isRequired,
-	toURL: PropTypes.func.isRequired
+	toURL: PropTypes.func.isRequired,
 };

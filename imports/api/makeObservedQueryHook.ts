@@ -29,7 +29,7 @@ const makeObservedQuery =
 					const {results} = Collection.findOne({key});
 					setResults(results);
 					setLoading(false);
-				}
+				},
 			});
 			handleRef.current = handle;
 

@@ -21,8 +21,8 @@ import PatientPicker from '../patients/PatientPicker';
 
 const useStyles = makeStyles({
 	dialogPaper: {
-		overflow: 'visible'
-	}
+		overflow: 'visible',
+	},
 });
 
 const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
@@ -41,7 +41,7 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 				console.error(err);
 			} else {
 				console.log(
-					`Attachment #${attachmentId} linked to patient #${patientId}.`
+					`Attachment #${attachmentId} linked to patient #${patientId}.`,
 				);
 				if (isMounted()) onClose();
 			}
@@ -69,7 +69,7 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 					TextFieldProps={{
 						autoFocus: true,
 						label: 'Patient to link attachment to',
-						margin: 'normal'
+						margin: 'normal',
 					}}
 					value={patient}
 					onChange={(e) => {
@@ -103,11 +103,11 @@ AttachmentLinkingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	attachment: PropTypes.object,
-	existingLink: PropTypes.object
+	existingLink: PropTypes.object,
 };
 
 AttachmentLinkingDialog.projection = {
-	_id: 1
+	_id: 1,
 };
 
 export default withLazyOpening(AttachmentLinkingDialog);

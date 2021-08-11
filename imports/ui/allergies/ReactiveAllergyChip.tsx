@@ -23,7 +23,7 @@ const ReactiveAllergyChip = React.forwardRef<any, ReactiveAllergyChipProps>(
 				{...rest}
 			/>
 		);
-	}
+	},
 );
 
 export default ReactiveAllergyChip;

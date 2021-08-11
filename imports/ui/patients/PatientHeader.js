@@ -27,7 +27,7 @@ const PatientHeader = ({patientId}) => {
 	const {
 		loading,
 		found,
-		fields: patient
+		fields: patient,
 	} = useCachedPatient(init, query, options, deps);
 
 	const classes = useStyles();
@@ -83,7 +83,7 @@ const PatientHeader = ({patientId}) => {
 						eidDisplayBirthdate(patient.birthdate, localizeBirthdate) ?? ''
 					}
 					InputLabelProps={{
-						shrink: true
+						shrink: true,
 					}}
 					placeholder={textPlaceHolder}
 				/>
@@ -101,7 +101,7 @@ const PatientHeader = ({patientId}) => {
 };
 
 PatientHeader.propTypes = {
-	patientId: PropTypes.string.isRequired
+	patientId: PropTypes.string.isRequired,
 };
 
 export default PatientHeader;

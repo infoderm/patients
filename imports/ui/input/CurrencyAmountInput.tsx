@@ -16,8 +16,8 @@ const CurrencyAmountInput = ({inputRef, onChange, currency, ...other}) => {
 				if (other.value === value) return;
 				onChange({
 					target: {
-						value
-					}
+						value,
+					},
 				});
 			}}
 			{...currencyOptions}

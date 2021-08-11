@@ -10,7 +10,7 @@ import {
 	Consultations,
 	consultations,
 	findLastConsultationInInterval,
-	filterNotInRareBooks
+	filterNotInRareBooks,
 } from './consultations';
 import {patients} from './patients';
 
@@ -22,7 +22,7 @@ if (Meteor.isServer) {
 	Meteor.publish('appointments', function () {
 		return Appointments.find({
 			owner: this.userId,
-			isDone: false
+			isDone: false,
 		});
 	});
 
@@ -32,9 +32,9 @@ if (Meteor.isServer) {
 			{
 				owner: this.userId,
 				isDone: false,
-				patientId
+				patientId,
 			},
-			options
+			options,
 		);
 	});
 
@@ -46,8 +46,8 @@ if (Meteor.isServer) {
 			isDone: false,
 			patientId,
 			datetime: {
-				$gte: datetime
-			}
+				$gte: datetime,
+			},
 		});
 	});
 }
@@ -66,7 +66,7 @@ function sanitize({datetime, duration, patient, phone, reason}) {
 		patientFields: {
 			firstname: patient.firstname,
 			lastname: patient.lastname,
-			phone
+			phone,
 		},
 		consultationFields: {
 			patientId: patient._id,
@@ -76,8 +76,8 @@ function sanitize({datetime, duration, patient, phone, reason}) {
 			begin: datetime,
 			end: addMilliseconds(datetime, duration),
 			reason,
-			isDone: false
-		}
+			isDone: false,
+		},
 	};
 }
 
@@ -85,7 +85,7 @@ const methods = {
 	'appointments.createPatient'(fields) {
 		const patient = {
 			...fields,
-			createdForAppointment: true
+			createdForAppointment: true,
 		};
 		const patientId = patients.insertPatient.call(this, patient);
 		console.debug(`Created patient #${patientId} for new appointment.`);
@@ -107,12 +107,12 @@ const methods = {
 		const consultationId = Appointments.insert({
 			...args.consultationFields,
 			createdAt: new Date(),
-			owner: this.userId
+			owner: this.userId,
 		});
 
 		return {
 			_id: consultationId,
-			patientId: args.consultationFields.patientId
+			patientId: args.consultationFields.patientId,
 		};
 	},
 	'appointments.reschedule'(appointmentId, appointment) {
@@ -134,14 +134,14 @@ const methods = {
 		}
 
 		const fields = {
-			...args.consultationFields
+			...args.consultationFields,
 		};
 
 		Appointments.update(appointmentId, {$set: fields});
 
 		return {
 			_id: appointmentId,
-			patientId: args.consultationFields.patientId
+			patientId: args.consultationFields.patientId,
 		};
 	},
 	'appointments.cancel': unconditionallyUpdateById<ConsultationDocument>(
@@ -149,7 +149,7 @@ const methods = {
 		(
 			_existing,
 			cancellationReason: string,
-			cancellationExplanation: string
+			cancellationExplanation: string,
 		) => {
 			check(cancellationReason, String);
 			check(cancellationExplanation, String);
@@ -158,16 +158,16 @@ const methods = {
 					isCancelled: true,
 					cancellationDatetime: new Date(),
 					cancellationReason,
-					cancellationExplanation
-				}
+					cancellationExplanation,
+				},
 			};
-		}
+		},
 	),
 	'appointments.beginConsultation':
 		unconditionallyUpdateById<ConsultationDocument>(Appointments, function () {
 			const book = findLastConsultationInInterval(thisYearsInterval(), {
 				...filterNotInRareBooks(),
-				owner: this.userId
+				owner: this.userId,
 			})?.book;
 			const realDatetime = new Date();
 			return {
@@ -178,14 +178,14 @@ const methods = {
 					begin: realDatetime,
 					end: realDatetime,
 					isDone: true,
-					book
-				}
+					book,
+				},
 			};
 		}),
 	'appointments.uncancel': unconditionallyUpdateById(Appointments, {
-		$set: {isCancelled: false}
+		$set: {isCancelled: false},
 	}),
-	'appointments.remove': consultations.methods['consultations.remove']
+	'appointments.remove': consultations.methods['consultations.remove'],
 };
 
 Meteor.methods(methods);

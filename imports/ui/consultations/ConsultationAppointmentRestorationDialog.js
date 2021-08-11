@@ -24,13 +24,13 @@ import useIsMounted from '../hooks/useIsMounted';
 import usePatient from '../patients/usePatient';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const ConsultationAppointmentRestorationDialog = (props) => {
@@ -39,12 +39,12 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 	const options = {fields: ConsultationAppointmentRestorationDialog.projection};
 	const deps = [
 		consultation.patientId,
-		JSON.stringify(ConsultationAppointmentRestorationDialog.projection)
+		JSON.stringify(ConsultationAppointmentRestorationDialog.projection),
 	];
 	const {
 		loading,
 		found,
-		fields: patient
+		fields: patient,
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const classes = useStyles();
@@ -58,7 +58,7 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 	const isMounted = useIsMounted();
 
 	const restoreThisConsultationsAppointmentIfPatientsLastNameMatches = (
-		event
+		event,
 	) => {
 		event.preventDefault();
 		if (validate()) {
@@ -77,7 +77,7 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 						enqueueSnackbar(message, {variant: 'success'});
 						if (isMounted()) onClose();
 					}
-				}
+				},
 			);
 		}
 	};
@@ -136,13 +136,13 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 
 ConsultationAppointmentRestorationDialog.projection = {
 	firstname: 1,
-	lastname: 1
+	lastname: 1,
 };
 
 ConsultationAppointmentRestorationDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object.isRequired
+	consultation: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(ConsultationAppointmentRestorationDialog);

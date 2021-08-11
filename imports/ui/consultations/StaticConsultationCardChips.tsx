@@ -27,27 +27,27 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'center',
 		flexWrap: 'wrap',
 		marginRight: -theme.spacing(1),
-		marginBottom: -theme.spacing(1)
+		marginBottom: -theme.spacing(1),
 	},
 	chip: {
 		marginRight: theme.spacing(1),
-		marginBottom: theme.spacing(1)
+		marginBottom: theme.spacing(1),
 	},
 	priceChip: {
 		backgroundColor: '#228d57',
-		color: '#e8e9c9'
+		color: '#e8e9c9',
 	},
 	debtChip: {
 		backgroundColor: '#f88',
-		color: '#fff'
+		color: '#fff',
 	},
 	didNotHappenChip: {
 		backgroundColor: '#ff7961',
-		color: '#fff'
+		color: '#fff',
 	},
 	boldChip: {
-		fontWeight: 'bold'
-	}
+		fontWeight: 'bold',
+	},
 }));
 
 function paymentMethodIcon(payment_method) {
@@ -79,7 +79,7 @@ interface StaticConsultationCardChipsProps {
 }
 
 const StaticConsultationCardChips = (
-	props: StaticConsultationCardChipsProps
+	props: StaticConsultationCardChipsProps,
 ) => {
 	const classes = useStyles();
 
@@ -105,9 +105,9 @@ const StaticConsultationCardChips = (
 			isCancelled,
 			currency,
 			payment_method,
-			price
+			price,
 		},
-		attachments
+		attachments,
 	} = props;
 
 	const localizedDateFormat = useDateFormat();
@@ -119,7 +119,7 @@ const StaticConsultationCardChips = (
 				<Chip
 					label={localizedDateFormat(datetime, 'PPPP')}
 					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: didNotOrWillNotHappen
+						[classes.didNotHappenChip]: didNotOrWillNotHappen,
 					})}
 					component={Link}
 					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
@@ -129,7 +129,7 @@ const StaticConsultationCardChips = (
 				<Chip
 					label={localizedDateFormat(datetime, 'p')}
 					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: didNotOrWillNotHappen
+						[classes.didNotHappenChip]: didNotOrWillNotHappen,
 					})}
 					component={Link}
 					to={`/consultation/${_id}`}
@@ -157,7 +157,7 @@ const StaticConsultationCardChips = (
 					label="cancelled"
 					className={classNames(classes.chip, {
 						[classes.didNotHappenChip]: true,
-						[classes.boldChip]: true
+						[classes.boldChip]: true,
 					})}
 				/>
 			)}
@@ -166,7 +166,7 @@ const StaticConsultationCardChips = (
 					label="PVPP"
 					className={classNames(classes.chip, {
 						[classes.didNotHappenChip]: true,
-						[classes.boldChip]: true
+						[classes.boldChip]: true,
 					})}
 				/>
 			)}
@@ -188,7 +188,7 @@ const StaticConsultationCardChips = (
 					className={classNames(
 						classes.chip,
 						classes.boldChip,
-						classes.priceChip
+						classes.priceChip,
 					)}
 					avatar={<Avatar>{paymentMethodIcon(payment_method)}</Avatar>}
 					label={currencyFormat(price)}
@@ -200,7 +200,7 @@ const StaticConsultationCardChips = (
 					className={classNames(
 						classes.chip,
 						classes.boldChip,
-						classes.debtChip
+						classes.debtChip,
 					)}
 				/>
 			)}

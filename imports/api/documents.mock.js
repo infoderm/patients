@@ -8,5 +8,5 @@ Factory.define('document', Documents, {
 	patientId: Factory.get('patient'),
 	format: () => faker.company.bs(),
 	source: () => faker.lorem.paragraph(),
-	parsed: () => false
+	parsed: () => false,
 });

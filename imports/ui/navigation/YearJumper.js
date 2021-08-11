@@ -19,5 +19,5 @@ export default function YearJumper({current, ...rest}) {
 }
 
 YearJumper.propTypes = {
-	current: PropTypes.number.isRequired
+	current: PropTypes.number.isRequired,
 };

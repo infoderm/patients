@@ -12,7 +12,7 @@ const useFrequencyStats = (query) => {
 		const results = loading ? undefined : Count.findOne(key);
 		return {
 			loading,
-			...results
+			...results,
 		};
 	}, [publication, key]);
 };

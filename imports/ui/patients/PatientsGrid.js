@@ -27,7 +27,7 @@ PatientsGrid.defaultProps = {
 	Card: StaticPatientCard,
 	CardProps: undefined,
 	getCardProps: undefined,
-	selected: undefined
+	selected: undefined,
 };
 
 PatientsGrid.propTypes = {
@@ -35,7 +35,7 @@ PatientsGrid.propTypes = {
 	Card: PropTypes.elementType,
 	CardProps: PropTypes.object,
 	getCardProps: PropTypes.func,
-	selected: PropTypes.object
+	selected: PropTypes.object,
 };
 
 export default PatientsGrid;

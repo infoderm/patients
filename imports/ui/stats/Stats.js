@@ -12,12 +12,12 @@ import Frequency from './Frequency';
 
 const useStyles = makeStyles(() => ({
 	content: {
-		textAlign: 'center'
+		textAlign: 'center',
 	},
 	chart: {
 		position: 'relative',
-		display: 'inline-block'
-	}
+		display: 'inline-block',
+	},
 }));
 
 const Chart = ({title, subheader, children, ...rest}) => {

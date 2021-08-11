@@ -48,5 +48,5 @@ ConsultationsForPatientStatic.propTypes = {
 	classes: PropTypes.object.isRequired,
 	patientId: PropTypes.string.isRequired,
 	consultations: PropTypes.array.isRequired,
-	page: PropTypes.number.isRequired
+	page: PropTypes.number.isRequired,
 };

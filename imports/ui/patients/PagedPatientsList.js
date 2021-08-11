@@ -14,7 +14,7 @@ export default function PagedPatientsList({
 	perpage,
 	items,
 	refresh,
-	dirty
+	dirty,
 }) {
 	return (
 		<>
@@ -30,12 +30,12 @@ PagedPatientsList.projection = {
 	lastname: 1,
 	birthdate: 1,
 	sex: 1,
-	niss: 1
+	niss: 1,
 };
 
 PagedPatientsList.defaultProps = {
 	dirty: false,
-	refresh: undefined
+	refresh: undefined,
 };
 
 PagedPatientsList.propTypes = {
@@ -44,5 +44,5 @@ PagedPatientsList.propTypes = {
 	perpage: PropTypes.number.isRequired,
 	items: PropTypes.array.isRequired,
 	refresh: PropTypes.func,
-	dirty: PropTypes.bool
+	dirty: PropTypes.bool,
 };

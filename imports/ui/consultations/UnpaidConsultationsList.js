@@ -20,7 +20,7 @@ import ConsultationsList from './ConsultationsList';
 const useStyles = makeStyles((theme) => ({
 	thirdPartyToggle: computeFixedFabStyle({theme, col: 1}),
 	wireToggle: computeFixedFabStyle({theme, col: 2}),
-	cashToggle: computeFixedFabStyle({theme, col: 3})
+	cashToggle: computeFixedFabStyle({theme, col: 3}),
 }));
 
 const UnpaidConsultationsList = () => {
@@ -32,14 +32,14 @@ const UnpaidConsultationsList = () => {
 
 	const query = {
 		isDone: true,
-		unpaid: true
+		unpaid: true,
 	};
 	const options = {sort: {datetime: 1}};
 	const deps = [];
 	const {loading, results: unpaidConsultations} = useConsultationsFind(
 		query,
 		options,
-		deps
+		deps,
 	);
 
 	if (loading) {
@@ -48,14 +48,14 @@ const UnpaidConsultationsList = () => {
 
 	const displayedConsultations = unpaidConsultations
 		.filter(
-			(consultation) => showCash || consultation.payment_method !== 'cash'
+			(consultation) => showCash || consultation.payment_method !== 'cash',
 		)
 		.filter(
-			(consultation) => showWire || consultation.payment_method !== 'wire'
+			(consultation) => showWire || consultation.payment_method !== 'wire',
 		)
 		.filter(
 			(consultation) =>
-				showThirdParty || consultation.payment_method !== 'third-party'
+				showThirdParty || consultation.payment_method !== 'third-party',
 		);
 
 	return (
@@ -72,7 +72,7 @@ const UnpaidConsultationsList = () => {
 					items={displayedConsultations}
 					itemProps={{
 						showPrice: true,
-						PatientChip: ReactivePatientChip
+						PatientChip: ReactivePatientChip,
 					}}
 				/>
 			)}

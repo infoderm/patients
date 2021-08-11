@@ -13,8 +13,8 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		marginBottom: theme.spacing(1)
-	}
+		marginBottom: theme.spacing(1),
+	},
 }));
 
 const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
@@ -82,7 +82,7 @@ CalendarHeader.propTypes = {
 	next: PropTypes.func,
 	prev: PropTypes.func,
 	weekly: PropTypes.func,
-	monthly: PropTypes.func
+	monthly: PropTypes.func,
 };
 
 export default CalendarHeader;

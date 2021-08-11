@@ -33,7 +33,7 @@ const columnData = [
 	{id: 'mppcv', numeric: true, disablePadding: false, label: 'MPPCV'},
 	{id: 'mpp_nl', numeric: false, disablePadding: true, label: 'Flemish name'},
 	{id: 'mpp_fr', numeric: false, disablePadding: true, label: 'French name'},
-	{id: 'nvos_', numeric: false, disablePadding: true, label: 'NVOS_'}
+	{id: 'nvos_', numeric: false, disablePadding: true, label: 'NVOS_'},
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -89,32 +89,32 @@ EnhancedTableHead.propTypes = {
 	onSelectAllClick: PropTypes.func.isRequired,
 	order: PropTypes.string.isRequired,
 	orderBy: PropTypes.string.isRequired,
-	rowCount: PropTypes.number.isRequired
+	rowCount: PropTypes.number.isRequired,
 };
 
 const toolbarStyles = (theme) => ({
 	root: {
-		paddingRight: theme.spacing(1)
+		paddingRight: theme.spacing(1),
 	},
 	highlight:
 		theme.palette.type === 'light'
 			? {
 					color: theme.palette.secondary.dark,
-					backgroundColor: lighten(theme.palette.secondary.light, 0.4)
+					backgroundColor: lighten(theme.palette.secondary.light, 0.4),
 			  }
 			: {
 					color: lighten(theme.palette.secondary.light, 0.4),
-					backgroundColor: theme.palette.secondary.dark
+					backgroundColor: theme.palette.secondary.dark,
 			  },
 	spacer: {
-		flex: '1 1 100%'
+		flex: '1 1 100%',
 	},
 	actions: {
-		color: theme.palette.text.secondary
+		color: theme.palette.text.secondary,
 	},
 	title: {
-		flex: '0 0 auto'
-	}
+		flex: '0 0 auto',
+	},
 });
 
 const useStyles = makeStyles(toolbarStyles);
@@ -125,7 +125,7 @@ const EnhancedTableToolbar = ({onDelete, numSelected}) => {
 	return (
 		<Toolbar
 			className={classNames(classes.root, {
-				[classes.highlight]: numSelected > 0
+				[classes.highlight]: numSelected > 0,
 			})}
 		>
 			<div className={classes.title}>
@@ -157,21 +157,21 @@ const EnhancedTableToolbar = ({onDelete, numSelected}) => {
 
 EnhancedTableToolbar.propTypes = {
 	onDelete: PropTypes.func.isRequired,
-	numSelected: PropTypes.number.isRequired
+	numSelected: PropTypes.number.isRequired,
 };
 
 const styles = (theme) =>
 	createStyles({
 		root: {
 			width: '100%',
-			marginTop: theme.spacing(3)
+			marginTop: theme.spacing(3),
 		},
 		table: {
-			minWidth: 800
+			minWidth: 800,
 		},
 		tableWrapper: {
-			overflowX: 'auto'
-		}
+			overflowX: 'auto',
+		},
 	});
 
 function sortRows(data, order, orderBy) {
@@ -194,7 +194,7 @@ class EnhancedTable extends React.Component {
 			selected: new Set(),
 			data,
 			page: 0,
-			rowsPerPage: 10
+			rowsPerPage: 10,
 		};
 	}
 
@@ -222,7 +222,7 @@ class EnhancedTable extends React.Component {
 	handleSelectAllClick = (_event, checked) => {
 		if (checked) {
 			this.setState((state) => ({
-				selected: new Set(state.data.map((n) => n._id))
+				selected: new Set(state.data.map((n) => n._id)),
 			}));
 			return;
 		}
@@ -318,10 +318,10 @@ class EnhancedTable extends React.Component {
 									rowsPerPage={rowsPerPage}
 									page={page}
 									backIconButtonProps={{
-										'aria-label': 'Previous Page'
+										'aria-label': 'Previous Page',
 									}}
 									nextIconButtonProps={{
-										'aria-label': 'Next Page'
+										'aria-label': 'Next Page',
 									}}
 									onChangePage={this.handleChangePage}
 									onChangeRowsPerPage={this.handleChangeRowsPerPage}
@@ -336,18 +336,18 @@ class EnhancedTable extends React.Component {
 }
 
 EnhancedTable.propTypes = {
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
 };
 
 const Component = withTracker(({query}) => {
 	Meteor.subscribe('drugs.search', query, -20);
 	return {
-		drugs: Drugs.find().fetch()
+		drugs: Drugs.find().fetch(),
 	};
 })(withStyles(styles, {withTheme: true})(EnhancedTable));
 
 Component.propTypes = {
-	query: PropTypes.string.isRequired
+	query: PropTypes.string.isRequired,
 };
 
 export default Component;

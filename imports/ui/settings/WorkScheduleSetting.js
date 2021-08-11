@@ -30,9 +30,9 @@ export default function DisplayedWeekDaysSetting({className}) {
 					(durationUnits.week +
 						beginModuloWeek -
 						weekStartsOn * durationUnits.day) %
-					durationUnits.week
+					durationUnits.week,
 			),
-		[key, increasing, weekStartsOn, durationUnits.day, durationUnits.week]
+		[key, increasing, weekStartsOn, durationUnits.day, durationUnits.week],
 	);
 
 	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);
@@ -59,7 +59,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 		return {
 			beginModuloWeek: a + b,
 			endModuloWeek:
-				c < a || (c <= a && d < b) ? c + d + durationUnits.week : c + d
+				c < a || (c <= a && d < b) ? c + d + durationUnits.week : c + d,
 		};
 	};
 
@@ -67,14 +67,14 @@ export default function DisplayedWeekDaysSetting({className}) {
 		const {beginModuloWeek, endModuloWeek} = item;
 
 		const beginDay = Math.floor(
-			(beginModuloWeek % durationUnits.week) / durationUnits.day
+			(beginModuloWeek % durationUnits.week) / durationUnits.day,
 		);
 		const beginModuloDay = beginModuloWeek % durationUnits.day;
 		const beginModuloHour = beginModuloWeek % durationUnits.hour;
 		const beginHour = Math.floor(beginModuloDay / durationUnits.hour);
 		const beginMinutes = Math.floor(beginModuloHour / durationUnits.minute);
 		const endDay = Math.floor(
-			(endModuloWeek % durationUnits.week) / durationUnits.day
+			(endModuloWeek % durationUnits.week) / durationUnits.day,
 		);
 		const endModuloDay = endModuloWeek % durationUnits.day;
 		const endModuloHour = endModuloWeek % durationUnits.hour;

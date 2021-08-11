@@ -11,7 +11,7 @@ const useNoShowsForPatient = (patientId) => {
 
 	const upToDate = useTracker(
 		() => (loading ? undefined : NoShows.findOne(patientId)),
-		[loading, patientId]
+		[loading, patientId],
 	);
 
 	const found = Boolean(upToDate);

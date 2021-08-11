@@ -8,8 +8,8 @@ import FaceIcon from '@material-ui/icons/Face';
 const useStyles = makeStyles(() => ({
 	buttonTile: {
 		minHeight: 200,
-		fontSize: '1rem'
-	}
+		fontSize: '1rem',
+	},
 }));
 
 const GenericNewPatientCard = (props) => {

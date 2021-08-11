@@ -34,7 +34,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 		tooltipTop,
 		tooltipData,
 		hideTooltip,
-		showTooltip
+		showTooltip,
 	} = useTooltip<{key: any; bar: any}>();
 
 	if (width < 10) {
@@ -70,12 +70,12 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 	const xScale = scaleBand({
 		domain: data.map(x),
 		range: [0, xMax],
-		padding: 0.2
+		padding: 0.2,
 	});
 	const yScale = scaleLinear({
 		domain: [0, max(increasing, Object.values(totals)) ?? 1],
 		range: [yMax, 0],
-		nice: true
+		nice: true,
 	});
 
 	let tooltipTimeout;
@@ -135,11 +135,11 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 											showTooltip({
 												tooltipData: bar,
 												tooltipTop: top,
-												tooltipLeft: left
+												tooltipLeft: left,
 											});
 										}}
 									/>
-								))
+								)),
 							)
 						}
 					</BarStack>
@@ -152,7 +152,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 					tickLabelProps={(_value, _index) => ({
 						fill: '#a44afe',
 						fontSize: 11,
-						textAnchor: 'middle'
+						textAnchor: 'middle',
 					})}
 				/>
 			</svg>
@@ -163,7 +163,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 					width,
 					display: 'flex',
 					justifyContent: 'center',
-					fontSize: '14px'
+					fontSize: '14px',
 				}}
 			>
 				{data.length > 0 && (
@@ -180,7 +180,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 						tooltipData.bar.data[tooltipData.key]
 					} (${percentage(
 						tooltipData.bar.data[tooltipData.key] /
-							totals[tooltipData.bar.data.key]
+							totals[tooltipData.bar.data.key],
 					)} ~ ${percentage(tooltipData.bar.data[tooltipData.key] / total)})`}
 				</TooltipWithBounds>
 			)}

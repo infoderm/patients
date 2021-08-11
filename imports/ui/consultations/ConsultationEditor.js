@@ -27,13 +27,13 @@ import PrecedingConsultationsList from './PrecedingConsultationsList';
 
 const styles = (theme) => ({
 	container: {
-		paddingBottom: '6em'
+		paddingBottom: '6em',
 	},
 	main: {
-		marginTop: 64 + theme.spacing(3)
+		marginTop: 64 + theme.spacing(3),
 	},
 	compareButton: computeFixedFabStyle({theme, col: 2}),
-	saveButton: computeFixedFabStyle({theme, col: 1})
+	saveButton: computeFixedFabStyle({theme, col: 1}),
 });
 
 const useStyles = makeStyles(styles);
@@ -62,12 +62,12 @@ const defaultState = {
 
 	syncPaid: true,
 	priceWarning: false,
-	dirty: false
+	dirty: false,
 };
 
 const removeUndefined = (object) =>
 	Object.fromEntries(
-		Object.entries(object).filter(([_key, value]) => value !== undefined)
+		Object.entries(object).filter(([_key, value]) => value !== undefined),
 	);
 
 const isZero = (x) => Number.parseInt(String(x), 10) === 0;
@@ -97,8 +97,8 @@ const init = (consultation) => ({
 		book: consultation.book,
 		priceWarning: isZero(consultation.price),
 		priceError: !isValidAmount(consultation.price),
-		paidError: !isValidAmount(consultation.paid)
-	})
+		paidError: !isValidAmount(consultation.paid),
+	}),
 });
 
 /**
@@ -122,7 +122,7 @@ const reducer = (state, action) => {
 						paid,
 						paidError: !isValidAmount(paid),
 						syncPaid: false,
-						dirty: true
+						dirty: true,
 					};
 				}
 
@@ -139,7 +139,7 @@ const reducer = (state, action) => {
 						priceError: !isValidAmount(price),
 						paid,
 						paidError: !isValidAmount(paid),
-						dirty: true
+						dirty: true,
 					};
 				}
 
@@ -196,7 +196,7 @@ const ConsultationEditor = ({consultation}) => {
 		dirty,
 		priceWarning,
 		priceError,
-		paidError
+		paidError,
 	} = state;
 
 	const update =
@@ -222,7 +222,7 @@ const ConsultationEditor = ({consultation}) => {
 			payment_method,
 			price: Number.parseInt(price, 10),
 			paid: Number.parseInt(paid, 10),
-			book
+			book,
 		};
 
 		if (

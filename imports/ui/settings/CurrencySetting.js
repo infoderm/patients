@@ -4,7 +4,7 @@ import SelectOneSetting from './SelectOneSetting';
 
 const CurrencySetting = ({className}) => {
 	const CURRENCIES = {
-		EUR: '€'
+		EUR: '€',
 	};
 
 	const options = [...Object.keys(CURRENCIES)];

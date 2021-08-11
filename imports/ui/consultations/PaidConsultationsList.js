@@ -25,7 +25,7 @@ import ConsultationsPager from './ConsultationsPager';
 const useStyles = makeStyles((theme) => ({
 	thirdPartyToggle: computeFixedFabStyle({theme, col: 4}),
 	wireToggle: computeFixedFabStyle({theme, col: 5}),
-	cashToggle: computeFixedFabStyle({theme, col: 6})
+	cashToggle: computeFixedFabStyle({theme, col: 6}),
 }));
 
 export default function PaidConsultationsList({
@@ -33,7 +33,7 @@ export default function PaidConsultationsList({
 	payment_method,
 	year,
 	page,
-	perpage
+	perpage,
 }) {
 	const now = new Date();
 	payment_method = (match && match.params.payment_method) || payment_method;
@@ -51,8 +51,8 @@ export default function PaidConsultationsList({
 		isDone: true,
 		datetime: {
 			$gte: begin,
-			$lt: end
-		}
+			$lt: end,
+		},
 	};
 
 	if (payment_method) query.payment_method = payment_method;
@@ -83,7 +83,7 @@ export default function PaidConsultationsList({
 					paddingLeft: 30,
 					paddingRight: 30,
 					paddingBottom: 50,
-					paddingTop: 20
+					paddingTop: 20,
 				}}
 			>
 				<Center>
@@ -105,7 +105,7 @@ export default function PaidConsultationsList({
 				sort={sort}
 				itemProps={{
 					showPrice: true,
-					PatientChip: ReactivePatientChip
+					PatientChip: ReactivePatientChip,
 				}}
 			/>
 			<Fab
@@ -138,10 +138,10 @@ export default function PaidConsultationsList({
 
 PaidConsultationsList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 PaidConsultationsList.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };

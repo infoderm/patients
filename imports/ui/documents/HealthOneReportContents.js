@@ -8,13 +8,13 @@ const useStyles = makeStyles((theme) => ({
 		maxWidth: 1200,
 		margin: '0 auto',
 		marginTop: theme.spacing(3),
-		textAlign: 'center'
+		textAlign: 'center',
 	},
 	paper: {
 		display: 'inline-block',
 		whiteSpace: 'pre-wrap',
-		padding: theme.spacing(3)
-	}
+		padding: theme.spacing(3),
+	},
 }));
 
 const HealthOneReportContents = ({document}) => {

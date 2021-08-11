@@ -14,14 +14,14 @@ import AttachFileButton from './AttachFileButton';
 import AttachmentsGallery from './AttachmentsGallery';
 
 const useStyles = makeStyles((theme) => ({
-	attachButton: computeFixedFabStyle({theme, col: 4})
+	attachButton: computeFixedFabStyle({theme, col: 4}),
 }));
 
 const propTypes = {
 	patientId: PropTypes.string.isRequired,
 	attachmentsInfo: PropTypes.array.isRequired,
 	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired
+	perpage: PropTypes.number.isRequired,
 };
 
 type Props = InferProps<typeof propTypes> & ComponentPropsWithoutRef<'div'>;
@@ -37,7 +37,7 @@ const AttachmentsForPatientStatic = ({
 
 	const attachmentsInfoSlice = attachmentsInfo.slice(
 		(page - 1) * perpage,
-		page * perpage
+		page * perpage,
 	);
 
 	return (

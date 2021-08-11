@@ -19,7 +19,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import {capitalized, normalized, normalizeInput} from '../../api/string';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
@@ -28,14 +28,14 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		overflowY: 'visible'
+		overflowY: 'visible',
 	},
 	content: {
-		overflowY: 'visible'
+		overflowY: 'visible',
 	},
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const MAGIC = '8324jdkf-tag-renaming-dialog-title';
@@ -58,7 +58,7 @@ const TagRenamingDialog = (props) => {
 		tag,
 		nameKey,
 		nameKeyTitle,
-		nameFormat
+		nameFormat,
 	} = props;
 
 	const getError = (expected, value) =>
@@ -82,7 +82,7 @@ const TagRenamingDialog = (props) => {
 		if (!error) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
-				persist: true
+				persist: true,
 			});
 			Meteor.call(method, tag._id, name, (err, _res) => {
 				closeSnackbar(key);
@@ -92,7 +92,7 @@ const TagRenamingDialog = (props) => {
 				} else {
 					const message = `${Title} #${tag._id} renamed from ${nameFormat(
 						tag,
-						tag[nameKey]
+						tag[nameKey],
 					)} to ${nameFormat(tag, name)} (using ${method}).`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
@@ -131,14 +131,14 @@ const TagRenamingDialog = (props) => {
 					useSuggestions={makeSubstringSuggestions(
 						useTagsFind,
 						[tag[nameKey]],
-						nameKey
+						nameKey,
 					)}
 					TextFieldProps={{
 						label: `${Title}'s new ${nameKeyTitle}`,
 						margin: 'normal',
 						fullWidth: true,
 						helperText: newnameError,
-						error: Boolean(newnameError)
+						error: Boolean(newnameError),
 					}}
 					inputValue={newname}
 					onInputChange={(_event, newInputValue) =>
@@ -167,7 +167,7 @@ TagRenamingDialog.defaultProps = {
 	nameKey: 'name',
 	nameKeyTitle: 'name',
 	nameFormat: (_tag, name) => name,
-	useTagsFind: () => ({results: []})
+	useTagsFind: () => ({results: []}),
 };
 
 TagRenamingDialog.propTypes = {
@@ -180,7 +180,7 @@ TagRenamingDialog.propTypes = {
 	tag: PropTypes.object.isRequired,
 	nameKey: PropTypes.string,
 	nameKeyTitle: PropTypes.string,
-	nameFormat: PropTypes.func
+	nameFormat: PropTypes.func,
 };
 
 export default withLazyOpening(TagRenamingDialog);

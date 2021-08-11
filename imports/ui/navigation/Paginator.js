@@ -20,12 +20,12 @@ export default function Paginator({root, page, end, disabled}) {
 
 Paginator.defaultProps = {
 	end: false,
-	disabled: false
+	disabled: false,
 };
 
 Paginator.propTypes = {
 	page: PropTypes.number.isRequired,
 	end: PropTypes.bool,
 	disabled: PropTypes.bool,
-	root: PropTypes.string.isRequired
+	root: PropTypes.string.isRequired,
 };

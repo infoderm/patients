@@ -16,7 +16,7 @@ const TagGrid = ({Card, tags, ...rest}) => (
 
 TagGrid.propTypes = {
 	Card: PropTypes.elementType.isRequired,
-	tags: PropTypes.array.isRequired
+	tags: PropTypes.array.isRequired,
 };
 
 export default TagGrid;

@@ -27,7 +27,7 @@ import virtualFields from '../../api/consultations/virtualFields';
 import usePatient from '../patients/usePatient';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
 import makePatientsSuggestions from '../patients/makePatientsSuggestions';
@@ -36,8 +36,8 @@ import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 const useStyles = makeStyles({
 	dialogPaper: {
-		overflow: 'visible'
-	}
+		overflow: 'visible',
+	},
 });
 
 const ConsultationTransferDialog = ({open, onClose, consultation}) => {
@@ -51,16 +51,16 @@ const ConsultationTransferDialog = ({open, onClose, consultation}) => {
 	const {
 		loading: loadingPatient,
 		found: foundPatient,
-		fields: currentPatient
+		fields: currentPatient,
 	} = usePatient(
 		{_id: patientId},
 		patientId,
 		{
 			fields: {
-				lastname: 1
-			}
+				lastname: 1,
+			},
 		},
-		[patientId]
+		[patientId],
 	);
 
 	const [patients, setPatients] = useState([]);
@@ -81,7 +81,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}) => {
 			try {
 				await call('consultations.transfer', consultationId, patientId);
 				console.log(
-					`${itemKindCapitalized} #${consultationId} transferred to patient #${patientId}.`
+					`${itemKindCapitalized} #${consultationId} transferred to patient #${patientId}.`,
 				);
 				if (isMounted()) onClose();
 			} catch (error: unknown) {
@@ -128,7 +128,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}) => {
 				<PatientPicker
 					TextFieldProps={{
 						label: `Patient to transfer ${itemKind} to`,
-						margin: 'normal'
+						margin: 'normal',
 					}}
 					useSuggestions={makePatientsSuggestions([currentPatient])}
 					value={patients}
@@ -166,11 +166,11 @@ const ConsultationTransferDialog = ({open, onClose, consultation}) => {
 ConsultationTransferDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object
+	consultation: PropTypes.object,
 };
 
 ConsultationTransferDialog.projection = {
-	_id: 1
+	_id: 1,
 };
 
 export default withLazyOpening(ConsultationTransferDialog);

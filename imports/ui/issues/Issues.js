@@ -13,8 +13,8 @@ import DoctorsWithNonAlphabeticalSymbols from './DoctorsWithNonAlphabeticalSymbo
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: theme.spacing(3)
-	}
+		padding: theme.spacing(3),
+	},
 }));
 
 export default function Issues() {

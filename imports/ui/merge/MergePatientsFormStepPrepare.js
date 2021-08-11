@@ -35,7 +35,7 @@ const MergePatientsFormStepPrepare = (props) => {
 		newPatient,
 		newConsultations,
 		newAttachments,
-		newDocuments
+		newDocuments,
 	} = props;
 
 	const [merging, setMerging] = useState(false);
@@ -114,7 +114,7 @@ const MergePatientsFormStepPrepare = (props) => {
 };
 
 MergePatientsFormStepPrepare.propTypes = {
-	toMerge: PropTypes.array.isRequired
+	toMerge: PropTypes.array.isRequired,
 };
 
 export default withTracker(({toMerge}) => {
@@ -133,22 +133,22 @@ export default withTracker(({toMerge}) => {
 		const patient = Patients.findOne(patientId);
 		if (patient === undefined) {
 			const error = {
-				message: `Cannot merge because patient #${patientId} does not exist in the database.`
+				message: `Cannot merge because patient #${patientId} does not exist in the database.`,
 			};
 			return {error};
 		}
 
 		const consultationsForPatient = Consultations.find(
 			{patientId},
-			{sort: {datetime: -1}}
+			{sort: {datetime: -1}},
 		).fetch();
 		const attachmentsForPatient = Attachments.find(
 			{'meta.attachedToPatients': patientId},
-			{sort: {'meta.createdAt': -1}}
+			{sort: {'meta.createdAt': -1}},
 		).fetch();
 		const documentsForPatient = Documents.find(
 			{patientId},
-			{sort: {createdAt: -1}}
+			{sort: {createdAt: -1}},
 		).fetch();
 		oldPatients.push(patient);
 		consultations[patientId] = consultationsForPatient;
@@ -164,6 +164,6 @@ export default withTracker(({toMerge}) => {
 		newPatient: patients.merge(oldPatients),
 		newConsultations: list(chain(map((x) => consultations[x] || [], toMerge))),
 		newAttachments: list(chain(map((x) => attachments[x] || [], toMerge))),
-		newDocuments: list(chain(map((x) => documents[x] || [], toMerge)))
+		newDocuments: list(chain(map((x) => documents[x] || [], toMerge))),
 	};
 })(MergePatientsFormStepPrepare);

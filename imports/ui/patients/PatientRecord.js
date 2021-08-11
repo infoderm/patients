@@ -12,26 +12,26 @@ import PatientHeader from './PatientHeader';
 import PatientPersonalInformation from './PatientPersonalInformation';
 
 const ConsultationsForPatient = lazy(() =>
-	import('../consultations/ConsultationsForPatient')
+	import('../consultations/ConsultationsForPatient'),
 );
 const AppointmentsForPatient = lazy(() =>
-	import('../appointments/AppointmentsForPatient')
+	import('../appointments/AppointmentsForPatient'),
 );
 const DocumentsForPatient = lazy(() =>
-	import('../documents/DocumentsForPatient')
+	import('../documents/DocumentsForPatient'),
 );
 const AttachmentsForPatient = lazy(() =>
-	import('../attachments/AttachmentsForPatient')
+	import('../attachments/AttachmentsForPatient'),
 );
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		paddingTop: 80,
-		paddingBottom: 80
+		paddingBottom: 80,
 	},
 	container: {
-		padding: theme.spacing(3)
-	}
+		padding: theme.spacing(3),
+	},
 }));
 
 const PatientRecord = (props) => {
@@ -44,7 +44,7 @@ const PatientRecord = (props) => {
 		'consultations',
 		'documents',
 		'attachments',
-		'appointments'
+		'appointments',
 	];
 
 	return (
@@ -100,14 +100,14 @@ const PatientRecord = (props) => {
 PatientRecord.defaultProps = {
 	tab: 'information',
 	page: 1,
-	perpage: 5
+	perpage: 5,
 };
 
 PatientRecord.propTypes = {
 	patientId: PropTypes.string.isRequired,
 	tab: PropTypes.string,
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };
 
 export default ({match, location, patientId, tab, page, perpage}) => {
@@ -126,7 +126,7 @@ export default ({match, location, patientId, tab, page, perpage}) => {
 				patientId,
 				tab,
 				page,
-				perpage
+				perpage,
 			}}
 		/>
 	);

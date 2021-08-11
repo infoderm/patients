@@ -3,18 +3,18 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 
 import MuiTextField, {
-	TextFieldProps as MuiTextFieldProps
+	TextFieldProps as MuiTextFieldProps,
 } from '@material-ui/core/TextField';
 
 const styles = () => ({
 	readOnlyInput: {
 		'&::before': {
-			border: '0 !important'
+			border: '0 !important',
 		},
 		'&::after': {
-			border: '0 !important'
-		}
-	}
+			border: '0 !important',
+		},
+	},
 });
 
 const useStyles = makeStyles(styles);

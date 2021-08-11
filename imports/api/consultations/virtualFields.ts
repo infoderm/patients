@@ -26,7 +26,7 @@ const virtualFields = (consultation: ConsultationDocument) => {
 		isNoShow,
 		missingPaymentData,
 		owes,
-		owed
+		owed,
 	};
 };
 

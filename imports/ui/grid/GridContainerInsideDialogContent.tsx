@@ -7,8 +7,8 @@ import {makeStyles} from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
 	noMargin: {
 		width: '100% !important',
-		margin: '0 !important'
-	}
+		margin: '0 !important',
+	},
 }));
 
 const GridContainerInsideDialogContent = (props) => {

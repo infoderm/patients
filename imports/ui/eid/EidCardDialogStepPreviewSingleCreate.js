@@ -25,7 +25,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 	patientId,
 	eidInfo,
 	history,
-	onClose
+	onClose,
 }) => {
 	assert(patientId === '?');
 	const onNext = async () => {

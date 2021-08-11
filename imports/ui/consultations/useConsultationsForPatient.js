@@ -10,19 +10,19 @@ import {useConsultationsAndAppointments} from '../../api/consultations';
 const useConsultationsForPatient = (patientId, {limit}) => {
 	const query = {
 		patientId,
-		isDone: true
+		isDone: true,
 	};
 
 	const options = {
 		sort: {
-			datetime: -1
+			datetime: -1,
 		},
 		limit,
 		fields: {
 			patientId: 1,
 			isDone: 1,
-			datetime: 1
-		}
+			datetime: 1,
+		},
 	};
 
 	const deps = [patientId, limit];

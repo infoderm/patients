@@ -2,30 +2,30 @@ const intersectsInterval = (
 	begin: number | Date,
 	end: number | Date,
 	beginKey = 'begin',
-	endKey = 'end'
+	endKey = 'end',
 ) => ({
 	$or: [
 		{
 			[beginKey]: {
 				$gte: begin,
-				$lt: end
-			}
+				$lt: end,
+			},
 		},
 		{
 			[endKey]: {
 				$gt: begin,
-				$lte: end
-			}
+				$lte: end,
+			},
 		},
 		{
 			[beginKey]: {
-				$lt: begin
+				$lt: begin,
 			},
 			[endKey]: {
-				$gt: end
-			}
-		}
-	]
+				$gt: end,
+			},
+		},
+	],
 });
 
 export default intersectsInterval;

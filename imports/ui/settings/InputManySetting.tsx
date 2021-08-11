@@ -12,7 +12,7 @@ interface BaseProps {
 	className?: string;
 	setting: string;
 	makeSuggestions: (
-		value: any[]
+		value: any[],
 	) => (x: string) => {loading?: boolean; results: any[]};
 	title: string;
 	label?: string;
@@ -49,12 +49,12 @@ const InputManySetting = (props: Props) => {
 			const newValue = e.target.value;
 			setValue(sort ? sort(newValue) : newValue);
 		},
-		[setValue, sort]
+		[setValue, sort],
 	);
 
 	const sortedValue = useMemo(
 		() => (sort ? sort(value) : value),
-		[value, sort]
+		[value, sort],
 	);
 
 	return (
@@ -68,7 +68,7 @@ const InputManySetting = (props: Props) => {
 				createNewItem={identity}
 				TextFieldProps={{
 					label,
-					margin: 'normal'
+					margin: 'normal',
 				}}
 				value={sortedValue}
 				placeholder={loading ? 'loading...' : placeholder}
@@ -82,7 +82,7 @@ const InputManySetting = (props: Props) => {
 InputManySetting.defaultProps = {
 	makeSuggestions: () => () => ({results: []}),
 	label: undefined,
-	placeholder: undefined
+	placeholder: undefined,
 };
 
 InputManySetting.propTypes = {
@@ -91,7 +91,7 @@ InputManySetting.propTypes = {
 	title: PropTypes.string.isRequired,
 	makeSuggestions: PropTypes.func,
 	label: PropTypes.string,
-	placeholder: PropTypes.string
+	placeholder: PropTypes.string,
 };
 
 export default InputManySetting;

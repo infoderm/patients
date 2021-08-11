@@ -17,7 +17,7 @@ const CopiableTextField = (props) => {
 			{...props}
 			InputLabelProps={{
 				shrink: Boolean(readOnly && placeholder !== undefined) || undefined,
-				...InputLabelProps
+				...InputLabelProps,
 			}}
 			InputProps={{
 				endAdornment: readOnly && value && (
@@ -31,7 +31,7 @@ const CopiableTextField = (props) => {
 						</IconButton>
 					</InputAdornment>
 				),
-				...InputProps
+				...InputProps,
 			}}
 		/>
 	);

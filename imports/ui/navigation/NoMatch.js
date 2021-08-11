@@ -12,5 +12,5 @@ export default function NoMatch({location}) {
 }
 
 NoMatch.propTypes = {
-	location: PropTypes.object.isRequired
+	location: PropTypes.object.isRequired,
 };

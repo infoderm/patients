@@ -16,43 +16,43 @@ const styles = (theme) =>
 			maxWidth: 1200,
 			margin: '0 auto',
 			marginTop: theme.spacing(3),
-			overflowX: 'auto'
+			overflowX: 'auto',
 		},
 		table: {
-			minWidth: 700
+			minWidth: 700,
 		},
 		anomalyRow: {
-			backgroundColor: '#fa8'
+			backgroundColor: '#fa8',
 		},
 		unknownFlagRow: {
-			backgroundColor: '#f8a'
+			backgroundColor: '#f8a',
 		},
 		headerRow: {
-			backgroundColor: '#ddd'
+			backgroundColor: '#ddd',
 		},
 		subheaderRow: {
-			backgroundColor: '#eee'
+			backgroundColor: '#eee',
 		},
 		endRow: {
 			'& th': {
-				color: '#666 !important'
+				color: '#666 !important',
 			},
 			'& td': {
-				color: '#666 !important'
-			}
+				color: '#666 !important',
+			},
 		},
 		commentRow: {
 			'& th': {
-				color: '#666 !important'
+				color: '#666 !important',
 			},
 			'& td': {
-				color: '#666 !important'
-			}
+				color: '#666 !important',
+			},
 		},
 		row: {},
 		normalCell: {
-			color: '#444'
-		}
+			color: '#444',
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -142,7 +142,7 @@ const HealthOneLabResultsTable = ({document}) => {
 
 		rows.push({
 			className,
-			...result
+			...result,
 		});
 	}
 
@@ -207,7 +207,7 @@ const HealthOneLabResultsTable = ({document}) => {
 };
 
 HealthOneLabResultsTable.propTypes = {
-	document: PropTypes.object.isRequired
+	document: PropTypes.object.isRequired,
 };
 
 export default HealthOneLabResultsTable;

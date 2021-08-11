@@ -22,7 +22,7 @@ const ConfirmationDialog = ({
 	CancelIcon,
 	ConfirmIcon,
 	cancelColor,
-	confirmColor
+	confirmColor,
 }) => (
 	<Dialog open={open} /* component="form" */ onClose={onCancel}>
 		<DialogTitle>{title}</DialogTitle>
@@ -54,7 +54,7 @@ ConfirmationDialog.defaultProps = {
 	CancelIcon,
 	ConfirmIcon: DoneIcon,
 	cancelColor: 'default',
-	confirmColor: 'primary'
+	confirmColor: 'primary',
 };
 
 ConfirmationDialog.propTypes = {
@@ -68,7 +68,7 @@ ConfirmationDialog.propTypes = {
 	CancelIcon: PropTypes.elementType,
 	ConfirmIcon: PropTypes.elementType,
 	cancelColor: PropTypes.string,
-	confirmColor: PropTypes.string
+	confirmColor: PropTypes.string,
 };
 
 export default ConfirmationDialog;

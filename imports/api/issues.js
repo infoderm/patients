@@ -6,29 +6,29 @@ import makeFilteredCollection from './makeFilteredCollection';
 export const usePatientsMissingABirthdate = makeFilteredCollection(
 	Patients,
 	{
-		$or: [{birthdate: null}, {birthdate: ''}]
+		$or: [{birthdate: null}, {birthdate: ''}],
 	},
 	undefined,
-	'issues.PatientsMissingABirthdate'
+	'issues.PatientsMissingABirthdate',
 );
 
 export const usePatientsMissingAGender = makeFilteredCollection(
 	Patients,
 	{
-		$or: [{sex: null}, {sex: ''}]
+		$or: [{sex: null}, {sex: ''}],
 	},
 	undefined,
-	'issues.PatientsMissingAGender'
+	'issues.PatientsMissingAGender',
 );
 
 export const useConsultationsMissingABook = makeFilteredCollection(
 	Consultations,
 	{
 		isDone: true,
-		$or: [{book: null}, {book: ''}]
+		$or: [{book: null}, {book: ''}],
 	},
 	undefined,
-	'issues.ConsultationsMissingABook'
+	'issues.ConsultationsMissingABook',
 );
 
 export const useConsultationsMissingAPrice = makeFilteredCollection(
@@ -45,7 +45,7 @@ export const useConsultationsMissingAPrice = makeFilteredCollection(
 		 * "The Mongo server and the Meteor query disagree on how many documents match your query."
 		 * See https://forums.meteor.com/t/the-mongo-server-and-the-meteor-query-disagree-not-type/55086.
 		 */
-		price: {$not: {$gt: 1}}
+		price: {$not: {$gt: 1}},
 		/**
 		 * The original query must then be run on the superset loaded in minimongo.
 		 *
@@ -61,32 +61,32 @@ export const useConsultationsMissingAPrice = makeFilteredCollection(
 		 */
 	},
 	undefined,
-	'issues.ConsultationsMissingAPrice'
+	'issues.ConsultationsMissingAPrice',
 );
 
 export const useUnlinkedDocuments = makeFilteredCollection(
 	Documents,
 	{
-		patientId: null
+		patientId: null,
 	},
 	undefined,
-	'issues.UnlinkedDocuments'
+	'issues.UnlinkedDocuments',
 );
 
 export const useMangledDocuments = makeFilteredCollection(
 	Documents,
 	{
-		encoding: null
+		encoding: null,
 	},
 	undefined,
-	'issues.MangledDocuments'
+	'issues.MangledDocuments',
 );
 
 export const useUnparsedDocuments = makeFilteredCollection(
 	Documents,
 	{
-		parsed: false
+		parsed: false,
 	},
 	undefined,
-	'issues.UnparsedDocuments'
+	'issues.UnparsedDocuments',
 );

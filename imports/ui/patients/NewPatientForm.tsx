@@ -26,14 +26,14 @@ import call from '../../api/call';
 
 const styles = (theme) => ({
 	container: {
-		height: '100%'
+		height: '100%',
 	},
 	form: {
-		padding: theme.spacing(1.5)
+		padding: theme.spacing(1.5),
 	},
 	button: {
-		marginLeft: 'auto'
-	}
+		marginLeft: 'auto',
+	},
 });
 
 const useStyles = makeStyles(styles);
@@ -58,7 +58,7 @@ const NewPatientForm = () => {
 			lastname,
 			birthdate,
 			sex,
-			noshow
+			noshow,
 		};
 
 		try {
@@ -109,7 +109,7 @@ const NewPatientForm = () => {
 										input={<Input id="sex-input" />}
 										inputProps={{
 											name: 'sex',
-											id: 'sex-input'
+											id: 'sex-input',
 										}}
 										onChange={(e) => {
 											setSex(e.target.value as string);
@@ -130,7 +130,7 @@ const NewPatientForm = () => {
 									type="date"
 									label="Birth date"
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									value={birthdate}
 									onChange={(e) => {

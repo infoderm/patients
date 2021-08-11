@@ -33,12 +33,12 @@ const BooksDownloadDialog = ({
 	onClose,
 	initialAdvancedFunctionality,
 	initialBegin,
-	initialEnd
+	initialEnd,
 }) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [advancedFunctionality, setAdvancedFunctionality] = useState(
-		initialAdvancedFunctionality
+		initialAdvancedFunctionality,
 	);
 	const [begin, setBegin] = useState(initialBegin);
 	const [end, setEnd] = useState(initialEnd || addYears(initialBegin, 1));
@@ -69,7 +69,7 @@ const BooksDownloadDialog = ({
 		const _maxRows = Number.parseInt(maxRows, 10);
 		const key = enqueueSnackbar('Creating report...', {
 			variant: 'info',
-			persist: true
+			persist: true,
 		});
 		try {
 			const res = await call(
@@ -78,7 +78,7 @@ const BooksDownloadDialog = ({
 				end,
 				_firstBook,
 				_lastBook,
-				_maxRows
+				_maxRows,
 			);
 			closeSnackbar(key);
 			enqueueSnackbar('Report ready!', {variant: 'success'});
@@ -195,7 +195,7 @@ const BooksDownloadDialog = ({
 };
 
 BooksDownloadDialog.defaultProps = {
-	initialAdvancedFunctionality: false
+	initialAdvancedFunctionality: false,
 };
 
 BooksDownloadDialog.propTypes = {
@@ -203,7 +203,7 @@ BooksDownloadDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	initialBegin: PropTypes.instanceOf(Date).isRequired,
 	initialEnd: PropTypes.instanceOf(Date),
-	initialAdvancedFunctionality: PropTypes.bool
+	initialAdvancedFunctionality: PropTypes.bool,
 };
 
 export default withLazyOpening(BooksDownloadDialog);

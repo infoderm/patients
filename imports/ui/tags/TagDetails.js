@@ -45,14 +45,14 @@ const TagDetails = (props) => {
 		name,
 		selector,
 		sort,
-		fields
+		fields,
 	} = props;
 
 	const options = {
 		fields,
 		sort,
 		skip: (page - 1) * perpage,
-		limit: perpage
+		limit: perpage,
 	};
 
 	const [refreshKey, setRefreshKey] = useState(Math.random());
@@ -61,7 +61,7 @@ const TagDetails = (props) => {
 		name,
 		page,
 		perpage,
-		refreshKey
+		refreshKey,
 	]);
 
 	const listProps = {
@@ -69,7 +69,7 @@ const TagDetails = (props) => {
 		loading,
 		dirty,
 		refresh,
-		items: results
+		items: results,
 	};
 
 	if (!Card)
@@ -95,7 +95,7 @@ TagDetails.propTypes = {
 	sort: PropTypes.object.isRequired,
 	fields: PropTypes.object,
 	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired
+	perpage: PropTypes.number.isRequired,
 };
 
 export default TagDetails;

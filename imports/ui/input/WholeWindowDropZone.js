@@ -24,12 +24,12 @@ const styles = () =>
 			left: 0,
 			width: '100%',
 			height: '100vh',
-			backgroundColor: blue[900]
+			backgroundColor: blue[900],
 		},
 		visible: {
 			visibility: 'visible',
-			opacity: 0.5
-		}
+			opacity: 0.5,
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -85,7 +85,7 @@ const WholeWindowDropZone = ({callback}) => {
 	return (
 		<div
 			className={classNames(classes.root, {
-				[classes.visible]: visible
+				[classes.visible]: visible,
 			})}
 		>
 			<Fab color="primary">

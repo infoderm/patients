@@ -23,30 +23,30 @@ interface Global {
 	define: (
 		name: Name,
 		collection: MeteorCollection,
-		attributes: Attributes
+		attributes: Attributes,
 	) => Instance;
 	get: (name: Name) => Instance;
 	_build: (
 		name: Name,
 		attributes?: Attributes,
 		userOptions?: UserOptions,
-		options?: Options
+		options?: Options,
 	) => Item;
 	build: (
 		name: Name,
 		attributes?: Attributes,
-		userOptions?: UserOptions
+		userOptions?: UserOptions,
 	) => Item;
 	tree: (
 		name: Name,
 		attributes?: Attributes,
-		userOptions?: UserOptions
+		userOptions?: UserOptions,
 	) => Item;
 	_create: (name: Name, doc: Item) => Item;
 	create: (
 		name: Name,
 		attributes?: Attributes,
-		userOptions?: UserOptions
+		userOptions?: UserOptions,
 	) => Item;
 	extend: (name: Name, attributes?: Attributes) => Attributes;
 }

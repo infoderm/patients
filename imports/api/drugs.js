@@ -26,8 +26,8 @@ if (Meteor.isServer) {
 			{
 				fields,
 				sort,
-				limit
-			}
+				limit,
+			},
 		);
 	});
 }
@@ -47,7 +47,7 @@ Meteor.methods({
 				...drug,
 				createdAt,
 				owner,
-				username
+				username,
 			});
 		}
 	},
@@ -60,5 +60,5 @@ Meteor.methods({
 		}
 
 		return Drugs.remove(drugId);
-	}
+	},
 });

@@ -20,8 +20,8 @@ import useIsMounted from '../hooks/useIsMounted';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const AppointmentDeletionDialog = (props) => {
@@ -76,7 +76,7 @@ const AppointmentDeletionDialog = (props) => {
 AppointmentDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	appointment: PropTypes.object.isRequired
+	appointment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AppointmentDeletionDialog);

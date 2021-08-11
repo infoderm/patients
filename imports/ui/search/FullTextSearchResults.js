@@ -11,14 +11,14 @@ import PatientsObservedSearchResults from '../patients/PatientsObservedSearchRes
 const useStyles = makeStyles(() => ({
 	root: {
 		overflow: 'hidden',
-		textOverflow: 'ellipsis'
+		textOverflow: 'ellipsis',
 	},
 	heading: {
-		display: 'inline'
+		display: 'inline',
 	},
 	results: {
-		padding: '1em 0'
-	}
+		padding: '1em 0',
+	},
 }));
 
 export default function FullTextSearchResults({match}) {

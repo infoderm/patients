@@ -45,7 +45,7 @@ const StaticConsultationCardActions = (props) => {
 		editAction,
 		moreAction,
 		owes,
-		consultation: {_id, isDone, isCancelled, payment_method}
+		consultation: {_id, isDone, isCancelled, payment_method},
 	} = props;
 
 	const beginConsultation = () => {
@@ -211,14 +211,14 @@ const StaticConsultationCardActions = (props) => {
 StaticConsultationCardActions.projection = {
 	_id: 1,
 	isDone: 1,
-	payment_method: 1
+	payment_method: 1,
 };
 
 StaticConsultationCardActions.defaultProps = {
 	found: true,
 	attachAction: true,
 	editAction: true,
-	moreAction: true
+	moreAction: true,
 };
 
 StaticConsultationCardActions.propTypes = {
@@ -226,7 +226,7 @@ StaticConsultationCardActions.propTypes = {
 	attachAction: PropTypes.bool,
 	editAction: PropTypes.bool,
 	moreAction: PropTypes.bool,
-	consultation: PropTypes.object.isRequired
+	consultation: PropTypes.object.isRequired,
 };
 
 export default StaticConsultationCardActions;

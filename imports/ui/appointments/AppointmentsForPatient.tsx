@@ -40,31 +40,31 @@ const ConsultationsForPatient = (props) => {
 	}> = [
 		{
 			isCancelled: {
-				$in: [false, null]
+				$in: [false, null],
 			},
 			scheduledDatetime: {
-				$gt: startOfToday() // TODO make reactive?
-			}
-		}
+				$gt: startOfToday(), // TODO make reactive?
+			},
+		},
 	];
 
 	const query = {
 		patientId,
 		isDone: false,
-		$or
+		$or,
 	};
 
 	if (showCancelled) {
 		$or.push({
-			isCancelled: true
+			isCancelled: true,
 		});
 	}
 
 	if (showNoShow) {
 		$or.push({
 			isCancelled: {
-				$in: [false, null]
-			}
+				$in: [false, null],
+			},
 		});
 	}
 

@@ -13,9 +13,9 @@ const useStyles = makeStyles((theme) => ({
 	searchBox: {
 		background: fade(theme.palette.common.white, 0.15),
 		'&:hover': {
-			background: fade(theme.palette.common.white, 0.25)
-		}
-	}
+			background: fade(theme.palette.common.white, 0.25),
+		},
+	},
 }));
 
 const PatientsSearchBox = ({className}) => {

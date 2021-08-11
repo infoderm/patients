@@ -13,23 +13,23 @@ const DocumentsForPatient = ({patientId, page, perpage, ...rest}) => {
 		{},
 		patientId,
 		{fields: {_id: 1}},
-		[patientId]
+		[patientId],
 	);
 	const query = {
 		patientId,
 		deleted: false,
-		lastVersion: true
+		lastVersion: true,
 	};
 	const options = {
 		sort: {datetime: -1},
 		skip: (page - 1) * perpage,
-		limit: perpage
+		limit: perpage,
 	};
 	const deps = [patientId, page, perpage];
 	const {loading: loadingDocuments, results: documents} = useDocuments(
 		query,
 		options,
-		deps
+		deps,
 	);
 
 	if (loadingPatient) {

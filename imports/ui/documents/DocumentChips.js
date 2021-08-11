@@ -28,31 +28,31 @@ import DocumentVersionsChip from './DocumentVersionsChip';
 const useStyles = makeStyles((theme) => ({
 	chip: {
 		maxWidth: '200px',
-		marginRight: theme.spacing(1)
+		marginRight: theme.spacing(1),
 	},
 	unlinkedpatientchip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
 		color: '#fff',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
 	},
 	linkoffchip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
-		color: '#fff'
+		color: '#fff',
 	},
 	anomalieschip: {
 		marginRight: theme.spacing(1),
-		backgroundColor: '#fa8'
+		backgroundColor: '#fa8',
 	},
 	partialchip: {
 		marginRight: theme.spacing(1),
-		backgroundColor: '#fa8'
+		backgroundColor: '#fa8',
 	},
 	completechip: {
 		marginRight: theme.spacing(1),
-		backgroundColor: '#8fa'
-	}
+		backgroundColor: '#8fa',
+	},
 }));
 
 const DocumentChips = (props) => {
@@ -72,8 +72,8 @@ const DocumentChips = (props) => {
 			datetime,
 			deleted,
 			patient: subject,
-			anomalies
-		}
+			anomalies,
+		},
 	} = props;
 
 	const {document} = props;
@@ -103,7 +103,7 @@ const DocumentChips = (props) => {
 					icon={<ConfirmationNumberIcon />}
 					component={Link}
 					to={`/document/versions/${myEncodeURIComponent(
-						identifier
+						identifier,
 					)}/${myEncodeURIComponent(reference)}`}
 					label={reference}
 					className={classes.chip}
@@ -181,13 +181,13 @@ const DocumentChips = (props) => {
 
 DocumentChips.defaultProps = {
 	PatientChip: ReactivePatientChip,
-	VersionsChip: DocumentVersionsChip
+	VersionsChip: DocumentVersionsChip,
 };
 
 DocumentChips.propTypes = {
 	document: PropTypes.object.isRequired,
 	PatientChip: PropTypes.elementType,
-	VersionsChip: PropTypes.elementType
+	VersionsChip: PropTypes.elementType,
 };
 
 DocumentChips.projection = {
@@ -211,7 +211,7 @@ DocumentChips.projection = {
 	source: 0,
 	decoded: 0,
 	results: 0,
-	text: 0
+	text: 0,
 };
 
 export default DocumentChips;

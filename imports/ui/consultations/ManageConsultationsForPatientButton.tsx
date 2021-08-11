@@ -40,11 +40,11 @@ const ManageConsultationsForPatientButton = ({
 ManageConsultationsForPatientButton.propTypes = {
 	Button: PropTypes.elementType,
 	patientId: PropTypes.string.isRequired,
-	children: PropTypes.node
+	children: PropTypes.node,
 };
 
 ManageConsultationsForPatientButton.defaultProps = {
-	Button
+	Button,
 };
 
 export default ManageConsultationsForPatientButton;

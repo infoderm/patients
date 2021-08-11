@@ -8,7 +8,7 @@ import {useConsultationsMissingAPrice} from '../../api/issues';
 const ConsultationsMissingAPrice = (props) => {
 	const {loading, results: consultations} = useConsultationsMissingAPrice({
 		isDone: true,
-		$or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}]
+		$or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}],
 	});
 
 	if (loading) {

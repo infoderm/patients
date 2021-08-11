@@ -31,5 +31,5 @@ export default function AppointmentsForPatientStatic({
 
 AppointmentsForPatientStatic.propTypes = {
 	appointments: PropTypes.array.isRequired,
-	page: PropTypes.number.isRequired
+	page: PropTypes.number.isRequired,
 };

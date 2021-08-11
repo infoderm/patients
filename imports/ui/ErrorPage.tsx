@@ -14,15 +14,15 @@ const useStyles = makeStyles(() => ({
 	explanation: {
 		textAlign: 'center',
 		fontSize: '1.3em',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
 	},
 	details: {
-		padding: '1em'
+		padding: '1em',
 	},
 	summary: {
 		fontSize: '2em',
 		cursor: 'pointer',
-		color: '#d44'
+		color: '#d44',
 	},
 	pre: {
 		whiteSpace: 'pre-wrap',
@@ -30,15 +30,15 @@ const useStyles = makeStyles(() => ({
 		color: '#ccc',
 		padding: '1.5em',
 		borderRadius: '.5em',
-		textTransform: 'initial'
+		textTransform: 'initial',
 	},
 	buttons: {
 		textAlign: 'center',
-		paddingBottom: '2em'
+		paddingBottom: '2em',
 	},
 	button: {
-		margin: '1em'
-	}
+		margin: '1em',
+	},
 }));
 
 export default function ErrorPage({error, errorInfo, retry}) {

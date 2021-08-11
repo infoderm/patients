@@ -14,7 +14,7 @@ const Prev = ({to, ...rest}) => (
 );
 
 Prev.propTypes = {
-	to: PropTypes.string.isRequired
+	to: PropTypes.string.isRequired,
 };
 
 export default Prev;

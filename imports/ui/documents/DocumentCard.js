@@ -49,11 +49,11 @@ const styles = () =>
 		chips: {
 			display: 'flex',
 			justifyContent: 'center',
-			flexWrap: 'wrap'
+			flexWrap: 'wrap',
 		},
 		list: {
-			width: '100%'
-		}
+			width: '100%',
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -74,7 +74,7 @@ const DocumentCard = (props) => {
 
 	const download = (_event) => {
 		const extensions = {
-			healthone: 'HLT'
+			healthone: 'HLT',
 			// 'medar' : 'MDR' ,
 			// 'medidoc' : 'MDD' ,
 		};
@@ -220,7 +220,7 @@ DocumentCard.defaultProps = {
 	PatientChip: DocumentChips.defaultProps.PatientChip,
 	VersionsChip: DocumentChips.defaultProps.VersionsChip,
 	VersionsButton: DocumentVersionsButton,
-	defaultExpanded: false
+	defaultExpanded: false,
 };
 
 DocumentCard.propTypes = {
@@ -228,7 +228,7 @@ DocumentCard.propTypes = {
 	PatientChip: PropTypes.elementType,
 	VersionsChip: PropTypes.elementType,
 	VersionsButton: PropTypes.elementType,
-	defaultExpanded: PropTypes.bool
+	defaultExpanded: PropTypes.bool,
 };
 
 export default DocumentCard;

@@ -10,15 +10,15 @@ const UnlinkedDocuments = (props) => {
 			'patient.lastname': 1,
 			'patient.firstname': 1,
 			datetime: 1,
-			createdAt: 1
+			createdAt: 1,
 		},
 		fields: {
-			...DocumentsPage.projection
+			...DocumentsPage.projection,
 			// patientId: 1,
 			// patient: 1,
 			// datetime: 1,
 			// createdAt: 1
-		}
+		},
 	};
 
 	const {loading, results: documents} = useUnlinkedDocuments({}, options, []);

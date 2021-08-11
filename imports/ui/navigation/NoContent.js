@@ -7,8 +7,8 @@ const useStyles = makeStyles(() => ({
 	empty: {
 		textAlign: 'center',
 		margin: '3em 0',
-		color: '#999'
-	}
+		color: '#999',
+	},
 }));
 
 const NoContent = ({children, ...props}) => {

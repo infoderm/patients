@@ -10,8 +10,8 @@ Factory.define('upload', Uploads.collection, {
 	file: () =>
 		faker.image.dataUri(
 			randomDimension(),
-			randomDimension() /* Random color ? */
+			randomDimension() /* Random color ? */,
 		),
 	fileName: () => faker.system.fileName(),
-	isBase64: true
+	isBase64: true,
 });

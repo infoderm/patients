@@ -48,13 +48,13 @@ import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
 import {
 	// makeAnyIndex,
-	makeRegExpIndex
+	makeRegExpIndex,
 } from '../../api/string';
 
 import {
 	useDateFormat,
 	useDateFormatAge,
-	useDateMask
+	useDateMask,
 } from '../../i18n/datetime';
 
 import SetPicker from '../input/SetPicker';
@@ -71,22 +71,22 @@ import AttachFileButton from '../attachments/AttachFileButton';
 import PatientDeletionDialog from './PatientDeletionDialog';
 
 const allergyChipProps = {
-	avatar: <Avatar>Al</Avatar>
+	avatar: <Avatar>Al</Avatar>,
 };
 
 const doctorChipProps = {
-	avatar: <Avatar>Dr</Avatar>
+	avatar: <Avatar>Dr</Avatar>,
 };
 
 const insuranceChipProps = {
-	avatar: <Avatar>In</Avatar>
+	avatar: <Avatar>In</Avatar>,
 };
 
 const styles = (theme) =>
 	createStyles({
 		root: {
 			padding: theme.spacing(3),
-			paddingBottom: theme.spacing(5)
+			paddingBottom: theme.spacing(5),
 		},
 		photoPlaceHolder: {
 			display: 'inline-flex',
@@ -99,42 +99,42 @@ const styles = (theme) =>
 			color: '#fff',
 			backgroundColor: '#999',
 			verticalAlign: 'top',
-			marginBottom: theme.spacing(2)
+			marginBottom: theme.spacing(2),
 		},
 		left: {
-			textAlign: 'center'
+			textAlign: 'center',
 		},
 		photo: {
 			width: 140,
 			height: 200,
 			verticalAlign: 'top',
-			marginBottom: theme.spacing(2)
+			marginBottom: theme.spacing(2),
 		},
 		formControl: {
 			overflow: 'auto',
 			'& input, & div': {
-				color: 'black !important'
-			}
+				color: 'black !important',
+			},
 		},
 		setPicker: {
-			height: '100%'
+			height: '100%',
 		},
 		multiline: {
 			height: '100%',
 			overflow: 'auto',
 			'& textarea': {
-				color: 'black !important'
-			}
+				color: 'black !important',
+			},
 		},
 		button: {
-			margin: theme.spacing(1)
+			margin: theme.spacing(1),
 		},
 		problem: {
-			color: 'red'
+			color: 'red',
 		},
 		noShowsAdornment: {
-			color: '#999'
-		}
+			color: '#999',
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -143,7 +143,7 @@ const initialState = {
 	patient: undefined,
 	editing: false,
 	dirty: false,
-	deleting: false
+	deleting: false,
 };
 
 /**
@@ -158,7 +158,7 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				patient: {...state.patient, [action.key]: action.value},
-				dirty: true
+				dirty: true,
 			};
 		case 'editing':
 			return {...state, editing: true};
@@ -174,7 +174,7 @@ const reducer = (state, action) => {
 				editing: false,
 				dirty: false,
 				deleting: false,
-				patient: action.payload
+				patient: action.payload,
 			};
 		default:
 			throw new Error(`Unknown action type ${action.type}.`);
@@ -188,7 +188,7 @@ const PatientPersonalInformation = (props) => {
 		() =>
 			// return makeAnyIndex(importantStrings);
 			makeRegExpIndex(importantStrings),
-		[importantStrings]
+		[importantStrings],
 	);
 
 	const [state, dispatch] = useReducer(reducer, initialState);
@@ -207,7 +207,7 @@ const PatientPersonalInformation = (props) => {
 	const saveDetails = (_event) => {
 		const key = enqueueSnackbar('Processing...', {
 			variant: 'info',
-			persist: true
+			persist: true,
 		});
 		Meteor.call('patients.update', patient._id, patient, (err, _res) => {
 			closeSnackbar(key);
@@ -345,7 +345,7 @@ const PatientPersonalInformation = (props) => {
 												inputProps={{
 													readOnly: !editing,
 													name: 'sex',
-													id: 'sex'
+													id: 'sex',
 												}}
 												onChange={update('sex')}
 											>
@@ -376,7 +376,7 @@ const PatientPersonalInformation = (props) => {
 													dispatch({
 														type: 'update',
 														key: 'birthdate',
-														value: eidFormatBirthdate(date)
+														value: eidFormatBirthdate(date),
 													});
 												}
 											}}
@@ -394,13 +394,13 @@ const PatientPersonalInformation = (props) => {
 									rowsMax={maxRows}
 									className={classes.multiline}
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									InputProps={{
 										style: {
 											height: '100%',
-											alignItems: 'start'
-										}
+											alignItems: 'start',
+										},
 									}}
 									value={patient.antecedents}
 									margin="normal"
@@ -418,13 +418,13 @@ const PatientPersonalInformation = (props) => {
 									rowsMax={maxRows}
 									className={classes.multiline}
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									InputProps={{
 										style: {
 											height: '100%',
-											alignItems: 'start'
-										}
+											alignItems: 'start',
+										},
 									}}
 									value={patient.ongoing}
 									margin="normal"
@@ -441,12 +441,12 @@ const PatientPersonalInformation = (props) => {
 									createNewItem={(name) => ({name})}
 									useSuggestions={makeSubstringSuggestions(
 										useAllergiesFind,
-										patient.allergies
+										patient.allergies,
 									)}
 									readOnly={!editing}
 									TextFieldProps={{
 										label: 'Allergies',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									Chip={ReactiveAllergyChip}
 									chipProps={allergyChipProps}
@@ -463,7 +463,7 @@ const PatientPersonalInformation = (props) => {
 									readOnly={!editing}
 									label="Rue et Numéro"
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									placeholder={placeholder}
 									rows={1}
@@ -480,7 +480,7 @@ const PatientPersonalInformation = (props) => {
 									readOnly={!editing}
 									label="Code Postal"
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									placeholder={placeholder}
 									rows={1}
@@ -497,7 +497,7 @@ const PatientPersonalInformation = (props) => {
 									readOnly={!editing}
 									label="Commune"
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									placeholder={placeholder}
 									rows={1}
@@ -514,13 +514,13 @@ const PatientPersonalInformation = (props) => {
 									multiline
 									readOnly={!editing}
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									InputProps={{
 										style: {
 											height: '100%',
-											alignItems: 'start'
-										}
+											alignItems: 'start',
+										},
 									}}
 									label="Numéro de téléphone"
 									placeholder={placeholder}
@@ -540,7 +540,7 @@ const PatientPersonalInformation = (props) => {
 									createNewItem={(name) => ({name})}
 									useSuggestions={makeSubstringSuggestions(
 										useDoctorsFind,
-										patient.doctors
+										patient.doctors,
 									)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -548,13 +548,13 @@ const PatientPersonalInformation = (props) => {
 										label: 'Médecin Traitant',
 										margin: 'normal',
 										style: {
-											height: '100%'
-										}
+											height: '100%',
+										},
 									}}
 									InputProps={{
 										style: {
-											height: '100%'
-										}
+											height: '100%',
+										},
 									}}
 									Chip={ReactiveDoctorChip}
 									chipProps={doctorChipProps}
@@ -572,7 +572,7 @@ const PatientPersonalInformation = (props) => {
 									createNewItem={(name) => ({name})}
 									useSuggestions={makeSubstringSuggestions(
 										useInsurancesFind,
-										patient.insurances
+										patient.insurances,
 									)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -580,18 +580,18 @@ const PatientPersonalInformation = (props) => {
 										label: 'Mutuelle',
 										margin: 'normal',
 										style: {
-											height: '100%'
-										}
+											height: '100%',
+										},
 									}}
 									InputProps={{
 										style: {
-											height: '100%'
-										}
+											height: '100%',
+										},
 									}}
 									Chip={ReactiveInsuranceChip}
 									chipProps={insuranceChipProps}
 									value={list(
-										map((x) => ({name: x}), patient.insurances || [])
+										map((x) => ({name: x}), patient.insurances || []),
 									)}
 									placeholder={placeholder}
 									onChange={updateList('insurances')}
@@ -608,13 +608,13 @@ const PatientPersonalInformation = (props) => {
 									rowsMax={maxRows}
 									className={classes.multiline}
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									InputProps={{
 										style: {
 											height: '100%',
-											alignItems: 'start'
-										}
+											alignItems: 'start',
+										},
 									}}
 									value={patient.about}
 									margin="normal"
@@ -635,8 +635,8 @@ const PatientPersonalInformation = (props) => {
 											</InputAdornment>
 										) : undefined,
 										style: {
-											height: '100%'
-										}
+											height: '100%',
+										},
 									}}
 									label="PVPP (sans RDV)"
 									placeholder={placeholder}
@@ -644,7 +644,7 @@ const PatientPersonalInformation = (props) => {
 									value={patient.noshow || 0}
 									margin="normal"
 									onChange={update('noshow', (v) =>
-										v === '' ? 0 : Number.parseInt(v, 10)
+										v === '' ? 0 : Number.parseInt(v, 10),
 									)}
 								/>
 							</Grid>
@@ -715,7 +715,7 @@ const PatientPersonalInformation = (props) => {
 
 PatientPersonalInformation.propTypes = {
 	loading: PropTypes.bool,
-	patient: PropTypes.object.isRequired
+	patient: PropTypes.object.isRequired,
 };
 
 export default PatientPersonalInformation;

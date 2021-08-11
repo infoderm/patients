@@ -12,15 +12,15 @@ import {Drugs} from '../../api/drugs';
 
 const styles = (theme) => ({
 	container: {
-		padding: theme.spacing(3)
-	}
+		padding: theme.spacing(3),
+	},
 });
 
 class DrugDetails extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			drug: props.drug
+			drug: props.drug,
 		};
 	}
 
@@ -51,7 +51,7 @@ class DrugDetails extends React.Component {
 }
 
 DrugDetails.propTypes = {
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
 };
 
 export default withTracker(({match}) => {

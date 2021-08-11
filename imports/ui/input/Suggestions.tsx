@@ -13,7 +13,7 @@ const SuggestionPropTypes = {
 	selectedItems: PropTypes.array.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	itemToString: PropTypes.func.isRequired,
-	Item: PropTypes.elementType
+	Item: PropTypes.elementType,
 };
 
 type SuggestionProps = InferProps<typeof SuggestionPropTypes>;
@@ -30,7 +30,7 @@ const Suggestion = React.forwardRef<any, SuggestionProps>(
 			Item,
 			...rest
 		},
-		ref
+		ref,
 	) => {
 		const isHighlighted = highlightedIndex === index;
 		const isSelected = selectedItems.map(itemToKey).includes(itemToKey(item));
@@ -42,13 +42,13 @@ const Suggestion = React.forwardRef<any, SuggestionProps>(
 				selected={isHighlighted}
 				component="div"
 				style={{
-					fontWeight: isSelected ? 500 : 400
+					fontWeight: isSelected ? 500 : 400,
 				}}
 			>
 				{Item ? <Item item={item} /> : itemToString(item)}
 			</MenuItem>
 		);
-	}
+	},
 );
 
 Suggestion.propTypes = SuggestionPropTypes;
@@ -62,7 +62,7 @@ const SuggestionsPropTypes = {
 	selectedItems: PropTypes.array.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	itemToString: PropTypes.func.isRequired,
-	Item: PropTypes.elementType
+	Item: PropTypes.elementType,
 };
 
 type SuggestionsProps = InferProps<typeof SuggestionsPropTypes>;
@@ -74,11 +74,11 @@ const styles = (theme) =>
 			zIndex: 1,
 			marginTop: theme.spacing(1),
 			left: 0,
-			right: 0
+			right: 0,
 		},
 		hidden: {
-			display: 'none'
-		}
+			display: 'none',
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -97,7 +97,7 @@ const Suggestions = React.forwardRef<any, SuggestionsProps>(
 			Item,
 			...rest
 		},
-		ref
+		ref,
 	) => {
 		const classes = useStyles();
 
@@ -106,7 +106,7 @@ const Suggestions = React.forwardRef<any, SuggestionsProps>(
 				ref={ref}
 				square
 				className={classNames(classes.root, {
-					[classes.hidden]: hide || !suggestions?.length
+					[classes.hidden]: hide || !suggestions?.length,
 				})}
 			>
 				<div {...rest}>
@@ -127,7 +127,7 @@ const Suggestions = React.forwardRef<any, SuggestionsProps>(
 				</div>
 			</Paper>
 		);
-	}
+	},
 );
 
 Suggestions.propTypes = SuggestionsPropTypes;

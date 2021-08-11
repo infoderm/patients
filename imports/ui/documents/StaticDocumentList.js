@@ -12,7 +12,7 @@ export default function StaticDocumentList({
 	perpage,
 	loading,
 	documents,
-	root
+	root,
 }) {
 	return (
 		<>
@@ -33,7 +33,7 @@ export default function StaticDocumentList({
 StaticDocumentList.projection = DocumentsPage.projection;
 
 StaticDocumentList.defaultProps = {
-	loading: false
+	loading: false,
 };
 
 StaticDocumentList.propTypes = {
@@ -41,5 +41,5 @@ StaticDocumentList.propTypes = {
 	perpage: PropTypes.number.isRequired,
 	loading: PropTypes.bool,
 	documents: PropTypes.array.isRequired,
-	root: PropTypes.string.isRequired
+	root: PropTypes.string.isRequired,
 };

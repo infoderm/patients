@@ -7,8 +7,8 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(() => ({
 	container: {
-		display: 'inline'
-	}
+		display: 'inline',
+	},
 }));
 
 const InputFileButton = ({
@@ -39,12 +39,12 @@ const InputFileButton = ({
 };
 
 InputFileButton.defaultProps = {
-	Button
+	Button,
 };
 
 InputFileButton.propTypes = {
 	onChange: PropTypes.func.isRequired,
-	Button: PropTypes.elementType
+	Button: PropTypes.elementType,
 };
 
 export default InputFileButton;

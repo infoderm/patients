@@ -5,7 +5,7 @@ import {dataURL as pngDataURL} from '../../util/png';
 import {thumbnail} from '../../client/pdfthumbnails';
 
 const eee = pngDataURL(
-	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII='
+	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII=',
 );
 
 interface Options {
@@ -17,7 +17,7 @@ interface Options {
 
 const useThumbnail = (
 	url: string,
-	{isImage, isPDF, width, height}: Options
+	{isImage, isPDF, width, height}: Options,
 ) => {
 	const [src, setSrc] = useState(eee);
 
@@ -39,7 +39,7 @@ const useThumbnail = (
 				.catch((error) => {
 					console.error(
 						`Failed to generate PDF thumbmail URL for upload '${url}'`,
-						{error}
+						{error},
 					);
 				});
 			return () => {

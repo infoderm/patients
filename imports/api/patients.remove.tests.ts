@@ -47,7 +47,7 @@ if (Meteor.isServer) {
 
 				assert.throws(
 					() => patientsRemove.apply(invocation, [patientId]),
-					/not-found/
+					/not-found/,
 				);
 			});
 		});

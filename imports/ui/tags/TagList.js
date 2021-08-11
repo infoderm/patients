@@ -20,7 +20,7 @@ const TagList = (props) => {
 	const _root = root || url.split('/page/')[0];
 
 	const style = {
-		transition: 'opacity 200ms ease-out'
+		transition: 'opacity 200ms ease-out',
 	};
 	if (loading) style.opacity = 0.4;
 
@@ -42,7 +42,7 @@ TagList.defaultProps = {
 	page: 1,
 	perpage: 10,
 	query: {},
-	sort: {name: 1}
+	sort: {name: 1},
 };
 
 TagList.propTypes = {
@@ -55,7 +55,7 @@ TagList.propTypes = {
 	query: PropTypes.object,
 	sort: PropTypes.object,
 
-	useTags: PropTypes.func.isRequired
+	useTags: PropTypes.func.isRequired,
 };
 
 export default TagList;

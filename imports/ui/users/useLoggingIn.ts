@@ -10,7 +10,7 @@ const useLoggingIn = () => {
 
 	const [debouncedLoggingIn] = useDebounce(
 		loggingIn,
-		TIMEOUT_REACTIVITY_DEBOUNCE
+		TIMEOUT_REACTIVITY_DEBOUNCE,
 	);
 
 	const displayLoggingIn = loggingIn && debouncedLoggingIn;

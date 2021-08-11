@@ -22,7 +22,7 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 		isOpen,
 		loading,
 		selectedItem,
-		highlightedIndex
+		highlightedIndex,
 	} = props;
 
 	return (
@@ -36,7 +36,7 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 					expands={expands}
 					placeholder={placeholder}
 					{...getInputProps({
-						refKey: 'inputRef'
+						refKey: 'inputRef',
 					})}
 				/>
 			</SearchBoxInternalsInputContainer>
@@ -50,7 +50,7 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 					getMenuProps,
 					getItemProps,
 					selectedItem,
-					highlightedIndex
+					highlightedIndex,
 				}}
 			/>
 		</SearchBoxInternalsContainer>
@@ -67,5 +67,5 @@ SearchBoxWithSuggestionsInternals.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	inputValue: PropTypes.string,
 	highlightedIndex: PropTypes.number,
-	placeholder: PropTypes.string
+	placeholder: PropTypes.string,
 };

@@ -18,5 +18,5 @@ export default function DocumentsPage({documents}) {
 DocumentsPage.projection = DocumentListItem.projection;
 
 DocumentsPage.propTypes = {
-	documents: PropTypes.array.isRequired
+	documents: PropTypes.array.isRequired,
 };

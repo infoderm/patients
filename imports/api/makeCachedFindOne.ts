@@ -9,7 +9,7 @@ const makeCachedFindOne =
 		init: Partial<U>,
 		query: Mongo.Selector<T>,
 		options: Mongo.Options<T>,
-		deps: DependencyList
+		deps: DependencyList,
 	) => {
 		const ref = useRef(init);
 
@@ -20,7 +20,7 @@ const makeCachedFindOne =
 
 		const upToDate = useTracker<U>(
 			() => (loading ? undefined : Collection.findOne(query, options)),
-			[loading, ...deps]
+			[loading, ...deps],
 		);
 
 		const found = Boolean(upToDate);

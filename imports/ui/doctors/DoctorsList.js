@@ -35,11 +35,11 @@ export default function DoctorsList({match, prefix, page, perpage}) {
 
 DoctorsList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 DoctorsList.propTypes = {
 	page: PropTypes.number,
 	perpage: PropTypes.number,
-	prefix: PropTypes.string
+	prefix: PropTypes.string,
 };

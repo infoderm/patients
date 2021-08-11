@@ -16,7 +16,7 @@ const useBookStats = (name) =>
 		const handle = Meteor.subscribe(subscription, name);
 		return {
 			loading: !handle.ready(),
-			result: Collection.findOne({name})
+			result: Collection.findOne({name}),
 		};
 	}, [name]);
 

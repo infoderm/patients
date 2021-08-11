@@ -35,27 +35,27 @@ const PatientsObservedSearchResults = (props: Props) => {
 	const query = {$text: {$search}};
 
 	const sort = {
-		score: {$meta: 'textScore'}
+		score: {$meta: 'textScore'},
 	};
 	const fields = mergeFields(
 		sort,
 		StaticPatientsList.projection,
 		// We fetch the picture through a dedicated subscription to get live
 		// updates while avoiding double loading on init.
-		{photo: 0}
+		{photo: 0},
 	);
 	const options = {
 		fields,
 		sort,
 		skip: (page - 1) * perpage,
-		limit: perpage
+		limit: perpage,
 	};
 
 	const {loading, results, dirty} = usePatientsAdvancedFind(query, options, [
 		$search,
 		page,
 		perpage,
-		refreshKey
+		refreshKey,
 	]);
 
 	const root = `/search/${match.params.query}`;
@@ -80,14 +80,14 @@ PatientsObservedSearchResults.defaultProps = {
 	page: 1,
 	perpage: 10,
 	refresh: undefined,
-	refreshKey: undefined
+	refreshKey: undefined,
 };
 
 PatientsObservedSearchResults.propTypes = {
 	page: PropTypes.number,
 	perpage: PropTypes.number,
 	refresh: PropTypes.func,
-	refreshKey: PropTypes.any
+	refreshKey: PropTypes.any,
 };
 
 export default PatientsObservedSearchResults;

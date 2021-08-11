@@ -20,7 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {Alert, AlertTitle} from '@material-ui/lab';
 import {
 	MobileDatePicker as DatePicker,
-	MobileTimePicker as TimePicker
+	MobileTimePicker as TimePicker,
 } from '@material-ui/pickers';
 
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
@@ -51,15 +51,15 @@ import PatientPicker from '../patients/PatientPicker';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
+		marginLeft: theme.spacing(1),
 	},
 	dialogPaper: {
-		overflow: 'visible'
+		overflow: 'visible',
 	},
 	multiline: {
 		overflow: 'auto',
-		width: '100%'
-	}
+		width: '100%',
+	},
 }));
 
 const usePhone = (patientList) => {
@@ -94,24 +94,24 @@ const AppointmentDialog = (props) => {
 		initialPatient,
 		open,
 		onClose,
-		onSubmit
+		onSubmit,
 	} = props;
 
 	const {loading, value: appointmentDuration} = useSetting(
-		'appointment-duration'
+		'appointment-duration',
 	);
 
 	const [date, setDate] = useStateWithInitOverride(
-		serializeDate(initialDatetime)
+		serializeDate(initialDatetime),
 	);
 	const [validDate, setValidDate] = useStateWithInitOverride(
-		isValid(initialDatetime)
+		isValid(initialDatetime),
 	);
 	const [time, setTime] = useStateWithInitOverride(
-		noInitialTime ? '' : serializeTime(initialDatetime)
+		noInitialTime ? '' : serializeTime(initialDatetime),
 	);
 	const [validTime, setValidTime] = useStateWithInitOverride(
-		!noInitialTime && isValid(initialDatetime)
+		!noInitialTime && isValid(initialDatetime),
 	);
 	const [duration, setDuration] = useStateWithInitOverride(
 		appointmentDuration.includes(initialAppointment?.duration)
@@ -119,20 +119,20 @@ const AppointmentDialog = (props) => {
 			: appointmentDuration.length > 0
 			? appointmentDuration[0]
 			: 0,
-		[initialAppointment, appointmentDuration]
+		[initialAppointment, appointmentDuration],
 	);
 	const [reason, setReason] = useStateWithInitOverride(
 		initialAppointment?.reason || '',
-		[initialAppointment]
+		[initialAppointment],
 	);
 
 	const [patientList, setPatientList] = useStateWithInitOverride(
 		initialPatient ? [initialPatient] : [],
-		[initialPatient]
+		[initialPatient],
 	);
 	const [phone, setPhone] = usePhone(patientList);
 	const [patientError, setPatientError] = useStateWithInitOverride('', [
-		initialPatient
+		initialPatient,
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
@@ -141,7 +141,7 @@ const AppointmentDialog = (props) => {
 	const datetime = unserializeDatetime(date, time);
 	const appointmentIsInThePast = isBefore(
 		unserializeDate(date),
-		startOfToday()
+		startOfToday(),
 	);
 	const displayAppointmentIsInThePast = appointmentIsInThePast;
 
@@ -153,10 +153,10 @@ const AppointmentDialog = (props) => {
 		end,
 		{
 			_id: {$ne: _id},
-			isCancelled: {$ne: true}
+			isCancelled: {$ne: true},
 		},
 		{limit: 1},
-		[_id, Number(datetime), duration]
+		[_id, Number(datetime), duration],
 	);
 	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
 
@@ -170,7 +170,7 @@ const AppointmentDialog = (props) => {
 				duration,
 				patient: patientList[0],
 				phone,
-				reason
+				reason,
 			};
 			console.debug(args);
 			onSubmit(args, (err, res) => {
@@ -180,7 +180,7 @@ const AppointmentDialog = (props) => {
 					console.log(
 						`Consultation #${res._id} ${
 							initialAppointment ? 'updated' : 'created'
-						}.`
+						}.`,
 					);
 					onClose();
 					if (!initialAppointment) {
@@ -278,7 +278,7 @@ const AppointmentDialog = (props) => {
 								value={duration}
 								inputProps={{
 									name: 'duration',
-									id: 'duration'
+									id: 'duration',
 								}}
 								onChange={(e) => setDuration(e.target.value)}
 							>
@@ -298,7 +298,7 @@ const AppointmentDialog = (props) => {
 								label: "Patient's lastname then firstname(s)",
 								margin: 'normal',
 								helperText: patientError,
-								error: Boolean(patientError)
+								error: Boolean(patientError),
 							}}
 							value={patientList}
 							maxCount={1}
@@ -365,7 +365,7 @@ const AppointmentDialog = (props) => {
 };
 
 AppointmentDialog.defaultProps = {
-	noInitialTime: false
+	noInitialTime: false,
 };
 
 AppointmentDialog.propTypes = {
@@ -375,7 +375,7 @@ AppointmentDialog.propTypes = {
 	initialDatetime: PropTypes.instanceOf(Date).isRequired,
 	noInitialTime: PropTypes.bool,
 	initialAppointment: PropTypes.object,
-	initialPatient: PropTypes.object
+	initialPatient: PropTypes.object,
 };
 
 export default withLazyOpening(AppointmentDialog);

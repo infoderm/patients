@@ -10,7 +10,7 @@ const makeFindOne =
 
 		const upToDate = useTracker(
 			() => (loading ? undefined : Collection.findOne(query, options)),
-			[loading, ...deps]
+			[loading, ...deps],
 		);
 
 		const found = Boolean(upToDate);

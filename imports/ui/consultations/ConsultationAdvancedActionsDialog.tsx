@@ -29,12 +29,12 @@ import ConsultationTransferDialog from './ConsultationTransferDialog';
 const useStyles = makeStyles({
 	primary: {
 		backgroundColor: blue[100],
-		color: blue[600]
+		color: blue[600],
 	},
 	secondary: {
 		backgroundColor: red[100],
-		color: red[600]
-	}
+		color: red[600],
+	},
 });
 
 const ConsultationAdvancedActionsDialog = (props) => {

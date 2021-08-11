@@ -23,5 +23,5 @@ AllergyRenamingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onRename: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired
+	tag: PropTypes.object.isRequired,
 };

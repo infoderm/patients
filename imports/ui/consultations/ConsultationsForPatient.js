@@ -28,7 +28,7 @@ const ConsultationsForPatient = (props) => {
 
 	const query = {
 		patientId,
-		isDone: true
+		isDone: true,
 	};
 
 	const sort = {datetime: -1};

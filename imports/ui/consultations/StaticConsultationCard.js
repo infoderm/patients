@@ -16,14 +16,14 @@ import StaticConsultationCardActions from './StaticConsultationCardActions';
 
 const useStyles = makeStyles(() => ({
 	card: {
-		transition: 'opacity 500ms ease-out'
+		transition: 'opacity 500ms ease-out',
 	},
 	appointment: {
-		backgroundColor: '#FFF5D6'
+		backgroundColor: '#FFF5D6',
 	},
 	didNotOrWillNotHappen: {
-		backgroundColor: '#ccc'
-	}
+		backgroundColor: '#ccc',
+	},
 }));
 
 const StaticConsultationCard = (props) => {
@@ -39,7 +39,7 @@ const StaticConsultationCard = (props) => {
 		isNoShow,
 		missingPaymentData,
 		owes,
-		owed
+		owed,
 	} = virtualFields(consultation);
 
 	const extraProps = {
@@ -48,7 +48,7 @@ const StaticConsultationCard = (props) => {
 		isNoShow,
 		missingPaymentData,
 		owes,
-		owed
+		owed,
 	};
 
 	const cardOpacity = {opacity: deleted ? 0.4 : 1};
@@ -59,7 +59,7 @@ const StaticConsultationCard = (props) => {
 			TransitionProps={{unmountOnExit: true}}
 			className={classNames(classes.card, {
 				[classes.appointment]: isAppointment,
-				[classes.didNotOrWillNotHappen]: didNotOrWillNotHappen
+				[classes.didNotOrWillNotHappen]: didNotOrWillNotHappen,
 			})}
 			style={cardOpacity}
 		>
@@ -78,7 +78,7 @@ StaticConsultationCard.defaultProps = {
 	found: true,
 	PatientChip: undefined,
 	showPrice: false,
-	defaultExpanded: false
+	defaultExpanded: false,
 };
 
 StaticConsultationCard.propTypes = {
@@ -88,7 +88,7 @@ StaticConsultationCard.propTypes = {
 	attachments: PropTypes.array,
 	PatientChip: PropTypes.elementType,
 	showPrice: PropTypes.bool,
-	defaultExpanded: PropTypes.bool
+	defaultExpanded: PropTypes.bool,
 };
 
 export default StaticConsultationCard;

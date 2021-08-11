@@ -22,12 +22,12 @@ export const computeFixedFabStyle = ({
 	style,
 	theme,
 	row = DEFAULT_ROW,
-	col = DEFAULT_COL
+	col = DEFAULT_COL,
 }: Options): CSSProperties => ({
 	...style,
 	position: 'fixed',
 	bottom: theme?.spacing(3 + 9 * (row - 1)),
-	right: theme?.spacing(3 + 9 * (col - 1))
+	right: theme?.spacing(3 + 9 * (col - 1)),
 });
 
 const propTypes = {
@@ -37,8 +37,8 @@ const propTypes = {
 	component: PropTypes.elementType,
 	children: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.node),
-		PropTypes.node
-	]).isRequired
+		PropTypes.node,
+	]).isRequired,
 };
 
 type Props = InferProps<typeof propTypes>;
@@ -53,7 +53,7 @@ const FixedFab = React.forwardRef(
 			component,
 			...rest
 		}: Props & FabProps<typeof component>,
-		ref
+		ref,
 	) => {
 		const theme = useTheme();
 
@@ -64,7 +64,7 @@ const FixedFab = React.forwardRef(
 				{children}
 			</Fab>
 		);
-	}
+	},
 );
 
 FixedFab.propTypes = propTypes;

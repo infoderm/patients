@@ -32,9 +32,9 @@ Meteor.methods({
 				$set: {
 					owner,
 					key,
-					value
-				}
-			}
+					value,
+				},
+			},
 		);
 	},
 
@@ -45,12 +45,12 @@ Meteor.methods({
 		}
 
 		return Settings.remove({owner: this.userId, key});
-	}
+	},
 });
 
 const methods = {
 	update: 'settings.update',
-	reset: 'settings.reset'
+	reset: 'settings.reset',
 };
 
 const defaults = {
@@ -66,12 +66,12 @@ const defaults = {
 	'text-transform': 'uppercase',
 	iban: '',
 	'account-holder': '',
-	'displayed-week-days': [...ALL_WEEK_DAYS]
+	'displayed-week-days': [...ALL_WEEK_DAYS],
 };
 
 const settings = {
 	defaults,
-	methods
+	methods,
 };
 
 export {Settings, settings};

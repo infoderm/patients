@@ -13,7 +13,7 @@ import {normalized, normalizeInput, parseUint32StrictOrString} from './string';
 import {
 	STATS_SUFFIX,
 	FIND_CACHE_SUFFIX,
-	FIND_OBSERVE_SUFFIX
+	FIND_OBSERVE_SUFFIX,
 } from './createTagCollection';
 
 const collection = 'books';
@@ -35,14 +35,14 @@ if (Meteor.isServer) {
 	Meteor.publish(publication, function (args) {
 		const query = {
 			...args,
-			owner: this.userId
+			owner: this.userId,
 		};
 		return Books.find(query);
 	});
 
 	Meteor.publish(
 		cachePublication,
-		makeObservedQueryPublication(Books, cacheCollection)
+		makeObservedQueryPublication(Books, cacheCollection),
 	);
 }
 
@@ -55,7 +55,7 @@ export const books = {
 		publication,
 		stats,
 		parentPublication: 'book.consultations',
-		parentPublicationStats: 'book.stats'
+		parentPublicationStats: 'book.stats',
 	},
 	cache: {Stats},
 	sanitizeInput,
@@ -70,14 +70,14 @@ export const books = {
 
 		const key = {
 			owner,
-			name
+			name,
 		};
 
 		const fields = {
 			owner,
 			name,
 			fiscalYear,
-			bookNumber
+			bookNumber,
 		};
 
 		return Books.upsert(key, {$set: fields});
@@ -91,7 +91,7 @@ export const books = {
 
 		const fields = {
 			owner,
-			name
+			name,
 		};
 
 		return Books.remove(fields);
@@ -131,8 +131,8 @@ export const books = {
 			book,
 			datetime: {
 				$gte: begin,
-				$lt: end
-			}
+				$lt: end,
+			},
 		};
 	},
 
@@ -147,5 +147,5 @@ export const books = {
 	DOWNLOAD_FIRST_BOOK: 1,
 	DOWNLOAD_LAST_BOOK: 99,
 	DOWNLOAD_MAX_ROWS: 60,
-	RARE: ['0']
+	RARE: ['0'],
 };

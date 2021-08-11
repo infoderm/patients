@@ -21,14 +21,14 @@ const MonthlyCalendarData = (props) => {
 };
 
 MonthlyCalendarData.defaultProps = {
-	maxLines: 6
+	maxLines: 6,
 };
 
 MonthlyCalendarData.propTypes = {
 	year: PropTypes.number.isRequired,
 	month: PropTypes.number.isRequired,
 	weekOptions: PropTypes.object,
-	maxLines: PropTypes.number
+	maxLines: PropTypes.number,
 };
 
 export default MonthlyCalendarData;

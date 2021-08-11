@@ -53,7 +53,7 @@ const AutocompleteWithSuggestions = ({
 								{TextFieldProps?.InputProps?.endAdornment}
 								{params.InputProps.endAdornment}
 							</InputAdornment>
-						)
+						),
 					}}
 				/>
 			)}
@@ -67,11 +67,11 @@ const AutocompleteWithSuggestions = ({
 };
 
 AutocompleteWithSuggestions.defaultProps = {
-	itemToString: (x: any): any => x
+	itemToString: (x: any): any => x,
 };
 
 AutocompleteWithSuggestions.propTypes = {
-	itemToString: PropTypes.func
+	itemToString: PropTypes.func,
 };
 
 export default AutocompleteWithSuggestions;

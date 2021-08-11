@@ -10,7 +10,7 @@ const PickerDialog = ({value, onClick, onChange}) => (
 				top: '0px',
 				right: '0px',
 				bottom: '0px',
-				left: '0px'
+				left: '0px',
 			}}
 			onClick={onClick}
 		/>
@@ -21,7 +21,7 @@ const PickerDialog = ({value, onClick, onChange}) => (
 PickerDialog.propTypes = {
 	value: PropTypes.string,
 	onChange: PropTypes.func,
-	onClick: PropTypes.func
+	onClick: PropTypes.func,
 };
 
 export default PickerDialog;

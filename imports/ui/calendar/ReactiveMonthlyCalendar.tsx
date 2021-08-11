@@ -40,7 +40,7 @@ const ReactiveMonthlyCalendar = (props) => {
 	const {value: weekStartsOn} = useSettingCached('week-starts-on');
 
 	const weekOptions = {
-		weekStartsOn
+		weekStartsOn,
 	};
 
 	const [begin, end] = monthly(year, month, weekOptions);
@@ -60,7 +60,7 @@ const ReactiveMonthlyCalendar = (props) => {
 
 	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
-		Number(end)
+		Number(end),
 	]);
 
 	const history = useHistory();
@@ -72,7 +72,7 @@ const ReactiveMonthlyCalendar = (props) => {
 	const displayedEvents = events.filter(
 		(x) =>
 			(showCancelledEvents || !x.isCancelled) &&
-			(showNoShowEvents || !x.isNoShow)
+			(showNoShowEvents || !x.isNoShow),
 	);
 
 	return (

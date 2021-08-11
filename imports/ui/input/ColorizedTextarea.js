@@ -18,7 +18,7 @@ const ReadOnlyColorizedTextArea = (props) => {
 				style={{
 					maxHeight: rowsMax ? `${1.5 * rowsMax}rem` : undefined,
 					whiteSpace: 'pre-wrap',
-					overflowWrap: 'break-word'
+					overflowWrap: 'break-word',
 				}}
 			>
 				{children}

@@ -21,7 +21,7 @@ if (Meteor.isServer) {
 			patientId,
 			isDone: false,
 			isCancelled: {$in: [false, null]},
-			scheduledDatetime: {$lt: startOfToday()} // TODO make reactive?
+			scheduledDatetime: {$lt: startOfToday()}, // TODO make reactive?
 		};
 		const options = {fields: {_id: 1}};
 
@@ -39,7 +39,7 @@ if (Meteor.isServer) {
 			removed: (_id) => {
 				count -= 1;
 				this.changed(collection, key, state());
-			}
+			},
 		});
 
 		initializing = false;

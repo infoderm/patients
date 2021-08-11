@@ -19,8 +19,8 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const AppointmentUncancellationDialog = (props) => {
@@ -73,7 +73,7 @@ const AppointmentUncancellationDialog = (props) => {
 AppointmentUncancellationDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	appointment: PropTypes.object.isRequired
+	appointment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AppointmentUncancellationDialog);

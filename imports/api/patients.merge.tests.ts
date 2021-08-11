@@ -38,10 +38,10 @@ if (Meteor.isServer) {
 				const invocation = {userId};
 
 				const patientA = Factory.create('patient', {
-					owner: userId
+					owner: userId,
 				}) as PatientDocument;
 				const patientB = Factory.create('patient', {
-					owner: userId
+					owner: userId,
 				}) as PatientDocument;
 
 				const uploadA = Factory.create('upload', {userId});
@@ -52,21 +52,21 @@ if (Meteor.isServer) {
 
 				let consultationA = Factory.create('consultation', {
 					owner: userId,
-					patientId: patientA._id
+					patientId: patientA._id,
 				});
 				// create an irrelevant consultation
 				Factory.create('consultation', {
-					owner: userId
+					owner: userId,
 				});
 
 				let documentA = Factory.create('document', {
 					owner: userId,
-					patientId: patientA._id
+					patientId: patientA._id,
 				});
 
 				// create an irrelevant document
 				Factory.create('document', {
-					owner: userId
+					owner: userId,
 				});
 
 				assert.equal(Patients.find().count(), 4);
@@ -83,7 +83,7 @@ if (Meteor.isServer) {
 					consultationIds,
 					attachmentIds,
 					documentIds,
-					newPatientFields
+					newPatientFields,
 				];
 
 				const newPatientId = patientsMerge.apply(invocation, parameters);
@@ -102,9 +102,9 @@ if (Meteor.isServer) {
 				const newPatientAttachments = Attachments.find(
 					{
 						userId,
-						'meta.attachedToPatients': newPatientId
+						'meta.attachedToPatients': newPatientId,
 					},
-					{fields: {meta: 0}}
+					{fields: {meta: 0}},
 				).fetch();
 
 				assert.deepEqual(setLike(newPatientAttachments), expectedAttachments);

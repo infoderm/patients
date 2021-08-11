@@ -18,7 +18,7 @@ const PatientGridItem = ({
 
 PatientGridItem.propTypes = {
 	Card: PropTypes.elementType.isRequired,
-	CardProps: PropTypes.object
+	CardProps: PropTypes.object,
 };
 
 export default PatientGridItem;

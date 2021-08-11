@@ -10,15 +10,15 @@ const PrecedingConsultationsList = ({consultation}) => {
 	const query = {
 		patientId: consultation.patientId,
 		datetime: {
-			$lt: consultation.datetime
-		}
+			$lt: consultation.datetime,
+		},
 	};
 	const options = {sort: {datetime: -1}};
 	const deps = [JSON.stringify(query)];
 	const {loading, results: consultations} = useConsultationsFind(
 		query,
 		options,
-		deps
+		deps,
 	);
 
 	if (loading) return <Loading />;
@@ -34,7 +34,7 @@ const PrecedingConsultationsList = ({consultation}) => {
 			itemProps={{
 				attachAction: false,
 				editAction: false,
-				moreAction: false
+				moreAction: false,
 			}}
 		/>
 	);

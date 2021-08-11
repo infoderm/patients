@@ -11,39 +11,39 @@ import NoMatch from './navigation/NoMatch';
 import Loading from './navigation/Loading';
 
 const FullTextSearchResults = lazy(
-	async () => import('./search/FullTextSearchResults')
+	async () => import('./search/FullTextSearchResults'),
 );
 
 const PatientRecord = lazy(async () => import('./patients/PatientRecord'));
 const NewPatientForm = lazy(async () => import('./patients/NewPatientForm'));
 
 const ConsultationsOfTheDay = lazy(
-	async () => import('./consultations/ConsultationsOfTheDay')
+	async () => import('./consultations/ConsultationsOfTheDay'),
 );
 const TodaysConsultations = lazy(
-	async () => import('./consultations/TodaysConsultations')
+	async () => import('./consultations/TodaysConsultations'),
 );
 const LastDayOfConsultations = lazy(
-	async () => import('./consultations/LastDayOfConsultations')
+	async () => import('./consultations/LastDayOfConsultations'),
 );
 const LastConsultation = lazy(
-	async () => import('./consultations/LastConsultation')
+	async () => import('./consultations/LastConsultation'),
 );
 const ConsultationDetails = lazy(
-	async () => import('./consultations/ConsultationDetails')
+	async () => import('./consultations/ConsultationDetails'),
 );
 const EditConsultation = lazy(
-	async () => import('./consultations/EditConsultation')
+	async () => import('./consultations/EditConsultation'),
 );
 const NewConsultation = lazy(
-	async () => import('./consultations/NewConsultation')
+	async () => import('./consultations/NewConsultation'),
 );
 
 const MonthlyPlanner = lazy(
-	async () => import('./planner/PreconfiguredMonthlyPlanner')
+	async () => import('./planner/PreconfiguredMonthlyPlanner'),
 );
 const WeeklyPlanner = lazy(
-	async () => import('./planner/PreconfiguredWeeklyPlanner')
+	async () => import('./planner/PreconfiguredWeeklyPlanner'),
 );
 
 const BooksList = lazy(async () => import('./books/BooksList'));
@@ -51,21 +51,21 @@ const BookDetails = lazy(async () => import('./books/BookDetails'));
 
 const DocumentsList = lazy(async () => import('./documents/DocumentsList'));
 const DocumentVersionsList = lazy(
-	async () => import('./documents/DocumentVersionsList')
+	async () => import('./documents/DocumentVersionsList'),
 );
 const DocumentsFromIdentifierList = lazy(
-	async () => import('./documents/DocumentsFromIdentifierList')
+	async () => import('./documents/DocumentsFromIdentifierList'),
 );
 const DocumentDetails = lazy(async () => import('./documents/DocumentDetails'));
 
 const PaidConsultationsList = lazy(
-	async () => import('./consultations/PaidConsultationsList')
+	async () => import('./consultations/PaidConsultationsList'),
 );
 const SEPAPaymentDetails = lazy(
-	async () => import('./payment/SEPAPaymentDetails')
+	async () => import('./payment/SEPAPaymentDetails'),
 );
 const UnpaidConsultationsList = lazy(
-	async () => import('./consultations/UnpaidConsultationsList')
+	async () => import('./consultations/UnpaidConsultationsList'),
 );
 const Stats = lazy(async () => import('./stats/Stats'));
 const Issues = lazy(async () => import('./issues/Issues'));
@@ -76,7 +76,7 @@ const DoctorDetails = lazy(async () => import('./doctors/DoctorDetails'));
 
 const InsurancesList = lazy(async () => import('./insurances/InsurancesList'));
 const InsuranceDetails = lazy(
-	async () => import('./insurances/InsuranceDetails')
+	async () => import('./insurances/InsuranceDetails'),
 );
 
 const AllergiesList = lazy(async () => import('./allergies/AllergiesList'));
@@ -100,8 +100,8 @@ const CurrentMonthlyPlanner = ({match, ...rest}) => {
 		params: {
 			...match?.params,
 			year,
-			month
-		}
+			month,
+		},
 	};
 	return <MonthlyPlanner match={matchWithParams} {...rest} />;
 };
@@ -115,8 +115,8 @@ const CurrentWeeklyPlanner = ({match, ...rest}) => {
 		params: {
 			...match?.params,
 			year,
-			week
-		}
+			week,
+		},
 	};
 	return <WeeklyPlanner match={matchWithParams} {...rest} />;
 };

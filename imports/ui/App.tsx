@@ -6,7 +6,7 @@ import {
 	makeStyles,
 	MuiThemeProvider,
 	createMuiTheme,
-	responsiveFontSizes
+	responsiveFontSizes,
 } from '@material-ui/core/styles';
 
 import {SnackbarProvider} from 'notistack';
@@ -42,28 +42,28 @@ const useStyles = makeStyles(() => ({
 		position: 'relative',
 		display: 'flex',
 		width: '100%',
-		minHeight: '100vh'
+		minHeight: '100vh',
 	},
 	progress: {
 		display: 'block',
 		position: 'fixed',
 		width: '100%',
-		zIndex: 9999
-	}
+		zIndex: 9999,
+	},
 }));
 
 const useUISettings = () =>
 	useTracker(() => {
 		const handles = [
 			settings.subscribe('text-transform'),
-			settings.subscribe('navigation-drawer-is-open')
+			settings.subscribe('navigation-drawer-is-open'),
 		];
 		return {
 			loading: !all(map((x) => x.ready(), handles)),
 			textTransform: settings.getWithBrowserCache('text-transform'),
 			navigationDrawerIsOpen: settings.getWithBrowserCache(
-				'navigation-drawer-is-open'
-			)
+				'navigation-drawer-is-open',
+			),
 		};
 	}, []);
 

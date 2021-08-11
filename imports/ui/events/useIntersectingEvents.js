@@ -8,7 +8,7 @@ import {Events, intersectsInterval} from '../../api/events';
 const useIntersectingEvents = (begin, end, filter, options, deps) => {
 	const query = {
 		...intersectsInterval(begin, end),
-		...filter
+		...filter,
 	};
 
 	return useTracker(() => {
@@ -17,7 +17,7 @@ const useIntersectingEvents = (begin, end, filter, options, deps) => {
 		const handle = Meteor.subscribe('events.intersects', begin, end);
 		return {
 			loading: !handle.ready(),
-			results: Events.find(query, options).fetch()
+			results: Events.find(query, options).fetch(),
 		};
 	}, deps);
 };

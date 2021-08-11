@@ -14,7 +14,7 @@ const ColorPicker = ({
 	// ColorPicker
 	defaultValue,
 	onChange,
-	convert
+	convert,
 
 	// Text field
 	// name,
@@ -42,7 +42,7 @@ const ColorPicker = ({
 				}
 				style={{
 					backgroundColor: value,
-					color: colord(value).isLight() ? '#111' : '#ddd'
+					color: colord(value).isLight() ? '#111' : '#ddd',
 				}}
 				label={value}
 				onClick={() => setShowPicker(true)}
@@ -68,11 +68,11 @@ const ColorPicker = ({
 ColorPicker.propTypes = {
 	defaultValue: PropTypes.string,
 	onChange: PropTypes.func,
-	convert: PropTypes.oneOf(Object.keys(converters))
+	convert: PropTypes.oneOf(Object.keys(converters)),
 };
 
 ColorPicker.defaultProps = {
-	convert: DEFAULT_CONVERTER
+	convert: DEFAULT_CONVERTER,
 };
 
 export default ColorPicker;

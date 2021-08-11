@@ -28,8 +28,8 @@ export default function BookDetails({match, year, book, page, perpage}) {
 			listProps={{
 				itemProps: {
 					showPrice: true,
-					PatientChip: ReactivePatientChip
-				}
+					PatientChip: ReactivePatientChip,
+				},
 			}}
 			root={`/book/${year}/${myEncodeURIComponent(book)}`}
 			useParents={useConsultationsFind}
@@ -43,10 +43,10 @@ export default function BookDetails({match, year, book, page, perpage}) {
 
 BookDetails.defaultProps = {
 	page: 1,
-	perpage: 100
+	perpage: 100,
 };
 
 BookDetails.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };

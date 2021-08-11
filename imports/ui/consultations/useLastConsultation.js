@@ -8,7 +8,7 @@ export default function useLastConsultation(filter) {
 		const handle = Meteor.subscribe('consultations.last');
 		return {
 			loading: !handle.ready(),
-			consultation: findLastConsultation(filter)
+			consultation: findLastConsultation(filter),
 		};
 	}, [JSON.stringify(filter)]);
 }

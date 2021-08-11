@@ -10,11 +10,11 @@ const useStyles = makeStyles((theme) => ({
 	buttonTile: {
 		minHeight: 200,
 		width: '100%',
-		fontSize: '1rem'
+		fontSize: '1rem',
 	},
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 export default function MissingPatientCard({patientId}) {

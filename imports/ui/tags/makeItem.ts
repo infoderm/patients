@@ -13,7 +13,7 @@ interface ReturnType<U> {
 const makeItem =
 	<T extends TagDocument, U = T>(
 		collection: Mongo.Collection<T, U>,
-		singlePublication: string
+		singlePublication: string,
 	) =>
 	(name: string, deps: React.DependencyList): ReturnType<U> =>
 		useTracker(() => {
@@ -22,7 +22,7 @@ const makeItem =
 				const item = collection.findOne({name} as Mongo.Selector<T>);
 				return {
 					loading: false,
-					item
+					item,
 				};
 			}
 

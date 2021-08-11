@@ -9,11 +9,11 @@ import Button from '@material-ui/core/Button';
 const useStyles = makeStyles((theme) => ({
 	buttons: {
 		paddingBottom: theme.spacing(3),
-		textAlign: 'center'
+		textAlign: 'center',
 	},
 	button: {
-		margin: theme.spacing(1)
-	}
+		margin: theme.spacing(1),
+	},
 }));
 
 export default function Jumper({items}) {
@@ -38,5 +38,5 @@ export default function Jumper({items}) {
 }
 
 Jumper.propTypes = {
-	items: PropTypes.array.isRequired
+	items: PropTypes.array.isRequired,
 };

@@ -25,7 +25,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 		setLoggingIn(true);
 		const key = enqueueSnackbar('Logging in...', {
 			variant: 'info',
-			persist: true
+			persist: true,
 		});
 		Meteor.loginWithPassword(username, password, (err) => {
 			setLoggingIn(false);
@@ -75,11 +75,11 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 			open={Boolean(anchorEl)}
 			anchorOrigin={{
 				vertical: 'bottom',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			transformOrigin={{
 				vertical: 'top',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			onClose={handleClose}
 		>
@@ -130,7 +130,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 LoginPopover.propTypes = {
 	anchorEl: PropTypes.object,
 	handleClose: PropTypes.func.isRequired,
-	changeMode: PropTypes.func.isRequired
+	changeMode: PropTypes.func.isRequired,
 };
 
 export default LoginPopover;

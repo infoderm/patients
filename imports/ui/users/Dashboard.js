@@ -17,7 +17,7 @@ const Logout = () => {
 	const logout = () => {
 		const key = enqueueSnackbar('Logging out...', {
 			variant: 'info',
-			persist: true
+			persist: true,
 		});
 		Meteor.logout((err) => {
 			closeSnackbar(key);

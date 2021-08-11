@@ -6,8 +6,8 @@ import {UseMultipleSelectionGetSelectedItemPropsOptions} from 'downshift';
 
 const styles = (theme) => ({
 	chip: {
-		margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`
-	}
+		margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`,
+	},
 });
 
 const useStyles = makeStyles(styles);
@@ -18,7 +18,7 @@ interface SelectionProps<Item, ChipProps> {
 	selectedItems: Item[];
 	itemToString: (item: Item) => string;
 	getSelectedItemProps: (
-		options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>
+		options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
 	) => any;
 	readOnly: boolean;
 	removeSelectedItem: (item: Item) => void;
@@ -32,7 +32,7 @@ const Selection = React.memo(
 		itemToString,
 		getSelectedItemProps,
 		readOnly,
-		removeSelectedItem
+		removeSelectedItem,
 	}: SelectionProps<any, any>) => {
 		const classes = useStyles();
 
@@ -61,7 +61,7 @@ const Selection = React.memo(
 				))}
 			</>
 		);
-	}
+	},
 );
 
 export default Selection;

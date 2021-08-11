@@ -12,14 +12,14 @@ const ReactivePatientChip = ({patient, ...props}) => {
 	const deps = [
 		patientId,
 		JSON.stringify(patient),
-		JSON.stringify(StaticPatientChip.projection)
+		JSON.stringify(StaticPatientChip.projection),
 	];
 
 	const {loading, found, fields} = usePatient(
 		patient,
 		patientId,
 		options,
-		deps
+		deps,
 	);
 	props = {...props, loading, found, patient: fields};
 
@@ -27,11 +27,11 @@ const ReactivePatientChip = ({patient, ...props}) => {
 };
 
 ReactivePatientChip.propTypes = {
-	patient: PropTypes.object.isRequired
+	patient: PropTypes.object.isRequired,
 };
 
 ReactivePatientChip.projection = {
-	_id: 1
+	_id: 1,
 };
 
 export default ReactivePatientChip;

@@ -21,8 +21,8 @@ import PatientPicker from '../patients/PatientPicker';
 
 const useStyles = makeStyles({
 	dialogPaper: {
-		overflow: 'visible'
-	}
+		overflow: 'visible',
+	},
 });
 
 const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
@@ -67,7 +67,7 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 					TextFieldProps={{
 						autoFocus: true,
 						label: 'Patient to link document to',
-						margin: 'normal'
+						margin: 'normal',
 					}}
 					value={patients}
 					onChange={(e) => {
@@ -101,11 +101,11 @@ DocumentLinkingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	document: PropTypes.object,
-	existingLink: PropTypes.object
+	existingLink: PropTypes.object,
 };
 
 DocumentLinkingDialog.projection = {
-	_id: 1
+	_id: 1,
 };
 
 export default withLazyOpening(DocumentLinkingDialog);

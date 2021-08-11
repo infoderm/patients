@@ -14,7 +14,7 @@ const onSubmit = (args, callback) => {
 export default function NewAppointmentDialog(
 	props:
 		| PropsOf<typeof AppointmentDialog>
-		| PropsOf<typeof AppointmentFromPatientIdDialog>
+		| PropsOf<typeof AppointmentFromPatientIdDialog>,
 ) {
 	return props.patientId === undefined ? (
 		<AppointmentDialog onSubmit={onSubmit} {...props} />

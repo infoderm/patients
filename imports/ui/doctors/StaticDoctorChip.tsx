@@ -29,7 +29,7 @@ const StaticDoctorChip = React.forwardRef<any, StaticDoctorChipProps>(
 		return (
 			<Chip ref={ref} {...rest} style={style} component={component} to={to} />
 		);
-	}
+	},
 );
 
 export default StaticDoctorChip;

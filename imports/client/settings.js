@@ -55,13 +55,13 @@ export const useSetting = (key, getFn = get) => {
 
 	const setValue = useMemo(
 		() => (newValue) => setSetting(key, newValue),
-		[key]
+		[key],
 	);
 
 	return {
 		loading,
 		value,
-		setValue
+		setValue,
 	};
 };
 
@@ -73,5 +73,5 @@ export const settings = {
 	subscribe,
 	useSetting,
 	get,
-	getWithBrowserCache
+	getWithBrowserCache,
 };

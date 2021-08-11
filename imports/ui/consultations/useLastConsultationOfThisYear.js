@@ -11,11 +11,11 @@ export default function useLastConsultationOfThisYear(filter) {
 		const handle = Meteor.subscribe(
 			'consultations.interval.last',
 			...interval,
-			filter
+			filter,
 		);
 		return {
 			loading: !handle.ready(),
-			consultation: findLastConsultationInInterval(interval, filter)
+			consultation: findLastConsultationInInterval(interval, filter),
 		};
 	}, [JSON.stringify(interval), JSON.stringify(filter)]);
 }

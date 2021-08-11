@@ -5,7 +5,7 @@ export const converters = {
 	hex: (c) => c.hex,
 
 	rgba_rgb: (c) => (c.rgb.a === 1 ? converters.rgb(c) : converters.rgba(c)),
-	rgba_hex: (c) => (c.rgb.a === 1 ? converters.hex(c) : converters.rgba(c))
+	rgba_hex: (c) => (c.rgb.a === 1 ? converters.hex(c) : converters.rgba(c)),
 };
 
 export default converters;

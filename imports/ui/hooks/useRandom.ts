@@ -6,7 +6,7 @@ const useRandom = (): [number, () => void] => {
 		value,
 		() => {
 			setValue(Math.random());
-		}
+		},
 	];
 };
 

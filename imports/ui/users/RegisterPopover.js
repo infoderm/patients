@@ -23,7 +23,7 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Creating account...', {
 			variant: 'info',
-			persist: true
+			persist: true,
 		});
 		Accounts.createUser({username, password}, (err) => {
 			closeSnackbar(key);
@@ -72,11 +72,11 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 			open={Boolean(anchorEl)}
 			anchorOrigin={{
 				vertical: 'bottom',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			transformOrigin={{
 				vertical: 'top',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			onClose={handleClose}
 		>
@@ -122,7 +122,7 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 RegisterPopover.propTypes = {
 	anchorEl: PropTypes.object,
 	handleClose: PropTypes.func.isRequired,
-	changeMode: PropTypes.func.isRequired
+	changeMode: PropTypes.func.isRequired,
 };
 
 export default RegisterPopover;

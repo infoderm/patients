@@ -36,10 +36,10 @@ export default function InsuranceDetails({match, name, page, perpage}) {
 
 InsuranceDetails.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 InsuranceDetails.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };

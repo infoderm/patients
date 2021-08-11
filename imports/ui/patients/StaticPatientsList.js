@@ -23,7 +23,7 @@ export default function StaticPatientsList({
 	if (loading && patients.length === 0) return <Loading />;
 
 	const style = {
-		transition: 'opacity 200ms ease-out'
+		transition: 'opacity 200ms ease-out',
 	};
 	if (loading) style.opacity = 0.4;
 
@@ -62,7 +62,7 @@ export default function StaticPatientsList({
 StaticPatientsList.projection = PatientsPage.projection;
 
 StaticPatientsList.defaultProps = {
-	loading: false
+	loading: false,
 };
 
 StaticPatientsList.propTypes = {
@@ -71,5 +71,5 @@ StaticPatientsList.propTypes = {
 	loading: PropTypes.bool,
 	patients: PropTypes.array.isRequired,
 	root: PropTypes.string.isRequired,
-	Card: PropTypes.elementType
+	Card: PropTypes.elementType,
 };

@@ -48,14 +48,14 @@ InputOneSetting.propTypes = {
 	label: PropTypes.string,
 	setting: PropTypes.string.isRequired,
 	sanitize: PropTypes.func,
-	validate: PropTypes.func
+	validate: PropTypes.func,
 };
 
 InputOneSetting.defaultProps = {
 	sanitize: (x) => x,
 	validate: () => ({
-		outcome: 1
-	})
+		outcome: 1,
+	}),
 };
 
 export default InputOneSetting;

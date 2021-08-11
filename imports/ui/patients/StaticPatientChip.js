@@ -15,24 +15,24 @@ const useStyles = makeStyles((theme) => ({
 	chip: {
 		marginRight: theme.spacing(1),
 		fontWeight: 'bold',
-		maxWidth: '200px'
+		maxWidth: '200px',
 	},
 	loading: {
 		backgroundColor: '#aaa',
-		color: '#fff'
+		color: '#fff',
 	},
 	found: {
 		backgroundColor: '#88f',
-		color: '#fff'
+		color: '#fff',
 	},
 	notfound: {
 		backgroundColor: '#f88',
-		color: '#fff'
+		color: '#fff',
 	},
 	willBeCreated: {
 		backgroundColor: '#8f8',
-		color: '#222'
-	}
+		color: '#222',
+	},
 }));
 
 export default function StaticPatientChip({
@@ -41,7 +41,7 @@ export default function StaticPatientChip({
 	found,
 	patient,
 	onClick,
-	onDelete
+	onDelete,
 }) {
 	const classes = useStyles();
 
@@ -82,7 +82,7 @@ export default function StaticPatientChip({
 					: willBeCreated
 					? classes.willBeCreated
 					: classes.notfound,
-				className
+				className,
 			)}
 			component={component}
 			to={to}
@@ -95,12 +95,12 @@ export default function StaticPatientChip({
 StaticPatientChip.projection = {
 	firstname: 1,
 	lastname: 1,
-	photo: 1
+	photo: 1,
 };
 
 StaticPatientChip.defaultProps = {
 	loading: false,
-	found: true
+	found: true,
 };
 
 StaticPatientChip.propTypes = {
@@ -109,5 +109,5 @@ StaticPatientChip.propTypes = {
 	found: PropTypes.bool,
 	patient: PropTypes.object.isRequired,
 	onClick: PropTypes.func,
-	onDelete: PropTypes.func
+	onDelete: PropTypes.func,
 };

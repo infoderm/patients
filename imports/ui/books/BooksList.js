@@ -19,7 +19,7 @@ import BooksDownloadDialog from './BooksDownloadDialog';
 export default function BooksList({match, year, page, perpage}) {
 	const [downloading, setDownloading] = useState(false);
 	const {value: sortingOrder, setValue: setSortingOrder} = useSettingCached(
-		'books-sorting-order'
+		'books-sorting-order',
 	);
 
 	const now = new Date();
@@ -75,11 +75,11 @@ export default function BooksList({match, year, page, perpage}) {
 
 BooksList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 BooksList.propTypes = {
 	year: PropTypes.string,
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };

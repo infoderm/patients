@@ -18,7 +18,7 @@ const ReactiveInsuranceChip = React.forwardRef<any, ReactiveInsuranceChipProps>(
 			label={label}
 			{...rest}
 		/>
-	)
+	),
 );
 
 export default ReactiveInsuranceChip;

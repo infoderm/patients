@@ -11,7 +11,7 @@ type Props<C> = PropsOf<C> & {tooltip?: string};
 const addTooltip =
 	<C extends React.ElementType>(
 		Component: ComponentWithoutTooltip<C>,
-		transform: Transform<C> = (_props, x) => x
+		transform: Transform<C> = (_props, x) => x,
 	) =>
 	({tooltip, ...rest}: Props<C>) => {
 		const title = transform(rest as PropsOf<C>, tooltip);

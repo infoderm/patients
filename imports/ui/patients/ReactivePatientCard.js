@@ -23,7 +23,7 @@ const ReactivePatientCard = ({patient, Card, ...rest}) => {
 		{},
 		patientId,
 		options,
-		deps
+		deps,
 	);
 	const props = {loading, found, patient: {...patient, ...fields}};
 
@@ -31,11 +31,11 @@ const ReactivePatientCard = ({patient, Card, ...rest}) => {
 };
 
 ReactivePatientCard.defaultProps = {
-	Card: StaticPatientCard
+	Card: StaticPatientCard,
 };
 
 ReactivePatientCard.propTypes = {
-	Card: PropTypes.elementType
+	Card: PropTypes.elementType,
 };
 
 export default ReactivePatientCard;

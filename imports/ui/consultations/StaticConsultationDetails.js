@@ -9,8 +9,8 @@ import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: theme.spacing(3)
-	}
+		padding: theme.spacing(3),
+	},
 }));
 
 const StaticConsultationDetails = ({loading, found, consultation}) => {

@@ -40,38 +40,38 @@ const useStyles = makeStyles((theme) => ({
 	drawerPaper: {
 		position: 'fixed',
 		height: '100vh',
-		overflowY: 'scroll'
+		overflowY: 'scroll',
 	},
 	drawerOpen: {
 		width: drawerWidthOpen,
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen
-		})
+			duration: theme.transitions.duration.enteringScreen,
+		}),
 	},
 	drawerClosed: {
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen
+			duration: theme.transitions.duration.leavingScreen,
 		}),
 		overflowX: 'hidden',
 		width: theme.spacing(7) + 1,
 		[theme.breakpoints.up('sm')]: {
-			width: theme.spacing(9) + 1
-		}
+			width: theme.spacing(9) + 1,
+		},
 	},
 	drawer: {
 		width: drawerWidthOpen,
 		flexShrink: 0,
-		whiteSpace: 'nowrap'
+		whiteSpace: 'nowrap',
 	},
 	drawerHeader: {
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'flex-end',
 		padding: '0 8px',
-		...theme.mixins.toolbar
-	}
+		...theme.mixins.toolbar,
+	},
 }));
 
 const DrawerItem = ({expand, disabled, link}) => (
@@ -89,7 +89,7 @@ const DrawerItem = ({expand, disabled, link}) => (
 
 export default function NavigationDrawer({
 	currentUser,
-	navigationDrawerIsOpen
+	navigationDrawerIsOpen,
 }) {
 	const theme = useTheme();
 	const classes = useStyles();
@@ -107,33 +107,33 @@ export default function NavigationDrawer({
 				{
 					to: '/new/patient',
 					icon: <PersonAddIcon />,
-					title: 'Nouveau'
+					title: 'Nouveau',
 				},
 
 				{
 					to: '/consultations/today',
 					icon: <ScheduleIcon />,
-					title: "Aujourd'hui"
+					title: "Aujourd'hui",
 				},
 
 				{
 					to: '/consultation/last',
 					icon: <BookmarkIcon />,
-					title: 'Dernière'
+					title: 'Dernière',
 				},
 
 				{
 					to: '/calendar/week/current',
 					icon: <TodayIcon />,
-					title: 'Agenda'
+					title: 'Agenda',
 				},
 
 				{
 					to: '/documents',
 					icon: <LibraryBooksIcon />,
-					title: 'Documents'
-				}
-			]
+					title: 'Documents',
+				},
+			],
 		},
 
 		{
@@ -143,27 +143,27 @@ export default function NavigationDrawer({
 				{
 					to: '/books',
 					icon: <BookIcon />,
-					title: 'Carnets'
+					title: 'Carnets',
 				},
 
 				{
 					to: '/paid',
 					icon: <AccountBalanceIcon />,
-					title: 'Paid'
+					title: 'Paid',
 				},
 
 				{
 					to: '/unpaid',
 					icon: <MoneyOffIcon />,
-					title: 'Unpaid'
+					title: 'Unpaid',
 				},
 
 				{
 					to: '/sepa',
 					icon: <CropFreeIcon />,
-					title: 'SEPA'
-				}
-			]
+					title: 'SEPA',
+				},
+			],
 		},
 
 		{
@@ -173,15 +173,15 @@ export default function NavigationDrawer({
 				{
 					to: '/issues',
 					icon: <ReportProblemIcon />,
-					title: 'Issues'
+					title: 'Issues',
 				},
 
 				{
 					to: '/merge',
 					icon: <MergeTypeIcon />,
-					title: 'Merge'
-				}
-			]
+					title: 'Merge',
+				},
+			],
 		},
 
 		{
@@ -191,21 +191,21 @@ export default function NavigationDrawer({
 				{
 					to: '/doctors',
 					icon: <SupervisorAccountIcon />,
-					title: 'Doctors'
+					title: 'Doctors',
 				},
 
 				{
 					to: '/insurances',
 					icon: <BusinessIcon />,
-					title: 'Insurances'
+					title: 'Insurances',
 				},
 
 				{
 					to: '/allergies',
 					icon: <BugReportIcon />,
-					title: 'Allergies'
-				}
-			]
+					title: 'Allergies',
+				},
+			],
 		},
 
 		{
@@ -216,16 +216,16 @@ export default function NavigationDrawer({
 					to: '/drugs',
 					icon: <LocalPharmacyIcon />,
 					title: 'Drugs',
-					disabled: true
+					disabled: true,
 				},
 
 				{
 					to: '/hospitals',
 					icon: <LocalHospitalIcon />,
 					title: 'Hospitals',
-					disabled: true
-				}
-			]
+					disabled: true,
+				},
+			],
 		},
 
 		{
@@ -235,16 +235,16 @@ export default function NavigationDrawer({
 				{
 					to: '/settings',
 					icon: <SettingsIcon />,
-					title: 'Settings'
+					title: 'Settings',
 				},
 
 				{
 					to: '/stats',
 					icon: <BarChartIcon />,
-					title: 'Stats'
-				}
-			]
-		}
+					title: 'Stats',
+				},
+			],
+		},
 	];
 
 	return (
@@ -253,13 +253,13 @@ export default function NavigationDrawer({
 			variant="permanent"
 			className={classNames({
 				[classes.drawerOpen]: navigationDrawerIsOpen === 'open',
-				[classes.drawerClosed]: navigationDrawerIsOpen === 'closed'
+				[classes.drawerClosed]: navigationDrawerIsOpen === 'closed',
 			})}
 			classes={{
 				paper: classNames({
 					[classes.drawerOpen]: navigationDrawerIsOpen === 'open',
-					[classes.drawerClosed]: navigationDrawerIsOpen === 'closed'
-				})
+					[classes.drawerClosed]: navigationDrawerIsOpen === 'closed',
+				}),
 			}}
 			anchor="left"
 		>

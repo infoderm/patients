@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 		transition: 'opacity 500ms ease-out',
 		display: 'flex',
 		minHeight: 200,
-		minWidth: 400
+		minWidth: 400,
 	},
 	veil: {
 		position: 'absolute',
@@ -42,18 +42,18 @@ const useStyles = makeStyles((theme) => ({
 		left: 0,
 		right: 0,
 		zIndex: 1,
-		fontSize: '2rem'
+		fontSize: '2rem',
 	},
 	details: {
 		display: 'flex',
 		flex: 1,
-		flexDirection: 'column'
+		flexDirection: 'column',
 	},
 	header: {
-		flex: '1 0 auto'
+		flex: '1 0 auto',
 	},
 	content: {
-		flex: '1 0 auto'
+		flex: '1 0 auto',
 	},
 	photoPlaceHolder: {
 		position: 'absolute',
@@ -67,35 +67,35 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		justifyContent: 'center',
 		color: '#fff',
-		backgroundColor: '#999'
+		backgroundColor: '#999',
 	},
 	photo: {
 		position: 'absolute',
 		right: 0,
 		top: 0,
 		width: 140,
-		height: 200
+		height: 200,
 	},
 	actions: {
 		display: 'flex',
-		paddingLeft: theme.spacing(2)
+		paddingLeft: theme.spacing(2),
 	},
 	male: {
 		color: '#fff',
-		backgroundColor: blue[500]
+		backgroundColor: blue[500],
 	},
 	female: {
 		color: '#fff',
-		backgroundColor: pink[500]
+		backgroundColor: pink[500],
 	},
 	name: {
-		display: 'flex'
+		display: 'flex',
 	},
 	scoreChip: {
 		marginLeft: theme.spacing(1),
 		color: '#fff',
-		backgroundColor: red[500]
-	}
+		backgroundColor: red[500],
+	},
 }));
 
 const GenericStaticPatientCard = ({
@@ -119,7 +119,7 @@ const GenericStaticPatientCard = ({
 	const photoTransition = useTransition([photo], {
 		from: {opacity: 0},
 		enter: {opacity: 1},
-		leave: {opacity: 0}
+		leave: {opacity: 0},
 	});
 
 	const deleted = !loading && !found;
@@ -127,7 +127,7 @@ const GenericStaticPatientCard = ({
 	const nnStyle = highlightNn
 		? {
 				backgroundColor:
-					typeof highlightNn === 'string' ? highlightNn : yellow[200]
+					typeof highlightNn === 'string' ? highlightNn : yellow[200],
 		  }
 		: {};
 
@@ -172,7 +172,7 @@ const GenericStaticPatientCard = ({
 						{firstname[0]}
 						{lastname[0]}
 					</animated.div>
-				)
+				),
 			)}
 		</Card>
 	);
@@ -184,14 +184,14 @@ GenericStaticPatientCard.projection = {
 	birthdate: 1,
 	sex: 1,
 	niss: 1,
-	photo: 1
+	photo: 1,
 };
 
 GenericStaticPatientCard.defaultProps = {
 	loading: false,
 	found: true,
 	highlightNn: false,
-	showScore: false
+	showScore: false,
 };
 
 GenericStaticPatientCard.propTypes = {
@@ -199,7 +199,7 @@ GenericStaticPatientCard.propTypes = {
 	found: PropTypes.bool,
 	highlightNn: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
 	showScore: PropTypes.bool,
-	patient: PropTypes.object.isRequired
+	patient: PropTypes.object.isRequired,
 };
 
 export default GenericStaticPatientCard;

@@ -39,5 +39,5 @@ export default function DocumentsForPatientStatic({
 
 DocumentsForPatientStatic.propTypes = {
 	documents: PropTypes.array.isRequired,
-	page: PropTypes.number.isRequired
+	page: PropTypes.number.isRequired,
 };

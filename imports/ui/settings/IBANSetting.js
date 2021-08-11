@@ -11,7 +11,7 @@ export default function IBANSetting({className}) {
 			label="IBAN"
 			sanitize={(s) => s.trim()}
 			validate={(s) => ({
-				outcome: IBAN.isValid(s) ? 1 : 0
+				outcome: IBAN.isValid(s) ? 1 : 0,
 			})}
 		/>
 	);

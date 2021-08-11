@@ -22,8 +22,8 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const MergePatientsConfirmationDialog = (props) => {
@@ -34,7 +34,7 @@ const MergePatientsConfirmationDialog = (props) => {
 		consultationsToAttach,
 		attachmentsToAttach,
 		documentsToAttach,
-		toDelete
+		toDelete,
 	} = props;
 
 	const classes = useStyles();
@@ -62,7 +62,7 @@ const MergePatientsConfirmationDialog = (props) => {
 					enqueueSnackbar(message, {variant: 'success'});
 					history.push({pathname: `/patient/${_id}`});
 				}
-			}
+			},
 		);
 	};
 
@@ -108,7 +108,7 @@ MergePatientsConfirmationDialog.propTypes = {
 	consultationsToAttach: PropTypes.array.isRequired,
 	attachmentsToAttach: PropTypes.array.isRequired,
 	documentsToAttach: PropTypes.array.isRequired,
-	toDelete: PropTypes.array.isRequired
+	toDelete: PropTypes.array.isRequired,
 };
 
 export default withLazyOpening(MergePatientsConfirmationDialog);

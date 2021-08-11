@@ -101,7 +101,7 @@ declare module 'meteor/ostrio:files' {
 					responseCode?: string,
 					fileRef?: FileRef<MetadataType>,
 					versionRef?: Version<MetadataType>,
-					version?: string
+					version?: string,
 			  ) => Record<string, string>);
 		throttle?: number | boolean;
 		downloadRoute?: string;
@@ -114,30 +114,30 @@ declare module 'meteor/ostrio:files' {
 		strict?: boolean;
 		downloadCallback?: (
 			this: ContextHTTP & ContextUser,
-			fileObj: FileObj<MetadataType>
+			fileObj: FileObj<MetadataType>,
 		) => boolean;
 		protected?:
 			| boolean
 			| ((
 					this: ContextHTTP & ContextUser,
-					fileObj: FileObj<MetadataType>
+					fileObj: FileObj<MetadataType>,
 			  ) => boolean | number);
 		public?: boolean;
 		onBeforeUpload?: (
 			this: ContextUpload & ContextUser,
-			fileData: FileData<MetadataType>
+			fileData: FileData<MetadataType>,
 		) => boolean | string;
 		onBeforeRemove?: (
 			this: ContextUser,
-			cursor: Mongo.Cursor<FileObj<MetadataType>>
+			cursor: Mongo.Cursor<FileObj<MetadataType>>,
 		) => boolean;
 		onInitiateUpload?: (
 			this: ContextUpload & ContextUser,
-			fileData: FileData<MetadataType>
+			fileData: FileData<MetadataType>,
 		) => void;
 		onAfterUpload?: (
 			this: FilesCollection<MetadataType>,
-			fileRef: FileRef<MetadataType>
+			fileRef: FileRef<MetadataType>,
 		) => any;
 		onAfterRemove?: (files: ReadonlyArray<FileObj<MetadataType>>) => any;
 		onbeforeunloadMessage?: string | (() => string);
@@ -146,7 +146,7 @@ declare module 'meteor/ostrio:files' {
 		interceptDownload?: (
 			http: any,
 			fileRef: FileRef<MetadataType>,
-			version: string
+			version: string,
 		) => boolean;
 	}
 
@@ -157,7 +157,7 @@ declare module 'meteor/ostrio:files' {
 		fields?: Mongo.FieldSpecifier;
 		reactive?: boolean;
 		transform?: (
-			fileObj: FileObj<MetadataType>
+			fileObj: FileObj<MetadataType>,
 		) => FileObj<MetadataType> & TransformAdditions;
 	}
 
@@ -220,7 +220,7 @@ declare module 'meteor/ostrio:files' {
 		last(): FileCursor<MetadataType> & TransformAdditions;
 		remove(callback?: (err: object) => void): void;
 		each(
-			callback: (cursor: FileCursor<MetadataType> & TransformAdditions) => void
+			callback: (cursor: FileCursor<MetadataType> & TransformAdditions) => void,
 		): void;
 		current(): object | undefined;
 	}
@@ -243,7 +243,7 @@ declare module 'meteor/ostrio:files' {
 		 */
 		find<TransformAdditions = {}>(
 			selector?: Mongo.Selector<Partial<FileObj<MetadataType>>>,
-			options?: SearchOptions<MetadataType, TransformAdditions>
+			options?: SearchOptions<MetadataType, TransformAdditions>,
 		): FilesCursor<MetadataType, TransformAdditions>;
 
 		/**
@@ -258,16 +258,16 @@ declare module 'meteor/ostrio:files' {
 		 */
 		findOne<TransformAdditions = {}>(
 			selector?: Mongo.Selector<Partial<FileObj<MetadataType>>> | string,
-			options?: SearchOptions<MetadataType, TransformAdditions>
+			options?: SearchOptions<MetadataType, TransformAdditions>,
 		): FileCursor<MetadataType> & TransformAdditions;
 
 		insert(
 			settings: InsertOptions<MetadataType>,
-			autoStart?: boolean
+			autoStart?: boolean,
 		): FileUpload;
 		remove(
 			select: Mongo.Selector<FileObj<MetadataType>> | string,
-			callback?: (error: Meteor.Error) => void
+			callback?: (error: Meteor.Error) => void,
 		): FilesCollection<MetadataType>;
 		update(
 			select: Mongo.Selector<FileObj<MetadataType>> | string,
@@ -277,7 +277,7 @@ declare module 'meteor/ostrio:files' {
 				upsert?: boolean;
 				arrayFilters?: Array<Record<string, any>>;
 			},
-			callback?: (error: Meteor.Error, insertedCount: number) => void
+			callback?: (error: Meteor.Error, insertedCount: number) => void,
 		): FilesCollection<MetadataType>;
 		link(fileRef: FileRef<MetadataType>, version?: string): string;
 		allow(options: Mongo.AllowDenyOptions): void;
@@ -286,25 +286,25 @@ declare module 'meteor/ostrio:files' {
 		on(event: string, callback: (fileRef: FileRef<MetadataType>) => void): void;
 		unlink(
 			fileRef: FileObj<MetadataType>,
-			version?: string
+			version?: string,
 		): FilesCollection<MetadataType>;
 		addFile(
 			path: string,
 			opts: LoadOptions<MetadataType>,
 			callback?: (err: any, fileRef: FileRef<MetadataType>) => any,
-			proceedAfterUpload?: boolean
+			proceedAfterUpload?: boolean,
 		): FilesCollection<MetadataType>;
 		load(
 			url: string,
 			opts: LoadOptions<MetadataType>,
 			callback?: (err: object, fileRef: FileRef<MetadataType>) => any,
-			proceedAfterUpload?: boolean
+			proceedAfterUpload?: boolean,
 		): FilesCollection<MetadataType>;
 		write(
 			buffer: Buffer,
 			opts: LoadOptions<MetadataType>,
 			callback?: (err: object, fileRef: FileRef<MetadataType>) => any,
-			proceedAfterUpload?: boolean
+			proceedAfterUpload?: boolean,
 		): FilesCollection<MetadataType>;
 	}
 }

@@ -26,7 +26,7 @@ const EventFragment = (props) => {
 
 	const style = {
 		backgroundColor: eventBackgroundColor(event),
-		color: '#111'
+		color: '#111',
 	};
 
 	const time =

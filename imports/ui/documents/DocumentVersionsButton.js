@@ -22,7 +22,7 @@ const DocumentVersionsButton = ({document, ...rest}) => {
 			color="primary"
 			component={Link}
 			to={`/document/versions/${myEncodeURIComponent(
-				identifier
+				identifier,
 			)}/${myEncodeURIComponent(reference)}`}
 			{...rest}
 		>
@@ -33,7 +33,7 @@ const DocumentVersionsButton = ({document, ...rest}) => {
 };
 
 DocumentVersionsButton.propTypes = {
-	document: PropTypes.object.isRequired
+	document: PropTypes.object.isRequired,
 };
 
 export default DocumentVersionsButton;

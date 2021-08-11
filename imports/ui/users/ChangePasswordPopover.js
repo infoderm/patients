@@ -23,7 +23,7 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Changing password...', {
 			variant: 'info',
-			persist: true
+			persist: true,
 		});
 		Accounts.changePassword(oldPassword, newPassword, (err) => {
 			closeSnackbar(key);
@@ -59,11 +59,11 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 			open={Boolean(anchorEl)}
 			anchorOrigin={{
 				vertical: 'bottom',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			transformOrigin={{
 				vertical: 'top',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			onClose={handleClose}
 		>
@@ -102,7 +102,7 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 
 ChangePasswordPopover.propTypes = {
 	anchorEl: PropTypes.object,
-	handleClose: PropTypes.func.isRequired
+	handleClose: PropTypes.func.isRequired,
 };
 
 export default ChangePasswordPopover;

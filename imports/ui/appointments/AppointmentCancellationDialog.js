@@ -26,7 +26,7 @@ const AppointmentCancellationDialog = (props) => {
 	const {open, onClose, appointment} = props;
 
 	const {loading, value: reasons} = useSetting(
-		'appointment-cancellation-reason'
+		'appointment-cancellation-reason',
 	);
 	const [reason, setReason] = useState(loading ? '' : reasons[0] || '');
 	const [explanation, setExplanation] = useState('');
@@ -66,7 +66,7 @@ const AppointmentCancellationDialog = (props) => {
 						value={reason}
 						inputProps={{
 							name: 'cancellation-reason',
-							id: 'cancellation-reason'
+							id: 'cancellation-reason',
 						}}
 						onChange={(e) => setReason(e.target.value)}
 					>
@@ -85,7 +85,7 @@ const AppointmentCancellationDialog = (props) => {
 					value={explanation}
 					error={!explanation}
 					InputLabelProps={{
-						shrink: true
+						shrink: true,
 					}}
 					onChange={(e) => setExplanation(e.target.value)}
 				/>
@@ -115,7 +115,7 @@ const AppointmentCancellationDialog = (props) => {
 AppointmentCancellationDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	appointment: PropTypes.object.isRequired
+	appointment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AppointmentCancellationDialog);

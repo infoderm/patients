@@ -7,7 +7,7 @@ const makeQuery = (Collection, subscription) => (query, options, deps) =>
 
 		return {
 			loading: !handle.ready(),
-			results: Collection.find(query, options).fetch()
+			results: Collection.find(query, options).fetch(),
 		};
 	}, deps);
 

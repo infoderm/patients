@@ -15,8 +15,8 @@ import useDocumentVersions from './useDocumentVersions';
 const useStyles = makeStyles((theme) => ({
 	chip: {
 		marginRight: theme.spacing(1),
-		backgroundColor: '#bbb'
-	}
+		backgroundColor: '#bbb',
+	},
 }));
 
 const DocumentVersionsChip = ({document, ...rest}) => {
@@ -35,7 +35,7 @@ const DocumentVersionsChip = ({document, ...rest}) => {
 			className={classes.chip}
 			component={Link}
 			to={`/document/versions/${myEncodeURIComponent(
-				identifier
+				identifier,
 			)}/${myEncodeURIComponent(reference)}`}
 			{...rest}
 		/>
@@ -43,7 +43,7 @@ const DocumentVersionsChip = ({document, ...rest}) => {
 };
 
 DocumentVersionsChip.propTypes = {
-	document: PropTypes.object.isRequired
+	document: PropTypes.object.isRequired,
 };
 
 export default DocumentVersionsChip;

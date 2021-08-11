@@ -35,11 +35,11 @@ export default function AllergiesList({match, prefix, page, perpage}) {
 
 AllergiesList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 AllergiesList.propTypes = {
 	page: PropTypes.number,
 	perpage: PropTypes.number,
-	prefix: PropTypes.string
+	prefix: PropTypes.string,
 };

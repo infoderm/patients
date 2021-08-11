@@ -18,7 +18,7 @@ const ReactiveDoctorChip = React.forwardRef<any, ReactiveDoctorChipProps>(
 			label={label}
 			{...rest}
 		/>
-	)
+	),
 );
 
 export default ReactiveDoctorChip;

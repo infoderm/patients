@@ -22,8 +22,8 @@ import AttachmentsGrid from './AttachmentsGrid';
 const useStyles = makeStyles((theme) => ({
 	group: {
 		padding: theme.spacing(2),
-		marginBottom: theme.spacing(2)
-	}
+		marginBottom: theme.spacing(2),
+	},
 }));
 
 const AttachmentsGallery = (props) => {
@@ -42,16 +42,16 @@ const AttachmentsGallery = (props) => {
 			([k, g]) => [k, list(g)],
 			groupby(
 				grp,
-				attachments.sort((a, b) => grp(b) - grp(a)) // We are abusing stable native sorting here.
-			)
-		)
+				attachments.sort((a, b) => grp(b) - grp(a)), // We are abusing stable native sorting here.
+			),
+		),
 	);
 
 	console.debug({
 		attachments: attachments.map((attachment) => ({
 			attachment,
-			info: attachmentsInfo.get(attachment._id)
-		}))
+			info: attachmentsInfo.get(attachment._id),
+		})),
 	});
 
 	return (
@@ -66,7 +66,7 @@ const AttachmentsGallery = (props) => {
 										? 'Pièces jointes au patient'
 										: `Consultation du ${dateFormat(
 												new Date(k),
-												'yyyy-MM-dd'
+												'yyyy-MM-dd',
 										  )}`}
 								</Typography>
 							</Grid>
@@ -78,15 +78,15 @@ const AttachmentsGallery = (props) => {
 							/>
 						</Grid>
 					),
-					groups
-				)
+					groups,
+				),
 			)}
 		</Grid>
 	);
 };
 
 AttachmentsGallery.propTypes = {
-	loading: PropTypes.bool.isRequired
+	loading: PropTypes.bool.isRequired,
 };
 
 export default withTracker(({attachmentsInfo}) => {
@@ -104,6 +104,6 @@ export default withTracker(({attachmentsInfo}) => {
 	return {
 		loading: false,
 		attachmentsInfo: new Map(attachmentsInfo.map((x) => [x.attachmentId, x])),
-		attachments: Attachments.find(query, options).fetch()
+		attachments: Attachments.find(query, options).fetch(),
 	};
 })(AttachmentsGallery);

@@ -32,7 +32,7 @@ const ValuePicker = (props) => {
 
 	const inputProps = {
 		name,
-		id
+		id,
 	};
 
 	return (
@@ -57,7 +57,7 @@ const ValuePicker = (props) => {
 
 ValuePicker.defaultProps = {
 	optionToString: (x) => x.toString(),
-	pairToKey: (option, _index) => option
+	pairToKey: (option, _index) => option,
 };
 
 ValuePicker.propTypes = {
@@ -69,7 +69,7 @@ ValuePicker.propTypes = {
 	readOnly: PropTypes.bool,
 	label: PropTypes.node,
 	value: PropTypes.any,
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
 };
 
 export default ValuePicker;

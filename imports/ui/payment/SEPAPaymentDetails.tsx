@@ -19,32 +19,32 @@ import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 const styles = (theme) =>
 	createStyles({
 		container: {
-			height: '100%'
+			height: '100%',
 		},
 		paper: {
 			width: 800,
-			height: 500
+			height: 500,
 		},
 		form: {
-			padding: theme.spacing(3)
+			padding: theme.spacing(3),
 		},
 		qrcodeWrap: {
 			display: 'table',
 			backgroundColor: '#ccc',
 			width: 500,
-			height: 500
+			height: 500,
 		},
 		qrcode: {
 			display: 'table-cell',
 			verticalAlign: 'middle',
-			textAlign: 'center'
+			textAlign: 'center',
 		},
 		title: {
-			margin: theme.spacing(2)
+			margin: theme.spacing(2),
 		},
 		textField: {
-			margin: theme.spacing(3)
-		}
+			margin: theme.spacing(3),
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -78,7 +78,7 @@ const SEPAPaymentDetailsStatic = (props) => {
 		name: accountHolder,
 		iban,
 		currency,
-		amount: Number.isNaN(amount) ? 0 : amount
+		amount: Number.isNaN(amount) ? 0 : amount,
 	};
 
 	if (unstructuredReference) {
@@ -87,7 +87,7 @@ const SEPAPaymentDetailsStatic = (props) => {
 
 	const codeProps = {
 		level: 'H',
-		size: 500
+		size: 500,
 	};
 
 	return (
@@ -124,7 +124,7 @@ const SEPAPaymentDetailsStatic = (props) => {
 									error={Number.isNaN(amount)}
 									InputProps={{
 										inputComponent: CurrencyAmountInput as any,
-										inputProps: {currency}
+										inputProps: {currency},
 									}}
 									onChange={handleAmountChange}
 								/>

@@ -10,12 +10,12 @@ const useStyles = makeStyles((theme) => ({
 		position: 'absolute',
 		marginTop: theme.spacing(1),
 		left: 0,
-		right: 0
+		right: 0,
 	},
 	itemText: {
 		overflow: 'hidden',
-		textOverflow: 'ellipsis'
-	}
+		textOverflow: 'ellipsis',
+	},
 }));
 
 export default function SearchBoxInternalsSuggestions(props) {
@@ -28,7 +28,7 @@ export default function SearchBoxInternalsSuggestions(props) {
 		getMenuProps,
 		getItemProps,
 		selectedItem,
-		highlightedIndex
+		highlightedIndex,
 	} = props;
 
 	const classes = useStyles();
@@ -45,8 +45,8 @@ export default function SearchBoxInternalsSuggestions(props) {
 							disabled: loading,
 							selected: highlightedIndex === index,
 							style: {
-								fontWeight: selectedItem === item ? 500 : 400
-							}
+								fontWeight: selectedItem === item ? 500 : 400,
+							},
 						})}
 					>
 						<span className={classes.itemText}>{itemToString(item)}</span>
@@ -63,5 +63,5 @@ SearchBoxInternalsSuggestions.propTypes = {
 	itemToString: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	getItemProps: PropTypes.func.isRequired,
-	highlightedIndex: PropTypes.number
+	highlightedIndex: PropTypes.number,
 };

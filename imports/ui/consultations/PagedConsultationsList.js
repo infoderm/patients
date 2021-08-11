@@ -40,7 +40,7 @@ export default function PagedConsultationsList(props) {
 PagedConsultationsList.defaultProps = {
 	loading: false,
 	dirty: false,
-	refresh: undefined
+	refresh: undefined,
 };
 
 PagedConsultationsList.propTypes = {
@@ -50,5 +50,5 @@ PagedConsultationsList.propTypes = {
 	items: PropTypes.array.isRequired,
 	loading: PropTypes.bool,
 	refresh: PropTypes.func,
-	dirty: PropTypes.bool
+	dirty: PropTypes.bool,
 };

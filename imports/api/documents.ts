@@ -26,9 +26,9 @@ if (Meteor.isServer) {
 				owner: this.userId,
 				patientId,
 				lastVersion: true,
-				deleted: false
+				deleted: false,
 			},
-			options
+			options,
 		);
 	});
 
@@ -37,9 +37,9 @@ if (Meteor.isServer) {
 		return Documents.find(
 			{
 				owner: this.userId,
-				patientId
+				patientId,
 			},
-			options
+			options,
 		);
 	});
 }
@@ -57,7 +57,7 @@ async function sanitize({patientId, format, array}) {
 
 	const mangled = new TextDecoder('utf-8', {fatal: false}).decode(
 		array.buffer,
-		{stream: false}
+		{stream: false},
 	);
 
 	try {
@@ -93,7 +93,7 @@ async function sanitize({patientId, format, array}) {
 
 				for (const [document, mangledDocument] of zip(
 					documents,
-					mangledDocuments
+					mangledDocuments,
 				)) {
 					// Const utf8_array = (new TextEncoder()).encode(decoded);
 					// const utf8_buffer = utf8_array.buffer;
@@ -106,7 +106,7 @@ async function sanitize({patientId, format, array}) {
 						encoding,
 						decoded: document.source.join('\n'),
 						// Binary: utf8_binary,
-						parsed: true
+						parsed: true,
 					};
 					entries.push(entry);
 				}
@@ -126,8 +126,8 @@ async function sanitize({patientId, format, array}) {
 				// Binary: Binary(buffer),
 				encoding,
 				decoded,
-				lastVersion: true
-			}
+				lastVersion: true,
+			},
 		];
 	} catch (error: unknown) {
 		console.error('Failed to decode document buffer', error);
@@ -139,9 +139,9 @@ async function sanitize({patientId, format, array}) {
 			format,
 			source: mangled,
 			parsed: false,
-			lastVersion: true
+			lastVersion: true,
 			// Binary: Binary(buffer),
-		}
+		},
 	];
 }
 
@@ -205,14 +205,14 @@ function updateLastVersionFlags(owner, document) {
 			owner,
 			identifier,
 			reference,
-			deleted: false
+			deleted: false,
 		},
 		{
 			sort: {
 				status: 1, // Complete < partial
-				datetime: -1
-			}
-		}
+				datetime: -1,
+			},
+		},
 	);
 
 	if (latest === undefined) {
@@ -227,16 +227,16 @@ function updateLastVersionFlags(owner, document) {
 			identifier,
 			reference,
 			lastVersion: true,
-			_id: {$ne: latest._id}
+			_id: {$ne: latest._id},
 		},
 		{
 			$set: {
-				lastVersion: false
-			}
+				lastVersion: false,
+			},
 		},
 		{
-			multi: true
-		}
+			multi: true,
+		},
 	);
 }
 
@@ -259,7 +259,7 @@ Meteor.methods({
 
 			const existingDocument = Documents.findOne({
 				owner: this.userId,
-				source: entry.source
+				source: entry.source,
 			});
 
 			if (!existingDocument) {
@@ -271,7 +271,7 @@ Meteor.methods({
 					patientId,
 					deleted: false,
 					createdAt: new Date(),
-					owner: this.userId
+					owner: this.userId,
 				});
 
 				result.push(_id);
@@ -305,8 +305,8 @@ Meteor.methods({
 					Documents.update(existingDocument._id, {
 						$set: {
 							...entry,
-							patientId
-						}
+							patientId,
+						},
 					});
 				}
 
@@ -380,10 +380,10 @@ Meteor.methods({
 
 		Documents.remove(documentId);
 		updateLastVersionFlags(this.userId, document);
-	}
+	},
 });
 
 export const documents = {
 	sanitize,
-	updateLastVersionFlags
+	updateLastVersionFlags,
 };

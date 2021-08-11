@@ -20,11 +20,11 @@ import BookRenamingDialog from './BookRenamingDialog';
 const useStyles = makeStyles(() => ({
 	avatar: {
 		color: '#fff',
-		backgroundColor: orange[500]
+		backgroundColor: orange[500],
 	},
 	content: {
-		lineHeight: 1.35
-	}
+		lineHeight: 1.35,
+	},
 }));
 
 export default function BookCard({item}) {
@@ -72,5 +72,5 @@ export default function BookCard({item}) {
 }
 
 BookCard.propTypes = {
-	item: PropTypes.object.isRequired
+	item: PropTypes.object.isRequired,
 };

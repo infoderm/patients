@@ -23,13 +23,13 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const ConsultationDeletionDialog = (props) => {
@@ -38,12 +38,12 @@ const ConsultationDeletionDialog = (props) => {
 	const options = {fields: ConsultationDeletionDialog.projection};
 	const deps = [
 		consultation.patientId,
-		JSON.stringify(ConsultationDeletionDialog.projection)
+		JSON.stringify(ConsultationDeletionDialog.projection),
 	];
 	const {
 		loading,
 		found,
-		fields: patient
+		fields: patient,
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const classes = useStyles();
@@ -129,13 +129,13 @@ const ConsultationDeletionDialog = (props) => {
 
 ConsultationDeletionDialog.projection = {
 	firstname: 1,
-	lastname: 1
+	lastname: 1,
 };
 
 ConsultationDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object.isRequired
+	consultation: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(ConsultationDeletionDialog);

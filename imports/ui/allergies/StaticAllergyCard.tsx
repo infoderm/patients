@@ -24,14 +24,14 @@ import AllergyDeletionDialog from './AllergyDeletionDialog';
 const useStyles = makeStyles((theme) => ({
 	avatar: {
 		color: '#fff',
-		backgroundColor: green[500]
+		backgroundColor: green[500],
 	},
 	patientChip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#aaa',
 		fontWeight: 'normal',
-		color: '#fff'
-	}
+		color: '#fff',
+	},
 }));
 
 interface StaticAllergyCardProps {
@@ -101,7 +101,7 @@ const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 				RenamingDialog={AllergyRenamingDialog}
 			/>
 		);
-	}
+	},
 );
 
 export default StaticAllergyCard;

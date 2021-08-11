@@ -12,7 +12,7 @@ import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		position: 'relative'
+		position: 'relative',
 	},
 	veil: {
 		width: '100%',
@@ -25,19 +25,19 @@ const useStyles = makeStyles((theme) => ({
 		cursor: 'pointer',
 		color: theme.palette.primary.main,
 		backgroundColor: 'transparent',
-		transition: 'background-color 500ms ease-out'
+		transition: 'background-color 500ms ease-out',
 	},
 	veilSelected: {
-		backgroundColor: 'rgba(128,128,255,0.25)'
+		backgroundColor: 'rgba(128,128,255,0.25)',
 	},
 	veilNotSelected: {
-		backgroundColor: 'rgba(255,255,255,0.5)'
+		backgroundColor: 'rgba(255,255,255,0.5)',
 	},
 	checkbox: {
 		position: 'absolute',
 		bottom: theme.spacing(2),
-		right: theme.spacing(2)
-	}
+		right: theme.spacing(2),
+	},
 }));
 
 const SelectablePatientCard = ({onClick, selected, Card, patient, ...rest}) => {
@@ -64,7 +64,7 @@ const SelectablePatientCard = ({onClick, selected, Card, patient, ...rest}) => {
 				focusRipple
 				className={classNames(classes.veil, {
 					[classes.veilSelected]: selected === true,
-					[classes.veilNotSelected]: selected === false
+					[classes.veilNotSelected]: selected === false,
 				})}
 				onClick={() => onClick(patient)}
 			/>
@@ -76,13 +76,13 @@ SelectablePatientCard.projection = GenericStaticPatientCard.projection;
 
 SelectablePatientCard.defaultProps = {
 	selected: undefined,
-	Card: GenericStaticPatientCard
+	Card: GenericStaticPatientCard,
 };
 
 SelectablePatientCard.propTypes = {
 	selected: PropTypes.bool,
 	onClick: PropTypes.func.isRequired,
-	Card: PropTypes.elementType
+	Card: PropTypes.elementType,
 };
 
 export default SelectablePatientCard;

@@ -23,13 +23,13 @@ const styles = (theme) =>
 	createStyles({
 		card: {
 			display: 'flex',
-			minHeight: 200
+			minHeight: 200,
 		},
 		details: {
 			display: 'flex',
 			flex: 1,
 			flexDirection: 'column',
-			minWidth: 300
+			minWidth: 300,
 		},
 		header: {
 			flex: 1,
@@ -38,12 +38,12 @@ const styles = (theme) =>
 				'& > span': {
 					whiteSpace: 'nowrap',
 					overflow: 'hidden',
-					textOverflow: 'ellipsis'
-				}
-			}
+					textOverflow: 'ellipsis',
+				},
+			},
 		},
 		content: {
-			flex: '1 0 auto'
+			flex: '1 0 auto',
 		},
 		photoPlaceHolder: {
 			display: 'flex',
@@ -55,15 +55,15 @@ const styles = (theme) =>
 			justifyContent: 'center',
 			color: '#fff',
 			backgroundColor: '#999',
-			flex: 'none'
+			flex: 'none',
 		},
 		actions: {
 			display: 'flex',
-			paddingLeft: theme.spacing(2)
+			paddingLeft: theme.spacing(2),
 		},
 		name: {
-			display: 'flex'
-		}
+			display: 'flex',
+		},
 	});
 
 const useStyles = makeStyles(styles);
@@ -80,7 +80,7 @@ const TagCard = (props) => {
 		items,
 		RenamingDialog,
 		DeletionDialog,
-		abbr
+		abbr,
 	} = props;
 
 	const classes = useStyles();
@@ -160,7 +160,7 @@ const TagCard = (props) => {
 TagCard.defaultProps = {
 	actions: () => null,
 	stats: {},
-	items: undefined
+	items: undefined,
 };
 
 TagCard.propTypes = {
@@ -172,7 +172,7 @@ TagCard.propTypes = {
 	actions: PropTypes.func,
 
 	stats: PropTypes.object,
-	items: PropTypes.array
+	items: PropTypes.array,
 };
 
 const ReactiveTagCard = withTracker(
@@ -184,7 +184,7 @@ const ReactiveTagCard = withTracker(
 		statsCollection,
 		selector,
 		options,
-		limit
+		limit,
 	}) => {
 		const name = tag.name;
 		const handle = subscription
@@ -193,7 +193,7 @@ const ReactiveTagCard = withTracker(
 		const statsHandle = Meteor.subscribe(statsSubscription, name);
 		const result = {
 			items: undefined,
-			stats: undefined
+			stats: undefined,
 		};
 
 		if (handle.ready()) {
@@ -205,15 +205,15 @@ const ReactiveTagCard = withTracker(
 		}
 
 		return result;
-	}
+	},
 )(TagCard);
 
 ReactiveTagCard.defaultProps = {
 	limit: 0,
 	subscription: undefined,
 	collection: {
-		find: () => () => []
-	}
+		find: () => () => [],
+	},
 };
 
 ReactiveTagCard.propTypes = {
@@ -223,7 +223,7 @@ ReactiveTagCard.propTypes = {
 	statsCollection: PropTypes.object.isRequired,
 	selector: PropTypes.object.isRequired,
 	options: PropTypes.object,
-	limit: PropTypes.number
+	limit: PropTypes.number,
 };
 
 export default ReactiveTagCard;

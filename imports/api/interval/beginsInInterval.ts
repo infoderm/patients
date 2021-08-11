@@ -1,12 +1,12 @@
 const beginsInInterval = (
 	begin: number | Date,
 	end: number | Date,
-	beginKey = 'begin'
+	beginKey = 'begin',
 ) => ({
 	[beginKey]: {
 		$gte: begin,
-		$lt: end
-	}
+		$lt: end,
+	},
 });
 
 export default beginsInInterval;

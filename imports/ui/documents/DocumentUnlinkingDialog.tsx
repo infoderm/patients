@@ -70,7 +70,7 @@ const DocumentUnlinkingDialog = (props) => {
 
 DocumentUnlinkingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired
+	onClose: PropTypes.func.isRequired,
 };
 
 export default withLazyOpening(DocumentUnlinkingDialog);

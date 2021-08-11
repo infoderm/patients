@@ -37,10 +37,10 @@ const styles = {
 			color: computedColor,
 			cursor,
 			'&:hover, &:focus': {
-				backgroundColor: backgroundColor && darken(backgroundColor, 0.1)
-			}
+				backgroundColor: backgroundColor && darken(backgroundColor, 0.1),
+			},
 		};
-	}
+	},
 };
 
 const useStyles = makeStyles(styles);
@@ -67,7 +67,7 @@ const StaticAllergyChip = React.forwardRef<any, StaticAllergyChipProps>(
 				to={to}
 			/>
 		);
-	}
+	},
 );
 
 export default StaticAllergyChip;

@@ -6,7 +6,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import AppointmentDialog from './AppointmentDialog';
 
 const propTypes = {
-	patientId: PropTypes.string.isRequired
+	patientId: PropTypes.string.isRequired,
 };
 
 const AppointmentFromPatientIdDialog = ({
@@ -21,7 +21,7 @@ const AppointmentFromPatientIdDialog = ({
 		{_id: patientId},
 		patientId,
 		options,
-		deps
+		deps,
 	);
 
 	const patient = loading

@@ -29,7 +29,7 @@ const StaticInsuranceChip = React.forwardRef<any, StaticInsuranceChipProps>(
 		return (
 			<Chip ref={ref} {...rest} style={style} component={component} to={to} />
 		);
-	}
+	},
 );
 
 export default StaticInsuranceChip;

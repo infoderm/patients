@@ -11,7 +11,7 @@ import StaticDocumentList from './StaticDocumentList';
 import HealthOneDocumentImportButton from './HealthOneDocumentImportButton';
 
 const styles = (theme) => ({
-	importButton: computeFixedFabStyle({theme, col: 4})
+	importButton: computeFixedFabStyle({theme, col: 4}),
 });
 
 const useStyles = makeStyles(styles);
@@ -27,7 +27,7 @@ const DocumentsList = ({match, page, perpage}) => {
 		sort: {createdAt: -1},
 		fields: StaticDocumentList.projection,
 		skip: (page - 1) * perpage,
-		limit: perpage
+		limit: perpage,
 	};
 
 	const deps = [page, perpage];
@@ -56,12 +56,12 @@ const DocumentsList = ({match, page, perpage}) => {
 
 DocumentsList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 DocumentsList.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };
 
 export default DocumentsList;

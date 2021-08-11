@@ -14,7 +14,7 @@ export const units: UnitsRecord = {
 	hour: HOUR,
 	minute: MINUTE,
 	second: SECOND,
-	millisecond: MILLISECOND
+	millisecond: MILLISECOND,
 };
 
 const DEFAULT_UNITS: UnitsArray = [
@@ -22,7 +22,7 @@ const DEFAULT_UNITS: UnitsArray = [
 	['day', DAY],
 	['hour', HOUR],
 	['minute', MINUTE],
-	['second', SECOND]
+	['second', SECOND],
 ];
 
 const DEFAULT_REST_UNIT = 'millisecond';
@@ -33,7 +33,7 @@ const DEFAULT_ABBR = {
 	hour: 'h',
 	minute: 'm',
 	second: 's',
-	millisecond: 'ms'
+	millisecond: 'ms',
 };
 
 const DEFAULT_KEY_TO_STRING = (key: string, value: number, options) =>
@@ -52,13 +52,13 @@ const DEFAULT_OPTIONS = {
 	keyToString: DEFAULT_KEY_TO_STRING,
 	verbose: DEFAULT_VERBOSE,
 	conjugate: DEFAULT_CONJUGATE,
-	separator: DEFAULT_SEPARATOR
+	separator: DEFAULT_SEPARATOR,
 };
 
 function* quantityToDigits(
 	units: UnitsArray,
 	restUnit: string,
-	quantity: number
+	quantity: number,
 ): IterableIterator<[string, number]> {
 	let rest = quantity;
 
@@ -94,7 +94,7 @@ export const msToString = (dirtyMs: number, dirtyOptions?: Options) => {
 
 export const msToStringShort = (
 	dirtyMs: number,
-	dirtyOptions?: Options
+	dirtyOptions?: Options,
 ): string => {
 	const options = Object.assign({}, DEFAULT_OPTIONS, dirtyOptions);
 	const ms = dirtyMs;

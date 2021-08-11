@@ -8,7 +8,7 @@ const useDocumentVersions = (document) => {
 	const query = {identifier, reference};
 	const options = {
 		sort: {status: 1, datetime: -1},
-		fields: {identifier: 1, reference: 1, status: 1, datetime: 1}
+		fields: {identifier: 1, reference: 1, status: 1, datetime: 1},
 	};
 
 	const deps = [JSON.stringify(query), JSON.stringify(options)];
@@ -19,7 +19,7 @@ const useDocumentVersions = (document) => {
 		const handle = Meteor.subscribe('documents', query, options);
 		return {
 			loading: !handle.ready(),
-			versions: Documents.find(query, options).fetch()
+			versions: Documents.find(query, options).fetch(),
 		};
 	}, deps);
 };

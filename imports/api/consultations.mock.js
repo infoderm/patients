@@ -19,5 +19,5 @@ Factory.define('consultation', Consultations, {
 	paid: () => 0,
 	book: () => `${faker.datatype.number(100)}`,
 
-	isDone: () => true
+	isDone: () => true,
 });

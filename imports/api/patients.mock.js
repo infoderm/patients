@@ -12,7 +12,7 @@ import {
 	PatientDocument,
 	PatientFields,
 	BIRTHDATE_FORMAT,
-	SEX_ALLOWED
+	SEX_ALLOWED,
 } from './patients';
 
 export {Patients, patients, PatientDocument, PatientFields};
@@ -40,17 +40,17 @@ Factory.define('patient', Patients, {
 
 	insurances: () =>
 		list(
-			map(() => faker.company.companyName(), range(faker.datatype.number(2)))
+			map(() => faker.company.companyName(), range(faker.datatype.number(2))),
 		),
 	doctors: () =>
 		list(
 			map(
 				() => `${faker.name.lastName()} ${faker.name.firstName()}`,
-				range(faker.datatype.number(2))
-			)
+				range(faker.datatype.number(2)),
+			),
 		),
 	allergies: () =>
 		list(map(() => faker.commerce.product(), range(faker.datatype.number(4)))),
 
-	noshow: () => faker.datatype.number(3)
+	noshow: () => faker.datatype.number(3),
 });

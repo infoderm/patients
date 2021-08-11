@@ -7,8 +7,8 @@ const useStyles = makeStyles({
 	inputContainer: {
 		display: 'flex',
 		alignItems: 'center',
-		borderRadius: 2
-	}
+		borderRadius: 2,
+	},
 });
 
 type Props = {
@@ -24,7 +24,7 @@ const SearchBoxInternalsInputContainer = React.forwardRef<any, Props>(
 				{children}
 			</div>
 		);
-	}
+	},
 );
 
 export default SearchBoxInternalsInputContainer;

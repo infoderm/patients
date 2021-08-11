@@ -68,7 +68,7 @@ const indexObservedQueryCacheCollection = 'patients.index.cache.collection';
 const indexCachePublication = 'patients.index.cache.publication';
 export const Patients = new Mongo.Collection<PatientDocument>(collection);
 export const PatientsCache: ObservedQueryCacheCollection = new Mongo.Collection(
-	cacheCollection
+	cacheCollection,
 );
 export const PatientsSearchIndex = new Mongo.Collection(indexCollection);
 export const PatientsSearchIndexCache: ObservedQueryCacheCollection =
@@ -93,14 +93,14 @@ if (Meteor.isServer) {
 
 	Meteor.publish(
 		cachePublication,
-		makeObservedQueryPublication(Patients, cacheCollection)
+		makeObservedQueryPublication(Patients, cacheCollection),
 	);
 	Meteor.publish(
 		indexCachePublication,
 		makeObservedQueryPublication(
 			PatientsSearchIndex,
-			indexObservedQueryCacheCollection
-		)
+			indexObservedQueryCacheCollection,
+		),
 	);
 }
 
@@ -134,11 +134,11 @@ function updateIndex(userId, _id, fields) {
 		lastname,
 		birthdate,
 		sex,
-		owner: userId
+		owner: userId,
 	};
 
 	PatientsSearchIndex.upsert(_id, {
-		$set: upsertFields
+		$set: upsertFields,
 	});
 }
 
@@ -146,7 +146,7 @@ function updateTags(userId, fields) {
 	for (const [tagCollection, tagList] of [
 		[insurances, fields.insurances],
 		[doctors, fields.doctors],
-		[allergies, fields.allergies]
+		[allergies, fields.allergies],
 	]) {
 		if (tagList) {
 			for (const tag of tagList) {
@@ -178,7 +178,7 @@ function sanitize({
 	allergies,
 
 	noshow,
-	createdForAppointment
+	createdForAppointment,
 }): PatientFields & PatientComputedFields {
 	if (niss !== undefined) check(niss, String);
 	if (firstname !== undefined) check(firstname, String);
@@ -212,8 +212,8 @@ function sanitize({
 	if (!SEX_ALLOWED.includes(sex))
 		throw new Error(
 			`Wrong sex for patient (${sex}). Must be one of ${JSON.stringify(
-				SEX_ALLOWED
-			)}`
+				SEX_ALLOWED,
+			)}`,
 		);
 	photo = photo?.replace(/\n/g, '');
 
@@ -261,7 +261,7 @@ function sanitize({
 		insurances,
 
 		noshow,
-		createdForAppointment
+		createdForAppointment,
 	};
 }
 
@@ -277,7 +277,7 @@ function insertPatient(this: Meteor.MethodThisType, patient) {
 	const patientId = Patients.insert({
 		...fields,
 		createdAt: new Date(),
-		owner: this.userId
+		owner: this.userId,
 	});
 
 	updateIndex(this.userId, patientId, fields);
@@ -314,14 +314,14 @@ Meteor.methods({
 
 		const attachment = Attachments.findOne({
 			_id: uploadId,
-			userId: this.userId
+			userId: this.userId,
 		});
 		if (!attachment) {
 			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
 		return Attachments.update(uploadId, {
-			$addToSet: {'meta.attachedToPatients': patientId}
+			$addToSet: {'meta.attachedToPatients': patientId},
 		});
 	},
 
@@ -336,14 +336,14 @@ Meteor.methods({
 
 		const attachment = Attachments.findOne({
 			_id: uploadId,
-			userId: this.userId
+			userId: this.userId,
 		});
 		if (!attachment) {
 			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
 		return Attachments.update(uploadId, {
-			$pull: {'meta.attachedToPatients': patientId}
+			$pull: {'meta.attachedToPatients': patientId},
 		});
 	},
 
@@ -357,7 +357,7 @@ Meteor.methods({
 
 		const consultationQuery = {owner: this.userId, patientId};
 		const consultationIds = Consultations.find(consultationQuery, {
-			fields: {_id: 1}
+			fields: {_id: 1},
 		})
 			.fetch()
 			.map((x) => x._id);
@@ -367,49 +367,49 @@ Meteor.methods({
 			console.warn(
 				`Removed ${nConsultationRemoved} consultations while removing patient #${patientId} but ${
 					consultationIds.length
-				} where found before (${JSON.stringify(consultationIds)})`
+				} where found before (${JSON.stringify(consultationIds)})`,
 			);
 		}
 
 		Documents.update(
 			{
 				owner: this.userId,
-				patientId
+				patientId,
 			},
 			{
 				$set: {
-					deleted: true
-				}
+					deleted: true,
+				},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		Attachments.update(
 			{
 				userId: this.userId,
-				'meta.attachedToPatients': patientId
+				'meta.attachedToPatients': patientId,
 			},
 			{
-				$pull: {'meta.attachedToPatients': patientId}
+				$pull: {'meta.attachedToPatients': patientId},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		Attachments.update(
 			{
 				userId: this.userId,
-				'meta.attachedToConsultations': {$in: consultationIds}
+				'meta.attachedToConsultations': {$in: consultationIds},
 			},
 			{
-				$pullAll: {'meta.attachedToConsultations': consultationIds}
+				$pullAll: {'meta.attachedToConsultations': consultationIds},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		PatientsSearchIndex.remove(patientId);
@@ -421,7 +421,7 @@ Meteor.methods({
 		consultationIds,
 		attachmentIds,
 		documentIds,
-		newPatient
+		newPatient,
 	) {
 		// Here is what is done in this method
 		// (1) Check that user is connected
@@ -444,7 +444,7 @@ Meteor.methods({
 		for (const oldPatientId of oldPatientIds) {
 			const oldPatient = Patients.findOne({
 				_id: oldPatientId,
-				owner: this.userId
+				owner: this.userId,
 			});
 			if (!oldPatient) {
 				throw new Meteor.Error('not-found', 'no such patient');
@@ -457,7 +457,7 @@ Meteor.methods({
 		const newPatientId = Patients.insert({
 			...fields,
 			createdAt: new Date(),
-			owner: this.userId
+			owner: this.userId,
 		});
 
 		updateIndex(this.userId, newPatientId, fields);
@@ -471,20 +471,20 @@ Meteor.methods({
 			{
 				owner: this.userId, // This selector automatically filters out bad consultation ids
 				patientId: {$in: oldPatientIds},
-				_id: {$in: consultationIds}
+				_id: {$in: consultationIds},
 			},
 			{
-				$set: {patientId: newPatientId}
+				$set: {patientId: newPatientId},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		// (5)
 		Consultations.remove({
 			owner: this.userId,
-			patientId: {$in: oldPatientIds}
+			patientId: {$in: oldPatientIds},
 		});
 
 		// (6)
@@ -492,28 +492,28 @@ Meteor.methods({
 			{
 				userId: this.userId, // This selector automatically filters out bad attachments ids
 				'meta.attachedToPatients': {$in: oldPatientIds},
-				_id: {$in: attachmentIds}
+				_id: {$in: attachmentIds},
 			},
 			{
-				$addToSet: {'meta.attachedToPatients': newPatientId}
+				$addToSet: {'meta.attachedToPatients': newPatientId},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		// (7)
 		Attachments.update(
 			{
 				userId: this.userId,
-				'meta.attachedToPatients': {$in: oldPatientIds}
+				'meta.attachedToPatients': {$in: oldPatientIds},
 			},
 			{
-				$pullAll: {'meta.attachedToPatients': oldPatientIds}
+				$pullAll: {'meta.attachedToPatients': oldPatientIds},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		// (8)
@@ -521,36 +521,36 @@ Meteor.methods({
 			{
 				owner: this.userId, // This selector automatically filters out bad document ids
 				patientId: {$in: oldPatientIds},
-				_id: {$in: documentIds}
+				_id: {$in: documentIds},
 			},
 			{
-				$set: {patientId: newPatientId}
+				$set: {patientId: newPatientId},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		// (9)
 		Documents.update(
 			{
 				owner: this.userId,
-				patientId: {$in: oldPatientIds}
+				patientId: {$in: oldPatientIds},
 			},
 			{
-				$set: {deleted: true}
+				$set: {deleted: true},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		// (10)
 		PatientsSearchIndex.remove({
-			_id: {$in: oldPatientIds}
+			_id: {$in: oldPatientIds},
 		});
 		Patients.remove({
-			_id: {$in: oldPatientIds}
+			_id: {$in: oldPatientIds},
 		});
 
 		return newPatientId;
@@ -559,7 +559,7 @@ Meteor.methods({
 	'patients.find'(query, options) {
 		if (!Meteor.isServer) return undefined;
 		return Patients.find({...query, owner: this.userId}, options).fetch();
-	}
+	},
 });
 
 function mergePatients(oldPatients: PatientFields[]): PatientFields {
@@ -567,7 +567,7 @@ function mergePatients(oldPatients: PatientFields[]): PatientFields {
 		allergies: [],
 		doctors: [],
 		insurances: [],
-		noshow: 0
+		noshow: 0,
 	};
 
 	for (const oldPatient of oldPatients) {
@@ -648,8 +648,8 @@ const patientFilter = (suggestions, inputValue, transform = (v) => v) => {
 	return list(
 		take(
 			filter((x) => matches(transform(x)), suggestions),
-			keep
-		)
+			keep,
+		),
 	);
 };
 
@@ -666,20 +666,20 @@ function createPatient(string) {
 	return {
 		lastname: lastnames.join(' '),
 		firstname,
-		_id: '?'
+		_id: '?',
 	};
 }
 
 // TODO rename to useObservedPatients
 export const usePatientsFind = makeObservedQueryHook(
 	PatientsCache,
-	cachePublication
+	cachePublication,
 );
 
 // TODO rename to useAdvancedObservedPatients
 export const usePatientsAdvancedFind = makeObservedQueryHook(
 	PatientsSearchIndexCache,
-	indexCachePublication
+	indexCachePublication,
 );
 
 export const patients = {
@@ -693,5 +693,5 @@ export const patients = {
 	normalizedName,
 	merge: mergePatients,
 	filter: patientFilter,
-	create: createPatient
+	create: createPatient,
 };

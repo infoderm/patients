@@ -20,19 +20,19 @@ import useLocaleKey from './useLocale';
 export const locales: Readonly<Record<string, Locale>> = {
 	'en-US': enUS,
 	'nl-BE': nlBE,
-	'fr-BE': fr
+	'fr-BE': fr,
 };
 
 export const localeDescriptions: Readonly<Record<string, string>> = {
 	'en-US': 'English (US)',
 	'fr-BE': 'Français (Belgique)',
-	'nl-BE': 'Nederlands (Belgïe)'
+	'nl-BE': 'Nederlands (Belgïe)',
 };
 
 export const maskMap = {
 	'en-US': '__/__/____',
 	'nl-BE': '__-__-____',
-	'fr-BE': '__/__/____'
+	'fr-BE': '__/__/____',
 };
 
 export const useLocale = () => {
@@ -53,9 +53,9 @@ export const useDateFormat = (defaultFormat = 'PP', defaultOptions?) => {
 				dateFormat(date, format, {
 					locale,
 					...defaultOptions,
-					...options
+					...options,
 				}),
-		[locale]
+		[locale],
 	);
 };
 
@@ -66,9 +66,9 @@ const useLocalizedDateFormatDistanceOrRelative = (fn, defaultOptions) => {
 			fn(date, baseDate, {
 				locale,
 				...defaultOptions,
-				...options
+				...options,
 			}),
-		[locale]
+		[locale],
 	);
 };
 
@@ -77,7 +77,7 @@ export const useDateFormatDistance = (defaultOptions?) =>
 export const useDateFormatDistanceStrict = (defaultOptions?) =>
 	useLocalizedDateFormatDistanceOrRelative(
 		dateFormatDistanceStrict,
-		defaultOptions
+		defaultOptions,
 	);
 export const useDateFormatRelative = (defaultOptions?) =>
 	useLocalizedDateFormatDistanceOrRelative(dateFormatRelative, defaultOptions);
@@ -89,9 +89,9 @@ export const useDateFormatDuration = (defaultOptions?) => {
 			dateFormatDuration(duration, {
 				locale,
 				...defaultOptions,
-				...options
+				...options,
 			}),
-		[locale]
+		[locale],
 	);
 };
 
@@ -108,7 +108,7 @@ export const useDateFormatAge = (defaultOptions?) => {
 				(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
 			return displayedAge;
 		},
-		[tuple]
+		[tuple],
 	);
 };
 
@@ -135,6 +135,6 @@ export const useDateFormatRange = (format, options) => {
 	return useMemo(
 		() => (startDate, endDate) =>
 			`${formatPart(startDate)} — ${formatPart(endDate)}`,
-		[formatPart]
+		[formatPart],
 	);
 };

@@ -11,7 +11,7 @@ if (Meteor.isServer) {
 	Meteor.publish('attachments', function (query, options) {
 		const selector = {
 			...query,
-			userId: this.userId
+			userId: this.userId,
 		};
 		return Attachments.find(selector, options);
 	});
@@ -24,7 +24,7 @@ if (Meteor.isServer) {
 	Meteor.publish('patient.attachments', function (patientId) {
 		const selector = {
 			'meta.attachedToPatients': patientId,
-			userId: this.userId
+			userId: this.userId,
 		};
 		return Attachments.find(selector);
 	});

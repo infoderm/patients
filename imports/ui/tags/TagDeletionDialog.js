@@ -20,7 +20,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
 const MAGIC = '8324jdkf-tag-deletion-dialog-title';
@@ -47,7 +47,7 @@ const TagDeletionDialog = (props) => {
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
-				persist: true
+				persist: true,
 			});
 			Meteor.call(method, tag._id, (err, _res) => {
 				closeSnackbar(key);
@@ -115,7 +115,7 @@ TagDeletionDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	title: PropTypes.string.isRequired,
 	method: PropTypes.string.isRequired,
-	tag: PropTypes.object.isRequired
+	tag: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(TagDeletionDialog);

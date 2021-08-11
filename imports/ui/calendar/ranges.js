@@ -16,7 +16,7 @@ export function weekly(year, week, weekOptions) {
 	const someDayOfWeek = new Date(
 		year,
 		0,
-		(weekOptions.firstWeekContainsDate || 1) + (week - 1) * 7
+		(weekOptions.firstWeekContainsDate || 1) + (week - 1) * 7,
 	);
 	const lastDayOfWeek = startOfDay(endOfWeek(someDayOfWeek, weekOptions));
 	const begin = startOfWeek(someDayOfWeek, weekOptions); // Inclusive
@@ -26,5 +26,5 @@ export function weekly(year, week, weekOptions) {
 
 export default {
 	monthly,
-	weekly
+	weekly,
 };

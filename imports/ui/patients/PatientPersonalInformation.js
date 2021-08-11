@@ -17,7 +17,7 @@ const PatientPersonalInformation = ({patientId}) => {
 	const {
 		loading,
 		found,
-		fields: patient
+		fields: patient,
 	} = usePatient(init, query, options, deps);
 
 	if (loading) return <Loading />;
@@ -30,7 +30,7 @@ const PatientPersonalInformation = ({patientId}) => {
 };
 
 PatientPersonalInformation.propTypes = {
-	patientId: PropTypes.string.isRequired
+	patientId: PropTypes.string.isRequired,
 };
 
 export default PatientPersonalInformation;

@@ -24,11 +24,11 @@ PatientsPage.projection = StaticPatientCard.projection;
 
 PatientsPage.defaultProps = {
 	Card: StaticPatientCard,
-	NewCard: undefined
+	NewCard: undefined,
 };
 
 PatientsPage.propTypes = {
 	patients: PropTypes.array.isRequired,
 	Card: PropTypes.elementType,
-	NewCard: PropTypes.elementType
+	NewCard: PropTypes.elementType,
 };

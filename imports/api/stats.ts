@@ -21,7 +21,7 @@ export const countPublicationName = (QueriedCollection, {values}) =>
 
 export const countPublicationKey = (QueriedCollection, {values}, query) =>
 	`${QueriedCollection._name}-${values.join('/')}-${JSON.stringify(
-		query ?? {}
+		query ?? {},
 	)}`;
 
 export const getCountOptions = (options) =>
@@ -30,7 +30,7 @@ export const getCountOptions = (options) =>
 		: {
 				discretize: (x) => options.fields.map((key) => [key, x[key]]),
 				values: [...options.fields],
-				...options
+				...options,
 		  };
 
 const countPublication = (QueriedCollection, {fields, discretize, values}) =>
@@ -39,7 +39,7 @@ const countPublication = (QueriedCollection, {fields, discretize, values}) =>
 		const key = countPublicationKey(QueriedCollection, {values}, query);
 		const selector = {...query, owner: this.userId};
 		const options = {
-			fields: Object.fromEntries(fields.map((field) => [field, 1]))
+			fields: Object.fromEntries(fields.map((field) => [field, 1])),
 		};
 
 		let total = 0;
@@ -47,7 +47,7 @@ const countPublication = (QueriedCollection, {fields, discretize, values}) =>
 
 		const state = (): PollResult => ({
 			total,
-			count
+			count,
 		});
 
 		const refs = new Map();
@@ -102,7 +102,7 @@ const countPublication = (QueriedCollection, {fields, discretize, values}) =>
 				dec(previousObject);
 				refs.delete(_id);
 				this.changed(collection, key, state());
-			}
+			},
 		});
 
 		// Instead, we'll send one `added` message right after `observeChanges` has
@@ -121,7 +121,7 @@ const publishCount = (QueriedCollection, options) => {
 	options = getCountOptions(options);
 	Meteor.publish(
 		countPublicationName(QueriedCollection, options),
-		countPublication(QueriedCollection, options)
+		countPublication(QueriedCollection, options),
 	);
 };
 
@@ -137,7 +137,7 @@ if (Meteor.isServer) {
 			if (!birthdate)
 				return [
 					['key', 'unk'],
-					['sex', sex || 'none']
+					['sex', sex || 'none'],
 				];
 			const _birthdate = eidParseBirthdate(birthdate);
 			const thisMorning = startOfToday();
@@ -149,10 +149,10 @@ if (Meteor.isServer) {
 			const to = fr + incrementYears;
 			return [
 				['key', `${fr} à ${to}`],
-				['sex', sex || 'none']
+				['sex', sex || 'none'],
 			];
 		},
-		values: ['key', 'sex']
+		values: ['key', 'sex'],
 	});
 
 	Meteor.publish(frequencySexPublication, function (query) {
@@ -161,8 +161,8 @@ if (Meteor.isServer) {
 		const selector = {...query, isDone: true, owner: this.userId};
 		const options = {
 			fields: {
-				patientId: 1
-			}
+				patientId: 1,
+			},
 		};
 		let total = 0;
 		const refs = new Map();
@@ -171,7 +171,7 @@ if (Meteor.isServer) {
 
 		const state = (): PollResult => ({
 			total,
-			count
+			count,
 		});
 
 		const inc = (patientId) => {
@@ -207,7 +207,7 @@ if (Meteor.isServer) {
 
 		const pHandle = Patients.find(
 			{owner: this.userId},
-			{fields: {sex: 1}}
+			{fields: {sex: 1}},
 		).observeChanges({
 			added: (_id, {sex}) => {
 				pRefs.set(_id, {freq: 0, sex});
@@ -226,7 +226,7 @@ if (Meteor.isServer) {
 			removed: (_id) => {
 				pRefs.delete(_id);
 				// everything should be commited by the consultations observer
-			}
+			},
 		});
 
 		const cHandle = Consultations.find(selector, options).observeChanges({
@@ -246,7 +246,7 @@ if (Meteor.isServer) {
 				dec(patientId);
 				refs.delete(_id);
 				commit();
-			}
+			},
 		});
 
 		initializing = false;

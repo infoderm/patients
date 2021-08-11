@@ -8,7 +8,7 @@ export default function insertDocument(history, format, fd) {
 		const array = new Uint8Array(buffer);
 		const op = {
 			format,
-			array
+			array,
 		};
 		Meteor.call('documents.insert', op, (err, result) => {
 			if (err) {

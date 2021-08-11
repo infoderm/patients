@@ -19,7 +19,7 @@ const makePatientsSuggestions = (set = [], userOptions = undefined) => {
 		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(
 			searchString,
 			TIMEOUT_INPUT_DEBOUNCE,
-			DEBOUNCE_OPTIONS
+			DEBOUNCE_OPTIONS,
 		);
 
 		const $search = normalizeSearch(debouncedSearchString);
@@ -28,28 +28,28 @@ const makePatientsSuggestions = (set = [], userOptions = undefined) => {
 		const query = {$text: {$search}, _id: {$nin}};
 
 		const sort = {
-			score: {$meta: 'textScore'}
+			score: {$meta: 'textScore'},
 		};
 		const fields = mergeFields(
 			sort,
 			{
 				_id: 1,
 				firstname: 1,
-				lastname: 1
+				lastname: 1,
 			},
-			userOptions?.fields
+			userOptions?.fields,
 		);
 
 		const options = {
 			fields,
 			sort,
 			skip: 0,
-			limit
+			limit,
 		};
 
 		const deps = [
 			JSON.stringify(query),
-			JSON.stringify(options)
+			JSON.stringify(options),
 			// refreshKey,
 		];
 
@@ -59,7 +59,7 @@ const makePatientsSuggestions = (set = [], userOptions = undefined) => {
 			loading: loading || isPending(),
 			cancel,
 			flush,
-			...rest
+			...rest,
 		};
 	};
 };

@@ -20,7 +20,7 @@ const eidParseXML = (xmlString: string) => {
 
 		municipality: address.municipality._text,
 		streetandnumber: address.streetandnumber._text,
-		zip: address.zip._text
+		zip: address.zip._text,
 	};
 };
 

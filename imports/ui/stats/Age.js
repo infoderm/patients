@@ -23,7 +23,7 @@ const Chart = (props) => {
 					male: 0,
 					other: 0,
 					none: 0,
-					...value
+					...value,
 				}))
 				.sort((a, b) => {
 					const _a = Number.parseInt(a.key, 10);
@@ -35,7 +35,7 @@ const Chart = (props) => {
 
 	const color = scaleOrdinal({
 		domain: ['female', 'male', 'other', 'none'],
-		range: [pink[500], blue[500], purple[500], grey[500]]
+		range: [pink[500], blue[500], purple[500], grey[500]],
 	});
 
 	return <StackedBarChart {...props} data={data} color={color} />;

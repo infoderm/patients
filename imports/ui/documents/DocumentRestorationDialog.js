@@ -20,8 +20,8 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const DocumentRestorationDialog = ({open, onClose, document}) => {
@@ -78,7 +78,7 @@ const DocumentRestorationDialog = ({open, onClose, document}) => {
 
 DocumentRestorationDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired
+	onClose: PropTypes.func.isRequired,
 };
 
 export default withLazyOpening(DocumentRestorationDialog);

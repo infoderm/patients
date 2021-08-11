@@ -78,7 +78,7 @@ export type ConsultationDocument = ConsultationFields &
 	ConsultationMetadata;
 
 export const Consultations = new Mongo.Collection<ConsultationDocument>(
-	collection
+	collection,
 );
 const Stats = new Mongo.Collection(stats);
 
@@ -86,7 +86,7 @@ export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 
 export const useConsultationsAndAppointments = makeQuery(
 	Consultations,
-	'consultationsAndAppointments'
+	'consultationsAndAppointments',
 );
 
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
@@ -98,28 +98,28 @@ export const findLastConsultation = (filter) =>
 	Consultations.findOne(
 		{
 			isDone: true,
-			...filter
+			...filter,
 		},
 		{
 			sort: {
-				datetime: -1
-			}
-		}
+				datetime: -1,
+			},
+		},
 	);
 
 export const findLastConsultationInInterval = ([begin, end], filter) =>
 	findLastConsultation({
 		datetime: {
 			$gte: begin,
-			$lt: end
+			$lt: end,
 		},
-		...filter
+		...filter,
 	});
 
 export const filterNotInRareBooks = () => ({
 	book: {
-		$nin: books.RARE
-	}
+		$nin: books.RARE,
+	},
 });
 
 function setupConsultationsStatsPublication(collection, query, init?) {
@@ -128,7 +128,7 @@ function setupConsultationsStatsPublication(collection, query, init?) {
 	const selector = {
 		...query,
 		isDone: true,
-		owner: this.userId
+		owner: this.userId,
 	};
 	const options = {fields: {_id: 1, price: 1, datetime: 1}};
 
@@ -143,7 +143,7 @@ function setupConsultationsStatsPublication(collection, query, init?) {
 		count,
 		total,
 		first: minHeap.head(),
-		last: maxHeap.head()
+		last: maxHeap.head(),
 	});
 
 	// `observeChanges` only returns after the initial `added` callbacks have run.
@@ -190,7 +190,7 @@ function setupConsultationsStatsPublication(collection, query, init?) {
 			maxHeap.delete(maxRef);
 			refs.delete(_id);
 			this.changed(collection, key, state());
-		}
+		},
 	});
 
 	// Instead, we'll send one `added` message right after `observeChanges` has
@@ -207,9 +207,9 @@ if (Meteor.isServer) {
 		return Consultations.find(
 			{
 				owner: this.userId,
-				_id
+				_id,
 			},
-			options
+			options,
 		);
 	});
 
@@ -217,7 +217,7 @@ if (Meteor.isServer) {
 		return Consultations.find({
 			isDone: true,
 			...query,
-			owner: this.userId
+			owner: this.userId,
 		});
 	});
 
@@ -226,8 +226,8 @@ if (Meteor.isServer) {
 			owner: this.userId,
 			datetime: {
 				$gte: from,
-				$lt: to
-			}
+				$lt: to,
+			},
 		});
 	});
 
@@ -237,17 +237,17 @@ if (Meteor.isServer) {
 				isDone: true,
 				datetime: {
 					$gte: from,
-					$lt: to
+					$lt: to,
 				},
 				...filter,
-				owner: this.userId
+				owner: this.userId,
 			},
 			{
 				sort: {
-					datetime: -1
+					datetime: -1,
 				},
-				limit: 1
-			}
+				limit: 1,
+			},
 		);
 	});
 
@@ -256,14 +256,14 @@ if (Meteor.isServer) {
 			{
 				isDone: true,
 				...filter,
-				owner: this.userId
+				owner: this.userId,
 			},
 			{
 				sort: {
-					datetime: -1
+					datetime: -1,
 				},
-				limit: 1
-			}
+				limit: 1,
+			},
 		);
 	});
 
@@ -275,9 +275,9 @@ if (Meteor.isServer) {
 			{
 				owner: this.userId,
 				isDone: true,
-				patientId
+				patientId,
 			},
-			options
+			options,
 		);
 	});
 
@@ -288,11 +288,11 @@ if (Meteor.isServer) {
 			return Consultations.find(
 				{
 					owner: this.userId,
-					patientId
+					patientId,
 				},
-				options
+				options,
 			);
-		}
+		},
 	);
 
 	Meteor.publish(
@@ -301,15 +301,15 @@ if (Meteor.isServer) {
 			const query = {
 				...books.selector(name),
 				owner: this.userId,
-				isDone: true
+				isDone: true,
 			};
 			if (options.fields) {
 				const {fields, ...rest} = options;
 				const _options = {
 					...rest,
 					fields: {
-						...fields
-					}
+						...fields,
+					},
 				};
 				for (const key of Object.keys(query)) {
 					_options.fields[key] = 1;
@@ -319,7 +319,7 @@ if (Meteor.isServer) {
 			}
 
 			return Consultations.find(query, options);
-		}
+		},
 	);
 
 	Meteor.publish(books.options.parentPublicationStats, function (name) {
@@ -332,7 +332,7 @@ if (Meteor.isServer) {
 			this,
 			collection,
 			query,
-			{name}
+			{name},
 		);
 		this.ready();
 
@@ -350,7 +350,7 @@ if (Meteor.isServer) {
 		const handle = setupConsultationsStatsPublication.call(
 			this,
 			collection,
-			query
+			query,
 		);
 		this.ready();
 
@@ -377,7 +377,7 @@ function sanitize({
 	price,
 	paid,
 	book,
-	payment_method
+	payment_method,
 }) {
 	check(patientId, String);
 	check(datetime, Date);
@@ -426,7 +426,7 @@ function sanitize({
 		unpaid: isUnpaid({price, paid}),
 		book,
 		payment_method,
-		isDone: true
+		isDone: true,
 	};
 }
 
@@ -435,7 +435,7 @@ const computedFields = (owner, state, changes) => {
 		Consultations.findOne({
 			owner,
 			isDone: true,
-			datetime: {$gt: changes.datetime ?? state?.datetime}
+			datetime: {$gt: changes.datetime ?? state?.datetime},
 		}) === undefined;
 
 	if (!isLastConsultation) return undefined;
@@ -453,7 +453,7 @@ const computedFields = (owner, state, changes) => {
 
 	return {
 		doneDatetime: now,
-		end: now
+		end: now,
 	};
 };
 
@@ -476,15 +476,15 @@ const methods = {
 			{
 				datetime: {
 					$gte: begin,
-					$lt: end
+					$lt: end,
 				},
-				owner: this.userId
+				owner: this.userId,
 			},
 			{
 				sort: {
-					datetime: 1
-				}
-			}
+					datetime: 1,
+				},
+			},
 		).fetch();
 
 		const data = {};
@@ -518,8 +518,8 @@ const methods = {
 		const header = list(
 			map(
 				([year, book]) => books.format(year, book),
-				product([range(beginYear, endYear), range(beginBook, endBook)])
-			)
+				product([range(beginYear, endYear), range(beginBook, endBook)]),
+			),
 		);
 		const lines = [];
 
@@ -564,7 +564,7 @@ const methods = {
 			...computedFields(this.userId, undefined, fields),
 			createdAt,
 			lastModifiedAt,
-			owner: this.userId
+			owner: this.userId,
 		});
 	},
 
@@ -572,7 +572,7 @@ const methods = {
 		check(consultationId, String);
 		const existing = Consultations.findOne({
 			_id: consultationId,
-			owner: this.userId
+			owner: this.userId,
 		});
 		if (!existing) {
 			throw new Meteor.Error('not-found');
@@ -587,8 +587,8 @@ const methods = {
 			$set: {
 				...fields,
 				...computedFields(this.userId, existing, fields),
-				lastModifiedAt: new Date()
-			}
+				lastModifiedAt: new Date(),
+			},
 		});
 	},
 
@@ -599,14 +599,14 @@ const methods = {
 		const numUpdated = Consultations.update(
 			{
 				_id: consultationId,
-				owner: this.userId
+				owner: this.userId,
 			},
 			{
 				$set: {
-					patientId
-				}
+					patientId,
+				},
 			},
-			{multi: false, upsert: false}
+			{multi: false, upsert: false},
 		);
 
 		if (numUpdated === 0) {
@@ -622,7 +622,7 @@ const methods = {
 
 		const consultation = Consultations.findOne({
 			_id: consultationId,
-			owner: this.userId
+			owner: this.userId,
 		});
 		if (!consultation) {
 			throw new Meteor.Error('not-found', 'consultation not found');
@@ -630,14 +630,14 @@ const methods = {
 
 		const attachment = Attachments.findOne({
 			_id: uploadId,
-			userId: this.userId
+			userId: this.userId,
 		});
 		if (!attachment) {
 			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
 		return Attachments.update(uploadId, {
-			$addToSet: {'meta.attachedToConsultations': consultationId}
+			$addToSet: {'meta.attachedToConsultations': consultationId},
 		});
 	},
 
@@ -647,7 +647,7 @@ const methods = {
 
 		const consultation = Consultations.findOne({
 			_id: consultationId,
-			owner: this.userId
+			owner: this.userId,
 		});
 		if (!consultation) {
 			throw new Meteor.Error('not-found', 'consultation not found');
@@ -655,14 +655,14 @@ const methods = {
 
 		const attachment = Attachments.findOne({
 			_id: uploadId,
-			userId: this.userId
+			userId: this.userId,
 		});
 		if (!attachment) {
 			throw new Meteor.Error('not-found', 'attachment not found');
 		}
 
 		return Attachments.update(uploadId, {
-			$pull: {'meta.attachedToConsultations': consultationId}
+			$pull: {'meta.attachedToConsultations': consultationId},
 		});
 	},
 
@@ -671,7 +671,7 @@ const methods = {
 
 		const consultation = Consultations.findOne({
 			_id: consultationId,
-			owner: this.userId
+			owner: this.userId,
 		});
 		if (!consultation) {
 			throw new Meteor.Error('not-found');
@@ -680,14 +680,14 @@ const methods = {
 		Attachments.update(
 			{
 				userId: this.userId,
-				'meta.attachedToConsultations': consultationId
+				'meta.attachedToConsultations': consultationId,
 			},
 			{
-				$pull: {'meta.attachedToConsultations': consultationId}
+				$pull: {'meta.attachedToConsultations': consultationId},
 			},
 			{
-				multi: true
-			}
+				multi: true,
+			},
 		);
 
 		return Consultations.remove(consultationId);
@@ -700,9 +700,9 @@ const methods = {
 				datetime: existing.scheduledDatetime,
 				begin: existing.scheduledDatetime,
 				end: addMilliseconds(existing.scheduledDatetime, existing.duration),
-				isDone: false
-			}
-		})
+				isDone: false,
+			},
+		}),
 	),
 	'books.changeBookNumber'(oldBookId, newBookNumber) {
 		check(oldBookId, String);
@@ -735,20 +735,20 @@ const methods = {
 		const query = {
 			...books.selector(oldName),
 			owner: this.userId,
-			isDone: true
+			isDone: true,
 		};
 
 		Consultations.update(
 			query,
 			{
-				$set: {book: newBookNumber.toString()}
+				$set: {book: newBookNumber.toString()},
 			},
-			{multi: true}
+			{multi: true},
 		);
 
 		Books.remove(oldBookId);
 		return newBookId;
-	}
+	},
 };
 
 Meteor.methods(methods);
@@ -760,6 +760,6 @@ export const consultations = {
 		collection: stats,
 		publication: statsPublication,
 		Collection: Stats,
-		key: statsKey
-	}
+		key: statsKey,
+	},
 };

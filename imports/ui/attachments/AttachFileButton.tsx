@@ -50,7 +50,7 @@ const AttachFileButton = ({
 						>
 							Ok
 						</Button>
-					)
+					),
 				});
 			} else {
 				uploadingKey = enqueueSnackbar(uploadingMessage(), {variant: 'info'});
@@ -59,7 +59,7 @@ const AttachFileButton = ({
 
 		const notistackInfoOptions: NotistackOptionsObject = {
 			variant: 'info',
-			persist: true
+			persist: true,
 		};
 
 		const notistackErrorOptions: NotistackOptionsObject = {
@@ -73,7 +73,7 @@ const AttachFileButton = ({
 				>
 					Dismiss
 				</Button>
-			)
+			),
 		};
 
 		const onEnd = (err, fileObject) => {
@@ -89,7 +89,7 @@ const AttachFileButton = ({
 				enqueueSnackbar(message, {variant: 'info'});
 				const key2 = enqueueSnackbar(
 					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${method}`,
-					notistackInfoOptions
+					notistackInfoOptions,
 				);
 				Meteor.call(method, itemId, fileObject._id, (err, _res) => {
 					closeSnackbar(key2);
@@ -117,9 +117,9 @@ const AttachFileButton = ({
 				{
 					file,
 					chunkSize: 'dynamic',
-					meta
+					meta,
 				},
-				false
+				false,
 			);
 
 			const message = '[Upload] init';
@@ -146,7 +146,7 @@ const AttachFileButton = ({
 
 	const buttonProps = {
 		...extraProps,
-		...rest
+		...rest,
 	};
 
 	return (
@@ -161,8 +161,8 @@ AttachFileButton.propTypes = {
 	item: PropTypes.string.isRequired,
 	children: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.node),
-		PropTypes.node
-	])
+		PropTypes.node,
+	]),
 };
 
 export default AttachFileButton;

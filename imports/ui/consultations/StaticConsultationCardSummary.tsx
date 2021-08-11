@@ -10,8 +10,8 @@ import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 const useStyles = makeStyles({
 	summary: {
-		position: 'relative'
-	}
+		position: 'relative',
+	},
 });
 
 const StaticConsultationCardSummary = (props) => {

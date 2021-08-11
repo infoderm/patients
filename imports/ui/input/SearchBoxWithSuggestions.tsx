@@ -10,20 +10,20 @@ const comboboxStateReducer = (state, {type, changes}) => {
 		case useCombobox.stateChangeTypes.InputChange:
 			return {
 				...changes,
-				highlightedIndex: -1
+				highlightedIndex: -1,
 			};
 		case useCombobox.stateChangeTypes.InputBlur:
 			return {
 				...changes,
 				highlightedIndex: state.highlightedIndex,
-				inputValue: state.inputValue
+				inputValue: state.inputValue,
 			};
 		case useCombobox.stateChangeTypes.InputKeyDownEnter:
 		case useCombobox.stateChangeTypes.ItemClick:
 			return {
 				...changes,
 				highlightedIndex: -1,
-				inputValue: ''
+				inputValue: '',
 			};
 		default:
 			return changes;
@@ -60,7 +60,7 @@ export default function SearchBoxWithSuggestions(props: Props) {
 		placeholder,
 		className,
 		loading,
-		suggestions
+		suggestions,
 	};
 
 	const downshiftProps = useCombobox({
@@ -71,7 +71,7 @@ export default function SearchBoxWithSuggestions(props: Props) {
 			setInputValue(inputValue);
 		},
 		stateReducer: comboboxStateReducer,
-		...rest
+		...rest,
 	});
 
 	return (
@@ -86,5 +86,5 @@ SearchBoxWithSuggestions.propTypes = {
 	useSuggestions: PropTypes.func.isRequired,
 	itemToKey: PropTypes.func.isRequired,
 	placeholder: PropTypes.string,
-	className: PropTypes.string
+	className: PropTypes.string,
 };

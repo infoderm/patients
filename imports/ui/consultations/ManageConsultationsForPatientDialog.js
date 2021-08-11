@@ -42,16 +42,16 @@ const formatDatetime = (datetime) => {
 const useStyles = makeStyles({
 	avatarBegin: {
 		backgroundColor: green[100],
-		color: green[600]
+		color: green[600],
 	},
 	avatarEdit: {
 		backgroundColor: blue[100],
-		color: blue[600]
+		color: blue[600],
 	},
 	avatarSchedule: {
 		backgroundColor: orange[100],
-		color: orange[600]
-	}
+		color: orange[600],
+	},
 });
 
 const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
@@ -60,11 +60,11 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 
 	const {loading: loadingAppointments, results: appointments} =
 		useUpcomingAppointmentsForPatient(patientId, {
-			limit: 2
+			limit: 2,
 		});
 	const {loading: loadingConsultations, results: consultations} =
 		useConsultationsForPatient(patientId, {
-			limit: 3
+			limit: 3,
 		});
 
 	const createNewConsultation = () => {
@@ -108,7 +108,7 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 						<ListItemAvatar>
 							<Avatar
 								className={classNames({
-									[classes.avatarBegin]: isToday(datetime)
+									[classes.avatarBegin]: isToday(datetime),
 								})}
 							>
 								<AlarmIcon />
@@ -124,7 +124,7 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 						<ListItemAvatar>
 							<Avatar
 								className={classNames({
-									[classes.avatarEdit]: isToday(datetime)
+									[classes.avatarEdit]: isToday(datetime),
 								})}
 							>
 								<BookmarkIcon />
@@ -139,7 +139,7 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 					<ListItemAvatar>
 						<Avatar
 							className={classNames({
-								[classes.avatarSchedule]: appointments.length === 0
+								[classes.avatarSchedule]: appointments.length === 0,
 							})}
 						>
 							<TodayIcon />
@@ -163,7 +163,7 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 ManageConsultationsForPatientDialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,
-	patientId: PropTypes.string.isRequired
+	patientId: PropTypes.string.isRequired,
 };
 
 export default withLazyOpening(ManageConsultationsForPatientDialog);

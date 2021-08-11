@@ -21,14 +21,14 @@ const WeeklyCalendarData = (props) => {
 };
 
 WeeklyCalendarData.defaultProps = {
-	maxLines: 24
+	maxLines: 24,
 };
 
 WeeklyCalendarData.propTypes = {
 	year: PropTypes.number.isRequired,
 	week: PropTypes.number.isRequired,
 	weekOptions: PropTypes.object,
-	maxLines: PropTypes.number
+	maxLines: PropTypes.number,
 };
 
 export default WeeklyCalendarData;

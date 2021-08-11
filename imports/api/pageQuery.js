@@ -7,7 +7,7 @@ const pageQuery = (Collection) =>
 			options = {
 				...options,
 				skip,
-				limit
+				limit,
 			};
 		}
 

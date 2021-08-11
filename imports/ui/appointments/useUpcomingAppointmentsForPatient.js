@@ -17,21 +17,21 @@ const useUpcomingAppointmentsForPatient = (patientId, {limit}) => {
 		isDone: false,
 		isCancelled: {$ne: true},
 		datetime: {
-			$gte: earlyMorning
-		}
+			$gte: earlyMorning,
+		},
 	};
 
 	const mergedOptions = {
 		sort: {
-			datetime: 1
+			datetime: 1,
 		},
 		limit,
 		fields: {
 			patientId: 1,
 			isDone: 1,
 			isCancelled: 1,
-			datetime: 1
-		}
+			datetime: 1,
+		},
 	};
 
 	const deps = [JSON.stringify(query), limit];

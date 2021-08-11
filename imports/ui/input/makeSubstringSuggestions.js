@@ -12,7 +12,7 @@ const makeSubstringSuggestions =
 		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(
 			searchString,
 			TIMEOUT_INPUT_DEBOUNCE,
-			DEBOUNCE_OPTIONS
+			DEBOUNCE_OPTIONS,
 		);
 
 		const $regex = escapeStringRegexp(debouncedSearchString);
@@ -22,24 +22,24 @@ const makeSubstringSuggestions =
 		const query = {[key]: {$regex, $options: 'i', $nin}};
 
 		const sort = {
-			[key]: 1
+			[key]: 1,
 		};
 		const fields = {
 			...sort,
 			_id: 1,
-			[key]: 1
+			[key]: 1,
 		};
 
 		const options = {
 			fields,
 			sort,
 			skip: 0,
-			limit
+			limit,
 		};
 
 		const {loading, ...rest} = useCollectionFind(query, options, [
 			$regex,
-			JSON.stringify($nin)
+			JSON.stringify($nin),
 			// refreshKey,
 		]);
 
@@ -47,7 +47,7 @@ const makeSubstringSuggestions =
 			loading: loading || isPending(),
 			cancel,
 			flush,
-			...rest
+			...rest,
 		};
 	};
 

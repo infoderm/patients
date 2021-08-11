@@ -7,13 +7,13 @@ import DocumentsPage from '../documents/DocumentsPage';
 const UnparsedDocuments = (props) => {
 	const options = {
 		sort: {
-			createdAt: 1
+			createdAt: 1,
 		},
 		fields: {
-			...DocumentsPage.projection
+			...DocumentsPage.projection,
 			// parsed: 1,
 			// createdAt: 1
-		}
+		},
 	};
 
 	const {loading, results: documents} = useUnparsedDocuments({}, options, []);

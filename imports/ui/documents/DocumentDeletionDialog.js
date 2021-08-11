@@ -21,8 +21,8 @@ import useIsMounted from '../hooks/useIsMounted';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const DocumentDeletionDialog = ({open, onClose, document}) => {
@@ -81,7 +81,7 @@ const DocumentDeletionDialog = ({open, onClose, document}) => {
 
 DocumentDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired
+	onClose: PropTypes.func.isRequired,
 };
 
 export default withLazyOpening(DocumentDeletionDialog);

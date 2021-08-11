@@ -8,13 +8,13 @@ const {
 	Collection: Allergies,
 	operations: allergies,
 	useTags: useAllergies,
-	useTagsFind: useAllergiesFind
+	useTagsFind: useAllergiesFind,
 } = createTagCollection({
 	collection: 'allergies',
 	publication: 'allergies',
 	singlePublication: 'allergy',
 	parentPublication: 'patients-of-allergy',
-	key: 'allergies'
+	key: 'allergies',
 });
 
 export {Allergies, allergies, useAllergies, useAllergiesFind};
@@ -39,5 +39,5 @@ Meteor.methods({
 		}
 
 		return Allergies.update(tagId, {$set: {color: newColor}});
-	}
+	},
 });

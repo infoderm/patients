@@ -29,8 +29,8 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			niss: 1,
 			firstname: 1,
 			lastname: 1,
-			photo: 1
-		}
+			photo: 1,
+		},
 	};
 	const deps = [query];
 

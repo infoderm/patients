@@ -5,13 +5,13 @@ const {
 	Collection: Doctors,
 	operations: doctors,
 	useTags: useDoctors,
-	useTagsFind: useDoctorsFind
+	useTagsFind: useDoctorsFind,
 } = createTagCollection({
 	collection: 'doctors',
 	publication: 'doctors',
 	singlePublication: 'doctor',
 	parentPublication: 'patients-of-doctor',
-	key: 'doctors'
+	key: 'doctors',
 });
 
 export {Doctors, doctors, useDoctors, useDoctorsFind};

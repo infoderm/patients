@@ -18,5 +18,5 @@ export default function AllergyDeletionDialog({open, onClose, tag}) {
 AllergyDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired
+	tag: PropTypes.object.isRequired,
 };

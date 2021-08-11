@@ -8,7 +8,7 @@ export default makeStyles((theme) => ({
 		padding: theme.spacing(3),
 		marginTop: 48,
 		[theme.breakpoints.up('sm')]: {
-			marginTop: 64
-		}
-	}
+			marginTop: 64,
+		},
+	},
 }));

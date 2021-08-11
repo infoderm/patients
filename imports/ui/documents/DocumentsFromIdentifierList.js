@@ -18,19 +18,19 @@ const DocumentsFromIdentifierList = withTracker(({match, page, perpage}) => {
 	const identifier = myDecodeURIComponent(match.params.identifier);
 	const query = {identifier};
 	const sort = {
-		datetime: -1
+		datetime: -1,
 	};
 	const fields = {
 		source: 0,
 		decoded: 0,
 		results: 0,
-		text: 0
+		text: 0,
 	};
 	const options = {
 		sort,
 		fields,
 		skip: (page - 1) * perpage,
-		limit: perpage
+		limit: perpage,
 	};
 	const handle = Meteor.subscribe('documents', query, options);
 	const loading = !handle.ready();
@@ -39,18 +39,18 @@ const DocumentsFromIdentifierList = withTracker(({match, page, perpage}) => {
 		perpage,
 		root: `/documents/${match.params.identifier}`,
 		loading,
-		documents: loading ? [] : Documents.find(query, options).fetch()
+		documents: loading ? [] : Documents.find(query, options).fetch(),
 	};
 })(StaticDocumentList);
 
 DocumentsFromIdentifierList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 DocumentsFromIdentifierList.propTypes = {
 	page: PropTypes.number,
-	perpage: PropTypes.number
+	perpage: PropTypes.number,
 };
 
 export default DocumentsFromIdentifierList;

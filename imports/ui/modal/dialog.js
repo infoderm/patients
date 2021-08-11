@@ -4,7 +4,7 @@ import {render, unmountComponentAtNode} from 'react-dom';
 const DEFAULT_OPTIONS = {
 	unmountDelay: 3000,
 	openKey: 'open',
-	parent: () => document.body
+	parent: () => document.body,
 };
 
 const dialog = (componentExecutor, options) => {
@@ -21,9 +21,9 @@ const dialog = (componentExecutor, options) => {
 	const promise = new Promise((resolve, reject) => {
 		render(
 			cloneElement(componentExecutor(resolve, reject), {
-				[options.openKey]: true
+				[options.openKey]: true,
 			}),
-			container
+			container,
 		);
 	});
 
@@ -34,7 +34,7 @@ const dialog = (componentExecutor, options) => {
 			container,
 			() => {
 				setTimeout(unmount, options.unmountDelay);
-			}
+			},
 		);
 	});
 };

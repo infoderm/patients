@@ -33,8 +33,8 @@ import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: theme.spacing(3)
-	}
+		padding: theme.spacing(3),
+	},
 }));
 
 const ConsultationsOfTheDay = ({day}) => {
@@ -55,7 +55,7 @@ const ConsultationsOfTheDay = ({day}) => {
 	const {results: consultations} = useConsultationsAndAppointments(
 		query,
 		options,
-		deps
+		deps,
 	);
 
 	const classes = useStyles();
@@ -74,7 +74,7 @@ const ConsultationsOfTheDay = ({day}) => {
 			(showNoShowAppointments ||
 				c.isDone !== false ||
 				c.isCancelled ||
-				!isBefore(c.scheduledDatetime, thisMorning))
+				!isBefore(c.scheduledDatetime, thisMorning)),
 	);
 	const pm = consultations.filter(
 		(c) =>
@@ -85,14 +85,14 @@ const ConsultationsOfTheDay = ({day}) => {
 			(showNoShowAppointments ||
 				c.isDone !== false ||
 				c.isCancelled ||
-				!isBefore(c.scheduledDatetime, thisMorning))
+				!isBefore(c.scheduledDatetime, thisMorning)),
 	);
 	const cam = count(am);
 	const cpm = count(pm);
 
 	const heading = `${localizedDateFormat(
 		day,
-		'PPPP'
+		'PPPP',
 	)} (AM: ${cam}, PM: ${cpm})`;
 
 	return (
@@ -184,7 +184,7 @@ const ConsultationsOfTheDay = ({day}) => {
 };
 
 ConsultationsOfTheDay.propTypes = {
-	day: PropTypes.object.isRequired
+	day: PropTypes.object.isRequired,
 };
 
 export default ConsultationsOfTheDay;

@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
 		height: '100%',
 		position: 'relative',
 		pointerEvents: 'none',
-		justifyContent: 'center'
-	}
+		justifyContent: 'center',
+	},
 }));
 
 export default function SearchBoxInternalsAdornment() {

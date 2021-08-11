@@ -11,11 +11,11 @@ const useEvents = (
 	end: Date,
 	filter: Mongo.Selector<Event>,
 	options: Mongo.Options<Event>,
-	deps: any[]
+	deps: any[],
 ) => {
 	const query = {
 		...beginsInInterval(begin, end),
-		...filter
+		...filter,
 	};
 
 	return useTracker(() => {
@@ -24,7 +24,7 @@ const useEvents = (
 		const handle = Meteor.subscribe('events.interval', begin, end);
 		return {
 			loading: !handle.ready(),
-			results: Events.find(query, options).fetch()
+			results: Events.find(query, options).fetch(),
 		};
 	}, deps);
 };

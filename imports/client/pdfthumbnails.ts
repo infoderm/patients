@@ -3,7 +3,7 @@ import {fetchPDF} from './pdf';
 function createContext(
 	page: any,
 	desiredWidth?: number,
-	desiredHeight?: number
+	desiredHeight?: number,
 ) {
 	const viewport = page.getViewport({scale: 1});
 
@@ -25,7 +25,7 @@ function createContext(
 
 	return {
 		canvasContext: ctx,
-		viewport: scaledViewport
+		viewport: scaledViewport,
 	};
 }
 
@@ -39,7 +39,7 @@ interface Options {
 
 export const thumbnail = async (
 	url: string,
-	{page = 1, width, height, type, encoderOptions}: Options
+	{page = 1, width, height, type, encoderOptions}: Options,
 ) =>
 	// A Promise
 	fetchPDF({url})

@@ -24,41 +24,41 @@ const useStyles = makeStyles((theme) => ({
 		color: '#fff',
 		backgroundColor: '#999',
 		verticalAlign: 'top',
-		marginRight: theme.spacing(2)
+		marginRight: theme.spacing(2),
 	},
 	photo: {
 		width: 140,
 		height: 200,
 		verticalAlign: 'top',
-		marginRight: theme.spacing(2)
+		marginRight: theme.spacing(2),
 	},
 	formControl: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
 		'& input, & div': {
-			color: 'black !important'
-		}
+			color: 'black !important',
+		},
 	},
 	container: {
-		padding: theme.spacing(3)
+		padding: theme.spacing(3),
 	},
 	multiline: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing(2)}px)`,
 		'& textarea': {
-			color: 'black !important'
-		}
-	}
+			color: 'black !important',
+		},
+	},
 }));
 
 const CustomTextField = ({value, ...rest}) => (
 	<TextField
 		InputLabelProps={{
-			shrink: value !== '' && value !== undefined && value !== null
+			shrink: value !== '' && value !== undefined && value !== null,
 		}}
 		inputProps={{
-			readOnly: true
+			readOnly: true,
 		}}
 		margin="normal"
 		value={value}
@@ -154,10 +154,10 @@ const PatientSheet = (props) => {
 									itemToString={(x) => x}
 									TextFieldProps={{
 										label: 'Allergies',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									chipProps={{
-										avatar: <Avatar>Al</Avatar>
+										avatar: <Avatar>Al</Avatar>,
 									}}
 									value={patient.allergies || []}
 								/>
@@ -196,10 +196,10 @@ const PatientSheet = (props) => {
 									itemToString={(x) => x}
 									TextFieldProps={{
 										label: 'Médecin Traitant',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									chipProps={{
-										avatar: <Avatar>Dr</Avatar>
+										avatar: <Avatar>Dr</Avatar>,
 									}}
 									value={patient.doctors || []}
 								/>
@@ -212,10 +212,10 @@ const PatientSheet = (props) => {
 									itemToString={(x) => x}
 									TextFieldProps={{
 										label: 'Mutuelle',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									chipProps={{
-										avatar: <Avatar>In</Avatar>
+										avatar: <Avatar>In</Avatar>,
 									}}
 									value={patient.insurances || []}
 								/>
@@ -243,7 +243,7 @@ const PatientSheet = (props) => {
 									itemToString={(x) => x._id}
 									TextFieldProps={{
 										label: 'Consultations',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									value={consultations || []}
 								/>
@@ -256,7 +256,7 @@ const PatientSheet = (props) => {
 									itemToString={(x) => x._id}
 									TextFieldProps={{
 										label: 'Documents',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									value={documents || []}
 								/>
@@ -269,7 +269,7 @@ const PatientSheet = (props) => {
 									itemToString={(x) => x._id}
 									TextFieldProps={{
 										label: 'Attachments',
-										margin: 'normal'
+										margin: 'normal',
 									}}
 									value={attachments || []}
 								/>
@@ -286,7 +286,7 @@ PatientSheet.propTypes = {
 	patient: PropTypes.object.isRequired,
 	consultations: PropTypes.array.isRequired,
 	attachments: PropTypes.array.isRequired,
-	documents: PropTypes.array.isRequired
+	documents: PropTypes.array.isRequired,
 };
 
 export default PatientSheet;

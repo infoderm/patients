@@ -20,7 +20,7 @@ const SearchBox = ({
 
 SearchBox.propTypes = {
 	className: PropTypes.string,
-	expands: PropTypes.bool
+	expands: PropTypes.bool,
 };
 
 export default SearchBox;

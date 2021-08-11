@@ -19,7 +19,7 @@ import {Uploads} from '../../api/uploads';
 import {normalized} from '../../api/string';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
 import withLazyOpening from '../modal/withLazyOpening';
@@ -28,11 +28,11 @@ import AttachmentThumbnail from './AttachmentThumbnail';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
+		marginLeft: theme.spacing(1),
 	},
 	thumbnail: {
-		height: 300
-	}
+		height: 300,
+	},
 }));
 
 const AttachmentSuperDeletionDialog = (props) => {
@@ -121,7 +121,7 @@ const AttachmentSuperDeletionDialog = (props) => {
 AttachmentSuperDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	attachment: PropTypes.object.isRequired
+	attachment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AttachmentSuperDeletionDialog);

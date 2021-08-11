@@ -34,8 +34,8 @@ export const Uploads = new FilesCollection({
 		this.collection.update(upload._id, {
 			$set: {
 				'meta.createdAt': new Date(),
-				'meta.isDeleted': false
-			}
+				'meta.isDeleted': false,
+			},
 		});
 
 		const unlink = (versionName: string) => {
@@ -49,12 +49,12 @@ export const Uploads = new FilesCollection({
 				owner: upload.userId,
 				versionName,
 				uploadId: upload._id,
-				storedAt: new Date()
+				storedAt: new Date(),
 			};
 
 			const writeStream = bucket.openUploadStream(upload.name, {
 				contentType: upload.type || 'binary/octet-stream',
-				metadata
+				metadata,
 			});
 
 			const {path} = upload.versions[versionName];
@@ -76,10 +76,10 @@ export const Uploads = new FilesCollection({
 					Meteor.bindEnvironment((version) => {
 						const property = `versions.${versionName}.meta.gridFsFileId`;
 						this.collection.update(upload._id, {
-							$set: {[property]: version._id.toHexString()}
+							$set: {[property]: version._id.toHexString()},
 						});
 						unlink(versionName);
-					})
+					}),
 				);
 		});
 	},
@@ -93,7 +93,7 @@ export const Uploads = new FilesCollection({
 				http.response.statusCode = 404;
 				http.response.end('file not found');
 				console.error(
-					`chunk of file ${upload._id}/${upload.name} was not found`
+					`chunk of file ${upload._id}/${upload.name} was not found`,
 				);
 				console.debug({error});
 			});
@@ -123,7 +123,7 @@ export const Uploads = new FilesCollection({
 				}
 			});
 		});
-	}
+	},
 });
 
 if (Meteor.isServer) {
@@ -143,16 +143,16 @@ Meteor.methods({
 	'uploads.delete': unconditionallyUpdateById(
 		Uploads.collection,
 		{
-			$set: {'meta.isDeleted': true}
+			$set: {'meta.isDeleted': true},
 		},
-		'userId'
+		'userId',
 	),
 
 	'uploads.restore': unconditionallyUpdateById(
 		Uploads.collection,
 		{
-			$set: {'meta.isDeleted': false}
+			$set: {'meta.isDeleted': false},
 		},
-		'userId'
-	)
+		'userId',
+	),
 });

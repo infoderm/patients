@@ -35,11 +35,11 @@ export default function InsurancesList({match, prefix, page, perpage}) {
 
 InsurancesList.defaultProps = {
 	page: 1,
-	perpage: 10
+	perpage: 10,
 };
 
 InsurancesList.propTypes = {
 	page: PropTypes.number,
 	perpage: PropTypes.number,
-	prefix: PropTypes.string
+	prefix: PropTypes.string,
 };

@@ -38,7 +38,7 @@ SelectOneSetting.propTypes = {
 	label: PropTypes.string,
 	setting: PropTypes.string.isRequired,
 	options: PropTypes.array.isRequired,
-	optionToString: PropTypes.func
+	optionToString: PropTypes.func,
 };
 
 export default SelectOneSetting;

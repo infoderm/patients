@@ -40,7 +40,7 @@ Meteor.startup(() => {
 		Doctors,
 		Allergies,
 		Books,
-		Documents
+		Documents,
 	];
 
 	// Drop all indexes (if the collection is not empty)
@@ -60,7 +60,7 @@ Meteor.startup(() => {
 		.forEach((patient) => {
 			patient.normalizedName = patients.normalizedName(
 				patient.firstname,
-				patient.lastname
+				patient.lastname,
 			);
 			Patients.rawCollection().save(patient);
 		});
@@ -75,13 +75,13 @@ Meteor.startup(() => {
 					Attachments.update(
 						{_id: {$in: attachments}},
 						{
-							$addToSet: {'meta.attachedToConsultations': _id}
+							$addToSet: {'meta.attachedToConsultations': _id},
 						},
-						{multi: true}
+						{multi: true},
 					);
 					Consultations.update(_id, {$unset: {attachments: true}});
 				}
-			})
+			}),
 		);
 
 	// Add .unpaid field to consultations
@@ -139,7 +139,7 @@ Meteor.startup(() => {
 		.forEach(
 			Meteor.bindEnvironment((patient) => {
 				patients.updateIndex(patient.owner, patient._id, patient);
-			})
+			}),
 		);
 
 	// Create indexes
@@ -148,11 +148,11 @@ Meteor.startup(() => {
 		collection.rawCollection().createIndex(
 			{
 				owner: 1,
-				[field]: 1
+				[field]: 1,
 			},
 			{
-				background: true
-			}
+				background: true,
+			},
 		);
 
 	createSimpleIndex(Patients, 'niss');
@@ -174,14 +174,14 @@ Meteor.startup(() => {
 			key: {
 				owner: 1,
 				firstname: 'text',
-				lastname: 'text'
+				lastname: 'text',
 			},
 			background: true,
 			weights: {
 				firstname: 2,
-				lastname: 3
-			}
-		}
+				lastname: 3,
+			},
+		},
 	]);
 
 	PatientsSearchIndex.rawCollection().createIndexes([
@@ -197,7 +197,7 @@ Meteor.startup(() => {
 				lastname_particles: 'text',
 				lastname_substring_long: 'text',
 				lastname_substring_medium: 'text',
-				lastname_substring_short: 'text'
+				lastname_substring_short: 'text',
 			},
 			name: 'PatientsSearchIndex.text',
 			default_language: 'none',
@@ -211,22 +211,22 @@ Meteor.startup(() => {
 				lastname_particles: 6,
 				lastname_substring_long: 7,
 				lastname_substring_medium: 5,
-				lastname_substring_short: 4
+				lastname_substring_short: 4,
 			},
-			background: true
-		}
+			background: true,
+		},
 	]);
 
 	const createSimpleUniqueIndex = (collection, field) =>
 		collection.rawCollection().createIndex(
 			{
 				owner: 1,
-				[field]: 1
+				[field]: 1,
 			},
 			{
 				unique: true,
-				background: true
-			}
+				background: true,
+			},
 		);
 
 	createSimpleUniqueIndex(Settings, 'key');
@@ -239,75 +239,75 @@ Meteor.startup(() => {
 		{
 			owner: 1,
 			fiscalYear: 1,
-			bookNumber: 1
+			bookNumber: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	createSimpleUniqueIndex(Drugs, 'mppcv');
 
 	Drugs.rawCollection().createIndex(
 		{
-			'$**': 'text'
+			'$**': 'text',
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
-			datetime: 1
+			datetime: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			begin: 1,
-			end: 1
+			end: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
-			end: 1
+			end: 1,
 		},
 		{
-			background: true
-		}
-	);
-
-	Consultations.rawCollection().createIndex(
-		{
-			owner: 1,
-			isDone: 1,
-			datetime: 1
+			background: true,
 		},
-		{
-			background: true
-		}
 	);
 
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
-			unpaid: 1
+			datetime: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			unpaid: 1,
+		},
+		{
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
@@ -315,11 +315,11 @@ Meteor.startup(() => {
 			owner: 1,
 			patientId: 1,
 			isDone: 1,
-			datetime: -1
+			datetime: -1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
@@ -327,11 +327,11 @@ Meteor.startup(() => {
 			owner: 1,
 			isDone: 1,
 			book: 1,
-			datetime: 1
+			datetime: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
@@ -339,63 +339,63 @@ Meteor.startup(() => {
 			owner: 1,
 			isDone: 1,
 			payment_method: 1,
-			datetime: -1
+			datetime: -1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
-			price: 1
+			price: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Events.rawCollection().createIndex(
 		{
 			owner: 1,
 			begin: 1,
-			end: 1
+			end: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Events.rawCollection().createIndex(
 		{
 			owner: 1,
-			end: 1
+			end: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Attachments.rawCollection().createIndex(
 		{
 			userId: 1,
-			'meta.attachedToPatients': 1
+			'meta.attachedToPatients': 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Attachments.rawCollection().createIndex(
 		{
 			userId: 1,
-			'meta.attachedToConsultations': 1
+			'meta.attachedToConsultations': 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
@@ -405,11 +405,11 @@ Meteor.startup(() => {
 			datetime: 1,
 			status: 1,
 			lastVersion: 1,
-			deleted: 1
+			deleted: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
@@ -418,64 +418,64 @@ Meteor.startup(() => {
 			identifier: 1,
 			reference: 1,
 			status: 1,
-			datetime: -1
+			datetime: -1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			identifier: 1,
-			datetime: -1
+			datetime: -1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			patientId: 1,
-			createdAt: 1
+			createdAt: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			parsed: 1,
-			createdAt: 1
+			createdAt: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			encoding: 1,
-			createdAt: 1
+			createdAt: 1,
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	Documents.rawCollection().createIndex(
 		{
-			source: 'hashed'
+			source: 'hashed',
 		},
 		{
-			background: true
-		}
+			background: true,
+		},
 	);
 
 	// Recreate all generated entries
@@ -522,7 +522,7 @@ Meteor.startup(() => {
 				const document = {
 					patientId,
 					format,
-					array
+					array,
 				};
 
 				const entries = await documents.sanitize(document);
@@ -535,14 +535,14 @@ Meteor.startup(() => {
 					const inserted = Documents.insert({
 						...entry,
 						createdAt,
-						owner
+						owner,
 					});
 					console.debug('Inserted new parsed document', inserted);
 				}
 
 				console.debug('Removing old document', _id);
 				Documents.rawCollection().remove({_id});
-			}
+			},
 		);
 
 	// Remove duplicate documents
@@ -565,7 +565,7 @@ Meteor.startup(() => {
 				if (!keep.patientId) {
 					console.debug(
 						'Removing previously kept duplicate document',
-						keep._id
+						keep._id,
 					);
 					Documents.rawCollection().remove({_id: keep._id});
 					documentsIndex[owner][source] = {_id, patientId};
@@ -573,7 +573,7 @@ Meteor.startup(() => {
 					console.debug('Removing current duplicate document', _id);
 					Documents.rawCollection().remove({_id});
 				}
-			})
+			}),
 		);
 
 	// Add missing deleted flag
@@ -585,7 +585,7 @@ Meteor.startup(() => {
 				if (deleted !== true && deleted !== false) {
 					Documents.update(_id, {$set: {deleted: false}});
 				}
-			})
+			}),
 		);
 
 	// Add missing lastVersion flag
@@ -599,17 +599,17 @@ Meteor.startup(() => {
 						parsed,
 						identifier,
 						reference,
-						datetime
+						datetime,
 					});
-				}
-			)
+				},
+			),
 		);
 
 	Promise.all([
 		Patients.rawCollection().distinct('_id'),
 		Consultations.rawCollection().distinct('_id'),
 		Attachments.rawCollection().distinct('meta.attachedToPatients'),
-		Attachments.rawCollection().distinct('meta.attachedToConsultations')
+		Attachments.rawCollection().distinct('meta.attachedToConsultations'),
 	])
 		.then(
 			Meteor.bindEnvironment(
@@ -617,52 +617,52 @@ Meteor.startup(() => {
 					patientIds,
 					consultationIds,
 					attachedToPatientsIds,
-					attachedToConsultationsIds
+					attachedToConsultationsIds,
 				]) => {
 					const patientIdsSet = new Set(patientIds);
 					const consultationIdsSet = new Set(consultationIds);
 					const badAttachedToPatientsIds = attachedToPatientsIds.filter(
-						(x) => !patientIdsSet.has(x)
+						(x) => !patientIdsSet.has(x),
 					);
 					const badAttachedToConsultationsIds =
 						attachedToConsultationsIds.filter(
-							(x) => !consultationIdsSet.has(x)
+							(x) => !consultationIdsSet.has(x),
 						);
 					if (badAttachedToPatientsIds.length > 0) {
 						console.debug(
 							'Removing bad patient ids from Attachments.meta.attachedToPatients',
-							{badAttachedToPatientsIds}
+							{badAttachedToPatientsIds},
 						);
 						Attachments.update(
 							{'meta.attachedToPatients': {$in: badAttachedToPatientsIds}},
 							{
-								$pullAll: {'meta.attachedToPatients': badAttachedToPatientsIds}
+								$pullAll: {'meta.attachedToPatients': badAttachedToPatientsIds},
 							},
-							{multi: true}
+							{multi: true},
 						);
 					}
 
 					if (badAttachedToConsultationsIds.length > 0) {
 						console.debug(
 							'Removing bad consultation ids from Attachments.meta.attachedToConsultations',
-							{badAttachedToConsultationsIds}
+							{badAttachedToConsultationsIds},
 						);
 						Attachments.update(
 							{
 								'meta.attachedToConsultations': {
-									$in: badAttachedToConsultationsIds
-								}
+									$in: badAttachedToConsultationsIds,
+								},
 							},
 							{
 								$pullAll: {
-									'meta.attachedToConsultations': badAttachedToConsultationsIds
-								}
+									'meta.attachedToConsultations': badAttachedToConsultationsIds,
+								},
 							},
-							{multi: true}
+							{multi: true},
 						);
 					}
-				}
-			)
+				},
+			),
 		)
 		.catch((error) => {
 			console.error(error);

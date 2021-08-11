@@ -21,14 +21,14 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
 import ConfirmationTextField, {
-	useConfirmationTextFieldState
+	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 import StaticPatientCard from './StaticPatientCard';
 
 const useStyles = makeStyles((theme) => ({
 	rightIcon: {
-		marginLeft: theme.spacing(1)
-	}
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const PatientDeletionDialog = ({open, onClose, patient}) => {
@@ -47,7 +47,7 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
-				persist: true
+				persist: true,
 			});
 			Meteor.call('patients.remove', patient._id, (err, _res) => {
 				closeSnackbar(key);
@@ -110,7 +110,7 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 PatientDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	patient: PropTypes.object.isRequired
+	patient: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(PatientDeletionDialog);

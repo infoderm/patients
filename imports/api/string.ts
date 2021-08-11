@@ -56,14 +56,14 @@ export const onlyNumeric = (string: string) =>
 const patternsStatistics = (patterns: Iterable<string>) => {
 	const minLength = min(increasing, map(len, patterns), 0);
 	return {
-		minLength
+		minLength,
 	};
 };
 
 export const makeAnyIndex = (patterns: Iterable<string>) => {
 	const needles = sorted(
 		byLength(increasing),
-		map(onlyLowerCaseASCII, patterns)
+		map(onlyLowerCaseASCII, patterns),
 	);
 	if (needles.length === 0) return null;
 	const minLength = needles[0].length;
@@ -103,7 +103,7 @@ const PARTICLES_NL: string[] = [
 	'ter',
 	'te',
 	'van',
-	'der'
+	'der',
 ];
 const PARTICLES_DE: string[] = [
 	'am',
@@ -117,13 +117,13 @@ const PARTICLES_DE: string[] = [
 	'und',
 	'zu',
 	'zum',
-	'zur'
+	'zur',
 ];
 
 const PARTICLES: Set<string> = new Set([
 	...PARTICLES_FR,
 	...PARTICLES_NL,
-	...PARTICLES_DE
+	...PARTICLES_DE,
 ]);
 const PARTICLES_ORDERED: string[] = sorted(byLength(decreasing), PARTICLES);
 
@@ -171,7 +171,7 @@ export const shatter = (data: string) => {
 		particles: [],
 		substring_long: [],
 		substring_medium: [],
-		substring_short: []
+		substring_short: [],
 	};
 	for (const part of parts) {
 		if (PARTICLES.has(part)) {
@@ -224,7 +224,7 @@ export const parseNonNegativeIntegerStrict = (string: string, base = 10) =>
 
 export const parseNonNegativeIntegerStrictOrString = (
 	string: string,
-	base?: number
+	base?: number,
 ) => {
 	const parsed = parseNonNegativeIntegerStrict(string, base);
 	return Number.isNaN(parsed) ? string : parsed;
