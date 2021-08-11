@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react';
+import {DependencyList, useState, useEffect} from 'react';
 
-const useStateWithInitOverride = (init, deps = [init]) => {
+const useStateWithInitOverride = (init: any, deps: DependencyList = [init]) => {
 	const [value, setValue] = useState(init);
 	useEffect(() => {
 		if (init !== value) setValue(init);

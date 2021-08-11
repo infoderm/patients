@@ -1,3 +1,5 @@
+import {DependencyList} from 'react';
+
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
@@ -11,7 +13,7 @@ const useEvents = (
 	end: Date,
 	filter: Mongo.Selector<Event>,
 	options: Mongo.Options<Event>,
-	deps: any[],
+	deps: DependencyList,
 ) => {
 	const query = {
 		...beginsInInterval(begin, end),

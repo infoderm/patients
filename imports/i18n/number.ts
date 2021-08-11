@@ -14,5 +14,5 @@ export const useNumberFormat = (options: any) => {
 
 			throw error;
 		}
-	}, [JSON.stringify(options), ...locales]);
+	}, [JSON.stringify(options), locales]);
 };

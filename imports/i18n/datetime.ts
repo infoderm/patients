@@ -45,6 +45,18 @@ export const useDateMask = () => {
 	return maskMap[key];
 };
 
+const stringifyOptions = (options) => {
+	if (options === undefined) return undefined;
+
+	const {locale, ...rest} = options;
+	return locale !== undefined
+		? JSON.stringify({
+				locale: locale.code,
+				...rest,
+		  })
+		: JSON.stringify(rest);
+};
+
 export const useDateFormat = (defaultFormat = 'PP', defaultOptions?) => {
 	const locale = useLocale();
 	return useMemo(
@@ -55,7 +67,7 @@ export const useDateFormat = (defaultFormat = 'PP', defaultOptions?) => {
 					...defaultOptions,
 					...options,
 				}),
-		[locale],
+		[locale, defaultFormat, stringifyOptions(defaultOptions)],
 	);
 };
 
@@ -68,7 +80,7 @@ const useLocalizedDateFormatDistanceOrRelative = (fn, defaultOptions) => {
 				...defaultOptions,
 				...options,
 			}),
-		[locale],
+		[locale, fn, stringifyOptions(defaultOptions)],
 	);
 };
 
@@ -91,7 +103,7 @@ export const useDateFormatDuration = (defaultOptions?) => {
 				...defaultOptions,
 				...options,
 			}),
-		[locale],
+		[locale, stringifyOptions(defaultOptions)],
 	);
 };
 

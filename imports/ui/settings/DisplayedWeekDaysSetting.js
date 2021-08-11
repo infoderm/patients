@@ -20,7 +20,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 
 	const compare = useMemo(
 		() => key(increasing, (x) => (7 + x - weekStartsOn) % 7),
-		[key, increasing, weekStartsOn],
+		[weekStartsOn],
 	);
 
 	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);

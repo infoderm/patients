@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useCallback} from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 import keycode from 'keycode';
@@ -203,11 +203,14 @@ const SetPicker = (props: SetPickerProps) => {
 
 	const hasSuggestions = Boolean(suggestions?.length);
 
-	const resetInputValue = () => setInputValue(emptyInput);
+	const resetInputValue = useCallback(
+		() => setInputValue(emptyInput),
+		[setInputValue, emptyInput],
+	);
 
 	useEffect(() => {
 		if (inputDisabled) resetInputValue();
-	}, [inputDisabled]);
+	}, [inputDisabled, resetInputValue]);
 
 	const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({
 		selectedItems,

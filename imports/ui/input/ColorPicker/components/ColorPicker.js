@@ -27,10 +27,15 @@ const ColorPicker = ({
 }) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const [value, setValue] = useState(defaultValue);
+	const [previousDefaultValue, setPreviousDefaultValue] =
+		useState(defaultValue);
 
 	useEffect(() => {
-		if (defaultValue !== value) setValue(defaultValue);
-	}, [defaultValue]);
+		if (defaultValue !== previousDefaultValue) {
+			setPreviousDefaultValue(defaultValue);
+			setValue(defaultValue);
+		}
+	}, [defaultValue, previousDefaultValue]);
 
 	return (
 		<span>

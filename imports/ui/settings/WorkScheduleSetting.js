@@ -32,7 +32,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 						weekStartsOn * durationUnits.day) %
 					durationUnits.week,
 			),
-		[key, increasing, weekStartsOn, durationUnits.day, durationUnits.week],
+		[weekStartsOn],
 	);
 
 	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);

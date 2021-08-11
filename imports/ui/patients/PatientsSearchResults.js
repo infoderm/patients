@@ -20,13 +20,10 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 	const {enqueueSnackbar} = useSnackbar();
 	const [loading, setLoading] = useState(true);
 	const [patients, setPatients] = useState([]);
-	const [abortPrevious, setAbortPrevious] = useState(null);
 
 	const $search = myDecodeURIComponent(match.params.query);
 
 	useEffect(() => {
-		if (abortPrevious) abortPrevious();
-
 		const query = {$text: {$search}};
 
 		const sort = {
@@ -48,15 +45,8 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 
 		setLoading(true);
 		let cancelled = false;
-		const abort = () => {
-			cancelled = true;
-			// enqueueSnackbar(`Aborted query: ${$search}.`, {variant: 'warning'});
-		};
-
-		setAbortPrevious(() => abort);
 		Meteor.call('patients.find', query, options, (err, res) => {
 			if (!cancelled) {
-				setAbortPrevious(null); // GC
 				setLoading(false);
 				if (err) {
 					console.log('err', err);
@@ -68,7 +58,12 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 				}
 			}
 		});
-	}, [$search, page, perpage]);
+
+		return () => {
+			cancelled = true;
+			// enqueueSnackbar(`Aborted query: ${$search}.`, {variant: 'warning'});
+		};
+	}, [$search, page, perpage, enqueueSnackbar]);
 
 	const root = `/search/${match.params.query}`;
 

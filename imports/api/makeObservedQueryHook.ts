@@ -1,12 +1,16 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
-import {useState, useEffect, useRef} from 'react';
+import {DependencyList, useState, useEffect, useRef} from 'react';
 
 import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 
-const makeObservedQuery =
+const makeObservedQueryHook =
 	<T>(Collection: ObservedQueryCacheCollection, subscription: string) =>
-	(query: Mongo.Selector<T>, options: Mongo.Options<T>, deps: any[]) => {
+	(
+		query: Mongo.Selector<T>,
+		options: Mongo.Options<T>,
+		deps: DependencyList,
+	) => {
 		const [loading, setLoading] = useState(true);
 		const [results, setResults] = useState([]);
 		const [dirty, setDirty] = useState(false);
@@ -41,4 +45,4 @@ const makeObservedQuery =
 		return {loading, results, dirty};
 	};
 
-export default makeObservedQuery;
+export default makeObservedQueryHook;

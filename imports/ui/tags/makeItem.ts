@@ -1,4 +1,4 @@
-import React from 'react';
+import {DependencyList} from 'react';
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
@@ -15,7 +15,7 @@ const makeItem =
 		collection: Mongo.Collection<T, U>,
 		singlePublication: string,
 	) =>
-	(name: string, deps: React.DependencyList): ReturnType<U> =>
+	(name: string, deps: DependencyList): ReturnType<U> =>
 		useTracker(() => {
 			const handle = Meteor.subscribe(singlePublication, name);
 			if (handle.ready()) {
