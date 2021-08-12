@@ -1,9 +1,6 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React, {useState} from 'react';
 import {useHistory, Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import PropTypes, {InferProps} from 'prop-types';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 
@@ -68,16 +65,34 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const TagCard = (props) => {
+export const StaticTagCardPropTypes = {
+	tag: PropTypes.any.isRequired,
+	url: PropTypes.func.isRequired,
+	avatar: PropTypes.object.isRequired,
+	subheader: PropTypes.func.isRequired,
+	content: PropTypes.func.isRequired,
+	actions: PropTypes.func,
+
+	stats: PropTypes.object,
+	items: PropTypes.array,
+
+	RenamingDialog: PropTypes.elementType,
+	DeletionDialog: PropTypes.elementType,
+	abbr: PropTypes.string,
+};
+
+export type StaticTagCardProps = InferProps<typeof StaticTagCardPropTypes>;
+
+const StaticTagCard = (props: StaticTagCardProps) => {
 	const {
 		tag,
 		avatar,
 		subheader,
 		url,
 		content,
-		actions,
-		stats,
-		items,
+		actions = () => null,
+		stats = {},
+		items = undefined,
 		RenamingDialog,
 		DeletionDialog,
 		abbr,
@@ -89,10 +104,21 @@ const TagCard = (props) => {
 	const [deleting, setDeleting] = useState(false);
 	const [renaming, setRenaming] = useState(false);
 
-	const openRenamingDialog = () => setRenaming(true);
-	const closeRenamingDialog = () => setRenaming(false);
-	const openDeletionDialog = () => setDeleting(true);
-	const closeDeletionDialog = () => setDeleting(false);
+	const openRenamingDialog = () => {
+		setRenaming(true);
+	};
+
+	const closeRenamingDialog = () => {
+		setRenaming(false);
+	};
+
+	const openDeletionDialog = () => {
+		setDeleting(true);
+	};
+
+	const closeDeletionDialog = () => {
+		setDeleting(false);
+	};
 
 	const isMounted = useIsMounted();
 
@@ -157,73 +183,6 @@ const TagCard = (props) => {
 	);
 };
 
-TagCard.defaultProps = {
-	actions: () => null,
-	stats: {},
-	items: undefined,
-};
+StaticTagCard.propTypes = StaticTagCardPropTypes;
 
-TagCard.propTypes = {
-	tag: PropTypes.object.isRequired,
-	url: PropTypes.func.isRequired,
-	avatar: PropTypes.object.isRequired,
-	subheader: PropTypes.func.isRequired,
-	content: PropTypes.func.isRequired,
-	actions: PropTypes.func,
-
-	stats: PropTypes.object,
-	items: PropTypes.array,
-};
-
-const ReactiveTagCard = withTracker(
-	({
-		tag,
-		subscription,
-		statsSubscription,
-		collection,
-		statsCollection,
-		selector,
-		options,
-		limit,
-	}) => {
-		const name = tag.name;
-		const handle = subscription
-			? Meteor.subscribe(subscription, name, {...options, limit})
-			: {ready: () => false};
-		const statsHandle = Meteor.subscribe(statsSubscription, name);
-		const result = {
-			items: undefined,
-			stats: undefined,
-		};
-
-		if (handle.ready()) {
-			result.items = collection.find(selector, {...options, limit}).fetch();
-		}
-
-		if (statsHandle.ready()) {
-			result.stats = statsCollection.findOne({name});
-		}
-
-		return result;
-	},
-)(TagCard);
-
-ReactiveTagCard.defaultProps = {
-	limit: 0,
-	subscription: undefined,
-	collection: {
-		find: () => () => [],
-	},
-};
-
-ReactiveTagCard.propTypes = {
-	subscription: PropTypes.string,
-	statsSubscription: PropTypes.string.isRequired,
-	collection: PropTypes.object,
-	statsCollection: PropTypes.object.isRequired,
-	selector: PropTypes.object.isRequired,
-	options: PropTypes.object,
-	limit: PropTypes.number,
-};
-
-export default ReactiveTagCard;
+export default StaticTagCard;
