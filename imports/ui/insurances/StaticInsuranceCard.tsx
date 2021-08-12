@@ -7,12 +7,12 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
-import TagCard from '../tags/TagCard';
+import StaticTagCard from '../tags/StaticTagCard';
 
 import StaticPatientChip from '../patients/StaticPatientChip';
 
-import {Patients} from '../../api/patients';
-import {insurances} from '../../api/insurances';
+import {useInsuranceStats} from '../../api/insurances';
+import {usePatientsInsuredBy} from '../../api/patients';
 import {myEncodeURIComponent} from '../../client/uri';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';
@@ -33,49 +33,51 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const StaticInsuranceCard = ({item, loading = false}) => {
+const LoadedTagCard = ({item}) => {
 	const classes = useStyles();
 
-	if (loading) return null;
-	if (item === undefined) return null;
-
+	const {result} = useInsuranceStats(item.name);
+	const {count} = result ?? {};
+	const {results: patients} = usePatientsInsuredBy(item.name, {
+		fields: StaticPatientChip.projection,
+		limit: 1,
+	});
+	const subheader = count === undefined ? '...' : `assure ${count} patients`;
+	const content =
+		patients === undefined ? (
+			<>...</>
+		) : (
+			<div>
+				{patients.map((patient) => (
+					<StaticPatientChip
+						key={patient._id}
+						patient={patient}
+						className={classes.patientChip}
+					/>
+				))}
+				{count > patients.length && (
+					<Chip label={`+ ${count - patients.length}`} />
+				)}
+			</div>
+		);
 	return (
-		<TagCard
+		<StaticTagCard
 			tag={item}
-			collection={Patients}
-			statsCollection={insurances.cache.Stats}
-			subscription={insurances.options.parentPublication}
-			statsSubscription={insurances.options.parentPublicationStats}
-			selector={{insurances: item.name}}
-			options={{fields: StaticPatientChip.projection}}
-			limit={1}
+			subheader={subheader}
+			content={content}
 			url={(name) => `/insurance/${myEncodeURIComponent(name)}`}
-			subheader={({count}) =>
-				count === undefined ? '...' : `assure ${count} patients`
-			}
-			content={({count}, patients) =>
-				patients === undefined ? (
-					'...'
-				) : (
-					<div>
-						{patients.map((patient) => (
-							<StaticPatientChip
-								key={patient._id}
-								patient={patient}
-								className={classes.patientChip}
-							/>
-						))}
-						{count > patients.length && (
-							<Chip label={`+ ${count - patients.length}`} />
-						)}
-					</div>
-				)
-			}
 			avatar={<Avatar className={classes.avatar}>In</Avatar>}
 			DeletionDialog={InsuranceDeletionDialog}
 			RenamingDialog={InsuranceRenamingDialog}
 		/>
 	);
+};
+
+const StaticInsuranceCard = ({item, loading = false}) => {
+	if (loading) return null;
+	if (item === undefined) return null;
+
+	return <LoadedTagCard item={item} />;
 };
 
 StaticInsuranceCard.propTypes = {

@@ -11,7 +11,7 @@ const subscription = books.options.parentPublicationStats;
  *
  * @param {string} name
  */
-const useBookStats = (name) =>
+const useBookStats = (name: string) =>
 	useTracker(() => {
 		const handle = Meteor.subscribe(subscription, name);
 		return {

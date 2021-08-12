@@ -69,12 +69,10 @@ export const StaticTagCardPropTypes = {
 	tag: PropTypes.any.isRequired,
 	url: PropTypes.func.isRequired,
 	avatar: PropTypes.object.isRequired,
-	subheader: PropTypes.func.isRequired,
-	content: PropTypes.func.isRequired,
-	actions: PropTypes.func,
 
-	stats: PropTypes.object,
-	items: PropTypes.array,
+	subheader: PropTypes.string.isRequired,
+	content: PropTypes.element,
+	actions: PropTypes.element,
 
 	RenamingDialog: PropTypes.elementType,
 	DeletionDialog: PropTypes.elementType,
@@ -83,105 +81,103 @@ export const StaticTagCardPropTypes = {
 
 export type StaticTagCardProps = InferProps<typeof StaticTagCardPropTypes>;
 
-const StaticTagCard = (props: StaticTagCardProps) => {
-	const {
-		tag,
-		avatar,
-		subheader,
-		url,
-		content,
-		actions = () => null,
-		stats = {},
-		items = undefined,
-		RenamingDialog,
-		DeletionDialog,
-		abbr,
-	} = props;
+const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
+	(props, ref) => {
+		const {
+			tag,
+			avatar,
+			subheader,
+			url,
+			content,
+			actions = null,
+			RenamingDialog,
+			DeletionDialog,
+			abbr,
+		} = props;
 
-	const classes = useStyles();
-	const history = useHistory();
+		const classes = useStyles();
+		const history = useHistory();
 
-	const [deleting, setDeleting] = useState(false);
-	const [renaming, setRenaming] = useState(false);
+		const [deleting, setDeleting] = useState(false);
+		const [renaming, setRenaming] = useState(false);
 
-	const openRenamingDialog = () => {
-		setRenaming(true);
-	};
+		const openRenamingDialog = () => {
+			setRenaming(true);
+		};
 
-	const closeRenamingDialog = () => {
-		setRenaming(false);
-	};
+		const closeRenamingDialog = () => {
+			setRenaming(false);
+		};
 
-	const openDeletionDialog = () => {
-		setDeleting(true);
-	};
+		const openDeletionDialog = () => {
+			setDeleting(true);
+		};
 
-	const closeDeletionDialog = () => {
-		setDeleting(false);
-	};
+		const closeDeletionDialog = () => {
+			setDeleting(false);
+		};
 
-	const isMounted = useIsMounted();
+		const isMounted = useIsMounted();
 
-	const onRename = (newName) => {
-		const currentURL = history.location.pathname.replaceAll(' ', '%20');
-		const oldURL = url(tag.name);
-		if (currentURL === oldURL) {
-			const newURL = url(newName);
-			history.push(newURL);
-		} else if (isMounted()) {
-			closeRenamingDialog();
-		}
-	};
+		const onRename = (newName) => {
+			const currentURL = history.location.pathname.replaceAll(' ', '%20');
+			const oldURL = url(tag.name);
+			if (currentURL === oldURL) {
+				const newURL = url(newName);
+				history.push(newURL);
+			} else if (isMounted()) {
+				closeRenamingDialog();
+			}
+		};
 
-	return (
-		<Card className={classes.card}>
-			<div className={classes.details}>
-				<CardHeader
-					className={classes.header}
-					avatar={avatar}
-					title={tag.name}
-					subheader={subheader(stats, items)}
-					component={Link}
-					to={url(tag.name)}
-				/>
-				<CardContent className={classes.content}>
-					{content(stats, items)}
-				</CardContent>
-				<CardActions disableSpacing className={classes.actions}>
-					{RenamingDialog && (
-						<Button color="primary" onClick={openRenamingDialog}>
-							Rename
-							<EditIcon />
-						</Button>
-					)}
-					{DeletionDialog && (
-						<Button color="secondary" onClick={openDeletionDialog}>
-							Delete
-							<DeleteIcon />
-						</Button>
-					)}
-					{RenamingDialog && (
-						<RenamingDialog
-							open={renaming}
-							tag={tag}
-							onClose={closeRenamingDialog}
-							onRename={onRename}
-						/>
-					)}
-					{DeletionDialog && (
-						<DeletionDialog
-							open={deleting}
-							tag={tag}
-							onClose={closeDeletionDialog}
-						/>
-					)}
-					{actions(stats, items)}
-				</CardActions>
-			</div>
-			<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
-		</Card>
-	);
-};
+		return (
+			<Card ref={ref} className={classes.card}>
+				<div className={classes.details}>
+					<CardHeader
+						className={classes.header}
+						avatar={avatar}
+						title={tag.name}
+						subheader={subheader}
+						component={Link}
+						to={url(tag.name)}
+					/>
+					<CardContent className={classes.content}>{content}</CardContent>
+					<CardActions disableSpacing className={classes.actions}>
+						{RenamingDialog && (
+							<Button color="primary" onClick={openRenamingDialog}>
+								Rename
+								<EditIcon />
+							</Button>
+						)}
+						{DeletionDialog && (
+							<Button color="secondary" onClick={openDeletionDialog}>
+								Delete
+								<DeleteIcon />
+							</Button>
+						)}
+						{RenamingDialog && (
+							<RenamingDialog
+								open={renaming}
+								tag={tag}
+								onClose={closeRenamingDialog}
+								onRename={onRename}
+							/>
+						)}
+						{DeletionDialog && (
+							<DeletionDialog
+								open={deleting}
+								tag={tag}
+								onClose={closeDeletionDialog}
+							/>
+						)}
+						{actions}
+					</CardActions>
+				</div>
+				<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
+			</Card>
+		);
+	},
+);
 
 StaticTagCard.propTypes = StaticTagCardPropTypes;
 

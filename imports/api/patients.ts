@@ -77,12 +77,18 @@ export const PatientsSearchIndexCache: ObservedQueryCacheCollection =
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
 
-insurances.init(Patients);
-doctors.init(Patients);
-allergies.init(Patients);
+const {useTaggedDocuments: usePatientsInsuredBy} = insurances.init(Patients);
+const {useTaggedDocuments: usePatientsGoingToDoctor} = doctors.init(Patients);
+const {useTaggedDocuments: usePatientsHavingAllergy} = allergies.init(Patients);
+
+export {
+	usePatientsInsuredBy,
+	usePatientsGoingToDoctor,
+	usePatientsHavingAllergy,
+};
 
 if (Meteor.isServer) {
-	Meteor.publish('patients', function (query, options) {
+	Meteor.publish('patients', function (query, options = undefined) {
 		return Patients.find({...query, owner: this.userId}, options);
 	});
 

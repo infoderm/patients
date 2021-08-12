@@ -7,12 +7,12 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import blue from '@material-ui/core/colors/blue';
 
-import TagCard from '../tags/TagCard';
+import StaticTagCard from '../tags/StaticTagCard';
 
 import StaticPatientChip from '../patients/StaticPatientChip';
 
-import {Patients} from '../../api/patients';
-import {doctors} from '../../api/doctors';
+import {useDoctorStats} from '../../api/doctors';
+import {usePatientsGoingToDoctor} from '../../api/patients';
 
 import {myEncodeURIComponent} from '../../client/uri';
 import DoctorRenamingDialog from './DoctorRenamingDialog';
@@ -34,50 +34,41 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const StaticDoctorCard = ({item, name, loading = false}) => {
+const LoadedTagCard = ({item}) => {
 	const classes = useStyles();
 
-	if (loading) {
-		return <>...Loading</>;
-	}
+	const {result} = useDoctorStats(item.name);
+	const {count} = result ?? {};
+	const {results: patients} = usePatientsGoingToDoctor(item.name, {
+		fields: StaticPatientChip.projection,
+		limit: 1,
+	});
 
-	if (item === undefined) {
-		// eslint-disable-next-line react/jsx-no-useless-fragment
-		return <>{`Doctor ${name} does not exist`}</>;
-	}
+	const subheader = count === undefined ? '...' : `soigne ${count} patients`;
+	const content =
+		patients === undefined ? (
+			<>...</>
+		) : (
+			<div>
+				{patients.map((patient) => (
+					<StaticPatientChip
+						key={patient._id}
+						patient={patient}
+						className={classes.patientChip}
+					/>
+				))}
+				{count > patients.length && (
+					<Chip label={`+ ${count - patients.length}`} />
+				)}
+			</div>
+		);
 
 	return (
-		<TagCard
+		<StaticTagCard
 			tag={item}
-			collection={Patients}
-			statsCollection={doctors.cache.Stats}
-			subscription={doctors.options.parentPublication}
-			statsSubscription={doctors.options.parentPublicationStats}
-			selector={{doctors: item.name}}
-			options={{fields: StaticPatientChip.projection}}
-			limit={1}
 			url={(name: string) => `/doctor/${myEncodeURIComponent(name)}`}
-			subheader={({count}) =>
-				count === undefined ? '...' : `soigne ${count} patients`
-			}
-			content={({count}, patients) =>
-				patients === undefined ? (
-					'...'
-				) : (
-					<div>
-						{patients.map((patient) => (
-							<StaticPatientChip
-								key={patient._id}
-								patient={patient}
-								className={classes.patientChip}
-							/>
-						))}
-						{count > patients.length && (
-							<Chip label={`+ ${count - patients.length}`} />
-						)}
-					</div>
-				)
-			}
+			subheader={subheader}
+			content={content}
 			avatar={<Avatar className={classes.avatar}>Dr</Avatar>}
 			DeletionDialog={DoctorDeletionDialog}
 			RenamingDialog={DoctorRenamingDialog}
@@ -85,9 +76,15 @@ const StaticDoctorCard = ({item, name, loading = false}) => {
 	);
 };
 
+const StaticDoctorCard = ({item, loading = false}) => {
+	if (loading) return null;
+	if (item === undefined) return null;
+
+	return <LoadedTagCard item={item} />;
+};
+
 StaticDoctorCard.propTypes = {
 	item: PropTypes.object,
-	name: PropTypes.string,
 	loading: PropTypes.bool,
 };
 

@@ -9,15 +9,16 @@ const {
 	operations: allergies,
 	useTags: useAllergies,
 	useTagsFind: useAllergiesFind,
+	useTagStats: useAllergyStats,
 } = createTagCollection({
 	collection: 'allergies',
 	publication: 'allergies',
 	singlePublication: 'allergy',
-	parentPublication: 'patients-of-allergy',
+	parentPublication: 'patients',
 	key: 'allergies',
 });
 
-export {Allergies, allergies, useAllergies, useAllergiesFind};
+export {Allergies, allergies, useAllergies, useAllergiesFind, useAllergyStats};
 
 export interface AllergyDocument extends TagDocument {
 	color?: string;

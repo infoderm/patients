@@ -6,8 +6,8 @@ interface ObserveOptions {
 	changed?: boolean;
 }
 
-const makeObservedQuerySubscription = <T>(
-	QueriedCollection: Mongo.Collection<T>,
+const makeObservedQuerySubscription = <T, U = T>(
+	QueriedCollection: Mongo.Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
 	function (

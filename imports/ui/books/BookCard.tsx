@@ -7,13 +7,14 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import orange from '@material-ui/core/colors/orange';
 
-import TagCard from '../tags/TagCard';
+import StaticTagCard from '../tags/StaticTagCard';
 
 import {books} from '../../api/books';
 
 import {myEncodeURIComponent} from '../../client/uri';
 
 import {useDateFormatRange} from '../../i18n/datetime';
+import useBookStats from './useBookStats';
 
 import BookRenamingDialog from './BookRenamingDialog';
 
@@ -34,36 +35,30 @@ export default function BookCard({item}) {
 
 	const [year, book] = books.split(item.name);
 
-	return (
-		<TagCard
-			tag={item}
-			statsCollection={books.cache.Stats}
-			statsSubscription={books.options.parentPublicationStats}
-			selector={books.selector(item.name)}
-			options={{fields: {price: 1, datetime: 1}}}
-			url={(_name) => `/book/${year}/${myEncodeURIComponent(book)}`}
-			subheader={({count}) =>
-				count === undefined ? '...' : `${count} consultations`
-			}
-			content={({count, total, first, last}) => {
-				if (count === undefined)
-					return (
-						<Typography className={classes.content} variant="body1">
-							Total ... <br />
-							... — ...
-						</Typography>
-					);
-				if (count === 0) {
-					return null;
-				}
+	const {result} = useBookStats(item.name);
+	const {count, total, first, last} = result ?? {};
 
-				return (
-					<Typography className={classes.content} variant="body1">
-						Total {total} € <br />
-						{dateFormatRange(first, last)}
-					</Typography>
-				);
-			}}
+	const subheader = count === undefined ? '...' : `${count} consultations`;
+
+	const content =
+		count === undefined ? (
+			<Typography className={classes.content} variant="body1">
+				Total ... <br />
+				... — ...
+			</Typography>
+		) : count === 0 ? null : (
+			<Typography className={classes.content} variant="body1">
+				Total {total} € <br />
+				{dateFormatRange(first, last)}
+			</Typography>
+		);
+
+	return (
+		<StaticTagCard
+			tag={item}
+			url={(_name) => `/book/${year}/${myEncodeURIComponent(book)}`}
+			subheader={subheader}
+			content={content}
 			avatar={<Avatar className={classes.avatar}>Bk</Avatar>}
 			abbr={`/${book.slice(0, 2)}`}
 			RenamingDialog={BookRenamingDialog}

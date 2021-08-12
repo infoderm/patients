@@ -16,15 +16,34 @@ import {
 	FIND_OBSERVE_SUFFIX,
 } from './createTagCollection';
 
+import CacheItem from './CacheItem';
+import ConsultationsStats from './ConsultationsStats';
+
+export interface BookFields {
+	name: string;
+}
+
+interface BookComputedFields {
+	fiscalYear: number | string;
+	bookNumber: number | string;
+}
+
+interface BookMetadata {
+	_id: string;
+	owner: string;
+}
+
+export type BookDocument = BookFields & BookComputedFields & BookMetadata;
+
 const collection = 'books';
 const publication = 'books';
 const stats = collection + STATS_SUFFIX;
 const cacheCollection = collection + FIND_CACHE_SUFFIX;
 const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 
-export const Books = new Mongo.Collection(collection);
-const Stats = new Mongo.Collection(stats);
-const BooksCache = new Mongo.Collection(cacheCollection);
+export const Books = new Mongo.Collection<BookDocument>(collection);
+const Stats = new Mongo.Collection<ConsultationsStats>(stats);
+const BooksCache = new Mongo.Collection<CacheItem>(cacheCollection);
 
 export const useBooks = makeQuery(Books, publication);
 
@@ -60,7 +79,7 @@ export const books = {
 	cache: {Stats},
 	sanitizeInput,
 	sanitize,
-	add: (owner, name, verbatim = false) => {
+	add: (owner: string, name: string, verbatim = false) => {
 		check(owner, String);
 		check(name, String);
 
@@ -101,12 +120,12 @@ export const books = {
 
 	name: (datetime, book) => books.format(datetime.getFullYear(), book),
 
-	split: (name) => {
+	split: (name: string): [string, string] => {
 		const pivot = name.indexOf('/');
 		return [name.slice(0, pivot), name.slice(pivot + 1)];
 	},
 
-	parse: (name) => {
+	parse: (name: string) => {
 		const [year, book] = books.split(name);
 
 		const fiscalYear = parseUint32StrictOrString(year);
@@ -115,7 +134,7 @@ export const books = {
 		return [fiscalYear, bookNumber];
 	},
 
-	range: (name) => {
+	range: (name: string): [string, Date, Date] => {
 		const [year, book] = books.split(name);
 
 		const begin = dateParseISO(`${year}-01-01`);
@@ -124,7 +143,7 @@ export const books = {
 		return [book, begin, end];
 	},
 
-	selector: (name) => {
+	selector: (name: string) => {
 		const [book, begin, end] = books.range(name);
 
 		return {
@@ -136,7 +155,7 @@ export const books = {
 		};
 	},
 
-	isReal: (name) => {
+	isReal: (name: string) => {
 		const [fiscalYear, bookNumber] = books.parse(name);
 		if (typeof fiscalYear !== 'number') return false;
 		if (typeof bookNumber !== 'number') return false;

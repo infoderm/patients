@@ -7,13 +7,13 @@ import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 
 import debounce from 'debounce';
-import TagCard from '../tags/TagCard';
+import StaticTagCard from '../tags/StaticTagCard';
 
 import StaticPatientChip from '../patients/StaticPatientChip';
 
 import call from '../../api/call';
-import {Patients} from '../../api/patients';
-import {allergies, AllergyDocument} from '../../api/allergies';
+import {AllergyDocument, useAllergyStats} from '../../api/allergies';
+import {usePatientsHavingAllergy} from '../../api/patients';
 
 import ColorPicker from '../input/ColorPicker';
 
@@ -41,10 +41,27 @@ interface StaticAllergyCardProps {
 
 const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 	({loading, item}, ref) => {
-		const classes = useStyles();
-
 		if (loading) return null;
 		if (item === undefined) return null;
+
+		return <LoadedTagCard ref={ref} item={item} />;
+	},
+);
+
+interface LoadedTagCardProps {
+	item: AllergyDocument;
+}
+
+const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
+	({item}, ref) => {
+		const classes = useStyles();
+
+		const {result} = useAllergyStats(item.name);
+		const {count} = result ?? {};
+		const {results: patients} = usePatientsHavingAllergy(item.name, {
+			fields: StaticPatientChip.projection,
+			limit: 1,
+		});
 
 		const onChange = async (color: string) => {
 			if (color !== item.color) {
@@ -57,45 +74,39 @@ const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 			}
 		};
 
+		const subheader = count === undefined ? '...' : `affecte ${count} patients`;
+
+		const content =
+			patients === undefined ? (
+				<>...</>
+			) : (
+				<div>
+					{patients.map((patient) => (
+						<StaticPatientChip
+							key={patient._id}
+							patient={patient}
+							className={classes.patientChip}
+						/>
+					))}
+					{count !== undefined && count > patients.length && (
+						<Chip label={`+ ${count - patients.length}`} />
+					)}
+				</div>
+			);
+
 		return (
-			<TagCard
+			<StaticTagCard
 				ref={ref}
 				tag={item}
-				collection={Patients}
-				statsCollection={allergies.cache.Stats}
-				subscription={allergies.options.parentPublication}
-				statsSubscription={allergies.options.parentPublicationStats}
-				selector={{allergies: item.name}}
-				options={{fields: StaticPatientChip.projection}}
-				limit={1}
 				url={(name: string) => `/allergy/${myEncodeURIComponent(name)}`}
-				subheader={({count}) =>
-					count === undefined ? '...' : `affecte ${count} patients`
-				}
-				content={({count}, patients) =>
-					patients === undefined ? (
-						'...'
-					) : (
-						<div>
-							{patients.map((patient) => (
-								<StaticPatientChip
-									key={patient._id}
-									patient={patient}
-									className={classes.patientChip}
-								/>
-							))}
-							{count !== undefined && count > patients.length && (
-								<Chip label={`+ ${count - patients.length}`} />
-							)}
-						</div>
-					)
-				}
-				actions={() => (
+				subheader={subheader}
+				content={content}
+				actions={
 					<ColorPicker
 						defaultValue={item.color || '#e0e0e0'}
 						onChange={debounce(onChange, 1000)}
 					/>
-				)}
+				}
 				avatar={<Avatar className={classes.avatar}>Al</Avatar>}
 				DeletionDialog={AllergyDeletionDialog}
 				RenamingDialog={AllergyRenamingDialog}

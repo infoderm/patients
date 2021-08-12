@@ -14,7 +14,7 @@ const ReactiveInsuranceChip = React.forwardRef<any, ReactiveInsuranceChipProps>(
 	({label, ...rest}, ref) => (
 		<StaticInsuranceChip
 			ref={ref}
-			item={{_id: undefined, name: label}}
+			item={{name: label}}
 			label={label}
 			{...rest}
 		/>

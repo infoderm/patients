@@ -7,7 +7,7 @@ const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input
 
 const makeSubstringSuggestions =
-	(useCollectionFind, set, key = 'name') =>
+	(useCollectionFind, $nin: string[] = [], key = 'name') =>
 	(searchString) => {
 		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(
 			searchString,
@@ -16,7 +16,6 @@ const makeSubstringSuggestions =
 		);
 
 		const $regex = escapeStringRegexp(debouncedSearchString);
-		const $nin = set || [];
 		const limit = 5;
 
 		const query = {[key]: {$regex, $options: 'i', $nin}};

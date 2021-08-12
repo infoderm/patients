@@ -142,7 +142,7 @@ export const useIntlDateTimeFormat = (options?) => {
 	return new Intl.DateTimeFormat(locale, options);
 };
 
-export const useDateFormatRange = (format, options) => {
+export const useDateFormatRange = (format, options?) => {
 	const formatPart = useDateFormat(format, options);
 	return useMemo(
 		() => (startDate, endDate) =>

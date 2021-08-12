@@ -12,12 +12,7 @@ type ReactiveDoctorChipProps = ChipProps & Tweaks;
 
 const ReactiveDoctorChip = React.forwardRef<any, ReactiveDoctorChipProps>(
 	({label, ...rest}, ref) => (
-		<StaticDoctorChip
-			ref={ref}
-			item={{_id: undefined, name: label}}
-			label={label}
-			{...rest}
-		/>
+		<StaticDoctorChip ref={ref} item={{name: label}} label={label} {...rest} />
 	),
 );
 

@@ -1,6 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
+import {useTracker} from 'meteor/react-meteor-data';
+
+import mergeOptions from '../util/mergeOptions.js';
 
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
@@ -8,6 +11,9 @@ import makeObservedQueryPublication from './makeObservedQueryPublication';
 import pageQuery from './pageQuery';
 
 import {containsNonAlphabetical} from './string';
+
+import CacheItem from './CacheItem';
+import TagDocument from './tags/TagDocument';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -17,7 +23,19 @@ const computedFields = (name) => ({
 	containsNonAlphabetical: containsNonAlphabetical(name),
 });
 
-export default function createTagCollection(options) {
+interface Options {
+	collection: string;
+	publication: string;
+	singlePublication: string;
+	parentPublication: string;
+	key: string;
+}
+
+interface TagStats {
+	count: number;
+}
+
+const createTagCollection = <T extends TagDocument>(options: Options) => {
 	const {
 		collection,
 		publication,
@@ -27,20 +45,30 @@ export default function createTagCollection(options) {
 	} = options;
 
 	const stats = collection + STATS_SUFFIX;
-	const parentPublicationStats = parentPublication + STATS_SUFFIX;
+	const statsPublication = stats;
 
 	const cacheCollection = collection + FIND_CACHE_SUFFIX;
 	const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 
-	const Collection = new Mongo.Collection(collection);
-	const Stats = new Mongo.Collection(stats);
+	const Collection = new Mongo.Collection<T>(collection);
+	const Stats = new Mongo.Collection<TagStats>(stats);
 
-	const TagsCache = new Mongo.Collection(cacheCollection);
+	const TagsCache = new Mongo.Collection<CacheItem>(cacheCollection);
 
 	const useTags = makeQuery(Collection, publication);
 
 	// TODO rename to useObservedTags
 	const useTagsFind = makeObservedQueryHook(TagsCache, cachePublication);
+
+	const useTagStats = (name) =>
+		useTracker(() => {
+			const handle = Meteor.subscribe(statsPublication, name);
+			const loading = !handle.ready();
+			return {
+				loading,
+				result: Stats.findOne({name}),
+			};
+		}, [name]);
 
 	if (Meteor.isServer) {
 		Meteor.publish(publication, pageQuery(Collection));
@@ -51,8 +79,8 @@ export default function createTagCollection(options) {
 		);
 
 		if (singlePublication) {
-			Meteor.publish(singlePublication, function (name) {
-				return Collection.find({owner: this.userId, name});
+			Meteor.publish(singlePublication, function (name: string) {
+				return Collection.find({owner: this.userId, name} as Mongo.Selector<T>);
 			});
 		}
 	}
@@ -61,12 +89,12 @@ export default function createTagCollection(options) {
 		options: {
 			...options,
 			stats,
-			parentPublicationStats,
+			parentPublicationStats: statsPublication,
 		},
 
 		cache: {Stats},
 
-		add: (owner, name) => {
+		add: (owner: string, name: string) => {
 			check(owner, String);
 			check(name, String);
 
@@ -82,10 +110,13 @@ export default function createTagCollection(options) {
 				...selector,
 			};
 
-			return Collection.upsert(selector, {$set: fields});
+			return Collection.upsert(
+				selector as Mongo.Selector<T>,
+				{$set: fields} as Mongo.Modifier<T>,
+			);
 		},
 
-		remove: (owner, name) => {
+		remove: (owner: string, name: string) => {
 			check(owner, String);
 			check(name, String);
 
@@ -94,36 +125,35 @@ export default function createTagCollection(options) {
 			const selector = {
 				owner,
 				name,
-			};
+			} as Mongo.Selector<T>;
 
 			return Collection.remove(selector);
 		},
 
 		init: (Parent) => {
+			const useTaggedDocuments = (name: string, options) =>
+				useTracker(() => {
+					const selector = {[key]: name};
+					const mergedOptions = mergeOptions(options, {
+						fields: {
+							[key]: 1,
+						},
+					});
+					const handle = Meteor.subscribe(
+						parentPublication,
+						selector,
+						mergedOptions,
+					);
+					const loading = !handle.ready();
+					return {
+						loading,
+						results: Parent.find(selector, options).fetch(),
+					};
+				}, [name, JSON.stringify(options)]);
+
 			if (Meteor.isServer) {
-				Meteor.publish(parentPublication, function (tag, options = {}) {
-					check(tag, String);
-					const query = {[key]: tag, owner: this.userId};
-					if (options.fields) {
-						const {fields, ...rest} = options;
-						const _options = {
-							...rest,
-							fields: {
-								...fields,
-							},
-						};
-						for (const key of Object.keys(query)) {
-							_options.fields[key] = 1;
-						}
-
-						return Parent.find(query, _options);
-					}
-
-					return Parent.find(query, options);
-				});
-
 				// Publish the current size of a collection.
-				Meteor.publish(parentPublicationStats, function (name) {
+				Meteor.publish(statsPublication, function (name: string) {
 					check(name, String);
 					const uid = JSON.stringify({name, owner: this.userId});
 					const query = {[key]: name, owner: this.userId};
@@ -167,7 +197,7 @@ export default function createTagCollection(options) {
 			}
 
 			Meteor.methods({
-				[`${collection}.rename`](tagId, newname) {
+				[`${collection}.rename`](tagId: string, newname: string) {
 					check(tagId, String);
 					check(newname, String);
 
@@ -211,10 +241,13 @@ export default function createTagCollection(options) {
 					delete newfields._id;
 
 					Collection.remove(tagId);
-					return Collection.upsert(selector, {$set: newfields});
+					return Collection.upsert(
+						selector as Mongo.Selector<T>,
+						{$set: newfields} as Mongo.Modifier<T>,
+					);
 				},
 
-				[`${collection}.delete`](tagId) {
+				[`${collection}.delete`](tagId: string) {
 					check(tagId, String);
 
 					const tag = Collection.findOne(tagId);
@@ -232,8 +265,12 @@ export default function createTagCollection(options) {
 					return Collection.remove(tagId);
 				},
 			});
+
+			return {useTaggedDocuments};
 		},
 	};
 
-	return {Collection, operations, useTags, useTagsFind};
-}
+	return {Collection, operations, useTags, useTagsFind, useTagStats};
+};
+
+export default createTagCollection;

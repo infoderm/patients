@@ -23,6 +23,8 @@ import pageQuery from './pageQuery';
 import makeQuery from './makeQuery';
 import unconditionallyUpdateById from './unconditionallyUpdateById';
 
+import ConsultationsStats from './ConsultationsStats';
+
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
 export const DEFAULT_DURATION_IN_MILLISECONDS =
@@ -80,7 +82,7 @@ export type ConsultationDocument = ConsultationFields &
 export const Consultations = new Mongo.Collection<ConsultationDocument>(
 	collection,
 );
-const Stats = new Mongo.Collection(stats);
+const Stats = new Mongo.Collection<ConsultationsStats>(stats);
 
 export const useConsultationsFind = makeQuery(Consultations, 'consultations');
 

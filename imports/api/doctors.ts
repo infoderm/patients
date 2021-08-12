@@ -1,4 +1,4 @@
-import TagDocument from './tags/TagDocument';
+import TagDocument, {TagFields} from './tags/TagDocument';
 import createTagCollection from './createTagCollection';
 
 const {
@@ -6,14 +6,16 @@ const {
 	operations: doctors,
 	useTags: useDoctors,
 	useTagsFind: useDoctorsFind,
+	useTagStats: useDoctorStats,
 } = createTagCollection({
 	collection: 'doctors',
 	publication: 'doctors',
 	singlePublication: 'doctor',
-	parentPublication: 'patients-of-doctor',
+	parentPublication: 'patients',
 	key: 'doctors',
 });
 
-export {Doctors, doctors, useDoctors, useDoctorsFind};
+export {Doctors, doctors, useDoctors, useDoctorsFind, useDoctorStats};
 
 export type DoctorDocument = TagDocument;
+export type DoctorFields = TagFields;

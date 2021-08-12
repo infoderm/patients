@@ -6,10 +6,10 @@ import Chip, {ChipProps} from '@material-ui/core/Chip';
 
 import {myEncodeURIComponent} from '../../client/uri';
 
-import {DoctorDocument} from '../../api/doctors';
+import {DoctorFields} from '../../api/doctors';
 
 interface AddedProps {
-	item: DoctorDocument;
+	item: DoctorFields;
 }
 
 type StaticDoctorChipProps = ChipProps & AddedProps;
