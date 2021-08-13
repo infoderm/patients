@@ -2,14 +2,10 @@ import startOfToday from 'date-fns/startOfToday';
 
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 
-/**
- * useUpcomingAppointmentsForPatient.
- *
- * @param {string} patientId
- * @param {{limit: number}} options
- * @return {{loading: boolean, results: array}}
- */
-const useUpcomingAppointmentsForPatient = (patientId, {limit}) => {
+const useUpcomingAppointmentsForPatient = (
+	patientId: string,
+	{limit}: {limit: number},
+) => {
 	const earlyMorning = startOfToday();
 
 	const query = {

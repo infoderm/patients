@@ -3,7 +3,7 @@ import React from 'react';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import useConsultationsFind from './useConsultationsFind';
+import useConsultationsUnpaged from './useConsultationsUnpaged';
 import ConsultationsList from './ConsultationsList';
 
 const PrecedingConsultationsList = ({consultation}) => {
@@ -15,7 +15,7 @@ const PrecedingConsultationsList = ({consultation}) => {
 	};
 	const options = {sort: {datetime: -1}};
 	const deps = [JSON.stringify(query)];
-	const {loading, results: consultations} = useConsultationsFind(
+	const {loading, results: consultations} = useConsultationsUnpaged(
 		query,
 		options,
 		deps,

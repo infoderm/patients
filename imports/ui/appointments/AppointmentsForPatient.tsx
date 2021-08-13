@@ -14,7 +14,7 @@ import FixedFab from '../button/FixedFab';
 import ConsultationsPager from '../consultations/ConsultationsPager';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 
-const ConsultationsForPatient = (props) => {
+const AppointmentsForPatient = (props) => {
 	const [showCancelled, setShowCancelled] = useState(true);
 	const [showNoShow, setShowNoShow] = useState(true);
 
@@ -115,4 +115,4 @@ const ConsultationsForPatient = (props) => {
 	);
 };
 
-export default ConsultationsForPatient;
+export default AppointmentsForPatient;

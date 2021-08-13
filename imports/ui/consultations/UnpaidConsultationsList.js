@@ -14,7 +14,7 @@ import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 import {computeFixedFabStyle} from '../button/FixedFab';
 
-import useConsultationsFind from './useConsultationsFind';
+import useConsultationsUnpaged from './useConsultationsUnpaged';
 import ConsultationsList from './ConsultationsList';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const UnpaidConsultationsList = () => {
 	};
 	const options = {sort: {datetime: 1}};
 	const deps = [];
-	const {loading, results: unpaidConsultations} = useConsultationsFind(
+	const {loading, results: unpaidConsultations} = useConsultationsUnpaged(
 		query,
 		options,
 		deps,

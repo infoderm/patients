@@ -1,7 +1,9 @@
-const pageQuery = (Collection) =>
-	function (query, options) {
+import {Mongo} from 'meteor/mongo';
+
+const pageQuery = <T, U>(Collection: Mongo.Collection<T, U>) =>
+	function (query: Mongo.Selector<T>, options: Mongo.Options<T>) {
 		const selector = {...query, owner: this.userId};
-		if (options && options.skip) {
+		if (options?.skip) {
 			const skip = 0;
 			const limit = options.limit ? options.skip + options.limit : undefined;
 			options = {

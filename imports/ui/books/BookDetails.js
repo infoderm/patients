@@ -10,7 +10,7 @@ import TagDetails from '../tags/TagDetails';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 import PagedConsultationsList from '../consultations/PagedConsultationsList';
 
-import useConsultationsFind from '../consultations/useConsultationsFind';
+import useConsultationsUnpaged from '../consultations/useConsultationsUnpaged';
 
 export default function BookDetails({match, year, book, page, perpage}) {
 	year = (match && match.params.year) || year;
@@ -32,7 +32,7 @@ export default function BookDetails({match, year, book, page, perpage}) {
 				},
 			}}
 			root={`/book/${year}/${myEncodeURIComponent(book)}`}
-			useParents={useConsultationsFind}
+			useParents={useConsultationsUnpaged}
 			selector={books.selector(name)}
 			sort={{datetime: 1}}
 			page={page}
