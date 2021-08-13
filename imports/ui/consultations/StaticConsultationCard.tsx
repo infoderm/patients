@@ -71,7 +71,7 @@ const StaticConsultationCard = (props) => {
 	);
 };
 
-StaticConsultationCard.projection = {};
+StaticConsultationCard.projection = undefined;
 
 StaticConsultationCard.defaultProps = {
 	loading: false,

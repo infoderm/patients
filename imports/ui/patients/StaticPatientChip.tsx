@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {InferProps} from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -35,18 +35,34 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function StaticPatientChip({
-	className,
-	loading,
-	found,
+const StaticPatientChipPropTypes = {
+	className: PropTypes.string,
+	loading: PropTypes.bool,
+	found: PropTypes.bool,
+	patient: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		firstname: PropTypes.string,
+		lastname: PropTypes.string,
+		photo: PropTypes.string,
+	}).isRequired,
+	onClick: PropTypes.func,
+	onDelete: PropTypes.func,
+};
+
+type StaticPatientChipProps = InferProps<typeof StaticPatientChipPropTypes>;
+
+const StaticPatientChip = ({
+	className = undefined,
+	loading = false,
+	found = true,
 	patient,
-	onClick,
-	onDelete,
-}) {
+	onClick = undefined,
+	onDelete = undefined,
+}: StaticPatientChipProps) => {
 	const classes = useStyles();
 
-	let component;
-	let to;
+	let component: React.ElementType;
+	let to: string;
 	if (!onClick && !onDelete) {
 		component = Link;
 		to = `/patient/${patient._id}`;
@@ -90,7 +106,7 @@ export default function StaticPatientChip({
 			onDelete={onDelete}
 		/>
 	);
-}
+};
 
 StaticPatientChip.projection = {
 	firstname: 1,
@@ -98,16 +114,6 @@ StaticPatientChip.projection = {
 	photo: 1,
 };
 
-StaticPatientChip.defaultProps = {
-	loading: false,
-	found: true,
-};
+StaticPatientChip.propTypes = StaticPatientChipPropTypes;
 
-StaticPatientChip.propTypes = {
-	className: PropTypes.string,
-	loading: PropTypes.bool,
-	found: PropTypes.bool,
-	patient: PropTypes.object.isRequired,
-	onClick: PropTypes.func,
-	onDelete: PropTypes.func,
-};
+export default StaticPatientChip;
