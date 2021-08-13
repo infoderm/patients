@@ -28,7 +28,7 @@ import FixedFab from '../button/FixedFab';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import {useDateFormat} from '../../i18n/datetime';
-import {useConsultationsAndAppointments} from '../../api/consultations';
+import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 const useStyles = makeStyles((theme) => ({

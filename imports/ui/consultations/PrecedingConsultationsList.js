@@ -3,7 +3,7 @@ import React from 'react';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import {useConsultationsFind} from '../../api/consultations';
+import useConsultationsFind from './useConsultationsFind';
 import ConsultationsList from './ConsultationsList';
 
 const PrecedingConsultationsList = ({consultation}) => {

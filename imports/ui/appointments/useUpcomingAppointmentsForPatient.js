@@ -1,6 +1,6 @@
 import startOfToday from 'date-fns/startOfToday';
 
-import {useConsultationsAndAppointments} from '../../api/consultations';
+import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 
 /**
  * useUpcomingAppointmentsForPatient.

@@ -14,7 +14,7 @@ import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 import {computeFixedFabStyle} from '../button/FixedFab';
 
-import {useConsultationsFind} from '../../api/consultations';
+import useConsultationsFind from './useConsultationsFind';
 import ConsultationsList from './ConsultationsList';
 
 const useStyles = makeStyles((theme) => ({

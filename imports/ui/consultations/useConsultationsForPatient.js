@@ -1,4 +1,4 @@
-import {useConsultationsAndAppointments} from '../../api/consultations';
+import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 
 /**
  * useConsultationsForPatient.

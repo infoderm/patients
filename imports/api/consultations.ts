@@ -20,7 +20,6 @@ import {Books, books} from './books';
 import {parseUint32StrictOrString} from './string';
 
 import pageQuery from './pageQuery';
-import makeQuery from './makeQuery';
 import unconditionallyUpdateById from './unconditionallyUpdateById';
 
 import ConsultationsStats from './ConsultationsStats';
@@ -83,13 +82,6 @@ export const Consultations = new Mongo.Collection<ConsultationDocument>(
 	collection,
 );
 const Stats = new Mongo.Collection<ConsultationsStats>(stats);
-
-export const useConsultationsFind = makeQuery(Consultations, 'consultations');
-
-export const useConsultationsAndAppointments = makeQuery(
-	Consultations,
-	'consultationsAndAppointments',
-);
 
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
 	paid !== price;
