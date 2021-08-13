@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 
-import useDocuments from '../../api/hooks/useDocuments';
 import {computeFixedFabStyle} from '../button/FixedFab';
 
+import useDocuments from './useDocuments';
 import StaticDocumentList from './StaticDocumentList';
 import HealthOneDocumentImportButton from './HealthOneDocumentImportButton';
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles(styles);
 
 const DocumentsList = ({match, page, perpage}) => {
 	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
+		(match?.params.page && Number.parseInt(match.params.page, 10)) ||
 		page ||
 		DocumentsList.defaultProps.page;
 	perpage = perpage || DocumentsList.defaultProps.perpage;

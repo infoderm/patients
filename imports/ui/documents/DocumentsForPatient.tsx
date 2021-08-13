@@ -1,11 +1,11 @@
 import React from 'react';
 
-import usePatient from '../patients/usePatient';
-import useDocuments from '../../api/hooks/useDocuments';
-
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
+import usePatient from '../patients/usePatient';
+
+import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 
 const DocumentsForPatient = ({patientId, page, perpage, ...rest}) => {
