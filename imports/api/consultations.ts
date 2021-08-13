@@ -86,7 +86,7 @@ const Stats = new Mongo.Collection<ConsultationsStats>(stats);
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
 	paid !== price;
 
-const statsKey = (query, init) => JSON.stringify({query, init});
+const statsKey = (query, init = undefined) => JSON.stringify({query, init});
 
 export const findLastConsultation = (filter) =>
 	Consultations.findOne(

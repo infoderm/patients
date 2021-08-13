@@ -1,9 +1,6 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
 import {Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import PropTypes, {InferProps} from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -17,7 +14,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import {useDateFormatRange} from '../../i18n/datetime';
 
-import {consultations} from '../../api/consultations';
+import useConsultationsStats from './useConsultationsStats';
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -72,35 +69,45 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const subheader = ({count}) =>
-	count === undefined ? '...' : `${count} consultations`;
+const ConsultationsStatsCardPropTypes = {
+	query: PropTypes.object.isRequired,
 
-const ConsultationsStatsCard = (props) => {
+	title: PropTypes.string.isRequired,
+	avatar: PropTypes.string.isRequired,
+	url: PropTypes.string,
+	actions: PropTypes.func,
+	abbr: PropTypes.string.isRequired,
+};
+
+type Props = InferProps<typeof ConsultationsStatsCardPropTypes>;
+
+const ConsultationsStatsCard = ({
+	query,
+	title,
+	avatar,
+	url = undefined,
+	actions = () => null,
+	abbr,
+}: Props) => {
 	const classes = useStyles();
-
 	const dateFormatRange = useDateFormatRange('PPP');
+	const {result} = useConsultationsStats(query);
+	const {count, total, first, last} = result ?? {};
 
-	const {title, avatar, url, actions, stats, abbr} = props;
+	const subheader = count === undefined ? '...' : `${count} consultations`;
 
-	const content = ({count, total, first, last}) => {
-		if (count === undefined)
-			return (
-				<Typography className={classes.paragraph} variant="body1">
-					Total ... <br />
-					... — ...
-				</Typography>
-			);
-		if (count === 0) {
-			return null;
-		}
-
-		return (
+	const content =
+		count === undefined ? (
+			<Typography className={classes.paragraph} variant="body1">
+				Total ... <br />
+				... — ...
+			</Typography>
+		) : count === 0 ? null : (
 			<Typography className={classes.content} variant="body1">
 				Total {total} € <br />
 				{dateFormatRange(first, last)}
 			</Typography>
 		);
-	};
 
 	return (
 		<Card className={classes.card}>
@@ -109,13 +116,13 @@ const ConsultationsStatsCard = (props) => {
 					className={classes.header}
 					avatar={<Avatar className={classes.avatar}>{avatar}</Avatar>}
 					title={title}
-					subheader={subheader(stats)}
+					subheader={subheader}
 					component={Link}
 					to={url}
 				/>
-				<CardContent className={classes.content}>{content(stats)}</CardContent>
+				<CardContent className={classes.content}>{content}</CardContent>
 				<CardActions disableSpacing className={classes.actions}>
-					{actions(stats)}
+					{actions(result ?? {})}
 				</CardActions>
 			</div>
 			<div className={classes.photoPlaceHolder}>{abbr || title.slice(-2)}</div>
@@ -123,40 +130,6 @@ const ConsultationsStatsCard = (props) => {
 	);
 };
 
-ConsultationsStatsCard.defaultProps = {
-	url: undefined,
-	actions: () => null,
-	stats: {},
-};
+ConsultationsStatsCard.propTypes = ConsultationsStatsCardPropTypes;
 
-ConsultationsStatsCard.propTypes = {
-	title: PropTypes.string.isRequired,
-	url: PropTypes.string,
-	avatar: PropTypes.string.isRequired,
-	actions: PropTypes.func,
-
-	stats: PropTypes.object,
-};
-
-const ReactiveConsultationsStatsCard = withTracker(({query}) => {
-	const {key, publication, Collection} = consultations.stats;
-
-	console.debug({publication, query});
-
-	const handle = Meteor.subscribe(publication, query);
-	const result = {
-		stats: undefined,
-	};
-
-	if (handle.ready()) {
-		result.stats = Collection.findOne(key(query));
-	}
-
-	return result;
-})(ConsultationsStatsCard);
-
-ReactiveConsultationsStatsCard.propTypes = {
-	query: PropTypes.object.isRequired,
-};
-
-export default ReactiveConsultationsStatsCard;
+export default ConsultationsStatsCard;
