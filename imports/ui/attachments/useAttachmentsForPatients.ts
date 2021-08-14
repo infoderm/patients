@@ -1,5 +1,6 @@
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 import useAttachments from './useAttachments';
+import AttachmentInfo from './AttachmentInfo';
 
 const useAttachmentsForPatients = ($in) => {
 	const cQuery = {
@@ -53,7 +54,7 @@ const useAttachmentsForPatients = ($in) => {
 	const consultationMap = new Map(consultations.map((x) => [x._id, x]));
 
 	const loading = loadingConsultations || loadingAttachments;
-	const results = [];
+	const results: AttachmentInfo[] = [];
 
 	for (const {_id, meta} of attachments) {
 		if (meta?.attachedToPatients) {

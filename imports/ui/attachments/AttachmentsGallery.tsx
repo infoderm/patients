@@ -1,8 +1,4 @@
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +12,8 @@ import {groupby} from '@iterable-iterator/group';
 
 import Loading from '../navigation/Loading';
 
-import {Attachments} from '../../api/attachments';
+import useAttachments from './useAttachments';
+import AttachmentInfo from './AttachmentInfo';
 import AttachmentsGrid from './AttachmentsGrid';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,9 +23,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const AttachmentsGallery = (props) => {
-	const {loading, attachmentsInfo, attachments} = props;
+interface StaticAttachmentsGalleryProps {
+	loading: boolean;
+	attachmentsInfo: Map<string, AttachmentInfo>;
+	attachments: any[];
+}
 
+const StaticAttachmentsGallery = ({
+	loading,
+	attachmentsInfo,
+	attachments,
+}: StaticAttachmentsGalleryProps) => {
 	const classes = useStyles();
 
 	if (loading) {
@@ -85,25 +90,30 @@ const AttachmentsGallery = (props) => {
 	);
 };
 
-AttachmentsGallery.propTypes = {
-	loading: PropTypes.bool.isRequired,
-};
+interface ReactiveAttachmentsGalleryProps {
+	attachmentsInfo: AttachmentInfo[];
+}
 
-export default withTracker(({attachmentsInfo}) => {
-	if (attachmentsInfo.length === 0) return {loading: false, attachments: []};
-
+const ReactiveAttachmentsGallery = ({
+	attachmentsInfo,
+}: ReactiveAttachmentsGalleryProps) => {
 	const attachmentsId = attachmentsInfo.map((x) => x.attachmentId);
 	const query = {_id: {$in: attachmentsId}};
 	const options = {sort: {'meta.createdAt': -1}};
-	const handle = Meteor.subscribe('attachments', query, options);
+	const deps = [JSON.stringify(query), JSON.stringify(options)];
+	const {loading, results: attachments} = useAttachments(query, options, deps);
 
-	if (!handle.ready()) {
-		return {loading: true};
-	}
+	const attachmentsInfoMap = new Map(
+		attachmentsInfo.map((x) => [x.attachmentId, x]),
+	);
 
-	return {
-		loading: false,
-		attachmentsInfo: new Map(attachmentsInfo.map((x) => [x.attachmentId, x])),
-		attachments: Attachments.find(query, options).fetch(),
-	};
-})(AttachmentsGallery);
+	return (
+		<StaticAttachmentsGallery
+			loading={loading}
+			attachmentsInfo={attachmentsInfoMap}
+			attachments={attachments}
+		/>
+	);
+};
+
+export default ReactiveAttachmentsGallery;
