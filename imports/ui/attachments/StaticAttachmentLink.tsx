@@ -4,11 +4,25 @@ import Typography from '@material-ui/core/Typography';
 
 import {link} from '../../api/attachments';
 
-const StaticAttachmentLink = ({loading, attachmentId, attachment, ...rest}) => {
+const StaticAttachmentLink = ({
+	loading,
+	found,
+	attachmentId,
+	attachment,
+	...rest
+}) => {
 	if (loading) {
 		return (
 			<Typography variant="body1" {...rest}>
 				{attachmentId}
+			</Typography>
+		);
+	}
+
+	if (!found) {
+		return (
+			<Typography variant="body1" {...rest}>
+				{attachmentId} (NOT FOUND)
 			</Typography>
 		);
 	}
