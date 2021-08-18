@@ -12,6 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import dateParseISO from 'date-fns/parseISO';
 
 import call from '../../api/call';
+import {ConsultationDocument} from '../../api/consultations';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -30,7 +31,8 @@ const styles = (theme) => ({
 		paddingBottom: '6em',
 	},
 	main: {
-		marginTop: 64 + theme.spacing(3),
+		marginTop: 64,
+		paddingTop: theme.spacing(3),
 	},
 	compareButton: computeFixedFabStyle({theme, col: 2}),
 	saveButton: computeFixedFabStyle({theme, col: 1}),
@@ -56,58 +58,66 @@ const defaultState = {
 
 	currency: 'EUR',
 	payment_method: 'cash',
-	price: '',
-	paid: '',
+	priceString: '',
+	paidString: '',
 	book: '',
 
 	syncPaid: true,
 	priceWarning: false,
+	priceError: true,
+	paidError: true,
 	dirty: false,
 };
 
-const removeUndefined = (object) =>
+type State = typeof defaultState;
+
+const removeUndefined = <T,>(object: T) =>
 	Object.fromEntries(
 		Object.entries(object).filter(([_key, value]) => value !== undefined),
-	);
+	) as Partial<T>;
 
-const isZero = (x) => Number.parseInt(String(x), 10) === 0;
-const isValidAmount = (amount) => /^\d+$/.test(amount);
+const isZero = (x: string) => Number.parseInt(x, 10) === 0;
+const isValidAmount = (amount: string) => /^\d+$/.test(amount);
 
-const init = (consultation) => ({
-	...defaultState,
-	...removeUndefined({
-		_id: consultation._id,
-		datetime: consultation.datetime,
-		doneDatetime: consultation.doneDatetime,
-		reason: consultation.reason,
-		done: consultation.done,
-		todo: consultation.todo,
-		treatment: consultation.treatment,
-		next: consultation.next,
-		more: consultation.more,
+const init = (consultation: ConsultationDocument): State => {
+	const priceString = Number.isFinite(consultation.price)
+		? String(consultation.price)
+		: '';
+	const paidString = Number.isFinite(consultation.paid)
+		? String(consultation.paid)
+		: '';
 
-		currency: consultation.currency,
-		payment_method: consultation.payment_method,
-		price: Number.isFinite(consultation.price)
-			? String(consultation.price)
-			: undefined,
-		paid: Number.isFinite(consultation.paid)
-			? String(consultation.paid)
-			: undefined,
-		book: consultation.book,
-		priceWarning: isZero(consultation.price),
-		priceError: !isValidAmount(consultation.price),
-		paidError: !isValidAmount(consultation.paid),
-	}),
-});
+	return {
+		...defaultState,
+		...removeUndefined({
+			_id: consultation._id,
+			datetime: consultation.datetime,
+			doneDatetime: consultation.doneDatetime,
+			reason: consultation.reason,
+			done: consultation.done,
+			todo: consultation.todo,
+			treatment: consultation.treatment,
+			next: consultation.next,
+			more: consultation.more,
 
-/**
- * reducer.
- *
- * @param {Object} state
- * @param {{type: string, key?: string, value?: any}} action
- */
-const reducer = (state, action) => {
+			currency: consultation.currency,
+			payment_method: consultation.payment_method,
+			priceString,
+			paidString,
+			book: consultation.book,
+
+			syncPaid: priceString === paidString,
+			priceWarning: isZero(priceString),
+			priceError: !isValidAmount(priceString),
+			paidError: !isValidAmount(paidString),
+		}),
+	};
+};
+
+const reducer = (
+	state: State,
+	action: {type: string; key?: string; value?: any},
+) => {
 	switch (action.type) {
 		case 'update':
 			switch (action.key) {
@@ -115,30 +125,30 @@ const reducer = (state, action) => {
 					throw new Error('Cannot update _id.');
 				case 'dirty':
 					throw new Error('Cannot update dirty.');
-				case 'paid': {
-					const paid = action.value;
+				case 'paidString': {
+					const paidString = action.value;
 					return {
 						...state,
-						paid,
-						paidError: !isValidAmount(paid),
+						paidString,
+						paidError: !isValidAmount(paidString),
 						syncPaid: false,
 						dirty: true,
 					};
 				}
 
-				case 'price': {
-					const price = action.value;
-					const paid =
+				case 'priceString': {
+					const priceString = action.value;
+					const paidString =
 						state.syncPaid && state.payment_method === 'cash'
-							? price
-							: state.paid;
+							? priceString
+							: state.paidString;
 					return {
 						...state,
-						price,
-						priceWarning: isZero(price),
-						priceError: !isValidAmount(price),
-						paid,
-						paidError: !isValidAmount(paid),
+						priceString,
+						priceWarning: isZero(priceString),
+						priceError: !isValidAmount(priceString),
+						paidString,
+						paidError: !isValidAmount(paidString),
 						dirty: true,
 					};
 				}
@@ -189,14 +199,12 @@ const ConsultationEditor = ({consultation}) => {
 
 		currency,
 		payment_method,
-		price,
-		paid,
+		priceString,
+		paidString,
 		book,
 
 		dirty,
 		priceWarning,
-		priceError,
-		paidError,
 	} = state;
 
 	const update =
@@ -220,8 +228,8 @@ const ConsultationEditor = ({consultation}) => {
 
 			currency,
 			payment_method,
-			price: Number.parseInt(price, 10),
-			paid: Number.parseInt(paid, 10),
+			price: Number.parseInt(priceString, 10),
+			paid: Number.parseInt(paidString, 10),
 			book,
 		};
 
@@ -230,7 +238,7 @@ const ConsultationEditor = ({consultation}) => {
 			!(await dialog((resolve) => (
 				<ConfirmationDialog
 					title="Confirm"
-					text={`This consultation has a price of ${price}.`}
+					text={`This consultation has a price of ${priceString}.`}
 					cancel="Cancel"
 					confirm={
 						consultationId === undefined
@@ -257,7 +265,7 @@ const ConsultationEditor = ({consultation}) => {
 				await call('consultations.update', consultationId, consultation);
 				dispatch({type: 'not-dirty'});
 			}
-		} catch (error) {
+		} catch (error: unknown) {
 			console.error(error);
 		}
 	};
@@ -287,7 +295,9 @@ const ConsultationEditor = ({consultation}) => {
 				className={classes.compareButton}
 				color={compare ? 'primary' : 'default'}
 				aria-label="compare"
-				onClick={() => setCompare(!compare)}
+				onClick={() => {
+					setCompare(!compare);
+				}}
 			>
 				<VerticalSplitIcon />
 			</Fab>
@@ -295,7 +305,7 @@ const ConsultationEditor = ({consultation}) => {
 				className={classes.saveButton}
 				color="primary"
 				aria-label="save"
-				disabled={!dirty || priceError || paidError}
+				disabled={!dirty}
 				onClick={handleSubmit}
 			>
 				<SaveIcon />

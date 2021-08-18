@@ -23,8 +23,6 @@ const NewConsultationEditor = ({match}) => {
 		more: '',
 		currency: 'EUR',
 		payment_method: 'cash',
-		price: '',
-		paid: '',
 		book: bookNumber,
 	};
 

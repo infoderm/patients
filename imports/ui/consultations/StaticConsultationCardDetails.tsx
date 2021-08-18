@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Avatar from '@material-ui/core/Avatar';
 
+import ErrorIcon from '@material-ui/icons/Error';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
 import InfoIcon from '@material-ui/icons/Info';
@@ -26,6 +27,8 @@ import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import BookIcon from '@material-ui/icons/Book';
 import AttachmentIcon from '@material-ui/icons/Attachment';
+
+import red from '@material-ui/core/colors/red';
 
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
@@ -50,6 +53,10 @@ const useStyles = makeStyles(() => ({
 	link: {
 		fontWeight: 'bold',
 	},
+	avatarIssues: {
+		backgroundColor: red[100],
+		color: red[600],
+	},
 }));
 
 function paymentMethodString(payment_method) {
@@ -64,13 +71,14 @@ function paymentMethodString(payment_method) {
 	}
 }
 
-const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
+const ConsultationsCardListItemBase = ({
+	avatar,
+	primary,
+	secondary,
+	...rest
+}) => (
 	<ListItem>
-		<ListItemAvatar>
-			<Avatar>
-				<Icon />
-			</Avatar>
-		</ListItemAvatar>
+		<ListItemAvatar>{avatar}</ListItemAvatar>
 		<ListItemText
 			primary={primary}
 			secondary={secondary}
@@ -82,6 +90,19 @@ const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
 			{...rest}
 		/>
 	</ListItem>
+);
+
+const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
+	<ConsultationsCardListItemBase
+		avatar={
+			<Avatar>
+				<Icon />
+			</Avatar>
+		}
+		primary={primary}
+		secondary={secondary}
+		{...rest}
+	/>
 );
 
 const StaticConsultationCardDetails = (props) => {
@@ -119,6 +140,17 @@ const StaticConsultationCardDetails = (props) => {
 		<AccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<List>
+				{missingPaymentData && (
+					<ConsultationsCardListItemBase
+						avatar={
+							<Avatar className={classes.avatarIssues}>
+								<ErrorIcon />
+							</Avatar>
+						}
+						primary="Problèmes"
+						secondary="Il manque des informations de paiement pour cette consultation"
+					/>
+				)}
 				{!isDone && isCancelled && (
 					<ConsultationsCardListItem
 						Icon={AlarmOffIcon}

@@ -389,8 +389,8 @@ function sanitize({
 	if (book !== undefined) check(book, String);
 	if (payment_method !== undefined) check(payment_method, String);
 
-	price = Number.isFinite(price) ? price : 0;
-	paid = Number.isFinite(paid) ? paid : 0;
+	price = Number.isFinite(price) ? price : undefined;
+	paid = Number.isFinite(paid) ? paid : undefined;
 
 	reason = reason?.trim();
 	done = done?.trim();
@@ -562,7 +562,7 @@ const methods = {
 		});
 	},
 
-	'consultations.update'(consultationId, newfields) {
+	'consultations.update'(consultationId: string, newfields) {
 		check(consultationId, String);
 		const existing = Consultations.findOne({
 			_id: consultationId,
@@ -577,13 +577,39 @@ const methods = {
 			books.add(this.userId, books.name(fields.datetime, fields.book));
 		}
 
-		return Consultations.update(consultationId, {
+		let $unset;
+
+		if (
+			Object.prototype.hasOwnProperty.call(newfields, 'price') &&
+			fields.price === undefined
+		) {
+			$unset = {
+				...$unset,
+				price: true,
+			};
+		}
+
+		if (
+			Object.prototype.hasOwnProperty.call(newfields, 'paid') &&
+			fields.paid === undefined
+		) {
+			$unset = {
+				...$unset,
+				paid: true,
+			};
+		}
+
+		const updateDocument: Mongo.Modifier<ConsultationDocument> = {
 			$set: {
 				...fields,
 				...computedFields(this.userId, existing, fields),
-				lastModifiedAt: new Date(),
 			},
-		});
+			$currentDate: {lastModifiedAt: true},
+		};
+
+		if ($unset !== undefined) updateDocument.$unset = $unset;
+
+		return Consultations.update(consultationId, updateDocument);
 	},
 
 	'consultations.transfer'(consultationId: string, patientId: string) {
@@ -610,7 +636,7 @@ const methods = {
 		return numUpdated;
 	},
 
-	'consultations.attach'(consultationId, uploadId) {
+	'consultations.attach'(consultationId: string, uploadId: string) {
 		check(consultationId, String);
 		check(uploadId, String);
 
@@ -635,7 +661,7 @@ const methods = {
 		});
 	},
 
-	'consultations.detach'(consultationId, uploadId) {
+	'consultations.detach'(consultationId: string, uploadId: string) {
 		check(consultationId, String);
 		check(uploadId, String);
 
@@ -660,7 +686,7 @@ const methods = {
 		});
 	},
 
-	'consultations.remove'(consultationId) {
+	'consultations.remove'(consultationId: string) {
 		check(consultationId, String);
 
 		const consultation = Consultations.findOne({
@@ -698,9 +724,9 @@ const methods = {
 			},
 		}),
 	),
-	'books.changeBookNumber'(oldBookId, newBookNumber) {
+	'books.changeBookNumber'(oldBookId: string, newBookNumberString: string) {
 		check(oldBookId, String);
-		check(newBookNumber, String);
+		check(newBookNumberString, String);
 
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
@@ -713,12 +739,12 @@ const methods = {
 
 		const {name: oldName, fiscalYear, bookNumber: oldBookNumber} = oldBook;
 
-		newBookNumber = books.sanitize(newBookNumber);
-		if (newBookNumber === '') {
+		newBookNumberString = books.sanitize(newBookNumberString);
+		if (newBookNumberString === '') {
 			throw new Meteor.Error('value-error');
 		}
 
-		newBookNumber = parseUint32StrictOrString(newBookNumber);
+		const newBookNumber = parseUint32StrictOrString(newBookNumberString);
 		if (newBookNumber === oldBookNumber) {
 			throw new Meteor.Error('value-error');
 		}

@@ -11,6 +11,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import WarningIcon from '@material-ui/icons/Warning';
+import LinkIcon from '@material-ui/icons/Link';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
 
 import TextField from '../input/TextField';
 
@@ -52,10 +54,11 @@ const ConsultationForm = ({consultation, update}) => {
 
 		currency,
 		payment_method,
-		price,
-		paid,
+		priceString,
+		paidString,
 		book,
 
+		syncPaid,
 		priceWarning,
 		priceError,
 		paidError,
@@ -190,7 +193,7 @@ const ConsultationForm = ({consultation, update}) => {
 						fullWidth
 						readOnly={!update}
 						label="Prix"
-						value={price}
+						value={priceString}
 						margin="normal"
 						error={priceError}
 						InputProps={{
@@ -208,7 +211,7 @@ const ConsultationForm = ({consultation, update}) => {
 							inputComponent: CurrencyAmountInput as any,
 							inputProps: {currency},
 						}}
-						onChange={update?.('price')}
+						onChange={update?.('priceString')}
 					/>
 				</Grid>
 				<Grid item xs={3}>
@@ -216,14 +219,21 @@ const ConsultationForm = ({consultation, update}) => {
 						fullWidth
 						readOnly={!update}
 						label="Payé"
-						value={paid}
+						value={paidString}
 						margin="normal"
 						error={paidError}
 						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton>
+										{syncPaid ? <LinkIcon /> : <LinkOffIcon />}
+									</IconButton>
+								</InputAdornment>
+							),
 							inputComponent: CurrencyAmountInput as any,
 							inputProps: {currency},
 						}}
-						onChange={update?.('paid')}
+						onChange={update?.('paidString')}
 					/>
 				</Grid>
 				<Grid item xs={3}>
