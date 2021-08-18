@@ -109,13 +109,24 @@ const SEPAPaymentDetailsStatic = (props) => {
 									readOnly
 									label="Account Holder"
 									value={accountHolder}
+									InputLabelProps={{shrink: true}}
 								/>
 							</div>
 							<div className={classes.textField}>
-								<TextField readOnly label="IBAN" value={iban} />
+								<TextField
+									readOnly
+									label="IBAN"
+									value={iban}
+									InputLabelProps={{shrink: true}}
+								/>
 							</div>
 							<div className={classes.textField}>
-								<TextField readOnly label="Currency" value={currency} />
+								<TextField
+									readOnly
+									label="Currency"
+									value={currency}
+									InputLabelProps={{shrink: true}}
+								/>
 							</div>
 							<div className={classes.textField}>
 								<TextField
