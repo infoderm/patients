@@ -14,7 +14,9 @@ module.exports = {
 			one: {},
 		},
 		docker: {
-			image: 'abernix/meteord:node-12.20.0-base',
+			image: 'zodern/meteor:latest',
+			prepareBundle: true,
+			useBuildKit: true,
 		},
 		buildOptions: {
 			serverOnly: true,
