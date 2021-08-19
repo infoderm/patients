@@ -5,10 +5,10 @@ import {list} from '@iterable-iterator/list';
 
 import mergeFields from '../../util/mergeFields';
 
-import {usePatientsAdvancedFind} from '../../api/patients';
 import {normalizeSearch} from '../../api/string';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
+import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 
 const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input
@@ -29,6 +29,12 @@ const makePatientsSuggestions = (set = [], userOptions = undefined) => {
 
 		const sort = {
 			score: {$meta: 'textScore'},
+			lastModifiedAt: -1,
+			lastname: 1,
+			firstname: 1,
+			birthdate: 1,
+			sex: 1,
+			niss: 1,
 		};
 		const fields = mergeFields(
 			sort,
@@ -53,7 +59,11 @@ const makePatientsSuggestions = (set = [], userOptions = undefined) => {
 			// refreshKey,
 		];
 
-		const {loading, ...rest} = usePatientsAdvancedFind(query, options, deps);
+		const {loading, ...rest} = useAdvancedObservedPatients(
+			query,
+			options,
+			deps,
+		);
 
 		return {
 			loading: loading || isPending(),

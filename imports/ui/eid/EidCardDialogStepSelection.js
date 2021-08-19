@@ -30,13 +30,14 @@ import SearchBox from '../input/SearchBox';
 
 import mergeFields from '../../util/mergeFields';
 
-import {patients, usePatientsFind} from '../../api/patients';
+import {patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
 import dialog from '../modal/dialog';
 import InformationDialog from '../modal/InformationDialog';
 
 import makePatientsSuggestions from '../patients/makePatientsSuggestions';
+import useObservedPatients from '../patients/useObservedPatients';
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
 import SelectablePatientCard from '../patients/SelectablePatientCard';
 import ReactivePatientCard from '../patients/ReactivePatientCard';
@@ -68,7 +69,7 @@ const usePatientsNnSearch = ({niss: nn}) => {
 		sort,
 		limit,
 	};
-	return usePatientsFind(query, options, [nn]);
+	return useObservedPatients(query, options, [nn]);
 };
 
 const usePatientsNormalizedNameSearch = ({normalizedName}) => {
@@ -88,7 +89,7 @@ const usePatientsNormalizedNameSearch = ({normalizedName}) => {
 		sort,
 		limit,
 	};
-	return usePatientsFind(query, options, [normalizedName]);
+	return useObservedPatients(query, options, [normalizedName]);
 };
 
 const useStyles = makeStyles((theme) => ({

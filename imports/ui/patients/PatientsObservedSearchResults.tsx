@@ -6,8 +6,8 @@ import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 
 import Refresh from '../navigation/Refresh';
-import {usePatientsAdvancedFind} from '../../api/patients';
 import PropsOf from '../../util/PropsOf';
+import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
@@ -36,6 +36,12 @@ const PatientsObservedSearchResults = (props: Props) => {
 
 	const sort = {
 		score: {$meta: 'textScore'},
+		lastModifiedAt: -1,
+		lastname: 1,
+		firstname: 1,
+		birthdate: 1,
+		sex: 1,
+		niss: 1,
 	};
 	const fields = mergeFields(
 		sort,
@@ -51,12 +57,11 @@ const PatientsObservedSearchResults = (props: Props) => {
 		limit: perpage,
 	};
 
-	const {loading, results, dirty} = usePatientsAdvancedFind(query, options, [
-		$search,
-		page,
-		perpage,
-		refreshKey,
-	]);
+	const {loading, results, dirty} = useAdvancedObservedPatients(
+		query,
+		options,
+		[$search, page, perpage, refreshKey],
+	);
 
 	const root = `/search/${match.params.query}`;
 

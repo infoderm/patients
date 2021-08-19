@@ -19,7 +19,6 @@ import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 
 import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 import makeObservedQueryPublication from './makeObservedQueryPublication';
-import makeObservedQueryHook from './makeObservedQueryHook';
 
 export interface PatientFields {
 	niss: string;
@@ -62,10 +61,10 @@ export type PatientDocument = PatientFields &
 
 const collection = 'patients';
 const cacheCollection = 'patients.find.cache';
-const cachePublication = 'patients.find.observe';
+export const cachePublication = 'patients.find.observe';
 const indexCollection = 'patients.index.collection';
 const indexObservedQueryCacheCollection = 'patients.index.cache.collection';
-const indexCachePublication = 'patients.index.cache.publication';
+export const indexCachePublication = 'patients.index.cache.publication';
 export const Patients = new Mongo.Collection<PatientDocument>(collection);
 export const PatientsCache: ObservedQueryCacheCollection = new Mongo.Collection(
 	cacheCollection,
@@ -116,7 +115,7 @@ function normalizedName(firstname, lastname) {
 	return `${lastnameHash} ${firstnameHash}`;
 }
 
-function updateIndex(userId, _id, fields) {
+function updateIndex(userId: string, _id: string, fields) {
 	const {niss, firstname, lastname, birthdate, sex} = fields;
 	const patientIndex = {};
 	if (firstname) {
@@ -145,6 +144,7 @@ function updateIndex(userId, _id, fields) {
 
 	PatientsSearchIndex.upsert(_id, {
 		$set: upsertFields,
+		$currentDate: {lastModifiedAt: true},
 	});
 }
 
@@ -675,18 +675,6 @@ function createPatient(string) {
 		_id: '?',
 	};
 }
-
-// TODO rename to useObservedPatients
-export const usePatientsFind = makeObservedQueryHook(
-	PatientsCache,
-	cachePublication,
-);
-
-// TODO rename to useAdvancedObservedPatients
-export const usePatientsAdvancedFind = makeObservedQueryHook(
-	PatientsSearchIndexCache,
-	indexCachePublication,
-);
 
 export const patients = {
 	cacheCollection,

@@ -52,7 +52,9 @@ export default function FullTextSearchInput({className}) {
 		updateHistory(e.target.value);
 	};
 
-	const onBlur = () => setValue('');
+	const onBlur = () => {
+		setValue('');
+	};
 
 	return (
 		<div className={className}>

@@ -3,19 +3,17 @@ import PropTypes from 'prop-types';
 
 import TagDetails from '../tags/TagDetails';
 
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
+
+import useObservedPatients from '../patients/useObservedPatients';
 import PagedPatientsList from '../patients/PagedPatientsList';
 
-import {usePatientsFind} from '../../api/patients';
-
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
 import StaticDoctorCard from './StaticDoctorCard';
 import useDoctor from './useDoctor';
 
 export default function DoctorDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page;
+	page = Number.parseInt(match?.params.page, 10) || page;
 
 	return (
 		<TagDetails
@@ -24,7 +22,7 @@ export default function DoctorDetails({match, name, page, perpage}) {
 			name={name}
 			List={PagedPatientsList}
 			root={`/doctor/${myEncodeURIComponent(name)}`}
-			useParents={usePatientsFind}
+			useParents={useObservedPatients}
 			selector={{doctors: name}}
 			sort={{lastname: 1}}
 			fields={PagedPatientsList.projection}

@@ -56,7 +56,10 @@ const TagDetails = (props) => {
 	};
 
 	const [refreshKey, setRefreshKey] = useState(Math.random());
-	const refresh = () => setRefreshKey(Math.random());
+	const refresh = () => {
+		setRefreshKey(Math.random());
+	};
+
 	const {loading, results, dirty} = useParents(selector, options, [
 		name,
 		page,

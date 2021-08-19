@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {InferProps} from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -7,25 +7,37 @@ import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 import Paginator from '../navigation/Paginator';
 
-import PatientGridItem from '../patients/PatientGridItem';
+import PatientGridItem from './PatientGridItem';
 import PatientsPage from './PatientsPage';
 import NewPatientCard from './NewPatientCard';
 
-export default function StaticPatientsList({
+const StaticPatientsListPropTypes = {
+	className: PropTypes.string,
+	page: PropTypes.number.isRequired,
+	perpage: PropTypes.number.isRequired,
+	loading: PropTypes.bool,
+	patients: PropTypes.array.isRequired,
+	root: PropTypes.string.isRequired,
+	Card: PropTypes.elementType,
+};
+
+type Props = InferProps<typeof StaticPatientsListPropTypes>;
+
+const StaticPatientsList = ({
 	page,
 	perpage,
-	loading,
+	loading = false,
 	patients,
 	root,
 	Card,
 	...rest
-}) {
+}: Props) => {
 	if (loading && patients.length === 0) return <Loading />;
 
 	const style = {
 		transition: 'opacity 200ms ease-out',
+		opacity: loading ? 0.4 : undefined,
 	};
-	if (loading) style.opacity = 0.4;
 
 	return (
 		<>
@@ -57,19 +69,10 @@ export default function StaticPatientsList({
 			/>
 		</>
 	);
-}
+};
 
 StaticPatientsList.projection = PatientsPage.projection;
 
-StaticPatientsList.defaultProps = {
-	loading: false,
-};
+StaticPatientsList.propTypes = StaticPatientsListPropTypes;
 
-StaticPatientsList.propTypes = {
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired,
-	loading: PropTypes.bool,
-	patients: PropTypes.array.isRequired,
-	root: PropTypes.string.isRequired,
-	Card: PropTypes.elementType,
-};
+export default StaticPatientsList;
