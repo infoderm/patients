@@ -5,9 +5,11 @@ runs:
   steps:
     - name: Set $PATH 🪜
       run: echo "$HOME/.meteor" >> $GITHUB_PATH
+      shell: bash
 
     - name: Set env.METEOR_RELEASE 📻
       run: echo "METEOR_RELEASE=$(cat .meteor/release | cut -d@ -f2)" >> $GITHUB_ENV
+      shell: bash
 
     - name: Cache ~/.meteor (Meteor ${{ env.METEOR_RELEASE }}) 💿
       uses: actions/cache@v2
@@ -24,6 +26,7 @@ runs:
     - name: Install Meteor ${{ env.METEOR_RELEASE }} ☄️
       if: steps.cache-meteor.outputs.cache-hit != 'true'
       run: curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh
+      shell: bash
 
     - name: Cache ~/.npm 📀
       uses: actions/cache@v2
@@ -48,6 +51,7 @@ runs:
     - name: Install dependencies 📦
       if: steps.cache-node-modules.outputs.cache-hit != 'true'
       run: meteor npm clean-install
+      shell: bash
 
     - name: Cache ./.meteor/local 💾
       uses: actions/cache@v2
