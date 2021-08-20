@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TagList from '../tags/TagList';
 
-import {useDoctors} from '../../api/doctors';
+import {useInsurancesFind} from '../../api/insurances';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import StaticDoctorCard from './StaticDoctorCard';
+import StaticInsuranceCard from './StaticInsuranceCard';
 
-export default function DoctorsList({match, prefix, page, perpage}) {
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page;
-	prefix = (match && match.params.prefix) || prefix;
+export default function InsurancesList({match, prefix, page, perpage}) {
+	page = Number.parseInt(match?.params.page, 10) || page;
+	prefix = match?.params.prefix || prefix;
 
 	const query = prefix
 		? {name: {$regex: '^' + escapeStringRegexp(prefix), $options: 'i'}}
@@ -20,25 +18,25 @@ export default function DoctorsList({match, prefix, page, perpage}) {
 
 	return (
 		<div>
-			<AlphabetJumper current={prefix} toURL={(x) => `/doctors/${x}`} />
+			<AlphabetJumper current={prefix} toURL={(x) => `/insurances/${x}`} />
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={StaticDoctorCard}
+				Card={StaticInsuranceCard}
 				url={match.url}
 				query={query}
-				useTags={useDoctors}
+				useTags={useInsurancesFind}
 			/>
 		</div>
 	);
 }
 
-DoctorsList.defaultProps = {
+InsurancesList.defaultProps = {
 	page: 1,
 	perpage: 10,
 };
 
-DoctorsList.propTypes = {
+InsurancesList.propTypes = {
 	page: PropTypes.number,
 	perpage: PropTypes.number,
 	prefix: PropTypes.string,

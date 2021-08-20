@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TagList from '../tags/TagList';
 
-import {useAllergies} from '../../api/allergies';
+import {useAllergiesFind} from '../../api/allergies';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
 import StaticAllergyCard from './StaticAllergyCard';
 
 export default function AllergiesList({match, prefix, page, perpage}) {
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page;
-	prefix = (match && match.params.prefix) || prefix;
+	page = Number.parseInt(match?.params.page, 10) || page;
+	prefix = match?.params.prefix || prefix;
 
 	const query = prefix
 		? {name: {$regex: '^' + escapeStringRegexp(prefix), $options: 'i'}}
@@ -27,7 +25,7 @@ export default function AllergiesList({match, prefix, page, perpage}) {
 				Card={StaticAllergyCard}
 				url={match.url}
 				query={query}
-				useTags={useAllergies}
+				useTags={useAllergiesFind}
 			/>
 		</div>
 	);
