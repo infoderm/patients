@@ -206,17 +206,9 @@ const AppointmentDialog = (props) => {
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
 
 	return (
-		<Dialog
-			classes={{paper: classes.dialogPaper}}
-			open={open}
-			// component="form"
-			aria-labelledby="new-appointment-dialog-title"
-			onClose={onClose}
-		>
+		<Dialog classes={{paper: classes.dialogPaper}} open={open}>
 			{loading && <LinearProgress />}
-			<DialogTitle id="new-appointment-dialog-title">
-				Schedule an appointment
-			</DialogTitle>
+			<DialogTitle>Schedule an appointment</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
