@@ -30,10 +30,7 @@ const SIZE_CODE = 256;
 const SIZE_PROGRESS = 128;
 const THICKNESS_PROGRESS = 3.6;
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
+const useStyles = makeStyles({
 	code: {},
 	codeContainer: {
 		position: 'relative',
@@ -62,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-}));
+});
 
 const ConsultationPaymentDialog = (props) => {
 	const classes = useStyles();
@@ -156,9 +153,13 @@ const ConsultationPaymentDialog = (props) => {
 				</div>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="primary" onClick={onClose}>
+				<Button
+					type="submit"
+					color="primary"
+					endIcon={<CloseIcon />}
+					onClick={onClose}
+				>
 					Close
-					<CloseIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

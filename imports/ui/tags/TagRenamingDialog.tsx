@@ -26,17 +26,14 @@ import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
 	root: {
 		overflowY: 'visible',
 	},
 	content: {
 		overflowY: 'visible',
 	},
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-}));
+});
 
 const MAGIC = '8324jdkf-tag-renaming-dialog-title';
 let nextAriaId = 0;
@@ -147,16 +144,20 @@ const TagRenamingDialog = (props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					color="secondary"
+					endIcon={<EditIcon />}
 					onClick={renameThisTagIfNameMatchesAndNewNameNotEmpty}
 				>
 					Rename
-					<EditIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

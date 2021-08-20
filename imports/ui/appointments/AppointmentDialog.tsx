@@ -49,10 +49,7 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import withLazyOpening from '../modal/withLazyOpening';
 import PatientPicker from '../patients/PatientPicker';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
+const useStyles = makeStyles({
 	dialogPaper: {
 		overflow: 'visible',
 	},
@@ -60,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 		overflow: 'auto',
 		width: '100%',
 	},
-}));
+});
 
 const usePhone = (patientList) => {
 	const patientId = patientList.length === 1 ? patientList[0]._id : '?';
@@ -347,17 +344,21 @@ const AppointmentDialog = (props) => {
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					disabled={patientList.length !== 1 || !validDate || !validTime}
 					color="primary"
+					endIcon={<AccessTimeIcon />}
 					onClick={createAppointment}
 				>
 					Schedule
-					<AccessTimeIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

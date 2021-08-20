@@ -3,7 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
@@ -19,14 +18,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-}));
-
 const AttachmentEditionDialog = ({open, onClose, attachment}) => {
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [filename, setFilename] = useState(attachment.name || '');
 	const [filenameError, setFilenameError] = useState('');
@@ -83,17 +75,26 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 					value={filename}
 					helperText={filenameError}
 					error={Boolean(filenameError)}
-					onChange={(e) => setFilename(e.target.value)}
+					onChange={(e) => {
+						setFilename(e.target.value);
+					}}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="primary" onClick={editThisAttachment}>
+				<Button
+					color="primary"
+					endIcon={<SaveIcon />}
+					onClick={editThisAttachment}
+				>
 					Save Changes
-					<SaveIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

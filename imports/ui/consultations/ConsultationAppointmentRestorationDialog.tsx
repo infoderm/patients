@@ -3,7 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
@@ -27,12 +26,6 @@ import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-}));
-
 const ConsultationAppointmentRestorationDialog = (props) => {
 	const {open, onClose, consultation} = props;
 
@@ -47,7 +40,6 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 		fields: patient,
 	} = usePatient({}, consultation.patientId, options, deps);
 
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
@@ -117,17 +109,21 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
 				<Button
 					disabled={!found || ConfirmationTextFieldProps.error}
 					color="secondary"
+					endIcon={<RestoreIcon />}
 					onClick={restoreThisConsultationsAppointmentIfPatientsLastNameMatches}
 				>
 					Restore
-					<RestoreIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

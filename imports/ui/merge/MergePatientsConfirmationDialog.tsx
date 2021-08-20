@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import {useHistory} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@material-ui/core/Button';
@@ -20,12 +19,6 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-}));
-
 const MergePatientsConfirmationDialog = (props) => {
 	const {
 		open,
@@ -37,7 +30,6 @@ const MergePatientsConfirmationDialog = (props) => {
 		toDelete,
 	} = props;
 
-	const classes = useStyles();
 	const history = useHistory();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -88,13 +80,20 @@ const MergePatientsConfirmationDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="secondary" onClick={mergePatients}>
+				<Button
+					color="secondary"
+					endIcon={<MergeTypeIcon />}
+					onClick={mergePatients}
+				>
 					Merge
-					<MergeTypeIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

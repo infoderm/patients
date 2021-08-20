@@ -3,8 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,16 +15,8 @@ import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
 import withLazyOpening from '../modal/withLazyOpening';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-}));
-
 const AppointmentUncancellationDialog = (props) => {
 	const {open, onClose, appointment} = props;
-
-	const classes = useStyles();
 
 	const cancelThisAppointment = (event) => {
 		event.preventDefault();
@@ -57,13 +47,20 @@ const AppointmentUncancellationDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<AlarmOffIcon />}
+					onClick={onClose}
+				>
 					Do not uncancel
-					<AlarmOffIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="primary" onClick={cancelThisAppointment}>
+				<Button
+					color="primary"
+					endIcon={<AlarmOnIcon />}
+					onClick={cancelThisAppointment}
+				>
 					Uncancel Appointment
-					<AlarmOnIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>

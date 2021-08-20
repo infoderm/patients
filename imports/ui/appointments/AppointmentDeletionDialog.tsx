@@ -3,8 +3,6 @@ import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,16 +16,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
-const useStyles = makeStyles((theme) => ({
-	rightIcon: {
-		marginLeft: theme.spacing(1),
-	},
-}));
-
 const AppointmentDeletionDialog = (props) => {
 	const {open, onClose, appointment} = props;
-
-	const classes = useStyles();
 
 	const isMounted = useIsMounted();
 
@@ -60,13 +50,20 @@ const AppointmentDeletionDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" color="default" onClick={onClose}>
+				<Button
+					type="submit"
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
-					<CancelIcon className={classes.rightIcon} />
 				</Button>
-				<Button color="secondary" onClick={deleteThisAppointment}>
+				<Button
+					color="secondary"
+					endIcon={<DeleteIcon />}
+					onClick={deleteThisAppointment}
+				>
 					Delete
-					<DeleteIcon className={classes.rightIcon} />
 				</Button>
 			</DialogActions>
 		</Dialog>
