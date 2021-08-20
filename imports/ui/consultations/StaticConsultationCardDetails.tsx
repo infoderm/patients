@@ -140,7 +140,7 @@ const StaticConsultationCardDetails = (props) => {
 		<AccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<List>
-				{missingPaymentData && (
+				{isDone && missingPaymentData && (
 					<ConsultationsCardListItemBase
 						avatar={
 							<Avatar className={classes.avatarIssues}>
