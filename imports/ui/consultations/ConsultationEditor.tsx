@@ -3,11 +3,15 @@ import React, {useState, useReducer} from 'react';
 import {Prompt} from 'react-router';
 import {useHistory} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
+
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
 import SaveIcon from '@material-ui/icons/Save';
+import CheckIcon from '@material-ui/icons/Check';
+import blue from '@material-ui/core/colors/blue';
 
 import dateParseISO from 'date-fns/parseISO';
 
@@ -26,17 +30,25 @@ import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
 
-const styles = (theme) => ({
-	container: {
-		paddingBottom: '6em',
-	},
-	main: {
-		marginTop: 64,
-		paddingTop: theme.spacing(3),
-	},
-	compareButton: computeFixedFabStyle({theme, col: 2}),
-	saveButton: computeFixedFabStyle({theme, col: 1}),
-});
+const styles = (theme) =>
+	createStyles({
+		container: {
+			paddingBottom: '6em',
+		},
+		main: {
+			marginTop: 64,
+			paddingTop: theme.spacing(3),
+		},
+		compareButton: computeFixedFabStyle({theme, col: 2}),
+		saveButtonWrapper: computeFixedFabStyle({theme, col: 1}),
+		saveButtonProgress: {
+			color: blue[500],
+			position: 'absolute',
+			top: -6,
+			left: -6,
+			zIndex: 1,
+		},
+	});
 
 const useStyles = makeStyles(styles);
 
@@ -67,6 +79,8 @@ const defaultState = {
 	priceError: true,
 	paidError: true,
 	dirty: false,
+	saving: false,
+	lastSaveWasSuccessful: false,
 };
 
 type State = typeof defaultState;
@@ -161,6 +175,17 @@ const reducer = (
 					return {...state, [action.key]: action.value, dirty: true};
 			}
 
+		case 'save':
+			return {...state, saving: true};
+		case 'save-success':
+			return {
+				...state,
+				saving: false,
+				dirty: false,
+				lastSaveWasSuccessful: true,
+			};
+		case 'save-failure':
+			return {...state, saving: false, lastSaveWasSuccessful: false};
 		case 'not-dirty':
 			return {...state, dirty: false};
 		default:
@@ -204,8 +229,12 @@ const ConsultationEditor = ({consultation}) => {
 		book,
 
 		dirty,
+		saving,
+		lastSaveWasSuccessful,
 		priceWarning,
 	} = state;
+
+	const showSuccess = !dirty && lastSaveWasSuccessful;
 
 	const update =
 		(key, transform = (x) => x) =>
@@ -213,7 +242,7 @@ const ConsultationEditor = ({consultation}) => {
 			dispatch({type: 'update', key, value: transform(e.target.value)});
 		};
 
-	const handleSubmit = async (event) => {
+	const handleSave = async (event) => {
 		event.preventDefault();
 
 		const consultation = {
@@ -256,17 +285,20 @@ const ConsultationEditor = ({consultation}) => {
 		)
 			return;
 
+		dispatch({type: 'save'});
+
 		try {
 			if (consultationId === undefined) {
 				const res = await call('consultations.insert', consultation);
-				dispatch({type: 'not-dirty'});
+				dispatch({type: 'save-success'});
 				history.push({pathname: `/edit/consultation/${res}`});
 			} else {
 				await call('consultations.update', consultationId, consultation);
-				dispatch({type: 'not-dirty'});
+				dispatch({type: 'save-success'});
 			}
 		} catch (error: unknown) {
 			console.error(error);
+			dispatch({type: 'save-failure'});
 		}
 	};
 
@@ -301,15 +333,19 @@ const ConsultationEditor = ({consultation}) => {
 			>
 				<VerticalSplitIcon />
 			</Fab>
-			<Fab
-				className={classes.saveButton}
-				color="primary"
-				aria-label="save"
-				disabled={!dirty}
-				onClick={handleSubmit}
-			>
-				<SaveIcon />
-			</Fab>
+			<div className={classes.saveButtonWrapper}>
+				<Fab
+					color="primary"
+					aria-label="save"
+					disabled={!dirty || saving}
+					onClick={handleSave}
+				>
+					{showSuccess ? <CheckIcon /> : <SaveIcon />}
+				</Fab>
+				{saving && (
+					<CircularProgress size={68} className={classes.saveButtonProgress} />
+				)}
+			</div>
 		</div>
 	);
 };
