@@ -7,11 +7,21 @@ const DEFAULT_OPTIONS = {
 	parent: () => document.body,
 };
 
-const dialog = (componentExecutor, options) => {
-	options = {...DEFAULT_OPTIONS, ...options};
+type Options = typeof DEFAULT_OPTIONS;
+
+type Resolve = (value: unknown) => void;
+type Reject = () => void;
+
+type ComponentExecutor = (resolve: Resolve, reject: Reject) => any;
+
+const dialog = async (
+	componentExecutor: ComponentExecutor,
+	options?: Options,
+) => {
+	const {unmountDelay, openKey, parent} = {...DEFAULT_OPTIONS, ...options};
 
 	const container = document.createElement('div');
-	options.parent().append(container);
+	parent().append(container);
 
 	const unmount = () => {
 		unmountComponentAtNode(container);
@@ -21,19 +31,20 @@ const dialog = (componentExecutor, options) => {
 	const promise = new Promise((resolve, reject) => {
 		render(
 			cloneElement(componentExecutor(resolve, reject), {
-				[options.openKey]: true,
+				[openKey]: true,
 			}),
 			container,
 		);
 	});
 
 	return promise.finally(() => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const noop = () => {};
 		render(
-			cloneElement(componentExecutor(noop, noop), {[options.openKey]: false}),
+			cloneElement(componentExecutor(noop, noop), {[openKey]: false}),
 			container,
 			() => {
-				setTimeout(unmount, options.unmountDelay);
+				setTimeout(unmount, unmountDelay);
 			},
 		);
 	});

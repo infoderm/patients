@@ -1,86 +1,60 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
-
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import call from '../../api/call';
+
+import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
-const DocumentSuperDeletionDialog = ({open, onClose, document}) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	document: any;
+}
+
+const DocumentSuperDeletionDialog = ({open, onClose, document}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const isMounted = useIsMounted();
 
-	const deleteThisDocumentForever = (event) => {
+	const deleteThisDocumentForever = async (event) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
-		Meteor.call('documents.superdelete', document._id, (err, _res) => {
+		try {
+			await call('documents.superdelete', document._id);
 			closeSnackbar(key);
-			if (err) {
-				console.error(err);
-				enqueueSnackbar(err.message, {variant: 'error'});
-			} else {
-				const message = `Document #${document._id} deleted forever.`;
-				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
-				if (isMounted()) onClose();
-			}
-		});
+			const message = `Document #${document._id} deleted forever.`;
+			console.log(message);
+			enqueueSnackbar(message, {variant: 'success'});
+			if (isMounted()) onClose();
+		} catch (error: unknown) {
+			closeSnackbar(key);
+			console.error(error);
+			const message = error instanceof Error ? error.message : 'unknown error';
+			enqueueSnackbar(message, {variant: 'error'});
+		}
 	};
 
 	return (
-		<Dialog
+		<ConfirmationDialog
 			open={open}
-			// component="form"
-			aria-labelledby="document-super-deletion-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="document-super-deletion-dialog-title">
-				Delete document {document._id.toString()} forever
-			</DialogTitle>
-			<DialogContent>
-				<DialogContentText>
-					If you do not want to delete this document forever, click cancel. If
-					you really want to delete this document from the system forever, click
-					the delete button.
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
-				<Button
-					color="secondary"
-					endIcon={<DeleteForeverIcon />}
-					onClick={deleteThisDocumentForever}
-				>
-					Delete forever
-				</Button>
-			</DialogActions>
-		</Dialog>
+			title={`Delete document ${document._id.toString()} forever`}
+			text="If you do not want to delete this document forever, click cancel. If you really want to delete this document from the system forever, click the delete button."
+			cancel="Cancel"
+			CancelIcon={CancelIcon}
+			cancelColor="default"
+			confirm="Delete forever"
+			ConfirmIcon={DeleteForeverIcon}
+			confirmColor="secondary"
+			onCancel={onClose}
+			onConfirm={deleteThisDocumentForever}
+		/>
 	);
-};
-
-DocumentSuperDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
 };
 
 export default withLazyOpening(DocumentSuperDeletionDialog);
