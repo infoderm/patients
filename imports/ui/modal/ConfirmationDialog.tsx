@@ -1,4 +1,4 @@
-import React, {ElementType} from 'react';
+import React, {ElementType, MouseEventHandler} from 'react';
 
 import {PropTypes as MuiPropTypes} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
@@ -11,10 +11,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DefaultConfirmIcon from '@material-ui/icons/Done';
 import DefaultCancelIcon from '@material-ui/icons/Cancel';
 
+type EventHandler = MouseEventHandler<HTMLButtonElement>;
+
 interface Props {
 	open?: boolean;
-	onCancel: () => void;
-	onConfirm: () => void;
+	onCancel: EventHandler;
+	onConfirm: EventHandler;
 	title: string;
 	text: string;
 	cancel: string;
@@ -38,18 +40,13 @@ const ConfirmationDialog = ({
 	cancelColor = 'default',
 	confirmColor = 'primary',
 }: Props) => (
-	<Dialog open={open} /* component="form" */ onClose={onCancel}>
+	<Dialog open={open} onClose={onCancel}>
 		<DialogTitle>{title}</DialogTitle>
 		<DialogContent>
 			<DialogContentText>{text}</DialogContentText>
 		</DialogContent>
 		<DialogActions>
-			<Button
-				type="submit"
-				color={cancelColor}
-				endIcon={<CancelIcon />}
-				onClick={onCancel}
-			>
+			<Button color={cancelColor} endIcon={<CancelIcon />} onClick={onCancel}>
 				{cancel}
 			</Button>
 			<Button
