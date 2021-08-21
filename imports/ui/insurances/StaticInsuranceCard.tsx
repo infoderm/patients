@@ -9,7 +9,9 @@ import red from '@material-ui/core/colors/red';
 
 import StaticTagCard from '../tags/StaticTagCard';
 
-import StaticPatientChip from '../patients/StaticPatientChip';
+import StaticPatientChip, {
+	projection as StaticPatientChipProjection,
+} from '../patients/StaticPatientChip';
 
 import {useInsuranceStats} from '../../api/insurances';
 import {usePatientsInsuredBy} from '../../api/patients';
@@ -39,7 +41,7 @@ const LoadedTagCard = ({item}) => {
 	const {result} = useInsuranceStats(item.name);
 	const {count} = result ?? {};
 	const {results: patients} = usePatientsInsuredBy(item.name, {
-		fields: StaticPatientChip.projection,
+		fields: StaticPatientChipProjection,
 		limit: 1,
 	});
 	const subheader = count === undefined ? '...' : `assure ${count} patients`;

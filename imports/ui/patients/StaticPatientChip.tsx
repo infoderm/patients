@@ -51,69 +51,75 @@ const StaticPatientChipPropTypes = {
 
 type StaticPatientChipProps = InferProps<typeof StaticPatientChipPropTypes>;
 
-const StaticPatientChip = ({
-	className = undefined,
-	loading = false,
-	found = true,
-	patient,
-	onClick = undefined,
-	onDelete = undefined,
-}: StaticPatientChipProps) => {
-	const classes = useStyles();
+const StaticPatientChip = React.forwardRef(
+	(
+		{
+			className = undefined,
+			loading = false,
+			found = true,
+			patient,
+			onClick = undefined,
+			onDelete = undefined,
+		}: StaticPatientChipProps,
+		ref,
+	) => {
+		const classes = useStyles();
 
-	let component: React.ElementType;
-	let to: string;
-	if (!onClick && !onDelete) {
-		component = Link;
-		to = `/patient/${patient._id}`;
-	}
+		let component: React.ElementType;
+		let to: string;
+		if (!onClick && !onDelete) {
+			component = Link;
+			to = `/patient/${patient._id}`;
+		}
 
-	const willBeCreated = patient._id === '?';
+		const willBeCreated = patient._id === '?';
 
-	return (
-		<Chip
-			key={patient._id}
-			avatar={
-				!loading && found && patient.photo ? (
-					<Avatar src={pngDataURL(patient.photo)} />
-				) : null
-			}
-			label={
-				loading
-					? patient._id
-					: !found
-					? willBeCreated
-						? [patient.lastname, patient.firstname, '(new)']
-								.filter((x) => Boolean(x))
-								.join(' ')
-						: `Not found`
-					: `${patient.lastname} ${patient.firstname}`
-			}
-			className={classNames(
-				classes.chip,
-				loading
-					? classes.loading
-					: found
-					? classes.found
-					: willBeCreated
-					? classes.willBeCreated
-					: classes.notfound,
-				className,
-			)}
-			component={component}
-			to={to}
-			onClick={onClick}
-			onDelete={onDelete}
-		/>
-	);
-};
-
-StaticPatientChip.projection = {
-	firstname: 1,
-	lastname: 1,
-	photo: 1,
-};
+		return (
+			<Chip
+				ref={ref}
+				key={patient._id}
+				avatar={
+					!loading && found && patient.photo ? (
+						<Avatar src={pngDataURL(patient.photo)} />
+					) : null
+				}
+				label={
+					loading
+						? patient._id
+						: !found
+						? willBeCreated
+							? [patient.lastname, patient.firstname, '(new)']
+									.filter((x) => Boolean(x))
+									.join(' ')
+							: `Not found`
+						: `${patient.lastname} ${patient.firstname}`
+				}
+				className={classNames(
+					classes.chip,
+					loading
+						? classes.loading
+						: found
+						? classes.found
+						: willBeCreated
+						? classes.willBeCreated
+						: classes.notfound,
+					className,
+				)}
+				component={component}
+				to={to}
+				onClick={onClick}
+				onDelete={onDelete}
+			/>
+		);
+	},
+);
 
 StaticPatientChip.propTypes = StaticPatientChipPropTypes;
 
 export default StaticPatientChip;
+
+export const projection = {
+	firstname: 1,
+	lastname: 1,
+	photo: 1,
+};

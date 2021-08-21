@@ -9,7 +9,9 @@ import green from '@material-ui/core/colors/green';
 import debounce from 'debounce';
 import StaticTagCard from '../tags/StaticTagCard';
 
-import StaticPatientChip from '../patients/StaticPatientChip';
+import StaticPatientChip, {
+	projection as StaticPatientChipProjection,
+} from '../patients/StaticPatientChip';
 
 import call from '../../api/call';
 import {AllergyDocument, useAllergyStats} from '../../api/allergies';
@@ -59,7 +61,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 		const {result} = useAllergyStats(item.name);
 		const {count} = result ?? {};
 		const {results: patients} = usePatientsHavingAllergy(item.name, {
-			fields: StaticPatientChip.projection,
+			fields: StaticPatientChipProjection,
 			limit: 1,
 		});
 

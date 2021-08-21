@@ -9,7 +9,9 @@ import blue from '@material-ui/core/colors/blue';
 
 import StaticTagCard from '../tags/StaticTagCard';
 
-import StaticPatientChip from '../patients/StaticPatientChip';
+import StaticPatientChip, {
+	projection as StaticPatientChipProjection,
+} from '../patients/StaticPatientChip';
 
 import {useDoctorStats} from '../../api/doctors';
 import {usePatientsGoingToDoctor} from '../../api/patients';
@@ -40,7 +42,7 @@ const LoadedTagCard = ({item}) => {
 	const {result} = useDoctorStats(item.name);
 	const {count} = result ?? {};
 	const {results: patients} = usePatientsGoingToDoctor(item.name, {
-		fields: StaticPatientChip.projection,
+		fields: StaticPatientChipProjection,
 		limit: 1,
 	});
 
