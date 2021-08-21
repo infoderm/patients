@@ -87,10 +87,11 @@ const BooksDownloadDialog = ({
 				: `carnets-${begin.getFullYear()}.csv`;
 			saveTextAs(res, filename);
 			onClose();
-		} catch (error) {
+		} catch (error: unknown) {
 			console.error(error);
 			closeSnackbar(key);
-			enqueueSnackbar(error.message, {variant: 'error'});
+			const message = error instanceof Error ? error.message : 'unknown error';
+			enqueueSnackbar(message, {variant: 'error'});
 		}
 	};
 
@@ -117,7 +118,9 @@ const BooksDownloadDialog = ({
 									renderInput={(props) => <TextField fullWidth {...props} />}
 									label="Begin"
 									value={begin}
-									onChange={(date) => setBegin(date)}
+									onChange={(date) => {
+										setBegin(date);
+									}}
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -125,7 +128,9 @@ const BooksDownloadDialog = ({
 									renderInput={(props) => <TextField fullWidth {...props} />}
 									label="End"
 									value={end}
-									onChange={(date) => setEnd(date)}
+									onChange={(date) => {
+										setEnd(date);
+									}}
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -134,7 +139,9 @@ const BooksDownloadDialog = ({
 									label="First book"
 									value={firstBook}
 									error={!/^\d+$/.test(firstBook)}
-									onChange={(e) => setFirstBook(e.target.value)}
+									onChange={(e) => {
+										setFirstBook(e.target.value);
+									}}
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -143,7 +150,9 @@ const BooksDownloadDialog = ({
 									label="Last book"
 									value={lastBook}
 									error={!/^\d+$/.test(lastBook)}
-									onChange={(e) => setLastBook(e.target.value)}
+									onChange={(e) => {
+										setLastBook(e.target.value);
+									}}
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -152,7 +161,9 @@ const BooksDownloadDialog = ({
 									label="Max rows"
 									value={maxRows}
 									error={!/^\d+$/.test(maxRows)}
-									onChange={(e) => setMaxRows(e.target.value)}
+									onChange={(e) => {
+										setMaxRows(e.target.value);
+									}}
 								/>
 							</Grid>
 						</>
@@ -163,7 +174,9 @@ const BooksDownloadDialog = ({
 								views={['year']}
 								label="Year"
 								value={begin}
-								onChange={(date) => setYear(date.getFullYear())}
+								onChange={(date) => {
+									setYear(date.getFullYear());
+								}}
 							/>
 						</Grid>
 					)}
@@ -182,7 +195,9 @@ const BooksDownloadDialog = ({
 					disabled={advancedFunctionality}
 					color="default"
 					endIcon={<TuneIcon />}
-					onClick={() => setAdvancedFunctionality(true)}
+					onClick={() => {
+						setAdvancedFunctionality(true);
+					}}
 				>
 					Advanced
 				</Button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {match} from 'react-router-dom';
 
 import {books} from '../../api/books';
 
@@ -12,12 +12,24 @@ import PagedConsultationsList from '../consultations/PagedConsultationsList';
 
 import useConsultationsUnpaged from '../consultations/useConsultationsUnpaged';
 
-export default function BookDetails({match, year, book, page, perpage}) {
-	year = (match && match.params.year) || year;
+interface Params {
+	book: string;
+	year: string;
+	page: string;
+}
+
+interface Props {
+	match?: match<Params>;
+	year?: string;
+	book?: string;
+	page?: number;
+	perpage?: number;
+}
+
+const BookDetails = ({match, year, book, page = 1, perpage = 100}: Props) => {
+	year = match?.params.year || year;
 	book = (match && myDecodeURIComponent(match.params.book)) || book;
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page;
+	page = Number.parseInt(match?.params.page, 10) || page;
 
 	const name = books.format(year, book);
 
@@ -39,14 +51,6 @@ export default function BookDetails({match, year, book, page, perpage}) {
 			perpage={perpage}
 		/>
 	);
-}
-
-BookDetails.defaultProps = {
-	page: 1,
-	perpage: 100,
 };
 
-BookDetails.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-};
+export default BookDetails;

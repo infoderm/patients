@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import {match} from 'react-router-dom';
 
 import SaveIcon from '@material-ui/icons/Save';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -16,17 +16,26 @@ import FixedFab from '../button/FixedFab';
 import BookCard from './BookCard';
 import BooksDownloadDialog from './BooksDownloadDialog';
 
-export default function BooksList({match, year, page, perpage}) {
+interface Params {
+	year?: string;
+	page?: string;
+}
+
+interface Props {
+	match?: match<Params>;
+	year?: string;
+	page?: number;
+	perpage?: number;
+}
+
+const BooksList = ({match, year, page = 1, perpage = 10}: Props) => {
 	const [downloading, setDownloading] = useState(false);
 	const {value: sortingOrder, setValue: setSortingOrder} = useSettingCached(
 		'books-sorting-order',
 	);
 
-	const now = new Date();
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page;
-	year = (match && match.params.year) || year || dateFormat(now, 'yyyy');
+	page = Number.parseInt(match?.params.page, 10) || page;
+	year = match?.params.year || year || dateFormat(new Date(), 'yyyy');
 
 	const _year = Number.parseInt(year, 10);
 
@@ -52,7 +61,9 @@ export default function BooksList({match, year, page, perpage}) {
 				col={4}
 				color="secondary"
 				tooltip="Download books"
-				onClick={() => setDownloading(true)}
+				onClick={() => {
+					setDownloading(true);
+				}}
 			>
 				<SaveIcon />
 			</FixedFab>
@@ -60,26 +71,21 @@ export default function BooksList({match, year, page, perpage}) {
 				col={5}
 				color="default"
 				tooltip="Toggle sorting order"
-				onClick={() => setSortingOrder(-sortingOrder)}
+				onClick={() => {
+					setSortingOrder(-sortingOrder);
+				}}
 			>
 				<SwapVertIcon />
 			</FixedFab>
 			<BooksDownloadDialog
 				initialBegin={initialBegin}
 				open={downloading}
-				onClose={() => setDownloading(false)}
+				onClose={() => {
+					setDownloading(false);
+				}}
 			/>
 		</div>
 	);
-}
-
-BooksList.defaultProps = {
-	page: 1,
-	perpage: 10,
 };
 
-BooksList.propTypes = {
-	year: PropTypes.string,
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-};
+export default BooksList;
