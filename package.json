@@ -1,9 +1,10 @@
 {
   "name": "patients",
   "meteor": {
-    "mainModule": {
-      "client": "client/main.tsx",
-      "server": "server/main.ts"
+    "nodeModules": {
+      "recompile": {
+        "pdfjs-dist": true
+      }
     }
   },
   "babel": {
@@ -115,13 +116,6 @@
     "total-order": "3.0.1",
     "typescript": "4.4.4",
     "xo": "0.44.0"
-  },
-  "meteor": {
-    "nodeModules": {
-      "recompile": {
-        "pdfjs-dist": true
-      }
-    }
   },
   "postinstall": {
     "@fontsource/roboto/300.css": "copy public/@fontsource/roboto/",
