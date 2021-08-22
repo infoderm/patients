@@ -77,7 +77,7 @@
     "react-spring": "^9.2.4",
     "regenerator-runtime": "^0.13.9",
     "sepa-payment-qr-code": "^1.0.0",
-    "typeface-roboto": "^1.1.13",
+    "typeface-roboto": "1.1.13",
     "use-debounce": "^7.0.0",
     "xml-js": "^1.6.11"
   },
