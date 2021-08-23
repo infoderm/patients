@@ -1,4 +1,4 @@
-name: Check for vulnerabilities with Snyk
+name: ci:snyk
 
 on:
   - push
