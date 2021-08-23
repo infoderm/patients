@@ -77,13 +77,13 @@
     "react-spring": "^9.2.4",
     "regenerator-runtime": "^0.13.9",
     "sepa-payment-qr-code": "^1.0.0",
-    "typeface-roboto": "^1.1.13",
     "use-debounce": "^7.0.0",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.0",
     "@babel/plugin-syntax-jsx": "7.14.5",
+    "@fontsource/roboto": "^4.5.0",
     "@types/meteor": "1.4.77",
     "@types/mocha": "9.0.0",
     "@types/react-router-dom": "5.1.8",
@@ -106,9 +106,12 @@
     "xo": "0.44.0"
   },
   "postinstall": {
-    "typeface-roboto/index.css": "copy public/typeface-roboto/",
-    "typeface-roboto/files/*.woff": "copy public/typeface-roboto/files/",
-    "typeface-roboto/files/*.woff2": "copy public/typeface-roboto/files/",
+    "@fontsource/roboto/300.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/400.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/500.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/700.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/files/*.woff": "copy public/@fontsource/roboto/files/",
+    "@fontsource/roboto/files/*.woff2": "copy public/@fontsource/roboto/files/",
     "pdfjs-dist/build/pdf.worker.js": "copy public/pdfjs-dist/build/",
     "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/",
     "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps"
