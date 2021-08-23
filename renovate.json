@@ -6,6 +6,7 @@
     "schedule:nonOfficeHours",
     "github>make-github-pseudonymous-again/renovate-config-js-library:label-deps-changes",
     "github>make-github-pseudonymous-again/renovate-config-js-library:semantic-commit-with-emojis",
+    ":pinOnlyDevDependencies",
     ":automergeDisabled"
   ]
 }
