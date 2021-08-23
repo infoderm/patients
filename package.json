@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/runtime": "^7.15.3",
     "@functional-abstraction/operator": "^1.0.4",
-    "@heap-data-structure/pairing-heap": "^3.0.1",
+    "@heap-data-structure/pairing-heap": "^4.0.0",
     "@iterable-iterator/cardinality": "^3.0.4",
     "@iterable-iterator/chain": "^1.0.0",
     "@iterable-iterator/filter": "^0.1.2",
