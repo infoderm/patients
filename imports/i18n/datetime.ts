@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useState, useMemo, useEffect} from 'react';
 
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
@@ -13,15 +13,22 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import {enUS, nlBE, fr} from 'date-fns/locale';
-
 import useLocaleKey from './useLocale';
 
-export const locales: Readonly<Record<string, Locale>> = {
-	'en-US': enUS,
-	'nl-BE': nlBE,
-	'fr-BE': fr,
+const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
+	'nl-BE': async () =>
+		import('date-fns/locale/nl-BE/index.js') as Promise<Locale>,
+	'fr-BE': async () => import('date-fns/locale/fr/index.js') as Promise<Locale>,
 };
+
+const loadLocale = async (key: string) =>
+	(
+		localeLoaders[key] ??
+		(async () =>
+			new Promise((resolve) => {
+				resolve(undefined);
+			}))
+	)();
 
 export const localeDescriptions: Readonly<Record<string, string>> = {
 	'en-US': 'English (US)',
@@ -35,9 +42,36 @@ export const maskMap = {
 	'fr-BE': '__/__/____',
 };
 
+const localesCache = new Map<string, Locale>();
+
 export const useLocale = () => {
 	const key = useLocaleKey();
-	return locales[key];
+	const [lastLoadedLocale, setLastLoadedLocale] = useState(undefined);
+
+	useEffect(() => {
+		if (localesCache.has(key)) return undefined;
+
+		let isCancelled = false;
+		loadLocale(key).then(
+			(loadedLocale) => {
+				localesCache.set(key, loadedLocale);
+				if (!isCancelled) {
+					setLastLoadedLocale(loadedLocale);
+				}
+			},
+			(error) => {
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				console.error(`failed to load locale ${key}: ${message}`);
+				console.debug({error});
+			},
+		);
+		return () => {
+			isCancelled = true;
+		};
+	}, [key, setLastLoadedLocale]);
+
+	return localesCache.has(key) ? localesCache.get(key) : lastLoadedLocale;
 };
 
 export const useDateMask = () => {
