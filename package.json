@@ -134,8 +134,8 @@
     "ci:test": "TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
     "upgrade-deps": "ncu --upgrade",
     "upgrade": "meteor update && npm run upgrade-deps && meteor npm install",
-    "setup-deploy": "mup setup",
-    "build-and-upload": "mup deploy",
+    "setup-deploy": "mup setup --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
+    "build-and-upload": "mup deploy --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
     "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload"
   },
   "xo": {
@@ -208,7 +208,7 @@
       },
       {
         "files": [
-          "mup.js",
+          ".deploy/*/mup.js",
           "lint-staged.config.js"
         ],
         "rules": {
