@@ -9,7 +9,7 @@ module.exports = {
 
 	meteor: {
 		name: 'patients',
-		path: '.',
+		path: '../../',
 		servers: {
 			one: {},
 		},
