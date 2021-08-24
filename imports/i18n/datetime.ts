@@ -49,7 +49,10 @@ export const useLocale = () => {
 	const [lastLoadedLocale, setLastLoadedLocale] = useState(undefined);
 
 	useEffect(() => {
-		if (localesCache.has(key)) return undefined;
+		if (localesCache.has(key)) {
+			setLastLoadedLocale(localesCache.get(key));
+			return undefined;
+		}
 
 		let isCancelled = false;
 		loadLocale(key).then(
