@@ -18,6 +18,7 @@ module.exports = {
 			image: 'zodern/meteor:latest',
 			prepareBundle: true,
 			useBuildKit: true,
+			stopAppDuringPrepareBundle: false,
 		},
 		buildOptions: {
 			serverOnly: true,
