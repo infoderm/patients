@@ -7,9 +7,10 @@ module.exports = {
 		},
 	},
 
-	meteor: {
+	app: {
 		name: 'patients',
 		path: '../../',
+		type: 'meteor',
 		servers: {
 			one: {},
 		},
