@@ -8,6 +8,7 @@ import {Random} from 'meteor/random';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+import patientsAttach from './endpoint/patients/attach';
 import {Patients, patients, PatientDocument} from './patients.mock';
 import {Consultations} from './consultations.mock';
 import {Documents} from './documents.mock';
@@ -34,7 +35,6 @@ if (Meteor.isServer) {
 			it('can merge two patients', () => {
 				const userId = Random.id();
 				const patientsMerge = methods['patients.merge'];
-				const patientsAttach = methods['patients.attach'];
 				const invocation = {userId};
 
 				const patientA = Factory.create('patient', {
@@ -47,8 +47,23 @@ if (Meteor.isServer) {
 				const uploadA = Factory.create('upload', {userId});
 				const uploadB = Factory.create('upload', {userId});
 
-				patientsAttach.apply(invocation, [patientA._id, uploadA._id]);
-				patientsAttach.apply(invocation, [patientB._id, uploadB._id]);
+				Reflect.apply(patientsAttach.validate, invocation, [
+					patientA._id,
+					uploadA._id,
+				]);
+				Reflect.apply(patientsAttach.run, invocation, [
+					patientA._id,
+					uploadA._id,
+				]);
+
+				Reflect.apply(patientsAttach.validate, invocation, [
+					patientB._id,
+					uploadB._id,
+				]);
+				Reflect.apply(patientsAttach.run, invocation, [
+					patientB._id,
+					uploadB._id,
+				]);
 
 				let consultationA = Factory.create('consultation', {
 					owner: userId,

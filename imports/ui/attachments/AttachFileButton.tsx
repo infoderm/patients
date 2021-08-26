@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
@@ -8,6 +7,7 @@ import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
 
 import InputFileButton from '../input/InputFileButton';
 
+import _call from '../../api/call';
 import {Uploads} from '../../api/uploads';
 
 const AttachFileButton = ({
@@ -76,7 +76,7 @@ const AttachFileButton = ({
 			),
 		};
 
-		const onEnd = (err, fileObject) => {
+		const onEnd = async (err, fileObject) => {
 			if (err) {
 				++erroredCount;
 				const message = `[Upload] Error during upload: ${err.message}`;
@@ -88,20 +88,21 @@ const AttachFileButton = ({
 				console.log(message);
 				enqueueSnackbar(message, {variant: 'info'});
 				const key2 = enqueueSnackbar(
-					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${method}`,
+					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${method}".`,
 					notistackInfoOptions,
 				);
-				Meteor.call(method, itemId, fileObject._id, (err, _res) => {
+				try {
+					await _call(method, itemId, fileObject._id);
+					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method}".`;
+					console.log(message);
+					enqueueSnackbar(message, {variant: 'success'});
+				} catch (error: unknown) {
 					closeSnackbar(key2);
-					if (err) {
-						console.error(err);
-						enqueueSnackbar(err.message, notistackErrorOptions);
-					} else {
-						const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method}".`;
-						console.log(message);
-						enqueueSnackbar(message, {variant: 'success'});
-					}
-				});
+					const message =
+						error instanceof Error ? error.message : 'unknown error';
+					enqueueSnackbar(message, notistackErrorOptions);
+					console.error({error});
+				}
 			}
 
 			updateUploadingNotification();

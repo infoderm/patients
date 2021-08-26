@@ -24,6 +24,8 @@ import '../imports/api/issues';
 import '../imports/api/stats';
 // eslint-disable-next-line import/no-unassigned-import
 import '../imports/api/noShows';
+// eslint-disable-next-line import/no-unassigned-import
+import '../imports/api/endpoint/_register/enabled';
 
 Meteor.startup(() => {
 	// Code to run on server at startup

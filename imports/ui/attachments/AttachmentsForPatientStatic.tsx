@@ -52,7 +52,7 @@ const AttachmentsForPatientStatic = ({
 				Button={Fab}
 				className={classes.attachButton}
 				color="default"
-				method="patients.attach"
+				method="/patients/attach"
 				item={patientId}
 			>
 				<AttachFileIcon />

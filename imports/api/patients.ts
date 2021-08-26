@@ -15,8 +15,6 @@ import {insurances} from './insurances';
 import {doctors} from './doctors';
 import {allergies} from './allergies';
 
-import executeTransaction from './transaction/executeTransaction';
-
 import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 
 import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
@@ -309,42 +307,6 @@ Meteor.methods({
 		updateIndex(this.userId, patientId, fields);
 
 		return Patients.update(patientId, {$set: fields});
-	},
-
-	async 'patients.attach'(patientId, uploadId) {
-		check(patientId, String);
-		check(uploadId, String);
-
-		return executeTransaction(async (session) => {
-			const patient = await Patients.rawCollection().findOne(
-				{_id: patientId, owner: this.userId},
-				{session},
-			);
-			if (!patient) {
-				throw new Meteor.Error('not-found', 'patient not found');
-			}
-
-			const result = await Attachments.rawCollection().updateOne(
-				{_id: uploadId, userId: this.userId},
-				{
-					$addToSet: {'meta.attachedToPatients': patientId},
-				},
-				{session},
-			);
-
-			if (result.matchedCount === 0) {
-				throw new Meteor.Error('not-found', 'attachment not found');
-			}
-
-			if (result.matchedCount >= 2) {
-				throw new Meteor.Error(
-					'fatal',
-					'more than two attachments matched the same _id',
-				);
-			}
-
-			return result;
-		});
 	},
 
 	'patients.detach'(patientId, uploadId) {

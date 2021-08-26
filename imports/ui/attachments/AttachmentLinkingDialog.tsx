@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,6 +12,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import call from '../../api/endpoint/call';
+import patientsAttach from '../../api/endpoint/patients/attach';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -32,20 +33,19 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 
 	const isMounted = useIsMounted();
 
-	const linkThisAttachment = (event) => {
+	const linkThisAttachment = async (event) => {
 		event.preventDefault();
 		const attachmentId = attachment._id;
 		const patientId = patient[0]._id;
-		Meteor.call('patients.attach', patientId, attachmentId, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(
-					`Attachment #${attachmentId} linked to patient #${patientId}.`,
-				);
-				if (isMounted()) onClose();
-			}
-		});
+		try {
+			await call(patientsAttach, patientId, attachmentId);
+			console.log(
+				`Attachment #${attachmentId} linked to patient #${patientId}.`,
+			);
+			if (isMounted()) onClose();
+		} catch (error: unknown) {
+			console.error(error);
+		}
 	};
 
 	return (
