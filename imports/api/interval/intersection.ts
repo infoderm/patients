@@ -3,6 +3,6 @@ const intersection = <Endpoint>(
 	x1: Endpoint,
 	y0: Endpoint,
 	y1: Endpoint,
-) => [x0 < y0 ? y0 : x0, x1 > y1 ? y1 : x1];
+): [Endpoint, Endpoint] => [x0 < y0 ? y0 : x0, x1 > y1 ? y1 : x1];
 
 export default intersection;

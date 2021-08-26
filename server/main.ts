@@ -49,6 +49,8 @@ Meteor.startup(() => {
 		Allergies,
 		Books,
 		Documents,
+		// TODO uncomment
+		// Availability,
 	];
 
 	// Drop all indexes (if the collection is not empty)
@@ -60,6 +62,10 @@ Meteor.startup(() => {
 
 	// Delete all generated book entries
 	Books.remove({});
+
+	// Delete all generated availability entries
+	// TODO uncomment
+	// Availability.remove({});
 
 	// Regenerate patient.normalizedName
 	Patients.rawCollection()
@@ -669,4 +675,11 @@ Meteor.startup(() => {
 		.catch((error) => {
 			console.error(error);
 		});
+
+	// Generate availability data
+	// TODO uncomment
+	// Consultations.find().map((item) => {
+	// const {owner, begin, end, isCancelled} = item;
+	// availability.insertHook(owner, begin, end, isCancelled ? 0 : 1);
+	// });
 });
