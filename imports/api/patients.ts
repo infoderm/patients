@@ -15,6 +15,8 @@ import {insurances} from './insurances';
 import {doctors} from './doctors';
 import {allergies} from './allergies';
 
+import executeTransaction from './transaction/executeTransaction';
+
 import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 
 import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
@@ -309,25 +311,39 @@ Meteor.methods({
 		return Patients.update(patientId, {$set: fields});
 	},
 
-	'patients.attach'(patientId, uploadId) {
+	async 'patients.attach'(patientId, uploadId) {
 		check(patientId, String);
 		check(uploadId, String);
 
-		const patient = Patients.findOne({_id: patientId, owner: this.userId});
-		if (!patient) {
-			throw new Meteor.Error('not-found', 'patient not found');
-		}
+		return executeTransaction(async (session) => {
+			const patient = await Patients.rawCollection().findOne(
+				{_id: patientId, owner: this.userId},
+				{session},
+			);
+			if (!patient) {
+				throw new Meteor.Error('not-found', 'patient not found');
+			}
 
-		const attachment = Attachments.findOne({
-			_id: uploadId,
-			userId: this.userId,
-		});
-		if (!attachment) {
-			throw new Meteor.Error('not-found', 'attachment not found');
-		}
+			const result = await Attachments.rawCollection().updateOne(
+				{_id: uploadId, userId: this.userId},
+				{
+					$addToSet: {'meta.attachedToPatients': patientId},
+				},
+				{session},
+			);
 
-		return Attachments.update(uploadId, {
-			$addToSet: {'meta.attachedToPatients': patientId},
+			if (result.matchedCount === 0) {
+				throw new Meteor.Error('not-found', 'attachment not found');
+			}
+
+			if (result.matchedCount >= 2) {
+				throw new Meteor.Error(
+					'fatal',
+					'more than two attachments matched the same _id',
+				);
+			}
+
+			return result;
 		});
 	},
 
