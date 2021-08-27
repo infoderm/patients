@@ -4,6 +4,7 @@ interface Params<T> {
 	name: string;
 	validate: (...args: any[]) => void;
 	run: (...args: any[]) => any;
+	simulate?: (...args: any[]) => any;
 	options?: Options<T>;
 }
 

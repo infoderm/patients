@@ -44,4 +44,9 @@ export default define({
 			return result;
 		});
 	},
+	simulate(consultationId: string, uploadId: string) {
+		return Attachments.update(uploadId, {
+			$addToSet: {'meta.attachedToConsultations': consultationId},
+		});
+	},
 });

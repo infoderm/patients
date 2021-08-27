@@ -6,7 +6,9 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 	Meteor.methods({
 		[params.name](...args: any[]) {
 			Reflect.apply(params.validate, this, args);
-			return Reflect.apply(params.run, this, args);
+			return Meteor.isServer
+				? Reflect.apply(params.run, this, args)
+				: Reflect.apply(params.simulate ?? params.run, this, args);
 		},
 	});
 

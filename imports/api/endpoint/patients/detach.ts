@@ -44,4 +44,9 @@ export default define({
 			return result;
 		});
 	},
+	simulate(patientId: string, uploadId: string) {
+		return Attachments.update(uploadId, {
+			$pull: {'meta.attachedToPatients': patientId},
+		});
+	},
 });
