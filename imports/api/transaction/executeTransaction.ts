@@ -1,3 +1,4 @@
+import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
 import {ClientSession, SessionOptions, TransactionOptions} from 'mongodb';
 
