@@ -93,6 +93,7 @@ const AttachFileButton = ({
 				);
 				try {
 					await _call(method, itemId, fileObject._id);
+					closeSnackbar(key2);
 					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method}".`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
