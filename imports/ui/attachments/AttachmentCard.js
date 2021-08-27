@@ -210,7 +210,7 @@ const AttachmentCard = (props) => {
 						{info && (
 							<AttachmentDeletionDialog
 								open={deleting}
-								detach={`${info.parentCollection}.detach`}
+								detach={`/${info.parentCollection}/detach`}
 								itemId={info.parentId}
 								attachment={attachment}
 								onClose={() => dispatch({type: 'closeDeletionDialog'})}

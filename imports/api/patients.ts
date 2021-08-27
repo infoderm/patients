@@ -309,28 +309,6 @@ Meteor.methods({
 		return Patients.update(patientId, {$set: fields});
 	},
 
-	'patients.detach'(patientId, uploadId) {
-		check(patientId, String);
-		check(uploadId, String);
-
-		const patient = Patients.findOne({_id: patientId, owner: this.userId});
-		if (!patient) {
-			throw new Meteor.Error('not-found', 'patient not found');
-		}
-
-		const attachment = Attachments.findOne({
-			_id: uploadId,
-			userId: this.userId,
-		});
-		if (!attachment) {
-			throw new Meteor.Error('not-found', 'attachment not found');
-		}
-
-		return Attachments.update(uploadId, {
-			$pull: {'meta.attachedToPatients': patientId},
-		});
-	},
-
 	'patients.remove'(patientId) {
 		check(patientId, String);
 

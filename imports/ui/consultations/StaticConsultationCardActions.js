@@ -64,7 +64,7 @@ const StaticConsultationCardActions = (props) => {
 			{attachAction && (
 				<AttachFileButton
 					color="primary"
-					method="consultations.attach"
+					method="/consultations/attach"
 					item={_id}
 					disabled={!found}
 				/>

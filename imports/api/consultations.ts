@@ -636,56 +636,6 @@ const methods = {
 		return numUpdated;
 	},
 
-	'consultations.attach'(consultationId: string, uploadId: string) {
-		check(consultationId, String);
-		check(uploadId, String);
-
-		const consultation = Consultations.findOne({
-			_id: consultationId,
-			owner: this.userId,
-		});
-		if (!consultation) {
-			throw new Meteor.Error('not-found', 'consultation not found');
-		}
-
-		const attachment = Attachments.findOne({
-			_id: uploadId,
-			userId: this.userId,
-		});
-		if (!attachment) {
-			throw new Meteor.Error('not-found', 'attachment not found');
-		}
-
-		return Attachments.update(uploadId, {
-			$addToSet: {'meta.attachedToConsultations': consultationId},
-		});
-	},
-
-	'consultations.detach'(consultationId: string, uploadId: string) {
-		check(consultationId, String);
-		check(uploadId, String);
-
-		const consultation = Consultations.findOne({
-			_id: consultationId,
-			owner: this.userId,
-		});
-		if (!consultation) {
-			throw new Meteor.Error('not-found', 'consultation not found');
-		}
-
-		const attachment = Attachments.findOne({
-			_id: uploadId,
-			userId: this.userId,
-		});
-		if (!attachment) {
-			throw new Meteor.Error('not-found', 'attachment not found');
-		}
-
-		return Attachments.update(uploadId, {
-			$pull: {'meta.attachedToConsultations': consultationId},
-		});
-	},
-
 	'consultations.remove'(consultationId: string) {
 		check(consultationId, String);
 
