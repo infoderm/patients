@@ -19,6 +19,8 @@ import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
+import consultationsAttach from '../../api/endpoint/consultations/attach';
+
 import AttachFileButton from '../attachments/AttachFileButton';
 
 import AppointmentCancellationDialog from '../appointments/AppointmentCancellationDialog';
@@ -64,7 +66,7 @@ const StaticConsultationCardActions = (props) => {
 			{attachAction && (
 				<AttachFileButton
 					color="primary"
-					method="/consultations/attach"
+					method={consultationsAttach}
 					item={_id}
 					disabled={!found}
 				/>
@@ -96,7 +98,9 @@ const StaticConsultationCardActions = (props) => {
 							color="primary"
 							disabled={!found}
 							endIcon={<ScheduleIcon />}
-							onClick={() => setEditing(true)}
+							onClick={() => {
+								setEditing(true);
+							}}
 						>
 							Reschedule
 						</Button>
@@ -107,7 +111,9 @@ const StaticConsultationCardActions = (props) => {
 					color="primary"
 					disabled={!found}
 					endIcon={<SmartphoneIcon />}
-					onClick={() => setPaying(true)}
+					onClick={() => {
+						setPaying(true);
+					}}
 				>
 					Pay by Phone
 				</Button>
@@ -117,7 +123,9 @@ const StaticConsultationCardActions = (props) => {
 					color="primary"
 					disabled={!found}
 					endIcon={<EuroSymbolIcon />}
-					onClick={() => setSettling(true)}
+					onClick={() => {
+						setSettling(true);
+					}}
 				>
 					Settle debt
 				</Button>
@@ -128,7 +136,9 @@ const StaticConsultationCardActions = (props) => {
 						color="primary"
 						disabled={!found}
 						endIcon={<AlarmOnIcon />}
-						onClick={() => setUncancelling(true)}
+						onClick={() => {
+							setUncancelling(true);
+						}}
 					>
 						Uncancel
 					</Button>
@@ -137,7 +147,9 @@ const StaticConsultationCardActions = (props) => {
 						color="secondary"
 						disabled={!found}
 						endIcon={<AlarmOffIcon />}
-						onClick={() => setCancelling(true)}
+						onClick={() => {
+							setCancelling(true);
+						}}
 					>
 						Cancel
 					</Button>
@@ -146,7 +158,9 @@ const StaticConsultationCardActions = (props) => {
 				<Button
 					disabled={!found}
 					endIcon={<MoreHorizIcon />}
-					onClick={() => setMore(true)}
+					onClick={() => {
+						setMore(true);
+					}}
 				>
 					More
 				</Button>
@@ -155,20 +169,26 @@ const StaticConsultationCardActions = (props) => {
 				<ConsultationPaymentDialog
 					open={paying}
 					consultation={props.consultation}
-					onClose={() => setPaying(false)}
+					onClose={() => {
+						setPaying(false);
+					}}
 				/>
 			)}
 			{!owes ? null : (
 				<ConsultationDebtSettlementDialog
 					open={settling}
 					consultation={props.consultation}
-					onClose={() => setSettling(false)}
+					onClose={() => {
+						setSettling(false);
+					}}
 				/>
 			)}
 			{moreAction && (
 				<ConsultationAdvancedActionsDialog
 					open={more}
-					onClose={() => setMore(false)}
+					onClose={() => {
+						setMore(false);
+					}}
 					{...props}
 				/>
 			)}
@@ -176,20 +196,26 @@ const StaticConsultationCardActions = (props) => {
 				<AppointmentUncancellationDialog
 					open={uncancelling}
 					appointment={props.consultation}
-					onClose={() => setUncancelling(false)}
+					onClose={() => {
+						setUncancelling(false);
+					}}
 				/>
 			) : (
 				<AppointmentCancellationDialog
 					open={cancelling}
 					appointment={props.consultation}
-					onClose={() => setCancelling(false)}
+					onClose={() => {
+						setCancelling(false);
+					}}
 				/>
 			)}
 			{editAction && !isDone && !isCancelled && (
 				<EditAppointmentDialog
 					open={editing}
 					appointment={props.consultation}
-					onClose={() => setEditing(false)}
+					onClose={() => {
+						setEditing(false);
+					}}
 				/>
 			)}
 			{!editAction && (

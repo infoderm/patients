@@ -6,6 +6,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
+import patientsAttach from '../../api/endpoint/patients/attach';
+
 import NoContent from '../navigation/NoContent';
 import Paginator from '../navigation/Paginator';
 import {computeFixedFabStyle} from '../button/FixedFab';
@@ -52,7 +54,7 @@ const AttachmentsForPatientStatic = ({
 				Button={Fab}
 				className={classes.attachButton}
 				color="default"
-				method="/patients/attach"
+				method={patientsAttach}
 				item={patientId}
 			>
 				<AttachFileIcon />

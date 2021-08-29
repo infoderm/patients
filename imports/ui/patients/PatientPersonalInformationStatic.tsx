@@ -46,6 +46,8 @@ import eidParseBirthdate from '../../api/eidParseBirthdate';
 import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
+import patientsAttach from '../../api/endpoint/patients/attach';
+
 import {
 	// makeAnyIndex,
 	makeRegExpIndex,
@@ -253,7 +255,10 @@ const PatientPersonalInformation = (props) => {
 	const _birthdate = eidParseBirthdate(patient.birthdate);
 	const displayedAge = localizeAge(_birthdate);
 
-	const totalNoShow = (patient.noshow || 0) + (reifiedNoShows || 0);
+	const hardCodedNoShows: number = patient.noshow || 0;
+	const totalNoShow =
+		hardCodedNoShows +
+		(typeof reifiedNoShows === 'number' ? reifiedNoShows : 0);
 
 	return (
 		<Paper className={classes.root}>
@@ -665,7 +670,9 @@ const PatientPersonalInformation = (props) => {
 					<FixedFab
 						col={3}
 						color={dirty ? 'secondary' : 'default'}
-						onClick={() => dispatch({type: 'init', payload: props.patient})}
+						onClick={() => {
+							dispatch({type: 'init', payload: props.patient});
+						}}
 					>
 						<UndoIcon />
 					</FixedFab>
@@ -675,7 +682,9 @@ const PatientPersonalInformation = (props) => {
 					<FixedFab
 						col={2}
 						color="default"
-						onClick={() => dispatch({type: 'editing'})}
+						onClick={() => {
+							dispatch({type: 'editing'});
+						}}
 					>
 						<EditIcon />
 					</FixedFab>
@@ -683,7 +692,7 @@ const PatientPersonalInformation = (props) => {
 						Button={FixedFab}
 						col={3}
 						color="default"
-						method="/patients/attach"
+						method={patientsAttach}
 						item={patient._id}
 					>
 						<AttachFileIcon />
@@ -698,7 +707,9 @@ const PatientPersonalInformation = (props) => {
 					<FixedFab
 						col={5}
 						color="secondary"
-						onClick={() => dispatch({type: 'deleting'})}
+						onClick={() => {
+							dispatch({type: 'deleting'});
+						}}
 					>
 						<DeleteIcon />
 					</FixedFab>
@@ -707,7 +718,9 @@ const PatientPersonalInformation = (props) => {
 			<PatientDeletionDialog
 				open={deleting}
 				patient={props.patient}
-				onClose={() => dispatch({type: 'not-deleting'})}
+				onClose={() => {
+					dispatch({type: 'not-deleting'});
+				}}
 			/>
 		</Paper>
 	);

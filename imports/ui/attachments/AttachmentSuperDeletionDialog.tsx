@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
@@ -32,13 +31,17 @@ const useStyles = makeStyles({
 	},
 });
 
-const AttachmentSuperDeletionDialog = (props) => {
-	const {open, onClose, attachment} = props;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	attachment: {_id: string; name: string};
+}
 
+const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const getError = (expected, value) =>
+	const getError = (expected: string, value: string) =>
 		normalized(expected) === normalized(value)
 			? ''
 			: 'Attachment names do not match';
@@ -117,12 +120,6 @@ const AttachmentSuperDeletionDialog = (props) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-AttachmentSuperDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	attachment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AttachmentSuperDeletionDialog);

@@ -10,8 +10,8 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import useAny from '../hooks/useAny';
 
 export const useConfirmationTextFieldState = (
-	expected,
-	getError,
+	expected: string,
+	getError: (expected: string, newValue: string) => string,
 	initValue = '',
 	initError = '',
 ) => {
@@ -19,7 +19,7 @@ export const useConfirmationTextFieldState = (
 	const [error, setError] = useState(initError);
 	const erroredOnce = useAny(error);
 
-	const checkAndUpdate = (newValue) => {
+	const checkAndUpdate = (newValue: string) => {
 		const error = getError(expected, newValue);
 		setError(error);
 		return !error;
@@ -27,7 +27,7 @@ export const useConfirmationTextFieldState = (
 
 	const validate = () => checkAndUpdate(value);
 
-	const checkAndUpdateOnlyIfErroredOnce = (value) =>
+	const checkAndUpdateOnlyIfErroredOnce = (value: string) =>
 		erroredOnce && checkAndUpdate(value);
 
 	const onAutoFill = () => {
@@ -35,9 +35,9 @@ export const useConfirmationTextFieldState = (
 		setError('');
 	};
 
-	const onChange = (e) => {
-		setValue(e.target.value);
-		checkAndUpdateOnlyIfErroredOnce(e.target.value);
+	const onChange = (event) => {
+		setValue(event.target.value);
+		checkAndUpdateOnlyIfErroredOnce(event.target.value);
 	};
 
 	return {
@@ -67,7 +67,9 @@ const ConfirmationTextField = ({onAutoFill, ...rest}) => (
 					<IconButton
 						aria-label="autofill"
 						onClick={onAutoFill}
-						onMouseDown={(e) => e.preventDefault()}
+						onMouseDown={(e) => {
+							e.preventDefault();
+						}}
 					>
 						<AssignmentIcon />
 					</IconButton>

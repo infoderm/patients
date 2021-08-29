@@ -1,21 +1,24 @@
-import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
+import React, {ReactNode} from 'react';
 
 import Button from '@material-ui/core/Button';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
 
-import InputFileButton from '../input/InputFileButton';
+import PropsOf from '../../util/PropsOf';
 
-import _call from '../../api/call';
+import call from '../../api/endpoint/call';
+import Endpoint from '../../api/endpoint/Endpoint';
 import {Uploads} from '../../api/uploads';
 
-const AttachFileButton = ({
-	method,
-	item: itemId,
-	children,
-	...rest
-}: InferProps<typeof AttachFileButton.propTypes>) => {
+import InputFileButton from '../input/InputFileButton';
+
+interface Props extends Omit<PropsOf<typeof InputFileButton>, 'onChange'> {
+	method: Endpoint<unknown>;
+	item: string;
+	children?: ReactNode;
+}
+
+const AttachFileButton = ({method, item: itemId, children, ...rest}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const upload = (event) => {
@@ -88,13 +91,13 @@ const AttachFileButton = ({
 				console.log(message);
 				enqueueSnackbar(message, {variant: 'info'});
 				const key2 = enqueueSnackbar(
-					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${method}".`,
+					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${method.name}".`,
 					notistackInfoOptions,
 				);
 				try {
-					await _call(method, itemId, fileObject._id);
+					await call(method, itemId, fileObject._id);
 					closeSnackbar(key2);
-					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method}".`;
+					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method.name}".`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
 				} catch (error: unknown) {
@@ -146,25 +149,11 @@ const AttachFileButton = ({
 
 	const extraProps = children ? {} : {endIcon: <AttachFileIcon />};
 
-	const buttonProps = {
-		...extraProps,
-		...rest,
-	};
-
 	return (
-		<InputFileButton onChange={upload} {...buttonProps}>
+		<InputFileButton onChange={upload} {...extraProps} {...rest}>
 			{children ?? 'Attach File'}
 		</InputFileButton>
 	);
-};
-
-AttachFileButton.propTypes = {
-	method: PropTypes.string.isRequired,
-	item: PropTypes.string.isRequired,
-	children: PropTypes.oneOfType([
-		PropTypes.arrayOf(PropTypes.node),
-		PropTypes.node,
-	]),
 };
 
 export default AttachFileButton;

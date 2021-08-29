@@ -25,6 +25,9 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
 import {link} from '../../api/attachments';
+import patientsDetach from '../../api/endpoint/patients/detach';
+import consultationsDetach from '../../api/endpoint/consultations/detach';
+
 import AttachmentThumbnail from './AttachmentThumbnail';
 import AttachmentEditionDialog from './AttachmentEditionDialog';
 import AttachmentLinkingDialog from './AttachmentLinkingDialog';
@@ -128,6 +131,13 @@ const AttachmentCard = (props) => {
 		.filter((x) => Boolean(x))
 		.join('/');
 
+	const detach =
+		info?.parentCollection === 'patients'
+			? patientsDetach
+			: info?.parentCollection === 'consultations'
+			? consultationsDetach
+			: undefined;
+
 	return (
 		<Card className={classes.card}>
 			<CardHeader
@@ -210,9 +220,9 @@ const AttachmentCard = (props) => {
 						{info && (
 							<AttachmentDeletionDialog
 								open={deleting}
-								detach={`/${info.parentCollection}/detach`}
 								itemId={info.parentId}
 								attachment={attachment}
+								method={detach}
 								onClose={() => dispatch({type: 'closeDeletionDialog'})}
 							/>
 						)}

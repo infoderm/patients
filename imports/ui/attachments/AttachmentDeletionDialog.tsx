@@ -1,7 +1,4 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
@@ -19,6 +16,9 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string';
 
+import call from '../../api/endpoint/call';
+import Endpoint from '../../api/endpoint/Endpoint';
+
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
@@ -33,13 +33,25 @@ const useStyles = makeStyles({
 	},
 });
 
-const AttachmentDeletionDialog = (props) => {
-	const {open, onClose, detach, itemId, attachment} = props;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	itemId: string;
+	attachment: {_id: string; name: string};
+	method: Endpoint<unknown>;
+}
 
+const AttachmentDeletionDialog = ({
+	open,
+	onClose,
+	itemId,
+	attachment,
+	method,
+}: Props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const getError = (expected, value) =>
+	const getError = (expected: string, value: string) =>
 		normalized(expected) === normalized(value)
 			? ''
 			: 'Attachment names do not match';
@@ -49,22 +61,24 @@ const AttachmentDeletionDialog = (props) => {
 
 	const isMounted = useIsMounted();
 
-	const detachThisAttachmentIfAttachmentNameMatches = (event) => {
+	const detachThisAttachmentIfAttachmentNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
-			Meteor.call(detach, itemId, attachment._id, (err, _res) => {
+			try {
+				await call(method, itemId, attachment._id);
 				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `[Detach] Attachment ${attachment.name} detached with ${detach}(${itemId}).`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					if (isMounted()) onClose();
-				}
-			});
+				const message = `[Detach] Attachment ${attachment.name} detached with ${method.name}(${itemId}).`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				if (isMounted()) onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+				console.error({error});
+			}
 		}
 	};
 
@@ -117,14 +131,6 @@ const AttachmentDeletionDialog = (props) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-AttachmentDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	detach: PropTypes.string.isRequired,
-	itemId: PropTypes.string.isRequired,
-	attachment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AttachmentDeletionDialog);

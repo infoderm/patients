@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -26,7 +25,19 @@ const useStyles = makeStyles({
 	},
 });
 
-const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	attachment: {_id: string};
+	existingLink?: {_id: string};
+}
+
+const AttachmentLinkingDialog = ({
+	open,
+	onClose,
+	attachment,
+	existingLink,
+}: Props) => {
 	const classes = useStyles();
 
 	const [patient, setPatient] = useState(existingLink ? [existingLink] : []);
@@ -52,7 +63,6 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			// component="form"
 			aria-labelledby="attachment-linking-dialog-title"
 			onClose={onClose}
 		>
@@ -78,12 +88,7 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
 					Cancel
 				</Button>
 				<Button
@@ -97,13 +102,6 @@ const AttachmentLinkingDialog = ({open, onClose, attachment, existingLink}) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-AttachmentLinkingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	attachment: PropTypes.object,
-	existingLink: PropTypes.object,
 };
 
 AttachmentLinkingDialog.projection = {

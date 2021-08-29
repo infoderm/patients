@@ -1,9 +1,9 @@
 import React, {useRef} from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
+import MuiButton from '@material-ui/core/Button';
 
-import Button from '@material-ui/core/Button';
+import PropsOf from '../../util/PropsOf';
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -11,11 +11,25 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-const InputFileButton = ({
+type ComponentWithoutCollidingProps<C> = PropsOf<C> extends
+	| {onChange?: unknown}
+	| {Button?: unknown}
+	| {onClick?: unknown}
+	? never
+	: C;
+
+interface OwnProps<C> {
+	onChange: (event: any) => void;
+	Button?: ComponentWithoutCollidingProps<C>;
+}
+
+type Props<C> = PropsOf<C> & OwnProps<C>;
+
+const InputFileButton = <C extends React.ElementType>({
 	onChange,
-	Button,
+	Button = MuiButton,
 	...rest
-}: InferProps<typeof InputFileButton.propTypes>) => {
+}: Props<C>) => {
 	const classes = useStyles();
 	const ref = useRef<HTMLInputElement>(null);
 
@@ -36,15 +50,6 @@ const InputFileButton = ({
 			/>
 		</div>
 	);
-};
-
-InputFileButton.defaultProps = {
-	Button,
-};
-
-InputFileButton.propTypes = {
-	onChange: PropTypes.func.isRequired,
-	Button: PropTypes.elementType,
 };
 
 export default InputFileButton;
