@@ -3,7 +3,7 @@ import {useTracker} from 'meteor/react-meteor-data';
 
 import {NoShows} from './noShows';
 
-const useNoShowsForPatient = (patientId) => {
+const useNoShowsForPatient = (patientId: string) => {
 	const loading = useTracker(() => {
 		const handle = Meteor.subscribe('patient.noShows', patientId);
 		return !handle.ready();

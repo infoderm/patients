@@ -6,8 +6,12 @@ import startOfToday from 'date-fns/startOfToday';
 
 import {Appointments} from './appointments';
 
+interface State {
+	count: number;
+}
+
 const noShows = 'noShows';
-export const NoShows = new Mongo.Collection(noShows);
+export const NoShows = new Mongo.Collection<State>(noShows);
 
 if (Meteor.isServer) {
 	Meteor.publish('patient.noShows', function (patientId) {
@@ -26,7 +30,7 @@ if (Meteor.isServer) {
 		const options = {fields: {_id: 1}};
 
 		let count = 0;
-		const state = () => ({count});
+		const state = (): State => ({count});
 
 		let initializing = true;
 		const handle = Collection.find(selector, options).observeChanges({
@@ -44,7 +48,9 @@ if (Meteor.isServer) {
 
 		initializing = false;
 		this.added(collection, key, state());
-		this.onStop(() => handle.stop());
+		this.onStop(() => {
+			handle.stop();
+		});
 		this.ready();
 	});
 }
