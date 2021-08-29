@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,45 +15,46 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import call from '../../api/endpoint/call';
+import patientsMerge from '../../api/endpoint/patients/merge';
+
 import withLazyOpening from '../modal/withLazyOpening';
 
-const MergePatientsConfirmationDialog = (props) => {
-	const {
-		open,
-		onClose,
-		toCreate,
-		consultationsToAttach,
-		attachmentsToAttach,
-		documentsToAttach,
-		toDelete,
-	} = props;
-
+const MergePatientsConfirmationDialog = ({
+	open,
+	onClose,
+	toCreate,
+	consultationsToAttach,
+	attachmentsToAttach,
+	documentsToAttach,
+	toDelete,
+}) => {
 	const history = useHistory();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const mergePatients = (event) => {
+	const mergePatients = async (event) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
-		Meteor.call(
-			'patients.merge',
-			toDelete,
-			consultationsToAttach,
-			attachmentsToAttach,
-			documentsToAttach,
-			toCreate,
-			(err, _id) => {
-				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `Merged. Patient #${_id} created.`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					history.push({pathname: `/patient/${_id}`});
-				}
-			},
-		);
+		try {
+			const _id = await call(
+				patientsMerge,
+				toDelete,
+				consultationsToAttach,
+				attachmentsToAttach,
+				documentsToAttach,
+				toCreate,
+			);
+			closeSnackbar(key);
+			const message = `Merged. Patient #${_id} created.`;
+			console.log(message);
+			enqueueSnackbar(message, {variant: 'success'});
+			history.push({pathname: `/patient/${_id}`});
+		} catch (error: unknown) {
+			closeSnackbar(key);
+			console.error({error});
+			const message = error instanceof Error ? error.message : 'unknown error';
+			enqueueSnackbar(message, {variant: 'error'});
+		}
 	};
 
 	return (

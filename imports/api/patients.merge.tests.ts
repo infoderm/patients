@@ -8,7 +8,9 @@ import {Random} from 'meteor/random';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+import invoke from './endpoint/invoke';
 import patientsAttach from './endpoint/patients/attach';
+import patientsMerge from './endpoint/patients/merge';
 import {Patients, patients, PatientDocument} from './patients.mock';
 import {Consultations} from './consultations.mock';
 import {Documents} from './documents.mock';
@@ -19,10 +21,6 @@ import {Attachments} from './attachments.mock';
 const setLike = (x) => sorted(totalOrder, x);
 
 if (Meteor.isServer) {
-	const methods = (
-		Meteor as unknown as {server: {method_handlers: Record<string, Function>}}
-	).server.method_handlers;
-
 	describe('Patients', () => {
 		describe('methods', () => {
 			beforeEach(() => {
@@ -32,9 +30,8 @@ if (Meteor.isServer) {
 				Attachments.remove({});
 			});
 
-			it('can merge two patients', () => {
+			it('can merge two patients', async () => {
 				const userId = Random.id();
-				const patientsMerge = methods['patients.merge'];
 				const invocation = {userId};
 
 				const patientA = Factory.create('patient', {
@@ -47,23 +44,9 @@ if (Meteor.isServer) {
 				const uploadA = Factory.create('upload', {userId});
 				const uploadB = Factory.create('upload', {userId});
 
-				Reflect.apply(patientsAttach.validate, invocation, [
-					patientA._id,
-					uploadA._id,
-				]);
-				Reflect.apply(patientsAttach.run, invocation, [
-					patientA._id,
-					uploadA._id,
-				]);
+				await invoke(patientsAttach, invocation, [patientA._id, uploadA._id]);
 
-				Reflect.apply(patientsAttach.validate, invocation, [
-					patientB._id,
-					uploadB._id,
-				]);
-				Reflect.apply(patientsAttach.run, invocation, [
-					patientB._id,
-					uploadB._id,
-				]);
+				await invoke(patientsAttach, invocation, [patientB._id, uploadB._id]);
 
 				let consultationA = Factory.create('consultation', {
 					owner: userId,
@@ -101,7 +84,11 @@ if (Meteor.isServer) {
 					newPatientFields,
 				];
 
-				const newPatientId = patientsMerge.apply(invocation, parameters);
+				const newPatientId = await invoke(
+					patientsMerge,
+					invocation,
+					parameters,
+				);
 
 				assert.equal(Patients.find().count(), 3);
 				assert.equal(Consultations.find().count(), 2);
