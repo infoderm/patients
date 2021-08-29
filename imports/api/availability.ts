@@ -2,6 +2,8 @@ import assert from 'assert';
 
 import {window} from '@iterable-iterator/window';
 
+import isSameDatetime from 'date-fns/isEqual';
+
 import {units} from './duration';
 
 import intersectsOrTouchesInterval from './interval/intersectsOrTouchesInterval';
@@ -213,8 +215,6 @@ const simplify = (
 
 	return slots;
 };
-
-const isSameDatetime = (a: Date, b: Date) => a.getTime() === b.getTime();
 
 const isContiguous = (slots: Array<[Date, Date, number]>): boolean => {
 	for (const [left, right] of window(2, slots)) {
