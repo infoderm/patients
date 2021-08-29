@@ -1,6 +1,16 @@
+import {key} from '@total-order/key';
+import {decreasing} from '@total-order/primitive';
+import {iterable} from '@total-order/iter';
+
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 import useAttachments from './useAttachments';
 import AttachmentInfo from './AttachmentInfo';
+
+const order = key(iterable(decreasing), function* (x: AttachmentInfo) {
+	yield x.group;
+	yield x.lastModified;
+	yield x.createdAt;
+});
 
 const useAttachmentsForPatients = ($in) => {
 	const cQuery = {
@@ -37,6 +47,8 @@ const useAttachmentsForPatients = ($in) => {
 			// will not fetch additional meta subdocument fields.
 			// 'meta.attachedToPatients': 1,
 			// 'meta.attachedToConsultations': 1
+			// 'meta.lastModified': 1,
+			// 'meta.createdAt': 1
 		},
 	};
 
@@ -66,6 +78,8 @@ const useAttachmentsForPatients = ($in) => {
 						attachmentId: _id,
 						patientId: parentId,
 						group: Number.POSITIVE_INFINITY,
+						lastModified: Number(meta.lastModified),
+						createdAt: Number(meta.createdAt),
 					});
 				}
 			}
@@ -81,13 +95,15 @@ const useAttachmentsForPatients = ($in) => {
 						attachmentId: _id,
 						patientId,
 						group: Number(datetime),
+						lastModified: Number(meta.lastModified),
+						createdAt: Number(meta.createdAt),
 					});
 				}
 			}
 		}
 	}
 
-	results.sort((a, b) => b.group - a.group);
+	results.sort(order);
 
 	return {loading, results};
 };

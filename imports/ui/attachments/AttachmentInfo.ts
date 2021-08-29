@@ -4,4 +4,6 @@ export default interface AttachmentInfo {
 	attachmentId: string;
 	patientId: string;
 	group: number;
+	createdAt: number;
+	lastModified: number;
 }
