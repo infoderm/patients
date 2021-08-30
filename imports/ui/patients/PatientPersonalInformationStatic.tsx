@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useReducer, useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
 
@@ -46,6 +44,8 @@ import eidParseBirthdate from '../../api/eidParseBirthdate';
 import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
+import call from '../../api/endpoint/call';
+import patientsUpdate from '../../api/endpoint/patients/update';
 import patientsAttach from '../../api/endpoint/patients/attach';
 
 import {
@@ -206,23 +206,25 @@ const PatientPersonalInformation = (props) => {
 
 	const classes = useStyles();
 
-	const saveDetails = (_event) => {
+	const saveDetails = async (_event) => {
 		const key = enqueueSnackbar('Processing...', {
 			variant: 'info',
 			persist: true,
 		});
-		Meteor.call('patients.update', patient._id, patient, (err, _res) => {
+
+		try {
+			await call(patientsUpdate, patient._id, patient);
 			closeSnackbar(key);
-			if (err) {
-				console.error(err);
-				enqueueSnackbar(err.message, {variant: 'error'});
-			} else {
-				const message = `Patient #${patient._id} updated.`;
-				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
-				dispatch({type: 'not-editing'});
-			}
-		});
+			const message = `Patient #${patient._id} updated.`;
+			console.log(message);
+			enqueueSnackbar(message, {variant: 'success'});
+			dispatch({type: 'not-editing'});
+		} catch (error: unknown) {
+			closeSnackbar(key);
+			const message = error instanceof Error ? error.message : 'unknown error';
+			enqueueSnackbar(message, {variant: 'error'});
+			console.error({error});
+		}
 	};
 
 	const {value: reifiedNoShows} = useNoShowsForPatient(props.patient._id);

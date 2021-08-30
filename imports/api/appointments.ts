@@ -12,7 +12,9 @@ import {
 	findLastConsultationInInterval,
 	filterNotInRareBooks,
 } from './consultations';
-import {patients} from './patients';
+
+import invoke from './endpoint/invoke';
+import insertPatient from './endpoint/patients/insert';
 
 import unconditionallyUpdateById from './unconditionallyUpdateById';
 
@@ -82,16 +84,16 @@ function sanitize({datetime, duration, patient, phone, reason}) {
 }
 
 const methods = {
-	'appointments.createPatient'(fields) {
+	async 'appointments.createPatient'(fields) {
 		const patient = {
 			...fields,
 			createdForAppointment: true,
 		};
-		const patientId = patients.insertPatient.call(this, patient);
+		const patientId = await invoke(insertPatient, this, [patient]);
 		console.debug(`Created patient #${patientId} for new appointment.`);
 		return patientId;
 	},
-	'appointments.schedule'(appointment) {
+	async 'appointments.schedule'(appointment) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -99,7 +101,7 @@ const methods = {
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {
-			args.consultationFields.patientId = methods[
+			args.consultationFields.patientId = await methods[
 				'appointments.createPatient'
 			].call(this, args.patientFields);
 		}
@@ -115,7 +117,7 @@ const methods = {
 			patientId: args.consultationFields.patientId,
 		};
 	},
-	'appointments.reschedule'(appointmentId, appointment) {
+	async 'appointments.reschedule'(appointmentId: string, appointment) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -128,7 +130,7 @@ const methods = {
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {
-			args.consultationFields.patientId = methods[
+			args.consultationFields.patientId = await methods[
 				'appointments.createPatient'
 			].call(this, args.patientFields);
 		}

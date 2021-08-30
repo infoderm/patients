@@ -7,10 +7,6 @@ import {map} from '@iterable-iterator/map';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
-import {Consultations} from './consultations';
-import {Documents} from './documents';
-import {Attachments} from './attachments';
-
 import {insurances} from './insurances';
 import {doctors} from './doctors';
 import {allergies} from './allergies';
@@ -271,119 +267,6 @@ function sanitize({
 	};
 }
 
-function insertPatient(this: Meteor.MethodThisType, patient) {
-	if (!this.userId) {
-		throw new Meteor.Error('not-authorized');
-	}
-
-	const fields = sanitize(patient);
-
-	updateTags(this.userId, fields);
-
-	const patientId = Patients.insert({
-		...fields,
-		createdAt: new Date(),
-		owner: this.userId,
-	});
-
-	updateIndex(this.userId, patientId, fields);
-
-	return patientId;
-}
-
-Meteor.methods({
-	'patients.insert': insertPatient,
-	'patients.update'(patientId, newfields) {
-		check(patientId, String);
-		const patient = Patients.findOne(patientId);
-		if (patient.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const fields = sanitize(newfields);
-
-		updateTags(this.userId, fields);
-
-		updateIndex(this.userId, patientId, fields);
-
-		return Patients.update(patientId, {$set: fields});
-	},
-
-	'patients.remove'(patientId) {
-		check(patientId, String);
-
-		const patient = Patients.findOne({_id: patientId, owner: this.userId});
-		if (!patient) {
-			throw new Meteor.Error('not-found');
-		}
-
-		const consultationQuery = {owner: this.userId, patientId};
-		const consultationIds = Consultations.find(consultationQuery, {
-			fields: {_id: 1},
-		})
-			.fetch()
-			.map((x) => x._id);
-		const nConsultationRemoved = Consultations.remove(consultationQuery);
-
-		if (consultationIds.length !== nConsultationRemoved) {
-			console.warn(
-				`Removed ${nConsultationRemoved} consultations while removing patient #${patientId} but ${
-					consultationIds.length
-				} where found before (${JSON.stringify(consultationIds)})`,
-			);
-		}
-
-		Documents.update(
-			{
-				owner: this.userId,
-				patientId,
-			},
-			{
-				$set: {
-					deleted: true,
-				},
-			},
-			{
-				multi: true,
-			},
-		);
-
-		Attachments.update(
-			{
-				userId: this.userId,
-				'meta.attachedToPatients': patientId,
-			},
-			{
-				$pull: {'meta.attachedToPatients': patientId},
-			},
-			{
-				multi: true,
-			},
-		);
-
-		Attachments.update(
-			{
-				userId: this.userId,
-				'meta.attachedToConsultations': {$in: consultationIds},
-			},
-			{
-				$pullAll: {'meta.attachedToConsultations': consultationIds},
-			},
-			{
-				multi: true,
-			},
-		);
-
-		PatientsSearchIndex.remove(patientId);
-		return Patients.remove(patientId);
-	},
-
-	'patients.find'(query, options) {
-		if (!Meteor.isServer) return undefined;
-		return Patients.find({...query, owner: this.userId}, options).fetch();
-	},
-});
-
 function mergePatients(oldPatients: PatientFields[]): PatientFields {
 	const newPatient = {
 		allergies: [],
@@ -475,7 +358,7 @@ const patientFilter = (suggestions, inputValue, transform = (v) => v) => {
 	);
 };
 
-function createPatient(string) {
+function createPatient(string: string) {
 	let nameSplit = string.split(',');
 
 	if (nameSplit.length < 2) {
@@ -496,7 +379,7 @@ export const patients = {
 	cacheCollection,
 	cachePublication,
 	updateIndex,
-	insertPatient,
+	updateTags,
 	sanitize,
 	toString: patientToString,
 	toKey: patientToKey,

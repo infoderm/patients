@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,6 +12,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import call from '../../api/endpoint/call';
+import patientsRemove from '../../api/endpoint/patients/remove';
 
 import {normalized} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
@@ -34,25 +35,27 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 
 	const isMounted = useIsMounted();
 
-	const deleteThisPatientIfLastNameMatches = (event) => {
+	const deleteThisPatientIfLastNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
 				persist: true,
 			});
-			Meteor.call('patients.remove', patient._id, (err, _res) => {
+			try {
+				await call(patientsRemove, patient._id);
 				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `Patient #${patient._id} deleted.`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					if (isMounted()) onClose();
-				}
-			});
+				const message = `Patient #${patient._id} deleted.`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				if (isMounted()) onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error({error});
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
 		}
 	};
 

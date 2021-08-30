@@ -12,7 +12,8 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
+import patientsInsert from '../../api/endpoint/patients/insert';
 import {patients} from '../../api/patients';
 
 import dialog from '../modal/dialog';
@@ -47,10 +48,10 @@ const EidCardDialogStepPreviewSingleCreate = ({
 			))
 		) {
 			try {
-				const _id = await call('patients.insert', eidInfo);
+				const _id = await call(patientsInsert, eidInfo);
 				history.push({pathname: `/patient/${_id}`});
 				onClose();
-			} catch (error) {
+			} catch (error: unknown) {
 				console.error(error);
 			}
 		}

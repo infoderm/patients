@@ -1,21 +1,35 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
+import {match} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
+
+import call from '../../api/endpoint/call';
+import find from '../../api/endpoint/patients/find';
+
 import {myDecodeURIComponent} from '../../client/uri';
 import mergeFields from '../../util/mergeFields';
 
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
-const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page ||
-		PatientsSearchResults.defaultProps.page;
-	perpage = perpage || PatientsSearchResults.defaultProps.perpage;
+interface Params {
+	query?: string;
+	page?: string;
+}
+
+interface Props {
+	match?: match<Params>;
+	page?: number;
+	perpage?: number;
+}
+
+const PatientsSearchResults = ({
+	match,
+	page = 1,
+	perpage = 10,
+	...rest
+}: Props) => {
+	page = Number.parseInt(match?.params.page, 10) || page;
 
 	const {enqueueSnackbar} = useSnackbar();
 	const [loading, setLoading] = useState(true);
@@ -45,19 +59,24 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 
 		setLoading(true);
 		let cancelled = false;
-		Meteor.call('patients.find', query, options, (err, res) => {
-			if (!cancelled) {
-				setLoading(false);
-				if (err) {
-					console.log('err', err);
-					enqueueSnackbar(`${err.message} (query: ${$search})`, {
-						variant: 'error',
-					});
-				} else {
+
+		call(find, query, options).then(
+			(res) => {
+				if (!cancelled) {
+					setLoading(false);
 					setPatients(res);
 				}
-			}
-		});
+			},
+			(error) => {
+				if (!cancelled) {
+					setLoading(false);
+					console.log('err', error);
+					enqueueSnackbar(`${error.message} (query: ${$search})`, {
+						variant: 'error',
+					});
+				}
+			},
+		);
 
 		return () => {
 			cancelled = true;
@@ -78,16 +97,6 @@ const PatientsSearchResults = ({match, page, perpage, ...rest}) => {
 			{...rest}
 		/>
 	);
-};
-
-PatientsSearchResults.defaultProps = {
-	page: 1,
-	perpage: 10,
-};
-
-PatientsSearchResults.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
 };
 
 export default PatientsSearchResults;

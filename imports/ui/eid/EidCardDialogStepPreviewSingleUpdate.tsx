@@ -33,7 +33,8 @@ import green from '@material-ui/core/colors/green';
 import diff from '../../util/diff';
 import {dataURL as pngDataURL} from '../../util/png';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
+import patientsUpdate from '../../api/endpoint/patients/update';
 import {patients} from '../../api/patients';
 
 import dialog from '../modal/dialog';
@@ -161,9 +162,9 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 			))
 		) {
 			try {
-				await call('patients.update', patientId, eidInfo);
+				await call(patientsUpdate, patientId, eidInfo);
 				onOpen();
-			} catch (error) {
+			} catch (error: unknown) {
 				console.error(error);
 			}
 		}

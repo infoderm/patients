@@ -1,18 +1,32 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'regenerator-runtime/runtime.js';
-import {assert} from 'chai';
+import {assert, expect} from 'chai';
 
 import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
+import invoke from './endpoint/invoke';
+import patientsRemove from './endpoint/patients/remove';
+
 import {Patients} from './patients.mock';
 import {Consultations} from './consultations.mock';
 
-if (Meteor.isServer) {
-	const methods = (
-		Meteor as unknown as {server: {method_handlers: Record<string, Function>}}
-	).server.method_handlers;
+const throws = async (fn: () => Promise<any>, expected: string | RegExp) => {
+	let thrownError: any;
+	try {
+		await fn();
+	} catch (error: unknown) {
+		thrownError = error;
+	}
 
+	if (typeof expected === 'string') {
+		expect(thrownError.message).to.equal(expected);
+	} else if (expected instanceof RegExp) {
+		expect(thrownError.message).to.match(expected);
+	}
+};
+
+if (Meteor.isServer) {
 	describe('Patients', () => {
 		describe('methods', () => {
 			beforeEach(() => {
@@ -20,17 +34,15 @@ if (Meteor.isServer) {
 				Consultations.remove({});
 			});
 
-			it('can delete own patient', () => {
+			it('can delete own patient', async () => {
 				const userId = Random.id();
 
 				const patient = Factory.create('patient', {owner: userId});
 				const patientId = patient._id;
 
-				const patientsRemove = methods['patients.remove'];
-
 				const invocation = {userId};
 
-				patientsRemove.apply(invocation, [patientId]);
+				await invoke(patientsRemove, invocation, [patientId]);
 
 				assert.equal(Patients.find().count(), 0);
 			});
@@ -41,12 +53,10 @@ if (Meteor.isServer) {
 				const patient = Factory.create('patient', {owner: userId});
 				const patientId = patient._id;
 
-				const patientsRemove = methods['patients.remove'];
-
 				const invocation = {userId: `${userId}x`};
 
-				assert.throws(
-					() => patientsRemove.apply(invocation, [patientId]),
+				throws(
+					() => invoke(patientsRemove, invocation, [patientId]),
 					/not-found/,
 				);
 			});

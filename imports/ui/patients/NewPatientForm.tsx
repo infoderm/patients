@@ -22,7 +22,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
+import patientsInsert from '../../api/endpoint/patients/insert';
 
 const styles = (theme) => ({
 	container: {
@@ -62,7 +63,7 @@ const NewPatientForm = () => {
 		};
 
 		try {
-			const _id = await call('patients.insert', patient);
+			const _id = await call(patientsInsert, patient);
 			history.push({pathname: `/patient/${_id}`});
 		} catch (error: unknown) {
 			console.error(error);
