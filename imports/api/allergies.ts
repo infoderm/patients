@@ -1,6 +1,4 @@
-import {Meteor} from 'meteor/meteor';
-import {check} from 'meteor/check';
-
+import {Patients} from './collection/patients';
 import TagDocument from './tags/TagDocument';
 import createTagCollection from './createTagCollection';
 
@@ -10,35 +8,25 @@ const {
 	useTags: useAllergies,
 	useTagsFind: useAllergiesFind,
 	useTagStats: useAllergyStats,
+	useTaggedDocuments: usePatientsHavingAllergy,
 } = createTagCollection({
 	collection: 'allergies',
 	publication: 'allergies',
 	singlePublication: 'allergy',
+	Parent: Patients,
 	parentPublication: 'patients',
 	key: 'allergies',
 });
 
-export {Allergies, allergies, useAllergies, useAllergiesFind, useAllergyStats};
+export {
+	Allergies,
+	allergies,
+	useAllergies,
+	useAllergiesFind,
+	useAllergyStats,
+	usePatientsHavingAllergy,
+};
 
 export interface AllergyDocument extends TagDocument {
 	color?: string;
 }
-
-Meteor.methods({
-	'allergies.changeColor'(tagId, newColor) {
-		check(tagId, String);
-		check(newColor, String);
-
-		const tag = Allergies.findOne(tagId);
-		if (!tag) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const owner = tag.owner;
-		if (owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		return Allergies.update(tagId, {$set: {color: newColor}});
-	},
-});

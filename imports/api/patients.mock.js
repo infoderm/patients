@@ -6,14 +6,9 @@ import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 
-import {
-	Patients,
-	patients,
-	PatientDocument,
-	PatientFields,
-	BIRTHDATE_FORMAT,
-	SEX_ALLOWED,
-} from './patients';
+import {Patients, PatientDocument, PatientFields} from './collection/patients';
+
+import {patients, BIRTHDATE_FORMAT, SEX_ALLOWED} from './patients';
 
 export {Patients, patients, PatientDocument, PatientFields};
 

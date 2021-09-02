@@ -16,38 +16,6 @@ if (Meteor.isServer) {
 	});
 }
 
-Meteor.methods({
-	'settings.update'(key, value) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		// const updatedAt = new Date();
-		const owner = this.userId;
-		// const username = Meteor.users.findOne(this.userId).username;
-
-		Settings.upsert(
-			{owner, key},
-			{
-				$set: {
-					owner,
-					key,
-					value,
-				},
-			},
-		);
-	},
-
-	'settings.reset'(key) {
-		check(key, String);
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		return Settings.remove({owner: this.userId, key});
-	},
-});
-
 const methods = {
 	update: 'settings.update',
 	reset: 'settings.reset',

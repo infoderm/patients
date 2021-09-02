@@ -13,8 +13,7 @@ import StaticPatientChip, {
 	projection as StaticPatientChipProjection,
 } from '../patients/StaticPatientChip';
 
-import {useDoctorStats} from '../../api/doctors';
-import {usePatientsGoingToDoctor} from '../../api/patients';
+import {useDoctorStats, usePatientsGoingToDoctor} from '../../api/doctors';
 
 import {myEncodeURIComponent} from '../../client/uri';
 import DoctorRenamingDialog from './DoctorRenamingDialog';

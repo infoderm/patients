@@ -14,8 +14,11 @@ import StaticPatientChip, {
 } from '../patients/StaticPatientChip';
 
 import call from '../../api/call';
-import {AllergyDocument, useAllergyStats} from '../../api/allergies';
-import {usePatientsHavingAllergy} from '../../api/patients';
+import {
+	AllergyDocument,
+	useAllergyStats,
+	usePatientsHavingAllergy,
+} from '../../api/allergies';
 
 import ColorPicker from '../input/ColorPicker';
 

@@ -1,4 +1,4 @@
-import {Patients} from './patients';
+import {Patients} from './collection/patients';
 import {Consultations} from './consultations';
 import {Documents} from './documents';
 import makeFilteredCollection from './makeFilteredCollection';

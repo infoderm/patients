@@ -5,7 +5,8 @@ import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
 import {_chain as chain} from '@iterable-iterator/chain';
 
-import {Patients, patients} from '../../api/patients';
+import {Patients} from '../../api/collection/patients';
+import {patients} from '../../api/patients';
 import {Consultations} from '../../api/consultations';
 import {Attachments} from '../../api/attachments';
 import {Documents} from '../../api/documents';

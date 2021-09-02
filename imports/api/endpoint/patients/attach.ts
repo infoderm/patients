@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Patients} from '../../patients';
+import {Patients} from '../../collection/patients';
 import {Attachments} from '../../attachments';
 
 import executeTransaction from '../../transaction/executeTransaction';
