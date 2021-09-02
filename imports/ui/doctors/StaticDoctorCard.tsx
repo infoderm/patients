@@ -36,7 +36,7 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const LoadedTagCard = ({item}) => {
+const LoadedTagCard = ({loading, found, item}) => {
 	const classes = useStyles();
 
 	const {result} = useDoctorStats(item.name);
@@ -67,6 +67,8 @@ const LoadedTagCard = ({item}) => {
 
 	return (
 		<StaticTagCard
+			loading={loading}
+			found={found}
 			tag={item}
 			url={(name: string) => `/doctor/${myEncodeURIComponent(name)}`}
 			subheader={subheader}
@@ -78,16 +80,16 @@ const LoadedTagCard = ({item}) => {
 	);
 };
 
-const StaticDoctorCard = ({item, loading = false}) => {
-	if (loading) return null;
+const StaticDoctorCard = ({item, loading = false, found = true}) => {
 	if (item === undefined) return null;
 
-	return <LoadedTagCard item={item} />;
+	return <LoadedTagCard loading={loading} found={found} item={item} />;
 };
 
 StaticDoctorCard.propTypes = {
 	item: PropTypes.object,
 	loading: PropTypes.bool,
+	found: PropTypes.bool,
 };
 
 export default StaticDoctorCard;

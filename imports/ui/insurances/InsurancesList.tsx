@@ -6,7 +6,7 @@ import {useInsurancesFind} from '../../api/insurances';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import StaticInsuranceCard from './StaticInsuranceCard';
+import ReactiveInsuranceCard from './ReactiveInsuranceCard';
 
 export default function InsurancesList({match, prefix, page, perpage}) {
 	page = Number.parseInt(match?.params.page, 10) || page;
@@ -22,7 +22,7 @@ export default function InsurancesList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={StaticInsuranceCard}
+				Card={ReactiveInsuranceCard}
 				url={match.url}
 				query={query}
 				useTags={useInsurancesFind}

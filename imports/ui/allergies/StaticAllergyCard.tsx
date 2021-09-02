@@ -37,25 +37,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface StaticAllergyCardProps {
-	loading: boolean;
+	loading?: boolean;
+	found?: boolean;
 	item: AllergyDocument;
 }
 
 const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
-	({loading, item}, ref) => {
-		if (loading) return null;
+	({loading = false, found = true, item}, ref) => {
 		if (item === undefined) return null;
 
-		return <LoadedTagCard ref={ref} item={item} />;
+		return (
+			<LoadedTagCard ref={ref} loading={loading} found={found} item={item} />
+		);
 	},
 );
 
 interface LoadedTagCardProps {
+	loading: boolean;
+	found: boolean;
 	item: AllergyDocument;
 }
 
 const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
-	({item}, ref) => {
+	({loading, found, item}, ref) => {
 		const classes = useStyles();
 
 		const {result} = useAllergyStats(item.name);
@@ -99,6 +103,8 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 		return (
 			<StaticTagCard
 				ref={ref}
+				loading={loading}
+				found={found}
 				tag={item}
 				url={(name: string) => `/allergy/${myEncodeURIComponent(name)}`}
 				subheader={subheader}

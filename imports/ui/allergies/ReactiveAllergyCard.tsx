@@ -1,18 +1,17 @@
 import React from 'react';
 
-import useAllergy from './useAllergy';
+import useCachedAllergy from './useCachedAllergy';
 
 import StaticAllergyCard from './StaticAllergyCard';
 
-interface ReactiveAllergyCardProps {
-	name: string;
-}
-
-const ReactiveAllergyCard = React.forwardRef<any, ReactiveAllergyCardProps>(
-	({name}, ref) => {
-		const {loading, item} = useAllergy(name, [name]);
-		return <StaticAllergyCard ref={ref} loading={loading} item={item} />;
-	},
-);
+const ReactiveAllergyCard = ({item}) => {
+	const init = {...item};
+	const {name} = item;
+	const query = {name};
+	const options = {};
+	const deps = [name];
+	const {loading, found, fields} = useCachedAllergy(init, query, options, deps);
+	return <StaticAllergyCard loading={loading} found={found} item={fields} />;
+};
 
 export default ReactiveAllergyCard;

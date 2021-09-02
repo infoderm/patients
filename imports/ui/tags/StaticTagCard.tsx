@@ -19,6 +19,7 @@ import useIsMounted from '../hooks/useIsMounted';
 const styles = (theme) =>
 	createStyles({
 		card: {
+			position: 'relative',
 			display: 'flex',
 			minHeight: 200,
 		},
@@ -61,11 +62,25 @@ const styles = (theme) =>
 		name: {
 			display: 'flex',
 		},
+		veil: {
+			position: 'absolute',
+			display: 'flex',
+			justifyContent: 'center',
+			alignItems: 'center',
+			top: 0,
+			bottom: 0,
+			left: 0,
+			right: 0,
+			zIndex: 1,
+			fontSize: '2rem',
+		},
 	});
 
 const useStyles = makeStyles(styles);
 
 export const StaticTagCardPropTypes = {
+	loading: PropTypes.bool.isRequired,
+	found: PropTypes.bool.isRequired,
 	tag: PropTypes.any.isRequired,
 	url: PropTypes.func.isRequired,
 	avatar: PropTypes.object.isRequired,
@@ -84,6 +99,8 @@ export type StaticTagCardProps = InferProps<typeof StaticTagCardPropTypes>;
 const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 	(props, ref) => {
 		const {
+			loading,
+			found,
 			tag,
 			avatar,
 			subheader,
@@ -130,8 +147,12 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 			}
 		};
 
+		const deleted = !loading && !found;
+		const cardOpacity = {opacity: deleted ? 0.4 : 1};
+
 		return (
-			<Card ref={ref} className={classes.card}>
+			<Card ref={ref} className={classes.card} style={cardOpacity}>
+				{deleted && <div className={classes.veil}>DELETED</div>}
 				<div className={classes.details}>
 					<CardHeader
 						className={classes.header}
@@ -142,36 +163,38 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 						to={url(tag.name)}
 					/>
 					<CardContent className={classes.content}>{content}</CardContent>
-					<CardActions disableSpacing className={classes.actions}>
-						{RenamingDialog && (
-							<Button color="primary" onClick={openRenamingDialog}>
-								Rename
-								<EditIcon />
-							</Button>
-						)}
-						{DeletionDialog && (
-							<Button color="secondary" onClick={openDeletionDialog}>
-								Delete
-								<DeleteIcon />
-							</Button>
-						)}
-						{RenamingDialog && (
-							<RenamingDialog
-								open={renaming}
-								tag={tag}
-								onClose={closeRenamingDialog}
-								onRename={onRename}
-							/>
-						)}
-						{DeletionDialog && (
-							<DeletionDialog
-								open={deleting}
-								tag={tag}
-								onClose={closeDeletionDialog}
-							/>
-						)}
-						{actions}
-					</CardActions>
+					{!deleted && (
+						<CardActions disableSpacing className={classes.actions}>
+							{RenamingDialog && (
+								<Button color="primary" onClick={openRenamingDialog}>
+									Rename
+									<EditIcon />
+								</Button>
+							)}
+							{DeletionDialog && (
+								<Button color="secondary" onClick={openDeletionDialog}>
+									Delete
+									<DeleteIcon />
+								</Button>
+							)}
+							{RenamingDialog && (
+								<RenamingDialog
+									open={renaming}
+									tag={tag}
+									onClose={closeRenamingDialog}
+									onRename={onRename}
+								/>
+							)}
+							{DeletionDialog && (
+								<DeletionDialog
+									open={deleting}
+									tag={tag}
+									onClose={closeDeletionDialog}
+								/>
+							)}
+							{actions}
+						</CardActions>
+					)}
 				</div>
 				<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
 			</Card>

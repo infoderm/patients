@@ -35,9 +35,8 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const LoadedTagCard = ({item}) => {
+const LoadedTagCard = ({loading, found, item}) => {
 	const classes = useStyles();
-
 	const {result} = useInsuranceStats(item.name);
 	const {count} = result ?? {};
 	const {results: patients} = usePatientsInsuredBy(item.name, {
@@ -64,6 +63,8 @@ const LoadedTagCard = ({item}) => {
 		);
 	return (
 		<StaticTagCard
+			loading={loading}
+			found={found}
 			tag={item}
 			subheader={subheader}
 			content={content}
@@ -75,11 +76,10 @@ const LoadedTagCard = ({item}) => {
 	);
 };
 
-const StaticInsuranceCard = ({item, loading = false}) => {
-	if (loading) return null;
+const StaticInsuranceCard = ({item, loading = false, found = true}) => {
 	if (item === undefined) return null;
 
-	return <LoadedTagCard item={item} />;
+	return <LoadedTagCard loading={loading} found={found} item={item} />;
 };
 
 StaticInsuranceCard.propTypes = {

@@ -6,7 +6,7 @@ import {useAllergiesFind} from '../../api/allergies';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import StaticAllergyCard from './StaticAllergyCard';
+import ReactiveAllergyCard from './ReactiveAllergyCard';
 
 export default function AllergiesList({match, prefix, page, perpage}) {
 	page = Number.parseInt(match?.params.page, 10) || page;
@@ -22,7 +22,7 @@ export default function AllergiesList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={StaticAllergyCard}
+				Card={ReactiveAllergyCard}
 				url={match.url}
 				query={query}
 				useTags={useAllergiesFind}

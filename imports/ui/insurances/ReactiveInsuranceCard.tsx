@@ -1,12 +1,22 @@
 import React from 'react';
 
-import useInsurance from './useInsurance';
+import useCachedInsurance from './useCachedInsurance';
 
 import StaticInsuranceCard from './StaticInsuranceCard';
 
-const ReactiveInsuranceCard = ({name}) => {
-	const {loading, item} = useInsurance(name, [name]);
-	return <StaticInsuranceCard loading={loading} item={item} />;
+const ReactiveInsuranceCard = ({item}) => {
+	const init = {...item};
+	const {name} = item;
+	const query = {name};
+	const options = {};
+	const deps = [name];
+	const {loading, found, fields} = useCachedInsurance(
+		init,
+		query,
+		options,
+		deps,
+	);
+	return <StaticInsuranceCard loading={loading} found={found} item={fields} />;
 };
 
 export default ReactiveInsuranceCard;

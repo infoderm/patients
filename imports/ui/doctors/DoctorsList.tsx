@@ -6,7 +6,7 @@ import {useDoctorsFind} from '../../api/doctors';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
-import StaticDoctorCard from './StaticDoctorCard';
+import ReactiveDoctorCard from './ReactiveDoctorCard';
 
 export default function DoctorsList({match, prefix, page, perpage}) {
 	page = Number.parseInt(match?.params.page, 10) || page;
@@ -22,7 +22,7 @@ export default function DoctorsList({match, prefix, page, perpage}) {
 			<TagList
 				page={page}
 				perpage={perpage}
-				Card={StaticDoctorCard}
+				Card={ReactiveDoctorCard}
 				url={match.url}
 				query={query}
 				useTags={useDoctorsFind}
