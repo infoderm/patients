@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-import {PatientDocument, PatientFields} from '../../api/patients';
+import {PatientDocument, PatientFields} from '../../api/collection/patients';
 import PatientSheet from '../patients/PatientSheet';
 
 import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog';

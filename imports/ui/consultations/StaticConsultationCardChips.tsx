@@ -17,7 +17,7 @@ import dateFormat from 'date-fns/format';
 
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
-import {PatientDocument} from '../../api/patients';
+import {PatientDocument} from '../../api/collection/patients';
 import {ConsultationDocument} from '../../api/consultations';
 import {msToString, msToStringShort} from '../../api/duration';
 

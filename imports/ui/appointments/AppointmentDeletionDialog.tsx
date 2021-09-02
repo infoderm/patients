@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -13,6 +11,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import call from '../../api/endpoint/call';
+import appointmentsRemove from '../../api/endpoint/appointments/remove';
+
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
@@ -21,16 +22,15 @@ const AppointmentDeletionDialog = (props) => {
 
 	const isMounted = useIsMounted();
 
-	const deleteThisAppointment = (event) => {
+	const deleteThisAppointment = async (event) => {
 		event.preventDefault();
-		Meteor.call('appointments.remove', appointment._id, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Appointment #${appointment._id} deleted.`);
-				if (isMounted()) onClose();
-			}
-		});
+		try {
+			await call(appointmentsRemove, appointment._id);
+			console.log(`Appointment #${appointment._id} deleted.`);
+			if (isMounted()) onClose();
+		} catch (error: unknown) {
+			console.error(error);
+		}
 	};
 
 	return (

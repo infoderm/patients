@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Patients, PatientsSearchIndex, patients} from '../../patients';
+import {Patients} from '../../collection/patients';
+import {PatientsSearchIndex, patients} from '../../patients';
 import {Consultations} from '../../consultations';
 import {Documents} from '../../documents';
 import {Attachments} from '../../attachments';

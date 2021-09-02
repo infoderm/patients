@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Patients, patients} from '../../patients';
+import {Patients} from '../../collection/patients';
+import {patients} from '../../patients';
 
 import define from '../define';
 

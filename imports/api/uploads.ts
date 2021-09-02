@@ -1,12 +1,9 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
 import {Meteor} from 'meteor/meteor';
 import {FilesCollection} from 'meteor/ostrio:files';
-import {check} from 'meteor/check';
 
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
-
-import unconditionallyUpdateById from './unconditionallyUpdateById';
 
 import createBucket from './gridfs/createBucket';
 import createObjectID from './gridfs/createObjectID';
@@ -129,30 +126,3 @@ export const Uploads = new FilesCollection({
 if (Meteor.isServer) {
 	Uploads.denyClient();
 }
-
-Meteor.methods({
-	'uploads.updateFilename'(uploadId, filename) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		check(filename, String);
-		return Uploads.collection.update(uploadId, {$set: {name: filename}});
-	},
-
-	'uploads.delete': unconditionallyUpdateById(
-		Uploads.collection,
-		{
-			$set: {'meta.isDeleted': true},
-		},
-		'userId',
-	),
-
-	'uploads.restore': unconditionallyUpdateById(
-		Uploads.collection,
-		{
-			$set: {'meta.isDeleted': false},
-		},
-		'userId',
-	),
-});

@@ -1,3 +1,4 @@
+import {Patients} from './collection/patients';
 import TagDocument, {TagFields} from './tags/TagDocument';
 import createTagCollection from './createTagCollection';
 
@@ -7,10 +8,12 @@ const {
 	useTags: useInsurances,
 	useTagsFind: useInsurancesFind,
 	useTagStats: useInsuranceStats,
+	useTaggedDocuments: usePatientsInsuredBy,
 } = createTagCollection({
 	collection: 'insurances',
 	publication: 'insurances',
 	singlePublication: 'insurance',
+	Parent: Patients,
 	parentPublication: 'patients',
 	key: 'insurances',
 });
@@ -21,6 +24,7 @@ export {
 	useInsurances,
 	useInsurancesFind,
 	useInsuranceStats,
+	usePatientsInsuredBy,
 };
 
 export type InsuranceDocument = TagDocument;

@@ -5,7 +5,7 @@ import startOfToday from 'date-fns/startOfToday';
 import intervalToDuration from 'date-fns/intervalToDuration';
 
 import eidParseBirthdate from './eidParseBirthdate';
-import {Patients} from './patients';
+import {Patients} from './collection/patients';
 import {Consultations} from './consultations';
 
 interface PollResult {

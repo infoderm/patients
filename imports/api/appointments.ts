@@ -3,20 +3,7 @@ import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {thisYearsInterval} from '../util/datetime';
-
-import {
-	ConsultationDocument,
-	Consultations,
-	consultations,
-	findLastConsultationInInterval,
-	filterNotInRareBooks,
-} from './consultations';
-
-import invoke from './endpoint/invoke';
-import insertPatient from './endpoint/patients/insert';
-
-import unconditionallyUpdateById from './unconditionallyUpdateById';
+import {Consultations} from './consultations';
 
 export const Appointments = Consultations;
 
@@ -83,113 +70,6 @@ function sanitize({datetime, duration, patient, phone, reason}) {
 	};
 }
 
-const methods = {
-	async 'appointments.createPatient'(fields) {
-		const patient = {
-			...fields,
-			createdForAppointment: true,
-		};
-		const patientId = await invoke(insertPatient, this, [patient]);
-		console.debug(`Created patient #${patientId} for new appointment.`);
-		return patientId;
-	},
-	async 'appointments.schedule'(appointment) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const args = sanitize(appointment);
-
-		if (args.createPatient) {
-			args.consultationFields.patientId = await methods[
-				'appointments.createPatient'
-			].call(this, args.patientFields);
-		}
-
-		const consultationId = Appointments.insert({
-			...args.consultationFields,
-			createdAt: new Date(),
-			owner: this.userId,
-		});
-
-		return {
-			_id: consultationId,
-			patientId: args.consultationFields.patientId,
-		};
-	},
-	async 'appointments.reschedule'(appointmentId: string, appointment) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const item = Appointments.findOne({_id: appointmentId, owner: this.userId});
-		if (!item) {
-			throw new Meteor.Error('not-found');
-		}
-
-		const args = sanitize(appointment);
-
-		if (args.createPatient) {
-			args.consultationFields.patientId = await methods[
-				'appointments.createPatient'
-			].call(this, args.patientFields);
-		}
-
-		const fields = {
-			...args.consultationFields,
-		};
-
-		Appointments.update(appointmentId, {$set: fields});
-
-		return {
-			_id: appointmentId,
-			patientId: args.consultationFields.patientId,
-		};
-	},
-	'appointments.cancel': unconditionallyUpdateById<ConsultationDocument>(
-		Appointments,
-		(
-			_existing,
-			cancellationReason: string,
-			cancellationExplanation: string,
-		) => {
-			check(cancellationReason, String);
-			check(cancellationExplanation, String);
-			return {
-				$set: {
-					isCancelled: true,
-					cancellationDatetime: new Date(),
-					cancellationReason,
-					cancellationExplanation,
-				},
-			};
-		},
-	),
-	'appointments.beginConsultation':
-		unconditionallyUpdateById<ConsultationDocument>(Appointments, function () {
-			const book = findLastConsultationInInterval(thisYearsInterval(), {
-				...filterNotInRareBooks(),
-				owner: this.userId,
-			})?.book;
-			const realDatetime = new Date();
-			return {
-				$set: {
-					datetime: realDatetime,
-					realDatetime,
-					doneDatetime: realDatetime,
-					begin: realDatetime,
-					end: realDatetime,
-					isDone: true,
-					book,
-				},
-			};
-		}),
-	'appointments.uncancel': unconditionallyUpdateById(Appointments, {
-		$set: {isCancelled: false},
-	}),
-	'appointments.remove': consultations.methods['consultations.remove'],
+export const appointments = {
+	sanitize,
 };
-
-Meteor.methods(methods);
-
-export const appointments = {};

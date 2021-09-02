@@ -7,6 +7,12 @@ import {map} from '@iterable-iterator/map';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
+import {
+	Patients,
+	PatientFields,
+	PatientComputedFields,
+} from './collection/patients';
+
 import {insurances} from './insurances';
 import {doctors} from './doctors';
 import {allergies} from './allergies';
@@ -16,52 +22,11 @@ import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 import makeObservedQueryPublication from './makeObservedQueryPublication';
 
-export interface PatientFields {
-	niss: string;
-	firstname: string;
-	lastname: string;
-	birthdate: string;
-	sex: string;
-	photo: string;
-
-	antecedents: string;
-	ongoing: string;
-	about: string;
-
-	municipality: string;
-	streetandnumber: string;
-	zip: string;
-	phone: string;
-
-	allergies: string[];
-	doctors: string[];
-	insurances: string[];
-
-	noshow?: number;
-	createdForAppointment?: boolean;
-}
-
-interface PatientComputedFields {
-	normalizedName: string;
-}
-
-interface PatientMetadata {
-	_id: string;
-	owner: string;
-	createdAt: Date;
-}
-
-export type PatientDocument = PatientFields &
-	PatientComputedFields &
-	PatientMetadata;
-
-const collection = 'patients';
 const cacheCollection = 'patients.find.cache';
 export const cachePublication = 'patients.find.observe';
 const indexCollection = 'patients.index.collection';
 const indexObservedQueryCacheCollection = 'patients.index.cache.collection';
 export const indexCachePublication = 'patients.index.cache.publication';
-export const Patients = new Mongo.Collection<PatientDocument>(collection);
 export const PatientsCache: ObservedQueryCacheCollection = new Mongo.Collection(
 	cacheCollection,
 );
@@ -71,16 +36,6 @@ export const PatientsSearchIndexCache: ObservedQueryCacheCollection =
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
-
-const {useTaggedDocuments: usePatientsInsuredBy} = insurances.init(Patients);
-const {useTaggedDocuments: usePatientsGoingToDoctor} = doctors.init(Patients);
-const {useTaggedDocuments: usePatientsHavingAllergy} = allergies.init(Patients);
-
-export {
-	usePatientsInsuredBy,
-	usePatientsGoingToDoctor,
-	usePatientsHavingAllergy,
-};
 
 if (Meteor.isServer) {
 	Meteor.publish('patients', function (query, options = undefined) {

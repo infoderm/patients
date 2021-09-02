@@ -9,7 +9,7 @@ import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 
 import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations';
-import {Patients} from './patients';
+import {Patients} from './collection/patients';
 
 import intersectsInterval from './interval/intersectsInterval';
 import beginsInInterval from './interval/beginsInInterval';

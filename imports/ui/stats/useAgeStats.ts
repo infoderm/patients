@@ -1,4 +1,4 @@
-import {Patients} from '../../api/patients';
+import {Patients} from '../../api/collection/patients';
 import makeHistogram from './makeHistogram';
 
 const useAgeStats = makeHistogram(Patients, ['key', 'sex']);

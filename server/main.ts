@@ -6,7 +6,8 @@ import {Mongo} from 'meteor/mongo';
 import addMilliseconds from 'date-fns/addMilliseconds';
 
 import {Settings} from '../imports/api/settings';
-import {Patients, PatientsSearchIndex, patients} from '../imports/api/patients';
+import {Patients} from '../imports/api/collection/patients';
+import {PatientsSearchIndex, patients} from '../imports/api/patients';
 import {Drugs} from '../imports/api/drugs';
 import {Consultations, isUnpaid} from '../imports/api/consultations';
 import {Events} from '../imports/api/events';

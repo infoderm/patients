@@ -12,6 +12,7 @@ const unconditionallyUpdateById = <T>(
 	ownerKey = 'owner',
 ) =>
 	function (this: Meteor.MethodThisType, _id: string, ...rest: any[]) {
+		// TODO make atomic
 		check(_id, String);
 
 		if (!this.userId) {

@@ -8,7 +8,8 @@ import {check} from 'meteor/check';
 import {zip} from '@iterable-iterator/zip';
 
 import pageQuery from './pageQuery';
-import {Patients, patients} from './patients';
+import {Patients} from './collection/patients';
+import {patients} from './patients';
 
 export const Documents = new Mongo.Collection<any>('documents');
 
@@ -186,7 +187,7 @@ function findBestPatientMatch(owner, entry) {
 	return undefined;
 }
 
-function findBestPatientMatchServerOnly(owner, entry) {
+export function findBestPatientMatchServerOnly(owner, entry) {
 	// This query depends on the entire database being available.
 	// Therefore, it cannot be simulated efficiently on the client.
 	if (Meteor.isServer) return findBestPatientMatch(owner, entry);
@@ -239,149 +240,6 @@ function updateLastVersionFlags(owner, document) {
 		},
 	);
 }
-
-Meteor.methods({
-	async 'documents.insert'(document) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		const entries = await sanitize(document);
-
-		const result = [];
-
-		for (const entry of entries) {
-			// Find best patient match for this document
-
-			const patientId = findBestPatientMatchServerOnly(this.userId, entry);
-
-			// Find document with matching source
-
-			const existingDocument = Documents.findOne({
-				owner: this.userId,
-				source: entry.source,
-			});
-
-			if (!existingDocument) {
-				// Only create new document if there is no other document with
-				// matching source
-
-				const _id = Documents.insert({
-					...entry,
-					patientId,
-					deleted: false,
-					createdAt: new Date(),
-					owner: this.userId,
-				});
-
-				result.push(_id);
-			} else {
-				// We update the document if we found a matching patient and no
-				// patient had been assigned before.
-
-				if (!existingDocument.patientId && patientId) {
-					// TODO Test this on all documents without a patientId when
-					// creating a new patient.
-					Documents.update(existingDocument._id, {$set: {patientId}});
-				}
-
-				// We update the document if it did not have a binary field before.
-
-				// if (!existingDocument.binary) {
-				// Documents.update(existingDocument._id, {
-				// $set: {
-				// binary: entry.binary,
-				// }
-				// });
-				// }
-
-				// We update the document if it had not been properly decoded before.
-
-				if (
-					existingDocument.parsed &&
-					(existingDocument.encoding !== entry.encoding ||
-						existingDocument.decoded !== entry.decoded)
-				) {
-					Documents.update(existingDocument._id, {
-						$set: {
-							...entry,
-							patientId,
-						},
-					});
-				}
-
-				if (!existingDocument.parsed && !existingDocument.lastVersion) {
-					Documents.update(existingDocument._id, {$set: {lastVersion: true}});
-				}
-
-				result.push(existingDocument._id);
-			}
-
-			updateLastVersionFlags(this.userId, entry);
-		}
-
-		return result;
-	},
-
-	'documents.link'(documentId, patientId) {
-		check(documentId, String);
-		check(patientId, String);
-		const document = Documents.findOne(documentId);
-		const patient = Patients.findOne(patientId);
-		if (!document || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own document');
-		}
-
-		if (!patient || patient.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own patient');
-		}
-
-		return Documents.update(documentId, {$set: {patientId}});
-	},
-
-	'documents.unlink'(documentId) {
-		check(documentId, String);
-		const document = Documents.findOne(documentId);
-		if (!document || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own document');
-		}
-
-		return Documents.update(documentId, {$unset: {patientId: ''}});
-	},
-
-	'documents.delete'(documentId) {
-		// Check(documentId, String);
-		const document = Documents.findOne(documentId);
-		if (!document || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		Documents.update(documentId, {$set: {deleted: true}});
-		updateLastVersionFlags(this.userId, document);
-	},
-
-	'documents.restore'(documentId) {
-		// Check(documentId, String);
-		const document = Documents.findOne(documentId);
-		if (!document || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		Documents.update(documentId, {$set: {deleted: false}});
-		updateLastVersionFlags(this.userId, document);
-	},
-
-	'documents.superdelete'(documentId) {
-		// Check(documentId, String);
-		const document = Documents.findOne(documentId);
-		if (!document || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
-		Documents.remove(documentId);
-		updateLastVersionFlags(this.userId, document);
-	},
-});
 
 export const documents = {
 	sanitize,
