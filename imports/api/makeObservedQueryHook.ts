@@ -4,8 +4,11 @@ import {DependencyList, useState, useEffect, useRef} from 'react';
 
 import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 
+import Publication from './publication/Publication';
+import subscribe from './publication/subscribe';
+
 const makeObservedQueryHook =
-	<T>(Collection: ObservedQueryCacheCollection, subscription: string) =>
+	<T>(Collection: ObservedQueryCacheCollection, publication: Publication) =>
 	(
 		query: Mongo.Selector<T>,
 		options: Mongo.Options<T>,
@@ -22,7 +25,7 @@ const makeObservedQueryHook =
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query, options});
-			const handle = Meteor.subscribe(subscription, key, query, options, {
+			const handle = subscribe(publication, key, query, options, {
 				onStop: () => {
 					if (handleRef.current === handle) {
 						setDirty(true);

@@ -1,15 +1,17 @@
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 import {Mongo} from 'meteor/mongo';
+import define from './publication/define';
+import subscribe from './publication/subscribe';
 
 const makeFilteredCollection = (
 	Collection,
 	filterQuery,
 	filterOptions,
-	name,
+	name: string,
 ) => {
-	if (Meteor.isServer) {
-		Meteor.publish(name, function (publicationQuery, publicationOptions) {
+	const publication = define({
+		name,
+		handle(publicationQuery, publicationOptions) {
 			const selector = {
 				...filterQuery,
 				...publicationQuery,
@@ -37,14 +39,14 @@ const makeFilteredCollection = (
 
 			this.onStop(() => handle.stop());
 			this.ready();
-		});
-	}
+		},
+	});
 
 	const Filtered = new Mongo.Collection(name);
 
 	return (hookQuery = {}, options = undefined, deps = []) =>
 		useTracker(() => {
-			const handle = Meteor.subscribe(name, undefined, options);
+			const handle = subscribe(publication, undefined, options);
 			return {
 				loading: !handle.ready(),
 				results: Filtered.find(hookQuery, options).fetch(),

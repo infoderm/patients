@@ -29,6 +29,10 @@ import {lighten} from '@material-ui/core/styles/colorManipulator';
 
 import {Drugs} from '../../api/collection/drugs';
 
+import subscribe from '../../api/publication/subscribe';
+
+import publication from '../../api/publication/drugs/search';
+
 const columnData = [
 	{id: 'mppcv', numeric: true, disablePadding: false, label: 'MPPCV'},
 	{id: 'mpp_nl', numeric: false, disablePadding: true, label: 'Flemish name'},
@@ -340,7 +344,7 @@ EnhancedTable.propTypes = {
 };
 
 const Component = withTracker(({query}) => {
-	Meteor.subscribe('drugs.search', query, -20);
+	subscribe(publication, query, -20);
 	return {
 		drugs: Drugs.find().fetch(),
 	};

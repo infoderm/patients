@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import {list} from '@iterable-iterator/list';
@@ -7,11 +5,9 @@ import {map} from '@iterable-iterator/map';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
-import {
-	Patients,
-	PatientFields,
-	PatientComputedFields,
-} from './collection/patients';
+import {PatientFields, PatientComputedFields} from './collection/patients';
+
+import {PatientsSearchIndex} from './collection/patients/search';
 
 import {insurances} from './insurances';
 import {doctors} from './doctors';
@@ -19,46 +15,8 @@ import {allergies} from './allergies';
 
 import {makeIndex, shatter, normalized, normalizeSearch} from './string';
 
-import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
-import makeObservedQueryPublication from './makeObservedQueryPublication';
-
-const cacheCollection = 'patients.find.cache';
-export const cachePublication = 'patients.find.observe';
-const indexCollection = 'patients.index.collection';
-const indexObservedQueryCacheCollection = 'patients.index.cache.collection';
-export const indexCachePublication = 'patients.index.cache.publication';
-export const PatientsCache: ObservedQueryCacheCollection = new Mongo.Collection(
-	cacheCollection,
-);
-export const PatientsSearchIndex = new Mongo.Collection(indexCollection);
-export const PatientsSearchIndexCache: ObservedQueryCacheCollection =
-	new Mongo.Collection(indexObservedQueryCacheCollection);
-
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
-
-if (Meteor.isServer) {
-	Meteor.publish('patients', function (query, options = undefined) {
-		return Patients.find({...query, owner: this.userId}, options);
-	});
-
-	Meteor.publish('patient', function (_id, options) {
-		check(_id, String);
-		return Patients.find({owner: this.userId, _id}, options);
-	});
-
-	Meteor.publish(
-		cachePublication,
-		makeObservedQueryPublication(Patients, cacheCollection),
-	);
-	Meteor.publish(
-		indexCachePublication,
-		makeObservedQueryPublication(
-			PatientsSearchIndex,
-			indexObservedQueryCacheCollection,
-		),
-	);
-}
 
 function normalizedName(firstname, lastname) {
 	const lastnameHash = normalizeSearch(lastname || '').replace(' ', '-');
@@ -331,8 +289,6 @@ function createPatient(string: string) {
 }
 
 export const patients = {
-	cacheCollection,
-	cachePublication,
 	updateIndex,
 	updateTags,
 	sanitize,

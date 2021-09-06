@@ -7,7 +7,8 @@ import addMilliseconds from 'date-fns/addMilliseconds';
 
 import {Settings} from '../imports/api/collection/settings';
 import {Patients} from '../imports/api/collection/patients';
-import {PatientsSearchIndex, patients} from '../imports/api/patients';
+import {PatientsSearchIndex} from '../imports/api/collection/patients/search';
+import {patients} from '../imports/api/patients';
 import {Drugs} from '../imports/api/collection/drugs';
 import {Consultations} from '../imports/api/collection/consultations';
 import {isUnpaid} from '../imports/api/consultations';

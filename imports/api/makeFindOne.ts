@@ -1,9 +1,10 @@
 import {DependencyList} from 'react';
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
+import Publication from './publication/Publication';
+import subscribe from './publication/subscribe';
 
 const makeFindOne =
-	<T, U>(Collection: Mongo.Collection<T, U>, subscription: string) =>
+	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
 	(
 		init: Partial<U>,
 		query: Mongo.Selector<T> | string,
@@ -11,7 +12,7 @@ const makeFindOne =
 		deps: DependencyList,
 	) => {
 		const loading = useTracker(() => {
-			const handle = Meteor.subscribe(subscription, query, options);
+			const handle = subscribe(publication, query, options);
 			return !handle.ready();
 		}, deps);
 

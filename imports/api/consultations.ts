@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
@@ -9,26 +7,16 @@ import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
 import {books} from './books';
 
-import pageQuery from './pageQuery';
-
-import ConsultationsStats from './ConsultationsStats';
-
-import {Consultations, collection} from './collection/consultations';
+import {Consultations} from './collection/consultations';
+import {key as statsKey} from './collection/consultations/stats';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
 export const DEFAULT_DURATION_IN_MILLISECONDS =
 	DEFAULT_DURATION_IN_SECONDS * 1000;
 
-const stats = collection + '.stats';
-const statsPublication = stats;
-
-const Stats = new Mongo.Collection<ConsultationsStats>(stats);
-
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
 	paid !== price;
-
-const statsKey = (query, init = undefined) => JSON.stringify({query, init});
 
 export const findLastConsultation = (filter) =>
 	Consultations.findOne(
@@ -58,7 +46,7 @@ export const filterNotInRareBooks = () => ({
 	},
 });
 
-function setupConsultationsStatsPublication(collection, query, init?) {
+export function setupConsultationsStatsPublication(collection, query, init?) {
 	// Generate unique key depending on parameters
 	const key = statsKey(query, init);
 	const selector = {
@@ -135,168 +123,6 @@ function setupConsultationsStatsPublication(collection, query, init?) {
 	this.added(collection, key, state());
 
 	return handle;
-}
-
-if (Meteor.isServer) {
-	Meteor.publish('consultation', function (_id, options) {
-		check(_id, String);
-		return Consultations.find(
-			{
-				owner: this.userId,
-				_id,
-			},
-			options,
-		);
-	});
-
-	Meteor.publish('consultations', function (query = {}) {
-		return Consultations.find({
-			isDone: true,
-			...query,
-			owner: this.userId,
-		});
-	});
-
-	Meteor.publish('consultations.interval', function (from, to) {
-		return Consultations.find({
-			owner: this.userId,
-			datetime: {
-				$gte: from,
-				$lt: to,
-			},
-		});
-	});
-
-	Meteor.publish('consultations.interval.last', function (from, to, filter) {
-		return Consultations.find(
-			{
-				isDone: true,
-				datetime: {
-					$gte: from,
-					$lt: to,
-				},
-				...filter,
-				owner: this.userId,
-			},
-			{
-				sort: {
-					datetime: -1,
-				},
-				limit: 1,
-			},
-		);
-	});
-
-	Meteor.publish('consultations.last', function (filter) {
-		return Consultations.find(
-			{
-				isDone: true,
-				...filter,
-				owner: this.userId,
-			},
-			{
-				sort: {
-					datetime: -1,
-				},
-				limit: 1,
-			},
-		);
-	});
-
-	Meteor.publish('consultationsAndAppointments', pageQuery(Consultations));
-
-	Meteor.publish('patient.consultations', function (patientId, options) {
-		check(patientId, String);
-		return Consultations.find(
-			{
-				owner: this.userId,
-				isDone: true,
-				patientId,
-			},
-			options,
-		);
-	});
-
-	Meteor.publish(
-		'patient.consultationsAndAppointments',
-		function (patientId, options) {
-			check(patientId, String);
-			return Consultations.find(
-				{
-					owner: this.userId,
-					patientId,
-				},
-				options,
-			);
-		},
-	);
-
-	Meteor.publish(
-		books.options.parentPublication,
-		function (name, options = {}) {
-			const query = {
-				...books.selector(name),
-				owner: this.userId,
-				isDone: true,
-			};
-			if (options.fields) {
-				const {fields, ...rest} = options;
-				const _options = {
-					...rest,
-					fields: {
-						...fields,
-					},
-				};
-				for (const key of Object.keys(query)) {
-					_options.fields[key] = 1;
-				}
-
-				return Consultations.find(query, _options);
-			}
-
-			return Consultations.find(query, options);
-		},
-	);
-
-	Meteor.publish(books.options.parentPublicationStats, function (name) {
-		check(name, String);
-
-		const collection = books.options.stats;
-		const query = books.selector(name);
-
-		const handle = setupConsultationsStatsPublication.call(
-			this,
-			collection,
-			query,
-			{name},
-		);
-		this.ready();
-
-		// Stop observing the cursor when the client unsubscribes. Stopping a
-		// subscription automatically takes care of sending the client any `removed`
-		// messages.
-		this.onStop(() => {
-			handle.stop();
-		});
-	});
-
-	Meteor.publish(statsPublication, function (query) {
-		const collection = stats;
-
-		const handle = setupConsultationsStatsPublication.call(
-			this,
-			collection,
-			query,
-		);
-		this.ready();
-
-		// Stop observing the cursor when the client unsubscribes. Stopping a
-		// subscription automatically takes care of sending the client any `removed`
-		// messages.
-		this.onStop(() => {
-			handle.stop();
-		});
-	});
 }
 
 function sanitize({
@@ -395,10 +221,4 @@ export const computedFields = (owner: string, state, changes) => {
 
 export const consultations = {
 	sanitize,
-	stats: {
-		collection: stats,
-		publication: statsPublication,
-		Collection: Stats,
-		key: statsKey,
-	},
 };

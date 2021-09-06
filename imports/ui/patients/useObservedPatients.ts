@@ -1,9 +1,8 @@
 import makeObservedQueryHook from '../../api/makeObservedQueryHook';
-import {cachePublication, PatientsCache} from '../../api/patients';
+import {PatientsCache} from '../../api/collection/patients/cache';
 
-const useObservedPatients = makeObservedQueryHook(
-	PatientsCache,
-	cachePublication,
-);
+import publication from '../../api/publication/patients/observe';
+
+const useObservedPatients = makeObservedQueryHook(PatientsCache, publication);
 
 export default useObservedPatients;

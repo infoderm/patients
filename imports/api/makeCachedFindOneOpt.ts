@@ -3,13 +3,15 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 
 import useRandom from '../ui/hooks/useRandom';
+import Publication from './publication/Publication';
+import subscribe from './publication/subscribe';
 
 /**
  * WARNING: Does not work properly if used multiple times with the same
  * parameters on the same page.
  */
 const makeCachedFindOneOpt =
-	<T, U>(Collection: Mongo.Collection<T, U>, subscription: string) =>
+	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
 	(
 		init: Partial<U>,
 		query: Mongo.Selector<T>,
@@ -32,7 +34,7 @@ const makeCachedFindOneOpt =
 			let current = init;
 
 			let queryHandle: Meteor.LiveQueryHandle;
-			const handle = Meteor.subscribe(subscription, query, options, {
+			const handle = subscribe(publication, query, options, {
 				onStop: (e: Meteor.Error) => {
 					console.debug('onStop()', {e, queryHandle});
 					if (queryHandle) queryHandle.stop();

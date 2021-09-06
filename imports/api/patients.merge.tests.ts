@@ -11,12 +11,12 @@ import {sorted} from '@iterable-iterator/sorted';
 import invoke from './endpoint/invoke';
 import patientsAttach from './endpoint/patients/attach';
 import patientsMerge from './endpoint/patients/merge';
-import {Patients, patients, PatientDocument} from './patients.mock';
-import {Consultations} from './consultations.mock';
-import {Documents} from './documents.mock';
+import {Patients, patients, PatientDocument} from './collection/patients.mock';
+import {Consultations} from './collection/consultations.mock';
+import {Documents} from './collection/documents.mock';
 // eslint-disable-next-line import/no-unassigned-import
 import './uploads.mock';
-import {Attachments} from './attachments.mock';
+import {Attachments} from './collection/attachments.mock';
 
 const setLike = (x) => sorted(totalOrder, x);
 

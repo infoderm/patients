@@ -8,8 +8,8 @@ import {Random} from 'meteor/random';
 import invoke from './endpoint/invoke';
 import patientsRemove from './endpoint/patients/remove';
 
-import {Patients} from './patients.mock';
-import {Consultations} from './consultations.mock';
+import {Patients} from './collection/patients.mock';
+import {Consultations} from './collection/consultations.mock';
 
 const throws = async (fn: () => Promise<any>, expected: string | RegExp) => {
 	let thrownError: any;

@@ -1,6 +1,8 @@
 import makeFindOne from '../../api/makeFindOne';
 import {Patients} from '../../api/collection/patients';
 
-const usePatient = makeFindOne(Patients, 'patient');
+import publication from '../../api/publication/patients/patient';
+
+const usePatient = makeFindOne(Patients, publication);
 
 export default usePatient;

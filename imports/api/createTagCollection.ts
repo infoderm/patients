@@ -10,12 +10,15 @@ import makeObservedQueryHook from './makeObservedQueryHook';
 import makeObservedQueryPublication from './makeObservedQueryPublication';
 import pageQuery from './pageQuery';
 
-import define from './endpoint/define';
+import defineEndpoint from './endpoint/define';
+import definePublication from './publication/define';
 
 import {containsNonAlphabetical} from './string';
 
 import CacheItem from './CacheItem';
 import TagDocument from './tags/TagDocument';
+import subscribe from './publication/subscribe';
+import Publication from './publication/Publication';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -31,7 +34,7 @@ interface Options<T> {
 	publication: string;
 	singlePublication: string;
 	Parent: Mongo.Collection<any>;
-	parentPublication: string;
+	parentPublication: Publication;
 	key: string;
 }
 
@@ -60,35 +63,32 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 
 	const TagsCache = new Mongo.Collection<CacheItem>(cacheCollection);
 
-	const useTags = makeQuery(Collection, publication);
+	const _publication = definePublication({
+		name: publication,
+		cursor: pageQuery(Collection),
+	});
+
+	const useTags = makeQuery(Collection, _publication);
+
+	const _cachePublication = definePublication({
+		name: cachePublication,
+		handle: makeObservedQueryPublication(Collection, cacheCollection),
+	});
 
 	// TODO rename to useObservedTags
-	const useTagsFind = makeObservedQueryHook(TagsCache, cachePublication);
+	const useTagsFind = makeObservedQueryHook(TagsCache, _cachePublication);
 
-	const useTagStats = (name) =>
-		useTracker(() => {
-			const handle = Meteor.subscribe(statsPublication, name);
-			const loading = !handle.ready();
-			return {
-				loading,
-				result: Stats.findOne({name}),
-			};
-		}, [name]);
-
-	if (Meteor.isServer) {
-		Meteor.publish(publication, pageQuery(Collection));
-
-		Meteor.publish(
-			cachePublication,
-			makeObservedQueryPublication(Collection, cacheCollection),
-		);
-
-		if (singlePublication) {
-			Meteor.publish(singlePublication, function (name: string) {
-				return Collection.find({owner: this.userId, name} as Mongo.Selector<T>);
-			});
-		}
-	}
+	const _singlePublication = singlePublication
+		? definePublication({
+				name: singlePublication,
+				cursor(name: string) {
+					return Collection.find({
+						owner: this.userId,
+						name,
+					} as Mongo.Selector<T>);
+				},
+		  })
+		: undefined;
 
 	const useTaggedDocuments = (name: string, options) =>
 		useTracker(() => {
@@ -98,11 +98,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 					[key]: 1,
 				},
 			});
-			const handle = Meteor.subscribe(
-				parentPublication,
-				selector,
-				mergedOptions,
-			);
+			const handle = subscribe(parentPublication, selector, mergedOptions);
 			const loading = !handle.ready();
 			return {
 				loading,
@@ -110,9 +106,10 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			};
 		}, [name, JSON.stringify(options)]);
 
-	if (Meteor.isServer) {
-		// Publish the current size of a collection.
-		Meteor.publish(statsPublication, function (name: string) {
+	// Publish the current size of a collection.
+	const _statsPublication = definePublication({
+		name: statsPublication,
+		handle(name: string) {
 			check(name, String);
 			const uid = JSON.stringify({name, owner: this.userId});
 			const query = {[key]: name, owner: this.userId};
@@ -154,10 +151,20 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			this.onStop(() => {
 				handle.stop();
 			});
-		});
-	}
+		},
+	});
 
-	const renameEndpoint = define({
+	const useTagStats = (name) =>
+		useTracker(() => {
+			const handle = subscribe(_statsPublication, name);
+			const loading = !handle.ready();
+			return {
+				loading,
+				result: Stats.findOne({name}),
+			};
+		}, [name]);
+
+	const renameEndpoint = defineEndpoint({
 		name: `${collection}.rename`,
 		validate(tagId: string, newname: string) {
 			check(tagId, String);
@@ -212,7 +219,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 		},
 	});
 
-	const deleteEndpoint = define({
+	const deleteEndpoint = defineEndpoint({
 		name: `${collection}.delete`,
 		validate(tagId: string) {
 			check(tagId, String);
@@ -238,6 +245,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 	const operations = {
 		options: {
 			...options,
+			_singlePublication,
 			stats,
 			parentPublicationStats: statsPublication,
 		},

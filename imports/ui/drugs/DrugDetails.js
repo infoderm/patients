@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
@@ -9,6 +8,9 @@ import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import {Drugs} from '../../api/collection/drugs';
+import subscribe from '../../api/publication/subscribe';
+
+import publication from '../../api/publication/drugs/findOne';
 
 const styles = (theme) => ({
 	container: {
@@ -56,7 +58,7 @@ DrugDetails.propTypes = {
 
 export default withTracker(({match}) => {
 	const _id = match.params.id;
-	const handle = Meteor.subscribe('drug', _id);
+	const handle = subscribe(publication, _id);
 	if (handle.ready()) {
 		const drug = Drugs.findOne(_id);
 		return {loading: false, drug};

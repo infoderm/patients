@@ -1,16 +1,19 @@
 import {useMemo} from 'react';
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 import {Settings} from '../api/collection/settings';
 import {settings as _settings} from '../api/settings';
+import _subscribe from '../api/publication/subscribe';
+import byKey from '../api/publication/settings/byKey';
+import call from '../api/endpoint/call';
+import update from '../api/endpoint/settings/update';
 
 const {defaults, methods} = _settings;
 
-function subscribe(key) {
-	return Meteor.subscribe('setting', key);
+function subscribe(key: string) {
+	return _subscribe(byKey, key);
 }
 
-function get(key) {
+function get(key: string) {
 	const item = Settings.findOne({key});
 	if (item === undefined) {
 		return defaults[key];
@@ -20,7 +23,7 @@ function get(key) {
 }
 
 const localStoragePrefix = 'u3208hfosjas-';
-function getWithBrowserCache(key) {
+function getWithBrowserCache(key: string) {
 	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
 	// TODO AVOID CLASHES BY ADDING USER ID's TO THE KEY?
 	const item = Settings.findOne({key});
@@ -35,17 +38,16 @@ function getWithBrowserCache(key) {
 	return item.value;
 }
 
-export const setSetting = (key, newValue) => {
-	Meteor.call(methods.update, key, newValue, (err) => {
-		if (err) {
-			console.error(err);
-		} else {
-			console.debug('Setting', key, 'updated to', newValue);
-		}
-	});
+export const setSetting = async (key: string, newValue: any) => {
+	try {
+		await call(update, key, newValue);
+		console.debug('Setting', key, 'updated to', newValue);
+	} catch (error: unknown) {
+		console.error({error});
+	}
 };
 
-export const useSetting = (key, getFn = get) => {
+export const useSetting = (key: string, getFn = get) => {
 	// TODO use only one tracker
 	const loading = useTracker(() => {
 		const handle = subscribe(key);
@@ -55,7 +57,7 @@ export const useSetting = (key, getFn = get) => {
 	const value = useTracker(() => getFn(key), [key]);
 
 	const setValue = useMemo(
-		() => (newValue) => setSetting(key, newValue),
+		() => async (newValue: any) => setSetting(key, newValue),
 		[key],
 	);
 
@@ -66,7 +68,8 @@ export const useSetting = (key, getFn = get) => {
 	};
 };
 
-export const useSettingCached = (key) => useSetting(key, getWithBrowserCache);
+export const useSettingCached = (key: string) =>
+	useSetting(key, getWithBrowserCache);
 
 export const settings = {
 	defaults,

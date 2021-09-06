@@ -6,43 +6,10 @@ import {check} from 'meteor/check';
 
 import {zip} from '@iterable-iterator/zip';
 
-import pageQuery from './pageQuery';
 import {Patients} from './collection/patients';
 import {patients} from './patients';
 
 import {Documents} from './collection/documents';
-
-if (Meteor.isServer) {
-	Meteor.publish('documents', pageQuery(Documents));
-
-	Meteor.publish('document', function (_id) {
-		return Documents.find({owner: this.userId, _id});
-	});
-
-	Meteor.publish('patient.documents', function (patientId, options) {
-		check(patientId, String);
-		return Documents.find(
-			{
-				owner: this.userId,
-				patientId,
-				lastVersion: true,
-				deleted: false,
-			},
-			options,
-		);
-	});
-
-	Meteor.publish('patient.documents.all', function (patientId, options) {
-		check(patientId, String);
-		return Documents.find(
-			{
-				owner: this.userId,
-				patientId,
-			},
-			options,
-		);
-	});
-}
 
 // Const utfLabelToEncoding = {
 // 'iso-8859-1': 'windows-1252',

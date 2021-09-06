@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-import {Documents} from './collection/documents';
+import {Documents} from './documents';
 
 export {Documents};
 

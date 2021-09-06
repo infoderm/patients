@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
 import {list} from '@iterable-iterator/list';
@@ -11,14 +10,19 @@ import {Attachments} from '../../api/collection/attachments';
 import {Documents} from '../../api/collection/documents';
 
 import {patients} from '../../api/patients';
+import subscribe from '../../api/publication/subscribe';
+import patient from '../../api/publication/patients/patient';
+import consultationsAndAppointments from '../../api/publication/patient/consultationsAndAppointments';
+import attachedToPatient from '../../api/publication/patient/attachments';
+import all from '../../api/publication/patient/documents/all';
 
 const useMergeInfo = (toMerge) =>
 	useTracker(() => {
 		for (const patientId of toMerge) {
-			Meteor.subscribe('patient', patientId);
-			Meteor.subscribe('patient.consultationsAndAppointments', patientId);
-			Meteor.subscribe('patient.attachments', patientId);
-			Meteor.subscribe('patient.documents.all', patientId);
+			subscribe(patient, patientId);
+			subscribe(consultationsAndAppointments, patientId);
+			subscribe(attachedToPatient, patientId);
+			subscribe(all, patientId);
 		}
 
 		const oldPatients = [];
