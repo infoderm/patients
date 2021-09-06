@@ -5,8 +5,8 @@ import {FilesCollection} from 'meteor/ostrio:files';
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import createBucket from './gridfs/createBucket';
-import createObjectID from './gridfs/createObjectID';
+import createBucket from '../backend/gridfs/createBucket';
+import createObjectID from '../backend/gridfs/createObjectID';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
