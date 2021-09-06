@@ -2,20 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import TagDeletionDialog from '../tags/TagDeletionDialog';
+import {deleteAllergy} from '../../api/allergies';
 
-export default function InsuranceDeletionDialog({open, onClose, tag}) {
+export default function AllergyDeletionDialog({open, onClose, tag}) {
 	return (
 		<TagDeletionDialog
 			open={open}
-			title="insurance"
-			method="insurances.delete"
+			title="allergy"
+			endpoint={deleteAllergy}
 			tag={tag}
 			onClose={onClose}
 		/>
 	);
 }
 
-InsuranceDeletionDialog.propTypes = {
+AllergyDeletionDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	tag: PropTypes.object.isRequired,

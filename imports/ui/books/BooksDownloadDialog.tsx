@@ -24,9 +24,10 @@ import GridContainerInsideDialogContent from '../grid/GridContainerInsideDialogC
 
 import saveTextAs from '../../client/saveTextAs';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 import {books} from '../../api/books';
 import withLazyOpening from '../modal/withLazyOpening';
+import csv from '../../api/endpoint/books/csv';
 
 const BooksDownloadDialog = ({
 	open,
@@ -72,14 +73,7 @@ const BooksDownloadDialog = ({
 			persist: true,
 		});
 		try {
-			const res = await call(
-				'books.interval.csv',
-				begin,
-				end,
-				_firstBook,
-				_lastBook,
-				_maxRows,
-			);
+			const res = await call(csv, begin, end, _firstBook, _lastBook, _maxRows);
 			closeSnackbar(key);
 			enqueueSnackbar('Report ready!', {variant: 'success'});
 			const filename = advancedFunctionality

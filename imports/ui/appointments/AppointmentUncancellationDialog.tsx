@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,26 +12,26 @@ import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
 import withLazyOpening from '../modal/withLazyOpening';
+import call from '../../api/endpoint/call';
+import uncancel from '../../api/endpoint/appointments/uncancel';
 
 const AppointmentUncancellationDialog = (props) => {
 	const {open, onClose, appointment} = props;
 
-	const cancelThisAppointment = (event) => {
+	const uncancelThisAppointment = async (event) => {
 		event.preventDefault();
-		Meteor.call('appointments.uncancel', appointment._id, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Appointment #${appointment._id} uncancelled.`);
-				onClose();
-			}
-		});
+		try {
+			await call(uncancel, appointment._id);
+			console.log(`Appointment #${appointment._id} uncancelled.`);
+			onClose();
+		} catch (error: unknown) {
+			console.error({error});
+		}
 	};
 
 	return (
 		<Dialog
 			open={open}
-			// component="form"
 			aria-labelledby="appointment-uncancellation-dialog-title"
 			onClose={onClose}
 		>
@@ -47,18 +45,13 @@ const AppointmentUncancellationDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<AlarmOffIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<AlarmOffIcon />} onClick={onClose}>
 					Do not uncancel
 				</Button>
 				<Button
 					color="primary"
 					endIcon={<AlarmOnIcon />}
-					onClick={cancelThisAppointment}
+					onClick={uncancelThisAppointment}
 				>
 					Uncancel Appointment
 				</Button>

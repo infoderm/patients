@@ -1,7 +1,4 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useSnackbar} from 'notistack';
@@ -25,6 +22,9 @@ import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
+import Endpoint from '../../api/endpoint/Endpoint';
+import call from '../../api/endpoint/call';
+import TagDocument from '../../api/tags/TagDocument';
 
 const useStyles = makeStyles({
 	root: {
@@ -35,28 +35,38 @@ const useStyles = makeStyles({
 	},
 });
 
-const MAGIC = '8324jdkf-tag-renaming-dialog-title';
-let nextAriaId = 0;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	onRename: (name: string) => void;
+	title: string;
+	useTagsFind?: () => void;
+	endpoint: Endpoint<unknown>;
+	tag: TagDocument;
+	nameKey?: string;
+	nameKeyTitle?: string;
+	nameFormat: (tag: TagDocument, name: string) => string;
+}
 
-const TagRenamingDialog = (props) => {
+const defaultUseTagsFind = () => ({results: []});
+const defaultNameFormat = (_tag: TagDocument, name: string) => name;
+
+const TagRenamingDialog = ({
+	open,
+	onClose,
+	onRename,
+	title,
+	useTagsFind = defaultUseTagsFind,
+	endpoint,
+	tag,
+	nameKey = 'name',
+	nameKeyTitle = 'name',
+	nameFormat = defaultNameFormat,
+}: Props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
 	const [newnameError, setNewnameError] = useState('');
-	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
-
-	const {
-		open,
-		onClose,
-		onRename,
-		title,
-		useTagsFind,
-		method,
-		tag,
-		nameKey,
-		nameKeyTitle,
-		nameFormat,
-	} = props;
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
@@ -65,7 +75,7 @@ const TagRenamingDialog = (props) => {
 
 	const Title = capitalized(title);
 
-	const renameThisTagIfNameMatchesAndNewNameNotEmpty = (event) => {
+	const renameThisTagIfNameMatchesAndNewNameNotEmpty = async (event) => {
 		event.preventDefault();
 		let error = !validateOldName();
 		const name = newname.trim();
@@ -81,33 +91,32 @@ const TagRenamingDialog = (props) => {
 				variant: 'info',
 				persist: true,
 			});
-			Meteor.call(method, tag._id, name, (err, _res) => {
+			try {
+				await call(endpoint, tag._id, name);
 				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `${Title} #${tag._id} renamed from ${nameFormat(
-						tag,
-						tag[nameKey],
-					)} to ${nameFormat(tag, name)} (using ${method}).`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					onRename(name);
-				}
-			});
+				const message = `${Title} #${tag._id} renamed from ${nameFormat(
+					tag,
+					tag[nameKey],
+				)} to ${nameFormat(tag, name)} (using ${endpoint.name}).`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				onRename(name);
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error(error);
+				const message = error instanceof Error ? error.message : 'unknown err';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
 		}
 	};
 
 	return (
 		<Dialog
 			open={open}
-			// component="form"
 			PaperProps={{className: classes.root}}
-			aria-labelledby={ariaId}
 			onClose={onClose}
 		>
-			<DialogTitle id={ariaId}>
+			<DialogTitle>
 				Rename {title} {nameFormat(tag, tag[nameKey])}
 			</DialogTitle>
 			<DialogContent className={classes.content}>
@@ -144,12 +153,7 @@ const TagRenamingDialog = (props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
 					Cancel
 				</Button>
 				<Button
@@ -162,26 +166,6 @@ const TagRenamingDialog = (props) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-TagRenamingDialog.defaultProps = {
-	nameKey: 'name',
-	nameKeyTitle: 'name',
-	nameFormat: (_tag, name) => name,
-	useTagsFind: () => ({results: []}),
-};
-
-TagRenamingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onRename: PropTypes.func.isRequired,
-	title: PropTypes.string.isRequired,
-	useTagsFind: PropTypes.func,
-	method: PropTypes.string.isRequired,
-	tag: PropTypes.object.isRequired,
-	nameKey: PropTypes.string,
-	nameKeyTitle: PropTypes.string,
-	nameFormat: PropTypes.func,
 };
 
 export default withLazyOpening(TagRenamingDialog);

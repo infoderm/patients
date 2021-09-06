@@ -5,7 +5,8 @@ import {useSnackbar} from 'notistack';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
+import deleteDocument from '../../api/endpoint/documents/delete';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
@@ -26,7 +27,7 @@ const DocumentDeletionDialog = ({open, onClose, document}: Props) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
 		try {
-			await call('documents.delete', document._id);
+			await call(deleteDocument, document._id);
 			closeSnackbar(key);
 			const message = `Document #${document._id} deleted.`;
 			console.log(message);

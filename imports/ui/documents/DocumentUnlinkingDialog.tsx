@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,32 +12,26 @@ import LinkOffIcon from '@material-ui/icons/LinkOff';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
+import call from '../../api/endpoint/call';
+import unlink from '../../api/endpoint/documents/unlink';
 
 const DocumentUnlinkingDialog = (props) => {
 	const {open, onClose, document} = props;
 
-	const unlinkThisDocument = (event) => {
+	const unlinkThisDocument = async (event) => {
 		event.preventDefault();
-		Meteor.call('documents.unlink', document._id, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Document #${document._id} unlinked.`);
-				onClose();
-			}
-		});
+		try {
+			await call(unlink, document._id);
+			console.log(`Document #${document._id} unlinked.`);
+			onClose();
+		} catch (error: unknown) {
+			console.error(error);
+		}
 	};
 
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="document-unlinking-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="document-unlinking-dialog-title">
-				Unlink document {document._id.toString()}
-			</DialogTitle>
+		<Dialog open={open} onClose={onClose}>
+			<DialogTitle>Unlink document {document._id.toString()}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					If you do not want to unlink this document, click cancel. If you
@@ -48,12 +40,7 @@ const DocumentUnlinkingDialog = (props) => {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
 					Cancel
 				</Button>
 				<Button

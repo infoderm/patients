@@ -5,10 +5,11 @@ import {useSnackbar} from 'notistack';
 import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
+import restore from '../../api/endpoint/documents/restore';
 
 interface Props {
 	open: boolean;
@@ -23,7 +24,7 @@ const DocumentRestorationDialog = ({open, onClose, document}: Props) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
 		try {
-			await call('documents.restore', document._id);
+			await call(restore, document._id);
 			closeSnackbar(key);
 			const message = `Document #${document._id} restored.`;
 			console.log(message);

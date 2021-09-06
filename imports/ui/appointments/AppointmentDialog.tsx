@@ -157,7 +157,7 @@ const AppointmentDialog = (props) => {
 	);
 	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
 
-	const createAppointment = (event) => {
+	const createAppointment = async (event) => {
 		event.preventDefault();
 
 		if (patientList.length === 1) {
@@ -170,21 +170,20 @@ const AppointmentDialog = (props) => {
 				reason,
 			};
 			console.debug(args);
-			onSubmit(args, (err, res) => {
-				if (err) {
-					console.error(err);
-				} else {
-					console.log(
-						`Consultation #${res._id} ${
-							initialAppointment ? 'updated' : 'created'
-						}.`,
-					);
-					onClose();
-					if (!initialAppointment) {
-						history.push({pathname: `/consultation/${res._id}`});
-					}
+			try {
+				const res = await onSubmit(args);
+				console.log(
+					`Consultation #${res._id} ${
+						initialAppointment ? 'updated' : 'created'
+					}.`,
+				);
+				onClose();
+				if (!initialAppointment) {
+					history.push({pathname: `/consultation/${res._id}`});
 				}
-			});
+			} catch (error: unknown) {
+				console.error({error});
+			}
 		} else {
 			setPatientError("The patient's name is required");
 		}

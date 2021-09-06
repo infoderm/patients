@@ -15,7 +15,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -32,6 +32,7 @@ import ConfirmationTextField, {
 
 import makePatientsSuggestions from '../patients/makePatientsSuggestions';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
+import transfer from '../../api/endpoint/consultations/transfer';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 const useStyles = makeStyles({
@@ -79,7 +80,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}) => {
 			const consultationId = consultation._id;
 			const patientId = patients[0]._id;
 			try {
-				await call('consultations.transfer', consultationId, patientId);
+				await call(transfer, consultationId, patientId);
 				console.log(
 					`${itemKindCapitalized} #${consultationId} transferred to patient #${patientId}.`,
 				);

@@ -1,9 +1,9 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
 import withLazyOpening from '../modal/withLazyOpening';
+import call from '../../api/endpoint/call';
+import reschedule from '../../api/endpoint/appointments/reschedule';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
 const propTypes = {
@@ -21,9 +21,7 @@ const EditAppointmentDialog = ({
 	onClose,
 	appointment,
 }: InferProps<typeof propTypes>) => {
-	const onSubmit = (args, callback) => {
-		Meteor.call('appointments.reschedule', appointment._id, args, callback);
-	};
+	const onSubmit = async (args) => call(reschedule, appointment._id, args);
 
 	return (
 		<AppointmentFromPatientIdDialog

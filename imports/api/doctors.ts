@@ -10,6 +10,8 @@ const {
 	useTagsFind: useDoctorsFind,
 	useTagStats: useDoctorStats,
 	useTaggedDocuments: usePatientsGoingToDoctor,
+	deleteEndpoint: deleteDoctor,
+	renameEndpoint: renameDoctor,
 } = createTagCollection({
 	Collection: Doctors,
 	collection,
@@ -26,4 +28,6 @@ export {
 	useDoctorsFind,
 	useDoctorStats,
 	usePatientsGoingToDoctor,
+	deleteDoctor,
+	renameDoctor,
 };

@@ -1,7 +1,4 @@
-import {Meteor} from 'meteor/meteor';
-
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 
 import {useSnackbar} from 'notistack';
 
@@ -23,14 +20,22 @@ import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
-const MAGIC = '8324jdkf-tag-deletion-dialog-title';
-let nextAriaId = 0;
+import call from '../../api/endpoint/call';
+import Endpoint from '../../api/endpoint/Endpoint';
 
-const TagDeletionDialog = (props) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	title: string;
+	endpoint: Endpoint<unknown>;
+	tag: {
+		_id: string;
+		name: string;
+	};
+}
+
+const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [ariaId] = useState(`${MAGIC}-#${++nextAriaId}`);
-
-	const {open, onClose, title, method, tag} = props;
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
@@ -42,36 +47,34 @@ const TagDeletionDialog = (props) => {
 
 	const isMounted = useIsMounted();
 
-	const deleteThisTagIfNameMatches = (event) => {
+	const deleteThisTagIfNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
 				persist: true,
 			});
-			Meteor.call(method, tag._id, (err, _res) => {
+
+			try {
+				await call(endpoint, tag._id);
 				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `${Title} #${tag._id} deleted (using ${method}).`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					if (isMounted()) onClose();
-				}
-			});
+				const message = `${Title} #${tag._id} deleted (using ${endpoint.name}).`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				if (isMounted()) onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error(error);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
 		}
 	};
 
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby={ariaId}
-			onClose={onClose}
-		>
-			<DialogTitle id={ariaId}>
+		<Dialog open={open} onClose={onClose}>
+			<DialogTitle>
 				Delete {title} {tag.name}
 			</DialogTitle>
 			<DialogContent>
@@ -89,12 +92,7 @@ const TagDeletionDialog = (props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
 					Cancel
 				</Button>
 				<Button
@@ -108,14 +106,6 @@ const TagDeletionDialog = (props) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-TagDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	title: PropTypes.string.isRequired,
-	method: PropTypes.string.isRequired,
-	tag: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(TagDeletionDialog);

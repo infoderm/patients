@@ -10,6 +10,8 @@ const {
 	useTagsFind: useInsurancesFind,
 	useTagStats: useInsuranceStats,
 	useTaggedDocuments: usePatientsInsuredBy,
+	deleteEndpoint: deleteInsurance,
+	renameEndpoint: renameInsurance,
 } = createTagCollection({
 	Collection: Insurances,
 	collection,
@@ -26,4 +28,6 @@ export {
 	useInsurancesFind,
 	useInsuranceStats,
 	usePatientsInsuredBy,
+	deleteInsurance,
+	renameInsurance,
 };

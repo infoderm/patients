@@ -38,7 +38,7 @@ interface Props {
 	onClose: () => void;
 	itemId: string;
 	attachment: {_id: string; name: string};
-	method: Endpoint<unknown>;
+	endpoint: Endpoint<unknown>;
 }
 
 const AttachmentDeletionDialog = ({
@@ -46,7 +46,7 @@ const AttachmentDeletionDialog = ({
 	onClose,
 	itemId,
 	attachment,
-	method,
+	endpoint,
 }: Props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -66,9 +66,9 @@ const AttachmentDeletionDialog = ({
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
 			try {
-				await call(method, itemId, attachment._id);
+				await call(endpoint, itemId, attachment._id);
 				closeSnackbar(key);
-				const message = `[Detach] Attachment ${attachment.name} detached with ${method.name}(${itemId}).`;
+				const message = `[Detach] Attachment ${attachment.name} detached with ${endpoint.name}(${itemId}).`;
 				console.log(message);
 				enqueueSnackbar(message, {variant: 'success'});
 				if (isMounted()) onClose();

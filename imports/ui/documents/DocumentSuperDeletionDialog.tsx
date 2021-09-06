@@ -5,11 +5,12 @@ import {useSnackbar} from 'notistack';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
+import superdelete from '../../api/endpoint/documents/superdelete';
 
 interface Props {
 	open: boolean;
@@ -26,7 +27,7 @@ const DocumentSuperDeletionDialog = ({open, onClose, document}: Props) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
 		try {
-			await call('documents.superdelete', document._id);
+			await call(superdelete, document._id);
 			closeSnackbar(key);
 			const message = `Document #${document._id} deleted forever.`;
 			console.log(message);

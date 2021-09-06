@@ -15,7 +15,7 @@ import blue from '@material-ui/core/colors/blue';
 
 import dateParseISO from 'date-fns/parseISO';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 import {ConsultationDocument} from '../../api/collection/consultations';
 
 import Loading from '../navigation/Loading';
@@ -26,6 +26,8 @@ import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import {computeFixedFabStyle} from '../button/FixedFab';
 
+import insertConsultation from '../../api/endpoint/consultations/insert';
+import updateConsultation from '../../api/endpoint/consultations/update';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
@@ -289,11 +291,11 @@ const ConsultationEditor = ({consultation}) => {
 
 		try {
 			if (consultationId === undefined) {
-				const res = await call('consultations.insert', consultation);
+				const res = await call(insertConsultation, consultation);
 				dispatch({type: 'save-success'});
 				history.push({pathname: `/edit/consultation/${res}`});
 			} else {
-				await call('consultations.update', consultationId, consultation);
+				await call(updateConsultation, consultationId, consultation);
 				dispatch({type: 'save-success'});
 			}
 		} catch (error: unknown) {

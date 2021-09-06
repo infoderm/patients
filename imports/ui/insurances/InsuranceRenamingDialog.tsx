@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {useInsurancesFind} from '../../api/insurances';
+import {renameInsurance, useInsurancesFind} from '../../api/insurances';
 
 export default function InsuranceRenamingDialog({
 	open,
@@ -16,7 +16,7 @@ export default function InsuranceRenamingDialog({
 			open={open}
 			title="insurance"
 			useTagsFind={useInsurancesFind}
-			method="insurances.rename"
+			endpoint={renameInsurance}
 			tag={tag}
 			onClose={onClose}
 			onRename={onRename}
