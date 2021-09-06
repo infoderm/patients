@@ -1,8 +1,8 @@
 import {check} from 'meteor/check';
 
-import {ConsultationDocument} from '../../consultations';
+import {ConsultationDocument} from '../../collection/consultations';
 
-import {Appointments} from '../../appointments';
+import {Appointments} from '../../collection/appointments';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 

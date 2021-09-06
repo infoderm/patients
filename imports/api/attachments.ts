@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 import {Uploads} from './uploads';
 
-export const Attachments = Uploads.collection;
+import {Attachments} from './collection/attachments';
 
 export const link = (attachment) =>
 	`/${Uploads.link(attachment).split('/').slice(3).join('/')}`;

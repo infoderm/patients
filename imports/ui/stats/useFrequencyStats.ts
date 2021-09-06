@@ -1,7 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {Count, frequencySexPublication, frequencySexKey} from '../../api/stats';
+import {Count} from '../../api/collection/stats';
+import {frequencySexPublication, frequencySexKey} from '../../api/stats';
 
 const useFrequencyStats = (query) => {
 	const publication = frequencySexPublication;

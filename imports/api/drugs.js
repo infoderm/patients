@@ -1,10 +1,9 @@
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import mergeFields from '../util/mergeFields';
 
-export const Drugs = new Mongo.Collection('drugs');
+import {Drugs} from './collection/drugs';
 
 if (Meteor.isServer) {
 	Meteor.publish('drugs', function () {

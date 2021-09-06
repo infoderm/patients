@@ -1,5 +1,11 @@
 {
   "name": "patients",
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.tsx",
+      "server": "server/main.ts"
+    }
+  },
   "babel": {
     "plugins": [
       "@babel/plugin-syntax-jsx"

@@ -6,10 +6,11 @@ import {map} from '@iterable-iterator/map';
 import {_chain as chain} from '@iterable-iterator/chain';
 
 import {Patients} from '../../api/collection/patients';
+import {Consultations} from '../../api/collection/consultations';
+import {Attachments} from '../../api/collection/attachments';
+import {Documents} from '../../api/collection/documents';
+
 import {patients} from '../../api/patients';
-import {Consultations} from '../../api/consultations';
-import {Attachments} from '../../api/attachments';
-import {Documents} from '../../api/documents';
 
 const useMergeInfo = (toMerge) =>
 	useTracker(() => {

@@ -1,7 +1,7 @@
 import startOfToday from 'date-fns/startOfToday';
 import isBefore from 'date-fns/isBefore';
 
-import {ConsultationDocument} from '../consultations';
+import {ConsultationDocument} from '../collection/consultations';
 
 const virtualFields = (consultation: ConsultationDocument) => {
 	const {isDone, isCancelled, scheduledDatetime, currency, price, paid} =

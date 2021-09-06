@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Documents} from '../../documents';
+import {Documents} from '../../collection/documents';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 

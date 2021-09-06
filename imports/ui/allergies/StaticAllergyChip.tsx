@@ -12,7 +12,7 @@ import {colord} from 'colord';
 
 import {myEncodeURIComponent} from '../../client/uri';
 
-import {AllergyDocument} from '../../api/allergies';
+import {AllergyDocument} from '../../api/collection/allergies';
 
 interface AddedProps {
 	loading?: boolean;

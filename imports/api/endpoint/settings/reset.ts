@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Settings, settings} from '../../settings';
+import {Settings} from '../../collection/settings';
+import {settings} from '../../settings';
 
 import define from '../define';
 

@@ -6,7 +6,7 @@ import Chip, {ChipProps} from '@material-ui/core/Chip';
 
 import {myEncodeURIComponent} from '../../client/uri';
 
-import {DoctorFields} from '../../api/doctors';
+import {DoctorFields} from '../../api/collection/doctors';
 
 interface AddedProps {
 	item: DoctorFields;

@@ -1,11 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {
-	Count,
-	countPublicationName,
-	countPublicationKey,
-} from '../../api/stats';
+import {Count} from '../../api/collection/stats';
+
+import {countPublicationName, countPublicationKey} from '../../api/stats';
 
 const makeHistogram = (QueriedCollection, values) => (query?: object) => {
 	const publication = countPublicationName(QueriedCollection, {values});

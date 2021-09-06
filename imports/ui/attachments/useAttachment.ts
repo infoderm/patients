@@ -1,4 +1,4 @@
-import {Attachments} from '../../api/attachments';
+import {Attachments} from '../../api/collection/attachments';
 import makeFindOne from '../../api/makeFindOne';
 
 const useAttachment = makeFindOne(Attachments, 'attachment');

@@ -8,7 +8,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import {Drugs} from '../../api/drugs';
+import {Drugs} from '../../api/collection/drugs';
 
 const styles = (theme) => ({
 	container: {

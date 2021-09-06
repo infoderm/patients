@@ -3,9 +3,10 @@ import {check} from 'meteor/check';
 import {
 	Consultations,
 	ConsultationDocument,
-	consultations,
-	computedFields,
-} from '../../consultations';
+} from '../../collection/consultations';
+
+import {consultations, computedFields} from '../../consultations';
+
 import {books} from '../../books';
 
 import define from '../define';

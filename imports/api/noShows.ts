@@ -1,17 +1,11 @@
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import {Appointments} from './appointments';
+import {Appointments} from './collection/appointments';
 
-interface State {
-	count: number;
-}
-
-const noShows = 'noShows';
-export const NoShows = new Mongo.Collection<State>(noShows);
+import {noShows, State} from './collection/noShows';
 
 if (Meteor.isServer) {
 	Meteor.publish('patient.noShows', function (patientId) {

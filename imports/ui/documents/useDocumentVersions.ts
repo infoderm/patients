@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
-import {Documents} from '../../api/documents';
+import {Documents} from '../../api/collection/documents';
 
 const useDocumentVersions = (document) => {
 	const {parsed, identifier, reference} = document;

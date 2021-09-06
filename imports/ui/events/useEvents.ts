@@ -6,13 +6,14 @@ import {useTracker} from 'meteor/react-meteor-data';
 
 import isValid from 'date-fns/isValid';
 
-import {Events, Event, beginsInInterval} from '../../api/events';
+import {Events, EventDocument} from '../../api/collection/events';
+import {beginsInInterval} from '../../api/events';
 
 const useEvents = (
 	begin: Date,
 	end: Date,
-	filter: Mongo.Selector<Event>,
-	options: Mongo.Options<Event>,
+	filter: Mongo.Selector<EventDocument>,
+	options: Mongo.Options<EventDocument>,
 	deps: DependencyList,
 ) => {
 	const query = {

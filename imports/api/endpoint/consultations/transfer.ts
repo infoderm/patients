@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Consultations} from '../../consultations';
+import {Consultations} from '../../collection/consultations';
 
 import define from '../define';
 
