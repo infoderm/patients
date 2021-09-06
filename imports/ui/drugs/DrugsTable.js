@@ -27,7 +27,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
 
-import {Drugs} from '../../api/drugs';
+import {Drugs} from '../../api/collection/drugs';
 
 const columnData = [
 	{id: 'mppcv', numeric: true, disablePadding: false, label: 'MPPCV'},

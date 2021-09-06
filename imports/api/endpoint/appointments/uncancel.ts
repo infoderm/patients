@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Appointments} from '../../appointments';
+import {Appointments} from '../../collection/appointments';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 

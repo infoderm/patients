@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Allergies} from '../../allergies';
+import {Allergies} from '../../collection/allergies';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';

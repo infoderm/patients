@@ -1,20 +1,13 @@
 import {Meteor, Subscription} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 
 import startOfToday from 'date-fns/startOfToday';
 import intervalToDuration from 'date-fns/intervalToDuration';
 
 import eidParseBirthdate from './eidParseBirthdate';
 import {Patients} from './collection/patients';
-import {Consultations} from './consultations';
+import {Consultations} from './collection/consultations';
 
-interface PollResult {
-	total: number;
-	count: any;
-}
-
-export const countCollection = 'stats.count';
-export const Count = new Mongo.Collection<PollResult>(countCollection);
+import {countCollection, PollResult} from './collection/stats';
 
 export const countPublicationName = (QueriedCollection, {values}) =>
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;

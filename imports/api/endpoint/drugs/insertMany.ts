@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Drugs} from '../../drugs';
+import {Drugs} from '../../collection/drugs';
 
 import define from '../define';
 

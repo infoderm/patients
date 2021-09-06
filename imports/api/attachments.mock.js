@@ -1,3 +1,1 @@
-import {Attachments} from './attachments';
-
-export {Attachments};
+export {Attachments} from './collection/attachments';

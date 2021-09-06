@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Appointments, appointments} from '../../appointments';
+import {Appointments} from '../../collection/appointments';
+import {appointments} from '../../appointments';
 
 import invoke from '../invoke';
 

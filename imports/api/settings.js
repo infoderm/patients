@@ -1,10 +1,9 @@
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import {ALL_WEEK_DAYS} from '../ui/calendar/constants';
 
-const Settings = new Mongo.Collection('settings');
+import {Settings} from './collection/settings';
 
 if (Meteor.isServer) {
 	Meteor.publish('settings', function () {
@@ -42,4 +41,4 @@ const settings = {
 	methods,
 };
 
-export {Settings, settings};
+export {settings};

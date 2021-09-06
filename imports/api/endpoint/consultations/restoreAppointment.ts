@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {Consultations} from '../../consultations';
+import {Consultations} from '../../collection/consultations';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';

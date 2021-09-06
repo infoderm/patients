@@ -1,7 +1,6 @@
 import {Buffer} from 'buffer';
 
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 // Import { Binary } from 'meteor/mongo';
 import {check} from 'meteor/check';
 
@@ -11,7 +10,7 @@ import pageQuery from './pageQuery';
 import {Patients} from './collection/patients';
 import {patients} from './patients';
 
-export const Documents = new Mongo.Collection<any>('documents');
+import {Documents} from './collection/documents';
 
 if (Meteor.isServer) {
 	Meteor.publish('documents', pageQuery(Documents));

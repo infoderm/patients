@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Consultations} from '../../consultations';
-import {Attachments} from '../../attachments';
+import {Consultations} from '../../collection/consultations';
+import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 

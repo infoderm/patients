@@ -1,7 +1,8 @@
 import {check} from 'meteor/check';
 
-import {Consultations} from '../../consultations';
-import {Books, books} from '../../books';
+import {Consultations} from '../../collection/consultations';
+import {Books} from '../../collection/books';
+import {books} from '../../books';
 import {parseUint32StrictOrString} from '../../string';
 
 import define from '../define';

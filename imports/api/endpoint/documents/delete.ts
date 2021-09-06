@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Documents, documents} from '../../documents';
+import {Documents} from '../../collection/documents';
+import {documents} from '../../documents';
 
 import define from '../define';
 

@@ -5,26 +5,30 @@ import {Mongo} from 'meteor/mongo';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {Settings} from '../imports/api/settings';
+import {Settings} from '../imports/api/collection/settings';
 import {Patients} from '../imports/api/collection/patients';
 import {PatientsSearchIndex, patients} from '../imports/api/patients';
-import {Drugs} from '../imports/api/drugs';
-import {Consultations, isUnpaid} from '../imports/api/consultations';
-import {Events} from '../imports/api/events';
-import {Attachments} from '../imports/api/attachments';
+import {Drugs} from '../imports/api/collection/drugs';
+import {Consultations} from '../imports/api/collection/consultations';
+import {isUnpaid} from '../imports/api/consultations';
+import {Events} from '../imports/api/collection/events';
+import {Attachments} from '../imports/api/collection/attachments';
+import {Insurances} from '../imports/api/collection/insurances';
+import {insurances} from '../imports/api/insurances';
+import {Doctors} from '../imports/api/collection/doctors';
+import {doctors} from '../imports/api/doctors';
+import {Allergies} from '../imports/api/collection/allergies';
+import {allergies} from '../imports/api/allergies';
+import {Books} from '../imports/api/collection/books';
+import {books} from '../imports/api/books';
+import {Documents} from '../imports/api/collection/documents';
+import {documents} from '../imports/api/documents';
+
+// DECLARE ALL ENABLED PUBLICATIONS
 // eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/appointments';
-import {Insurances, insurances} from '../imports/api/insurances';
-import {Doctors, doctors} from '../imports/api/doctors';
-import {Allergies, allergies} from '../imports/api/allergies';
-import {Books, books} from '../imports/api/books';
-import {Documents, documents} from '../imports/api/documents';
-// eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/issues';
-// eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/stats';
-// eslint-disable-next-line import/no-unassigned-import
-import '../imports/api/noShows';
+import './publication/_register/enabled';
+
+// DECLARE ALL ENABLED API ENDPOINTS
 // eslint-disable-next-line import/no-unassigned-import
 import '../imports/api/endpoint/_register/enabled';
 

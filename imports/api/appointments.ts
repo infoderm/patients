@@ -3,9 +3,7 @@ import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {Consultations} from './consultations';
-
-export const Appointments = Consultations;
+import {Appointments} from './collection/appointments';
 
 if (Meteor.isServer) {
 	Meteor.publish('appointments', function () {

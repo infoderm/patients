@@ -2,13 +2,14 @@ import {check} from 'meteor/check';
 
 import {thisYearsInterval} from '../../../util/datetime';
 
+import {ConsultationDocument} from '../../collection/consultations';
+
 import {
-	ConsultationDocument,
 	findLastConsultationInInterval,
 	filterNotInRareBooks,
 } from '../../consultations';
 
-import {Appointments} from '../../appointments';
+import {Appointments} from '../../collection/appointments';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 

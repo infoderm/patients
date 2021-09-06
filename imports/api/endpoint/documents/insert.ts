@@ -1,10 +1,7 @@
 import {check} from 'meteor/check';
 
-import {
-	Documents,
-	documents,
-	findBestPatientMatchServerOnly,
-} from '../../documents';
+import {Documents} from '../../collection/documents';
+import {documents, findBestPatientMatchServerOnly} from '../../documents';
 
 import define from '../define';
 

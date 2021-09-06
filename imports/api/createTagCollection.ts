@@ -25,7 +25,8 @@ const computedFields = (name) => ({
 	containsNonAlphabetical: containsNonAlphabetical(name),
 });
 
-interface Options {
+interface Options<T> {
+	Collection: Mongo.Collection<T>;
 	collection: string;
 	publication: string;
 	singlePublication: string;
@@ -38,8 +39,9 @@ interface TagStats {
 	count: number;
 }
 
-const createTagCollection = <T extends TagDocument>(options: Options) => {
+const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 	const {
+		Collection,
 		collection,
 		publication,
 		singlePublication, // Optional
@@ -54,7 +56,6 @@ const createTagCollection = <T extends TagDocument>(options: Options) => {
 	const cacheCollection = collection + FIND_CACHE_SUFFIX;
 	const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 
-	const Collection = new Mongo.Collection<T>(collection);
 	const Stats = new Mongo.Collection<TagStats>(stats);
 
 	const TagsCache = new Mongo.Collection<CacheItem>(cacheCollection);
@@ -240,8 +241,6 @@ const createTagCollection = <T extends TagDocument>(options: Options) => {
 			stats,
 			parentPublicationStats: statsPublication,
 		},
-
-		cache: {Stats},
 
 		add: (owner: string, name: string) => {
 			check(owner, String);

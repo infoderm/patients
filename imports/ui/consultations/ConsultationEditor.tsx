@@ -16,7 +16,7 @@ import blue from '@material-ui/core/colors/blue';
 import dateParseISO from 'date-fns/parseISO';
 
 import call from '../../api/call';
-import {ConsultationDocument} from '../../api/consultations';
+import {ConsultationDocument} from '../../api/collection/consultations';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';

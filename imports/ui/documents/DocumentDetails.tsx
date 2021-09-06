@@ -8,7 +8,7 @@ import {Mongo} from 'meteor/mongo';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import {Documents} from '../../api/documents';
+import {Documents} from '../../api/collection/documents';
 import DocumentCard from './DocumentCard';
 
 type DocumentId = string | Mongo.ObjectID;

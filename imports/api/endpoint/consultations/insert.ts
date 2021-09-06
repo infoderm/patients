@@ -1,10 +1,9 @@
 import {check} from 'meteor/check';
 
-import {
-	Consultations,
-	computedFields,
-	consultations,
-} from '../../consultations';
+import {Consultations} from '../../collection/consultations';
+
+import {computedFields, consultations} from '../../consultations';
+
 import {books} from '../../books';
 
 import define from '../define';

@@ -7,7 +7,7 @@ import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
 
-import {Consultations} from '../../consultations';
+import {Consultations} from '../../collection/consultations';
 import {books} from '../../books';
 
 import define from '../define';

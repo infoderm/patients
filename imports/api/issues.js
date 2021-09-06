@@ -1,6 +1,6 @@
 import {Patients} from './collection/patients';
-import {Consultations} from './consultations';
-import {Documents} from './documents';
+import {Consultations} from './collection/consultations';
+import {Documents} from './collection/documents';
 import makeFilteredCollection from './makeFilteredCollection';
 
 export const usePatientsMissingABirthdate = makeFilteredCollection(

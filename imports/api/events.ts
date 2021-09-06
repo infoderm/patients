@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
@@ -8,27 +7,17 @@ import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 
-import {Consultations, DEFAULT_DURATION_IN_MINUTES} from './consultations';
+import {Consultations} from './collection/consultations';
+
+import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
 
 import intersectsInterval from './interval/intersectsInterval';
 import beginsInInterval from './interval/beginsInInterval';
 
+import {EventDocument, events} from './collection/events';
+
 export {intersectsInterval, beginsInInterval};
-
-export interface Event {
-	owner: string;
-	calendar: string;
-	title: string;
-	begin: Date;
-	end: Date;
-	isCancelled: boolean;
-	isNoShow: boolean;
-	uri: string;
-}
-
-const events = 'events';
-export const Events = new Mongo.Collection<Event>(events);
 
 if (Meteor.isServer) {
 	const event = (
@@ -43,7 +32,7 @@ if (Meteor.isServer) {
 			doneDatetime,
 			createdAt,
 		},
-	): Event => {
+	): EventDocument => {
 		const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
 		const begin = datetime;
 		const end = isDone
