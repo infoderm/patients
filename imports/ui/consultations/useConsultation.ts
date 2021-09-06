@@ -1,6 +1,8 @@
 import makeFindOne from '../../api/makeFindOne';
 import {Consultations} from '../../api/collection/consultations';
 
-const useConsultation = makeFindOne(Consultations, 'consultation');
+import publication from '../../api/publication/consultations/findOne';
+
+const useConsultation = makeFindOne(Consultations, publication);
 
 export default useConsultation;

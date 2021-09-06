@@ -2,6 +2,7 @@ import {Patients} from './collection/patients';
 import createTagCollection from './createTagCollection';
 
 import {Allergies, collection} from './collection/allergies';
+import patients from './publication/patients/patients';
 
 const {
 	operations: allergies,
@@ -15,7 +16,7 @@ const {
 	publication: 'allergies',
 	singlePublication: 'allergy',
 	Parent: Patients,
-	parentPublication: 'patients',
+	parentPublication: patients,
 	key: 'allergies',
 });
 

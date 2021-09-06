@@ -1,14 +1,16 @@
-import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import {Appointments} from './collection/appointments';
+import {Appointments} from '../../collection/appointments';
 
-import {noShows, State} from './collection/noShows';
+import {noShows, State} from '../../collection/noShows';
 
-if (Meteor.isServer) {
-	Meteor.publish('patient.noShows', function (patientId) {
+import define from '../define';
+
+export default define({
+	name: 'patient.noShows',
+	handle(patientId: string) {
 		check(patientId, String);
 
 		const Collection = Appointments;
@@ -46,5 +48,5 @@ if (Meteor.isServer) {
 			handle.stop();
 		});
 		this.ready();
-	});
-}
+	},
+});

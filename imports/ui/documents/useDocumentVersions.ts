@@ -1,6 +1,7 @@
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 import {Documents} from '../../api/collection/documents';
+import subscribe from '../../api/publication/subscribe';
+import find from '../../api/publication/documents/find';
 
 const useDocumentVersions = (document) => {
 	const {parsed, identifier, reference} = document;
@@ -16,7 +17,7 @@ const useDocumentVersions = (document) => {
 	return useTracker(() => {
 		if (!parsed) return {loading: false, versions: [document]};
 
-		const handle = Meteor.subscribe('documents', query, options);
+		const handle = subscribe(find, query, options);
 		return {
 			loading: !handle.ready(),
 			versions: Documents.find(query, options).fetch(),

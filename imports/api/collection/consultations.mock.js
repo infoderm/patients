@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-import {Consultations} from './collection/consultations';
+import {Consultations} from './consultations';
 
 export {Consultations};
 

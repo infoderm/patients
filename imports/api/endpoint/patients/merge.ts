@@ -1,10 +1,12 @@
 import {check} from 'meteor/check';
 
 import {Patients} from '../../collection/patients';
-import {PatientsSearchIndex, patients} from '../../patients';
+import {PatientsSearchIndex} from '../../collection/patients/search';
 import {Consultations} from '../../collection/consultations';
 import {Documents} from '../../collection/documents';
 import {Attachments} from '../../collection/attachments';
+
+import {patients} from '../../patients';
 
 // import executeTransaction from '../../transaction/executeTransaction';
 

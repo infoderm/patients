@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import dateParseISO from 'date-fns/parseISO';
@@ -7,47 +5,19 @@ import addYears from 'date-fns/addYears';
 
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
-import makeObservedQueryPublication from './makeObservedQueryPublication';
 import {normalized, normalizeInput, parseUint32StrictOrString} from './string';
 
-import {
-	STATS_SUFFIX,
-	FIND_CACHE_SUFFIX,
-	FIND_OBSERVE_SUFFIX,
-} from './createTagCollection';
-
-import CacheItem from './CacheItem';
-import ConsultationsStats from './ConsultationsStats';
-
 import {Books, collection} from './collection/books';
+import {BooksCache} from './collection/books/cache';
+import {Stats} from './collection/books/stats';
 
-const publication = 'books';
-const stats = collection + STATS_SUFFIX;
-const cacheCollection = collection + FIND_CACHE_SUFFIX;
-const cachePublication = collection + FIND_OBSERVE_SUFFIX;
-
-const Stats = new Mongo.Collection<ConsultationsStats>(stats);
-const BooksCache = new Mongo.Collection<CacheItem>(cacheCollection);
+import publication from './publication/books/find';
+import cachePublication from './publication/books/observe';
 
 export const useBooks = makeQuery(Books, publication);
 
 // TODO rename to useObservedBooks
 export const useBooksFind = makeObservedQueryHook(BooksCache, cachePublication);
-
-if (Meteor.isServer) {
-	Meteor.publish(publication, function (args) {
-		const query = {
-			...args,
-			owner: this.userId,
-		};
-		return Books.find(query);
-	});
-
-	Meteor.publish(
-		cachePublication,
-		makeObservedQueryPublication(Books, cacheCollection),
-	);
-}
 
 const sanitizeInput = normalizeInput;
 const sanitize = normalized;
@@ -55,8 +25,6 @@ const sanitize = normalized;
 export const books = {
 	options: {
 		collection,
-		publication,
-		stats,
 		parentPublication: 'book.consultations',
 		parentPublicationStats: 'book.stats',
 	},

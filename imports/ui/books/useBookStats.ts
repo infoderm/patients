@@ -1,10 +1,9 @@
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {books} from '../../api/books';
+import subscribe from '../../api/publication/subscribe';
 
-const Collection = books.cache.Stats;
-const subscription = books.options.parentPublicationStats;
+import publication from '../../api/publication/books/consultations/stats';
+import {Stats as Collection} from '../../api/collection/books/stats';
 
 /**
  * useBookStats.
@@ -13,7 +12,7 @@ const subscription = books.options.parentPublicationStats;
  */
 const useBookStats = (name: string) =>
 	useTracker(() => {
-		const handle = Meteor.subscribe(subscription, name);
+		const handle = subscribe(publication, name);
 		return {
 			loading: !handle.ready(),
 			result: Collection.findOne({name}),

@@ -1,12 +1,11 @@
+import {PatientsSearchIndexCache} from '../../api/collection/patients/search/cache';
 import makeObservedQueryHook from '../../api/makeObservedQueryHook';
-import {
-	PatientsSearchIndexCache,
-	indexCachePublication,
-} from '../../api/patients';
+
+import publication from '../../api/publication/patients/search';
 
 const useAdvancedObservedPatients = makeObservedQueryHook(
 	PatientsSearchIndexCache,
-	indexCachePublication,
+	publication,
 );
 
 export default useAdvancedObservedPatients;

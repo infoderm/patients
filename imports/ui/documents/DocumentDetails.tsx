@@ -1,7 +1,6 @@
 import React from 'react';
 import {match} from 'react-router-dom';
 
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 import {Mongo} from 'meteor/mongo';
 
@@ -9,6 +8,9 @@ import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import {Documents} from '../../api/collection/documents';
+
+import subscribe from '../../api/publication/subscribe';
+import findOne from '../../api/publication/documents/findOne';
 import DocumentCard from './DocumentCard';
 
 type DocumentId = string | Mongo.ObjectID;
@@ -50,7 +52,7 @@ interface ReactiveDocumentDetailsProps {
 
 const useDocument = (documentId: DocumentId) =>
 	useTracker(() => {
-		const handle = Meteor.subscribe('document', documentId);
+		const handle = subscribe(findOne, documentId);
 		const loading = !handle.ready();
 		return {
 			loading,

@@ -1,20 +1,19 @@
-import {Meteor} from 'meteor/meteor';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {consultations} from '../../api/consultations';
-
-const {key, publication, Collection} = consultations.stats;
+import {key, Stats} from '../../api/collection/consultations/stats';
+import subscribe from '../../api/publication/subscribe';
+import publication from '../../api/publication/consultations/stats';
 
 const useConsultationsStats = (query) =>
 	useTracker(() => {
 		console.debug({publication, query});
 
-		const handle = Meteor.subscribe(publication, query);
+		const handle = subscribe(publication, query);
 		const loading = !handle.ready();
 
 		return {
 			loading,
-			result: loading ? undefined : Collection.findOne(key(query)),
+			result: loading ? undefined : Stats.findOne(key(query)),
 		};
 	}, [JSON.stringify(query)]);
 

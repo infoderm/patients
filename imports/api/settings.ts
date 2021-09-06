@@ -1,19 +1,4 @@
-import {Meteor} from 'meteor/meteor';
-import {check} from 'meteor/check';
-
 import {ALL_WEEK_DAYS} from '../ui/calendar/constants';
-
-import {Settings} from './collection/settings';
-
-if (Meteor.isServer) {
-	Meteor.publish('settings', function () {
-		return Settings.find({owner: this.userId});
-	});
-	Meteor.publish('setting', function (key) {
-		check(key, String);
-		return Settings.find({owner: this.userId, key});
-	});
-}
 
 const methods = {
 	update: 'settings.update',
