@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useSnackbar} from 'notistack';
@@ -19,6 +17,8 @@ import {useCurrencyFormat} from '../../i18n/currency';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
+import call from '../../api/endpoint/call';
+import update from '../../api/endpoint/consultations/update';
 
 const ConsultationDebtSettlementDialog = (props) => {
 	const {open, onClose, consultation} = props;
@@ -42,33 +42,31 @@ const ConsultationDebtSettlementDialog = (props) => {
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const clearDebtForThisConsultation = (onClose, consultation) => (event) => {
-		event.preventDefault();
+	const clearDebtForThisConsultation =
+		(onClose, consultation) => async (event) => {
+			event.preventDefault();
 
-		const fields = {
-			...consultation,
-			paid: consultation.price,
-		};
+			const fields = {
+				...consultation,
+				paid: consultation.price,
+			};
 
-		const key = enqueueSnackbar('Processing...', {variant: 'info'});
-		Meteor.call(
-			'consultations.update',
-			consultation._id,
-			fields,
-			(err, _res) => {
+			const key = enqueueSnackbar('Processing...', {variant: 'info'});
+			try {
+				await call(update, consultation._id, fields);
 				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `Consultation #${consultation._id} updated.`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					onClose();
-				}
-			},
-		);
-	};
+				const message = `Consultation #${consultation._id} updated.`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error({error});
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
+		};
 
 	const patientIdentifier = found
 		? `${patient.firstname} ${patient.lastname}`

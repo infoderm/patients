@@ -25,11 +25,12 @@ import blue from '@material-ui/core/colors/blue';
 import green from '@material-ui/core/colors/green';
 import orange from '@material-ui/core/colors/orange';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 import withLazyOpening from '../modal/withLazyOpening';
 
 import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient';
-import useConsultationsForPatient from '../consultations/useConsultationsForPatient';
+import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
+import useConsultationsForPatient from './useConsultationsForPatient';
 
 const formatDatetime = (datetime) => {
 	if (isToday(datetime)) {
@@ -79,13 +80,13 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 		history.push(`/edit/consultation/${_id}`);
 	};
 
-	const beginConsultation = (_id) => async () => {
+	const beginThisConsultation = (_id) => async () => {
 		try {
-			await call('appointments.beginConsultation', _id);
+			await call(beginConsultation, _id);
 			console.log(`Consultation #${_id} started.`);
 			history.push({pathname: `/edit/consultation/${_id}`});
-		} catch (error) {
-			console.error(error);
+		} catch (error: unknown) {
+			console.error({error});
 		}
 	};
 
@@ -103,7 +104,7 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 						key={_id}
 						button
 						autoFocus={i === 0}
-						onClick={beginConsultation(_id)}
+						onClick={beginThisConsultation(_id)}
 					>
 						<ListItemAvatar>
 							<Avatar

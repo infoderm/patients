@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {useAllergiesFind} from '../../api/allergies';
+import {renameDoctor, useDoctorsFind} from '../../api/doctors';
 
-export default function AllergyRenamingDialog({open, onClose, onRename, tag}) {
+export default function DoctorRenamingDialog({open, onClose, onRename, tag}) {
 	return (
 		<TagRenamingDialog
 			open={open}
-			title="allergy"
-			useTagsFind={useAllergiesFind}
-			method="allergies.rename"
+			title="doctor"
+			useTagsFind={useDoctorsFind}
+			endpoint={renameDoctor}
 			tag={tag}
 			onClose={onClose}
 			onRename={onRename}
@@ -19,7 +19,7 @@ export default function AllergyRenamingDialog({open, onClose, onRename, tag}) {
 	);
 }
 
-AllergyRenamingDialog.propTypes = {
+DoctorRenamingDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onRename: PropTypes.func.isRequired,

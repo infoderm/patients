@@ -13,13 +13,14 @@ import StaticPatientChip, {
 	projection as StaticPatientChipProjection,
 } from '../patients/StaticPatientChip';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 import {AllergyDocument} from '../../api/collection/allergies';
 import {useAllergyStats, usePatientsHavingAllergy} from '../../api/allergies';
 
 import ColorPicker from '../input/ColorPicker';
 
 import {myEncodeURIComponent} from '../../client/uri';
+import changeColor from '../../api/endpoint/allergies/changeColor';
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';
 
@@ -72,7 +73,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 		const onChange = async (color: string) => {
 			if (color !== item.color) {
 				try {
-					await call('allergies.changeColor', item._id, color);
+					await call(changeColor, item._id, color);
 					console.log(`Changed color of allergy ${item._id} to ${color}`);
 				} catch (error: unknown) {
 					console.error(error);

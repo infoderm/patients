@@ -17,10 +17,11 @@ import TextField from '@material-ui/core/TextField';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
-import call from '../../api/call';
+import call from '../../api/endpoint/call';
 
 import {useSetting} from '../../client/settings';
 import withLazyOpening from '../modal/withLazyOpening';
+import cancel from '../../api/endpoint/appointments/cancel';
 
 const AppointmentCancellationDialog = (props) => {
 	const {open, onClose, appointment} = props;
@@ -34,18 +35,17 @@ const AppointmentCancellationDialog = (props) => {
 	const cancelThisAppointment = async (event) => {
 		event.preventDefault();
 		try {
-			await call('appointments.cancel', appointment._id, reason, explanation);
+			await call(cancel, appointment._id, reason, explanation);
 			console.log(`Appointment #${appointment._id} cancelled.`);
 			onClose();
-		} catch (error) {
-			console.error(error);
+		} catch (error: unknown) {
+			console.error({error});
 		}
 	};
 
 	return (
 		<Dialog
 			open={open}
-			// component="form"
 			aria-labelledby="appointment-cancellation-dialog-title"
 			onClose={onClose}
 		>
@@ -68,7 +68,9 @@ const AppointmentCancellationDialog = (props) => {
 							name: 'cancellation-reason',
 							id: 'cancellation-reason',
 						}}
-						onChange={(e) => setReason(e.target.value)}
+						onChange={(e) => {
+							setReason(e.target.value);
+						}}
 					>
 						{reasons.map((x) => (
 							<MenuItem key={x} value={x}>
@@ -87,16 +89,13 @@ const AppointmentCancellationDialog = (props) => {
 					InputLabelProps={{
 						shrink: true,
 					}}
-					onChange={(e) => setExplanation(e.target.value)}
+					onChange={(e) => {
+						setExplanation(e.target.value);
+					}}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<AlarmOnIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<AlarmOnIcon />} onClick={onClose}>
 					Do not cancel
 				</Button>
 				<Button

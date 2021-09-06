@@ -222,7 +222,7 @@ const AttachmentCard = (props) => {
 								open={deleting}
 								itemId={info.parentId}
 								attachment={attachment}
-								method={detach}
+								endpoint={detach}
 								onClose={() => dispatch({type: 'closeDeletionDialog'})}
 							/>
 						)}

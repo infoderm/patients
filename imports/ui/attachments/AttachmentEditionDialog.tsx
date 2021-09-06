@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,13 +15,15 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
+import call from '../../api/endpoint/call';
+import rename from '../../api/endpoint/uploads/rename';
 
 const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [filename, setFilename] = useState(attachment.name || '');
 	const [filenameError, setFilenameError] = useState('');
 
-	const editThisAttachment = (event) => {
+	const editThisAttachment = async (event) => {
 		event.preventDefault();
 		if (filename === '') {
 			setFilenameError('Filename cannot be empty');
@@ -33,23 +33,20 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 				variant: 'info',
 				persist: true,
 			});
-			Meteor.call(
-				'uploads.updateFilename',
-				attachment._id,
-				filename,
-				(err, _res) => {
-					closeSnackbar(key);
-					if (err) {
-						console.error(err);
-						enqueueSnackbar(err.message, {variant: 'error'});
-					} else {
-						const message = `Attachment ${attachment._id} changed name to ${filename}.`;
-						console.log(message);
-						enqueueSnackbar(message, {variant: 'success'});
-						onClose();
-					}
-				},
-			);
+			try {
+				await call(rename, attachment._id, filename);
+				closeSnackbar(key);
+				const message = `Attachment ${attachment._id} changed name to ${filename}.`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error({error});
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
 		}
 	};
 

@@ -10,6 +10,8 @@ const {
 	useTagsFind: useAllergiesFind,
 	useTagStats: useAllergyStats,
 	useTaggedDocuments: usePatientsHavingAllergy,
+	deleteEndpoint: deleteAllergy,
+	renameEndpoint: renameAllergy,
 } = createTagCollection({
 	Collection: Allergies,
 	collection,
@@ -26,4 +28,6 @@ export {
 	useAllergiesFind,
 	useAllergyStats,
 	usePatientsHavingAllergy,
+	deleteAllergy,
+	renameAllergy,
 };

@@ -694,7 +694,7 @@ const PatientPersonalInformation = (props) => {
 						Button={FixedFab}
 						col={3}
 						color="default"
-						method={patientsAttach}
+						endpoint={patientsAttach}
 						item={patient._id}
 					>
 						<AttachFileIcon />

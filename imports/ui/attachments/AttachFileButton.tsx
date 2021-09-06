@@ -13,12 +13,17 @@ import {Uploads} from '../../api/uploads';
 import InputFileButton from '../input/InputFileButton';
 
 interface Props extends Omit<PropsOf<typeof InputFileButton>, 'onChange'> {
-	method: Endpoint<unknown>;
+	endpoint: Endpoint<unknown>;
 	item: string;
 	children?: ReactNode;
 }
 
-const AttachFileButton = ({method, item: itemId, children, ...rest}: Props) => {
+const AttachFileButton = ({
+	endpoint,
+	item: itemId,
+	children,
+	...rest
+}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const upload = (event) => {
@@ -91,13 +96,13 @@ const AttachFileButton = ({method, item: itemId, children, ...rest}: Props) => {
 				console.log(message);
 				enqueueSnackbar(message, {variant: 'info'});
 				const key2 = enqueueSnackbar(
-					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${method.name}".`,
+					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${endpoint.name}".`,
 					notistackInfoOptions,
 				);
 				try {
-					await call(method, itemId, fileObject._id);
+					await call(endpoint, itemId, fileObject._id);
 					closeSnackbar(key2);
-					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${method.name}".`;
+					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${endpoint.name}".`;
 					console.log(message);
 					enqueueSnackbar(message, {variant: 'success'});
 				} catch (error: unknown) {

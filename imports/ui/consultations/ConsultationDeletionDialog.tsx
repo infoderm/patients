@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -24,6 +22,8 @@ import useIsMounted from '../hooks/useIsMounted';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
+import call from '../../api/endpoint/call';
+import remove from '../../api/endpoint/consultations/remove';
 
 const ConsultationDeletionDialog = (props) => {
 	const {open, onClose, consultation} = props;
@@ -48,22 +48,24 @@ const ConsultationDeletionDialog = (props) => {
 
 	const isMounted = useIsMounted();
 
-	const deleteThisConsultationIfPatientsLastNameMatches = (event) => {
+	const deleteThisConsultationIfPatientsLastNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
-			Meteor.call('consultations.remove', consultation._id, (err, _res) => {
+			try {
+				await call(remove, consultation._id);
 				closeSnackbar(key);
-				if (err) {
-					console.error(err);
-					enqueueSnackbar(err.message, {variant: 'error'});
-				} else {
-					const message = `Consultation #${consultation._id} deleted.`;
-					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
-					if (isMounted()) onClose();
-				}
-			});
+				const message = `Consultation #${consultation._id} deleted.`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				if (isMounted()) onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error(error);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
 		}
 	};
 

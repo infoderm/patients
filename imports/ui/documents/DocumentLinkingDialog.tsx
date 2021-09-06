@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
@@ -18,6 +16,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
+import call from '../../api/endpoint/call';
+import link from '../../api/endpoint/documents/link';
 
 const useStyles = makeStyles({
 	dialogPaper: {
@@ -32,31 +32,26 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 
 	const isMounted = useIsMounted();
 
-	const linkThisDocument = (event) => {
+	const linkThisDocument = async (event) => {
 		event.preventDefault();
 		const documentId = document._id;
 		const patientId = patients[0]._id;
-		Meteor.call('documents.link', documentId, patientId, (err, _res) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Document #${documentId} linked to patient #${patientId}.`);
-				if (isMounted()) onClose();
-			}
-		});
+		try {
+			await call(link, documentId, patientId);
+			console.log(`Document #${documentId} linked to patient #${patientId}.`);
+			if (isMounted()) onClose();
+		} catch (error: unknown) {
+			console.error(error);
+		}
 	};
 
 	return (
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			// component="form"
-			aria-labelledby="document-linking-dialog-title"
 			onClose={onClose}
 		>
-			<DialogTitle id="document-linking-dialog-title">
-				Link document {document._id.toString()}
-			</DialogTitle>
+			<DialogTitle>Link document {document._id.toString()}</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
 				<DialogContentText>
 					If you do not want to link this document, click cancel. If you really
@@ -76,12 +71,7 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
+				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
 					Cancel
 				</Button>
 				<Button

@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
@@ -27,6 +25,8 @@ import AppointmentCancellationDialog from '../appointments/AppointmentCancellati
 import AppointmentUncancellationDialog from '../appointments/AppointmentUncancellationDialog';
 import EditAppointmentDialog from '../appointments/EditAppointmentDialog';
 
+import call from '../../api/endpoint/call';
+import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
 import ConsultationPaymentDialog from './ConsultationPaymentDialog';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
 import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';
@@ -50,15 +50,14 @@ const StaticConsultationCardActions = (props) => {
 		consultation: {_id, isDone, isCancelled, payment_method},
 	} = props;
 
-	const beginConsultation = () => {
-		Meteor.call('appointments.beginConsultation', _id, (err) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Consultation #${_id} started.`);
-				history.push({pathname: `/edit/consultation/${_id}`});
-			}
-		});
+	const beginThisConsultation = async () => {
+		try {
+			await call(beginConsultation, _id);
+			console.log(`Consultation #${_id} started.`);
+			history.push({pathname: `/edit/consultation/${_id}`});
+		} catch (error: unknown) {
+			console.error(error);
+		}
 	};
 
 	return (
@@ -66,7 +65,7 @@ const StaticConsultationCardActions = (props) => {
 			{attachAction && (
 				<AttachFileButton
 					color="primary"
-					method={consultationsAttach}
+					endpoint={consultationsAttach}
 					item={_id}
 					disabled={!found}
 				/>
@@ -76,7 +75,7 @@ const StaticConsultationCardActions = (props) => {
 					color="primary"
 					disabled={!found}
 					startIcon={<FolderSharedIcon />}
-					onClick={beginConsultation}
+					onClick={beginThisConsultation}
 				>
 					Begin consultation
 				</Button>

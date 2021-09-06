@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import {withTracker} from 'meteor/react-meteor-data';
 
 import React from 'react';
@@ -32,6 +31,8 @@ import {Drugs} from '../../api/collection/drugs';
 import subscribe from '../../api/publication/subscribe';
 
 import publication from '../../api/publication/drugs/search';
+import call from '../../api/endpoint/call';
+import remove from '../../api/endpoint/drugs/remove';
 
 const columnData = [
 	{id: 'mppcv', numeric: true, disablePadding: false, label: 'MPPCV'},
@@ -248,10 +249,11 @@ class EnhancedTable extends React.Component {
 		this.setState({rowsPerPage: event.target.value});
 	};
 
-	handleDelete = () => {
+	handleDelete = async () => {
 		const {selected} = this.state;
 		for (const _id of selected) {
-			Meteor.call('drugs.remove', _id);
+			// eslint-disable-next-line no-await-in-loop
+			await call(remove, _id);
 		}
 
 		this.setState({selected: new Set()});

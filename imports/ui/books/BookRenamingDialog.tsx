@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {books, useBooksFind} from '../../api/books';
+import rename from '../../api/endpoint/books/rename';
 
 export default function BookRenamingDialog({open, onClose, onRename, tag}) {
 	return (
@@ -11,7 +12,7 @@ export default function BookRenamingDialog({open, onClose, onRename, tag}) {
 			open={open}
 			title="book"
 			useTagsFind={useBooksFind}
-			method="books.changeBookNumber"
+			endpoint={rename}
 			tag={tag}
 			nameKey="bookNumber"
 			nameKeyTitle="book number"

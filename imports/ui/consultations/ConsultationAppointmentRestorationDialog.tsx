@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -26,6 +24,9 @@ import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
+import call from '../../api/endpoint/call';
+import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
+
 const ConsultationAppointmentRestorationDialog = (props) => {
 	const {open, onClose, consultation} = props;
 
@@ -49,28 +50,26 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 
 	const isMounted = useIsMounted();
 
-	const restoreThisConsultationsAppointmentIfPatientsLastNameMatches = (
+	const restoreThisConsultationsAppointmentIfPatientsLastNameMatches = async (
 		event,
 	) => {
 		event.preventDefault();
 		if (validate()) {
 			const key = enqueueSnackbar('Processing...', {variant: 'info'});
-			Meteor.call(
-				'consultations.restoreAppointment',
-				consultation._id,
-				(err, _res) => {
-					closeSnackbar(key);
-					if (err) {
-						console.error(err);
-						enqueueSnackbar(err.message, {variant: 'error'});
-					} else {
-						const message = `Appointment #${consultation._id} restored from consultation.`;
-						console.log(message);
-						enqueueSnackbar(message, {variant: 'success'});
-						if (isMounted()) onClose();
-					}
-				},
-			);
+			try {
+				await call(restoreAppointment, consultation._id);
+				closeSnackbar(key);
+				const message = `Appointment #${consultation._id} restored from consultation.`;
+				console.log(message);
+				enqueueSnackbar(message, {variant: 'success'});
+				if (isMounted()) onClose();
+			} catch (error: unknown) {
+				closeSnackbar(key);
+				console.error({error});
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			}
 		}
 	};
 
