@@ -1,11 +1,11 @@
 import Options from './Options';
 
 interface Params<T> {
-	name: string;
-	validate: (...args: any[]) => void;
-	run: (...args: any[]) => any;
-	simulate?: (...args: any[]) => any;
-	options?: Options<T>;
+	readonly name: string;
+	readonly validate: (...args: any[]) => void;
+	readonly run: (...args: any[]) => any;
+	readonly simulate?: (...args: any[]) => any;
+	readonly options?: Options<T>;
 }
 
 export default Params;
