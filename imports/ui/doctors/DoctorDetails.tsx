@@ -8,8 +8,8 @@ import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
 import useObservedPatients from '../patients/useObservedPatients';
 import PagedPatientsList from '../patients/PagedPatientsList';
 
+import {useDoctor} from '../../api/doctors';
 import StaticDoctorCard from './StaticDoctorCard';
-import useDoctor from './useDoctor';
 
 export default function DoctorDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;

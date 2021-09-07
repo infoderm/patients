@@ -2,7 +2,7 @@ import React from 'react';
 
 import {ChipProps} from '@material-ui/core/Chip';
 
-import useAllergy from './useAllergy';
+import {useAllergy} from '../../api/allergies';
 import StaticAllergyChip from './StaticAllergyChip';
 
 interface Tweaks {

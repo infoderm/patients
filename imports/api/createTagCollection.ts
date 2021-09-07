@@ -7,6 +7,7 @@ import mergeOptions from '../util/mergeOptions.js';
 
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
+import makeCachedFindOne from './makeCachedFindOne';
 import makeObservedQueryPublication from './makeObservedQueryPublication';
 import pageQuery from './pageQuery';
 
@@ -17,6 +18,7 @@ import {containsNonAlphabetical} from './string';
 
 import CacheItem from './CacheItem';
 import TagDocument from './tags/TagDocument';
+import makeItem from './tags/makeItem';
 import subscribe from './publication/subscribe';
 import Publication from './publication/Publication';
 
@@ -47,7 +49,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 		Collection,
 		collection,
 		publication,
-		singlePublication, // Optional
+		singlePublication,
 		Parent,
 		parentPublication,
 		key,
@@ -69,6 +71,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 	});
 
 	const useTags = makeQuery(Collection, _publication);
+	const useCachedTag = makeCachedFindOne(Collection, _publication);
 
 	const _cachePublication = definePublication({
 		name: cachePublication,
@@ -78,17 +81,17 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 	// TODO rename to useObservedTags
 	const useTagsFind = makeObservedQueryHook(TagsCache, _cachePublication);
 
-	const _singlePublication = singlePublication
-		? definePublication({
-				name: singlePublication,
-				cursor(name: string) {
-					return Collection.find({
-						owner: this.userId,
-						name,
-					} as Mongo.Selector<T>);
-				},
-		  })
-		: undefined;
+	const _singlePublication = definePublication({
+		name: singlePublication,
+		cursor(name: string) {
+			return Collection.find({
+				owner: this.userId,
+				name,
+			} as Mongo.Selector<T>);
+		},
+	});
+
+	const useTag = makeItem(Collection, _singlePublication);
 
 	const useTaggedDocuments = (name: string, options) =>
 		useTracker(() => {
@@ -240,12 +243,14 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			);
 			return Collection.remove(tagId);
 		},
+		simulate(tagId: string) {
+			return Collection.remove(tagId);
+		},
 	});
 
 	const operations = {
 		options: {
 			...options,
-			_singlePublication,
 			stats,
 			parentPublicationStats: statsPublication,
 		},
@@ -288,11 +293,12 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 	};
 
 	return {
-		Collection,
 		operations,
 		useTags,
 		useTagsFind,
 		useTagStats,
+		useTag,
+		useCachedTag,
 		useTaggedDocuments,
 		renameEndpoint,
 		deleteEndpoint,

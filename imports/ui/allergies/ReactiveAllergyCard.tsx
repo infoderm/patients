@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useCachedAllergy from './useCachedAllergy';
+import {useCachedAllergy} from '../../api/allergies';
 
 import StaticAllergyCard from './StaticAllergyCard';
 
