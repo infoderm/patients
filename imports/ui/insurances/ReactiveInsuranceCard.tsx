@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useCachedInsurance from './useCachedInsurance';
+import {useCachedInsurance} from '../../api/insurances';
 
 import StaticInsuranceCard from './StaticInsuranceCard';
 

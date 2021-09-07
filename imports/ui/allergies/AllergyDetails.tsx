@@ -8,8 +8,8 @@ import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
 import useObservedPatients from '../patients/useObservedPatients';
 import PagedPatientsList from '../patients/PagedPatientsList';
 
+import {useAllergy} from '../../api/allergies';
 import StaticAllergyCard from './StaticAllergyCard';
-import useAllergy from './useAllergy';
 
 export default function AllergyDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;

@@ -2,9 +2,9 @@ import {DependencyList} from 'react';
 import {Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import TagDocument from '../../api/tags/TagDocument';
-import subscribe from '../../api/publication/subscribe';
-import Publication from '../../api/publication/Publication';
+import subscribe from '../publication/subscribe';
+import Publication from '../publication/Publication';
+import TagDocument from './TagDocument';
 
 interface ReturnType<U> {
 	loading: boolean;

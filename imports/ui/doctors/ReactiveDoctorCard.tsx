@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useCachedDoctor from './useCachedDoctor';
+import {useCachedDoctor} from '../../api/doctors';
 
 import StaticDoctorCard from './StaticDoctorCard';
 

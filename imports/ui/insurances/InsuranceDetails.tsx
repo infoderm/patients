@@ -8,8 +8,8 @@ import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
 import useObservedPatients from '../patients/useObservedPatients';
 import PagedPatientsList from '../patients/PagedPatientsList';
 
+import {useInsurance} from '../../api/insurances';
 import StaticInsuranceCard from './StaticInsuranceCard';
-import useInsurance from './useInsurance';
 
 export default function InsuranceDetails({match, name, page, perpage}) {
 	name = (match && myDecodeURIComponent(match.params.name)) || name;
