@@ -20,6 +20,7 @@ const styles = (theme) =>
 	createStyles({
 		card: {
 			position: 'relative',
+			overflow: 'visible',
 			display: 'flex',
 			minHeight: 200,
 		},
