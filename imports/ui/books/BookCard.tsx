@@ -35,10 +35,10 @@ export default function BookCard({item}) {
 
 	const [year, book] = books.split(item.name);
 
-	const {result} = useBookStats(item.name);
+	const {loading, found, result} = useBookStats(item.name);
 	const {count, total, first, last} = result ?? {};
 
-	const subheader = count === undefined ? '...' : `${count} consultations`;
+	const subheader = found ? `${count} consultations` : '...';
 
 	const content =
 		count === undefined ? (
@@ -55,6 +55,8 @@ export default function BookCard({item}) {
 
 	return (
 		<StaticTagCard
+			loading={loading}
+			found={found}
 			tag={item}
 			url={(_name) => `/book/${year}/${myEncodeURIComponent(book)}`}
 			subheader={subheader}
