@@ -22,7 +22,7 @@
   "dependencies": {
     "@babel/runtime": "^7.15.3",
     "@combinatorics/n-combinations": "^0.1.1",
-    "@functional-abstraction/operator": "^1.0.4",
+    "@functional-abstraction/operator": "^3.0.0",
     "@heap-data-structure/pairing-heap": "^3.0.1",
     "@iterable-iterator/cardinality": "^3.0.4",
     "@iterable-iterator/chain": "^1.0.0",
