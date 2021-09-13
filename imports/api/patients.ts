@@ -13,36 +13,44 @@ import {insurances} from './insurances';
 import {doctors} from './doctors';
 import {allergies} from './allergies';
 
-import {makeIndex, shatter, normalized, normalizeSearch} from './string';
+import {
+	makeIndex,
+	words,
+	normalized,
+	keepUnique,
+	stringTrigrams,
+	boundaryTrigrams,
+} from './string';
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
 
 function normalizedName(firstname, lastname) {
-	const lastnameHash = normalizeSearch(lastname || '').replace(' ', '-');
+	const lastnameHash = normalized(lastname || '').replace(' ', '');
 	const firstnameHash = normalized(firstname || '').split(' ')[0];
 	return `${lastnameHash} ${firstnameHash}`;
 }
 
 function updateIndex(userId: string, _id: string, fields) {
 	const {niss, firstname, lastname, birthdate, sex} = fields;
-	const patientIndex = {};
-	if (firstname) {
-		const nameIndex = shatter(firstname);
-		for (const [key, value] of Object.entries(nameIndex)) {
-			patientIndex['firstname_' + key] = value;
-		}
-	}
+	const firstnameWords = keepUnique(words(firstname ?? ''));
+	const lastnameWords = keepUnique(words(lastname ?? ''));
 
-	if (lastname) {
-		const nameIndex = shatter(lastname);
-		for (const [key, value] of Object.entries(nameIndex)) {
-			patientIndex['lastname_' + key] = value;
-		}
-	}
+	const innerTrigrams = keepUnique(
+		stringTrigrams(firstname ?? ''),
+		stringTrigrams(lastname ?? ''),
+	);
+
+	const outerTrigrams = keepUnique(
+		boundaryTrigrams([...lastnameWords, ...firstnameWords]),
+		boundaryTrigrams([...firstnameWords, ...lastnameWords]),
+	);
 
 	const upsertFields = {
-		...patientIndex,
+		firstnameWords,
+		lastnameWords,
+		innerTrigrams,
+		outerTrigrams,
 		niss,
 		firstname,
 		lastname,
