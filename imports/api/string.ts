@@ -11,6 +11,7 @@ import {window} from '@iterable-iterator/window';
 import {increasing} from '@total-order/primitive';
 import {len as byLength} from '@total-order/key';
 import {combinations} from '@combinatorics/n-combinations';
+import {product} from '@set-theory/cartesian-product';
 import escapeStringRegexp from 'escape-string-regexp';
 
 export {default as escapeStringRegexp} from 'escape-string-regexp';
@@ -30,6 +31,9 @@ export const onlyASCII = (string: string) => deburr(string);
 
 export const onlyLowerCaseASCII = (string: string) =>
 	onlyASCII(string.toLowerCase());
+
+const onlyLowerCaseAlphabeticalAndHyphen = (string: string, replacement = '') =>
+	onlyLowerCaseASCII(string).replace(/[^a-z-]+/g, replacement);
 
 export const onlyLowerCaseAlphabetical = (string: string, replacement = '') =>
 	onlyLowerCaseASCII(string).replace(/[^a-z]+/g, replacement);
@@ -98,13 +102,35 @@ export const makeRegExpIndex = (patterns: Iterable<string>) => {
 	};
 };
 
-const split = (string: string): string[] => {
-	const trimmed = string.replace(/^\s+/, '').replace(/\s+$/, '');
-	return trimmed === '' ? [] : trimmed.split(/\s+/);
+const splitOn = function* (separator: RegExp, string: string) {
+	assert(separator.flags === '');
+	const re = new RegExp(separator.source, 'g');
+	let lastIndex = 0;
+	while (true) {
+		const match = re.exec(string);
+		if (match === null) break;
+		// const [left, right] = match.indices[0];
+		const left = match.index;
+		const right = left + match[0].length;
+		if (left !== lastIndex) {
+			yield string.slice(lastIndex, left);
+		}
+
+		lastIndex = right;
+	}
+
+	if (lastIndex !== string.length) yield string.slice(lastIndex);
 };
+
+const split = (string: string, separator = /\s+/): string[] => [
+	...splitOn(separator, string),
+];
 
 export const words = (string: string): string[] =>
 	split(onlyLowerCaseAlphabetical(string, ' '));
+
+export const names = (string: string): string[] =>
+	split(onlyLowerCaseAlphabeticalAndHyphen(string, ' '));
 
 const trigrams = (string: string): IterableIterator<string> =>
 	map(([a, b, c]: string[]) => a + b + c, window(3, string));
@@ -115,6 +141,18 @@ export const stringTrigrams = (string: string) =>
 	map(wrapTrigram, trigrams(onlyLowerCaseAlphabetical(string)));
 const textTrigrams = (text: string) =>
 	map(wrapTrigram, trigrams(`11${words(text).join('1')}1`));
+
+const _junctionTrigram = (a: string, b: string) => {
+	assert(a.length > 0);
+	assert(b.length > 0);
+	return `${a[a.length - 1]}1${b[0]}`;
+};
+
+const _junctionTrigrams = (left: string[], right: string[]) =>
+	map(([a, b]) => _junctionTrigram(a, b), product([left, right]));
+
+export const junctionTrigrams = (left: string[], right: string[]) =>
+	map(wrapTrigram, _junctionTrigrams(left, right));
 
 const _boundaryTrigrams = function* (
 	strings: string[],
@@ -128,7 +166,7 @@ const _boundaryTrigrams = function* (
 	}
 
 	for (const [a, b] of combinations(strings, 2)) {
-		yield `${a[a.length - 1]}1${b[0]}`;
+		yield _junctionTrigram(a, b);
 	}
 };
 

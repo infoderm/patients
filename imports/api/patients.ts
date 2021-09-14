@@ -2,6 +2,7 @@ import {check} from 'meteor/check';
 
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
+import {_chain} from '@iterable-iterator/chain';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
@@ -16,34 +17,44 @@ import {allergies} from './allergies';
 import {
 	makeIndex,
 	words,
-	normalized,
+	names,
 	keepUnique,
 	stringTrigrams,
 	boundaryTrigrams,
+	junctionTrigrams,
 } from './string';
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
 
+const splitNames = (string: string) => {
+	const [firstname, ...middlenames] = names(string);
+	const firstnameWords = words(firstname ?? '');
+	const middlenameWords = words(middlenames.join(''));
+	return [firstnameWords, middlenameWords];
+};
+
 function normalizedName(firstname, lastname) {
-	const lastnameHash = normalized(lastname || '').replace(' ', '');
-	const firstnameHash = normalized(firstname || '').split(' ')[0];
+	const lastnameHash = words(lastname ?? '').join('');
+	const firstnameHash = words(names(firstname ?? '')[0] ?? '').join('');
 	return `${lastnameHash} ${firstnameHash}`;
 }
 
 function updateIndex(userId: string, _id: string, fields) {
 	const {niss, firstname, lastname, birthdate, sex} = fields;
-	const firstnameWords = keepUnique(words(firstname ?? ''));
+	const [firstnameWords, middlenameWords] = splitNames(firstname ?? '');
 	const lastnameWords = keepUnique(words(lastname ?? ''));
 
 	const innerTrigrams = keepUnique(
-		stringTrigrams(firstname ?? ''),
+		stringTrigrams(firstnameWords.join('')),
+		_chain(map(stringTrigrams, middlenameWords)),
 		stringTrigrams(lastname ?? ''),
 	);
 
 	const outerTrigrams = keepUnique(
 		boundaryTrigrams([...lastnameWords, ...firstnameWords]),
 		boundaryTrigrams([...firstnameWords, ...lastnameWords]),
+		junctionTrigrams(firstnameWords, middlenameWords),
 	);
 
 	const upsertFields = {
