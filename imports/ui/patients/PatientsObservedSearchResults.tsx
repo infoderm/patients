@@ -83,7 +83,7 @@ const PatientsObservedSearchResults = (props: Props) => {
 
 PatientsObservedSearchResults.defaultProps = {
 	page: 1,
-	perpage: 10,
+	perpage: 5,
 	refresh: undefined,
 	refreshKey: undefined,
 };
