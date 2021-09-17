@@ -1,6 +1,8 @@
 import {check} from 'meteor/check';
+import {availability} from '../../availability';
 
 import {Appointments} from '../../collection/appointments';
+import {ConsultationDocument} from '../../collection/consultations';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
@@ -11,7 +13,37 @@ export default define({
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},
-	run: unconditionallyUpdateById(Appointments, {
-		$set: {isCancelled: false},
-	}),
+	run: unconditionallyUpdateById<ConsultationDocument>(
+		Appointments,
+		(existing) => {
+			const modifier = {
+				$set: {
+					isCancelled: false,
+				},
+			};
+			const {
+				owner,
+				begin: oldBegin,
+				end: oldEnd,
+				isDone: oldIsDone,
+				isCancelled: oldIsCancelled,
+			} = existing;
+			const {isCancelled: newIsCancelled} = modifier.$set;
+			const newBegin = oldBegin;
+			const newEnd = oldEnd;
+			const newIsDone = oldIsDone;
+			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
+			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
+			availability.updateHook(
+				owner,
+				oldBegin,
+				oldEnd,
+				oldWeight,
+				newBegin,
+				newEnd,
+				newWeight,
+			);
+			return modifier;
+		},
+	),
 });

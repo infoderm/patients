@@ -1,4 +1,4 @@
-import {ALL_WEEK_DAYS} from '../ui/calendar/constants';
+import {ALL_WEEK_DAYS} from '../util/datetime';
 
 const methods = {
 	update: 'settings.update',

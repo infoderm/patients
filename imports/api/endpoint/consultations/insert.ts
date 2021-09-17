@@ -7,6 +7,7 @@ import {computedFields, consultations} from '../../consultations';
 import {books} from '../../books';
 
 import define from '../define';
+import {availability} from '../../availability';
 
 const {sanitize} = consultations;
 
@@ -29,12 +30,19 @@ export default define({
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
-		return Consultations.insert({
+		const owner = this.userId;
+		const document = {
 			...fields,
 			...computedFields(this.userId, undefined, fields),
 			createdAt,
 			lastModifiedAt,
-			owner: this.userId,
-		});
+			owner,
+		};
+
+		const {begin, end} = document;
+
+		availability.insertHook(owner, begin, end, 0);
+
+		return Consultations.insert(document);
 	},
 });

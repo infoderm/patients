@@ -3,8 +3,15 @@ import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
 import endOfMonth from 'date-fns/endOfMonth';
 import addDays from 'date-fns/addDays';
+import {Locale} from 'date-fns';
 
-export function monthly(year, month, weekOptions) {
+interface WeekOptions {
+	locale?: Locale;
+	weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+	firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+}
+
+export function monthly(year: number, month: number, weekOptions: WeekOptions) {
 	const firstDayOfMonth = new Date(year, month - 1, 1);
 	const lastDayOfMonth = startOfDay(endOfMonth(firstDayOfMonth));
 	const begin = startOfWeek(firstDayOfMonth, weekOptions); // Inclusive
@@ -12,7 +19,7 @@ export function monthly(year, month, weekOptions) {
 	return [begin, end];
 }
 
-export function weekly(year, week, weekOptions) {
+export function weekly(year: number, week: number, weekOptions: WeekOptions) {
 	const someDayOfWeek = new Date(
 		year,
 		0,

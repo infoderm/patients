@@ -31,7 +31,10 @@ export const findLastConsultation = (filter) =>
 		},
 	);
 
-export const findLastConsultationInInterval = ([begin, end], filter) =>
+export const findLastConsultationInInterval = (
+	[begin, end]: [Date, Date],
+	filter,
+) =>
 	findLastConsultation({
 		datetime: {
 			$gte: begin,

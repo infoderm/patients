@@ -4,11 +4,14 @@ import {window} from '@iterable-iterator/window';
 
 import isSameDatetime from 'date-fns/isEqual';
 
+import {beginningOfTime, endOfTime, WEEK_MODULO} from '../util/datetime';
+import {mod} from '../util/artithmetic';
 import {units} from './duration';
 
 import intersectsOrTouchesInterval from './interval/intersectsOrTouchesInterval';
 
 import add from './interval/add';
+import isEmpty from './interval/isEmpty';
 import {
 	Availability,
 	SlotDocument,
@@ -17,12 +20,6 @@ import {
 
 export type Constraint = [number, number];
 export type Duration = number;
-
-const SECONDS_MODULO = 1;
-const MINUTE_MODULO = 60 * SECONDS_MODULO;
-const HOUR_MODULO = 60 * MINUTE_MODULO;
-const DAY_MODULO = 24 * HOUR_MODULO;
-export const WEEK_MODULO = 7 * DAY_MODULO;
 
 const intervalsOverlap = (
 	x0: number,
@@ -163,8 +160,6 @@ export const overlapsAfterDate = (
 	return false;
 };
 
-const mod = (n: number, m: number) => ((n % m) + m) % m;
-
 const slot = (begin: Date, end: Date, weight: number): SlotFields => {
 	const beginModuloWeek = mod(begin.getTime(), units.week);
 	const endModuloWeek = mod(end.getTime(), units.week);
@@ -180,27 +175,32 @@ const slot = (begin: Date, end: Date, weight: number): SlotFields => {
 	};
 };
 
-const BEGINNING_OF_TIME = new Date(-8_640_000_000_000_000);
-const END_OF_TIME = new Date(8_640_000_000_000_000);
-
 const simplify = (
 	slots: Array<[Date, Date, number]>,
 ): Array<[Date, Date, number]> => {
+	assert(slots.length >= 2);
 	// merge with preceding and succeeding slots if weights became equal
 	const [beginFirst, endFirst, weightFirst] = slots[0];
 	const [beginSecond, endSecond, weightSecond] = slots[1];
 	const [beginNextToLast, endNextToLast, weightNextToLast] =
 		slots[slots.length - 2];
 	const [beginLast, endLast, weightLast] = slots[slots.length - 1];
-	assert(endFirst === beginSecond);
-	assert(endNextToLast === beginLast);
+	assert(isSameDatetime(endFirst, beginSecond));
+	assert(isSameDatetime(endNextToLast, beginLast));
 	if (weightFirst === weightSecond) {
 		if (weightNextToLast === weightLast) {
-			return [
-				[beginFirst, endSecond, weightFirst],
-				...slots.slice(2, -2),
-				[beginNextToLast, endLast, weightLast],
-			];
+			switch (slots.length) {
+				case 2:
+					return [[beginFirst, endSecond, weightFirst]];
+				case 3:
+					return [[beginFirst, endLast, weightFirst]];
+				default:
+					return [
+						[beginFirst, endSecond, weightFirst],
+						...slots.slice(2, -2),
+						[beginNextToLast, endLast, weightLast],
+					];
+			}
 		}
 
 		return [
@@ -226,30 +226,52 @@ const isContiguous = (slots: Array<[Date, Date, number]>): boolean => {
 	return true;
 };
 
+const canBeSimplified = (slots: Array<[Date, Date, number]>): boolean => {
+	for (const [left, right] of window(2, slots)) {
+		const [, end, leftWeight] = left;
+		const [begin, rightWeight] = right;
+		if (isSameDatetime(end, begin) && leftWeight === rightWeight) return true;
+	}
+
+	return false;
+};
+
 export const insertHook = (
 	owner: string,
 	begin: Date,
 	end: Date,
 	weight: number,
 ) => {
-	if (weight === 0) return;
+	if (weight === 0 || isEmpty(begin, end)) return;
 
 	// TODO use transaction
 
-	const _intersected = Availability.find({
-		$and: [{owner}, intersectsOrTouchesInterval(begin, end)],
-	}).fetch();
+	const _intersected = Availability.find(
+		{
+			$and: [{owner}, intersectsOrTouchesInterval(begin, end)],
+		},
+		{
+			sort: {
+				begin: 1,
+			},
+		},
+	).fetch();
+
+	assert(isContiguous(_intersected.map((x) => [x.begin, x.end, x.weight])));
 
 	// Initialize timeline with monolith event
-	const intersected =
+	const intersected: SlotDocument[] =
 		_intersected.length === 0
 			? [
 					{
-						...slot(BEGINNING_OF_TIME, END_OF_TIME, 0),
+						...slot(beginningOfTime(), endOfTime(), 0),
+						_id: '?',
 						owner,
 					},
 			  ]
 			: _intersected;
+
+	assert(isContiguous(intersected.map((x) => [x.begin, x.end, x.weight])));
 
 	const toDelete = _intersected.map((x) => x._id);
 	const _toInsert = [];
@@ -267,6 +289,18 @@ export const insertHook = (
 		}
 	}
 
+	// console.debug('insertHook', {
+	// owner,
+	// begin,
+	// end,
+	// weight
+	// }, {
+	// _intersected,
+	// intersected,
+	// toDelete,
+	// _toInsert
+	// });
+
 	assert(_toInsert.length >= 3);
 
 	assert(isContiguous(_toInsert));
@@ -282,6 +316,8 @@ export const insertHook = (
 			_toInsert[_toInsert.length - 1][1],
 		),
 	);
+
+	assert(!canBeSimplified(toInsert));
 
 	Availability.remove({_id: {$in: toDelete}});
 
@@ -311,11 +347,19 @@ export const updateHook = (
 	newEnd: Date,
 	newWeight: number,
 ) => {
-	// TODO optimize
-	insertHook(owner, newBegin, newEnd, newWeight);
-	removeHook(owner, oldBegin, oldEnd, oldWeight);
+	if (
+		!isSameDatetime(newBegin, oldBegin) ||
+		!isSameDatetime(newEnd, oldEnd) ||
+		newWeight !== oldWeight
+	) {
+		// TODO optimize
+		insertHook(owner, newBegin, newEnd, newWeight);
+		removeHook(owner, oldBegin, oldEnd, oldWeight);
+	}
 };
 
 export const availability = {
 	insertHook,
+	removeHook,
+	updateHook,
 };

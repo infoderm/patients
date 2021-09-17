@@ -7,6 +7,7 @@ import invoke from '../invoke';
 
 import define from '../define';
 
+import {availability} from '../../availability';
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -22,7 +23,8 @@ export default define({
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const item = Appointments.findOne({_id: appointmentId, owner: this.userId});
+		const owner = this.userId;
+		const item = Appointments.findOne({_id: appointmentId, owner});
 		if (!item) {
 			throw new Meteor.Error('not-found');
 		}
@@ -40,6 +42,28 @@ export default define({
 		const fields = {
 			...args.consultationFields,
 		};
+
+		const {
+			begin: oldBegin,
+			end: oldEnd,
+			isDone: oldIsDone,
+			isCancelled: oldIsCancelled,
+		} = item;
+		const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
+		const newBegin = fields.begin ?? oldBegin;
+		const newEnd = fields.end ?? oldEnd;
+		const newIsDone = fields.isDone ?? oldIsDone;
+		const newIsCancelled = oldIsCancelled;
+		const newWeight = newIsDone || newIsCancelled ? 0 : 1;
+		availability.updateHook(
+			owner,
+			oldBegin,
+			oldEnd,
+			oldWeight,
+			newBegin,
+			newEnd,
+			newWeight,
+		);
 
 		Appointments.update(appointmentId, {$set: fields});
 

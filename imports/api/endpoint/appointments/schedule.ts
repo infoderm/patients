@@ -7,6 +7,7 @@ import invoke from '../invoke';
 
 import define from '../define';
 
+import {availability} from '../../availability';
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -31,10 +32,15 @@ export default define({
 			);
 		}
 
+		const owner = this.userId;
+		const {begin, end} = args.consultationFields;
+
+		availability.insertHook(owner, begin, end, 1);
+
 		const appointmentId = Appointments.insert({
 			...args.consultationFields,
 			createdAt: new Date(),
-			owner: this.userId,
+			owner,
 		});
 
 		return {

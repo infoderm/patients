@@ -11,9 +11,8 @@ import {useSettingCached} from '../../client/settings';
 
 import FixedFab from '../button/FixedFab';
 
-import {ALL_WEEK_DAYS} from '../calendar/constants';
-
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
+import {ALL_WEEK_DAYS} from '../../util/datetime';
 
 const useStyles = makeStyles({
 	calendar: {
@@ -25,6 +24,7 @@ const Planner = (props) => {
 	const {Calendar, CalendarProps, match} = props;
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
+	const [noInitialTime, setNoInitialtime] = useState(true);
 	const [creatingAppointment, setCreatingAppointment] = useState(false);
 	const [displayAllWeekDays, setDisplayAllWeekDays] = useState(false);
 	const [showCancelledEvents, setShowCancelledEvents] = useState(false);
@@ -32,9 +32,10 @@ const Planner = (props) => {
 	const {value: displayedWeekDays} = useSettingCached('displayed-week-days');
 	const classes = useStyles();
 
-	const onSlotClick = (slot) => {
+	const onSlotClick = (slot: Date, noInitialTime = true) => {
 		console.debug(slot);
 		setSelectedSlot(slot);
+		setNoInitialtime(noInitialTime);
 		setCreatingAppointment(true);
 	};
 
@@ -52,17 +53,21 @@ const Planner = (props) => {
 				{...CalendarProps}
 			/>
 			<NewAppointmentDialog
-				noInitialTime
+				noInitialTime={noInitialTime}
 				initialDatetime={selectedSlot}
 				patientId={match.params.patientId}
 				open={creatingAppointment}
-				onClose={() => setCreatingAppointment(false)}
+				onClose={() => {
+					setCreatingAppointment(false);
+				}}
 			/>
 			<FixedFab
 				col={3}
 				tooltip={displayAllWeekDays ? 'Show work days only' : 'Show all days'}
 				color={displayAllWeekDays ? 'primary' : 'default'}
-				onClick={() => setDisplayAllWeekDays(!displayAllWeekDays)}
+				onClick={() => {
+					setDisplayAllWeekDays(!displayAllWeekDays);
+				}}
 			>
 				{displayAllWeekDays ? <VisibilityIcon /> : <VisibilityOffIcon />}
 			</FixedFab>
@@ -70,7 +75,9 @@ const Planner = (props) => {
 				col={4}
 				tooltip={showNoShowEvents ? 'Hide no-shows' : 'Show no-shows'}
 				color={showNoShowEvents ? 'primary' : 'default'}
-				onClick={() => setShowNoShowEvents(!showNoShowEvents)}
+				onClick={() => {
+					setShowNoShowEvents(!showNoShowEvents);
+				}}
 			>
 				<PhoneDisabledIcon />
 			</FixedFab>
@@ -82,7 +89,9 @@ const Planner = (props) => {
 						: 'Show cancelled events'
 				}
 				color={showCancelledEvents ? 'primary' : 'default'}
-				onClick={() => setShowCancelledEvents(!showCancelledEvents)}
+				onClick={() => {
+					setShowCancelledEvents(!showCancelledEvents);
+				}}
 			>
 				<AlarmOffIcon />
 			</FixedFab>

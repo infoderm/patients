@@ -7,6 +7,7 @@ import {Appointments} from '../../collection/appointments';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
+import {availability} from '../../availability';
 
 export default define({
 	name: 'appointments.cancel',
@@ -21,14 +22,10 @@ export default define({
 	},
 	run: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
-		(
-			_existing,
-			cancellationReason: string,
-			cancellationExplanation: string,
-		) => {
+		(existing, cancellationReason: string, cancellationExplanation: string) => {
 			check(cancellationReason, String);
 			check(cancellationExplanation, String);
-			return {
+			const modifier = {
 				$set: {
 					isCancelled: true,
 					cancellationDatetime: new Date(),
@@ -36,6 +33,29 @@ export default define({
 					cancellationExplanation,
 				},
 			};
+			const {
+				owner,
+				begin: oldBegin,
+				end: oldEnd,
+				isDone: oldIsDone,
+				isCancelled: oldIsCancelled,
+			} = existing;
+			const {isCancelled: newIsCancelled} = modifier.$set;
+			const newBegin = oldBegin;
+			const newEnd = oldEnd;
+			const newIsDone = oldIsDone;
+			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
+			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
+			availability.updateHook(
+				owner,
+				oldBegin,
+				oldEnd,
+				oldWeight,
+				newBegin,
+				newEnd,
+				newWeight,
+			);
+			return modifier;
 		},
 	),
 });

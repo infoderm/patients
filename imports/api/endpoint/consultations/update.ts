@@ -10,6 +10,7 @@ import {consultations, computedFields} from '../../consultations';
 import {books} from '../../books';
 
 import define from '../define';
+import {availability} from '../../availability';
 
 const {sanitize} = consultations;
 
@@ -20,9 +21,10 @@ export default define({
 		check(newfields, Object);
 	},
 	run(consultationId: string, newfields: any) {
+		const owner = this.userId;
 		const existing = Consultations.findOne({
 			_id: consultationId,
-			owner: this.userId,
+			owner,
 		});
 		if (!existing) {
 			throw new Meteor.Error('not-found');
@@ -30,7 +32,7 @@ export default define({
 
 		const fields = sanitize(newfields);
 		if (fields.datetime && fields.book) {
-			books.add(this.userId, books.name(fields.datetime, fields.book));
+			books.add(owner, books.name(fields.datetime, fields.book));
 		}
 
 		let $unset;
@@ -55,16 +57,40 @@ export default define({
 			};
 		}
 
-		const updateDocument: Mongo.Modifier<ConsultationDocument> = {
-			$set: {
-				...fields,
-				...computedFields(this.userId, existing, fields),
-			},
+		const $set = {
+			...fields,
+			...computedFields(owner, existing, fields),
+		};
+
+		const modifier: Mongo.Modifier<ConsultationDocument> = {
+			$set,
 			$currentDate: {lastModifiedAt: true},
 		};
 
-		if ($unset !== undefined) updateDocument.$unset = $unset;
+		if ($unset !== undefined) modifier.$unset = $unset;
 
-		return Consultations.update(consultationId, updateDocument);
+		const {
+			begin: oldBegin,
+			end: oldEnd,
+			isDone: oldIsDone,
+			isCancelled: oldIsCancelled,
+		} = existing;
+		const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
+		const newBegin = $set.begin ?? oldBegin;
+		const newEnd = $set.end ?? oldEnd;
+		const newIsDone = $set.isDone ?? oldIsDone;
+		const newIsCancelled = oldIsCancelled;
+		const newWeight = newIsDone || newIsCancelled ? 0 : 1;
+		availability.updateHook(
+			owner,
+			oldBegin,
+			oldEnd,
+			oldWeight,
+			newBegin,
+			newEnd,
+			newWeight,
+		);
+
+		return Consultations.update(consultationId, modifier);
 	},
 });

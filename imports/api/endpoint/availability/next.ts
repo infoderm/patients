@@ -7,12 +7,8 @@ import properlyIntersectsWithRightOpenInterval from '../../interval/containsDate
 import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';
 import overlapsInterval from '../../interval/overlapsInterval';
 import {Availability} from '../../collection/availability';
-import {
-	Constraint,
-	Duration,
-	overlapsAfterDate,
-	WEEK_MODULO,
-} from '../../availability';
+import {Constraint, Duration, overlapsAfterDate} from '../../availability';
+import {WEEK_MODULO} from '../../../util/datetime';
 
 export default define({
 	name: 'availability.next',

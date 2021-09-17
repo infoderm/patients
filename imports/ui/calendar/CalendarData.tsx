@@ -6,8 +6,6 @@ import {makeStyles, createStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
-import addDays from 'date-fns/addDays';
-import getDay from 'date-fns/getDay';
 import getMonth from 'date-fns/getMonth';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
@@ -20,8 +18,7 @@ import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
 import {useDateFormat} from '../../i18n/datetime';
 
-import {ALL_WEEK_DAYS} from './constants';
-
+import {ALL_WEEK_DAYS, generateDays} from '../../util/datetime';
 import EventFragment from './EventFragment';
 
 const ColumnHeader = ({classes, day, col}) => {
@@ -56,21 +53,6 @@ const setTime = (datetime: Date, HHmm: string) =>
  * Compute day key.
  */
 const dayKey = (datetime: Date) => dateFormat(datetime, 'yyyyMMdd');
-
-/**
- * Generate days in range.
- */
-function* generateDays(
-	begin: Date,
-	end: Date,
-	displayedWeekDays: Set<number> = new Set(ALL_WEEK_DAYS),
-): IterableIterator<Date> {
-	let current = begin;
-	while (current < end) {
-		if (displayedWeekDays.has(getDay(current))) yield current;
-		current = addDays(current, 1);
-	}
-}
 
 interface DayProps {
 	day: Date;
@@ -465,6 +447,9 @@ const CalendarData = ({
 		slot: {
 			gridColumnEnd: 'span 1',
 			margin: '0 10px 3px 10px',
+			'&:hover': {
+				opacity: 0.8,
+			},
 		},
 		slot1: {
 			gridRowEnd: 'span 1',

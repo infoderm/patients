@@ -14,6 +14,7 @@ import {Appointments} from '../../collection/appointments';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
+import {availability} from '../../availability';
 
 export default define({
 	name: 'appointments.beginConsultation',
@@ -22,13 +23,20 @@ export default define({
 	},
 	run: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
-		function () {
+		(existing: ConsultationDocument) => {
+			const {
+				owner,
+				begin: oldBegin,
+				end: oldEnd,
+				isDone: oldIsDone,
+				isCancelled: oldIsCancelled,
+			} = existing;
 			const book = findLastConsultationInInterval(thisYearsInterval(), {
 				...filterNotInRareBooks(),
-				owner: this.userId,
+				owner,
 			})?.book;
 			const realDatetime = new Date();
-			return {
+			const modifier = {
 				$set: {
 					datetime: realDatetime,
 					realDatetime,
@@ -39,6 +47,20 @@ export default define({
 					book,
 				},
 			};
+			const {begin: newBegin, end: newEnd, isDone: newIsDone} = modifier.$set;
+			const newIsCancelled = oldIsCancelled;
+			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
+			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
+			availability.updateHook(
+				owner,
+				oldBegin,
+				oldEnd,
+				oldWeight,
+				newBegin,
+				newEnd,
+				newWeight,
+			);
+			return modifier;
 		},
 	),
 });

@@ -7,6 +7,7 @@ import {Documents} from '../../collection/documents';
 import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
+import {availability} from '../../availability';
 
 export default define({
 	name: '/api/patients/remove',
@@ -14,18 +15,22 @@ export default define({
 		check(patientId, String);
 	},
 	async run(patientId: string) {
-		const patient = Patients.findOne({_id: patientId, owner: this.userId});
+		const owner = this.userId;
+		const patient = Patients.findOne({_id: patientId, owner});
 		if (!patient) {
 			throw new Meteor.Error('not-found');
 		}
 
 		const consultationQuery = {owner: this.userId, patientId};
-		const consultationIds = Consultations.find(consultationQuery, {
-			fields: {_id: 1},
-		})
-			.fetch()
-			.map((x) => x._id);
+		const removedConsultations = Consultations.find(consultationQuery, {
+			fields: {_id: 1, begin: 1, end: 1, isDone: 1, isCancelled: 1},
+		}).fetch();
+		const consultationIds = removedConsultations.map((x) => x._id);
 		const nConsultationRemoved = Consultations.remove(consultationQuery);
+
+		for (const {begin, end, isDone, isCancelled} of removedConsultations) {
+			availability.removeHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
+		}
 
 		if (consultationIds.length !== nConsultationRemoved) {
 			console.warn(

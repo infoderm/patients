@@ -4,6 +4,7 @@ import {Consultations} from '../../collection/consultations';
 import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
+import {availability} from '../../availability';
 
 export default define({
 	name: 'consultations.remove',
@@ -11,9 +12,10 @@ export default define({
 		check(consultationId, String);
 	},
 	run(consultationId: string) {
+		const owner = this.userId;
 		const consultation = Consultations.findOne({
 			_id: consultationId,
-			owner: this.userId,
+			owner,
 		});
 		if (!consultation) {
 			throw new Meteor.Error('not-found');
@@ -32,6 +34,11 @@ export default define({
 			},
 		);
 
-		return Consultations.remove(consultationId);
+		const returnValue = Consultations.remove(consultationId);
+
+		const {begin, end, isDone, isCancelled} = consultation;
+		availability.removeHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
+
+		return returnValue;
 	},
 });

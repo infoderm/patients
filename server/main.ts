@@ -24,6 +24,8 @@ import {Books} from '../imports/api/collection/books';
 import {books} from '../imports/api/books';
 import {Documents} from '../imports/api/collection/documents';
 import {documents} from '../imports/api/documents';
+import {Availability} from '../imports/api/collection/availability';
+import {availability} from '../imports/api/availability';
 
 // DECLARE ALL ENABLED PUBLICATIONS
 // eslint-disable-next-line import/no-unassigned-import
@@ -49,8 +51,7 @@ Meteor.startup(() => {
 		Allergies,
 		Books,
 		Documents,
-		// TODO uncomment
-		// Availability,
+		Availability,
 	];
 
 	// Drop all indexes (if the collection is not empty)
@@ -64,8 +65,7 @@ Meteor.startup(() => {
 	Books.remove({});
 
 	// Delete all generated availability entries
-	// TODO uncomment
-	// Availability.remove({});
+	Availability.remove({});
 
 	// Regenerate patient.normalizedName
 	Patients.rawCollection()
@@ -386,6 +386,50 @@ Meteor.startup(() => {
 		},
 	);
 
+	Availability.rawCollection().createIndex(
+		{
+			owner: 1,
+			begin: 1,
+			end: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	Availability.rawCollection().createIndex(
+		{
+			owner: 1,
+			end: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	Availability.rawCollection().createIndex(
+		{
+			owner: 1,
+			weight: 1,
+			begin: 1,
+			end: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	Availability.rawCollection().createIndex(
+		{
+			owner: 1,
+			weight: 1,
+			end: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
 	Attachments.rawCollection().createIndex(
 		{
 			userId: 1,
@@ -677,9 +721,11 @@ Meteor.startup(() => {
 		});
 
 	// Generate availability data
-	// TODO uncomment
-	// Consultations.find().map((item) => {
-	// const {owner, begin, end, isCancelled} = item;
-	// availability.insertHook(owner, begin, end, isCancelled ? 0 : 1);
-	// });
+	// eslint-disable-next-line array-callback-return
+	Consultations.find().map((item) => {
+		// const {owner, begin, end, isCancelled} = item;
+		// availability.insertHook(owner, begin, end, isCancelled ? 0 : 1);
+		const {owner, begin, end, isDone, isCancelled} = item;
+		availability.insertHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
+	});
 });

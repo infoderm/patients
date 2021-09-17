@@ -17,6 +17,9 @@ import '../appointments/schedule';
 import '../appointments/uncancel';
 
 // eslint-disable-next-line import/no-unassigned-import
+import '../availability/next';
+
+// eslint-disable-next-line import/no-unassigned-import
 import '../books/csv';
 // eslint-disable-next-line import/no-unassigned-import
 import '../books/rename';

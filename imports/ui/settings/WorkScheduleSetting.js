@@ -1,41 +1,21 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
 
-import {key} from '@total-order/key';
-import {increasing} from '@total-order/primitive';
-
 import {useDaysNames, useDateFormat} from '../../i18n/datetime';
 
-import {units} from '../../api/duration';
+import {units as durationUnits} from '../../api/duration';
 
-import {useSettingCached} from '../../client/settings';
 import InputManySetting from './InputManySetting';
-
-const durationUnits = units;
+import useWorkScheduleSort from './useWorkScheduleSort';
 
 const KEY = 'work-schedule';
 
 // TODO merge intersecting intervals
 
-export default function DisplayedWeekDaysSetting({className}) {
-	const {value: weekStartsOn} = useSettingCached('week-starts-on');
-
-	const compare = useMemo(
-		() =>
-			key(
-				increasing,
-				({beginModuloWeek}) =>
-					(durationUnits.week +
-						beginModuloWeek -
-						weekStartsOn * durationUnits.day) %
-					durationUnits.week,
-			),
-		[weekStartsOn],
-	);
-
-	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);
+export default function WorkScheduleSetting({className}) {
+	const sort = useWorkScheduleSort();
 
 	const options = list(range(7));
 
