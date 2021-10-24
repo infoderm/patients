@@ -14,8 +14,6 @@ import {map} from '@iterable-iterator/map';
 import {chain, _chain} from '@iterable-iterator/chain';
 import {range} from '@iterable-iterator/range';
 import {window} from '@iterable-iterator/window';
-import {iter} from '@iterable-iterator/iter';
-import {next, StopIteration} from '@iterable-iterator/next';
 import {sorted} from '@iterable-iterator/sorted';
 import {filter} from '@iterable-iterator/filter';
 import {key} from '@total-order/key';
@@ -29,50 +27,15 @@ import useEvents from '../events/useEvents';
 import {useSettingCached} from '../../client/settings';
 
 import useAvailability from '../availability/useAvailability';
-import intersection from '../../api/interval/intersection';
 import {SlotDocument} from '../../api/collection/availability';
-import {
-	beginningOfTime,
-	generateDays,
-	getDayOfWeekModulo,
-} from '../../util/datetime';
-import isEmpty from '../../api/interval/isEmpty';
+import {generateDays, getDayOfWeekModulo} from '../../util/datetime';
 import {units as durationUnits} from '../../api/duration';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import {mod} from '../../util/artithmetic';
+import partitionEvents from '../../api/interval/nonOverlappingIntersection';
 import {weekly} from './ranges';
 import StaticWeeklyCalendar from './StaticWeeklyCalendar';
 import DayHeader from './DayHeader';
-
-const partitionEvents = function* (
-	slots: Iterable<[Date, Date]>,
-	events: Iterable<[Date, Date]>,
-): IterableIterator<[Date, Date]> {
-	const it = iter(slots);
-
-	let [slotBegin, slotEnd] = [beginningOfTime(), beginningOfTime()];
-
-	for (let [begin, end] of events) {
-		while (!isEmpty(begin, end)) {
-			const [i0, i1] = intersection(slotBegin, slotEnd, begin, end);
-			if (isEmpty(i0, i1)) {
-				if (slotBegin <= begin) {
-					try {
-						[slotBegin, slotEnd] = next(it);
-					} catch (error: unknown) {
-						if (error instanceof StopIteration) return;
-						throw error;
-					}
-				} else {
-					break;
-				}
-			} else {
-				yield [i0, i1];
-				begin = i1;
-			}
-		}
-	}
-};
 
 interface ScheduleSlot {
 	beginModuloWeek: number;
