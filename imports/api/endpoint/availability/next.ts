@@ -39,36 +39,31 @@ export default define({
 					isContainedInRightOpenIterval(after),
 					{
 						$or: [
-							...constraints.map(([beginModuloWeek, endModuloWeek]) =>
+							...constraints.map(([weekShiftedBegin, weekShiftedEnd]) =>
 								overlapsInterval(
-									beginModuloWeek,
-									endModuloWeek,
+									weekShiftedBegin,
+									weekShiftedEnd,
 									duration,
-									'beginModuloWeek',
-									'endModuloWeek',
-									'measureModuloWeek',
+									'weekShiftedBegin',
+									'weekShiftedEnd',
+									'measure',
 								),
 							),
-							...constraints.map(([beginModuloWeek, endModuloWeek]) =>
+							// NOTE This is necessary because the first hit could be
+							// in the second week of the slot
+							...constraints.map(([weekShiftedBegin, weekShiftedEnd]) =>
 								overlapsInterval(
-									beginModuloWeek + WEEK_MODULO,
-									endModuloWeek + WEEK_MODULO,
+									weekShiftedBegin + WEEK_MODULO,
+									weekShiftedEnd + WEEK_MODULO,
 									duration,
-									'beginModuloWeek',
-									'endModuloWeek',
-									'measureModuloWeek',
+									'weekShiftedBegin',
+									'weekShiftedEnd',
+									'measure',
 								),
 							),
-							...constraints.map(([beginModuloWeek, endModuloWeek]) =>
-								overlapsInterval(
-									beginModuloWeek + WEEK_MODULO * 2,
-									endModuloWeek + WEEK_MODULO * 2,
-									duration,
-									'beginModuloWeek',
-									'endModuloWeek',
-									'measureModuloWeek',
-								),
-							),
+							// NOTE We do not need to go further, if there is
+							// no hit in the second week there cannot be any
+							// hit.
 						],
 					},
 				],
@@ -86,7 +81,7 @@ export default define({
 			constraints,
 			properlyIntersecting[0],
 		)
-			? properlyIntersecting
+			? properlyIntersecting[0]
 			: firstContainedAndOverlapping;
 	},
 });

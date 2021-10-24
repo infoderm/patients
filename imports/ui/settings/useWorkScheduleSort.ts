@@ -5,7 +5,6 @@ import {increasing} from '@total-order/primitive';
 
 import {useSettingCached} from '../../client/settings';
 import {units as durationUnits} from '../../api/duration';
-import {SlotDocument} from '../../api/collection/availability';
 
 const useWorkScheduleSort = () => {
 	const {value: weekStartsOn} = useSettingCached('week-starts-on');
@@ -14,7 +13,7 @@ const useWorkScheduleSort = () => {
 		() =>
 			key(
 				increasing,
-				({beginModuloWeek}: SlotDocument) =>
+				({beginModuloWeek}: {beginModuloWeek: number}) =>
 					(durationUnits.week +
 						beginModuloWeek -
 						weekStartsOn * durationUnits.day) %
@@ -24,7 +23,7 @@ const useWorkScheduleSort = () => {
 	);
 
 	const sort = useMemo(
-		() => (items: SlotDocument[]) => items.slice().sort(compare),
+		() => (items: any[]) => items.slice().sort(compare),
 		[compare],
 	);
 

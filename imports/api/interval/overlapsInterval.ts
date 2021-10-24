@@ -9,29 +9,33 @@ const overlapsInterval = (
 	end - begin < measure
 		? {}
 		: {
+				// TODO optimize with $lt/$gt to avoid items that pass multiple tests.
 				$or: [
+					// beginKey <= begin <= begin + measure <= endKey/end
 					{
 						[beginKey]: {
 							$lte: begin,
 						},
 						[endKey]: {
-							$gt: begin + measure,
+							$gte: begin + measure, // <= end
 						},
 					},
+					// beginKey/begin <= end - measure <= end <= endKey
 					{
 						[beginKey]: {
-							$lt: end - measure,
+							$lte: end - measure, // >= begin
 						},
 						[endKey]: {
 							$gte: end,
 						},
 					},
+					// begin <= beginKey <= begin + measure <= endKey <= end
 					{
 						[beginKey]: {
-							$gt: begin,
+							$gte: begin,
 						},
 						[endKey]: {
-							$lt: end,
+							$lte: end,
 						},
 						[measureKey]: {
 							$gte: measure,

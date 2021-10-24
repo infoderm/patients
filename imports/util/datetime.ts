@@ -9,10 +9,14 @@ import {range} from '@iterable-iterator/range';
 
 export const ALL_WEEK_DAYS = Object.freeze(list(range(7)));
 
-export const beginningOfTime = () => new Date(-8_640_000_000_000_000);
-export const endOfTime = () => new Date(8_640_000_000_000_000);
+// +/- 8_640_000_000_000_000 are the max Date bounds
+// but we want to be able to exactly compute duration between any two dates and
+// MAX_SAFE_INTEGER is only 9007199254740991
+export const beginningOfTime = () => new Date(-4_320_000_000_000_000);
+export const endOfTime = () => new Date(4_320_000_000_000_000);
 
-const SECONDS_MODULO = 1;
+const MILLISECONDS_MODULO = 1;
+const SECONDS_MODULO = 1000 * MILLISECONDS_MODULO;
 const MINUTE_MODULO = 60 * SECONDS_MODULO;
 const HOUR_MODULO = 60 * MINUTE_MODULO;
 const DAY_MODULO = 24 * HOUR_MODULO;

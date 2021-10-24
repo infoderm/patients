@@ -3,9 +3,9 @@ import {Mongo} from 'meteor/mongo';
 export interface SlotFields {
 	begin: Date;
 	end: Date;
-	beginModuloWeek: number;
-	endModuloWeek: number;
-	measureModuloWeek: number;
+	weekShiftedBegin: number;
+	weekShiftedEnd: number;
+	measure: number;
 	weight: number;
 }
 

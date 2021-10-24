@@ -4,8 +4,9 @@ import {window} from '@iterable-iterator/window';
 
 import isSameDatetime from 'date-fns/isEqual';
 
+import endOfWeek from 'date-fns/endOfWeek';
+import startOfWeek from 'date-fns/startOfWeek';
 import {beginningOfTime, endOfTime, WEEK_MODULO} from '../util/datetime';
-import {mod} from '../util/artithmetic';
 import {units} from './duration';
 
 import intersectsOrTouchesInterval from './interval/intersectsOrTouchesInterval';
@@ -28,149 +29,80 @@ const intervalsOverlap = (
 	y1: number,
 	measure: number,
 ) =>
-	(x1 - x0 >= measure && x0 >= y0 && x0 + measure < y1) ||
-	(x1 - x0 >= measure && x1 - measure > y0 && x1 <= y1) ||
-	(x0 < y0 && x1 > y1 && y1 - y0 >= measure);
-// Math.min(x1, y1) - Math.max(x0, y0) >= measure;
+	(x1 - x0 >= measure && y0 <= x0 && x0 + measure <= y1) ||
+	(x1 - x0 >= measure && y0 <= x1 - measure && x1 <= y1) ||
+	(x0 <= y0 && y1 <= x1 && y1 - y0 >= measure);
+// TODO replace with Math.min(x1, y1) - Math.max(x0, y0) >= measure; or similar
 export const overlapsAfterDate = (
 	after: Date,
 	duration: Duration,
 	constraints: Constraint[],
-	slot: SlotDocument,
+	interval: SlotFields,
 ) => {
-	if (slot === undefined) return false;
+	if (interval === undefined) return false;
 	// TODO rewrite by applying various truncation to constraints instead of slot
 	// so that these can be used directly in a DB query
+	// NOTE probably not possible since truncation depends on slot
 
-	assert(slot.begin < slot.end);
+	assert(interval.begin < interval.end);
 
-	const toTruncateLeft = Number(after) - Number(slot.begin);
-	const toInspectRight = Number(slot.end) - Number(after);
+	if (after >= interval.end) return false;
 
-	if (toTruncateLeft <= 0) {
-		// slot is completely contained in right open interval
-		for (const [beginModuloWeek, endModuloWeek] of constraints) {
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek,
-					slot.endModuloWeek,
-					beginModuloWeek,
-					endModuloWeek,
-					duration,
-				)
+	if (after > interval.begin) {
+		interval = slot(after, interval.end, interval.weight);
+	}
+
+	for (const [weekShiftedBegin, weekShiftedEnd] of constraints) {
+		if (
+			intervalsOverlap(
+				interval.weekShiftedBegin,
+				interval.weekShiftedEnd,
+				weekShiftedBegin,
+				weekShiftedEnd,
+				duration,
 			)
-				return true;
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek,
-					slot.endModuloWeek,
-					beginModuloWeek + WEEK_MODULO,
-					endModuloWeek + WEEK_MODULO,
-					duration,
-				)
+		)
+			return true;
+		if (
+			intervalsOverlap(
+				interval.weekShiftedBegin,
+				interval.weekShiftedEnd,
+				weekShiftedBegin + WEEK_MODULO,
+				weekShiftedEnd + WEEK_MODULO,
+				duration,
 			)
-				return true;
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek,
-					slot.endModuloWeek,
-					beginModuloWeek + WEEK_MODULO * 2,
-					endModuloWeek + WEEK_MODULO * 2,
-					duration,
-				)
-			)
-				return true;
-		}
-	} else if (toTruncateLeft <= WEEK_MODULO - slot.beginModuloWeek) {
-		// after occurs during the first week of slot
-		for (const [beginModuloWeek, endModuloWeek] of constraints) {
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek + toTruncateLeft,
-					slot.endModuloWeek,
-					beginModuloWeek,
-					endModuloWeek,
-					duration,
-				)
-			)
-				return true;
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek + toTruncateLeft,
-					slot.endModuloWeek,
-					beginModuloWeek + WEEK_MODULO,
-					endModuloWeek + WEEK_MODULO,
-					duration,
-				)
-			)
-				return true;
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek + toTruncateLeft,
-					slot.endModuloWeek,
-					beginModuloWeek + WEEK_MODULO * 2,
-					endModuloWeek + WEEK_MODULO * 2,
-					duration,
-				)
-			)
-				return true;
-		}
-	} else if (toInspectRight <= slot.endModuloWeek % WEEK_MODULO) {
-		// after occurs during the last week of slot
-		const shift = Math.floor(slot.endModuloWeek / WEEK_MODULO) * WEEK_MODULO;
-		assert(shift === WEEK_MODULO || shift === WEEK_MODULO * 2);
-		for (const [beginModuloWeek, endModuloWeek] of constraints) {
-			if (
-				intervalsOverlap(
-					slot.endModuloWeek - toInspectRight,
-					slot.endModuloWeek,
-					beginModuloWeek + shift,
-					endModuloWeek + shift,
-					duration,
-				)
-			)
-				return true;
-		}
-	} else {
-		// after occurs in some week in the middle of the slot
-		for (const [beginModuloWeek, endModuloWeek] of constraints) {
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek + toTruncateLeft,
-					slot.endModuloWeek,
-					beginModuloWeek + WEEK_MODULO,
-					endModuloWeek + WEEK_MODULO,
-					duration,
-				)
-			)
-				return true;
-			if (
-				intervalsOverlap(
-					slot.beginModuloWeek + toTruncateLeft,
-					slot.endModuloWeek,
-					beginModuloWeek + WEEK_MODULO * 2,
-					endModuloWeek + WEEK_MODULO * 2,
-					duration,
-				)
-			)
-				return true;
-		}
+		)
+			return true;
 	}
 
 	return false;
 };
 
 const slot = (begin: Date, end: Date, weight: number): SlotFields => {
-	const beginModuloWeek = mod(begin.getTime(), units.week);
-	const endModuloWeek = mod(end.getTime(), units.week);
-	const measureModuloWeek = endModuloWeek - beginModuloWeek;
-	// TODO handle negative measureModuloWeek
+	assert(!isEmpty(begin, end));
+	// TODO handle different time zones
+	// const weekShiftedBegin = mod(begin.getTime(), units.week);
+	// const weekShiftedBegin = getDay(begin) * units.day + getHours(begin) * units.hour;
+	// startOfWeek could break on beginningOfTime
+	const ref = endOfWeek(begin).getTime() - units.week + units.millisecond;
+	const weekShiftedBegin = begin.getTime() - ref;
+	// const weekShiftedEnd = mod(end.getTime(), units.week);
+	// const weekShiftedEnd = getDay(end) * units.day + getHours(end) * units.hour;
+	const measure = end.getTime() - begin.getTime();
+	const diffInWeeks = measure / units.week;
+	const fillInWeeks = Math.floor(diffInWeeks);
+	const fill = fillInWeeks * units.week;
+	const weekShiftedEndRaw = end.getTime() - startOfWeek(end).getTime();
+	const weekShiftedEnd =
+		weekShiftedEndRaw +
+		fill +
+		(weekShiftedEndRaw < weekShiftedBegin ? units.week : 0);
 	return {
 		begin,
 		end,
-		beginModuloWeek,
-		endModuloWeek,
-		measureModuloWeek,
+		weekShiftedBegin,
+		weekShiftedEnd,
+		measure,
 		weight,
 	};
 };
@@ -322,6 +254,7 @@ export const insertHook = (
 	Availability.remove({_id: {$in: toDelete}});
 
 	for (const [a, b, w] of toInsert) {
+		// TODO use bulk insertion (and transaction! redundant?)
 		Availability.insert({
 			...slot(a, b, w),
 			owner,

@@ -58,12 +58,8 @@ const prepareAvailability = (
 		map(
 			(week: number) =>
 				map(({beginModuloWeek, endModuloWeek}) => {
-					const beginDay = getDayOfWeekModulo(
-						Math.floor(beginModuloWeek / durationUnits.second),
-					);
-					const endDay = getDayOfWeekModulo(
-						Math.floor(endModuloWeek / durationUnits.second),
-					);
+					const beginDay = getDayOfWeekModulo(beginModuloWeek);
+					const endDay = getDayOfWeekModulo(endModuloWeek);
 					const beginMilliseconds = beginModuloWeek % durationUnits.day;
 					const endMilliseconds = endModuloWeek % durationUnits.day;
 					const beginHours = Math.floor(beginMilliseconds / durationUnits.hour);
