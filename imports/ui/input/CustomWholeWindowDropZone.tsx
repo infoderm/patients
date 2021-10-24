@@ -12,9 +12,12 @@ export default function CustomWholeWindowDropZone() {
 			onDrop(data);
 			closeSnackbar(key);
 			enqueueSnackbar('Success!', {variant: 'success'});
-		} catch (error) {
+		} catch (error: unknown) {
 			closeSnackbar(key);
-			enqueueSnackbar(error.message, {variant: 'error'});
+			const message = error instanceof Error ? error.message : 'unknown error';
+			console.error(message);
+			console.debug({error});
+			enqueueSnackbar(message, {variant: 'error'});
 		}
 	};
 
