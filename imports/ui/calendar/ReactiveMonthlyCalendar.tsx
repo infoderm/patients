@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {Link, useHistory} from 'react-router-dom';
 
@@ -14,14 +14,6 @@ import {useSettingCached} from '../../client/settings';
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';
 import {monthly} from './ranges';
-
-const WeekNumber = ({className, day, weekOptions}) => (
-	<div className={className}>
-		<Link to={`/calendar/week/${dateFormat(day, 'yyyy/ww', weekOptions)}`}>
-			{dateFormat(day, 'w', weekOptions)}
-		</Link>
-	</div>
-);
 
 const ReactiveMonthlyCalendar = (props) => {
 	const {
@@ -73,6 +65,21 @@ const ReactiveMonthlyCalendar = (props) => {
 		(x) =>
 			(showCancelledEvents || !x.isCancelled) &&
 			(showNoShowEvents || !x.isNoShow),
+	);
+
+	const WeekNumber = useMemo(
+		() =>
+			({className, day, weekOptions}) =>
+				(
+					<div className={className}>
+						<Link
+							to={`${baseURL}/week/${dateFormat(day, 'yyyy/ww', weekOptions)}`}
+						>
+							{dateFormat(day, 'w', weekOptions)}
+						</Link>
+					</div>
+				),
+		[baseURL],
 	);
 
 	return (
