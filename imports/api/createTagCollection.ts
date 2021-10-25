@@ -3,7 +3,7 @@ import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import mergeOptions from '../util/mergeOptions.js';
+import mergeOptions from '../util/mergeOptions';
 
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
