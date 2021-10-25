@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme) => ({
 	item: {
 		marginTop: theme.spacing(2),
 		marginBottom: theme.spacing(2),
+		paddingRight: theme.spacing(6 * 3),
 	},
 	chips: {
-		// display: 'flex',
-		// justifyContent: 'center',
-		// flexWrap: 'wrap'
+		display: 'flex',
+		flexWrap: 'wrap',
 	},
 }));
 
