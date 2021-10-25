@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 import Chip from '@material-ui/core/Chip';
 
@@ -27,30 +28,29 @@ import DocumentVersionsChip from './DocumentVersionsChip';
 
 const useStyles = makeStyles((theme) => ({
 	chip: {
-		maxWidth: '200px',
 		marginRight: theme.spacing(1),
+		marginTop: theme.spacing(1 / 2),
+		marginBottom: theme.spacing(1 / 2),
+	},
+	maxWidthChip: {
+		maxWidth: '200px',
 	},
 	unlinkedpatientchip: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
 		color: '#fff',
 		fontWeight: 'bold',
 	},
 	linkoffchip: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#f88',
 		color: '#fff',
 	},
 	anomalieschip: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#fa8',
 	},
 	partialchip: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#fa8',
 	},
 	completechip: {
-		marginRight: theme.spacing(1),
 		backgroundColor: '#8fa',
 	},
 }));
@@ -95,7 +95,7 @@ const DocumentChips = (props) => {
 					component={Link}
 					to={`/documents/${myEncodeURIComponent(identifier)}`}
 					label={identifier}
-					className={classes.chip}
+					className={classNames(classes.chip, classes.maxWidthChip)}
 				/>
 			)}
 			{parsed && (
@@ -106,7 +106,7 @@ const DocumentChips = (props) => {
 						identifier,
 					)}/${myEncodeURIComponent(reference)}`}
 					label={reference}
-					className={classes.chip}
+					className={classNames(classes.chip, classes.maxWidthChip)}
 				/>
 			)}
 			{parsed ? null : (
@@ -116,12 +116,14 @@ const DocumentChips = (props) => {
 					className={classes.chip}
 				/>
 			)}
-			{PatientChip && patientId && <PatientChip patient={{_id: patientId}} />}
+			{PatientChip && patientId && (
+				<PatientChip className={classes.chip} patient={{_id: patientId}} />
+			)}
 			{patientId ? null : parsed ? (
 				<Chip
 					icon={<LinkOffIcon />}
 					label={`${subject.lastname} ${subject.firstname}`}
-					className={classes.unlinkedpatientchip}
+					className={classNames(classes.chip, classes.unlinkedpatientchip)}
 					onClick={(e) => {
 						e.stopPropagation();
 						setLinking(true);
@@ -131,7 +133,7 @@ const DocumentChips = (props) => {
 				<Chip
 					icon={<LinkOffIcon />}
 					label="not linked"
-					className={classes.linkoffchip}
+					className={classNames(classes.chip, classes.linkoffchip)}
 					onClick={(e) => {
 						e.stopPropagation();
 						setLinking(true);
@@ -142,21 +144,21 @@ const DocumentChips = (props) => {
 				<Chip
 					icon={<ErrorIcon />}
 					label={anomalies}
-					className={classes.anomalieschip}
+					className={classNames(classes.chip, classes.anomalieschip)}
 				/>
 			) : null}
 			{parsed && status && status === 'partial' ? (
 				<Chip
 					icon={<HourglassEmptyIcon />}
 					label={status}
-					className={classes.partialchip}
+					className={classNames(classes.chip, classes.partialchip)}
 				/>
 			) : null}
 			{parsed && status && status === 'complete' ? (
 				<Chip
 					icon={<DoneIcon />}
 					label={status}
-					className={classes.completechip}
+					className={classNames(classes.chip, classes.completechip)}
 				/>
 			) : null}
 			{deleted && (
@@ -167,7 +169,9 @@ const DocumentChips = (props) => {
 					className={classes.chip}
 				/>
 			)}
-			{!deleted && VersionsChip && <VersionsChip document={document} />}
+			{!deleted && VersionsChip && (
+				<VersionsChip document={document} className={classes.chip} />
+			)}
 			{!patientId && (
 				<DocumentLinkingDialog
 					open={linking}

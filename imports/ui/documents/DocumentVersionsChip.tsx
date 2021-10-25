@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 import Chip from '@material-ui/core/Chip';
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const DocumentVersionsChip = ({document, ...rest}) => {
+const DocumentVersionsChip = ({document, className, ...rest}) => {
 	const classes = useStyles();
 
 	const {loading, versions} = useDocumentVersions(document);
@@ -32,7 +33,7 @@ const DocumentVersionsChip = ({document, ...rest}) => {
 		<Chip
 			icon={<DynamicFeedIcon />}
 			label={lastVersion ? `${versions.length} versions` : 'old version'}
-			className={classes.chip}
+			className={classNames(classes.chip, className)}
 			component={Link}
 			to={`/document/versions/${myEncodeURIComponent(
 				identifier,
@@ -44,6 +45,7 @@ const DocumentVersionsChip = ({document, ...rest}) => {
 
 DocumentVersionsChip.propTypes = {
 	document: PropTypes.object.isRequired,
+	className: PropTypes.string,
 };
 
 export default DocumentVersionsChip;
