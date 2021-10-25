@@ -1,7 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
+import {makeStyles, createStyles} from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {useSnackbar} from 'notistack';
 import downloadDocument from './downloadDocument';
+
+const styles = () =>
+	createStyles({
+		saveButtonWrapper: {
+			position: 'relative',
+			display: 'inline',
+		},
+		saveButtonProgress: {
+			color: blue[900],
+			position: 'absolute',
+			top: -14,
+			left: 0,
+			zIndex: 1,
+		},
+	});
+
+const useStyles = makeStyles(styles);
 
 const DocumentDownloadGenericButton = ({
 	document,
@@ -9,14 +31,35 @@ const DocumentDownloadGenericButton = ({
 	component: Component,
 	...rest
 }) => {
-	const onClick = () => {
-		downloadDocument(document);
+	const classes = useStyles();
+	const {enqueueSnackbar} = useSnackbar();
+	const [downloading, setDownloading] = useState(false);
+
+	const onClick = async () => {
+		setDownloading(true);
+		try {
+			await downloadDocument(document);
+			setDownloading(false);
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : 'unknown error';
+			console.error(message);
+			console.debug({error});
+			enqueueSnackbar(message, {variant: 'error'});
+			setDownloading(false);
+		}
 	};
 
+	const props = downloading ? {...rest, disabled: true} : rest;
+
 	return (
-		<Component color="primary" onClick={onClick} {...rest}>
-			{children}
-		</Component>
+		<div className={classes.saveButtonWrapper}>
+			<Component color="primary" onClick={onClick} {...props}>
+				{children}
+			</Component>
+			{downloading && (
+				<CircularProgress size={48} className={classes.saveButtonProgress} />
+			)}
+		</div>
 	);
 };
 
