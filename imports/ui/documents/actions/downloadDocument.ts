@@ -1,8 +1,8 @@
-import saveTextAs from '../../../client/saveTextAs.js';
+import saveTextAs from '../../../client/saveTextAs';
 
 const downloadDocument = (document) => {
 	const extensions = {
-		healthone: 'HLT'
+		healthone: 'HLT',
 		// 'medar' : 'MDR' ,
 		// 'medidoc' : 'MDD' ,
 	};

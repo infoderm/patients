@@ -3,7 +3,7 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import DocumentDeletionGenericButton from './DocumentDeletionGenericButton.js';
+import DocumentDeletionGenericButton from './DocumentDeletionGenericButton';
 
 const DocumentDeletionIconButton = (props) => (
 	<DocumentDeletionGenericButton component={IconButton} {...props}>

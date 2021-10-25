@@ -172,7 +172,9 @@ const DocumentChips = (props) => {
 				<DocumentLinkingDialog
 					open={linking}
 					document={document}
-					onClose={() => setLinking(false)}
+					onClose={() => {
+						setLinking(false);
+					}}
 				/>
 			)}
 		</>
