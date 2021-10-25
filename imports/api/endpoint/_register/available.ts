@@ -42,6 +42,8 @@ import '../consultations/update';
 // eslint-disable-next-line import/no-unassigned-import
 import '../documents/delete';
 // eslint-disable-next-line import/no-unassigned-import
+import '../documents/fetch';
+// eslint-disable-next-line import/no-unassigned-import
 import '../documents/insert';
 // eslint-disable-next-line import/no-unassigned-import
 import '../documents/link';

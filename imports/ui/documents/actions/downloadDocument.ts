@@ -1,6 +1,8 @@
+import call from '../../../api/endpoint/call';
+import documentFetch from '../../../api/endpoint/documents/fetch';
 import saveTextAs from '../../../client/saveTextAs';
 
-const downloadDocument = (document) => {
+const downloadDocument = async (document) => {
 	const extensions = {
 		healthone: 'HLT',
 		// 'medar' : 'MDR' ,
@@ -15,7 +17,12 @@ const downloadDocument = (document) => {
 
 	const filename = `${name}.${ext}`;
 
-	saveTextAs(document.decoded || document.source, filename);
+	const text =
+		document.decoded ??
+		document.source ??
+		(await call(documentFetch, document._id));
+
+	saveTextAs(text, filename);
 };
 
 export default downloadDocument;
