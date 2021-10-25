@@ -27,7 +27,7 @@ module.exports = {
 			ROOT_URL: 'https://dermatodoc.local',
 			PORT: 3001,
 		},
-		deployCheckWaitTime: 30,
+		deployCheckWaitTime: 120,
 		deployCheckPort: 443,
 		enableUploadProgressBar: true,
 	},
