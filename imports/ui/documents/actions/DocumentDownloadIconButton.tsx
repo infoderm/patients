@@ -3,7 +3,7 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
-import DocumentDownloadGenericButton from './DocumentDownloadGenericButton.js';
+import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 
 const DocumentDownloadIconButton = (props) => (
 	<DocumentDownloadGenericButton component={IconButton} {...props}>

@@ -16,8 +16,8 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 import DocumentChips from './DocumentChips';
 
-import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton.js';
-import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton.js';
+import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton';
+import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton';
 
 const useStyles = makeStyles((theme) => ({
 	item: {

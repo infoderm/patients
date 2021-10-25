@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import downloadDocument from './downloadDocument.js';
+import downloadDocument from './downloadDocument';
 
 const DocumentDownloadGenericButton = ({
 	document,
@@ -9,7 +9,9 @@ const DocumentDownloadGenericButton = ({
 	component: Component,
 	...rest
 }) => {
-	const onClick = () => downloadDocument(document);
+	const onClick = () => {
+		downloadDocument(document);
+	};
 
 	return (
 		<Component color="primary" onClick={onClick} {...rest}>
@@ -20,7 +22,7 @@ const DocumentDownloadGenericButton = ({
 
 DocumentDownloadGenericButton.propTypes = {
 	document: PropTypes.object.isRequired,
-	component: PropTypes.elementType.isRequired
+	component: PropTypes.elementType.isRequired,
 };
 
 export default DocumentDownloadGenericButton;

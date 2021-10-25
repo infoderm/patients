@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import DocumentDeletionDialog from '../DocumentDeletionDialog.js';
+import DocumentDeletionDialog from '../DocumentDeletionDialog';
 
 const DocumentDownloadGenericButton = ({
 	document,
@@ -15,13 +15,21 @@ const DocumentDownloadGenericButton = ({
 
 	return (
 		<>
-			<Component color="secondary" onClick={() => setDeleting(true)} {...rest}>
+			<Component
+				color="secondary"
+				onClick={() => {
+					setDeleting(true);
+				}}
+				{...rest}
+			>
 				{children}
 			</Component>
 			<DocumentDeletionDialog
 				open={deleting}
 				document={document}
-				onClose={() => setDeleting(false)}
+				onClose={() => {
+					setDeleting(false);
+				}}
 			/>
 		</>
 	);
@@ -29,7 +37,7 @@ const DocumentDownloadGenericButton = ({
 
 DocumentDownloadGenericButton.propTypes = {
 	document: PropTypes.object.isRequired,
-	component: PropTypes.elementType.isRequired
+	component: PropTypes.elementType.isRequired,
 };
 
 export default DocumentDownloadGenericButton;

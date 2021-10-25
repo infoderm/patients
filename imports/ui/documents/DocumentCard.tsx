@@ -109,9 +109,7 @@ const DocumentCard = (props) => {
 							</ListItemAvatar>
 							<ListItemText
 								disableTypography
-								primary={
-									<Typography variant="subtitle1">Contents</Typography>
-								}
+								primary={<Typography variant="subtitle1">Contents</Typography>}
 								secondary={<HealthOneReportContents document={document} />}
 							/>
 						</ListItem>
@@ -136,24 +134,44 @@ const DocumentCard = (props) => {
 			<AccordionActions>
 				{VersionsButton && <VersionsButton document={document} />}
 				<DocumentDownloadButton document={document} />
-				<Button color="primary" onClick={() => setLinking(true)}>
+				<Button
+					color="primary"
+					onClick={() => {
+						setLinking(true);
+					}}
+				>
 					Link
 					<LinkIcon />
 				</Button>
 				{patientId && (
-					<Button color="secondary" onClick={() => setUnlinking(true)}>
+					<Button
+						color="secondary"
+						onClick={() => {
+							setUnlinking(true);
+						}}
+					>
 						Unlink
 						<LinkOffIcon />
 					</Button>
 				)}
 				{deleted && (
-					<Button color="primary" onClick={() => setRestoring(true)}>
+					<Button
+						color="primary"
+						onClick={() => {
+							setRestoring(true);
+						}}
+					>
 						Restore
 						<RestoreFromTrashIcon />
 					</Button>
 				)}
 				{deleted && (
-					<Button color="secondary" onClick={() => setSuperdeleting(true)}>
+					<Button
+						color="secondary"
+						onClick={() => {
+							setSuperdeleting(true);
+						}}
+					>
 						Delete forever
 						<DeleteForeverIcon />
 					</Button>
@@ -163,27 +181,37 @@ const DocumentCard = (props) => {
 					open={linking}
 					document={document}
 					existingLink={{_id: patientId}}
-					onClose={() => setLinking(false)}
+					onClose={() => {
+						setLinking(false);
+					}}
 				/>
 				<DocumentUnlinkingDialog
 					open={unlinking}
 					document={document}
-					onClose={() => setUnlinking(false)}
+					onClose={() => {
+						setUnlinking(false);
+					}}
 				/>
 				<DocumentDeletionDialog
 					open={deleting}
 					document={document}
-					onClose={() => setDeleting(false)}
+					onClose={() => {
+						setDeleting(false);
+					}}
 				/>
 				<DocumentRestorationDialog
 					open={restoring}
 					document={document}
-					onClose={() => setRestoring(false)}
+					onClose={() => {
+						setRestoring(false);
+					}}
 				/>
 				<DocumentSuperDeletionDialog
 					open={superdeleting}
 					document={document}
-					onClose={() => setSuperdeleting(false)}
+					onClose={() => {
+						setSuperdeleting(false);
+					}}
 				/>
 			</AccordionActions>
 		</Accordion>
