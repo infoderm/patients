@@ -29,7 +29,7 @@
     "@iterable-iterator/filter": "^0.1.2",
     "@iterable-iterator/group": "^0.0.1",
     "@iterable-iterator/iter": "^0.0.2",
-    "@iterable-iterator/list": "^0.0.2",
+    "@iterable-iterator/list": "^1.0.0",
     "@iterable-iterator/map": "^0.1.0",
     "@iterable-iterator/next": "^1.0.1",
     "@iterable-iterator/range": "^1.0.0",
