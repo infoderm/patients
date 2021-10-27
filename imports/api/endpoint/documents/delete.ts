@@ -12,11 +12,11 @@ export default define({
 	validate(documentId: string) {
 		check(documentId, String);
 	},
-	run(documentId: String) {
+	run(documentId: string) {
 		// TODO make atomic
-		const document = Documents.findOne(documentId);
-		if (!document || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
+		const document = Documents.findOne({_id: documentId, owner: this.userId});
+		if (!document) {
+			throw new Meteor.Error('not-found');
 		}
 
 		Documents.update(documentId, {$set: {deleted: true}});

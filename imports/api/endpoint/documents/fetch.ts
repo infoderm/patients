@@ -9,7 +9,7 @@ export default define({
 	validate(documentId: string) {
 		check(documentId, String);
 	},
-	run(documentId: String) {
+	run(documentId: string) {
 		const document = Documents.findOne(
 			{
 				_id: documentId,
