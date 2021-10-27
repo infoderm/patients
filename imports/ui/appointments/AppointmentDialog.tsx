@@ -1,4 +1,6 @@
-import React from 'react';
+import assert from 'assert';
+
+import React, {useMemo} from 'react';
 import {useHistory} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -48,6 +50,10 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import PatientPicker from '../patients/PatientPicker';
+import {weekShifted} from '../../api/availability';
+import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
+import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
+import isContiguous from '../../lib/interval/isContiguous';
 
 const useStyles = makeStyles({
 	dialogPaper: {
@@ -80,6 +86,9 @@ const unserializeDatetime = (date: string, time: string) =>
 	new Date(`${date}T${time}`);
 const unserializeTime = (time: string) =>
 	unserializeDatetime('1970-01-01', time);
+
+const isEqual = (a, b) => a === b;
+
 const AppointmentDialog = (props) => {
 	const classes = useStyles();
 	const history = useHistory();
@@ -156,6 +165,34 @@ const AppointmentDialog = (props) => {
 		[_id, Number(datetime), duration],
 	);
 	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
+
+	const workSchedule = useSortedWorkSchedule();
+
+	const appointmentReachesOutsideWorkSchedule = useMemo(() => {
+		if (!isValid(begin) || !isValid(end)) return false;
+		const intervals = workSchedule.map(({beginModuloWeek, endModuloWeek}) => [
+			beginModuloWeek,
+			endModuloWeek,
+		]) as Array<[number, number]>;
+		const [weekShiftedBegin, weekShiftedEnd] = weekShifted(begin, end);
+		const intersectionWithWorkSchedule = Array.from(
+			nonOverlappingIntersectionQuery(intervals, [
+				weekShiftedBegin,
+				weekShiftedEnd,
+			]),
+		);
+		const span =
+			intersectionWithWorkSchedule.length === 0
+				? 0
+				: intersectionWithWorkSchedule[
+						intersectionWithWorkSchedule.length - 1
+				  ][1] - intersectionWithWorkSchedule[0][0];
+		const measure = Number(end) - Number(begin);
+		assert(span <= measure);
+		return (
+			span < measure || !isContiguous(isEqual, intersectionWithWorkSchedule)
+		);
+	}, [workSchedule, Number(begin), Number(end)]);
 
 	const createAppointment = async (event) => {
 		event.preventDefault();
@@ -329,6 +366,15 @@ const AppointmentDialog = (props) => {
 							<Alert severity="warning">
 								<AlertTitle>Attention</AlertTitle>
 								Ce rendez-vous <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
+					{appointmentReachesOutsideWorkSchedule && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Ce rendez-vous{' '}
+								<strong>est en dehors de l&apos;horaire programmé</strong>!
 							</Alert>
 						</Grid>
 					)}
