@@ -2,6 +2,7 @@
 import 'regenerator-runtime/runtime.js';
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
+import {WebApp} from 'meteor/webapp';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
@@ -34,6 +35,11 @@ import './publication/_register/enabled';
 // DECLARE ALL ENABLED API ENDPOINTS
 // eslint-disable-next-line import/no-unassigned-import
 import '../imports/api/endpoint/_register/enabled';
+
+// DECLARE ALL ENABLED ICS ENDPOINTS
+import ics from './api/ics/index';
+
+WebApp.connectHandlers.use(ics);
 
 Meteor.startup(() => {
 	// Code to run on server at startup
