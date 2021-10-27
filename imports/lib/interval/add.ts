@@ -1,3 +1,4 @@
+import assert from 'assert';
 import intersection from './intersection';
 import isEmpty from './isEmpty';
 
@@ -9,8 +10,9 @@ export default function* add<Endpoint>(
 	xw: Weight,
 	y0: Endpoint,
 	y1: Endpoint,
-	xy: Weight,
+	yw: Weight,
 ): IterableIterator<[Endpoint, Endpoint, Weight]> {
+	assert(yw !== 0);
 	const [i0, i1] = intersection(x0, x1, y0, y1);
 
 	if (isEmpty(i0, i1)) {
@@ -20,7 +22,7 @@ export default function* add<Endpoint>(
 			yield [x0, i0, xw];
 		}
 
-		yield [i0, i1, xw + xy];
+		yield [i0, i1, xw + yw];
 
 		if (!isEmpty(i1, x1)) {
 			yield [i1, x1, xw];

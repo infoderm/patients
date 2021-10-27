@@ -38,6 +38,7 @@ const overlapsInterval = (
 							$lte: end,
 						},
 						[measureKey]: {
+							// TODO looks like this one is implied
 							$gte: measure,
 						},
 					},

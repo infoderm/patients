@@ -32,7 +32,7 @@ import {generateDays, getDayOfWeekModulo} from '../../util/datetime';
 import {units as durationUnits} from '../../api/duration';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import {mod} from '../../util/artithmetic';
-import partitionEvents from '../../api/interval/nonOverlappingIntersection';
+import partitionEvents from '../../lib/interval/nonOverlappingIntersection';
 import {weekly} from './ranges';
 import StaticWeeklyCalendar from './StaticWeeklyCalendar';
 import DayHeader from './DayHeader';

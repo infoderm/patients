@@ -6,18 +6,21 @@ const intersectsInterval = (
 ) => ({
 	$or: [
 		{
+			// NOTE Begins inside
 			[beginKey]: {
 				$gte: begin,
 				$lt: end,
 			},
 		},
 		{
+			// NOTE Ends inside
 			[endKey]: {
 				$gt: begin,
 				$lte: end,
 			},
 		},
 		{
+			// NOTE Begins before and ends after
 			[beginKey]: {
 				$lt: begin,
 			},

@@ -7,12 +7,13 @@ import isSameDatetime from 'date-fns/isEqual';
 import endOfWeek from 'date-fns/endOfWeek';
 import startOfWeek from 'date-fns/startOfWeek';
 import {beginningOfTime, endOfTime, WEEK_MODULO} from '../util/datetime';
+import add from '../lib/interval/add';
+import isEmpty from '../lib/interval/isEmpty';
+import isContiguous from '../lib/interval/isContiguous';
 import {units} from './duration';
 
 import intersectsOrTouchesInterval from './interval/intersectsOrTouchesInterval';
 
-import add from './interval/add';
-import isEmpty from './interval/isEmpty';
 import {
 	Availability,
 	SlotDocument,
@@ -148,16 +149,6 @@ const simplify = (
 	return slots;
 };
 
-const isContiguous = (slots: Array<[Date, Date, number]>): boolean => {
-	for (const [left, right] of window(2, slots)) {
-		const [, end] = left;
-		const [begin] = right;
-		if (!isSameDatetime(end, begin)) return false;
-	}
-
-	return true;
-};
-
 const canBeSimplified = (slots: Array<[Date, Date, number]>): boolean => {
 	for (const [left, right] of window(2, slots)) {
 		const [, end, leftWeight] = left;
@@ -189,7 +180,12 @@ export const insertHook = (
 		},
 	).fetch();
 
-	assert(isContiguous(_intersected.map((x) => [x.begin, x.end, x.weight])));
+	assert(
+		isContiguous(
+			isSameDatetime,
+			_intersected.map((x) => [x.begin, x.end]),
+		),
+	);
 
 	// Initialize timeline with monolith event
 	const intersected: SlotDocument[] =
@@ -203,7 +199,12 @@ export const insertHook = (
 			  ]
 			: _intersected;
 
-	assert(isContiguous(intersected.map((x) => [x.begin, x.end, x.weight])));
+	assert(
+		isContiguous(
+			isSameDatetime,
+			intersected.map((x) => [x.begin, x.end]),
+		),
+	);
 
 	const toDelete = _intersected.map((x) => x._id);
 	const _toInsert = [];
@@ -235,11 +236,13 @@ export const insertHook = (
 
 	assert(_toInsert.length >= 3);
 
-	assert(isContiguous(_toInsert));
+	assert(isContiguous(isSameDatetime, _toInsert));
 
 	const toInsert = simplify(_toInsert);
 
-	assert(isContiguous(toInsert));
+	assert(
+		isContiguous(isSameDatetime, toInsert as unknown as Array<[Date, Date]>),
+	);
 
 	assert(isSameDatetime(toInsert[0][0], _toInsert[0][0]));
 	assert(
