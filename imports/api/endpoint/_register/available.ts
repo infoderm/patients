@@ -75,6 +75,11 @@ import '../patients/remove';
 import '../patients/update';
 
 // eslint-disable-next-line import/no-unassigned-import
+import '../permissions/token/generate';
+// eslint-disable-next-line import/no-unassigned-import
+import '../permissions/token/revoke';
+
+// eslint-disable-next-line import/no-unassigned-import
 import '../settings/reset';
 // eslint-disable-next-line import/no-unassigned-import
 import '../settings/update';
