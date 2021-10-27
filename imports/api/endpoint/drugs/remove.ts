@@ -9,13 +9,12 @@ export default define({
 	validate(drugId: string) {
 		check(drugId, String);
 	},
-	run(drugId: String) {
-		// TODO make atomic
-		const drug = Drugs.findOne(drugId);
-		if (drug.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized');
+	run(drugId: string) {
+		const nRemoved = Drugs.remove({_id: drugId, owner: this.userId});
+		if (nRemoved === 0) {
+			throw new Meteor.Error('not-found');
 		}
 
-		return Drugs.remove(drugId);
+		return nRemoved;
 	},
 });
