@@ -4,8 +4,12 @@ import {window} from '@iterable-iterator/window';
 
 import isSameDatetime from 'date-fns/isEqual';
 
-import endOfWeek from 'date-fns/endOfWeek';
-import startOfWeek from 'date-fns/startOfWeek';
+import getDay from 'date-fns/getDay';
+import getHours from 'date-fns/getHours';
+import getMinutes from 'date-fns/getMinutes';
+import getSeconds from 'date-fns/getSeconds';
+import getMilliseconds from 'date-fns/getMilliseconds';
+import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
 import {beginningOfTime, endOfTime, WEEK_MODULO} from '../util/datetime';
 import add from '../lib/interval/add';
 import isEmpty from '../lib/interval/isEmpty';
@@ -79,25 +83,30 @@ export const overlapsAfterDate = (
 	return false;
 };
 
-const slot = (begin: Date, end: Date, weight: number): SlotFields => {
+const getWeekMilliseconds = (datetime: Date) => {
+	const day = getDay(datetime);
+	const hours = getHours(datetime);
+	const minutes = getMinutes(datetime);
+	const seconds = getSeconds(datetime);
+	const milliseconds = getMilliseconds(datetime);
+	return (
+		milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * day)))
+	);
+};
+
+export const weekShifted = (begin: Date, end: Date) => {
 	assert(!isEmpty(begin, end));
-	// TODO handle different time zones
-	// const weekShiftedBegin = mod(begin.getTime(), units.week);
-	// const weekShiftedBegin = getDay(begin) * units.day + getHours(begin) * units.hour;
-	// startOfWeek could break on beginningOfTime
-	const ref = endOfWeek(begin).getTime() - units.week + units.millisecond;
-	const weekShiftedBegin = begin.getTime() - ref;
-	// const weekShiftedEnd = mod(end.getTime(), units.week);
-	// const weekShiftedEnd = getDay(end) * units.day + getHours(end) * units.hour;
-	const measure = end.getTime() - begin.getTime();
-	const diffInWeeks = measure / units.week;
-	const fillInWeeks = Math.floor(diffInWeeks);
-	const fill = fillInWeeks * units.week;
-	const weekShiftedEndRaw = end.getTime() - startOfWeek(end).getTime();
-	const weekShiftedEnd =
-		weekShiftedEndRaw +
-		fill +
-		(weekShiftedEndRaw < weekShiftedBegin ? units.week : 0);
+	const weekShiftedBegin = getWeekMilliseconds(begin);
+	const diffInWeeks = differenceInCalendarWeeks(end, begin);
+	const fill = diffInWeeks * units.week;
+	const weekShiftedEndRaw = getWeekMilliseconds(end);
+	const weekShiftedEnd = fill + weekShiftedEndRaw;
+	return [weekShiftedBegin, weekShiftedEnd];
+};
+
+const slot = (begin: Date, end: Date, weight: number): SlotFields => {
+	const [weekShiftedBegin, weekShiftedEnd] = weekShifted(begin, end);
+	const measure = Number(end) - Number(begin);
 	return {
 		begin,
 		end,
