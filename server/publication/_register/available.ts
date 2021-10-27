@@ -69,6 +69,8 @@ import '../../../imports/api/publication/patients/patient';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/patients/search';
 // eslint-disable-next-line import/no-unassigned-import
+import '../../../imports/api/publication/permissionTokens/find';
+// eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/settings/all';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/settings/byKey';
