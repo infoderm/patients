@@ -86,6 +86,7 @@ const DrugsSearch = lazy(async () => import('./drugs/DrugsSearch'));
 const DrugDetails = lazy(async () => import('./drugs/DrugDetails'));
 
 const Settings = lazy(async () => import('./settings/Settings'));
+const Authentication = lazy(async () => import('./auth/Authentication'));
 
 const ConsultationsOfTheDayFromMatch = ({match}) => (
 	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))} />
@@ -326,6 +327,7 @@ export default function Router() {
 				<Route exact path="/drug/:id" component={DrugDetails} />
 
 				<Route exact path="/settings" component={Settings} />
+				<Route exact path="/auth" component={Authentication} />
 
 				<Route component={NoMatch} />
 			</Switch>
