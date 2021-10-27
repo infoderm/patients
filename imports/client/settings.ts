@@ -26,6 +26,11 @@ const localStoragePrefix = 'u3208hfosjas-';
 function getWithBrowserCache(key: string) {
 	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
 	// TODO AVOID CLASHES BY ADDING USER ID's TO THE KEY?
+	// + clear own cache on logout?!
+	// + clear other's cache on login
+	// + warning message if cache was found on login
+	// OR maybe if not logged in and not logging in clear all cache with
+	// warning
 	const item = Settings.findOne({key});
 	const localStorageKey = localStoragePrefix + key;
 	if (item === undefined) {
