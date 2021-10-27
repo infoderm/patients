@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,7 +10,11 @@ import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify';
 
 const CopiableTextField = (props) => {
 	const {value, placeholder, readOnly, InputLabelProps, InputProps} = props;
-	const copyValueToClipboard = useSaveTextToClipboardAndNotify(value);
+	const saveTextToClipboard = useSaveTextToClipboardAndNotify();
+	const copyValueToClipboard = useCallback(
+		() => saveTextToClipboard(value),
+		[saveTextToClipboard, value],
+	);
 
 	return (
 		<TextField
