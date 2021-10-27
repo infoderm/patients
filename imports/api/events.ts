@@ -3,7 +3,7 @@ import addMinutes from 'date-fns/addMinutes';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 
-import {Consultations} from './collection/consultations';
+import {ConsultationDocument, Consultations} from './collection/consultations';
 
 import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
@@ -15,7 +15,7 @@ import {EventDocument, events} from './collection/events';
 
 export {intersectsInterval, beginsInInterval};
 
-const event = (
+export const event = (
 	_id: string,
 	{
 		owner,
@@ -26,7 +26,7 @@ const event = (
 		duration,
 		doneDatetime,
 		createdAt,
-	},
+	}: Omit<ConsultationDocument, '_id'>,
 ): EventDocument => {
 	const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
 	const begin = datetime;
