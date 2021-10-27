@@ -30,6 +30,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import SecurityIcon from '@material-ui/icons/Security';
 
 import {setSetting} from '../client/settings';
 import Tooltip from './accessibility/Tooltip';
@@ -236,6 +237,12 @@ export default function NavigationDrawer({
 					to: '/settings',
 					icon: <SettingsIcon />,
 					title: 'Settings',
+				},
+
+				{
+					to: '/auth',
+					icon: <SecurityIcon />,
+					title: 'Authentication',
 				},
 
 				{
