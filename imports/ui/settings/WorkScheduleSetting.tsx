@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
+import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
 
@@ -7,15 +8,30 @@ import {useDaysNames, useDateFormat} from '../../i18n/datetime';
 
 import {units as durationUnits} from '../../api/duration';
 
+import simplifyUnion from '../../lib/interval/simplifyUnion';
 import InputManySetting from './InputManySetting';
 import useWorkScheduleSort from './useWorkScheduleSort';
 
 const KEY = 'work-schedule';
 
-// TODO merge intersecting intervals
+const slotToInterval = ({beginModuloWeek, endModuloWeek}) => [
+	beginModuloWeek,
+	endModuloWeek,
+];
+const intervalToSlot = ([beginModuloWeek, endModuloWeek]) => ({
+	beginModuloWeek,
+	endModuloWeek,
+});
 
 export default function WorkScheduleSetting({className}) {
 	const sort = useWorkScheduleSort();
+	const sortAndMerge = useMemo(
+		() => (values) =>
+			Array.from(
+				map(intervalToSlot, simplifyUnion(map(slotToInterval, sort(values)))),
+			),
+		[sort],
+	);
 
 	const options = list(range(7));
 
@@ -85,7 +101,7 @@ export default function WorkScheduleSetting({className}) {
 			itemToString={itemToString}
 			createNewItem={createNewItem}
 			placeholder="Give additional time slots"
-			sort={sort}
+			sort={sortAndMerge}
 		/>
 	);
 }
