@@ -7,17 +7,16 @@ import {useSettingCached} from '../../client/settings';
 import {units as durationUnits} from '../../api/duration';
 import {mod} from '../../util/artithmetic';
 
+export const weekSlotsCyclicOrder = (weekStartsOn: number) =>
+	key(increasing, ({beginModuloWeek}: {beginModuloWeek: number}) =>
+		mod(beginModuloWeek - weekStartsOn * durationUnits.day, durationUnits.week),
+	);
+
 const useWorkScheduleSort = () => {
 	const {value: weekStartsOn} = useSettingCached('week-starts-on');
 
 	const compare = useMemo(
-		() =>
-			key(increasing, ({beginModuloWeek}: {beginModuloWeek: number}) =>
-				mod(
-					beginModuloWeek - weekStartsOn * durationUnits.day,
-					durationUnits.week,
-				),
-			),
+		() => weekSlotsCyclicOrder(weekStartsOn),
 		[weekStartsOn],
 	);
 
