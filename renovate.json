@@ -8,5 +8,21 @@
     "github>make-github-pseudonymous-again/renovate-config-js-library:semantic-commit-with-emojis",
     ":pinOnlyDevDependencies",
     ":automergeDisabled"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "total-order"
+      ],
+      "matchPackagePrefixes": [
+        "@material-ui/",
+        "@total-order/",
+        "@set-theory/",
+        "@iterable-iterator/",
+        "@heap-data-structure/",
+        "@functional-abstraction/"
+      ],
+      "enabled": false
+    }
   ]
 }
