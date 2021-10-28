@@ -3,6 +3,7 @@ import React, {useMemo} from 'react';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
+import {sorted} from '@iterable-iterator/sorted';
 
 import {useDaysNames, useDateFormat} from '../../i18n/datetime';
 
@@ -10,7 +11,7 @@ import {units as durationUnits} from '../../api/duration';
 
 import simplifyUnion from '../../lib/interval/simplifyUnion';
 import InputManySetting from './InputManySetting';
-import useWorkScheduleSort from './useWorkScheduleSort';
+import useWorkScheduleSort, {weekSlotsCyclicOrder} from './useWorkScheduleSort';
 
 const KEY = 'work-schedule';
 
@@ -23,12 +24,19 @@ const intervalToSlot = ([beginModuloWeek, endModuloWeek]) => ({
 	endModuloWeek,
 });
 
+const slotOrder = weekSlotsCyclicOrder(0);
+
 export default function WorkScheduleSetting({className}) {
 	const sort = useWorkScheduleSort();
 	const sortAndMerge = useMemo(
 		() => (values) =>
-			Array.from(
-				map(intervalToSlot, simplifyUnion(map(slotToInterval, sort(values)))),
+			sort(
+				Array.from(
+					map(
+						intervalToSlot,
+						simplifyUnion(map(slotToInterval, sorted(slotOrder, values))),
+					),
+				),
 			),
 		[sort],
 	);
