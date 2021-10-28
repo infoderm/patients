@@ -99,8 +99,7 @@ export const weekShifted = (begin: Date, end: Date) => {
 	const weekShiftedBegin = getWeekMilliseconds(begin);
 	const diffInWeeks = differenceInCalendarWeeks(end, begin);
 	const fill = diffInWeeks * units.week;
-	const weekShiftedEndRaw = getWeekMilliseconds(end);
-	const weekShiftedEnd = fill + weekShiftedEndRaw;
+	const weekShiftedEnd = fill + getWeekMilliseconds(end);
 	return [weekShiftedBegin, weekShiftedEnd];
 };
 
