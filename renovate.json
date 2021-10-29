@@ -15,6 +15,7 @@
         "total-order"
       ],
       "matchPackagePrefixes": [
+        "@combinatorics/",
         "@material-ui/",
         "@total-order/",
         "@set-theory/",
