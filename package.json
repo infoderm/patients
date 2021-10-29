@@ -73,7 +73,7 @@
     "keycode": "^2.2.0",
     "lodash.deburr": "^4.1.0",
     "meteor-node-stubs": "^1.1.0",
-    "notistack": "^1.0.10",
+    "notistack": "^2.0.0",
     "papaparse": "^5.3.1",
     "pdfjs-dist": "^2.10.377",
     "prop-types": "^15.7.2",
