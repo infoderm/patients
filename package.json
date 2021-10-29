@@ -106,7 +106,7 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "faker": "5.5.3",
     "husky": "7.0.4",
-    "lint-staged": "11.2.4",
+    "lint-staged": "11.2.6",
     "mup": "1.5.5",
     "npm-check-updates": "11.8.5",
     "postinstall": "0.7.4",
