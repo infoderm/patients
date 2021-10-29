@@ -65,7 +65,7 @@ const Chart = ({width, height}) => {
 	} else if (!allCount) {
 		sex.push({sex: noDataText, freq: 1});
 	} else {
-		for (const s of ['female', 'male', 'other', '']) {
+		for (const s of ['female', 'male', 'other', '', 'undefined']) {
 			if (count[s]) {
 				sex.push({
 					sex: s || 'none',
@@ -77,9 +77,18 @@ const Chart = ({width, height}) => {
 		}
 	}
 
-	const domain = ['female', 'other', 'male', 'none', loadingText, noDataText];
+	const domain = [
+		'female',
+		'undefined',
+		'other',
+		'male',
+		'none',
+		loadingText,
+		noDataText,
+	];
 	const range = [
 		pink[500],
+		grey[600],
 		purple[500],
 		blue[500],
 		grey[500],
