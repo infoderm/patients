@@ -21,6 +21,10 @@ function unpack(data, item) {
 			return ['healthone', f];
 		}
 
+		if (f.name.endsWith('.REP')) {
+			return ['medidoc', f];
+		}
+
 		return ['unknown-file', f];
 	}
 
