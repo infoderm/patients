@@ -1,7 +1,8 @@
 import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
-import {documents, findBestPatientMatchServerOnly} from '../../documents';
+import {documents} from '../../documents';
+import findBestPatientMatch from '../../documents/findBestPatientMatch';
 
 import define from '../define';
 
@@ -18,14 +19,14 @@ export default define({
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const entries = await sanitize(document);
+		const entries = sanitize(document);
 
 		const result = [];
 
-		for (const entry of entries) {
+		for await (const entry of entries) {
 			// Find best patient match for this document
 
-			const patientId = findBestPatientMatchServerOnly(this.userId, entry);
+			const patientId = findBestPatientMatch(this.userId, entry);
 
 			// Find document with matching source
 

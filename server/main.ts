@@ -596,9 +596,9 @@ Meteor.startup(() => {
 					array,
 				};
 
-				const entries = await documents.sanitize(document);
+				const entries = documents.sanitize(document);
 
-				for (const entry of entries) {
+				for await (const entry of entries) {
 					if (!entry.parsed) {
 						return;
 					}

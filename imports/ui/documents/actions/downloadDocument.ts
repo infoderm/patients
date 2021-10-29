@@ -4,9 +4,22 @@ import saveTextAs from '../../../client/saveTextAs';
 
 const downloadDocument = async (document) => {
 	const extensions = {
+		// TODO maybe use LAB/REP kind dichotomy instead
+		// Could also use better naming, for instance Mediris uses
+		//    Format texte
+		//        DMA-REP (Medidoc)
+		//        ALA-AMF
+		//        HDM-REC
+		//        DMA-TEC
+
+		// Résultats de laboratoire (pas en format texte)
+		//        ALA-LAB (Medar)
+		//        HDM-LAB (Health One)
+		//
+		// See: https://support.mediportal.be/fr/support/solutions/articles/1000303373-faq-messages-illisibles-dans-le-dossier-g%C3%A9n%C3%A9ralit%C3%A9s-
 		healthone: 'HLT',
+		medidoc: 'REP',
 		// 'medar' : 'MDR' ,
-		// 'medidoc' : 'MDD' ,
 	};
 
 	const ext = extensions[document.format] || 'UNK';
