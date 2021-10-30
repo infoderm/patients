@@ -111,7 +111,7 @@ export const useDateFormat = (defaultFormat = 'PP', defaultOptions?) => {
 const useLocalizedDateFormatDistanceOrRelative = (fn, defaultOptions) => {
 	const locale = useLocale();
 	return useMemo(
-		() => (date, baseDate, options) =>
+		() => (date, baseDate, options?) =>
 			fn(date, baseDate, {
 				locale,
 				...defaultOptions,
