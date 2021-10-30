@@ -8,8 +8,10 @@ import {event} from '../../../imports/api/events';
 import {decode} from '../../../imports/api/permissions/token';
 import {SignedDocument, verify} from '../../../imports/lib/hmac';
 import {ICS_CALENDAR_READ} from '../../../imports/api/permissions/codes';
+import rateLimiter from './rateLimiter';
 
 const routes = express();
+routes.use(rateLimiter);
 
 const extractPermissions = ({_id, ...rest}) => rest;
 
