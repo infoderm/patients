@@ -37,11 +37,11 @@ const encodeDocument = (encoding: string, document: Document) => {
 	}
 };
 
-const extractSignature = (
+export const extractSignature = (
 	signedDocument: SignedDocument,
-): [Signature, Document] => {
-	const {signature, ...rest} = signedDocument;
-	return [signature, rest];
+): {document: Document; signature: Signature} => {
+	const {signature, ...document} = signedDocument;
+	return {document, signature};
 };
 
 const crypto = async () => import('crypto');
@@ -66,7 +66,8 @@ export const sign = async (
 };
 
 export const verify = async (symmKey: Key, signedDocument: SignedDocument) => {
-	const [expectedSignature, document] = extractSignature(signedDocument);
+	const {document, signature: expectedSignature} =
+		extractSignature(signedDocument);
 	const computedSignature = await sign(symmKey, document);
 	return computedSignature === expectedSignature;
 };
