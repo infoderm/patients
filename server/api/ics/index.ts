@@ -15,7 +15,7 @@ routes.use(rateLimiter);
 
 const extractPermissions = ({_id, ...rest}) => rest;
 
-routes.get('/api/ics/calendar/:token/events.ics', async (req, res, _next) => {
+routes.get('/calendar/:token/events.ics', async (req, res, _next) => {
 	const {token} = req.params;
 	let decoded;
 	try {

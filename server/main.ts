@@ -39,7 +39,7 @@ import '../imports/api/endpoint/_register/enabled';
 // DECLARE ALL ENABLED ICS ENDPOINTS
 import ics from './api/ics/index';
 
-WebApp.connectHandlers.use(ics);
+WebApp.connectHandlers.use('/api/ics', ics);
 
 Meteor.startup(() => {
 	// Code to run on server at startup
