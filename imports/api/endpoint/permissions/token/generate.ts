@@ -17,24 +17,21 @@ const TOKEN_SIG_ENCODING = 'base64';
 const TOKEN_DOCUMENT_ENCODING = 'json';
 const TOKEN_INPUT_ENCODING = 'utf8';
 
+const defaultHMACConfig = (): HMACConfig => ({
+	hashAlgo: TOKEN_HASH_ALGO,
+	keyEncoding: TOKEN_KEY_ENCODING,
+	signatureEncoding: TOKEN_SIG_ENCODING,
+	documentEncoding: TOKEN_DOCUMENT_ENCODING,
+	inputEncoding: TOKEN_INPUT_ENCODING,
+});
+
 export default define({
 	name: 'permissions.token.generate',
 	validate(permissions: string[]) {
 		check(permissions, Array);
 	},
 	async run(permissions: string[]) {
-		const hashAlgo = TOKEN_HASH_ALGO;
-		const documentEncoding = TOKEN_DOCUMENT_ENCODING;
-		const signatureEncoding = TOKEN_SIG_ENCODING;
-		const keyEncoding = TOKEN_KEY_ENCODING;
-		const inputEncoding = TOKEN_INPUT_ENCODING;
-		const hmac: HMACConfig = {
-			hashAlgo,
-			keyEncoding,
-			signatureEncoding,
-			documentEncoding,
-			inputEncoding,
-		};
+		const hmac = defaultHMACConfig();
 		const key = await genKey(TOKEN_BYTES, hmac);
 		const fields = {
 			owner: this.userId,
