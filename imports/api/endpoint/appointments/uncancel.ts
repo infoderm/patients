@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {Mongo} from 'meteor/mongo';
 import {availability} from '../../availability';
 
 import {Appointments} from '../../collection/appointments';
@@ -16,10 +17,11 @@ export default define({
 	run: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
 		(existing) => {
-			const modifier = {
+			const modifier: Mongo.Modifier<ConsultationDocument> = {
 				$set: {
 					isCancelled: false,
 				},
+				$currentDate: {lastModifiedAt: true},
 			};
 			const {
 				owner,

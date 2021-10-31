@@ -20,6 +20,7 @@ export default define({
 				$set: {
 					patientId,
 				},
+				$currentDate: {lastModifiedAt: true},
 			},
 			{multi: false, upsert: false},
 		);

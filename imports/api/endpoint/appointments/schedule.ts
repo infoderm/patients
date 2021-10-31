@@ -37,9 +37,13 @@ export default define({
 
 		availability.insertHook(owner, begin, end, 1);
 
+		const createdAt = new Date();
+		const lastModifiedAt = createdAt;
+
 		const appointmentId = Appointments.insert({
 			...args.consultationFields,
-			createdAt: new Date(),
+			createdAt,
+			lastModifiedAt,
 			owner,
 		});
 

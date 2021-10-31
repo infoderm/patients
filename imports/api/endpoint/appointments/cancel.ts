@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {Mongo} from 'meteor/mongo';
 
 import {ConsultationDocument} from '../../collection/consultations';
 
@@ -25,12 +26,15 @@ export default define({
 		(existing, cancellationReason: string, cancellationExplanation: string) => {
 			check(cancellationReason, String);
 			check(cancellationExplanation, String);
-			const modifier = {
+			const modifier: Mongo.Modifier<ConsultationDocument> = {
 				$set: {
 					isCancelled: true,
-					cancellationDatetime: new Date(),
 					cancellationReason,
 					cancellationExplanation,
+				},
+				$currentDate: {
+					cancellationDatetime: true,
+					lastModifiedAt: true,
 				},
 			};
 			const {
