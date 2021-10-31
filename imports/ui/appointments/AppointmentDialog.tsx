@@ -51,7 +51,7 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import withLazyOpening from '../modal/withLazyOpening';
 import PatientPicker from '../patients/PatientPicker';
 import {weekShifted} from '../../api/availability';
-import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
+import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
 
@@ -166,7 +166,7 @@ const AppointmentDialog = (props) => {
 	);
 	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
 
-	const workSchedule = useSortedWorkSchedule();
+	const workSchedule = useQuerySortedWorkSchedule();
 
 	const appointmentReachesOutsideWorkSchedule = useMemo(() => {
 		if (!isValid(begin) || !isValid(end)) return false;
