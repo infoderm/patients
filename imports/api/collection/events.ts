@@ -4,6 +4,7 @@ export interface EventDocument {
 	owner: string;
 	calendar: string;
 	title: string;
+	description: string;
 	begin: Date;
 	end: Date;
 	isCancelled: boolean;
