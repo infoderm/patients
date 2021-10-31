@@ -33,6 +33,7 @@ export default define({
 	async run(permissions: string[]) {
 		const hmac = defaultHMACConfig();
 		const key = await genKey(TOKEN_BYTES, hmac);
+		const now = new Date();
 		const fields = {
 			owner: this.userId,
 			hmac,
@@ -40,7 +41,9 @@ export default define({
 			userId: [this.userId],
 			validFrom: beginningOfTime(),
 			validUntil: endOfTime(),
-			createdAt: new Date(),
+			createdAt: now,
+			lastUsedAt: now,
+			lastUsedIPAddress: this.connection.clientAddress,
 		};
 		const signature = await sign(key, fields);
 		const permissionToken = {
