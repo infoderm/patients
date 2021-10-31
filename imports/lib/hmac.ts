@@ -15,7 +15,7 @@ export interface HMACConfig {
 	signatureEncoding: SUPPORTED_SIGNATURE_ENCODING;
 }
 
-interface Document {
+export interface Document {
 	hmac: HMACConfig;
 }
 
