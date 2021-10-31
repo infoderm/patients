@@ -68,6 +68,8 @@ routes.get(`/calendar/:token/${filename}`, async (req, res, _next) => {
 					start: begin,
 					end,
 					description,
+					created: fields.createdAt,
+					lastModified: fields.lastModifiedAt,
 					summary: title,
 					status: isCancelled ? ICalEventStatus.CANCELLED : null,
 					url: Meteor.absoluteUrl(path),
