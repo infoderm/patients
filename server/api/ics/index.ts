@@ -59,11 +59,15 @@ routes.get(`/calendar/:token/${filename}`, async (req, res, _next) => {
 
 		Consultations.find(query, {sort: {lastModifiedAt: -1}}).forEach(
 			({_id, ...fields}) => {
-				const {begin, end, title, isCancelled, uri} = event(_id, fields);
+				const {begin, end, title, description, isCancelled, uri} = event(
+					_id,
+					fields,
+				);
 				const path = uri.slice(1);
 				calendar.createEvent({
 					start: begin,
 					end,
+					description,
 					summary: title,
 					status: isCancelled ? ICalEventStatus.CANCELLED : null,
 					url: Meteor.absoluteUrl(path),
