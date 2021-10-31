@@ -1,6 +1,7 @@
 import {PermissionTokens} from '../collection/permissionTokens';
 import {
 	extractSignature,
+	sign,
 	Document,
 	SignedDocument,
 	verify,
@@ -30,6 +31,7 @@ export class PermissionTokenValidationError extends Error {
 
 export const getPermissionsForToken = async (
 	token: string,
+	ipAddress: string,
 ): Promise<Document> => {
 	let decoded;
 	try {
@@ -68,5 +70,25 @@ export const getPermissionsForToken = async (
 		);
 	}
 
-	return extractSignature(permissions).document;
+	const lastUsedIPAddress = ipAddress;
+	const lastUsedAt = new Date();
+	const newPermissions = {
+		...extractSignature(permissions).document,
+		lastUsedIPAddress,
+		lastUsedAt,
+	};
+	const newSignature = await sign(key, newPermissions);
+
+	PermissionTokens.update(
+		{_id},
+		{
+			$set: {
+				lastUsedAt,
+				lastUsedIPAddress,
+				signature: newSignature,
+			},
+		},
+	);
+
+	return newPermissions;
 };

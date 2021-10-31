@@ -11,14 +11,16 @@ import {
 import rateLimiter from './rateLimiter';
 
 const routes = express();
-routes.use(rateLimiter);
 
+routes.set('trust proxy', 1);
+
+routes.use(rateLimiter);
 routes.get('/calendar/:token/events.ics', async (req, res, _next) => {
 	const {token} = req.params;
 	let permissions;
 
 	try {
-		permissions = await getPermissionsForToken(token);
+		permissions = await getPermissionsForToken(token, req.ip);
 	} catch (error: unknown) {
 		if (error instanceof PermissionTokenValidationError) {
 			res.writeHead(error.getHTTPErrorCode()).end();

@@ -26,6 +26,7 @@ module.exports = {
 		env: {
 			ROOT_URL: 'https://dermatodoc.local',
 			PORT: 3001,
+			HTTP_FORWARDED_COUNT: 1,
 		},
 		deployCheckWaitTime: 120,
 		deployCheckPort: 443,

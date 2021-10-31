@@ -16,6 +16,8 @@ type PermissionTokenComputedFields = {};
 interface PermissionTokenMetadata {
 	_id: string;
 	createdAt: Date;
+	lastUsedAt: Date;
+	lastUsedIPAddress: string;
 }
 
 export type PermissionTokenDocument = PermissionTokenFields &
