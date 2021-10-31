@@ -317,6 +317,17 @@ Meteor.startup(() => {
 		{
 			owner: 1,
 			isDone: 1,
+			lastModifiedAt: -1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
 			unpaid: 1,
 		},
 		{

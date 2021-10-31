@@ -1,8 +1,12 @@
 import {check} from 'meteor/check';
+import {Mongo} from 'meteor/mongo';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-import {Consultations} from '../../collection/consultations';
+import {
+	ConsultationDocument,
+	Consultations,
+} from '../../collection/consultations';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
@@ -14,13 +18,14 @@ export default define({
 		check(consultationId, String);
 	},
 	run: unconditionallyUpdateById(Consultations, (existing) => {
-		const modifier = {
+		const modifier: Mongo.Modifier<ConsultationDocument> = {
 			$set: {
 				datetime: existing.scheduledDatetime,
 				begin: existing.scheduledDatetime,
 				end: addMilliseconds(existing.scheduledDatetime, existing.duration),
 				isDone: false,
 			},
+			$currentDate: {lastModifiedAt: true},
 		};
 		const {
 			owner,

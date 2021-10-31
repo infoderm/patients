@@ -43,6 +43,7 @@ export default define({
 					doneDatetime: realDatetime,
 					begin: realDatetime,
 					end: realDatetime,
+					lastModifiedAt: realDatetime,
 					isDone: true,
 					book,
 				},

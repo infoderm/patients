@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {Mongo} from 'meteor/mongo';
 
 import {Appointments} from '../../collection/appointments';
 import {appointments} from '../../appointments';
@@ -8,6 +9,7 @@ import invoke from '../invoke';
 import define from '../define';
 
 import {availability} from '../../availability';
+import {ConsultationDocument} from '../../collection/consultations';
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -65,7 +67,12 @@ export default define({
 			newWeight,
 		);
 
-		Appointments.update(appointmentId, {$set: fields});
+		const modifier: Mongo.Modifier<ConsultationDocument> = {
+			$set: fields,
+			$currentDate: {lastModifiedAt: true},
+		};
+
+		Appointments.update(appointmentId, modifier);
 
 		return {
 			_id: appointmentId,
