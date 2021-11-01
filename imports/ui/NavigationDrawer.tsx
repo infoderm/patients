@@ -242,7 +242,7 @@ export default function NavigationDrawer({
 				{
 					to: '/auth',
 					icon: <SecurityIcon />,
-					title: 'Authentication',
+					title: 'Auth',
 				},
 
 				{
