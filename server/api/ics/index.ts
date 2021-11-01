@@ -1,3 +1,4 @@
+import process from 'process';
 import {Meteor} from 'meteor/meteor';
 import express from 'express';
 import ical, {ICalEventStatus} from 'ical-generator';
@@ -99,7 +100,7 @@ const response = async (token, IPAddress, query, res) => {
 
 const routes = express();
 
-routes.set('trust proxy', 1);
+routes.set('trust proxy', process.env.HTTP_FORWARDED_COUNT);
 
 routes.use(rateLimiter);
 
