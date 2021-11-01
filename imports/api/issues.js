@@ -55,7 +55,7 @@ export const useConsultationsMissingAPrice = makeFilteredCollection(
 		 *   - true >= 1
 		 *   - '' >= 0
 		 *
-		 * So we cannot use price: {$not: {$ge: 0}} which would correspond to
+		 * So we cannot use price: {$not: {$gte: 0}} which would correspond to
 		 * a supserset with negative prices included (and excluding prices in
 		 * [0, 1)).
 		 */
