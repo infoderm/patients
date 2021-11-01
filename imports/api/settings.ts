@@ -1,4 +1,5 @@
 import {ALL_WEEK_DAYS} from '../util/datetime';
+import {Settings} from './collection/settings';
 
 const methods = {
 	update: 'settings.update',
@@ -21,9 +22,16 @@ const defaults = {
 	'displayed-week-days': [...ALL_WEEK_DAYS],
 };
 
-const settings = {
+export const settings = {
 	defaults,
 	methods,
 };
 
-export {settings};
+export function get(owner: string, key: string) {
+	const item = Settings.findOne({owner, key});
+	if (item === undefined) {
+		return defaults[key];
+	}
+
+	return item.value;
+}
