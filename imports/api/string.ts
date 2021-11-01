@@ -217,6 +217,7 @@ export const parseNonNegativeIntegerStrictOrString = (
 
 export const parseUint32StrictOrString = (string: string, base?: number) => {
 	const parsed = parseNonNegativeIntegerStrict(string, base);
+	// eslint-disable-next-line no-bitwise
 	return Number.isNaN(parsed) || (parsed >>> 0).toString() !== string
 		? string
 		: parsed;
