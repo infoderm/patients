@@ -2,28 +2,26 @@ import {Meteor} from 'meteor/meteor';
 import express from 'express';
 import ical, {ICalEventStatus} from 'ical-generator';
 
+import subWeeks from 'date-fns/subWeeks';
+import startOfWeek from 'date-fns/startOfWeek';
 import {Consultations} from '../../../imports/api/collection/consultations';
 import {event} from '../../../imports/api/events';
 import {
 	getPermissionsForToken,
 	PermissionTokenValidationError,
 } from '../../../imports/api/permissions/token';
+import {get as getSetting} from '../../../imports/api/settings';
 import rateLimiter from './rateLimiter';
 
 const cache = new Map(); // TODO allow to clear cache / use LRU cache
 
-const routes = express();
-
-routes.set('trust proxy', 1);
-
-routes.use(rateLimiter);
 const filename = 'events.ics';
-routes.get(`/calendar/:token/${filename}`, async (req, res, _next) => {
-	const {token} = req.params;
+
+const response = async (token, IPAddress, query, res) => {
 	let permissions;
 
 	try {
-		permissions = await getPermissionsForToken(token, req.ip);
+		permissions = await getPermissionsForToken(token, IPAddress);
 	} catch (error: unknown) {
 		if (error instanceof PermissionTokenValidationError) {
 			res.writeHead(error.getHTTPErrorCode()).end();
@@ -33,23 +31,28 @@ routes.get(`/calendar/:token/${filename}`, async (req, res, _next) => {
 		throw error;
 	}
 
-	const {userId} = permissions;
+	const {owner, userId} = permissions;
 
-	if (userId === undefined || userId.length === 0) {
+	if (owner === undefined || userId === undefined || userId.length === 0) {
 		res.writeHead(503).end();
 		return;
 	}
 
-	const query = {
+	const weekStartsOn = getSetting(owner, 'week-starts-on');
+
+	const startDate = subWeeks(startOfWeek(new Date(), {weekStartsOn}), 4);
+
+	const selector = {
+		...query,
 		owner: {$in: userId},
-		isDone: false,
+		end: {$gte: startDate},
 	};
 
-	const lastModified = Consultations.findOne(query, {
+	const lastModified = Consultations.findOne(selector, {
 		sort: {lastModifiedAt: -1},
 	});
 
-	const cacheKey = JSON.stringify(query);
+	const cacheKey = JSON.stringify(selector);
 
 	if (
 		!cache.has(cacheKey) ||
@@ -57,7 +60,7 @@ routes.get(`/calendar/:token/${filename}`, async (req, res, _next) => {
 	) {
 		const calendar = ical({name: `Calendar for ${JSON.stringify(userId)}`});
 
-		Consultations.find(query, {sort: {lastModifiedAt: -1}}).forEach(
+		Consultations.find(selector, {sort: {lastModifiedAt: -1}}).forEach(
 			({_id, ...fields}) => {
 				const {begin, end, title, description, isCancelled, uri} = event(
 					_id,
@@ -92,6 +95,24 @@ routes.get(`/calendar/:token/${filename}`, async (req, res, _next) => {
 			'Content-Disposition': `attachment; filename="${filename}"`,
 		})
 		.send(body);
+};
+
+const routes = express();
+
+routes.set('trust proxy', 1);
+
+routes.use(rateLimiter);
+
+routes.get(`/appointments/:token/${filename}`, async (req, res, _next) => {
+	const {token} = req.params;
+	const query = {isDone: false};
+	await response(token, req.ip, query, res);
+});
+
+routes.get(`/consultations/:token/${filename}`, async (req, res, _next) => {
+	const {token} = req.params;
+	const query = {isDone: true};
+	await response(token, req.ip, query, res);
 });
 
 export default routes;
