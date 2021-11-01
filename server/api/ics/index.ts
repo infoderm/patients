@@ -53,6 +53,11 @@ const response = async (token, IPAddress, query, res) => {
 		sort: {lastModifiedAt: -1},
 	});
 
+	if (!lastModified) {
+		ical({name: `Calendar for ${JSON.stringify(userId)}`}).serve(res);
+		return;
+	}
+
 	const cacheKey = JSON.stringify(selector);
 
 	if (
