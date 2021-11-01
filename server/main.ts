@@ -6,6 +6,7 @@ import {WebApp} from 'meteor/webapp';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
+import isValid from 'date-fns/isValid';
 import {Settings} from '../imports/api/collection/settings';
 import {Patients} from '../imports/api/collection/patients';
 import {PatientsSearchIndex} from '../imports/api/collection/patients/search';
@@ -746,4 +747,31 @@ Meteor.startup(() => {
 		const {owner, begin, end, isDone, isCancelled} = item;
 		availability.insertHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
 	});
+
+	// Add missing lastModifiedAt for all consultations and appointments
+	Consultations.rawCollection()
+		.find()
+		.hint({$natural: 1})
+		.forEach(
+			Meteor.bindEnvironment(
+				({_id, createdAt, lastModifiedAt, doneDatetime}) => {
+					if (!(lastModifiedAt instanceof Date)) {
+						const newLastModifiedAt = !(
+							doneDatetime instanceof Date && isValid(doneDatetime)
+						)
+							? createdAt
+							: !(createdAt instanceof Date && isValid(createdAt))
+							? doneDatetime
+							: createdAt > doneDatetime
+							? createdAt
+							: doneDatetime;
+						if (newLastModifiedAt instanceof Date) {
+							Consultations.update(_id, {
+								$set: {lastModifiedAt: newLastModifiedAt},
+							});
+						}
+					}
+				},
+			),
+		);
 });

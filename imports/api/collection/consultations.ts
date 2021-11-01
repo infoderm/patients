@@ -38,7 +38,7 @@ interface ConsultationMetadata {
 	_id: string;
 	owner: string;
 	createdAt: Date;
-	lastModifiedAt?: Date;
+	lastModifiedAt: Date;
 }
 
 export type ConsultationDocument = ConsultationFields &
