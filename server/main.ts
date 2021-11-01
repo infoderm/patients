@@ -317,6 +317,7 @@ Meteor.startup(() => {
 		{
 			owner: 1,
 			isDone: 1,
+			end: 1,
 			lastModifiedAt: -1,
 		},
 		{
