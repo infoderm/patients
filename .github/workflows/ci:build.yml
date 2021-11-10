@@ -13,4 +13,4 @@ jobs:
       - uses: ./.github/actions/install
 
       - name: Build 🏗️
-        run: meteor build
+        run: meteor build ../dist
