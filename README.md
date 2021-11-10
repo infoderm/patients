@@ -1,4 +1,5 @@
 :face_with_thermometer: `patients`
+[![Build](https://img.shields.io/github/workflow/status/infoderm/patients/ci:build?event=push&label=build)](https://github.com/infoderm/patients/actions/workflows/ci:build.yml?query=branch:main)
 [![Tests](https://img.shields.io/github/workflow/status/infoderm/patients/ci:test?event=push&label=tests)](https://github.com/infoderm/patients/actions/workflows/ci:test.yml?query=branch:main)
 [![Code coverage (cov)](https://img.shields.io/codecov/c/gh/infoderm/patients/main.svg)](https://codecov.io/gh/infoderm/patients)
 ==
