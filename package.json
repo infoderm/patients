@@ -114,7 +114,7 @@
     "eslint-plugin-react-hooks": "4.3.0",
     "faker": "5.5.3",
     "husky": "7.0.4",
-    "lint-staged": "11.2.6",
+    "lint-staged": "12.1.2",
     "moment": "2.29.1",
     "moment-timezone": "0.5.34",
     "mup": "1.5.5",
