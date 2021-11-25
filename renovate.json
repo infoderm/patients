@@ -12,6 +12,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
+        "notistack",
         "total-order"
       ],
       "matchPackagePrefixes": [
