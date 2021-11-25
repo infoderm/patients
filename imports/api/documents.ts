@@ -4,6 +4,8 @@ import {Meteor} from 'meteor/meteor';
 // Import { Binary } from 'meteor/mongo';
 import {check} from 'meteor/check';
 
+import omit from 'lodash.omit';
+
 import {zip} from '@iterable-iterator/zip';
 
 import {Patients} from './collection/patients';
@@ -66,12 +68,12 @@ async function sanitize({patientId, format, array}) {
 					// const utf8_buffer = utf8_array.buffer;
 					// const utf8_binary = Binary(utf8_buffer);
 					const entry = {
-						...document,
+						...omit(document, ['lines']),
 						patientId,
 						format,
-						source: mangledDocument.source.join('\n'),
+						source: mangledDocument.lines.join('\n'),
 						encoding,
-						decoded: document.source.join('\n'),
+						decoded: document.lines.join('\n'),
 						// Binary: utf8_binary,
 						parsed: true,
 					};
