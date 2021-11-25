@@ -13,7 +13,8 @@
     {
       "matchPackageNames": [
         "notistack",
-        "total-order"
+        "total-order",
+        "typescript"
       ],
       "matchPackagePrefixes": [
         "@combinatorics/",
