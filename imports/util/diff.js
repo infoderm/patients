@@ -1,3 +1,1 @@
-import diff from 'fast-diff';
-
-export default diff;
+export {default} from 'fast-diff';

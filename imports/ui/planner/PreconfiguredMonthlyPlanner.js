@@ -1,3 +1,1 @@
-import MonthlyPlanner from './MonthlyPlanner';
-
-export default MonthlyPlanner;
+export {default} from './MonthlyPlanner';

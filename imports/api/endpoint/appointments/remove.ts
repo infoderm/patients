@@ -1,3 +1,1 @@
-import remove from '../consultations/remove';
-
-export default remove;
+export {default} from '../consultations/remove';

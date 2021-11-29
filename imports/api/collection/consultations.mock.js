@@ -2,8 +2,6 @@ import faker from 'faker';
 
 import {Consultations} from './consultations';
 
-export {Consultations};
-
 Factory.define('consultation', Consultations, {
 	patientId: Factory.get('patient'),
 	datetime: () => faker.date.past(20),
@@ -21,3 +19,5 @@ Factory.define('consultation', Consultations, {
 
 	isDone: () => true,
 });
+
+export {Consultations} from './consultations';

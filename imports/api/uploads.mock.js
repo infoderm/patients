@@ -4,8 +4,6 @@ import {Uploads} from './uploads';
 
 const randomDimension = () => faker.datatype.number({min: 32, max: 128});
 
-export {Uploads};
-
 Factory.define('upload', Uploads.collection, {
 	file: () =>
 		faker.image.dataUri(
@@ -15,3 +13,5 @@ Factory.define('upload', Uploads.collection, {
 	fileName: () => faker.system.fileName(),
 	isBase64: true,
 });
+
+export {Uploads} from './uploads';

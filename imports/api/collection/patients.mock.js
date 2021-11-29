@@ -6,10 +6,8 @@ import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 
-import {patients, BIRTHDATE_FORMAT, SEX_ALLOWED} from '../patients';
-import {Patients, PatientDocument, PatientFields} from './patients';
-
-export {Patients, patients, PatientDocument, PatientFields};
+import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../patients';
+import {Patients} from './patients';
 
 const AGE_MAX = 130;
 
@@ -48,3 +46,6 @@ Factory.define('patient', Patients, {
 
 	noshow: () => faker.datatype.number(3),
 });
+
+export {patients} from '../patients';
+export {PatientDocument, Patients, PatientFields} from './patients';

@@ -8,12 +8,7 @@ import {ConsultationDocument, Consultations} from './collection/consultations';
 import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
 
-import intersectsInterval from './interval/intersectsInterval';
-import beginsInInterval from './interval/beginsInInterval';
-
 import {EventDocument, events} from './collection/events';
-
-export {intersectsInterval, beginsInInterval};
 
 export const event = (
 	_id: string,
@@ -82,3 +77,7 @@ export const publishEvents = function (query, options) {
 		handle.stop();
 	});
 };
+
+export {default as intersectsInterval} from './interval/intersectsInterval';
+
+export {default as beginsInInterval} from './interval/beginsInInterval';
