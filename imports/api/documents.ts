@@ -6,9 +6,27 @@ import decodeText from './documents/decodeText';
 import detectTextEncoding from './documents/detectTextEncoding';
 import parseHealthOne from './documents/parseHealthOne';
 
-async function* sanitize({patientId, format, array}) {
+const DETECT_REGEX_HEALTHONE = /^A1\/\d+\//m;
+const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/m;
+const DETECT_REGEX_MEDIDOC_LAB = /^[A-Z]\d{3}[\r\n]/m;
+
+const detectFormats = (string: string): Record<string, number> => ({
+	healthone: DETECT_REGEX_HEALTHONE.test(string) ? 1 : 0,
+	'DMA-REP': DETECT_REGEX_MEDIDOC_DOCTOR.test(string) ? 1 : 0,
+	'DMA-LAB': DETECT_REGEX_MEDIDOC_LAB.test(string) ? 1 : 0,
+});
+
+const detectFormat = (string: string): string | undefined => {
+	const formats = detectFormats(string);
+	const matches = Object.entries(formats)
+		.filter(([, value]) => value === 1)
+		.map(([key]) => key);
+	return matches.length === 1 ? matches[0] : undefined;
+};
+
+async function* sanitize({patientId, format: formatHint, array}) {
 	if (patientId !== undefined) check(patientId, String);
-	check(format, String);
+	if (formatHint !== undefined) check(formatHint, String);
 	check(array, Uint8Array);
 
 	console.debug('Starting to sanitize');
@@ -25,6 +43,8 @@ async function* sanitize({patientId, format, array}) {
 		console.debug('trying to decode...');
 		const decoded = await decodeText(encoding, array);
 		console.debug('worked!');
+
+		const format = formatHint ?? detectFormat(decoded);
 
 		try {
 			switch (format) {
@@ -52,7 +72,7 @@ async function* sanitize({patientId, format, array}) {
 
 		yield {
 			patientId,
-			format,
+			format: formatHint,
 			parsed: false,
 			source: mangled,
 			// Binary: Binary(buffer),
@@ -67,9 +87,9 @@ async function* sanitize({patientId, format, array}) {
 
 	yield {
 		patientId,
-		format,
-		source: mangled,
+		format: formatHint,
 		parsed: false,
+		source: mangled,
 		lastVersion: true,
 		// Binary: Binary(buffer),
 	};
