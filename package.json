@@ -110,7 +110,7 @@
     "dayjs": "1.10.7",
     "emoji-favicon-cli": "3.0.1",
     "eslint-config-xo-react": "0.25.0",
-    "eslint-plugin-react": "7.27.1",
+    "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "faker": "5.5.3",
     "husky": "7.0.4",
