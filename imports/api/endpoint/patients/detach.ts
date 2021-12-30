@@ -14,21 +14,21 @@ export default define({
 		check(uploadId, String);
 	},
 	async run(patientId: string, uploadId: string) {
-		return executeTransaction(async (session) => {
-			const patient = await Patients.rawCollection().findOne(
-				{_id: patientId, owner: this.userId},
-				{session},
-			);
+		return executeTransaction(async ({findOne, updateOne}) => {
+			const patient = await findOne(Patients, {
+				_id: patientId,
+				owner: this.userId,
+			});
 			if (!patient) {
 				throw new Meteor.Error('not-found', 'patient not found');
 			}
 
-			const result = await Attachments.rawCollection().updateOne(
+			const result = await updateOne(
+				Attachments,
 				{_id: uploadId, userId: this.userId},
 				{
 					$pull: {'meta.attachedToPatients': patientId},
 				},
-				{session},
 			);
 
 			if (result.matchedCount === 0) {

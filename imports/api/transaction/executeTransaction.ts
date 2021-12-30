@@ -1,8 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
-import {ClientSession, SessionOptions, TransactionOptions} from 'mongodb';
+import {SessionOptions, TransactionOptions} from 'mongodb';
 
-type Transaction = (session: ClientSession) => Promise<any>;
+import ClientSessionWrapper from './ClientSessionWrapper';
+import Transaction from './Transaction';
 
 /**
  * See https://forums.meteor.com/t/solved-transactions-with-mongodb-meteor-methods/48677.
@@ -16,7 +17,8 @@ const executeTransaction = async (
 	const session = client.startSession(sessionOptions);
 	session.startTransaction(transactionOptions);
 	try {
-		const result = await transaction(session);
+		const wrap = new ClientSessionWrapper(session);
+		const result = await transaction(wrap);
 		await session.commitTransaction();
 		return result;
 	} catch (error: unknown) {

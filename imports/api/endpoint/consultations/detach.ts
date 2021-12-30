@@ -14,21 +14,21 @@ export default define({
 		check(uploadId, String);
 	},
 	async run(consultationId: string, uploadId: string) {
-		return executeTransaction(async (session) => {
-			const consultation = await Consultations.rawCollection().findOne(
-				{_id: consultationId, owner: this.userId},
-				{session},
-			);
+		return executeTransaction(async ({findOne, updateOne}) => {
+			const consultation = await findOne(Consultations, {
+				_id: consultationId,
+				owner: this.userId,
+			});
 			if (!consultation) {
 				throw new Meteor.Error('not-found', 'consultation not found');
 			}
 
-			const result = await Attachments.rawCollection().updateOne(
+			const result = await updateOne(
+				Attachments,
 				{_id: uploadId, userId: this.userId},
 				{
 					$pull: {'meta.attachedToConsultations': consultationId},
 				},
-				{session},
 			);
 
 			if (result.matchedCount === 0) {
