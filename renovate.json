@@ -12,6 +12,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
+        "faker",
         "notistack",
         "total-order",
         "typescript"
