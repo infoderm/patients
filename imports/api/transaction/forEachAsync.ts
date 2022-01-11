@@ -1,3 +1,4 @@
+import {WithId} from 'mongodb';
 import snapshotTransaction from './snapshotTransaction';
 import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
 import Collection from './Collection';
@@ -11,7 +12,7 @@ type ForEachAsyncCallback<T> = (
 const forEachAsync = async <T, U = T>(
 	collection: Collection<T, U>,
 	filter: Filter<T>,
-	fn: ForEachAsyncCallback<T>,
+	fn: ForEachAsyncCallback<WithId<T>>,
 ) =>
 	snapshotTransaction(async (db) => {
 		const label = `forEachAsync-${

@@ -1,37 +1,28 @@
-import {ClientSession} from 'mongodb';
+import {
+	ClientSession,
+	UpdateResult as MongoUpdateResult,
+	InsertOneResult as MongoInsertOneResult,
+	InsertManyResult as MongoInsertManyResult,
+	DeleteResult as MongoDeleteResult,
+	WithId,
+} from 'mongodb';
 
 import Collection from './Collection';
 import Filter from './Filter';
 
 export type ValueOrPromise<X> = X | Promise<X>;
 
-export type IdType = string;
+export type ObjectId = string;
 
-export interface InsertOneResult {
-	acknowledged: boolean;
-	insertedId: IdType;
-}
+export type ObjectIds = Record<number, ObjectId>;
 
-export type IdTypes = Record<number, IdType>;
+export type UpdateResult = Omit<MongoUpdateResult, 'upsertedId'> & {
+	upsertedId?: ObjectId;
+};
 
-export interface InsertManyResult {
-	acknowledged: boolean;
-	insertedCount: number;
-	insertedIds: IdTypes;
-}
-
-export interface DeleteResult {
-	acknowledged: boolean;
-	deletedCount: number;
-}
-
-export interface UpdateResult {
-	acknowledged: boolean;
-	matchedCount: number;
-	modifiedCount?: number;
-	upsertedCount: number;
-	upsertedId?: IdType;
-}
+export type InsertOneResult<T> = MongoInsertOneResult<T>;
+export type InsertManyResult<T> = MongoInsertManyResult<T>;
+export type DeleteResult = MongoDeleteResult;
 
 export type Options = Record<string, any>;
 export default interface TransactionDriver {
@@ -41,12 +32,12 @@ export default interface TransactionDriver {
 		Collection: Collection<T, U>,
 		doc: any,
 		options?: Options,
-	) => ValueOrPromise<InsertOneResult>;
+	) => ValueOrPromise<InsertOneResult<T>>;
 	insertMany: <T, U = T>(
 		Collection: Collection<T, U>,
 		docs: any[],
 		options?: Options,
-	) => ValueOrPromise<InsertManyResult>;
+	) => ValueOrPromise<InsertManyResult<T>>;
 	findOne: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
@@ -61,7 +52,7 @@ export default interface TransactionDriver {
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
-	) => ValueOrPromise<T[]>;
+	) => ValueOrPromise<Array<WithId<T>>>;
 	deleteOne: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
