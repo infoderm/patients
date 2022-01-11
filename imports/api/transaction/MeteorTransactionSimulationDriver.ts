@@ -1,3 +1,5 @@
+import {InferIdType} from 'mongodb';
+
 import TransactionDriver from './TransactionDriver';
 import Collection from './Collection';
 
@@ -11,7 +13,10 @@ export default class MeteorTransactionSimulationDriver
 	insertOne<T, U = T>(Collection: Collection<T, U>, doc, options?) {
 		return {
 			acknowledged: true,
-			insertedId: Collection.insert(doc, this._makeOptions(options)),
+			insertedId: Collection.insert(
+				doc,
+				this._makeOptions(options),
+			) as unknown as InferIdType<T>,
 		};
 	}
 
@@ -78,6 +83,7 @@ export default class MeteorTransactionSimulationDriver
 				return {
 					acknowledged: true,
 					matchedCount: 0,
+					modifiedCount: 0,
 					upsertedCount: 1,
 					upsertedId: insertedId,
 				};
@@ -86,6 +92,7 @@ export default class MeteorTransactionSimulationDriver
 			return {
 				acknowledged: true,
 				matchedCount: numberAffected,
+				modifiedCount: numberAffected,
 				upsertedCount: 0,
 			};
 		}
@@ -99,6 +106,7 @@ export default class MeteorTransactionSimulationDriver
 		return {
 			acknowledged: true,
 			matchedCount: numberAffected,
+			modifiedCount: numberAffected,
 			upsertedCount: 0,
 		};
 	}
@@ -112,9 +120,11 @@ export default class MeteorTransactionSimulationDriver
 				this._makeOptions({multi: true, ...rest}),
 			);
 			const upsertedCount = insertedId ? 1 : 0;
+			const matchedCount = numberAffected - upsertedCount;
 			return {
 				acknowledged: true,
-				matchedCount: numberAffected - upsertedCount,
+				matchedCount,
+				modifiedCount: matchedCount,
 				upsertedCount,
 				upsertedId: insertedId,
 			};
@@ -126,9 +136,11 @@ export default class MeteorTransactionSimulationDriver
 			this._makeOptions({multi: true, ...rest}),
 		);
 
+		const matchedCount = numberAffected;
 		return {
 			acknowledged: true,
-			matchedCount: numberAffected,
+			matchedCount,
+			modifiedCount: matchedCount,
 			upsertedCount: 0,
 		};
 	}

@@ -1,5 +1,5 @@
 import {ClientSession} from 'mongodb';
-import TransactionDriver, {IdType, IdTypes, Options} from './TransactionDriver';
+import TransactionDriver, {Options, UpdateResult} from './TransactionDriver';
 
 import Collection from './Collection';
 import Filter from './Filter';
@@ -22,24 +22,20 @@ export default class MongoTransactionExecutionDriver
 		doc,
 		options?: Options,
 	) {
-		return insertOneWriteOpResultObjectToInsertOneResult(
-			await Collection.rawCollection().insertOne(
-				// TODO skip _id creation if it already exists
-				// @ts-expect-error _makeNewID is a private method
-				{_id: Collection._makeNewID(), ...doc},
-				this._makeOptions(options),
-			),
+		return Collection.rawCollection().insertOne(
+			// TODO skip _id creation if it already exists
+			// @ts-expect-error _makeNewID is a private method
+			{_id: Collection._makeNewID(), ...doc},
+			this._makeOptions(options),
 		);
 	}
 
 	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
-		return insertWriteOpResultObjectToInsertManyResult(
-			await Collection.rawCollection().insertMany(
-				// TODO skip _id creation if it already exists
-				// @ts-expect-error _makeNewID is a private method
-				docs.map((doc) => ({_id: Collection._makeNewID(), ...doc})),
-				this._makeOptions(options),
-			),
+		return Collection.rawCollection().insertMany(
+			// TODO skip _id creation if it already exists
+			// @ts-expect-error _makeNewID is a private method
+			docs.map((doc) => ({_id: Collection._makeNewID(), ...doc})),
+			this._makeOptions(options),
 		);
 	}
 
@@ -63,20 +59,16 @@ export default class MongoTransactionExecutionDriver
 	}
 
 	async deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return deleteWriteOpResultToDeleteResult(
-			await Collection.rawCollection().deleteOne(
-				filter,
-				this._makeOptions(options),
-			),
+		return Collection.rawCollection().deleteOne(
+			filter,
+			this._makeOptions(options),
 		);
 	}
 
 	async deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return deleteWriteOpResultToDeleteResult(
-			await Collection.rawCollection().deleteMany(
-				filter,
-				this._makeOptions(options),
-			),
+		return Collection.rawCollection().deleteMany(
+			filter,
+			this._makeOptions(options),
 		);
 	}
 
@@ -86,13 +78,11 @@ export default class MongoTransactionExecutionDriver
 		update,
 		options?,
 	) {
-		return updateWriteOpResultToUpdateResult(
-			await Collection.rawCollection().updateOne(
-				filter,
-				this._makeUpdate<T, U>(Collection, filter, update, options),
-				this._makeOptions(options),
-			),
-		);
+		return Collection.rawCollection().updateOne(
+			filter,
+			this._makeUpdate<T, U>(Collection, filter, update, options),
+			this._makeOptions(options),
+		) as unknown as Promise<UpdateResult>;
 	}
 
 	async updateMany<T, U = T>(
@@ -101,13 +91,11 @@ export default class MongoTransactionExecutionDriver
 		update,
 		options?,
 	) {
-		return updateWriteOpResultToUpdateResult(
-			await Collection.rawCollection().updateMany(
-				filter,
-				this._makeUpdate<T, U>(Collection, filter, update, options),
-				this._makeOptions(options),
-			),
-		);
+		return Collection.rawCollection().updateMany(
+			filter,
+			this._makeUpdate<T, U>(Collection, filter, update, options),
+			this._makeOptions(options),
+		) as Promise<UpdateResult>;
 	}
 
 	async distinct<T, U = T>(
@@ -146,52 +134,3 @@ export default class MongoTransactionExecutionDriver
 		};
 	}
 }
-
-const updateWriteOpResultToUpdateResult = ({
-	result: {ok},
-	matchedCount,
-	modifiedCount,
-	upsertedId,
-}) => {
-	const upsertedCount = upsertedId === null ? 0 : 1;
-
-	if (upsertedCount === 0) {
-		return {
-			acknowledged: Boolean(ok),
-			matchedCount,
-			modifiedCount,
-			upsertedCount,
-		};
-	}
-
-	return {
-		acknowledged: Boolean(ok),
-		matchedCount,
-		modifiedCount,
-		upsertedCount,
-		upsertedId: upsertedId._id as unknown as IdType,
-	};
-};
-
-const deleteWriteOpResultToDeleteResult = (op) => ({
-	acknowledged: Boolean(op.result.ok),
-	deletedCount: op.deletedCount,
-});
-
-const insertOneWriteOpResultObjectToInsertOneResult = ({
-	result: {ok},
-	insertedId,
-}) => ({
-	acknowledged: Boolean(ok),
-	insertedId: insertedId as unknown as IdType,
-});
-
-const insertWriteOpResultObjectToInsertManyResult = ({
-	result: {ok},
-	insertedCount,
-	insertedIds,
-}) => ({
-	acknowledged: Boolean(ok),
-	insertedCount,
-	insertedIds: insertedIds as unknown as IdTypes,
-});

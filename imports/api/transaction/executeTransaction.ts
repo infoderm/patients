@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
-import {SessionOptions, TransactionOptions} from 'mongodb';
+import {ClientSessionOptions, TransactionOptions} from 'mongodb';
 
 import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
 import Transaction from './Transaction';
@@ -11,7 +11,7 @@ import Transaction from './Transaction';
 const executeTransaction = async (
 	transaction: Transaction,
 	transactionOptions?: TransactionOptions,
-	sessionOptions?: SessionOptions,
+	sessionOptions?: ClientSessionOptions,
 ) => {
 	const {client} = MongoInternals.defaultRemoteCollectionDriver().mongo;
 	// NOTE causalConsistency: true is the default but better be explicit
@@ -34,7 +34,9 @@ const executeTransaction = async (
 	} finally {
 		// No need to await this Promise, this is just used to free-up
 		// resources.
-		session.endSession();
+		session.endSession().catch((error) => {
+			console.error('Call to endSession failed:', error);
+		});
 	}
 
 	return result;
