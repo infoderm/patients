@@ -64,7 +64,7 @@ ostrio:files@2.0.1
 promise@0.12.0
 random@1.2.0
 rate-limit@1.0.9
-react-fast-refresh@0.2.1
+react-fast-refresh@0.2.2
 react-meteor-data@2.2.2
 reactive-var@1.0.11
 reload@1.3.1
