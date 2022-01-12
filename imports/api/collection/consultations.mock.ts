@@ -23,7 +23,7 @@ export const newConsultationFormData = makeTemplate({
 
 export const newConsultation = async (invocation, extra?) => {
 	return invoke(insertConsultation, invocation, [
-		{...newConsultationFormData(), ...extra},
+		newConsultationFormData(extra),
 	]);
 };
 
