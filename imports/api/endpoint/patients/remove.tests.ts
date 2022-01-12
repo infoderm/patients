@@ -9,6 +9,11 @@ import invoke from '../invoke';
 
 import {Patients, newPatient} from '../../collection/patients.mock';
 import {throws} from '../../../test/fixtures';
+import {
+	Consultations,
+	newConsultation,
+} from '../../collection/consultations.mock';
+import {newAppointment} from '../../collection/appointments.mock';
 import patientsRemove from './remove';
 
 if (Meteor.isServer) {
@@ -17,6 +22,7 @@ if (Meteor.isServer) {
 			describe('remove', () => {
 				beforeEach(() => {
 					Patients.remove({});
+					Consultations.remove({});
 				});
 
 				it('can delete own patient', async () => {
@@ -42,6 +48,30 @@ if (Meteor.isServer) {
 						() => invoke(patientsRemove, invocation, [patientId]),
 						/not-found/,
 					);
+				});
+
+				it('deletes associated consultations and appointments', async () => {
+					const userId = Random.id();
+
+					const patientAId = await newPatient({userId});
+					const patientBId = await newPatient({userId});
+
+					await newConsultation({userId}, {patientId: patientAId});
+					await newAppointment({userId}, {patient: {_id: patientAId}});
+					await newConsultation({userId}, {patientId: patientBId});
+
+					assert.equal(Patients.find().count(), 2);
+					assert.equal(Consultations.find().count(), 3);
+
+					await invoke(patientsRemove, {userId}, [patientAId]);
+
+					assert.equal(Patients.find().count(), 1);
+					assert.equal(Consultations.find().count(), 1);
+
+					await invoke(patientsRemove, {userId}, [patientBId]);
+
+					assert.equal(Patients.find().count(), 0);
+					assert.equal(Consultations.find().count(), 0);
 				});
 			});
 		});
