@@ -7,31 +7,42 @@ import {Random} from 'meteor/random';
 
 import addMinutes from 'date-fns/addMinutes';
 
-import scheduleAppointment from '../appointments/schedule';
 import cancelAppointment from '../appointments/cancel';
 
 import invoke from '../invoke';
 
 import {Consultations} from '../../collection/consultations.mock';
-// eslint-disable-next-line import/no-unassigned-import
-import '../../collection/appointments.mock';
+import {newAppointment} from '../../collection/appointments.mock';
 import {Availability} from '../../collection/availability.mock';
 import {units} from '../../duration';
 import {initialSlot, slot} from '../../availability';
-import {endOfTime} from '../../../util/datetime';
+import {beginningOfTime, endOfTime} from '../../../util/datetime';
 import next from './next';
 
-const bookSlot = async (owner, begin, end) => {
-	const fields = Factory.tree('appointment', {
-		datetime: begin,
-		duration: end - begin,
-	});
+const bookSlot = async (userId, begin, end) => {
+	return newAppointment(
+		{userId},
+		{
+			datetime: begin,
+			duration: end - begin,
+		},
+	);
+};
 
-	fields.patient._id = '?'; // TODO temporary hack
+const findNextAvailable = async (userId, after, durationInMinutes) => {
+	const duration = durationInMinutes * units.minute;
 
-	const {_id} = await invoke(scheduleAppointment, {userId: owner}, [fields]);
+	const week: Array<[number, number]> = [[0, units.week + duration]];
 
-	return _id;
+	const constraints = week;
+
+	const {_id, ...actual} = await invoke(next, {userId}, [
+		after,
+		duration,
+		constraints,
+	]);
+
+	return actual;
 };
 
 if (Meteor.isServer) {
@@ -46,29 +57,16 @@ if (Meteor.isServer) {
 				it('starts with complete availability', async () => {
 					const userId = Random.id();
 
-					const invocation = {userId};
+					assert.deepEqual(Availability.findOne(), undefined);
 
-					const after = new Date();
+					const actual = await findNextAvailable(userId, new Date(), 1);
+					const {_id, ...expected} = initialSlot(userId);
 
-					const duration = 1;
-
-					const week: Array<[number, number]> = [[0, units.week + duration]];
-
-					const constraints = week;
-
-					const result = await invoke(next, invocation, [
-						after,
-						duration,
-						constraints,
-					]);
-
-					assert.deepEqual(result, initialSlot(userId));
+					assert.deepEqual(actual, expected);
 				});
 
 				it('stays with complete availability', async () => {
 					const userId = Random.id();
-
-					const invocation = {userId};
 
 					const now = new Date();
 
@@ -78,24 +76,11 @@ if (Meteor.isServer) {
 						addMinutes(now, 15),
 					);
 
-					await invoke(cancelAppointment, invocation, [appointmentId, '', '']);
+					await invoke(cancelAppointment, {userId}, [appointmentId, '', '']);
 
-					const after = now;
+					const actual = await findNextAvailable(userId, now, 1);
 
-					const duration = 1;
-
-					const week: Array<[number, number]> = [[0, units.week + duration]];
-
-					const constraints = week;
-
-					const actual = await invoke(next, invocation, [
-						after,
-						duration,
-						constraints,
-					]);
-					delete actual._id;
-					const expected = initialSlot(userId);
-					delete expected._id;
+					const {_id, ...expected} = initialSlot(userId);
 
 					assert.deepEqual(actual, expected);
 				});
@@ -103,32 +88,43 @@ if (Meteor.isServer) {
 				it('can find next available slot', async () => {
 					const userId = Random.id();
 
-					const invocation = {userId};
-
 					const now = new Date();
 
 					await bookSlot(userId, now, addMinutes(now, 15));
 
-					const after = now;
-
-					const duration = 1;
-
-					const week: Array<[number, number]> = [[0, units.week + duration]];
-
-					const constraints = week;
-
-					const actual = await invoke(next, invocation, [
-						after,
-						duration,
-						constraints,
-					]);
-					delete actual._id;
+					const actual = await findNextAvailable(userId, now, 1);
 					const expected = {
 						...slot(addMinutes(now, 15), endOfTime(), 0),
 						owner: userId,
 					};
 
 					assert.deepEqual(actual, expected);
+				});
+
+				it('can find next available slot of correct size', async () => {
+					const userId = Random.id();
+
+					const now = new Date();
+
+					await bookSlot(userId, addMinutes(now, 1), addMinutes(now, 16));
+
+					const actual2 = await findNextAvailable(userId, now, 2);
+
+					const expected2 = {
+						...slot(addMinutes(now, 16), endOfTime(), 0),
+						owner: userId,
+					};
+
+					assert.deepEqual(actual2, expected2);
+
+					const actual1 = await findNextAvailable(userId, now, 1);
+
+					const expected1 = {
+						...slot(beginningOfTime(), addMinutes(now, 1), 0),
+						owner: userId,
+					};
+
+					assert.deepEqual(actual1, expected1);
 				});
 			});
 		});

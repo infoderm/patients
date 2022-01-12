@@ -7,8 +7,7 @@ import {Random} from 'meteor/random';
 
 import invoke from '../invoke';
 
-import {Patients} from '../../collection/patients.mock';
-import {Consultations} from '../../collection/consultations.mock';
+import {Patients, newPatient} from '../../collection/patients.mock';
 import {throws} from '../../../test/fixtures';
 import patientsRemove from './remove';
 
@@ -18,16 +17,14 @@ if (Meteor.isServer) {
 			describe('remove', () => {
 				beforeEach(() => {
 					Patients.remove({});
-					Consultations.remove({});
 				});
 
 				it('can delete own patient', async () => {
 					const userId = Random.id();
 
-					const patient = Factory.create('patient', {owner: userId});
-					const patientId = patient._id;
-
 					const invocation = {userId};
+
+					const patientId = await newPatient(invocation);
 
 					await invoke(patientsRemove, invocation, [patientId]);
 
@@ -37,8 +34,7 @@ if (Meteor.isServer) {
 				it("cannot delete someone else's patient", async () => {
 					const userId = Random.id();
 
-					const patient = Factory.create('patient', {owner: userId});
-					const patientId = patient._id;
+					const patientId = await newPatient({userId});
 
 					const invocation = {userId: `${userId}x`};
 

@@ -1,8 +1,10 @@
 import faker from '@faker-js/faker';
+import {makeTemplate} from '../../test/fixtures';
 
-import {Appointments} from './appointments';
+import scheduleAppointment from '../endpoint/appointments/schedule';
+import invoke from '../endpoint/invoke';
 
-Factory.define('appointment', Appointments, {
+export const newAppointmentFormData = makeTemplate({
 	datetime: () => faker.date.past(20),
 	duration: () => 1,
 	reason: () => faker.lorem.sentence(),
@@ -10,10 +12,15 @@ Factory.define('appointment', Appointments, {
 	patient: {
 		firstname: () => faker.name.firstName(),
 		lastname: () => faker.name.lastName(),
-		_id: () => '?', // DOES NOT WORK
+		_id: () => '?',
 	},
 });
 
-// TODO get rid of factory, rely only on Faker and method invocations
+export const newAppointment = async (invocation, extra?) => {
+	const {_id} = await invoke(scheduleAppointment, invocation, [
+		{...newAppointmentFormData(), ...extra},
+	]);
+	return _id;
+};
 
 export {Appointments} from './appointments';

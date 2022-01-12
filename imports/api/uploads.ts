@@ -17,6 +17,7 @@ export const Uploads = new FilesCollection({
 	collectionName: 'uploads',
 	allowClientCode: true,
 	onBeforeUpload(file) {
+		console.debug({file});
 		if (!this.userId) {
 			return 'Must be logged in to upload a file.';
 		}
@@ -28,6 +29,7 @@ export const Uploads = new FilesCollection({
 		return true;
 	},
 	onAfterUpload(upload) {
+		console.debug({upload});
 		this.collection.update(upload._id, {
 			$set: {
 				'meta.createdAt': new Date(),

@@ -1,11 +1,10 @@
 import faker from '@faker-js/faker';
+import {makeTemplate} from '../../test/fixtures';
+import invoke from '../endpoint/invoke';
 
-// eslint-disable-next-line import/no-unassigned-import
-import './patients.mock';
-import {Consultations} from './consultations';
+import insertConsultation from '../endpoint/consultations/insert';
 
-Factory.define('consultation', Consultations, {
-	patientId: Factory.get('patient'),
+export const newConsultationFormData = makeTemplate({
 	datetime: () => faker.date.past(20),
 	reason: () => faker.lorem.sentence(),
 	done: () => faker.lorem.paragraph(),
@@ -21,5 +20,11 @@ Factory.define('consultation', Consultations, {
 
 	isDone: () => true,
 });
+
+export const newConsultation = async (invocation, extra?) => {
+	return invoke(insertConsultation, invocation, [
+		{...newConsultationFormData(), ...extra},
+	]);
+};
 
 export {Consultations} from './consultations';

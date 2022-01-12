@@ -9,6 +9,7 @@ import {books} from '../../books';
 import define from '../define';
 import {availability} from '../../availability';
 import Wrapper from '../../transaction/Wrapper';
+import {Patients} from '../../collection/patients';
 
 const {sanitize} = consultations;
 
@@ -23,6 +24,13 @@ export default define({
 		}
 
 		const fields = sanitize(consultation);
+		const owner = this.userId;
+
+		const patient = await db.findOne(Patients, {_id: fields.patientId, owner});
+
+		if (patient === null) {
+			throw new Meteor.Error('not-found');
+		}
 
 		if (fields.datetime && fields.book) {
 			await books.add(
@@ -35,7 +43,6 @@ export default define({
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
-		const owner = this.userId;
 		const document = {
 			...fields,
 			...computedFields(this.userId, undefined, fields),
