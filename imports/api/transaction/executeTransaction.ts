@@ -20,21 +20,24 @@ const executeTransaction = async (
 		causalConsistency: true,
 		...sessionOptions,
 	});
-	session.startTransaction(transactionOptions);
+	let result;
 	try {
 		const wrap = new MongoDBClientSessionWrapper(session);
-		const result = await transaction(wrap);
-		await session.commitTransaction();
-		return result;
+		await session.withTransaction(async () => {
+			result = await transaction(wrap);
+		}, transactionOptions);
 	} catch (error: unknown) {
-		await session.abortTransaction();
 		const message = error instanceof Error ? error.message : 'unknown error';
 		console.error(message);
 		console.debug({error});
 		throw new Meteor.Error('Database Transaction Failed', message);
 	} finally {
+		// No need to await this Promise, this is just used to free-up
+		// resources.
 		session.endSession();
 	}
+
+	return result;
 };
 
 export default executeTransaction;
