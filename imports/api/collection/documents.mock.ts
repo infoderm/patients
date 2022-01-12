@@ -13,7 +13,7 @@ export const newDocumentFormData = makeTemplate({
 
 export const newDocument = async (invocation, extra?) => {
 	const [_id] = await invoke(insertDocument, invocation, [
-		{...newDocumentFormData(), ...extra},
+		newDocumentFormData(extra),
 	]);
 	return _id;
 };

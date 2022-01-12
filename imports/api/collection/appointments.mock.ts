@@ -18,7 +18,7 @@ export const newAppointmentFormData = makeTemplate({
 
 export const newAppointment = async (invocation, extra?) => {
 	const {_id} = await invoke(scheduleAppointment, invocation, [
-		{...newAppointmentFormData(), ...extra},
+		newAppointmentFormData(extra),
 	]);
 	return _id;
 };

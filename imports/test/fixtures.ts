@@ -23,12 +23,25 @@ export const throws = async (
 
 export const setLike = (x) => sorted(totalOrder, x);
 
-export const create = (template) => {
-	if (typeof template === 'function') return template();
-	if (Array.isArray(template)) return template.map((x) => create(x));
+export const create = (template, extra) => {
+	if (typeof template === 'function') return extra ?? template();
+	if (Array.isArray(template)) {
+		return template
+			.map((x, i) => create(x, extra?.[i]))
+			.concat(extra?.slice(template.length) ?? []);
+	}
+
 	return Object.fromEntries(
-		Object.entries(template).map(([key, value]) => [key, create(value)]),
+		(extra === undefined || extra === undefined
+			? []
+			: Object.entries(extra)
+		).concat(
+			Object.entries(template).map(([key, value]) => [
+				key,
+				create(value, extra?.[key]),
+			]),
+		),
 	);
 };
 
-export const makeTemplate = (template) => () => create(template);
+export const makeTemplate = (template) => (extra?) => create(template, extra);
