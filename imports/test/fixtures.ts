@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import {assert, expect} from 'chai';
 
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
@@ -23,7 +23,10 @@ export const throws = async (
 
 export const setLike = (x) => sorted(totalOrder, x);
 
-export const dropId = ({_id, ...rest}) => rest;
+export const dropId = ({_id, ...rest}) => {
+	assert(typeof _id === 'string');
+	return rest;
+};
 
 export const dropIds = (x) => x.map(dropId);
 

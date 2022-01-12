@@ -40,18 +40,32 @@ export default class MinimongoWrapper implements Wrapper {
 	}
 
 	deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+		options = this._makeOptions(options);
+		if (filter._id === undefined) {
+			const found = this.findOne(Collection, filter, options);
+			if (found === null)
+				return {
+					acknowledged: true,
+					deletedCount: 0,
+				};
+			filter = {_id: found._id, ...filter};
+		}
+
+		return {
+			acknowledged: true,
+			deletedCount: Collection.remove(filter, options),
+		};
+	}
+
+	deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
 		return {
 			acknowledged: true,
 			deletedCount: Collection.remove(filter, this._makeOptions(options)),
 		};
 	}
 
-	deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return this.deleteOne<T, U>(Collection, filter, options);
-	}
-
 	updateOne<T, U = T>(Collection: Collection<T, U>, filter, update, options?) {
-		const {upsert, ...rest} = options;
+		const {upsert, ...rest} = options ?? {};
 		if (upsert) {
 			const {numberAffected, insertedId} = Collection.upsert(
 				filter,
@@ -82,7 +96,7 @@ export default class MinimongoWrapper implements Wrapper {
 	}
 
 	updateMany<T, U = T>(Collection: Collection<T, U>, filter, update, options?) {
-		const {upsert, ...rest} = options;
+		const {upsert, ...rest} = options ?? {};
 		if (upsert) {
 			const {numberAffected, insertedId} = Collection.upsert(
 				filter,
