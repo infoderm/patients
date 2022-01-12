@@ -164,6 +164,48 @@ if (Meteor.isServer) {
 					assert.deepEqual(dropIds(actual), expected);
 				});
 
+				it2('updateOne [upsert]', (db) => async () => {
+					const x = Random.id();
+					const y = Random.id();
+					const z = Random.id();
+					assert.equal(Tests.find().count(), 0);
+					const result = await db.updateOne(
+						Tests,
+						{x},
+						{$set: {y}},
+						{upsert: true},
+					);
+					const {_id} = Tests.findOne();
+					assert.deepInclude(result, {
+						acknowledged: true,
+						matchedCount: 0,
+						upsertedCount: 1,
+						upsertedId: _id,
+					});
+					assert.equal(Tests.find().count(), 1);
+					assert.deepInclude(
+						await db.updateOne(Tests, {x}, {$set: {z}}, {upsert: true}),
+						{
+							acknowledged: true,
+							matchedCount: 1,
+							upsertedCount: 0,
+						},
+					);
+					assert.equal(Tests.find().count(), 1);
+					assert.deepInclude(
+						await db.updateOne(Tests, {x}, {$set: {z}}, {upsert: true}),
+						{
+							acknowledged: true,
+							matchedCount: 1,
+							upsertedCount: 0,
+						},
+					);
+					assert.equal(Tests.find().count(), 1);
+					const expected = [{x, y, z}];
+					const actual = Tests.find().fetch();
+					assert.deepEqual(dropIds(actual), expected);
+				});
+
 				it2('updateMany', (db) => async () => {
 					const x = Random.id();
 					const y = Random.id();

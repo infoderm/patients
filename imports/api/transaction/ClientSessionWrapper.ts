@@ -1,6 +1,7 @@
 import {ClientSession} from 'mongodb';
 import Wrapper, {
 	DeleteResult,
+	IdType,
 	InsertManyResult,
 	InsertOneResult,
 	Options,
@@ -83,11 +84,31 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		update,
 		options?,
 	) {
-		return Collection.rawCollection().updateOne(
-			filter,
-			this._makeUpdate<T, U>(Collection, filter, update, options),
-			this._makeOptions(options),
-		) as unknown as Promise<UpdateResult>;
+		const {matchedCount, modifiedCount, upsertedId} =
+			await Collection.rawCollection().updateOne(
+				filter,
+				this._makeUpdate<T, U>(Collection, filter, update, options),
+				this._makeOptions(options),
+			);
+
+		const upsertedCount = upsertedId === null ? 0 : 1;
+
+		if (upsertedCount === 0) {
+			return {
+				acknowledged: true,
+				matchedCount,
+				modifiedCount,
+				upsertedCount,
+			};
+		}
+
+		return {
+			acknowledged: true,
+			matchedCount,
+			modifiedCount,
+			upsertedCount,
+			upsertedId: upsertedId._id as unknown as IdType,
+		};
 	}
 
 	async updateMany<T, U = T>(
