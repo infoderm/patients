@@ -31,17 +31,23 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 
 export default define;
 
-const wrapTransaction = (txn: Transaction): Executor => {
-	if (Meteor.isServer) {
-		return async function (...args: any[]) {
-			return executeTransaction(async (db) =>
-				Reflect.apply(txn, this, [db, ...args]),
-			);
-		};
-	}
+const wrapTransactionServer = (txn: Transaction): Executor => {
+	return async function (...args: any[]) {
+		return executeTransaction(async (db) =>
+			Reflect.apply(txn, this, [db, ...args]),
+		);
+	};
+};
 
+const wrapTransactionClient = (txn: Transaction): Executor => {
 	const db = new MinimongoWrapper();
 	return function (...args: any[]) {
 		Reflect.apply(txn, this, [db, ...args]);
 	};
+};
+
+const wrapTransaction = (txn: Transaction): Executor => {
+	return Meteor.isServer
+		? wrapTransactionServer(txn)
+		: wrapTransactionClient(txn);
 };
