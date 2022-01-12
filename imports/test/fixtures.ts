@@ -23,6 +23,10 @@ export const throws = async (
 
 export const setLike = (x) => sorted(totalOrder, x);
 
+export const dropId = ({_id, ...rest}) => rest;
+
+export const dropIds = (x) => x.map(dropId);
+
 export const create = (template, extra) => {
 	if (typeof template === 'function') return extra ?? template();
 	if (Array.isArray(template)) {

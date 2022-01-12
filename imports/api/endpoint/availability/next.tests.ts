@@ -17,6 +17,7 @@ import {Availability} from '../../collection/availability.mock';
 import {units} from '../../duration';
 import {initialSlot, slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../util/datetime';
+import {dropId} from '../../../test/fixtures';
 import next from './next';
 
 const bookSlot = async (userId, begin, end) => {
@@ -36,13 +37,7 @@ const findNextAvailable = async (userId, after, durationInMinutes) => {
 
 	const constraints = week;
 
-	const {_id, ...actual} = await invoke(next, {userId}, [
-		after,
-		duration,
-		constraints,
-	]);
-
-	return actual;
+	return dropId(await invoke(next, {userId}, [after, duration, constraints]));
 };
 
 if (Meteor.isServer) {
@@ -60,7 +55,7 @@ if (Meteor.isServer) {
 					assert.deepEqual(Availability.findOne(), undefined);
 
 					const actual = await findNextAvailable(userId, new Date(), 1);
-					const {_id, ...expected} = initialSlot(userId);
+					const expected = dropId(initialSlot(userId));
 
 					assert.deepEqual(actual, expected);
 				});
@@ -80,7 +75,7 @@ if (Meteor.isServer) {
 
 					const actual = await findNextAvailable(userId, now, 1);
 
-					const {_id, ...expected} = initialSlot(userId);
+					const expected = dropId(initialSlot(userId));
 
 					assert.deepEqual(actual, expected);
 				});
