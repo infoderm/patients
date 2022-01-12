@@ -227,9 +227,6 @@
         "env": [
           "meteor",
           "mocha"
-        ],
-        "globals": [
-          "Factory"
         ]
       },
       {

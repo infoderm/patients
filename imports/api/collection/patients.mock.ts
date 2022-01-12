@@ -6,12 +6,16 @@ import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 
+import {makeTemplate} from '../../test/fixtures';
+
+import insertPatient from '../endpoint/patients/insert';
+
 import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../patients';
-import {Patients} from './patients';
+import invoke from '../endpoint/invoke';
 
 const AGE_MAX = 130;
 
-Factory.define('patient', Patients, {
+export const newPatientFormData = makeTemplate({
 	niss: () => faker.datatype.uuid(),
 	firstname: () => faker.name.firstName(),
 	lastname: () => faker.name.lastName(),
@@ -46,6 +50,10 @@ Factory.define('patient', Patients, {
 
 	noshow: () => faker.datatype.number(3),
 });
+
+export const newPatient = async (invocation) => {
+	return invoke(insertPatient, invocation, [newPatientFormData()]);
+};
 
 export {patients} from '../patients';
 export {PatientDocument, Patients, PatientFields} from './patients';

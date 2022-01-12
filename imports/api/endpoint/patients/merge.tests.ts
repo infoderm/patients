@@ -6,17 +6,14 @@ import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
 import invoke from '../invoke';
-import insertConsultation from '../consultations/insert';
+import {Patients, patients, newPatient} from '../../collection/patients.mock';
 import {
-	Patients,
-	patients,
-	PatientDocument,
-} from '../../collection/patients.mock';
-import {Consultations} from '../../collection/consultations.mock';
-import {Documents} from '../../collection/documents.mock';
-// eslint-disable-next-line import/no-unassigned-import
-import '../../uploads.mock';
+	Consultations,
+	newConsultation,
+} from '../../collection/consultations.mock';
+import {Documents, newDocument} from '../../collection/documents.mock';
 import {Attachments} from '../../collection/attachments.mock';
+import {newUpload} from '../../uploads.mock';
 import {setLike} from '../../../test/fixtures';
 import patientsMerge from './merge';
 import patientsAttach from './attach';
@@ -36,50 +33,42 @@ if (Meteor.isServer) {
 					const userId = Random.id();
 					const invocation = {userId};
 
-					const patientA = Factory.create('patient', {
-						owner: userId,
-					}) as PatientDocument;
-					const patientB = Factory.create('patient', {
-						owner: userId,
-					}) as PatientDocument;
+					const patientAId = await newPatient({userId});
+					const patientBId = await newPatient({userId});
+					const patientCId = await newPatient({userId});
 
-					const uploadA = Factory.create('upload', {userId});
-					const uploadB = Factory.create('upload', {userId});
+					const uploadA = await newUpload({userId});
+					const uploadB = await newUpload({userId});
 
-					await invoke(patientsAttach, invocation, [patientA._id, uploadA._id]);
+					await invoke(patientsAttach, invocation, [patientAId, uploadA._id]);
 
-					await invoke(patientsAttach, invocation, [patientB._id, uploadB._id]);
+					await invoke(patientsAttach, invocation, [patientBId, uploadB._id]);
 
-					const {insertedId: consultationAId} = await invoke(
-						insertConsultation,
+					const {insertedId: consultationAId} = await newConsultation(
 						invocation,
-						[
-							Factory.tree('consultation', {
-								patientId: patientA._id,
-							}),
-						],
+						{patientId: patientAId},
 					);
 
 					// create an irrelevant consultation
-					Factory.create('consultation', {
-						owner: userId,
+					await newConsultation(invocation, {patientId: patientCId});
+
+					const documentAId = await newDocument(invocation, {
+						patientId: patientAId,
 					});
 
-					let documentA = Factory.create('document', {
-						owner: userId,
-						patientId: patientA._id,
-					});
+					let documentA = Documents.findOne(documentAId);
 
 					// create an irrelevant document
-					Factory.create('document', {
-						owner: userId,
-					});
+					await newDocument(invocation);
 
-					assert.equal(Patients.find().count(), 4);
+					assert.equal(Patients.find().count(), 3);
+
+					const patientA = Patients.findOne(patientAId);
+					const patientB = Patients.findOne(patientBId);
 
 					const newPatientFields = patients.merge([patientA, patientB]);
 
-					const oldPatientIds = [patientA._id, patientB._id];
+					const oldPatientIds = [patientAId, patientBId];
 					const consultationIds = [consultationAId];
 					const attachmentIds = [uploadA._id, uploadB._id];
 					const documentIds = [documentA._id];
@@ -98,23 +87,25 @@ if (Meteor.isServer) {
 						parameters,
 					);
 
-					assert.equal(Patients.find().count(), 3);
+					assert.equal(Patients.find().count(), 2);
 					assert.equal(Consultations.find().count(), 2);
 					assert.equal(Attachments.find().count(), 2);
 					assert.equal(Documents.find().count(), 2);
 
-					const newPatient = Patients.findOne(newPatientId);
+					const mergedPatient = Patients.findOne(newPatientId);
 
-					assert.equal(newPatient.firstname, patientB.firstname);
+					assert.equal(mergedPatient.firstname, patientB.firstname);
 
-					const expectedAttachments = setLike([uploadA, uploadB]);
+					const expectedAttachments = setLike(
+						[uploadA, uploadB].map(({meta, ...rest}) => rest),
+					);
 
 					const newPatientAttachments = Attachments.find(
 						{
 							userId,
 							'meta.attachedToPatients': newPatientId,
 						},
-						{fields: {meta: 0}},
+						{fields: {meta: 0, 'versions.original.meta': 0}},
 					).fetch();
 
 					assert.deepEqual(setLike(newPatientAttachments), expectedAttachments);
