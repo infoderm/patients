@@ -8,6 +8,7 @@ import Wrapper, {
 } from './Wrapper';
 
 import Collection from './Collection';
+import Filter from './Filter';
 
 export default class MongoDBClientSessionWrapper implements Wrapper {
 	readonly #session: ClientSession;
@@ -84,8 +85,8 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 	) {
 		return Collection.rawCollection().updateOne(
 			filter,
-			update,
-			this._makeUpdateOptions<T, U>(Collection, options),
+			this._makeUpdate<T, U>(Collection, filter, update, options),
+			this._makeOptions(options),
 		) as unknown as Promise<UpdateResult>;
 	}
 
@@ -97,8 +98,8 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 	) {
 		return Collection.rawCollection().updateMany(
 			filter,
-			update,
-			this._makeUpdateOptions<T, U>(Collection, options),
+			this._makeUpdate<T, U>(Collection, filter, update, options),
+			this._makeOptions(options),
 		) as unknown as Promise<UpdateResult>;
 	}
 
@@ -119,17 +120,22 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		return {session: this.#session, ...options};
 	}
 
-	private _makeUpdateOptions<T, U = T>(
+	private _makeUpdate<T, U = T>(
 		Collection: Collection<T, U>,
+		filter: Filter<T>,
+		update: any,
 		options: Options,
-	): Options {
-		if (options?.upsert && !options?.insertedId) {
-			const generatedId = true;
-			// @ts-expect-error _makeNewID is a private method
-			const insertedId = Collection._makeNewID();
-			return {generatedId, insertedId, ...this._makeOptions(options)};
-		}
-
-		return this._makeOptions(options);
+	): any {
+		if (!options?.upsert) return update;
+		// @ts-expect-error _makeNewID is a private method
+		const insertedId = filter?._id ?? Collection._makeNewID();
+		const {$setOnInsert, ...rest} = update;
+		return {
+			...rest,
+			$setOnInsert: {
+				...$setOnInsert,
+				_id: insertedId,
+			},
+		};
 	}
 }
