@@ -28,7 +28,7 @@ export interface DeleteResult {
 export interface UpdateResult {
 	acknowledged: boolean;
 	matchedCount: number;
-	modifiedCount: number;
+	modifiedCount?: number;
 	upsertedCount: number;
 	upsertedId?: IdType;
 }

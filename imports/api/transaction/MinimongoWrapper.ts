@@ -72,12 +72,19 @@ export default class MinimongoWrapper implements Wrapper {
 				update,
 				this._makeOptions(rest),
 			);
+			if (insertedId) {
+				return {
+					acknowledged: true,
+					matchedCount: 0,
+					upsertedCount: 1,
+					upsertedId: insertedId,
+				};
+			}
+
 			return {
 				acknowledged: true,
 				matchedCount: numberAffected,
-				modifiedCount: numberAffected,
-				upsertedCount: insertedId ? 1 : 0,
-				upsertedId: insertedId,
+				upsertedCount: 0,
 			};
 		}
 
@@ -90,7 +97,6 @@ export default class MinimongoWrapper implements Wrapper {
 		return {
 			acknowledged: true,
 			matchedCount: numberAffected,
-			modifiedCount: numberAffected,
 			upsertedCount: 0,
 		};
 	}
@@ -103,11 +109,11 @@ export default class MinimongoWrapper implements Wrapper {
 				update,
 				this._makeOptions({multi: true, ...rest}),
 			);
+			const upsertedCount = insertedId ? 1 : 0;
 			return {
 				acknowledged: true,
-				matchedCount: numberAffected,
-				modifiedCount: numberAffected,
-				upsertedCount: insertedId ? 1 : 0,
+				matchedCount: numberAffected - upsertedCount,
+				upsertedCount,
 				upsertedId: insertedId,
 			};
 		}
@@ -121,7 +127,6 @@ export default class MinimongoWrapper implements Wrapper {
 		return {
 			acknowledged: true,
 			matchedCount: numberAffected,
-			modifiedCount: numberAffected,
 			upsertedCount: 0,
 		};
 	}
