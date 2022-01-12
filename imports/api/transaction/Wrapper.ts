@@ -56,7 +56,7 @@ export default interface Wrapper {
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
-	) => any; // TODO cursor typeg
+	) => any; // TODO cursor type
 	fetch: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
