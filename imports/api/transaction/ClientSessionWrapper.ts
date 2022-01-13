@@ -20,39 +20,25 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		doc,
 		options?: Options,
 	) {
-		// TODO skip _id creation if it already exists
-		// @ts-expect-error _makeNewID is a private method
-		const _id = Collection._makeNewID();
-		const {
-			result: {ok},
-			insertedId,
-		} = await Collection.rawCollection().insertOne(
-			{_id, ...doc},
-			this._makeOptions(options),
+		return insertOneWriteOpResultObjectToInsertOneResult(
+			await Collection.rawCollection().insertOne(
+				// TODO skip _id creation if it already exists
+				// @ts-expect-error _makeNewID is a private method
+				{_id: Collection._makeNewID(), ...doc},
+				this._makeOptions(options),
+			),
 		);
-		return {
-			acknowledged: Boolean(ok),
-			insertedId: insertedId as unknown as IdType,
-		};
 	}
 
 	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
-		// TODO skip _id creation if it already exists
-		const {
-			result: {ok},
-			insertedCount,
-			insertedIds,
-		} = await Collection.rawCollection().insertMany(
-			// @ts-expect-error _makeNewID is a private method
-			docs.map((doc) => ({_id: Collection._makeNewID(), ...doc})),
-			this._makeOptions(options),
+		return insertWriteOpResultObjectToInsertManyResult(
+			await Collection.rawCollection().insertMany(
+				// TODO skip _id creation if it already exists
+				// @ts-expect-error _makeNewID is a private method
+				docs.map((doc) => ({_id: Collection._makeNewID(), ...doc})),
+				this._makeOptions(options),
+			),
 		);
-
-		return {
-			acknowledged: Boolean(ok),
-			insertedCount,
-			insertedIds: insertedIds as unknown as IdTypes,
-		};
 	}
 
 	async findOne<T, U = T>(
@@ -75,33 +61,21 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 	}
 
 	async deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		const {
-			result: {ok},
-			deletedCount,
-		} = await Collection.rawCollection().deleteOne(
-			filter,
-			this._makeOptions(options),
+		return deleteWriteOpResultToDeleteResult(
+			await Collection.rawCollection().deleteOne(
+				filter,
+				this._makeOptions(options),
+			),
 		);
-
-		return {
-			acknowledged: Boolean(ok),
-			deletedCount,
-		};
 	}
 
 	async deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		const {
-			result: {ok},
-			deletedCount,
-		} = await Collection.rawCollection().deleteMany(
-			filter,
-			this._makeOptions(options),
+		return deleteWriteOpResultToDeleteResult(
+			await Collection.rawCollection().deleteMany(
+				filter,
+				this._makeOptions(options),
+			),
 		);
-
-		return {
-			acknowledged: Boolean(ok),
-			deletedCount,
-		};
 	}
 
 	async updateOne<T, U = T>(
@@ -196,3 +170,26 @@ const updateWriteOpResultToUpdateResult = ({
 		upsertedId: upsertedId._id as unknown as IdType,
 	};
 };
+
+const deleteWriteOpResultToDeleteResult = (op) => ({
+	acknowledged: Boolean(op.result.ok),
+	deletedCount: op.deletedCount,
+});
+
+const insertOneWriteOpResultObjectToInsertOneResult = ({
+	result: {ok},
+	insertedId,
+}) => ({
+	acknowledged: Boolean(ok),
+	insertedId: insertedId as unknown as IdType,
+});
+
+const insertWriteOpResultObjectToInsertManyResult = ({
+	result: {ok},
+	insertedCount,
+	insertedIds,
+}) => ({
+	acknowledged: Boolean(ok),
+	insertedCount,
+	insertedIds: insertedIds as unknown as IdTypes,
+});
