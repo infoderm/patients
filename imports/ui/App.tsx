@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {BrowserRouter} from 'react-router-dom';
+
 import {useTracker} from 'meteor/react-meteor-data';
 
 import {
@@ -74,35 +76,37 @@ const App = () => {
 	const locale = useLocale();
 
 	return (
-		<LocalizationProvider dateAdapter={AdapterDateFns} locale={locale}>
-			<MuiThemeProvider theme={muitheme}>
-				<CssBaseline />
-				<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
-					<ErrorBoundary>
-						<div>
-							<CustomWholeWindowDropZone />
-							<div className={classes.appFrame} style={{textTransform}}>
-								{loading && <LinearProgress className={classes.progress} />}
-								<Header
-									navigationDrawerIsOpen={navigationDrawerIsOpen}
-									currentUser={currentUser}
-								/>
-								<NavigationDrawer
-									navigationDrawerIsOpen={navigationDrawerIsOpen}
-									currentUser={currentUser}
-								/>
-								<Content
-									navigationDrawerIsOpen={navigationDrawerIsOpen}
-									loggingIn={loggingIn}
-									currentUser={currentUser}
-									loading={loading}
-								/>
+		<BrowserRouter>
+			<LocalizationProvider dateAdapter={AdapterDateFns} locale={locale}>
+				<MuiThemeProvider theme={muitheme}>
+					<CssBaseline />
+					<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
+						<ErrorBoundary>
+							<div>
+								<CustomWholeWindowDropZone />
+								<div className={classes.appFrame} style={{textTransform}}>
+									{loading && <LinearProgress className={classes.progress} />}
+									<Header
+										navigationDrawerIsOpen={navigationDrawerIsOpen}
+										currentUser={currentUser}
+									/>
+									<NavigationDrawer
+										navigationDrawerIsOpen={navigationDrawerIsOpen}
+										currentUser={currentUser}
+									/>
+									<Content
+										navigationDrawerIsOpen={navigationDrawerIsOpen}
+										loggingIn={loggingIn}
+										currentUser={currentUser}
+										loading={loading}
+									/>
+								</div>
 							</div>
-						</div>
-					</ErrorBoundary>
-				</SnackbarProvider>
-			</MuiThemeProvider>
-		</LocalizationProvider>
+						</ErrorBoundary>
+					</SnackbarProvider>
+				</MuiThemeProvider>
+			</LocalizationProvider>
+		</BrowserRouter>
 	);
 };
 
