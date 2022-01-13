@@ -6,7 +6,7 @@ import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
 import createBucket from '../backend/gridfs/createBucket';
-import createObjectID from '../backend/gridfs/createObjectID';
+import createObjectId from '../backend/gridfs/createObjectId';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
@@ -85,7 +85,7 @@ export const Uploads = new FilesCollection({
 	interceptDownload(http, upload, versionName) {
 		const {gridFsFileId} = upload.versions[versionName].meta ?? {};
 		if (gridFsFileId) {
-			const gfsId = createObjectID(gridFsFileId);
+			const gfsId = createObjectId(gridFsFileId);
 			const readStream = bucket.openDownloadStream(gfsId);
 			readStream.on('error', (error) => {
 				// File not found Error handling without Server Crash
@@ -113,7 +113,7 @@ export const Uploads = new FilesCollection({
 			Object.keys(upload.versions).forEach((versionName) => {
 				const {gridFsFileId} = upload.versions[versionName].meta ?? {};
 				if (gridFsFileId) {
-					const gfsId = createObjectID(gridFsFileId);
+					const gfsId = createObjectId(gridFsFileId);
 					bucket.delete(gfsId, (error) => {
 						if (error) {
 							throw error;

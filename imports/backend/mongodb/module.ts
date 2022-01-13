@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
 
-export const {ObjectID, GridFSBucket} = Meteor.isServer
+export const {ObjectId, GridFSBucket} = Meteor.isServer
 	? MongoInternals.NpmModules.mongodb.module
-	: ({} as any);
+	: ({ObjectId: null, GridFSBucket: null} as any);
