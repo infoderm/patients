@@ -2,7 +2,6 @@ import React from 'react';
 import {match} from 'react-router-dom';
 
 import {useTracker} from 'meteor/react-meteor-data';
-import {Mongo} from 'meteor/mongo';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -13,7 +12,7 @@ import subscribe from '../../api/publication/subscribe';
 import findOne from '../../api/publication/documents/findOne';
 import DocumentCard from './DocumentCard';
 
-type DocumentId = string | Mongo.ObjectID;
+type DocumentId = string;
 
 interface StaticDocumentDetailsProps {
 	documentId: DocumentId;
@@ -31,7 +30,6 @@ const StaticDocumentDetails = ({
 	}
 
 	if (!document) {
-		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		return <NoContent>Document #{documentId.toString()} not found.</NoContent>;
 	}
 
@@ -61,8 +59,7 @@ const useDocument = (documentId: DocumentId) =>
 	}, [documentId]);
 
 const ReactiveDocumentDetails = ({match}: ReactiveDocumentDetailsProps) => {
-	const _id = match.params.id;
-	const documentId = _id.length === 24 ? new Mongo.ObjectID(_id) : _id;
+	const documentId = match.params.id;
 
 	const {loading, result: document} = useDocument(documentId);
 	return (
