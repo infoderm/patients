@@ -94,7 +94,7 @@ if (Meteor.isServer) {
 					assert.equal(Tests.find().count(), 3);
 					const expected = [{x}, {y}, {z}];
 					const actual = await db.fetch(Tests, {});
-					assert.deepEqual(dropIds(actual), expected);
+					assert.sameDeepMembers(dropIds(actual), expected);
 				});
 
 				it2('deleteOne', (db) => async () => {
@@ -192,7 +192,7 @@ if (Meteor.isServer) {
 					assert.oneOf(op1.modifiedCount, [1, undefined]);
 					const expected = [{x, w}, {y}, {z, w}];
 					const actual = Tests.find().fetch();
-					assert.deepEqual(dropIds(actual), expected);
+					assert.sameDeepMembers(dropIds(actual), expected);
 				});
 
 				it2('updateOne [upsert]', (db) => async () => {
@@ -234,7 +234,7 @@ if (Meteor.isServer) {
 					assert.equal(Tests.find().count(), 1);
 					const expected = [{x, y, z}];
 					const actual = Tests.find().fetch();
-					assert.deepEqual(dropIds(actual), expected);
+					assert.sameDeepMembers(dropIds(actual), expected);
 				});
 
 				it2('updateMany', (db) => async () => {
@@ -260,7 +260,7 @@ if (Meteor.isServer) {
 						{z, w},
 					];
 					const actual = Tests.find().fetch();
-					assert.deepEqual(dropIds(actual), expected);
+					assert.sameDeepMembers(dropIds(actual), expected);
 				});
 			});
 		});

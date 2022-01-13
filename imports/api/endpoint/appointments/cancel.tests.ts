@@ -66,7 +66,7 @@ if (Meteor.isServer) {
 
 					const before = Availability.find().fetch();
 
-					assert.deepEqual(dropIds(before), [
+					assert.sameDeepMembers(dropIds(before), [
 						{
 							...slot(beginningOfTime(), begin, 0),
 							owner: userId,
@@ -84,7 +84,7 @@ if (Meteor.isServer) {
 					await invoke(appointmentsCancel, {userId}, [appointmentId, '', '']);
 
 					const after = Availability.find().fetch();
-					assert.deepEqual(dropIds(after), [dropId(initialSlot(userId))]);
+					assert.sameDeepMembers(dropIds(after), [dropId(initialSlot(userId))]);
 				});
 			});
 		});
