@@ -19,7 +19,7 @@ import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 
 import call from '../../api/endpoint/call';
 
-import {useSetting} from '../../client/settings';
+import {useSetting} from '../settings/hooks';
 import withLazyOpening from '../modal/withLazyOpening';
 import cancel from '../../api/endpoint/appointments/cancel';
 

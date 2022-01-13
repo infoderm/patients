@@ -1,5 +1,5 @@
-import call from '../api/endpoint/call';
-import insert from '../api/endpoint/documents/insert';
+import call from '../endpoint/call';
+import insert from '../endpoint/documents/insert';
 
 export default function insertDocument(history, format, fd) {
 	console.debug('insert-document', format, fd);

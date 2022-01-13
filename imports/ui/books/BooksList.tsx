@@ -9,7 +9,7 @@ import dateFormat from 'date-fns/format';
 import TagList from '../tags/TagList';
 
 import {useBooks} from '../../api/books';
-import {useSettingCached} from '../../client/settings';
+import {useSettingCached} from '../settings/hooks';
 
 import YearJumper from '../navigation/YearJumper';
 import FixedFab from '../button/FixedFab';

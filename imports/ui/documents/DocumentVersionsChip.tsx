@@ -10,7 +10,7 @@ import Chip from '@material-ui/core/Chip';
 
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 import useDocumentVersions from './useDocumentVersions';
 
 const useStyles = makeStyles((theme) => ({

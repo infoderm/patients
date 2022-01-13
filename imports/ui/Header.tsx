@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import MenuIcon from '@material-ui/icons/Menu';
 
-import {setSetting} from '../client/settings';
+import {setSetting} from './settings/hooks';
 
 import FullTextSearchInput from './search/FullTextSearchInput';
 import AccountsUI from './users/AccountsUI';

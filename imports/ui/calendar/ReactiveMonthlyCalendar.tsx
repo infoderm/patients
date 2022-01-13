@@ -9,7 +9,7 @@ import subMonths from 'date-fns/subMonths';
 import {useDateFormat} from '../../i18n/datetime';
 
 import useEvents from '../events/useEvents';
-import {useSettingCached} from '../../client/settings';
+import {useSettingCached} from '../settings/hooks';
 
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';

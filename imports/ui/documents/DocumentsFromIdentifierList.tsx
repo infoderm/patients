@@ -2,7 +2,7 @@ import React from 'react';
 
 import {match} from 'react-router-dom';
 
-import {myDecodeURIComponent} from '../../client/uri';
+import {myDecodeURIComponent} from '../../util/uri';
 
 import StaticDocumentList from './StaticDocumentList';
 

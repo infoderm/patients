@@ -14,7 +14,7 @@ import StaticPatientChip, {
 } from '../patients/StaticPatientChip';
 
 import {useInsuranceStats, usePatientsInsuredBy} from '../../api/insurances';
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';
 

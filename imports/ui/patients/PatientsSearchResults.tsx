@@ -6,7 +6,7 @@ import {useSnackbar} from 'notistack';
 import call from '../../api/endpoint/call';
 import find from '../../api/endpoint/patients/find';
 
-import {myDecodeURIComponent} from '../../client/uri';
+import {myDecodeURIComponent} from '../../util/uri';
 import mergeFields from '../../util/mergeFields';
 
 import StaticPatientsList from './StaticPatientsList';

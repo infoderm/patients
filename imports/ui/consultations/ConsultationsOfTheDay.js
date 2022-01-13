@@ -19,7 +19,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
 
-import {TIME_BREAK} from '../../client/constants';
+import {TIME_BREAK} from '../constants';
 
 import Prev from '../navigation/Prev';
 import Next from '../navigation/Next';

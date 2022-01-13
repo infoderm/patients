@@ -1,6 +1,6 @@
 import call from '../../../api/endpoint/call';
 import documentFetch from '../../../api/endpoint/documents/fetch';
-import saveTextAs from '../../../client/saveTextAs';
+import saveTextAs from '../../output/saveTextAs';
 
 const downloadDocument = async (document) => {
 	const extensions = {

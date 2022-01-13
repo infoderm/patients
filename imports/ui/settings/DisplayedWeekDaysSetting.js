@@ -10,7 +10,7 @@ import {increasing} from '@total-order/primitive';
 
 import {useDaysNames} from '../../i18n/datetime';
 
-import {useSettingCached} from '../../client/settings';
+import {useSettingCached} from './hooks';
 import InputManySetting from './InputManySetting';
 
 const KEY = 'displayed-week-days';

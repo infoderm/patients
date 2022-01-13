@@ -1,5 +1,5 @@
 import React from 'react';
-import insertDocument from '../../client/insertDocument';
+import insertDocument from '../../api/documents/insertDocument';
 import DocumentImportButton from './DocumentImportButton';
 
 const HealthOneDocumentImportButton = (props) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSnackbar} from 'notistack';
-import useOnDrop from '../../client/useOnDrop';
+import useOnDrop from '../drag-and-drop/useOnDrop';
 import WholeWindowDropZone from './WholeWindowDropZone';
 
 export default function CustomWholeWindowDropZone() {

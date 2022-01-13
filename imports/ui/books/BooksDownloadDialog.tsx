@@ -22,7 +22,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 
 import GridContainerInsideDialogContent from '../grid/GridContainerInsideDialogContent';
 
-import saveTextAs from '../../client/saveTextAs';
+import saveTextAs from '../output/saveTextAs';
 
 import call from '../../api/endpoint/call';
 import {books} from '../../api/books';

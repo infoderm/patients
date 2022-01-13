@@ -19,7 +19,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 

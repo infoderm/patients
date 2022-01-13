@@ -21,9 +21,8 @@ import AdapterDateFns from '@material-ui/pickers/adapter/date-fns';
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import {settings} from '../client/settings';
-
 import {useLocale} from '../i18n/datetime';
+import {settings} from './settings/hooks';
 
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
 import Header from './Header';

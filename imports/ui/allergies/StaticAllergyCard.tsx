@@ -19,7 +19,7 @@ import {useAllergyStats, usePatientsHavingAllergy} from '../../api/allergies';
 
 import ColorPicker from '../input/ColorPicker';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 import changeColor from '../../api/endpoint/allergies/changeColor';
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';

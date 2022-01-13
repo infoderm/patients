@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import SetPicker from '../input/SetPicker';
 
-import {useSetting} from '../../client/settings';
-
 import PropsOf from '../../util/PropsOf';
+import {useSetting} from './hooks';
 
 interface BaseProps {
 	className?: string;
