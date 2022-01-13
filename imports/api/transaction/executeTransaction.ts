@@ -28,7 +28,7 @@ const executeTransaction = async (
 		}, transactionOptions);
 	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : 'unknown error';
-		console.error(message);
+		console.debug(message);
 		console.debug({error});
 		throw new Meteor.Error('Database Transaction Failed', message);
 	} finally {
