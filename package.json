@@ -101,9 +101,9 @@
     "@fontsource/roboto": "4.5.1",
     "@types/express": "4.17.13",
     "@types/luxon": "2.0.9",
-    "@types/meteor": "2.0.1",
-    "@types/mocha": "9.0.0",
-    "@types/node": "16.11.19",
+    "@types/meteor": "2.0.2",
+    "@types/mocha": "8.2.0",
+    "@types/node": "14.18.2",
     "@types/react-router-dom": "5.3.2",
     "babel-plugin-istanbul": "6.1.1",
     "chai": "4.3.4",
@@ -124,7 +124,7 @@
     "rrule": "2.6.8",
     "simpl-schema": "1.12.0",
     "total-order": "3.0.1",
-    "typescript": "4.4.4",
+    "typescript": "^4.3.5",
     "xo": "0.47.0"
   },
   "postinstall": {
@@ -154,8 +154,8 @@
     "test:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer npm run test",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ COVERAGE_OUT_LCOVONLY=1 npm run test -- --extra-packages lmieulet:meteor-coverage",
     "ci:test": "TEST_BROWSER_DRIVER=puppeteer npm run cover -- --once",
-    "upgrade-deps": "ncu --upgrade",
-    "upgrade": "meteor update && npm run upgrade-deps && meteor npm install",
+    "upgrade-deps": "meteor node .upgrade/upgrade.js",
+    "upgrade": "meteor update && npm run upgrade-deps -- -u && meteor npm install",
     "setup-deploy": "mup setup --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
     "build-and-upload": "mup deploy --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
     "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload"

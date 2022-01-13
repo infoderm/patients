@@ -108,6 +108,21 @@ the `chromium` executable that comes with `puppeteer` remove the assignment of t
 
     meteor npm run upgrade
 
+Some dependencies need manual upgrade. Their versions depends on the used
+Meteor version. Hereunder are the information links for the latest stable
+release of Meteor:
+
+  - [`@types/meteor`](https://www.npmjs.com/package/@types/meteor)
+  - [`@types/node`](https://github.com/meteor/meteor/blob/master/scripts/build-dev-bundle-common.sh)
+  - [`@types/mocha`](https://github.com/Meteor-Community-Packages/meteor-mocha-core/blob/master/package.js) and [`meteortesting:mocha-core`](https://github.com/Meteor-Community-Packages/meteor-mocha/blob/master/package/package.js)
+  - [`typescript`](https://github.com/meteor/meteor/blob/master/npm-packages/meteor-babel/package.json)
+
+NB: `@types/mongodb` does not need explicit pinning because it is a dependency
+of `@types/meteor.`
+
+Direct ESM dependencies cannot be added and CJS dependencies cannot be upgraded
+to ESM. See [the relevant discussion](https://github.com/meteor/meteor/discussions/11727).
+
 ## :woman_health_worker: Production
 
 ### :wrench: Setup

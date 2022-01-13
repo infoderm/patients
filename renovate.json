@@ -12,6 +12,9 @@
   "packageRules": [
     {
       "matchPackageNames": [
+        "@types/meteor",
+        "@types/mocha",
+        "@types/node",
         "faker",
         "notistack",
         "total-order",

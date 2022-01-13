@@ -1,3 +1,4 @@
+// @ts-expect-error Needs more recent @types/node
 import {Buffer} from 'buffer';
 
 import {Meteor} from 'meteor/meteor';
