@@ -176,8 +176,20 @@ if (Meteor.isServer) {
 					await db.insertOne(Tests, {y});
 					await db.insertOne(Tests, {z});
 					assert.equal(Tests.find().count(), 3);
-					await db.updateOne(Tests, {}, {$set: {w}});
-					await db.updateOne(Tests, {z}, {$set: {w}});
+					const op1 = await db.updateOne(Tests, {}, {$set: {w}});
+					assert.deepInclude(op1, {
+						acknowledged: true,
+						matchedCount: 1,
+						upsertedCount: 0,
+					});
+					assert.oneOf(op1.modifiedCount, [1, undefined]);
+					const op2 = await db.updateOne(Tests, {z}, {$set: {w}});
+					assert.deepInclude(op2, {
+						acknowledged: true,
+						matchedCount: 1,
+						upsertedCount: 0,
+					});
+					assert.oneOf(op1.modifiedCount, [1, undefined]);
 					const expected = [{x, w}, {y}, {z, w}];
 					const actual = Tests.find().fetch();
 					assert.deepEqual(dropIds(actual), expected);
@@ -235,7 +247,13 @@ if (Meteor.isServer) {
 					await db.insertOne(Tests, {y});
 					await db.insertOne(Tests, {z});
 					assert.equal(Tests.find().count(), 3);
-					await db.updateMany(Tests, {}, {$set: {w}});
+					const result = await db.updateMany(Tests, {}, {$set: {w}});
+					assert.deepInclude(result, {
+						acknowledged: true,
+						matchedCount: 3,
+						upsertedCount: 0,
+					});
+					assert.oneOf(result.modifiedCount, [3, undefined]);
 					const expected = [
 						{x, w},
 						{y, w},

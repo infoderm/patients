@@ -1,5 +1,5 @@
 import {ClientSession} from 'mongodb';
-import Wrapper, {IdType, IdTypes, Options, UpdateResult} from './Wrapper';
+import Wrapper, {IdType, IdTypes, Options} from './Wrapper';
 
 import Collection from './Collection';
 import Filter from './Filter';
@@ -110,31 +110,13 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		update,
 		options?,
 	) {
-		const {matchedCount, modifiedCount, upsertedId} =
+		return updateWriteOpResultToUpdateResult(
 			await Collection.rawCollection().updateOne(
 				filter,
 				this._makeUpdate<T, U>(Collection, filter, update, options),
 				this._makeOptions(options),
-			);
-
-		const upsertedCount = upsertedId === null ? 0 : 1;
-
-		if (upsertedCount === 0) {
-			return {
-				acknowledged: true,
-				matchedCount,
-				modifiedCount,
-				upsertedCount,
-			};
-		}
-
-		return {
-			acknowledged: true,
-			matchedCount,
-			modifiedCount,
-			upsertedCount,
-			upsertedId: upsertedId._id as unknown as IdType,
-		};
+			),
+		);
 	}
 
 	async updateMany<T, U = T>(
@@ -143,11 +125,13 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		update,
 		options?,
 	) {
-		return Collection.rawCollection().updateMany(
-			filter,
-			this._makeUpdate<T, U>(Collection, filter, update, options),
-			this._makeOptions(options),
-		) as unknown as Promise<UpdateResult>;
+		return updateWriteOpResultToUpdateResult(
+			await Collection.rawCollection().updateMany(
+				filter,
+				this._makeUpdate<T, U>(Collection, filter, update, options),
+				this._makeOptions(options),
+			),
+		);
 	}
 
 	async distinct<T, U = T>(
@@ -186,3 +170,29 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		};
 	}
 }
+
+const updateWriteOpResultToUpdateResult = ({
+	result: {ok},
+	matchedCount,
+	modifiedCount,
+	upsertedId,
+}) => {
+	const upsertedCount = upsertedId === null ? 0 : 1;
+
+	if (upsertedCount === 0) {
+		return {
+			acknowledged: Boolean(ok),
+			matchedCount,
+			modifiedCount,
+			upsertedCount,
+		};
+	}
+
+	return {
+		acknowledged: Boolean(ok),
+		matchedCount,
+		modifiedCount,
+		upsertedCount,
+		upsertedId: upsertedId._id as unknown as IdType,
+	};
+};
