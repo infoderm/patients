@@ -4,14 +4,14 @@ import insertPatient from '../patients/insert';
 
 import compose from '../compose';
 import define from '../define';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'appointments.createPatient',
 	validate(fields: any) {
 		check(fields, Object);
 	},
-	async transaction(db: Wrapper, fields: any) {
+	async transaction(db: TransactionDriver, fields: any) {
 		const patient = {
 			...fields,
 			createdForAppointment: true,

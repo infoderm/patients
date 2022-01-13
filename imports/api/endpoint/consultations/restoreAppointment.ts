@@ -11,7 +11,7 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import {availability} from '../../availability';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'consultations.restoreAppointment',
@@ -20,7 +20,7 @@ export default define({
 	},
 	transaction: unconditionallyUpdateById(
 		Consultations,
-		async (db: Wrapper, existing) => {
+		async (db: TransactionDriver, existing) => {
 			const modifier: Mongo.Modifier<ConsultationDocument> = {
 				$set: {
 					datetime: existing.scheduledDatetime,

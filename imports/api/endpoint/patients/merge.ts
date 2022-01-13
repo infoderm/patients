@@ -9,7 +9,7 @@ import {Attachments} from '../../collection/attachments';
 import {patients} from '../../patients';
 
 import define from '../define';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 const {sanitize, updateIndex} = patients;
 
@@ -29,7 +29,7 @@ export default define({
 		check(newPatient, Object);
 	},
 	async transaction(
-		db: Wrapper,
+		db: TransactionDriver,
 		oldPatientIds,
 		consultationIds,
 		attachmentIds,

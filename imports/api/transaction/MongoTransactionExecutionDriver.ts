@@ -1,10 +1,12 @@
 import {ClientSession} from 'mongodb';
-import Wrapper, {IdType, IdTypes, Options} from './Wrapper';
+import TransactionDriver, {IdType, IdTypes, Options} from './TransactionDriver';
 
 import Collection from './Collection';
 import Filter from './Filter';
 
-export default class MongoDBClientSessionWrapper implements Wrapper {
+export default class MongoTransactionExecutionDriver
+	implements TransactionDriver
+{
 	readonly #session: ClientSession;
 
 	constructor(session: ClientSession) {

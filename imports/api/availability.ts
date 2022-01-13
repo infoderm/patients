@@ -23,7 +23,7 @@ import {
 	SlotDocument,
 	SlotFields,
 } from './collection/availability';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 
 export type Constraint = [number, number];
 export type Duration = number;
@@ -175,7 +175,7 @@ const canBeSimplified = (slots: Array<[Date, Date, number]>): boolean => {
 };
 
 export const insertHook = async (
-	db: Wrapper,
+	db: TransactionDriver,
 	owner: string,
 	begin: Date,
 	end: Date,
@@ -276,7 +276,7 @@ export const insertHook = async (
 };
 
 export const removeHook = async (
-	db: Wrapper,
+	db: TransactionDriver,
 	owner: string,
 	begin: Date,
 	end: Date,
@@ -286,7 +286,7 @@ export const removeHook = async (
 };
 
 export const updateHook = async (
-	db: Wrapper,
+	db: TransactionDriver,
 	owner: string,
 	oldBegin: Date,
 	oldEnd: Date,

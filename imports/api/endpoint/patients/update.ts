@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {Patients} from '../../collection/patients';
 import {patients} from '../../patients';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -14,7 +14,7 @@ export default define({
 		check(patientId, String);
 		check(newfields, Object);
 	},
-	async transaction(db: Wrapper, patientId: string, newfields: any) {
+	async transaction(db: TransactionDriver, patientId: string, newfields: any) {
 		const patient = await db.findOne(Patients, {
 			_id: patientId,
 			owner: this.userId,

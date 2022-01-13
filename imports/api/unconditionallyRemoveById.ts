@@ -1,9 +1,13 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 
 const unconditionallyRemoveById = (Collection) =>
-	async function (this: Meteor.MethodThisType, db: Wrapper, _id: string) {
+	async function (
+		this: Meteor.MethodThisType,
+		db: TransactionDriver,
+		_id: string,
+	) {
 		check(_id, String);
 
 		if (!this.userId) {

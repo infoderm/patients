@@ -7,7 +7,7 @@ import {Appointments} from '../../collection/appointments';
 
 import {availability} from '../../availability';
 
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
@@ -26,7 +26,7 @@ export default define({
 	transaction: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
 		async (
-			db: Wrapper,
+			db: TransactionDriver,
 			existing,
 			cancellationReason: string,
 			cancellationExplanation: string,

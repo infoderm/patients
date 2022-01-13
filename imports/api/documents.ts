@@ -6,7 +6,7 @@ import decodeText from './documents/decodeText';
 import detectTextEncoding from './documents/detectTextEncoding';
 import parseHealthOne from './documents/parseHealthOne';
 import parseMedidoc from './documents/parseMedidoc';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 
 const DETECT_REGEX_HEALTHONE = /^A1\\\d+\\/;
 const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/;
@@ -123,7 +123,7 @@ async function* sanitize({
 	};
 }
 
-async function updateLastVersionFlags(db: Wrapper, owner, document) {
+async function updateLastVersionFlags(db: TransactionDriver, owner, document) {
 	if (!document.parsed) {
 		return;
 	}

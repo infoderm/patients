@@ -34,7 +34,7 @@ export interface UpdateResult {
 }
 
 export type Options = Record<string, any>;
-export default interface Wrapper {
+export default interface TransactionDriver {
 	session: ClientSession;
 	// TODO template depends on Collection document type
 	insertOne: <T, U = T>(

@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {Patients} from '../../collection/patients';
 import {patients} from '../../patients';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -13,7 +13,7 @@ export default define({
 	validate(patient: any) {
 		check(patient, Object);
 	},
-	async transaction(db: Wrapper, patient: any) {
+	async transaction(db: TransactionDriver, patient: any) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}

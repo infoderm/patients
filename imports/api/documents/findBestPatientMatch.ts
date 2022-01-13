@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Patients} from '../collection/patients';
 import {patients} from '../patients';
-import Wrapper from '../transaction/Wrapper';
+import TransactionDriver from '../transaction/TransactionDriver';
 
 function* findBestPatientMatch_queries(entry) {
 	if (entry.patient) {
@@ -17,7 +17,7 @@ function* findBestPatientMatch_queries(entry) {
 	}
 }
 
-async function findBestPatientMatch(db: Wrapper, owner, entry) {
+async function findBestPatientMatch(db: TransactionDriver, owner, entry) {
 	if (entry.patientId) {
 		return entry.patientId;
 	}
@@ -46,7 +46,7 @@ async function findBestPatientMatch(db: Wrapper, owner, entry) {
 }
 
 export default async function findBestPatientMatchServerOnly(
-	db: Wrapper,
+	db: TransactionDriver,
 	owner,
 	entry,
 ) {

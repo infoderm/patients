@@ -9,7 +9,7 @@ import define from '../define';
 import {availability} from '../../availability';
 import {ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -20,7 +20,11 @@ export default define({
 		check(appointmentId, String);
 		check(appointment, Object);
 	},
-	async transaction(db: Wrapper, appointmentId: string, appointment: any) {
+	async transaction(
+		db: TransactionDriver,
+		appointmentId: string,
+		appointment: any,
+	) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}

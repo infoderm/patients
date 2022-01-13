@@ -8,14 +8,14 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import {availability} from '../../availability';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: '/api/patients/remove',
 	validate(patientId: string) {
 		check(patientId, String);
 	},
-	async transaction(db: Wrapper, patientId: string) {
+	async transaction(db: TransactionDriver, patientId: string) {
 		const owner = this.userId;
 		const patient = await db.findOne(Patients, {_id: patientId, owner});
 		if (patient === null) {

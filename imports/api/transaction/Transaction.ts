@@ -1,4 +1,4 @@
-import MongoDBClientSessionWrapper from './ClientSessionWrapper';
+import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
 
-type Transaction = (db: MongoDBClientSessionWrapper) => Promise<any>;
+type Transaction = (db: MongoTransactionExecutionDriver) => Promise<any>;
 export default Transaction;

@@ -23,7 +23,7 @@ import {
 	boundaryTrigrams,
 	junctionTrigrams,
 } from './string';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
@@ -42,7 +42,7 @@ function normalizedName(firstname, lastname) {
 }
 
 const updateIndex = async (
-	db: Wrapper,
+	db: TransactionDriver,
 	userId: string,
 	_id: string,
 	fields,
@@ -87,7 +87,7 @@ const updateIndex = async (
 	);
 };
 
-const updateTags = async (db: Wrapper, userId, fields) => {
+const updateTags = async (db: TransactionDriver, userId, fields) => {
 	for (const [tagCollection, tagList] of [
 		[insurances, fields.insurances],
 		[doctors, fields.doctors],

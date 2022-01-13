@@ -11,7 +11,7 @@ import {books} from '../../books';
 
 import define from '../define';
 import {availability} from '../../availability';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 const {sanitize} = consultations;
 
@@ -21,7 +21,11 @@ export default define({
 		check(consultationId, String);
 		check(newfields, Object);
 	},
-	async transaction(db: Wrapper, consultationId: string, newfields: any) {
+	async transaction(
+		db: TransactionDriver,
+		consultationId: string,
+		newfields: any,
+	) {
 		const owner = this.userId;
 		const existing = await db.findOne(Consultations, {
 			_id: consultationId,

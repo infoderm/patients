@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor';
-import MinimongoWrapper from '../transaction/MinimongoWrapper';
+import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionSimulationDriver';
 import executeTransaction from '../transaction/executeTransaction';
 import Params from './Params';
 import Endpoint from './Endpoint';
@@ -40,7 +40,7 @@ const wrapTransactionServer = (txn: Transaction): Executor => {
 };
 
 const wrapTransactionClient = (txn: Transaction): Executor => {
-	const db = new MinimongoWrapper();
+	const db = new MeteorTransactionSimulationDriver();
 	return function (...args: any[]) {
 		Reflect.apply(txn, this, [db, ...args]);
 	};

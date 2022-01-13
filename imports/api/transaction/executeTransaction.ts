@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
 import {SessionOptions, TransactionOptions} from 'mongodb';
 
-import MongoDBClientSessionWrapper from './ClientSessionWrapper';
+import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
 import Transaction from './Transaction';
 
 /**
@@ -22,9 +22,9 @@ const executeTransaction = async (
 	});
 	let result;
 	try {
-		const wrap = new MongoDBClientSessionWrapper(session);
+		const driver = new MongoTransactionExecutionDriver(session);
 		await session.withTransaction(async () => {
-			result = await transaction(wrap);
+			result = await transaction(driver);
 		}, transactionOptions);
 	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : 'unknown error';

@@ -4,10 +4,10 @@ import {ConsultationDocument} from '../../api/collection/consultations';
 import {findLastConsultation} from '../../api/consultations';
 import last from '../../api/publication/consultations/last';
 import subscribe from '../../api/publication/subscribe';
-import MinimongoWrapper from '../../api/transaction/MinimongoWrapper';
+import MeteorTransactionSimulationDriver from '../../api/transaction/MeteorTransactionSimulationDriver';
 
 export default function useLastConsultation(filter) {
-	const db = new MinimongoWrapper();
+	const db = new MeteorTransactionSimulationDriver();
 	return useTracker(() => {
 		const handle = subscribe(last);
 		return {
