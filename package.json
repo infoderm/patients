@@ -14,6 +14,16 @@
       "COVERAGE": {
         "sourceMaps": "both",
         "plugins": [
+          [
+            "transform-remove-console",
+            {
+              "exclude": [
+                "log",
+                "error",
+                "warn"
+              ]
+            }
+          ],
           "istanbul"
         ]
       }
@@ -110,6 +120,7 @@
     "@types/node": "14.18.2",
     "@types/react-router-dom": "5.3.2",
     "babel-plugin-istanbul": "6.1.1",
+    "babel-plugin-transform-remove-console": "6.9.4",
     "chai": "4.3.4",
     "dayjs": "1.10.7",
     "emoji-favicon-cli": "3.0.1",
