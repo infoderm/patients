@@ -13,7 +13,7 @@ import {
 } from '../../collection/consultations.mock';
 import {Documents, newDocument} from '../../collection/documents.mock';
 import {Attachments} from '../../collection/attachments.mock';
-import {newUpload} from '../../uploads.mock';
+import {newUpload, Uploads} from '../../uploads.mock';
 import {setLike} from '../../../test/fixtures';
 import patientsMerge from './merge';
 import patientsAttach from './attach';
@@ -26,7 +26,7 @@ if (Meteor.isServer) {
 					Patients.remove({});
 					Consultations.remove({});
 					Documents.remove({});
-					Attachments.remove({});
+					Uploads.remove({});
 				});
 
 				it('can merge two patients', async () => {
