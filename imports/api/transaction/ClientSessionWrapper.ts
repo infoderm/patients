@@ -2,8 +2,7 @@ import {ClientSession} from 'mongodb';
 import Wrapper, {
 	DeleteResult,
 	IdType,
-	InsertManyResult,
-	InsertOneResult,
+	IdTypes,
 	Options,
 	UpdateResult,
 } from './Wrapper';
@@ -30,19 +29,36 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 		// TODO skip _id creation if it already exists
 		// @ts-expect-error _makeNewID is a private method
 		const _id = Collection._makeNewID();
-		return Collection.rawCollection().insertOne(
+		const {
+			result: {ok},
+			insertedId,
+		} = await Collection.rawCollection().insertOne(
 			{_id, ...doc},
 			this._makeOptions(options),
-		) as unknown as Promise<InsertOneResult>;
+		);
+		return {
+			acknowledged: Boolean(ok),
+			insertedId: insertedId as unknown as IdType,
+		};
 	}
 
 	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
 		// TODO skip _id creation if it already exists
-		return Collection.rawCollection().insertMany(
+		const {
+			result: {ok},
+			insertedCount,
+			insertedIds,
+		} = await Collection.rawCollection().insertMany(
 			// @ts-expect-error _makeNewID is a private method
 			docs.map((doc) => ({_id: Collection._makeNewID(), ...doc})),
 			this._makeOptions(options),
-		) as unknown as Promise<InsertManyResult>;
+		);
+
+		return {
+			acknowledged: Boolean(ok),
+			insertedCount,
+			insertedIds: insertedIds as unknown as IdTypes,
+		};
 	}
 
 	async findOne<T, U = T>(

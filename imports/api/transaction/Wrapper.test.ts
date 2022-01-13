@@ -38,6 +38,9 @@ if (Meteor.isServer) {
 				it2('insertOne', (db) => async () => {
 					assert.equal(Tests.find().count(), 0);
 					const result = await db.insertOne(Tests, {test: 'test'});
+					assert.deepInclude(result, {
+						acknowledged: true,
+					});
 					assert.containsAllKeys(result, ['insertedId']);
 					assert.isString(result.insertedId);
 					assert.deepEqual(Tests.findOne(), {
@@ -51,8 +54,15 @@ if (Meteor.isServer) {
 					const y = Random.id();
 					const z = Random.id();
 					assert.equal(Tests.find().count(), 0);
-					await db.insertMany(Tests, [{x}, {y}, {z}]);
-					assert.equal(Tests.find().count(), 3);
+					const result = await db.insertMany(Tests, [{x}, {y}, {z}]);
+					assert.deepInclude(result, {
+						acknowledged: true,
+						insertedCount: 3,
+					});
+					assert.deepEqual(
+						Tests.find().fetch(),
+						[{x}, {y}, {z}].map((t, i) => ({_id: result.insertedIds[i], ...t})),
+					);
 				});
 
 				it2('findOne', (db) => async () => {
