@@ -1,5 +1,5 @@
-import Wrapper from '../transaction/Wrapper';
+import TransactionDriver from '../transaction/TransactionDriver';
 
-type Transaction = (db: Wrapper, ...args: any[]) => Promise<any>;
+type Transaction = (db: TransactionDriver, ...args: any[]) => Promise<any>;
 
 export default Transaction;

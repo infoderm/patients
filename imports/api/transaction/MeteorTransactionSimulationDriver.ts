@@ -1,7 +1,9 @@
-import Wrapper from './Wrapper';
+import TransactionDriver from './TransactionDriver';
 import Collection from './Collection';
 
-export default class MinimongoWrapper implements Wrapper {
+export default class MeteorTransactionSimulationDriver
+	implements TransactionDriver
+{
 	get session() {
 		return null;
 	}

@@ -14,7 +14,7 @@ import {
 	overlapsAfterDate,
 } from '../../availability';
 import {WEEK_MODULO} from '../../../util/datetime';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'availability.next',
@@ -24,7 +24,7 @@ export default define({
 		check(constraints, Array);
 	},
 	async transaction(
-		db: Wrapper,
+		db: TransactionDriver,
 		after: Date,
 		duration: Duration,
 		constraints: Constraint[],

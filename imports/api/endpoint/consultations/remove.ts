@@ -5,14 +5,14 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import {availability} from '../../availability';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'consultations.remove',
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},
-	async transaction(db: Wrapper, consultationId: string) {
+	async transaction(db: TransactionDriver, consultationId: string) {
 		const owner = this.userId;
 		const consultation = await db.findOne(Consultations, {
 			_id: consultationId,

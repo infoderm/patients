@@ -3,7 +3,7 @@ import {check} from 'meteor/check';
 import {Patients} from '../../collection/patients';
 import {Attachments} from '../../collection/attachments';
 
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -13,7 +13,11 @@ export default define({
 		check(patientId, String);
 		check(uploadId, String);
 	},
-	async transaction(db: Wrapper, patientId: string, uploadId: string) {
+	async transaction(
+		db: TransactionDriver,
+		patientId: string,
+		uploadId: string,
+	) {
 		const patient = await db.findOne(Patients, {
 			_id: patientId,
 			owner: this.userId,

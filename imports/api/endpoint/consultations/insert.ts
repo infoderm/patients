@@ -8,7 +8,7 @@ import {books} from '../../books';
 
 import define from '../define';
 import {availability} from '../../availability';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 
 const {sanitize} = consultations;
@@ -18,7 +18,7 @@ export default define({
 	validate(consultation: any) {
 		check(consultation, Object);
 	},
-	async transaction(db: Wrapper, consultation: any) {
+	async transaction(db: TransactionDriver, consultation: any) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}

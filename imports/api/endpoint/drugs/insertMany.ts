@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
 import {Drugs} from '../../collection/drugs';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -10,7 +10,7 @@ export default define({
 	validate(drugs: any[]) {
 		for (const drug of drugs) check(drug, Object);
 	},
-	async transaction(db: Wrapper, drugs: any[]) {
+	async transaction(db: TransactionDriver, drugs: any[]) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}

@@ -1,9 +1,9 @@
 import {Meteor} from 'meteor/meteor';
-import Wrapper from '../transaction/Wrapper';
+import TransactionDriver from '../transaction/TransactionDriver';
 import Endpoint from './Endpoint';
 
 const compose = <T>(
-	db: Wrapper,
+	db: TransactionDriver,
 	endpoint: Endpoint<T>,
 	invocation: Partial<Meteor.MethodThisType>,
 	args: any[],

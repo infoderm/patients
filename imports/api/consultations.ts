@@ -9,7 +9,7 @@ import {books} from './books';
 
 import {Consultations} from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -19,7 +19,7 @@ export const DEFAULT_DURATION_IN_MILLISECONDS =
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
 	paid !== price;
 
-export const findLastConsultation = (db: Wrapper, filter) =>
+export const findLastConsultation = (db: TransactionDriver, filter) =>
 	db.findOne(
 		Consultations,
 		{
@@ -34,7 +34,7 @@ export const findLastConsultation = (db: Wrapper, filter) =>
 	);
 
 export const findLastConsultationInInterval = (
-	db: Wrapper,
+	db: TransactionDriver,
 	[begin, end]: [Date, Date],
 	filter,
 ) =>

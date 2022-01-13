@@ -4,7 +4,7 @@ import {Consultations} from '../../collection/consultations';
 import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: '/consultations/attach',
@@ -12,7 +12,11 @@ export default define({
 		check(consultationId, String);
 		check(uploadId, String);
 	},
-	async transaction(db: Wrapper, consultationId: string, uploadId: string) {
+	async transaction(
+		db: TransactionDriver,
+		consultationId: string,
+		uploadId: string,
+	) {
 		const consultation = await db.findOne(Consultations, {
 			_id: consultationId,
 			owner: this.userId,

@@ -6,23 +6,23 @@ import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
 import {dropId, dropIds} from '../../test/fixtures';
-import MetaWrapper from './MetaWrapper';
+import TestingTransactionDriver from './TestingTransactionDriver';
 import executeTransaction from './executeTransaction';
-import MinimongoWrapper from './MinimongoWrapper';
-import Wrapper from './Wrapper';
+import MeteorTransactionSimulationDriver from './MeteorTransactionSimulationDriver';
+import TransactionDriver from './TransactionDriver';
 
-const mongoWrapper = new MetaWrapper(async (txn) =>
+const MongoDriver = new TestingTransactionDriver(async (txn) =>
 	executeTransaction((db) => txn(db)),
 );
 
-const meteorWrapper = new MetaWrapper((txn) => {
-	const db = new MinimongoWrapper();
+const MeteorDriver = new TestingTransactionDriver((txn) => {
+	const db = new MeteorTransactionSimulationDriver();
 	return txn(db);
 });
 
-const it2 = (title, txn: (db: Wrapper) => () => Promise<any>) => {
-	it(`${title} (mongo)`, txn(mongoWrapper));
-	it(`${title} (meteor)`, txn(meteorWrapper));
+const it2 = (title, unit: (db: TransactionDriver) => () => Promise<any>) => {
+	it(`${title} (Mongo transaction execution)`, unit(MongoDriver));
+	it(`${title} (Meteor transaction simulation)`, unit(MeteorDriver));
 };
 
 const Tests = new Mongo.Collection<any>('test-8h9e8w89hf98239');
@@ -30,7 +30,7 @@ const Tests = new Mongo.Collection<any>('test-8h9e8w89hf98239');
 if (Meteor.isServer) {
 	describe('api', () => {
 		describe('transaction', () => {
-			describe('Wrapper interface', () => {
+			describe('driver interface', () => {
 				beforeEach(() => {
 					Tests.remove({});
 				});

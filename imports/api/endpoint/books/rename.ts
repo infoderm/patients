@@ -6,7 +6,7 @@ import {books} from '../../books';
 import {parseUint32StrictOrString} from '../../string';
 
 import define from '../define';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'books.changeBookNumber',
@@ -15,7 +15,7 @@ export default define({
 		check(newBookNumberString, String);
 	},
 	async transaction(
-		db: Wrapper,
+		db: TransactionDriver,
 		oldBookId: string,
 		newBookNumberString: string,
 	) {

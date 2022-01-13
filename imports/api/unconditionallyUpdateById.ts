@@ -1,13 +1,13 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 import Filter from './transaction/Filter';
 
 type OpReturnValue<T> = Promise<Mongo.Modifier<T>> | Mongo.Modifier<T>;
 
 type OpFunction<T> = (
-	db: Wrapper,
+	db: TransactionDriver,
 	existing: T,
 	...rest: any[]
 ) => OpReturnValue<T>;
@@ -21,7 +21,7 @@ const unconditionallyUpdateById = <T>(
 ) =>
 	async function (
 		this: Meteor.MethodThisType,
-		db: Wrapper,
+		db: TransactionDriver,
 		_id: string,
 		...rest: any[]
 	) {

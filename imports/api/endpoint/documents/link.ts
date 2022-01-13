@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
 import {Patients} from '../../collection/patients';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -12,7 +12,11 @@ export default define({
 		check(documentId, String);
 		check(patientId, String);
 	},
-	async transaction(db: Wrapper, documentId: string, patientId: string) {
+	async transaction(
+		db: TransactionDriver,
+		documentId: string,
+		patientId: string,
+	) {
 		const document = await db.findOne(Documents, {_id: documentId});
 		if (document === null || document.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own document');

@@ -21,7 +21,7 @@ import TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
 import subscribe from './publication/subscribe';
 import Publication from './publication/Publication';
-import Wrapper from './transaction/Wrapper';
+import TransactionDriver from './transaction/TransactionDriver';
 import Filter from './transaction/Filter';
 
 export const STATS_SUFFIX = '.stats';
@@ -175,7 +175,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			check(tagId, String);
 			check(newname, String);
 		},
-		async transaction(db: Wrapper, tagId: string, newname: string) {
+		async transaction(db: TransactionDriver, tagId: string, newname: string) {
 			const owner = this.userId;
 			const tag = await db.findOne(Collection, {
 				_id: tagId,
@@ -233,7 +233,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 		validate(tagId: string) {
 			check(tagId, String);
 		},
-		async transaction(db: Wrapper, tagId: string) {
+		async transaction(db: TransactionDriver, tagId: string) {
 			const owner = this.userId;
 			const tag = await db.findOne(Collection, {
 				_id: tagId,
@@ -264,7 +264,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			parentPublicationStats: statsPublication,
 		},
 
-		add: async (db: Wrapper, owner: string, name: string) => {
+		add: async (db: TransactionDriver, owner: string, name: string) => {
 			check(owner, String);
 			check(name, String);
 
@@ -288,7 +288,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			);
 		},
 
-		remove: async (db: Wrapper, owner: string, name: string) => {
+		remove: async (db: TransactionDriver, owner: string, name: string) => {
 			check(owner, String);
 			check(name, String);
 

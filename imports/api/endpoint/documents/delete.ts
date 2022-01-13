@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
 import {documents} from '../../documents';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -13,7 +13,7 @@ export default define({
 	validate(documentId: string) {
 		check(documentId, String);
 	},
-	async transaction(db: Wrapper, documentId: string) {
+	async transaction(db: TransactionDriver, documentId: string) {
 		const document = await db.findOne(Documents, {
 			_id: documentId,
 			owner: this.userId,

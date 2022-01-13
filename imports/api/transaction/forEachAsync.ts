@@ -1,10 +1,10 @@
 import snapshotTransaction from './snapshotTransaction';
-import MongoDBClientSessionWrapper from './ClientSessionWrapper';
+import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
 import Collection from './Collection';
 import Filter from './Filter';
 
 type ForEachAsyncCallback<T> = (
-	db: MongoDBClientSessionWrapper,
+	db: MongoTransactionExecutionDriver,
 	item: T,
 ) => Promise<any>;
 

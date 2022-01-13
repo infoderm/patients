@@ -4,7 +4,7 @@ import {availability} from '../../availability';
 
 import {Appointments} from '../../collection/appointments';
 import {ConsultationDocument} from '../../collection/consultations';
-import Wrapper from '../../transaction/Wrapper';
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
@@ -17,7 +17,7 @@ export default define({
 	},
 	transaction: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
-		async (db: Wrapper, existing) => {
+		async (db: TransactionDriver, existing) => {
 			const modifier: Mongo.Modifier<ConsultationDocument> = {
 				$set: {
 					isCancelled: false,
