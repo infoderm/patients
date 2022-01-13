@@ -90,17 +90,19 @@ if (Meteor.isServer) {
 						},
 					];
 
-					assert.deepEqual(dropIds(before), expected);
+					assert.sameDeepMembers(dropIds(before), expected);
 
 					await invoke(appointmentsCancel, {userId}, [appointmentId, '', '']);
 
 					const during = Availability.find().fetch();
-					assert.deepEqual(dropIds(during), [dropId(initialSlot(userId))]);
+					assert.sameDeepMembers(dropIds(during), [
+						dropId(initialSlot(userId)),
+					]);
 
 					await invoke(appointmentsUncancel, {userId}, [appointmentId]);
 					const after = Availability.find().fetch();
 
-					assert.deepEqual(dropIds(after), expected);
+					assert.sameDeepMembers(dropIds(after), expected);
 				});
 			});
 		});

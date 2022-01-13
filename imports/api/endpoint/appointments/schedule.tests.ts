@@ -30,7 +30,7 @@ if (Meteor.isServer) {
 
 					const actual = Availability.find().fetch();
 
-					assert.deepEqual(dropIds(actual), [
+					assert.sameDeepMembers(dropIds(actual), [
 						{
 							...slot(beginningOfTime(), begin, 0),
 							owner: userId,
