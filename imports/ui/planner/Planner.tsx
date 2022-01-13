@@ -7,7 +7,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
 
-import {useSettingCached} from '../../client/settings';
+import {useSettingCached} from '../settings/hooks';
 
 import FixedFab from '../button/FixedFab';
 

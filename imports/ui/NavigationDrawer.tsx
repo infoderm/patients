@@ -32,7 +32,7 @@ import CropFreeIcon from '@material-ui/icons/CropFree';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import SecurityIcon from '@material-ui/icons/Security';
 
-import {setSetting} from '../client/settings';
+import {setSetting} from './settings/hooks';
 import Tooltip from './accessibility/Tooltip';
 
 export const drawerWidthOpen = 215;

@@ -20,7 +20,7 @@ import {useCurrencyFormat} from '../../i18n/currency';
 
 import {onlyASCII} from '../../api/string';
 
-import {useSetting} from '../../client/settings';
+import {useSetting} from '../settings/hooks';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';

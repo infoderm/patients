@@ -38,7 +38,7 @@ import {dataURL as pngDataURL} from '../../util/png';
 import {useInsurancesFind} from '../../api/insurances';
 import {useDoctorsFind} from '../../api/doctors';
 import {useAllergiesFind} from '../../api/allergies';
-import {useSetting} from '../../client/settings';
+import {useSetting} from '../settings/hooks';
 
 import eidParseBirthdate from '../../api/eidParseBirthdate';
 import eidFormatBirthdate from '../../api/eidFormatBirthdate';

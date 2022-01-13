@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 import Chip, {ChipProps} from '@material-ui/core/Chip';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import {InsuranceFields} from '../../api/collection/insurances';
 

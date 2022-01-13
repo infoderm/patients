@@ -3,7 +3,7 @@ import {match} from 'react-router-dom';
 
 import {books} from '../../api/books';
 
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../util/uri';
 
 import TagDetails from '../tags/TagDetails';
 

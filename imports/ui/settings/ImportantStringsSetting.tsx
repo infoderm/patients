@@ -2,8 +2,6 @@ import React from 'react';
 
 import {onlyLowerCaseASCII} from '../../api/string';
 
-// import {settings} from '../../client/settings';
-
 import InputManySetting from './InputManySetting';
 
 const KEY = 'important-strings';

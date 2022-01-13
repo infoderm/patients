@@ -5,7 +5,7 @@ import {filter} from '@iterable-iterator/filter';
 
 import {msToString, units} from '../../api/duration';
 
-// import {settings} from '../../client/settings';
+// import {settings} from '../settings/hooks';
 
 import InputManySetting from './InputManySetting';
 

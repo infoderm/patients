@@ -10,7 +10,7 @@ import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import TextField from '../input/TextField';
 
-import {useSetting} from '../../client/settings';
+import {useSetting} from '../settings/hooks';
 
 import CurrencyAmountInput from '../input/CurrencyAmountInput';
 

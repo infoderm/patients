@@ -3,7 +3,7 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import {myDecodeURIComponent} from '../../client/uri';
+import {myDecodeURIComponent} from '../../util/uri';
 
 import useRandom from '../hooks/useRandom';
 import PatientsObservedSearchResults from '../patients/PatientsObservedSearchResults';

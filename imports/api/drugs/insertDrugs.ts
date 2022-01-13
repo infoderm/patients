@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
-import call from '../api/endpoint/call';
-import insertMany from '../api/endpoint/drugs/insertMany';
+import call from '../endpoint/call';
+import insertMany from '../endpoint/drugs/insertMany';
 
 export default function insertDrugs(fd) {
 	let i = 0;

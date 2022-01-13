@@ -4,7 +4,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
-import colorizeText from '../../client/colorizeText';
+import colorizeText from '../text/colorizeText';
 
 const ReadOnlyColorizedTextArea = (props) => {
 	const {className, label, rowsMax, dict, value} = props;

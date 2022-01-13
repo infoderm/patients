@@ -1,11 +1,11 @@
 import {useMemo} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
-import {Settings} from '../api/collection/settings';
-import {settings as _settings} from '../api/settings';
-import _subscribe from '../api/publication/subscribe';
-import byKey from '../api/publication/settings/byKey';
-import call from '../api/endpoint/call';
-import update from '../api/endpoint/settings/update';
+import {Settings} from '../../api/collection/settings';
+import {settings as _settings} from '../../api/settings';
+import _subscribe from '../../api/publication/subscribe';
+import byKey from '../../api/publication/settings/byKey';
+import call from '../../api/endpoint/call';
+import update from '../../api/endpoint/settings/update';
 
 const {defaults, methods} = _settings;
 

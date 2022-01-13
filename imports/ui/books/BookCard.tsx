@@ -11,7 +11,7 @@ import StaticTagCard from '../tags/StaticTagCard';
 
 import {books} from '../../api/books';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import {useDateFormatRange} from '../../i18n/datetime';
 import useBookStats from './useBookStats';

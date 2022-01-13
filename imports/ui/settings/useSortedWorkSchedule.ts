@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
-import {useSettingCached} from '../../client/settings';
 import useWorkScheduleSort from './useWorkScheduleSort';
+import {useSettingCached} from './hooks';
 
 const useSortedWorkSchedule = () => {
 	const sort = useWorkScheduleSort();

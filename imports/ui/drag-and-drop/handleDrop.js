@@ -1,6 +1,6 @@
-import insertPatient from './insertPatient';
-import insertDrugs from './insertDrugs';
-import insertDocument from './insertDocument';
+import insertPatient from '../../api/patients/insertPatient';
+import insertDrugs from '../../api/drugs/insertDrugs';
+import insertDocument from '../../api/documents/insertDocument';
 
 function unpack(data, item) {
 	if (item.kind === 'file') {

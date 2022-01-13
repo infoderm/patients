@@ -40,7 +40,7 @@ import {useDateMask} from '../../i18n/datetime';
 import {msToString} from '../../api/duration';
 
 import {patients} from '../../api/patients';
-import {useSetting} from '../../client/settings';
+import {useSetting} from '../settings/hooks';
 
 import useIntersectingEvents from '../events/useIntersectingEvents';
 

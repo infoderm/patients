@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import TagDetails from '../tags/TagDetails';
 
-import {myEncodeURIComponent, myDecodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent, myDecodeURIComponent} from '../../util/uri';
 
 import useObservedPatients from '../patients/useObservedPatients';
 import PagedPatientsList from '../patients/PagedPatientsList';

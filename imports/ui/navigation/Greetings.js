@@ -4,7 +4,7 @@ import startOfDay from 'date-fns/startOfDay';
 import addHours from 'date-fns/addHours';
 import isAfter from 'date-fns/isAfter';
 
-import {TIME_BREAK, TIME_EVENING} from '../../client/constants';
+import {TIME_BREAK, TIME_EVENING} from '../constants';
 import NoContent from './NoContent';
 
 export default function Greetings() {

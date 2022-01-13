@@ -3,9 +3,9 @@ import {useMemo} from 'react';
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
 
-import {useSettingCached} from '../../client/settings';
 import {units as durationUnits} from '../../api/duration';
 import {mod} from '../../util/artithmetic';
+import {useSettingCached} from './hooks';
 
 export const weekSlotsCyclicOrder = (weekStartsOn: number) =>
 	key(increasing, ({beginModuloWeek}: {beginModuloWeek: number}) =>

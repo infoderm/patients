@@ -24,7 +24,7 @@ import setHours from 'date-fns/setHours';
 import {useDateFormat} from '../../i18n/datetime';
 
 import useEvents from '../events/useEvents';
-import {useSettingCached} from '../../client/settings';
+import {useSettingCached} from '../settings/hooks';
 
 import useAvailability from '../availability/useAvailability';
 import {SlotDocument} from '../../api/collection/availability';

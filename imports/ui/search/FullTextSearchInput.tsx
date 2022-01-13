@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import {fade} from '@material-ui/core/styles/colorManipulator';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import SearchBox from '../input/SearchBox';
 

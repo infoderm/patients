@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
-import {useSettingCached} from '../../client/settings';
 import {weekSlotsCyclicOrder} from './useWorkScheduleSort';
+import {useSettingCached} from './hooks';
 
 const compare = weekSlotsCyclicOrder(0);
 const sort = (items: any[]) => items.slice().sort(compare);

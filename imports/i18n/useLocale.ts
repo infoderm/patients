@@ -1,4 +1,4 @@
-import {useSettingCached} from '../client/settings';
+import {useSettingCached} from '../ui/settings/hooks';
 
 const useLocale = () => {
 	const {value} = useSettingCached('lang');

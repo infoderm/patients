@@ -10,7 +10,7 @@ import Chip, {ChipProps} from '@material-ui/core/Chip';
 
 import {colord} from 'colord';
 
-import {myEncodeURIComponent} from '../../client/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import {AllergyDocument} from '../../api/collection/allergies';
 

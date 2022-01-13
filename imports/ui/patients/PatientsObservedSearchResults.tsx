@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {myDecodeURIComponent} from '../../client/uri';
+import {myDecodeURIComponent} from '../../util/uri';
 import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 
