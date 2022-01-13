@@ -108,22 +108,27 @@ if (Meteor.isServer) {
 					await db.insertOne(Tests, {z});
 					assert.equal(Tests.find().count(), 3);
 					assert.deepInclude(await db.deleteOne(Tests, {w}), {
+						acknowledged: true,
 						deletedCount: 0,
 					});
 					assert.equal(Tests.find().count(), 3);
 					assert.deepInclude(await db.deleteOne(Tests, {x}), {
+						acknowledged: true,
 						deletedCount: 1,
 					});
 					assert.equal(Tests.find().count(), 2);
 					assert.deepInclude(await db.deleteOne(Tests, {}), {
+						acknowledged: true,
 						deletedCount: 1,
 					});
 					assert.equal(Tests.find().count(), 1);
 					assert.deepInclude(await db.deleteOne(Tests, {}), {
+						acknowledged: true,
 						deletedCount: 1,
 					});
 					assert.equal(Tests.find().count(), 0);
 					assert.deepInclude(await db.deleteOne(Tests, {}), {
+						acknowledged: true,
 						deletedCount: 0,
 					});
 					assert.equal(Tests.find().count(), 0);
@@ -140,18 +145,22 @@ if (Meteor.isServer) {
 					await db.insertOne(Tests, {z});
 					assert.equal(Tests.find().count(), 3);
 					assert.deepInclude(await db.deleteMany(Tests, {w}), {
+						acknowledged: true,
 						deletedCount: 0,
 					});
 					assert.equal(Tests.find().count(), 3);
 					assert.deepInclude(await db.deleteMany(Tests, {x}), {
+						acknowledged: true,
 						deletedCount: 1,
 					});
 					assert.equal(Tests.find().count(), 2);
 					assert.deepInclude(await db.deleteMany(Tests, {}), {
+						acknowledged: true,
 						deletedCount: 2,
 					});
 					assert.equal(Tests.find().count(), 0);
 					assert.deepInclude(await db.deleteMany(Tests, {}), {
+						acknowledged: true,
 						deletedCount: 0,
 					});
 					assert.equal(Tests.find().count(), 0);

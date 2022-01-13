@@ -1,11 +1,5 @@
 import {ClientSession} from 'mongodb';
-import Wrapper, {
-	DeleteResult,
-	IdType,
-	IdTypes,
-	Options,
-	UpdateResult,
-} from './Wrapper';
+import Wrapper, {IdType, IdTypes, Options, UpdateResult} from './Wrapper';
 
 import Collection from './Collection';
 import Filter from './Filter';
@@ -81,17 +75,33 @@ export default class MongoDBClientSessionWrapper implements Wrapper {
 	}
 
 	async deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return Collection.rawCollection().deleteOne(
+		const {
+			result: {ok},
+			deletedCount,
+		} = await Collection.rawCollection().deleteOne(
 			filter,
 			this._makeOptions(options),
-		) as unknown as Promise<DeleteResult>;
+		);
+
+		return {
+			acknowledged: Boolean(ok),
+			deletedCount,
+		};
 	}
 
 	async deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return Collection.rawCollection().deleteMany(
+		const {
+			result: {ok},
+			deletedCount,
+		} = await Collection.rawCollection().deleteMany(
 			filter,
 			this._makeOptions(options),
-		) as unknown as Promise<DeleteResult>;
+		);
+
+		return {
+			acknowledged: Boolean(ok),
+			deletedCount,
+		};
 	}
 
 	async updateOne<T, U = T>(
