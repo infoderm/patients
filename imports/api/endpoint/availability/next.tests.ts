@@ -11,8 +11,7 @@ import cancelAppointment from '../appointments/cancel';
 
 import invoke from '../invoke';
 
-import {Consultations} from '../../collection/consultations.mock';
-import {newAppointment} from '../../collection/appointments.mock';
+import {Appointments, newAppointment} from '../../collection/appointments.mock';
 import {Availability} from '../../collection/availability.mock';
 import {units} from '../../duration';
 import {initialSlot, slot} from '../../availability';
@@ -45,7 +44,7 @@ if (Meteor.isServer) {
 		describe('availability', () => {
 			describe('next', () => {
 				beforeEach(() => {
-					Consultations.remove({});
+					Appointments.remove({});
 					Availability.remove({});
 				});
 
