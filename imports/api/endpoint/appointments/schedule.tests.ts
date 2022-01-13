@@ -5,8 +5,7 @@ import {assert} from 'chai';
 import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
-import {Consultations} from '../../collection/consultations.mock';
-import {newAppointment} from '../../collection/appointments.mock';
+import {Appointments, newAppointment} from '../../collection/appointments.mock';
 import {Availability} from '../../collection/availability.mock';
 import {slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../util/datetime';
@@ -17,7 +16,7 @@ if (Meteor.isServer) {
 		describe('appointments', () => {
 			describe('schedule', () => {
 				beforeEach(() => {
-					Consultations.remove({});
+					Appointments.remove({});
 					Availability.remove({});
 				});
 
@@ -26,7 +25,7 @@ if (Meteor.isServer) {
 
 					await newAppointment({userId});
 
-					const {begin, end} = Consultations.findOne();
+					const {begin, end} = Appointments.findOne();
 
 					const actual = Availability.find().fetch();
 
