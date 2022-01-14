@@ -1,11 +1,28 @@
 import {assert, expect} from 'chai';
 
+import {Random} from 'meteor/random';
+import {cleanup} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+export const randomUserId = () => Random.id();
+export const randomPassword = () => Random.id();
+
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
-		describe(title, fn);
+		describe(title, () => {
+			afterEach(
+				async () =>
+					new Promise<void>((resolve) => {
+						Meteor.logout(() => {
+							resolve();
+						});
+						cleanup();
+					}),
+			);
+
+			fn();
+		});
 	}
 };
 

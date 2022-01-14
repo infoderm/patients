@@ -83,6 +83,7 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 			<form className={classes.form} autoComplete="off">
 				<TextField
 					autoFocus
+					id="register-popover-input-username"
 					error={Boolean(errorUsername)}
 					helperText={errorUsername}
 					className={classes.row}
@@ -91,6 +92,7 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 					onChange={(e) => setUsername(e.target.value)}
 				/>
 				<TextField
+					id="register-popover-input-password"
 					error={Boolean(errorPassword)}
 					helperText={errorPassword}
 					className={classes.row}

@@ -1,22 +1,49 @@
+// eslint-disable-next-line import/no-unassigned-import
+import 'regenerator-runtime/runtime.js';
 import React from 'react';
-import {render} from '@testing-library/react';
-import {assert} from 'chai';
+import {render, waitForElementToBeRemoved} from '@testing-library/react';
 
-import {client} from '../test/fixtures';
+import {client, randomPassword, randomUserId} from '../test/fixtures';
 import App from './App';
 
+const setup = async (jsx: JSX.Element) => {
+	const {default: userEvent} = await import('@testing-library/user-event');
+	return {
+		user: userEvent,
+		...render(jsx),
+	};
+};
+
 const renderApp = () => render(<App />);
+const setupApp = async () => setup(<App />);
 
 client(__filename, () => {
 	it('should render', () => {
 		const {getByRole} = renderApp();
 		getByRole('heading', {name: 'Loading...'});
-		assert(true);
 	});
 
 	it('should load', async () => {
-		const {findByRole} = renderApp();
+		const {getByRole, findByRole} = renderApp();
+		await waitForElementToBeRemoved(() => {
+			return getByRole('heading', {name: 'Loading...'});
+		});
 		await findByRole('heading', {name: 'Please sign in'});
-		assert(true);
+	});
+
+	it('should allow to register a new user', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const {getByRole, findByRole, getByLabelText, user} = await setupApp();
+		user.click(await findByRole('button', {name: 'Sign in'}));
+		user.click(await findByRole('button', {name: 'Create account?'}));
+		await findByRole('button', {name: 'Register'});
+		user.type(getByLabelText('Username'), username);
+		user.type(getByLabelText('Password'), password);
+		user.click(getByRole('button', {name: 'Register'}));
+		await waitForElementToBeRemoved(() => {
+			return getByRole('button', {name: 'Register'});
+		});
+		user.click(await findByRole('button', {name: `Logged in as ${username}`}));
 	});
 });
