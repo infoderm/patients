@@ -14,6 +14,20 @@ The stack (provided by  [Meteor](https://meteor.com)):
   - **Server**: [Node.js](https://nodejs.org)
   - **Client**: [React](https://reactjs.org)
 
+The tests are declared via [Mocha](https://github.com/mochajs/mocha) thanks to
+[`meteor-testing:mocha`](https://packosphere.com/meteortesting/mocha).
+
+> :bulb: We would replace Mocha by [AVA](https://github.com/avajs/ava) or
+> [Jest](https://github.com/facebook/jest) here and now if only there was a
+> Meteor package for that.
+
+User Interface tests are facilitated by
+[`@testing-library/react`](https://github.com/testing-library/react-testing-library)
+and
+[`@testing-library/user-event`](https://github.com/testing-library/user-event).
+
+> :warning: Code coverage is currently both incomplete and broken most probably
+> due to a TypeScript/Istanbul incompatibility.
 
 In what follows, `dev` refers to the development machine, and `prod` refers to
 the production machine.
