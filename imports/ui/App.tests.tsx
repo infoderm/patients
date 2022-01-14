@@ -1,23 +1,22 @@
 import React from 'react';
-import {configure, shallow, mount} from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import {render} from '@testing-library/react';
 import {assert} from 'chai';
 
+import {client} from '../test/fixtures';
 import App from './App';
 
-configure({adapter: new Adapter()});
+const renderApp = () => render(<App />);
 
-if (Meteor.isClient) {
-	describe('App', () => {
-		it('should render (shallow)', () => {
-			shallow(<App />);
-			assert(true);
-		});
-
-		it('should render (mount)', () => {
-			const item = mount(<App />);
-			assert.equal(item.find('h3').text(), 'Loading...');
-			item.unmount();
-		});
+client(__filename, () => {
+	it('should render', () => {
+		const {getByRole} = renderApp();
+		getByRole('heading', {name: 'Loading...'});
+		assert(true);
 	});
-}
+
+	it('should load', async () => {
+		const {findByRole} = renderApp();
+		await findByRole('heading', {name: 'Please sign in'});
+		assert(true);
+	});
+});
