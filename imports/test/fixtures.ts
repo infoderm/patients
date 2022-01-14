@@ -3,6 +3,18 @@ import {assert, expect} from 'chai';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+export const client = (title, fn) => {
+	if (Meteor.isClient) {
+		describe(title, fn);
+	}
+};
+
+export const server = (title, fn) => {
+	if (Meteor.isServer) {
+		describe(title, fn);
+	}
+};
+
 export const throws = async (
 	fn: () => Promise<any>,
 	expected: string | RegExp,
