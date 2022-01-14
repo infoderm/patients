@@ -18,7 +18,10 @@
         "faker",
         "notistack",
         "total-order",
-        "typescript"
+        "typescript",
+        "react-router",
+        "react-router-dom",
+        "@types/react-router-dom"
       ],
       "matchPackagePrefixes": [
         "@combinatorics/",
