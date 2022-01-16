@@ -9,7 +9,7 @@ import App from './App';
 const setup = async (jsx: JSX.Element) => {
 	const {default: userEvent} = await import('@testing-library/user-event');
 	return {
-		user: userEvent,
+		user: userEvent.setup(),
 		...render(jsx),
 	};
 };
@@ -35,15 +35,17 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const {getByRole, findByRole, getByLabelText, user} = await setupApp();
-		user.click(await findByRole('button', {name: 'Sign in'}));
-		user.click(await findByRole('button', {name: 'Create account?'}));
+		await user.click(await findByRole('button', {name: 'Sign in'}));
+		await user.click(await findByRole('button', {name: 'Create account?'}));
 		await findByRole('button', {name: 'Register'});
-		user.type(getByLabelText('Username'), username);
-		user.type(getByLabelText('Password'), password);
-		user.click(getByRole('button', {name: 'Register'}));
+		await user.type(getByLabelText('Username'), username);
+		await user.type(getByLabelText('Password'), password);
+		await user.click(getByRole('button', {name: 'Register'}));
 		await waitForElementToBeRemoved(() => {
 			return getByRole('button', {name: 'Register'});
 		});
-		user.click(await findByRole('button', {name: `Logged in as ${username}`}));
+		await user.click(
+			await findByRole('button', {name: `Logged in as ${username}`}),
+		);
 	});
 });
