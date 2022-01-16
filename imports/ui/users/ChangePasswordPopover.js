@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {Accounts} from 'meteor/accounts-base';
 
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
@@ -9,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
 import {useSnackbar} from 'notistack';
+import changePassword from '../../api/user/changePassword';
+
 import {useStyles} from './Popover';
 
 const ChangePasswordPopover = ({anchorEl, handleClose}) => {
@@ -19,18 +20,27 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 	const [errorOldPassword, setErrorOldPassword] = useState('');
 	const [errorNewPassword, setErrorNewPassword] = useState('');
 
-	const changePassword = (event) => {
+	const uiChangePassword = async (event) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Changing password...', {
 			variant: 'info',
 			persist: true,
 		});
-		Accounts.changePassword(oldPassword, newPassword, (err) => {
-			closeSnackbar(key);
-			if (err) {
-				const {message} = err;
+		return changePassword(oldPassword, newPassword).then(
+			() => {
+				closeSnackbar(key);
+				const message = 'Password changed successfully!';
+				enqueueSnackbar(message, {variant: 'success'});
+				setErrorOldPassword('');
+				setErrorNewPassword('');
+				handleClose();
+			},
+			(error) => {
+				closeSnackbar(key);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
 				enqueueSnackbar(message, {variant: 'error'});
-				const reason = err instanceof Meteor.Error ? err.reason : undefined;
+				const reason = error instanceof Meteor.Error ? error.reason : undefined;
 				if (reason === 'Incorrect password' || reason === 'Match failed') {
 					setErrorOldPassword('Incorrect password');
 					setErrorNewPassword('');
@@ -41,14 +51,8 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 					setErrorOldPassword('');
 					setErrorNewPassword('');
 				}
-			} else {
-				const message = 'Password changed successfully!';
-				enqueueSnackbar(message, {variant: 'success'});
-				setErrorOldPassword('');
-				setErrorNewPassword('');
-				handleClose();
-			}
-		});
+			},
+		);
 	};
 
 	return (
@@ -91,7 +95,7 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 					type="submit"
 					color="secondary"
 					className={classes.row}
-					onClick={changePassword}
+					onClick={uiChangePassword}
 				>
 					Change password
 				</Button>
