@@ -1,5 +1,3 @@
-import {Meteor} from 'meteor/meteor';
-
 import React, {useState} from 'react';
 
 import Button from '@material-ui/core/Button';
@@ -9,27 +7,33 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import {useSnackbar} from 'notistack';
 
+import logout from '../../api/user/logout';
+
 import ChangePasswordPopover from './ChangePasswordPopover';
 
 const Logout = () => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const logout = () => {
+	const uiLogout = async () => {
 		const key = enqueueSnackbar('Logging out...', {
 			variant: 'info',
 			persist: true,
 		});
-		Meteor.logout((err) => {
-			closeSnackbar(key);
-			if (err) {
-				enqueueSnackbar(err.message, {variant: 'error'});
-			} else {
+		return logout().then(
+			() => {
+				closeSnackbar(key);
 				enqueueSnackbar('See you soon!', {variant: 'success'});
-			}
-		});
+			},
+			(error) => {
+				closeSnackbar(key);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
+				enqueueSnackbar(message, {variant: 'error'});
+			},
+		);
 	};
 
-	return <MenuItem onClick={logout}>Logout</MenuItem>;
+	return <MenuItem onClick={uiLogout}>Logout</MenuItem>;
 };
 
 const OptionsPopover = ({anchorEl, handleClose, changeMode}) => {

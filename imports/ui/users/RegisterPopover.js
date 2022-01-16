@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {Accounts} from 'meteor/accounts-base';
 
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
@@ -9,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 
 import {useSnackbar} from 'notistack';
+import createUserWithPassword from '../../api/user/createUserWithPassword';
+
 import {useStyles} from './Popover';
 
 const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
@@ -19,18 +20,23 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 	const [errorUsername, setErrorUsername] = useState('');
 	const [errorPassword, setErrorPassword] = useState('');
 
-	const register = (event) => {
+	const register = async (event) => {
 		event.preventDefault();
 		const key = enqueueSnackbar('Creating account...', {
 			variant: 'info',
 			persist: true,
 		});
-		Accounts.createUser({username, password}, (err) => {
-			closeSnackbar(key);
-			if (err) {
-				const {message} = err;
+		return createUserWithPassword(username, password).then(
+			() => {
+				closeSnackbar(key);
+				enqueueSnackbar('Welcome!', {variant: 'success'});
+			},
+			(error) => {
+				closeSnackbar(key);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
 				enqueueSnackbar(message, {variant: 'error'});
-				const reason = err instanceof Meteor.Error ? err.reason : undefined;
+				const reason = error instanceof Meteor.Error ? error.reason : undefined;
 				switch (reason) {
 					case 'Need to set a username or email': {
 						setErrorUsername('Please enter a username');
@@ -58,10 +64,8 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 						setErrorPassword('');
 					}
 				}
-			} else {
-				enqueueSnackbar('Welcome!', {variant: 'success'});
-			}
-		});
+			},
+		);
 	};
 
 	return (

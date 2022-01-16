@@ -9,6 +9,8 @@ import Popover from '@material-ui/core/Popover';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {useSnackbar} from 'notistack';
+import loginWithPassword from '../../api/user/loginWithPassword';
+
 import {useStyles} from './Popover';
 
 const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
@@ -20,20 +22,26 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 	const [errorPassword, setErrorPassword] = useState('');
 	const [loggingIn, setLoggingIn] = useState(false);
 
-	const login = (event) => {
+	const login = async (event) => {
 		event.preventDefault();
 		setLoggingIn(true);
 		const key = enqueueSnackbar('Logging in...', {
 			variant: 'info',
 			persist: true,
 		});
-		Meteor.loginWithPassword(username, password, (err) => {
-			setLoggingIn(false);
-			closeSnackbar(key);
-			if (err) {
-				const {message} = err;
+		return loginWithPassword(username, password).then(
+			() => {
+				setLoggingIn(false);
+				closeSnackbar(key);
+				enqueueSnackbar('Welcome back!', {variant: 'success'});
+			},
+			(error) => {
+				setLoggingIn(false);
+				closeSnackbar(key);
+				const message =
+					error instanceof Error ? error.message : 'unknown error';
 				enqueueSnackbar(message, {variant: 'error'});
-				const reason = err instanceof Meteor.Error ? err.reason : undefined;
+				const reason = error instanceof Meteor.Error ? error.reason : undefined;
 				switch (reason) {
 					case 'User not found': {
 						setErrorUsername(reason);
@@ -61,10 +69,8 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 						setErrorPassword('');
 					}
 				}
-			} else {
-				enqueueSnackbar('Welcome back!', {variant: 'success'});
-			}
-		});
+			},
+		);
 	};
 
 	return (
