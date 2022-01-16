@@ -90,3 +90,6 @@ import '../uploads/delete';
 import '../uploads/rename';
 // eslint-disable-next-line import/no-unassigned-import
 import '../uploads/restore';
+
+// eslint-disable-next-line import/no-unassigned-import
+import '../testing/reset';

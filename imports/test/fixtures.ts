@@ -1,22 +1,30 @@
 import {assert, expect} from 'chai';
 
 import {Random} from 'meteor/random';
-import {cleanup} from '@testing-library/react';
+import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 import logout from '../api/user/logout';
+import invoke from '../api/endpoint/invoke';
+import call from '../api/endpoint/call';
+import reset from '../api/endpoint/testing/reset';
 
 export const randomUserId = () => Random.id();
 export const randomPassword = () => Random.id();
 
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
-		describe(title, () => {
-			afterEach(async () => {
-				await logout();
-				cleanup();
-			});
+		const cleanup = async () => {
+			await logout();
+			unmount();
+			await call(reset);
+		};
 
+		const prepare = cleanup;
+
+		describe(title, () => {
+			beforeEach(prepare);
+			afterEach(cleanup);
 			fn();
 		});
 	}
@@ -24,7 +32,17 @@ export const client = (title, fn) => {
 
 export const server = (title, fn) => {
 	if (Meteor.isServer) {
-		describe(title, fn);
+		const cleanup = async () => {
+			await invoke(reset, {}, []);
+		};
+
+		const prepare = cleanup;
+
+		describe(title, () => {
+			beforeEach(prepare);
+			afterEach(cleanup);
+			fn();
+		});
 	}
 };
 

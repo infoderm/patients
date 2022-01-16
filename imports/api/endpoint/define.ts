@@ -8,7 +8,8 @@ import Transaction from './Transaction';
 import Executor from './Executor';
 
 const define = <T>(params: Params<T>): Endpoint<T> => {
-	const {name, validate, run, simulate, transaction, options} = params;
+	const {testOnly, name, validate, run, simulate, transaction, options} =
+		params;
 	const executor =
 		(Meteor.isServer ? run : simulate) ?? wrapTransaction(transaction);
 
@@ -20,11 +21,13 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 		options,
 	};
 
-	Meteor.methods({
-		[params.name](...args: any[]) {
-			return invoke(endpoint, this, args);
-		},
-	});
+	if (!testOnly || Meteor.isTest || Meteor.isAppTest) {
+		Meteor.methods({
+			[params.name](...args: any[]) {
+				return invoke(endpoint, this, args);
+			},
+		});
+	}
 
 	return endpoint;
 };
