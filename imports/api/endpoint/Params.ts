@@ -4,6 +4,7 @@ import Transaction from './Transaction';
 import Validator from './Validator';
 
 interface ParamsCommon<T> {
+	readonly testOnly?: boolean;
 	readonly name: string;
 	readonly validate: Validator;
 	readonly options?: Options<T>;
