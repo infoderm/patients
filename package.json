@@ -113,6 +113,7 @@
     "@babel/plugin-syntax-jsx": "7.16.7",
     "@faker-js/faker": "5.5.3",
     "@fontsource/roboto": "4.5.1",
+    "@testing-library/dom": "8.11.2",
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "14.0.0-beta.7",
     "@types/chai": "4.3.0",
@@ -228,9 +229,8 @@
     "overrides": [
       {
         "files": [
-          "client/*.js",
-          "imports/ui/**/*.js",
-          "imports/client/*.js"
+          "**/client/**/*.{js,jsx,ts,tsx}",
+          "imports/ui/**/*.{js,jsx,ts,tsx}"
         ],
         "env": "browser"
       },
@@ -238,7 +238,8 @@
         "files": [
           "imports/api/**/*.mock.{js,jsx,ts,tsx}",
           "imports/**/*.tests.{js,jsx,ts,tsx}",
-          "imports/test/**/*.{js,jsx,ts,tsx}"
+          "imports/test/**/*.{js,jsx,ts,tsx}",
+          "test/**/*.app-tests.{js,jsx,ts,tsx}"
         ],
         "env": [
           "meteor",

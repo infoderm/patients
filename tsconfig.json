@@ -37,6 +37,7 @@
     "server/**/*",
     "client/**/*",
     "imports/**/*",
+    "test/**/*",
     ".upgrade/**/*"
   ]
 }

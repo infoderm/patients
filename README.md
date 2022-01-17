@@ -22,7 +22,8 @@ The tests are declared via [Mocha](https://github.com/mochajs/mocha) thanks to
 > Meteor package for that.
 
 User Interface tests are facilitated by
-[`@testing-library/react`](https://github.com/testing-library/react-testing-library)
+[`@testing-library/react`](https://github.com/testing-library/react-testing-library),
+[`@testing-library/dom`](https://github.com/testing-library/dom-testing-library),
 and
 [`@testing-library/user-event`](https://github.com/testing-library/user-event).
 
