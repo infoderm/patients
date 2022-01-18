@@ -5,6 +5,7 @@ import {Documents} from './collection/documents';
 import decodeText from './documents/decodeText';
 import detectTextEncoding from './documents/detectTextEncoding';
 import parseHealthOne from './documents/parseHealthOne';
+import parseMedidoc from './documents/parseMedidoc';
 
 const DETECT_REGEX_HEALTHONE = /^A1\\\d+\\/;
 const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/;
@@ -47,21 +48,33 @@ async function* sanitize({patientId, format: formatHint, array}) {
 		const format = formatHint ?? detectFormat(decoded);
 
 		try {
-			switch (format) {
-				case 'healthone':
-					for await (const document of parseHealthOne(decoded, mangled)) {
-						yield {
-							...document,
-							patientId,
-							format,
-							encoding,
-						};
-					}
+			if (format === 'healthone') {
+				for await (const document of parseHealthOne(decoded, mangled)) {
+					yield {
+						...document,
+						patientId,
+						format,
+						encoding,
+					};
+				}
 
-					return;
-				default:
-					throw new Error(`unknown format: ${format}`);
+				return;
 			}
+
+			if (format === 'DMA-REP') {
+				for await (const document of parseMedidoc(decoded, mangled)) {
+					yield {
+						...document,
+						patientId,
+						format,
+						encoding,
+					};
+				}
+
+				return;
+			}
+
+			throw new Error(`unknown format: ${format}`);
 		} catch (error: unknown) {
 			const message =
 				error instanceof Error ? error.message : 'unknown parsing error';
