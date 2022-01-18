@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
+import './polyfill';
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {WebApp} from 'meteor/webapp';

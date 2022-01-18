@@ -20,6 +20,7 @@
     }
   },
   "dependencies": {
+    "@async-iterable-iterator/async-iterable-to-array": "0.0.1",
     "@babel/runtime": "^7.16.7",
     "@combinatorics/n-combinations": "^0.1.1",
     "@functional-abstraction/operator": "^1.0.4",
@@ -61,6 +62,7 @@
     "chardet": "^1.4.0",
     "classnames": "^2.3.1",
     "colord": "^2.9.2",
+    "core-js": "^3.20.3",
     "date-fns": "^2.28.0",
     "debounce": "^1.2.1",
     "downshift": "^6.1.7",
@@ -75,6 +77,7 @@
     "keycode": "^2.2.1",
     "lodash.deburr": "^4.1.0",
     "lodash.omit": "^4.5.0",
+    "medidoc": "1.0.1",
     "meteor-node-stubs": "^1.1.0",
     "notistack": "^1.0.10",
     "papaparse": "^5.3.1",
