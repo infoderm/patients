@@ -13,6 +13,7 @@ export default function DocumentsForPatientStatic({
 	perpage,
 	...rest
 }) {
+	console.debug(documents);
 	return (
 		<>
 			{documents.length === 0 && (
