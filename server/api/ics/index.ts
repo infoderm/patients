@@ -22,6 +22,7 @@ const response = async (token, IPAddress, query, res) => {
 	let permissions;
 
 	try {
+		// NOTE this is a transaction
 		permissions = await getPermissionsForToken(token, IPAddress);
 	} catch (error: unknown) {
 		if (error instanceof PermissionTokenValidationError) {
@@ -31,6 +32,8 @@ const response = async (token, IPAddress, query, res) => {
 
 		throw error;
 	}
+
+	// NOTE no need for a transaction for the rest, for now
 
 	const {owner, userId} = permissions;
 
