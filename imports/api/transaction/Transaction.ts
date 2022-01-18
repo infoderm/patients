@@ -1,4 +1,4 @@
-import ClientSessionWrapper from './ClientSessionWrapper';
+import MongoDBClientSessionWrapper from './ClientSessionWrapper';
 
-type Transaction = (txn: ClientSessionWrapper) => Promise<any>;
+type Transaction = (db: MongoDBClientSessionWrapper) => Promise<any>;
 export default Transaction;
