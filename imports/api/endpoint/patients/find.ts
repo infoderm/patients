@@ -14,6 +14,6 @@ export default define({
 		return Patients.find({...query, owner: this.userId}, options).fetch();
 	},
 	simulate(_query: any, _options: any) {
-		return undefined;
+		throw new Error('simulation not-implemented');
 	},
 });
