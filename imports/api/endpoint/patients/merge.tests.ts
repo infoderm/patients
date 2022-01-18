@@ -5,20 +5,21 @@ import {assert} from 'chai';
 import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
-import totalOrder from 'total-order';
-import {sorted} from '@iterable-iterator/sorted';
-
-import invoke from './endpoint/invoke';
-import patientsAttach from './endpoint/patients/attach';
-import patientsMerge from './endpoint/patients/merge';
-import {Patients, patients, PatientDocument} from './collection/patients.mock';
-import {Consultations} from './collection/consultations.mock';
-import {Documents} from './collection/documents.mock';
+import invoke from '../invoke';
+import insertConsultation from '../consultations/insert';
+import {
+	Patients,
+	patients,
+	PatientDocument,
+} from '../../collection/patients.mock';
+import {Consultations} from '../../collection/consultations.mock';
+import {Documents} from '../../collection/documents.mock';
 // eslint-disable-next-line import/no-unassigned-import
-import './uploads.mock';
-import {Attachments} from './collection/attachments.mock';
-
-const setLike = (x) => sorted(totalOrder, x);
+import '../../uploads.mock';
+import {Attachments} from '../../collection/attachments.mock';
+import {setLike} from '../../../test/fixtures';
+import patientsMerge from './merge';
+import patientsAttach from './attach';
 
 if (Meteor.isServer) {
 	describe('Patients', () => {
@@ -48,10 +49,16 @@ if (Meteor.isServer) {
 
 				await invoke(patientsAttach, invocation, [patientB._id, uploadB._id]);
 
-				let consultationA = Factory.create('consultation', {
-					owner: userId,
-					patientId: patientA._id,
-				});
+				const {insertedId: consultationAId} = await invoke(
+					insertConsultation,
+					invocation,
+					[
+						Factory.tree('consultation', {
+							patientId: patientA._id,
+						}),
+					],
+				);
+
 				// create an irrelevant consultation
 				Factory.create('consultation', {
 					owner: userId,
@@ -72,7 +79,7 @@ if (Meteor.isServer) {
 				const newPatientFields = patients.merge([patientA, patientB]);
 
 				const oldPatientIds = [patientA._id, patientB._id];
-				const consultationIds = [consultationA._id];
+				const consultationIds = [consultationAId];
 				const attachmentIds = [uploadA._id, uploadB._id];
 				const documentIds = [documentA._id];
 
@@ -111,7 +118,7 @@ if (Meteor.isServer) {
 
 				assert.deepEqual(setLike(newPatientAttachments), expectedAttachments);
 
-				consultationA = Consultations.findOne(consultationA._id);
+				const consultationA = Consultations.findOne(consultationAId);
 
 				assert.equal(consultationA.patientId, newPatientId);
 

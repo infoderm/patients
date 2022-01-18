@@ -1,30 +1,16 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'regenerator-runtime/runtime.js';
-import {assert, expect} from 'chai';
+import {assert} from 'chai';
 
 import {Meteor} from 'meteor/meteor';
 import {Random} from 'meteor/random';
 
-import invoke from './endpoint/invoke';
-import patientsRemove from './endpoint/patients/remove';
+import invoke from '../invoke';
 
-import {Patients} from './collection/patients.mock';
-import {Consultations} from './collection/consultations.mock';
-
-const throws = async (fn: () => Promise<any>, expected: string | RegExp) => {
-	let thrownError: any;
-	try {
-		await fn();
-	} catch (error: unknown) {
-		thrownError = error;
-	}
-
-	if (typeof expected === 'string') {
-		expect(thrownError.message).to.equal(expected);
-	} else if (expected instanceof RegExp) {
-		expect(thrownError.message).to.match(expected);
-	}
-};
+import {Patients} from '../../collection/patients.mock';
+import {Consultations} from '../../collection/consultations.mock';
+import {throws} from '../../../test/fixtures';
+import patientsRemove from './remove';
 
 if (Meteor.isServer) {
 	describe('Patients', () => {
@@ -47,7 +33,7 @@ if (Meteor.isServer) {
 				assert.equal(Patients.find().count(), 0);
 			});
 
-			it("cannot delete someone else's patient", () => {
+			it("cannot delete someone else's patient", async () => {
 				const userId = Random.id();
 
 				const patient = Factory.create('patient', {owner: userId});
@@ -55,7 +41,7 @@ if (Meteor.isServer) {
 
 				const invocation = {userId: `${userId}x`};
 
-				throws(
+				return throws(
 					() => invoke(patientsRemove, invocation, [patientId]),
 					/not-found/,
 				);
