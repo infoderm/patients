@@ -76,7 +76,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 	return (
 		<Popover
 			className={classes.popover}
-			id="dashboard-change-password"
+			id="login-popover"
 			anchorEl={anchorEl}
 			open={Boolean(anchorEl)}
 			anchorOrigin={{
@@ -92,6 +92,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 			<form className={classes.form} autoComplete="off">
 				<TextField
 					autoFocus
+					id="login-popover-input-username"
 					error={Boolean(errorUsername)}
 					helperText={errorUsername}
 					className={classes.row}
@@ -101,6 +102,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 					onChange={(e) => setUsername(e.target.value)}
 				/>
 				<TextField
+					id="login-popover-input-password"
 					error={Boolean(errorPassword)}
 					helperText={errorPassword}
 					className={classes.row}
