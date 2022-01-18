@@ -8,9 +8,8 @@ import {Attachments} from '../../collection/attachments';
 
 import {patients} from '../../patients';
 
-// import executeTransaction from '../../transaction/executeTransaction';
-
 import define from '../define';
+import Wrapper from '../../transaction/Wrapper';
 
 const {sanitize, updateIndex} = patients;
 
@@ -29,7 +28,8 @@ export default define({
 		check(documentIds, Array);
 		check(newPatient, Object);
 	},
-	async run(
+	async transaction(
+		db: Wrapper,
 		oldPatientIds,
 		consultationIds,
 		attachmentIds,
@@ -55,11 +55,12 @@ export default define({
 
 		// (2)
 		for (const oldPatientId of oldPatientIds) {
-			const oldPatient = Patients.findOne({
+			// eslint-disable-next-line no-await-in-loop
+			const oldPatient = await db.findOne(Patients, {
 				_id: oldPatientId,
 				owner: this.userId,
 			});
-			if (!oldPatient) {
+			if (oldPatient === null) {
 				throw new Meteor.Error('not-found', 'no such patient');
 			}
 		}
@@ -67,20 +68,21 @@ export default define({
 		// (3)
 		const fields = sanitize(newPatient);
 
-		const newPatientId = Patients.insert({
+		const {insertedId: newPatientId} = await db.insertOne(Patients, {
 			...fields,
 			createdAt: new Date(),
 			owner: this.userId,
 		});
 
-		updateIndex(this.userId, newPatientId, fields);
+		await updateIndex(db, this.userId, newPatientId, fields);
 
 		// Not needed to update tags since the merged info should only contain
 		// existing tags
-		// updateTags(this.userId, fields);
+		// await updateTags(db, this.userId, fields);
 
 		// (4)
-		Consultations.update(
+		await db.updateMany(
+			Consultations,
 			{
 				owner: this.userId, // This selector automatically filters out bad consultation ids
 				patientId: {$in: oldPatientIds},
@@ -89,19 +91,17 @@ export default define({
 			{
 				$set: {patientId: newPatientId},
 			},
-			{
-				multi: true,
-			},
 		);
 
 		// (5)
-		Consultations.remove({
+		await db.deleteMany(Consultations, {
 			owner: this.userId,
 			patientId: {$in: oldPatientIds},
 		});
 
 		// (6)
-		Attachments.update(
+		await db.updateMany(
+			Attachments,
 			{
 				userId: this.userId, // This selector automatically filters out bad attachments ids
 				'meta.attachedToPatients': {$in: oldPatientIds},
@@ -110,13 +110,11 @@ export default define({
 			{
 				$addToSet: {'meta.attachedToPatients': newPatientId},
 			},
-			{
-				multi: true,
-			},
 		);
 
 		// (7)
-		Attachments.update(
+		await db.updateMany(
+			Attachments,
 			{
 				userId: this.userId,
 				'meta.attachedToPatients': {$in: oldPatientIds},
@@ -124,13 +122,11 @@ export default define({
 			{
 				$pullAll: {'meta.attachedToPatients': oldPatientIds},
 			},
-			{
-				multi: true,
-			},
 		);
 
 		// (8)
-		Documents.update(
+		await db.updateMany(
+			Documents,
 			{
 				owner: this.userId, // This selector automatically filters out bad document ids
 				patientId: {$in: oldPatientIds},
@@ -139,13 +135,11 @@ export default define({
 			{
 				$set: {patientId: newPatientId},
 			},
-			{
-				multi: true,
-			},
 		);
 
 		// (9)
-		Documents.update(
+		await db.updateMany(
+			Documents,
 			{
 				owner: this.userId,
 				patientId: {$in: oldPatientIds},
@@ -153,16 +147,13 @@ export default define({
 			{
 				$set: {deleted: true},
 			},
-			{
-				multi: true,
-			},
 		);
 
 		// (10)
-		PatientsSearchIndex.remove({
+		await db.deleteMany(PatientsSearchIndex, {
 			_id: {$in: oldPatientIds},
 		});
-		Patients.remove({
+		await db.deleteMany(Patients, {
 			_id: {$in: oldPatientIds},
 		});
 

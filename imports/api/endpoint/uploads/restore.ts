@@ -10,7 +10,7 @@ export default define({
 	validate(uploadId: string) {
 		check(uploadId, String);
 	},
-	run: unconditionallyUpdateById(
+	transaction: unconditionallyUpdateById(
 		Uploads.collection,
 		{
 			$set: {'meta.isDeleted': false},

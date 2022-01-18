@@ -7,8 +7,7 @@ const invoke = <T>(
 	args: any[],
 ) => {
 	Reflect.apply(endpoint.validate, invocation, args);
-	const body = (invocation.isSimulation && endpoint.simulate) || endpoint.run;
-	return Reflect.apply(body, invocation, args);
+	return Reflect.apply(endpoint.run, invocation, args);
 };
 
 export default invoke;

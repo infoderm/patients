@@ -8,28 +8,43 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import {availability} from '../../availability';
+import Wrapper from '../../transaction/Wrapper';
 
 export default define({
 	name: '/api/patients/remove',
 	validate(patientId: string) {
 		check(patientId, String);
 	},
-	async run(patientId: string) {
+	async transaction(db: Wrapper, patientId: string) {
 		const owner = this.userId;
-		const patient = Patients.findOne({_id: patientId, owner});
-		if (!patient) {
+		const patient = await db.findOne(Patients, {_id: patientId, owner});
+		if (patient === null) {
 			throw new Meteor.Error('not-found');
 		}
 
 		const consultationQuery = {owner: this.userId, patientId};
-		const removedConsultations = Consultations.find(consultationQuery, {
-			fields: {_id: 1, begin: 1, end: 1, isDone: 1, isCancelled: 1},
-		}).fetch();
+		const removedConsultations = await db.fetch(
+			Consultations,
+			consultationQuery,
+			{
+				fields: {_id: 1, begin: 1, end: 1, isDone: 1, isCancelled: 1},
+			},
+		);
 		const consultationIds = removedConsultations.map((x) => x._id);
-		const nConsultationRemoved = Consultations.remove(consultationQuery);
+		const {deletedCount: nConsultationRemoved} = await db.deleteMany(
+			Consultations,
+			consultationQuery,
+		);
 
 		for (const {begin, end, isDone, isCancelled} of removedConsultations) {
-			availability.removeHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
+			// eslint-disable-next-line no-await-in-loop
+			await availability.removeHook(
+				db,
+				owner,
+				begin,
+				end,
+				isDone || isCancelled ? 0 : 1,
+			);
 		}
 
 		if (consultationIds.length !== nConsultationRemoved) {
@@ -40,7 +55,8 @@ export default define({
 			);
 		}
 
-		Documents.update(
+		await db.updateMany(
+			Documents,
 			{
 				owner: this.userId,
 				patientId,
@@ -50,12 +66,10 @@ export default define({
 					deleted: true,
 				},
 			},
-			{
-				multi: true,
-			},
 		);
 
-		Attachments.update(
+		await db.updateMany(
+			Attachments,
 			{
 				userId: this.userId,
 				'meta.attachedToPatients': patientId,
@@ -63,12 +77,10 @@ export default define({
 			{
 				$pull: {'meta.attachedToPatients': patientId},
 			},
-			{
-				multi: true,
-			},
 		);
 
-		Attachments.update(
+		await db.updateMany(
+			Attachments,
 			{
 				userId: this.userId,
 				'meta.attachedToConsultations': {$in: consultationIds},
@@ -76,12 +88,12 @@ export default define({
 			{
 				$pullAll: {'meta.attachedToConsultations': consultationIds},
 			},
-			{
-				multi: true,
-			},
 		);
 
-		PatientsSearchIndex.remove(patientId);
-		return Patients.remove(patientId);
+		await db.deleteOne(PatientsSearchIndex, {_id: patientId});
+		return db.deleteOne(Patients, {_id: patientId});
+	},
+	simulate(patientId: string) {
+		Patients.remove(patientId);
 	},
 });

@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-unassigned-import
 import './polyfill';
+import assert from 'assert';
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {WebApp} from 'meteor/webapp';
@@ -7,6 +8,8 @@ import {WebApp} from 'meteor/webapp';
 import addMilliseconds from 'date-fns/addMilliseconds';
 
 import isValid from 'date-fns/isValid';
+import forEachAsync from '../imports/api/transaction/forEachAsync';
+import snapshotTransaction from '../imports/api/transaction/snapshotTransaction';
 import {Settings} from '../imports/api/collection/settings';
 import {Patients} from '../imports/api/collection/patients';
 import {PatientsSearchIndex} from '../imports/api/collection/patients/search';
@@ -42,7 +45,8 @@ import ics from './api/ics/index';
 
 WebApp.connectHandlers.use('/api/ics', ics);
 
-Meteor.startup(() => {
+Meteor.startup(async () => {
+	console.time('migrations');
 	// Code to run on server at startup
 
 	const collections: Array<Mongo.Collection<any>> = [
@@ -63,105 +67,137 @@ Meteor.startup(() => {
 
 	// Drop all indexes (if the collection is not empty)
 	for (const collection of collections) {
-		if (collection.find().count() !== 0) {
-			collection.rawCollection().dropIndexes();
+		// eslint-disable-next-line no-await-in-loop
+		if ((await collection.rawCollection().findOne({})) !== null) {
+			// eslint-disable-next-line no-await-in-loop
+			await collection.rawCollection().dropIndexes();
 		}
 	}
 
 	// Delete all generated book entries
-	Books.remove({});
+	await Books.rawCollection().deleteMany({});
 
 	// Delete all generated availability entries
-	Availability.remove({});
+	await Availability.rawCollection().deleteMany({});
 
 	// Regenerate patient.normalizedName
-	Patients.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach((patient) => {
-			patient.normalizedName = patients.normalizedName(
-				patient.firstname,
-				patient.lastname,
+	await forEachAsync(Patients, {}, async (db, patient) => {
+		const normalizedName = patients.normalizedName(
+			patient.firstname,
+			patient.lastname,
+		);
+		if (normalizedName !== patient.normalizedName) {
+			await db.updateOne(
+				Patients,
+				{_id: patient._id},
+				{$set: {normalizedName}},
 			);
-			Patients.rawCollection().save(patient);
-		});
+		}
+	});
 
 	// Change schema for uploads attached to consultations
-	Consultations.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			Meteor.bindEnvironment(({_id, attachments}) => {
-				if (attachments) {
-					Attachments.update(
-						{_id: {$in: attachments}},
-						{
-							$addToSet: {'meta.attachedToConsultations': _id},
-						},
-						{multi: true},
-					);
-					Consultations.update(_id, {$unset: {attachments: true}});
-				}
-			}),
-		);
+	await forEachAsync(
+		Consultations,
+		{attachments: {$type: 'array'}},
+		async (db, {_id, attachments}) => {
+			db.updateMany(
+				Attachments,
+				{_id: {$in: attachments}},
+				{
+					$addToSet: {'meta.attachedToConsultations': _id},
+				},
+			);
+			db.updateOne(Consultations, {_id}, {$unset: {attachments: true}});
+		},
+	);
 
 	// Add .unpaid field to consultations
-	Consultations.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach((consultation) => {
-			if (typeof consultation.unpaid !== 'boolean') {
-				consultation.unpaid = isUnpaid(consultation);
+	await forEachAsync(
+		Consultations,
+		{unpaid: {$nin: [true, false]}},
+		async (db, consultation) => {
+			const unpaid = isUnpaid(consultation);
+			if (unpaid !== consultation.unpaid) {
+				db.updateOne(Consultations, {_id: consultation._id}, {$set: {unpaid}});
 			}
+		},
+	);
 
-			Consultations.rawCollection().save(consultation);
-		});
+	await forEachAsync(
+		Consultations,
+		{isDone: {$nin: [true, false]}},
+		async (_db, {_id}) => {
+			console.warn(`Consultation ${_id} has incorrect isDone field.`);
+		},
+	);
 
-	// Add new appointments/consultations fields
-	Consultations.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach((consultation) => {
-			if (consultation.isDone) {
-				consultation.realDatetime = consultation.datetime;
-			} else {
-				consultation.scheduledDatetime = consultation.datetime;
-			}
+	// Update realDatetime for consultations
+	await forEachAsync(
+		Consultations,
+		{isDone: true, $expr: {$ne: ['$realDatetime', '$datetime']}},
+		async (db, {_id, isDone, datetime}) => {
+			assert(isDone);
+			await db.updateOne(
+				Consultations,
+				{_id},
+				{$set: {realDatetime: datetime}},
+			);
+		},
+	);
 
-			Consultations.rawCollection().save(consultation);
-		});
+	// Update scheduledDatetime for appointments
+	await forEachAsync(
+		Consultations,
+		{isDone: false, $expr: {$ne: ['$scheduledDatetime', '$datetime']}},
+		async (db, {_id, isDone, datetime}) => {
+			assert(!isDone);
+			await db.updateOne(
+				Consultations,
+				{_id},
+				{$set: {scheduledDatetime: datetime}},
+			);
+		},
+	);
 
 	// Add begin/end fields
-	Consultations.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach((consultation) => {
+	await forEachAsync(
+		Consultations,
+		{
+			$expr: {
+				$or: [{$not: {begin: {$type: 'date'}}}, {$not: {end: {$type: 'date'}}}],
+			},
+		},
+		async (db, consultation) => {
 			if (consultation.isDone) {
-				consultation.begin = consultation.begin ?? consultation.datetime;
-				consultation.end =
+				const begin = consultation.begin ?? consultation.datetime;
+				const end =
 					consultation.end ??
 					consultation.doneDatetime ??
 					consultation.datetime;
+				await db.updateOne(
+					Consultations,
+					{_id: consultation._id},
+					{$set: {begin, end}},
+				);
 			} else {
-				consultation.begin = consultation.begin ?? consultation.datetime;
-				consultation.end =
+				const begin = consultation.begin ?? consultation.datetime;
+				const end =
 					consultation.end ??
 					addMilliseconds(consultation.datetime, consultation.duration);
+				await db.updateOne(
+					Consultations,
+					{_id: consultation._id},
+					{$set: {begin, end}},
+				);
 			}
-
-			Consultations.rawCollection().save(consultation);
-		});
+		},
+	);
 
 	// Regenerate PatientsSearchIndex
-	PatientsSearchIndex.remove({});
-	Patients.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			Meteor.bindEnvironment((patient) => {
-				patients.updateIndex(patient.owner, patient._id, patient);
-			}),
-		);
+	await PatientsSearchIndex.rawCollection().deleteMany({});
+	await forEachAsync(Patients, {}, async (db, patient) => {
+		await patients.updateIndex(db, patient.owner, patient._id, patient);
+	});
 
 	// Create indexes
 
@@ -176,21 +212,21 @@ Meteor.startup(() => {
 			},
 		);
 
-	createSimpleIndex(Patients, 'niss');
-	createSimpleIndex(Patients, 'lastname');
-	createSimpleIndex(Patients, 'normalizedName');
-	createSimpleIndex(Patients, 'sex');
-	createSimpleIndex(Patients, 'birthdate');
-	createSimpleIndex(Patients, 'doctors');
-	createSimpleIndex(Patients, 'insurances');
-	createSimpleIndex(Patients, 'allergies');
-	createSimpleIndex(Documents, 'createdAt');
+	await createSimpleIndex(Patients, 'niss');
+	await createSimpleIndex(Patients, 'lastname');
+	await createSimpleIndex(Patients, 'normalizedName');
+	await createSimpleIndex(Patients, 'sex');
+	await createSimpleIndex(Patients, 'birthdate');
+	await createSimpleIndex(Patients, 'doctors');
+	await createSimpleIndex(Patients, 'insurances');
+	await createSimpleIndex(Patients, 'allergies');
+	await createSimpleIndex(Documents, 'createdAt');
 
-	createSimpleIndex(Insurances, 'containsNonAlphabetical');
-	createSimpleIndex(Doctors, 'containsNonAlphabetical');
-	createSimpleIndex(Allergies, 'containsNonAlphabetical');
+	await createSimpleIndex(Insurances, 'containsNonAlphabetical');
+	await createSimpleIndex(Doctors, 'containsNonAlphabetical');
+	await createSimpleIndex(Allergies, 'containsNonAlphabetical');
 
-	Patients.rawCollection().createIndexes([
+	await Patients.rawCollection().createIndexes([
 		{
 			key: {
 				owner: 1,
@@ -205,7 +241,7 @@ Meteor.startup(() => {
 		},
 	]);
 
-	PatientsSearchIndex.rawCollection().createIndexes([
+	await PatientsSearchIndex.rawCollection().createIndexes([
 		{
 			key: {
 				owner: 1,
@@ -244,13 +280,13 @@ Meteor.startup(() => {
 			},
 		);
 
-	createSimpleUniqueIndex(Settings, 'key');
-	createSimpleUniqueIndex(Insurances, 'name');
-	createSimpleUniqueIndex(Doctors, 'name');
-	createSimpleUniqueIndex(Allergies, 'name');
-	createSimpleUniqueIndex(Books, 'name');
+	await createSimpleUniqueIndex(Settings, 'key');
+	await createSimpleUniqueIndex(Insurances, 'name');
+	await createSimpleUniqueIndex(Doctors, 'name');
+	await createSimpleUniqueIndex(Allergies, 'name');
+	await createSimpleUniqueIndex(Books, 'name');
 
-	Books.rawCollection().createIndex(
+	await Books.rawCollection().createIndex(
 		{
 			owner: 1,
 			fiscalYear: 1,
@@ -261,9 +297,9 @@ Meteor.startup(() => {
 		},
 	);
 
-	createSimpleUniqueIndex(Drugs, 'mppcv');
+	await createSimpleUniqueIndex(Drugs, 'mppcv');
 
-	Drugs.rawCollection().createIndex(
+	await Drugs.rawCollection().createIndex(
 		{
 			'$**': 'text',
 		},
@@ -272,7 +308,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			datetime: 1,
@@ -282,7 +318,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			begin: 1,
@@ -293,7 +329,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			end: 1,
@@ -303,7 +339,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
@@ -314,7 +350,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
@@ -326,7 +362,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
@@ -337,7 +373,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			patientId: 1,
@@ -349,7 +385,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
@@ -361,7 +397,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
@@ -373,7 +409,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Consultations.rawCollection().createIndex(
+	await Consultations.rawCollection().createIndex(
 		{
 			owner: 1,
 			isDone: 1,
@@ -384,7 +420,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Events.rawCollection().createIndex(
+	await Events.rawCollection().createIndex(
 		{
 			owner: 1,
 			begin: 1,
@@ -395,7 +431,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Events.rawCollection().createIndex(
+	await Events.rawCollection().createIndex(
 		{
 			owner: 1,
 			end: 1,
@@ -405,7 +441,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Availability.rawCollection().createIndex(
+	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
 			begin: 1,
@@ -416,7 +452,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Availability.rawCollection().createIndex(
+	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
 			end: 1,
@@ -426,7 +462,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Availability.rawCollection().createIndex(
+	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
 			weight: 1,
@@ -438,7 +474,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Availability.rawCollection().createIndex(
+	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
 			weight: 1,
@@ -449,7 +485,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Attachments.rawCollection().createIndex(
+	await Attachments.rawCollection().createIndex(
 		{
 			userId: 1,
 			'meta.attachedToPatients': 1,
@@ -459,7 +495,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Attachments.rawCollection().createIndex(
+	await Attachments.rawCollection().createIndex(
 		{
 			userId: 1,
 			'meta.attachedToConsultations': 1,
@@ -469,7 +505,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			patientId: 1,
@@ -483,7 +519,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			identifier: 1,
@@ -496,7 +532,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			identifier: 1,
@@ -507,7 +543,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			patientId: 1,
@@ -518,7 +554,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			parsed: 1,
@@ -529,7 +565,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			owner: 1,
 			encoding: 1,
@@ -540,7 +576,7 @@ Meteor.startup(() => {
 		},
 	);
 
-	Documents.rawCollection().createIndex(
+	await Documents.rawCollection().createIndex(
 		{
 			source: 'hashed',
 		},
@@ -550,228 +586,233 @@ Meteor.startup(() => {
 	);
 
 	// Recreate all generated entries
-	const generateTags = (parent: any, child: any, key: string) =>
-		// eslint-disable-next-line array-callback-return
-		parent.find().map((item) => {
-			const {owner, [key]: tags} = item;
-			if (tags) {
-				tags.forEach((tag) => child.add(owner, tag));
-			}
-		});
-
-	generateTags(Patients, insurances, 'insurances');
-	generateTags(Patients, doctors, 'doctors');
-	generateTags(Patients, allergies, 'allergies');
-
-	// Compute tag fields
-	const computeTagFields = (Collection, tags) =>
-		Collection.find().map(({owner, name}) => tags.add(owner, name));
-
-	computeTagFields(Insurances, insurances);
-	computeTagFields(Doctors, doctors);
-	computeTagFields(Allergies, allergies);
-
-	// eslint-disable-next-line array-callback-return
-	Consultations.find().map(({owner, datetime, book, isDone}) => {
-		if (isDone && datetime && book) {
-			books.add(owner, books.name(datetime, book), true);
-		}
-	});
-
-	// Reparse all documents
-	Documents.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			async ({_id, owner, createdAt, patientId, format, source, parsed}) => {
-				if (!_id.toHexString && parsed) {
-					return;
-				}
-
-				const array = new TextEncoder().encode(source);
-
-				const document = {
-					patientId,
-					format,
-					array,
-				};
-
-				const entries = documents.sanitize(document);
-
-				for await (const entry of entries) {
-					if (!entry.parsed) {
-						return;
+	const generateTags = async (parent: any, child: any, key: string) =>
+		forEachAsync<any>(
+			parent,
+			{[key]: {$type: 'array', $ne: []}},
+			async (db, item) => {
+				const {owner, [key]: tags} = item;
+				if (tags) {
+					for (const tag of tags) {
+						// eslint-disable-next-line no-await-in-loop
+						await child.add(db, owner, tag);
 					}
-
-					const inserted = Documents.insert({
-						...entry,
-						createdAt,
-						owner,
-					});
-					console.debug('Inserted new parsed document', inserted);
 				}
-
-				console.debug('Removing old document', _id);
-				Documents.rawCollection().remove({_id});
 			},
 		);
 
-	// Remove duplicate documents
-	const documentsIndex = {};
-	Documents.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			Meteor.bindEnvironment(({_id, owner, patientId, source}) => {
-				if (documentsIndex[owner] === undefined) {
-					documentsIndex[owner] = {};
-				}
+	await generateTags(Patients, insurances, 'insurances');
+	await generateTags(Patients, doctors, 'doctors');
+	await generateTags(Patients, allergies, 'allergies');
 
-				const keep = documentsIndex[owner][source];
-				if (!keep) {
-					documentsIndex[owner][source] = {_id, patientId};
+	// Compute tag fields
+	const computeTagFields = async (Collection, tags) =>
+		forEachAsync<any>(Collection, {}, async (db, {owner, name}) => {
+			await tags.add(db, owner, name);
+		});
+
+	await computeTagFields(Insurances, insurances);
+	await computeTagFields(Doctors, doctors);
+	await computeTagFields(Allergies, allergies);
+
+	await forEachAsync(
+		Consultations,
+		{isDone: true, datetime: {$type: 'date'}, book: {$exists: true}},
+		async (db, {owner, datetime, book}) => {
+			if (datetime && book) {
+				await books.add(db, owner, books.name(datetime, book), true);
+			}
+		},
+	);
+
+	// Reparse all documents
+	await forEachAsync(
+		Documents,
+		{},
+		async (
+			db,
+			{_id, owner, createdAt, patientId, source, encoding, decoded, parsed},
+		) => {
+			if (!_id.toHexString && parsed && encoding) {
+				// we skip reparsing documents if the document _id is a string
+				// and it is already decoded and parsed
+				return;
+			}
+
+			const array = new TextEncoder().encode(decoded ?? source);
+
+			const document = {
+				patientId,
+				array,
+			};
+
+			const entries = documents.sanitize(document);
+
+			for await (const entry of entries) {
+				if (!entry.parsed) {
 					return;
 				}
 
-				if (!keep.patientId) {
-					console.debug(
-						'Removing previously kept duplicate document',
-						keep._id,
-					);
-					Documents.rawCollection().remove({_id: keep._id});
-					documentsIndex[owner][source] = {_id, patientId};
-				} else {
-					console.debug('Removing current duplicate document', _id);
-					Documents.rawCollection().remove({_id});
-				}
-			}),
-		);
+				const {insertedId} = await db.insertOne(Documents, {
+					...entry,
+					createdAt,
+					owner,
+				});
+				console.debug('Inserted new parsed document', insertedId);
+			}
+
+			console.debug('Removing old document', _id);
+			await db.deleteOne(Documents, {_id});
+		},
+	);
+
+	// Remove duplicate documents
+	const documentsIndex = {};
+	await forEachAsync(
+		Documents,
+		{},
+		async (db, {_id, owner, patientId, source}) => {
+			if (documentsIndex[owner] === undefined) {
+				documentsIndex[owner] = {};
+			}
+
+			const keep = documentsIndex[owner][source];
+			if (!keep) {
+				documentsIndex[owner][source] = {_id, patientId};
+				return;
+			}
+
+			if (!keep.patientId) {
+				console.debug('Removing previously kept duplicate document', keep._id);
+				await db.deleteOne(Documents, {_id: keep._id});
+				documentsIndex[owner][source] = {_id, patientId};
+			} else {
+				console.debug('Removing current duplicate document', _id);
+				await db.deleteOne(Documents, {_id});
+			}
+		},
+	);
 
 	// Add missing deleted flag
-	Documents.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			Meteor.bindEnvironment(({_id, deleted}) => {
-				if (deleted !== true && deleted !== false) {
-					Documents.update(_id, {$set: {deleted: false}});
-				}
-			}),
-		);
+	await forEachAsync(
+		Documents,
+		{deleted: {$nin: [true, false]}},
+		async (db, {_id}) => {
+			await db.updateOne(Documents, {_id}, {$set: {deleted: false}});
+		},
+	);
 
 	// Add missing lastVersion flag
-	Documents.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			Meteor.bindEnvironment(
-				({owner, parsed, identifier, reference, datetime}) => {
-					documents.updateLastVersionFlags(owner, {
-						parsed,
-						identifier,
-						reference,
-						datetime,
-					});
-				},
-			),
+	await forEachAsync(
+		Documents,
+		{},
+		async (db, {owner, parsed, identifier, reference, datetime}) => {
+			await documents.updateLastVersionFlags(db, owner, {
+				parsed,
+				identifier,
+				reference,
+				datetime,
+			});
+		},
+	);
+
+	const label = 'remove-bad-attachedTo-ids';
+	console.time(label);
+	await snapshotTransaction(async (db) => {
+		const [
+			patientIds,
+			consultationIds,
+			attachedToPatientsIds,
+			attachedToConsultationsIds,
+		] = await Promise.all([
+			db.distinct(Patients, '_id'),
+			db.distinct(Consultations, '_id'),
+			db.distinct(Attachments, 'meta.attachedToPatients'),
+			db.distinct(Attachments, 'meta.attachedToConsultations'),
+		]);
+
+		const patientIdsSet = new Set(patientIds);
+		const consultationIdsSet = new Set(consultationIds);
+		const badAttachedToPatientsIds = attachedToPatientsIds.filter(
+			(x) => !patientIdsSet.has(x),
 		);
-
-	Promise.all([
-		Patients.rawCollection().distinct('_id'),
-		Consultations.rawCollection().distinct('_id'),
-		Attachments.rawCollection().distinct('meta.attachedToPatients'),
-		Attachments.rawCollection().distinct('meta.attachedToConsultations'),
-	])
-		.then(
-			Meteor.bindEnvironment(
-				([
-					patientIds,
-					consultationIds,
-					attachedToPatientsIds,
-					attachedToConsultationsIds,
-				]) => {
-					const patientIdsSet = new Set(patientIds);
-					const consultationIdsSet = new Set(consultationIds);
-					const badAttachedToPatientsIds = attachedToPatientsIds.filter(
-						(x) => !patientIdsSet.has(x),
-					);
-					const badAttachedToConsultationsIds =
-						attachedToConsultationsIds.filter(
-							(x) => !consultationIdsSet.has(x),
-						);
-					if (badAttachedToPatientsIds.length > 0) {
-						console.debug(
-							'Removing bad patient ids from Attachments.meta.attachedToPatients',
-							{badAttachedToPatientsIds},
-						);
-						Attachments.update(
-							{'meta.attachedToPatients': {$in: badAttachedToPatientsIds}},
-							{
-								$pullAll: {'meta.attachedToPatients': badAttachedToPatientsIds},
-							},
-							{multi: true},
-						);
-					}
-
-					if (badAttachedToConsultationsIds.length > 0) {
-						console.debug(
-							'Removing bad consultation ids from Attachments.meta.attachedToConsultations',
-							{badAttachedToConsultationsIds},
-						);
-						Attachments.update(
-							{
-								'meta.attachedToConsultations': {
-									$in: badAttachedToConsultationsIds,
-								},
-							},
-							{
-								$pullAll: {
-									'meta.attachedToConsultations': badAttachedToConsultationsIds,
-								},
-							},
-							{multi: true},
-						);
-					}
+		const badAttachedToConsultationsIds = attachedToConsultationsIds.filter(
+			(x) => !consultationIdsSet.has(x),
+		);
+		if (badAttachedToPatientsIds.length > 0) {
+			console.debug(
+				'Removing bad patient ids from Attachments.meta.attachedToPatients',
+				{badAttachedToPatientsIds},
+			);
+			await Attachments.rawCollection().updateMany(
+				{'meta.attachedToPatients': {$in: badAttachedToPatientsIds}},
+				{
+					$pullAll: {'meta.attachedToPatients': badAttachedToPatientsIds},
 				},
-			),
-		)
-		.catch((error) => {
-			console.error(error);
-		});
+			);
+		}
+
+		if (badAttachedToConsultationsIds.length > 0) {
+			console.debug(
+				'Removing bad consultation ids from Attachments.meta.attachedToConsultations',
+				{badAttachedToConsultationsIds},
+			);
+			await Attachments.rawCollection().updateMany(
+				{
+					'meta.attachedToConsultations': {
+						$in: badAttachedToConsultationsIds,
+					},
+				},
+				{
+					$pullAll: {
+						'meta.attachedToConsultations': badAttachedToConsultationsIds,
+					},
+				},
+			);
+		}
+	});
+	console.timeEnd(label);
 
 	// Generate availability data
-	// eslint-disable-next-line array-callback-return
-	Consultations.find().map((item) => {
+	await forEachAsync(Consultations, {isDone: false}, async (db, item) => {
 		// const {owner, begin, end, isCancelled} = item;
-		// availability.insertHook(owner, begin, end, isCancelled ? 0 : 1);
+		// await availability.insertHook(db, owner, begin, end, isCancelled ? 0 : 1);
 		const {owner, begin, end, isDone, isCancelled} = item;
-		availability.insertHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
+		await availability.insertHook(
+			db,
+			owner,
+			begin,
+			end,
+			isDone || isCancelled ? 0 : 1,
+		);
 	});
 
 	// Add missing lastModifiedAt for all consultations and appointments
-	Consultations.rawCollection()
-		.find()
-		.hint({$natural: 1})
-		.forEach(
-			Meteor.bindEnvironment(
-				({_id, createdAt, lastModifiedAt, doneDatetime}) => {
-					if (!(lastModifiedAt instanceof Date)) {
-						const newLastModifiedAt = !(
-							doneDatetime instanceof Date && isValid(doneDatetime)
-						)
-							? createdAt
-							: !(createdAt instanceof Date && isValid(createdAt))
-							? doneDatetime
-							: createdAt > doneDatetime
-							? createdAt
-							: doneDatetime;
-						if (newLastModifiedAt instanceof Date) {
-							Consultations.update(_id, {
-								$set: {lastModifiedAt: newLastModifiedAt},
-							});
-						}
-					}
-				},
-			),
-		);
+	await forEachAsync(
+		Consultations,
+		{lastModifiedAt: {$not: {$type: 'date'}}},
+		async (db, {_id, createdAt, doneDatetime}) => {
+			const newLastModifiedAt = !(
+				doneDatetime instanceof Date && isValid(doneDatetime)
+			)
+				? createdAt
+				: !(createdAt instanceof Date && isValid(createdAt))
+				? doneDatetime
+				: createdAt > doneDatetime
+				? createdAt
+				: doneDatetime;
+
+			if (newLastModifiedAt instanceof Date) {
+				await db.updateOne(
+					Consultations,
+					{_id},
+					{
+						$set: {lastModifiedAt: newLastModifiedAt},
+					},
+				);
+			}
+		},
+	);
+
+	console.timeEnd('migrations');
 });

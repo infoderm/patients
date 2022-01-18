@@ -3,11 +3,11 @@ import {check} from 'meteor/check';
 import {Appointments} from '../../collection/appointments';
 import {appointments} from '../../appointments';
 
-import invoke from '../invoke';
-
 import define from '../define';
 
 import {availability} from '../../availability';
+import compose from '../compose';
+import Wrapper from '../../transaction/Wrapper';
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -17,7 +17,7 @@ export default define({
 	validate(appointment: any) {
 		check(appointment, Object);
 	},
-	async run(appointment: any) {
+	async transaction(db: Wrapper, appointment: any) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -25,7 +25,8 @@ export default define({
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {
-			args.consultationFields.patientId = await invoke(
+			args.consultationFields.patientId = await compose(
+				db,
 				createPatientForAppointment,
 				this,
 				[args.patientFields],
@@ -35,12 +36,12 @@ export default define({
 		const owner = this.userId;
 		const {begin, end} = args.consultationFields;
 
-		availability.insertHook(owner, begin, end, 1);
+		await availability.insertHook(db, owner, begin, end, 1);
 
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
-		const appointmentId = Appointments.insert({
+		const {insertedId: appointmentId} = await db.insertOne(Appointments, {
 			...args.consultationFields,
 			createdAt,
 			lastModifiedAt,

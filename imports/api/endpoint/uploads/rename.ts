@@ -11,11 +11,16 @@ export default define({
 		check(uploadId, String);
 		check(filename, String);
 	},
-	run: unconditionallyUpdateById(
+	transaction: unconditionallyUpdateById(
 		Uploads.collection,
-		(_existing, filename: string) => ({
+		async (_db, _existing, filename: string) => ({
 			$set: {name: filename},
 		}),
 		'userId',
 	),
+	simulate(uploadId: string, filename: string) {
+		Uploads.collection.update(uploadId, {
+			$set: {name: filename},
+		});
+	},
 });

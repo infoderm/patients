@@ -5,10 +5,12 @@ import {ConsultationDocument} from '../../collection/consultations';
 
 import {Appointments} from '../../collection/appointments';
 
+import {availability} from '../../availability';
+
+import Wrapper from '../../transaction/Wrapper';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
-import {availability} from '../../availability';
 
 export default define({
 	name: 'appointments.cancel',
@@ -21,9 +23,14 @@ export default define({
 		check(cancellationReason, String);
 		check(cancellationExplanation, String);
 	},
-	run: unconditionallyUpdateById<ConsultationDocument>(
+	transaction: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
-		(existing, cancellationReason: string, cancellationExplanation: string) => {
+		async (
+			db: Wrapper,
+			existing,
+			cancellationReason: string,
+			cancellationExplanation: string,
+		) => {
 			check(cancellationReason, String);
 			check(cancellationExplanation, String);
 			const modifier: Mongo.Modifier<ConsultationDocument> = {
@@ -50,7 +57,8 @@ export default define({
 			const newIsDone = oldIsDone;
 			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
 			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
-			availability.updateHook(
+			await availability.updateHook(
+				db,
 				owner,
 				oldBegin,
 				oldEnd,

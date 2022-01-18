@@ -1,20 +1,21 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
+import Wrapper from './transaction/Wrapper';
 
 const unconditionallyRemoveById = (Collection) =>
-	function (this: Meteor.MethodThisType, _id: string) {
+	async function (this: Meteor.MethodThisType, db: Wrapper, _id: string) {
 		check(_id, String);
 
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const item = Collection.findOne({_id, owner: this.userId});
-		if (!item) {
+		const item = await db.findOne(Collection, {_id, owner: this.userId});
+		if (item === null) {
 			throw new Meteor.Error('not-found');
 		}
 
-		return Collection.remove(_id);
+		return db.deleteOne(Collection, {_id});
 	};
 
 export default unconditionallyRemoveById;

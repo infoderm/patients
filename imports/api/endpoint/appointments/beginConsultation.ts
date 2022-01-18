@@ -11,19 +11,21 @@ import {
 
 import {Appointments} from '../../collection/appointments';
 
+import {availability} from '../../availability';
+
+import Wrapper from '../../transaction/Wrapper';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
-import {availability} from '../../availability';
 
 export default define({
 	name: 'appointments.beginConsultation',
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},
-	run: unconditionallyUpdateById<ConsultationDocument>(
+	transaction: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
-		(existing: ConsultationDocument) => {
+		async (db: Wrapper, existing: ConsultationDocument) => {
 			const {
 				owner,
 				begin: oldBegin,
@@ -31,10 +33,15 @@ export default define({
 				isDone: oldIsDone,
 				isCancelled: oldIsCancelled,
 			} = existing;
-			const book = findLastConsultationInInterval(thisYearsInterval(), {
-				...filterNotInRareBooks(),
-				owner,
-			})?.book;
+			const lastConsultationOfThisYear = await findLastConsultationInInterval(
+				db,
+				thisYearsInterval(),
+				{
+					...filterNotInRareBooks(),
+					owner,
+				},
+			);
+			const book = lastConsultationOfThisYear?.book;
 			const realDatetime = new Date();
 			const modifier = {
 				$set: {
@@ -52,7 +59,8 @@ export default define({
 			const newIsCancelled = oldIsCancelled;
 			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
 			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
-			availability.updateHook(
+			await availability.updateHook(
+				db,
 				owner,
 				oldBegin,
 				oldEnd,

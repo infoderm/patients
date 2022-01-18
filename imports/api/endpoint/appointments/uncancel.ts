@@ -4,6 +4,7 @@ import {availability} from '../../availability';
 
 import {Appointments} from '../../collection/appointments';
 import {ConsultationDocument} from '../../collection/consultations';
+import Wrapper from '../../transaction/Wrapper';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
@@ -14,9 +15,9 @@ export default define({
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},
-	run: unconditionallyUpdateById<ConsultationDocument>(
+	transaction: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
-		(existing) => {
+		async (db: Wrapper, existing) => {
 			const modifier: Mongo.Modifier<ConsultationDocument> = {
 				$set: {
 					isCancelled: false,
@@ -36,7 +37,8 @@ export default define({
 			const newIsDone = oldIsDone;
 			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
 			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
-			availability.updateHook(
+			await availability.updateHook(
+				db,
 				owner,
 				oldBegin,
 				oldEnd,

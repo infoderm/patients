@@ -1,5 +1,14 @@
-import Params from './Params';
+import Options from './Options';
+import Executor from './Executor';
+import Validator from './Validator';
+import Transaction from './Transaction';
 
-type Endpoint<T> = Params<T>;
+interface Endpoint<T> {
+	readonly name: string;
+	readonly validate: Validator;
+	readonly transaction?: Transaction;
+	readonly run: Executor;
+	readonly options?: Options<T>;
+}
 
 export default Endpoint;

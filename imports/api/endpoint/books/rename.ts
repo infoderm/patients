@@ -6,6 +6,7 @@ import {books} from '../../books';
 import {parseUint32StrictOrString} from '../../string';
 
 import define from '../define';
+import Wrapper from '../../transaction/Wrapper';
 
 export default define({
 	name: 'books.changeBookNumber',
@@ -13,13 +14,20 @@ export default define({
 		check(oldBookId, String);
 		check(newBookNumberString, String);
 	},
-	run(oldBookId: string, newBookNumberString: string) {
+	async transaction(
+		db: Wrapper,
+		oldBookId: string,
+		newBookNumberString: string,
+	) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const oldBook = Books.findOne({_id: oldBookId, owner: this.userId});
-		if (!oldBook) {
+		const oldBook = await db.findOne(Books, {
+			_id: oldBookId,
+			owner: this.userId,
+		});
+		if (oldBook === null) {
 			throw new Meteor.Error('not-found');
 		}
 
@@ -36,7 +44,7 @@ export default define({
 		}
 
 		const newName = books.format(fiscalYear, newBookNumber);
-		const newBookId = books.add(this.userId, newName);
+		const newBookId = await books.add(db, this.userId, newName);
 
 		const query = {
 			...books.selector(oldName),
@@ -44,15 +52,11 @@ export default define({
 			isDone: true,
 		};
 
-		Consultations.update(
-			query,
-			{
-				$set: {book: newBookNumber.toString()},
-			},
-			{multi: true},
-		);
+		await db.updateMany(Consultations, query, {
+			$set: {book: newBookNumber.toString()},
+		});
 
-		Books.remove(oldBookId);
+		await db.deleteOne(Books, {_id: oldBookId});
 		return newBookId;
 	},
 });

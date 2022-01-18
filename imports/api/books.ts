@@ -13,6 +13,7 @@ import {Stats} from './collection/books/stats';
 
 import publication from './publication/books/find';
 import cachePublication from './publication/books/observe';
+import Wrapper from './transaction/Wrapper';
 
 export const useBooks = makeQuery(Books, publication);
 
@@ -31,7 +32,7 @@ export const books = {
 	cache: {Stats},
 	sanitizeInput,
 	sanitize,
-	add: (owner: string, name: string, verbatim = false) => {
+	add: async (db: Wrapper, owner: string, name: string, verbatim = false) => {
 		check(owner, String);
 		check(name, String);
 
@@ -51,10 +52,10 @@ export const books = {
 			bookNumber,
 		};
 
-		return Books.upsert(key, {$set: fields});
+		return db.updateOne(Books, key, {$set: fields}, {upsert: true});
 	},
 
-	remove: (owner, name) => {
+	remove: async (db: Wrapper, owner, name) => {
 		check(owner, String);
 		check(name, String);
 
@@ -65,7 +66,7 @@ export const books = {
 			name,
 		};
 
-		return Books.remove(fields);
+		return db.deleteOne(Books, fields);
 	},
 
 	format: (year, book) => `${year}/${book}`,

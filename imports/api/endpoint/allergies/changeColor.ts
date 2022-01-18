@@ -11,7 +11,10 @@ export default define({
 		check(tagId, String);
 		check(newColor, String);
 	},
-	run: unconditionallyUpdateById(Allergies, (_existing, newColor: string) => ({
-		$set: {color: newColor},
-	})),
+	transaction: unconditionallyUpdateById(
+		Allergies,
+		(_db, _existing, newColor: string) => ({
+			$set: {color: newColor},
+		}),
+	),
 });

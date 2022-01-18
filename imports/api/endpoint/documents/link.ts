@@ -2,6 +2,7 @@ import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
 import {Patients} from '../../collection/patients';
+import Wrapper from '../../transaction/Wrapper';
 
 import define from '../define';
 
@@ -11,18 +12,17 @@ export default define({
 		check(documentId, String);
 		check(patientId, String);
 	},
-	run(documentId: string, patientId: string) {
-		// TODO make atomic
-		const document = Documents.findOne(documentId);
-		const patient = Patients.findOne(patientId);
-		if (!document || document.owner !== this.userId) {
+	async transaction(db: Wrapper, documentId: string, patientId: string) {
+		const document = await db.findOne(Documents, {_id: documentId});
+		if (document === null || document.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own document');
 		}
 
-		if (!patient || patient.owner !== this.userId) {
+		const patient = await db.findOne(Patients, {_id: patientId});
+		if (patient === null || patient.owner !== this.userId) {
 			throw new Meteor.Error('not-authorized', 'user does not own patient');
 		}
 
-		return Documents.update(documentId, {$set: {patientId}});
+		return db.updateOne(Documents, {_id: documentId}, {$set: {patientId}});
 	},
 });

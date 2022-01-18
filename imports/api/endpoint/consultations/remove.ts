@@ -5,23 +5,25 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import {availability} from '../../availability';
+import Wrapper from '../../transaction/Wrapper';
 
 export default define({
 	name: 'consultations.remove',
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},
-	run(consultationId: string) {
+	async transaction(db: Wrapper, consultationId: string) {
 		const owner = this.userId;
-		const consultation = Consultations.findOne({
+		const consultation = await db.findOne(Consultations, {
 			_id: consultationId,
 			owner,
 		});
-		if (!consultation) {
+		if (consultation === null) {
 			throw new Meteor.Error('not-found');
 		}
 
-		Attachments.update(
+		await db.updateMany(
+			Attachments,
 			{
 				userId: this.userId,
 				'meta.attachedToConsultations': consultationId,
@@ -29,16 +31,17 @@ export default define({
 			{
 				$pull: {'meta.attachedToConsultations': consultationId},
 			},
-			{
-				multi: true,
-			},
 		);
 
-		const returnValue = Consultations.remove(consultationId);
-
 		const {begin, end, isDone, isCancelled} = consultation;
-		availability.removeHook(owner, begin, end, isDone || isCancelled ? 0 : 1);
+		await availability.removeHook(
+			db,
+			owner,
+			begin,
+			end,
+			isDone || isCancelled ? 0 : 1,
+		);
 
-		return returnValue;
+		return db.deleteOne(Consultations, {_id: consultationId});
 	},
 });

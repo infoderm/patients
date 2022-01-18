@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 
 import {Drugs} from '../../collection/drugs';
+import Wrapper from '../../transaction/Wrapper';
 
 import define from '../define';
 
@@ -9,8 +10,7 @@ export default define({
 	validate(drugs: any[]) {
 		for (const drug of drugs) check(drug, Object);
 	},
-	run(drugs: any[]) {
-		// TODO make atomic
+	async transaction(db: Wrapper, drugs: any[]) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -18,12 +18,9 @@ export default define({
 		const createdAt = new Date();
 		const owner = this.userId;
 
-		for (const drug of drugs) {
-			Drugs.insert({
-				...drug,
-				createdAt,
-				owner,
-			});
-		}
+		await db.insertMany(
+			Drugs,
+			drugs.map((drug) => ({...drug, createdAt, owner})),
+		);
 	},
 });

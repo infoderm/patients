@@ -2,6 +2,7 @@ import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
 import {documents} from '../../documents';
+import Wrapper from '../../transaction/Wrapper';
 
 import define from '../define';
 
@@ -12,14 +13,16 @@ export default define({
 	validate(documentId: string) {
 		check(documentId, String);
 	},
-	run(documentId: string) {
-		// TODO make atomic
-		const document = Documents.findOne({_id: documentId, owner: this.userId});
-		if (!document) {
+	async transaction(db: Wrapper, documentId: string) {
+		const document = await db.findOne(Documents, {
+			_id: documentId,
+			owner: this.userId,
+		});
+		if (document === null) {
 			throw new Meteor.Error('not-found');
 		}
 
-		Documents.remove(documentId);
-		updateLastVersionFlags(this.userId, document);
+		await db.deleteOne(Documents, {_id: documentId});
+		await updateLastVersionFlags(db, this.userId, document);
 	},
 });
