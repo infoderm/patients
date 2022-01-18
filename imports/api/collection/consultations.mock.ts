@@ -1,5 +1,7 @@
 import faker from '@faker-js/faker';
 
+// eslint-disable-next-line import/no-unassigned-import
+import './patients.mock';
 import {Consultations} from './consultations';
 
 Factory.define('consultation', Consultations, {
