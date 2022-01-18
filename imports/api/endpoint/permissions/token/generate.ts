@@ -54,6 +54,6 @@ export default define({
 		return encode(_id, key);
 	},
 	simulate(_permissions: string[]) {
-		return undefined;
+		throw new Error('simulation not-implemented');
 	},
 });
