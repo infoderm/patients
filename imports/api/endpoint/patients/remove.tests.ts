@@ -13,38 +13,40 @@ import {throws} from '../../../test/fixtures';
 import patientsRemove from './remove';
 
 if (Meteor.isServer) {
-	describe('Patients', () => {
-		describe('methods', () => {
-			beforeEach(() => {
-				Patients.remove({});
-				Consultations.remove({});
-			});
+	describe('endpoint', () => {
+		describe('patients', () => {
+			describe('remove', () => {
+				beforeEach(() => {
+					Patients.remove({});
+					Consultations.remove({});
+				});
 
-			it('can delete own patient', async () => {
-				const userId = Random.id();
+				it('can delete own patient', async () => {
+					const userId = Random.id();
 
-				const patient = Factory.create('patient', {owner: userId});
-				const patientId = patient._id;
+					const patient = Factory.create('patient', {owner: userId});
+					const patientId = patient._id;
 
-				const invocation = {userId};
+					const invocation = {userId};
 
-				await invoke(patientsRemove, invocation, [patientId]);
+					await invoke(patientsRemove, invocation, [patientId]);
 
-				assert.equal(Patients.find().count(), 0);
-			});
+					assert.equal(Patients.find().count(), 0);
+				});
 
-			it("cannot delete someone else's patient", async () => {
-				const userId = Random.id();
+				it("cannot delete someone else's patient", async () => {
+					const userId = Random.id();
 
-				const patient = Factory.create('patient', {owner: userId});
-				const patientId = patient._id;
+					const patient = Factory.create('patient', {owner: userId});
+					const patientId = patient._id;
 
-				const invocation = {userId: `${userId}x`};
+					const invocation = {userId: `${userId}x`};
 
-				return throws(
-					() => invoke(patientsRemove, invocation, [patientId]),
-					/not-found/,
-				);
+					return throws(
+						() => invoke(patientsRemove, invocation, [patientId]),
+						/not-found/,
+					);
+				});
 			});
 		});
 	});
