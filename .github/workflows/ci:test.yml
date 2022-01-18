@@ -1,0 +1,57 @@
+name: ci:test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  test:
+    name: Continuous integration (tests)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 💾
+        uses: meteor-actions/install@v2
+
+      - name: Cache build 💽
+        uses: meteor-actions/cache-build@v2
+        with:
+          key: test
+
+      - name: Tests 🔬
+        run: meteor npm run ci:test
+
+      - name: Publish coverage report 📰
+        uses: codecov/codecov-action@v2
+        with:
+          flags: test
+          directory: ./.coverage/
+          fail_ci_if_error: true
+
+  test-app:
+    name: Continuous integration (app tests)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 💾
+        uses: meteor-actions/install@v2
+
+      - name: Cache build 💽
+        uses: meteor-actions/cache-build@v2
+        with:
+          key: test-app
+
+      - name: App Tests 🕹️
+        run: meteor npm run ci:test -- --full-app
+
+      - name: Publish coverage report 📰
+        uses: codecov/codecov-action@v2
+        with:
+          flags: test-app
+          directory: ./.coverage/
+          fail_ci_if_error: true

@@ -1,0 +1,20 @@
+name: ci:lint
+
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  lint:
+    name: Continuous integration (lint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 💾
+        uses: meteor-actions/install@v2
+
+      - name: Lint 👕
+        run: meteor npm run lint
