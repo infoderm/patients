@@ -7,7 +7,12 @@ import properlyIntersectsWithRightOpenInterval from '../../interval/containsDate
 import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';
 import overlapsInterval from '../../interval/overlapsInterval';
 import {Availability} from '../../collection/availability';
-import {Constraint, Duration, overlapsAfterDate} from '../../availability';
+import {
+	Constraint,
+	Duration,
+	initialSlot,
+	overlapsAfterDate,
+} from '../../availability';
 import {WEEK_MODULO} from '../../../util/datetime';
 
 export default define({
@@ -18,12 +23,11 @@ export default define({
 		check(constraints, Array);
 	},
 	run(after: Date, duration: Duration, constraints: Constraint[]) {
+		const owner = this.userId;
+
 		const properlyIntersecting = Availability.find(
 			{
-				$and: [
-					{owner: this.userId, weight: 0},
-					properlyIntersectsWithRightOpenInterval(after),
-				],
+				$and: [{owner}, properlyIntersectsWithRightOpenInterval(after)],
 			},
 			{
 				limit: 2,
@@ -32,10 +36,15 @@ export default define({
 
 		assert(properlyIntersecting.length <= 1);
 
+		if (properlyIntersecting.length === 0) {
+			// availability is empty
+			return initialSlot(owner);
+		}
+
 		const firstContainedAndOverlapping = Availability.findOne(
 			{
 				$and: [
-					{owner: this.userId, weight: 0},
+					{owner, weight: 0},
 					isContainedInRightOpenIterval(after),
 					{
 						$or: [
@@ -75,12 +84,8 @@ export default define({
 			},
 		);
 
-		return overlapsAfterDate(
-			after,
-			duration,
-			constraints,
-			properlyIntersecting[0],
-		)
+		return properlyIntersecting[0].weight === 0 &&
+			overlapsAfterDate(after, duration, constraints, properlyIntersecting[0])
 			? properlyIntersecting[0]
 			: firstContainedAndOverlapping;
 	},
