@@ -11,7 +11,7 @@ interface ParamsCommon<T> {
 }
 
 interface ParamsWithTransaction<T> extends ParamsCommon<T> {
-	readonly transaction?: Transaction;
+	readonly transaction: Transaction;
 	readonly simulate?: Executor;
 	readonly run?: never;
 }
@@ -19,7 +19,7 @@ interface ParamsWithTransaction<T> extends ParamsCommon<T> {
 interface ParamsWithoutTransaction<T> extends ParamsCommon<T> {
 	readonly transaction?: never;
 	readonly simulate?: Executor;
-	readonly run?: Executor;
+	readonly run: Executor;
 }
 
 type Params<T> = ParamsWithTransaction<T> | ParamsWithoutTransaction<T>;
