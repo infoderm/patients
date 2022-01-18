@@ -6,9 +6,9 @@ import decodeText from './documents/decodeText';
 import detectTextEncoding from './documents/detectTextEncoding';
 import parseHealthOne from './documents/parseHealthOne';
 
-const DETECT_REGEX_HEALTHONE = /^A1\/\d+\//m;
-const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/m;
-const DETECT_REGEX_MEDIDOC_LAB = /^[A-Z]\d{3}[\r\n]/m;
+const DETECT_REGEX_HEALTHONE = /^A1\\\d+\\/;
+const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/;
+const DETECT_REGEX_MEDIDOC_LAB = /^[A-Z]\d{3}[\r\n]/;
 
 const detectFormats = (string: string): Record<string, number> => ({
 	healthone: DETECT_REGEX_HEALTHONE.test(string) ? 1 : 0,
