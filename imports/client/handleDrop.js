@@ -22,7 +22,7 @@ function unpack(data, item) {
 		}
 
 		if (f.name.endsWith('.REP')) {
-			return ['medidoc', f];
+			return ['DMA-REP', f];
 		}
 
 		return ['unknown-file', f];
@@ -49,6 +49,7 @@ const handleDrop = (history) => (data) => {
 				insertPatient(history, object);
 				break;
 			case 'healthone':
+			case 'DMA-REP':
 				insertDocument(history, kind, object);
 				break;
 			default:
