@@ -2,6 +2,7 @@ import {check} from 'meteor/check';
 
 import {Patients} from '../../collection/patients';
 import {patients} from '../../patients';
+import Wrapper from '../../transaction/Wrapper';
 
 import define from '../define';
 
@@ -12,23 +13,31 @@ export default define({
 	validate(patient: any) {
 		check(patient, Object);
 	},
-	async run(patient: any) {
+	async transaction(db: Wrapper, patient: any) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
 		const fields = sanitize(patient);
 
-		updateTags(this.userId, fields);
+		await updateTags(db, this.userId, fields);
 
-		const patientId = Patients.insert({
+		const {insertedId: patientId} = await db.insertOne(Patients, {
 			...fields,
 			createdAt: new Date(),
 			owner: this.userId,
 		});
 
-		updateIndex(this.userId, patientId, fields);
+		await updateIndex(db, this.userId, patientId, fields);
 
 		return patientId;
+	},
+	simulate(patient: any) {
+		const fields = sanitize(patient);
+		return Patients.insert({
+			...fields,
+			createdAt: new Date(),
+			owner: this.userId,
+		});
 	},
 });

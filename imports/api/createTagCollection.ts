@@ -21,6 +21,8 @@ import TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
 import subscribe from './publication/subscribe';
 import Publication from './publication/Publication';
+import Wrapper from './transaction/Wrapper';
+import Filter from './transaction/Filter';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -173,32 +175,34 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			check(tagId, String);
 			check(newname, String);
 		},
-		run(tagId: string, newname: string) {
-			// TODO make atomic
-			const tag = Collection.findOne(tagId);
-			const owner = tag.owner;
+		async transaction(db: Wrapper, tagId: string, newname: string) {
+			const owner = this.userId;
+			const tag = await db.findOne(Collection, {
+				_id: tagId,
+				owner,
+			} as Filter<T>);
 
-			if (owner !== this.userId) {
-				throw new Meteor.Error('not-authorized');
+			if (tag === null) {
+				throw new Meteor.Error('not-found');
 			}
 
 			const oldname = tag.name;
 			newname = newname.trim();
 
-			Parent.update(
+			await db.updateMany(
+				Parent,
 				{[key]: oldname, owner},
 				{
 					$addToSet: {[key]: newname},
 				},
-				{multi: true},
 			);
 
-			Parent.update(
+			await db.updateMany(
+				Parent,
 				{[key]: newname, owner},
 				{
 					$pull: {[key]: oldname},
 				},
-				{multi: true},
 			);
 
 			const selector = {
@@ -214,10 +218,12 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 
 			delete newfields._id;
 
-			Collection.remove(tagId);
-			return Collection.upsert(
-				selector as Mongo.Selector<T>,
+			await db.deleteOne(Collection, {_id: tagId} as Filter<T>);
+			return db.updateOne(
+				Collection,
+				selector as Filter<T>,
 				{$set: newfields} as Mongo.Modifier<T>,
+				{upsert: true},
 			);
 		},
 	});
@@ -227,21 +233,24 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 		validate(tagId: string) {
 			check(tagId, String);
 		},
-		run(tagId: string) {
-			// TODO make atomic
-			const tag = Collection.findOne(tagId);
-			const owner = tag.owner;
+		async transaction(db: Wrapper, tagId: string) {
+			const owner = this.userId;
+			const tag = await db.findOne(Collection, {
+				_id: tagId,
+				owner,
+			} as Filter<T>);
 
-			if (owner !== this.userId) {
-				throw new Meteor.Error('not-authorized');
+			if (tag === null) {
+				throw new Meteor.Error('not-found');
 			}
 
-			Parent.update(
+			await db.updateMany(
+				Parent,
 				{[key]: tag.name, owner},
 				{$pull: {[key]: tag.name}},
-				{multi: true},
 			);
-			return Collection.remove(tagId);
+
+			return db.deleteOne(Collection, {_id: tagId} as Filter<T>);
 		},
 		simulate(tagId: string) {
 			return Collection.remove(tagId);
@@ -255,7 +264,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			parentPublicationStats: statsPublication,
 		},
 
-		add: (owner: string, name: string) => {
+		add: async (db: Wrapper, owner: string, name: string) => {
 			check(owner, String);
 			check(name, String);
 
@@ -271,13 +280,15 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 				...selector,
 			};
 
-			return Collection.upsert(
-				selector as Mongo.Selector<T>,
+			return db.updateOne(
+				Collection,
+				selector as Filter<T>,
 				{$set: fields} as Mongo.Modifier<T>,
+				{upsert: true},
 			);
 		},
 
-		remove: (owner: string, name: string) => {
+		remove: async (db: Wrapper, owner: string, name: string) => {
 			check(owner, String);
 			check(name, String);
 
@@ -286,9 +297,9 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			const selector = {
 				owner,
 				name,
-			} as Mongo.Selector<T>;
+			} as Filter<T>;
 
-			return Collection.remove(selector);
+			return db.deleteOne(Collection, selector);
 		},
 	};
 

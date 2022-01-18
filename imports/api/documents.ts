@@ -6,6 +6,7 @@ import decodeText from './documents/decodeText';
 import detectTextEncoding from './documents/detectTextEncoding';
 import parseHealthOne from './documents/parseHealthOne';
 import parseMedidoc from './documents/parseMedidoc';
+import Wrapper from './transaction/Wrapper';
 
 const DETECT_REGEX_HEALTHONE = /^A1\\\d+\\/;
 const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/;
@@ -25,7 +26,17 @@ const detectFormat = (string: string): string | undefined => {
 	return matches.length === 1 ? matches[0] : undefined;
 };
 
-async function* sanitize({patientId, format: formatHint, array}) {
+interface DirtyDocument {
+	patientId: string;
+	format?: string;
+	array: Uint8Array;
+}
+
+async function* sanitize({
+	patientId,
+	format: formatHint,
+	array,
+}: DirtyDocument) {
 	if (patientId !== undefined) check(patientId, String);
 	if (formatHint !== undefined) check(formatHint, String);
 	check(array, Uint8Array);
@@ -112,14 +123,15 @@ async function* sanitize({patientId, format: formatHint, array}) {
 	};
 }
 
-function updateLastVersionFlags(owner, document) {
+async function updateLastVersionFlags(db: Wrapper, owner, document) {
 	if (!document.parsed) {
 		return;
 	}
 
 	const {identifier, reference} = document;
 
-	const latest = Documents.findOne(
+	const latest = await db.findOne(
+		Documents,
 		{
 			owner,
 			identifier,
@@ -130,17 +142,19 @@ function updateLastVersionFlags(owner, document) {
 			sort: {
 				status: 1, // Complete < partial
 				datetime: -1,
+				createdAt: -1,
 			},
 		},
 	);
 
-	if (latest === undefined) {
+	if (latest === null) {
 		return;
 	}
 
-	Documents.update(latest._id, {$set: {lastVersion: true}});
+	await db.updateOne(Documents, {_id: latest._id}, {$set: {lastVersion: true}});
 
-	Documents.update(
+	await db.updateMany(
+		Documents,
 		{
 			owner,
 			identifier,
@@ -152,9 +166,6 @@ function updateLastVersionFlags(owner, document) {
 			$set: {
 				lastVersion: false,
 			},
-		},
-		{
-			multi: true,
 		},
 	);
 }

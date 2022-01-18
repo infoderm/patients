@@ -1,11 +1,26 @@
+import Executor from './Executor';
 import Options from './Options';
+import Transaction from './Transaction';
+import Validator from './Validator';
 
-interface Params<T> {
+interface ParamsCommon<T> {
 	readonly name: string;
-	readonly validate: (...args: any[]) => void;
-	readonly run: (...args: any[]) => any;
-	readonly simulate?: (...args: any[]) => any;
+	readonly validate: Validator;
 	readonly options?: Options<T>;
 }
+
+interface ParamsWithTransaction<T> extends ParamsCommon<T> {
+	readonly transaction?: Transaction;
+	readonly simulate?: Executor;
+	readonly run?: never;
+}
+
+interface ParamsWithoutTransaction<T> extends ParamsCommon<T> {
+	readonly transaction?: never;
+	readonly simulate?: Executor;
+	readonly run?: Executor;
+}
+
+type Params<T> = ParamsWithTransaction<T> | ParamsWithoutTransaction<T>;
 
 export default Params;

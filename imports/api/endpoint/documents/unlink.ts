@@ -11,5 +11,5 @@ export default define({
 	validate(documentId: string) {
 		check(documentId, String);
 	},
-	run: unconditionallyUpdateById(Documents, {$unset: {patientId: ''}}),
+	transaction: unconditionallyUpdateById(Documents, {$unset: {patientId: ''}}),
 });

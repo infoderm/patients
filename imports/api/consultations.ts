@@ -9,6 +9,7 @@ import {books} from './books';
 
 import {Consultations} from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
+import Wrapper from './transaction/Wrapper';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -18,8 +19,9 @@ export const DEFAULT_DURATION_IN_MILLISECONDS =
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
 	paid !== price;
 
-export const findLastConsultation = (filter) =>
-	Consultations.findOne(
+export const findLastConsultation = (db: Wrapper, filter) =>
+	db.findOne(
+		Consultations,
 		{
 			isDone: true,
 			...filter,
@@ -32,10 +34,11 @@ export const findLastConsultation = (filter) =>
 	);
 
 export const findLastConsultationInInterval = (
+	db: Wrapper,
 	[begin, end]: [Date, Date],
 	filter,
 ) =>
-	findLastConsultation({
+	findLastConsultation(db, {
 		datetime: {
 			$gte: begin,
 			$lt: end,

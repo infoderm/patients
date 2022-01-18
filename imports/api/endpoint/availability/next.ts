@@ -14,6 +14,7 @@ import {
 	overlapsAfterDate,
 } from '../../availability';
 import {WEEK_MODULO} from '../../../util/datetime';
+import Wrapper from '../../transaction/Wrapper';
 
 export default define({
 	name: 'availability.next',
@@ -22,17 +23,23 @@ export default define({
 		check(duration, Number);
 		check(constraints, Array);
 	},
-	run(after: Date, duration: Duration, constraints: Constraint[]) {
+	async transaction(
+		db: Wrapper,
+		after: Date,
+		duration: Duration,
+		constraints: Constraint[],
+	) {
 		const owner = this.userId;
 
-		const properlyIntersecting = Availability.find(
+		const properlyIntersecting = await db.fetch(
+			Availability,
 			{
 				$and: [{owner}, properlyIntersectsWithRightOpenInterval(after)],
 			},
 			{
 				limit: 2,
 			},
-		).fetch();
+		);
 
 		assert(properlyIntersecting.length <= 1);
 
@@ -41,7 +48,8 @@ export default define({
 			return initialSlot(owner);
 		}
 
-		const firstContainedAndOverlapping = Availability.findOne(
+		const firstContainedAndOverlapping = await db.findOne(
+			Availability,
 			{
 				$and: [
 					{owner, weight: 0},

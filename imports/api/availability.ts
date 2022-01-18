@@ -23,6 +23,7 @@ import {
 	SlotDocument,
 	SlotFields,
 } from './collection/availability';
+import Wrapper from './transaction/Wrapper';
 
 export type Constraint = [number, number];
 export type Duration = number;
@@ -173,7 +174,8 @@ const canBeSimplified = (slots: Array<[Date, Date, number]>): boolean => {
 	return false;
 };
 
-export const insertHook = (
+export const insertHook = async (
+	db: Wrapper,
 	owner: string,
 	begin: Date,
 	end: Date,
@@ -181,9 +183,9 @@ export const insertHook = (
 ) => {
 	if (weight === 0 || isEmpty(begin, end)) return;
 
-	// TODO use transaction
-
-	const _intersected = Availability.find(
+	// NOTE we need touching intervals in case of merge simplification
+	const _intersected = await db.fetch(
+		Availability,
 		{
 			$and: [{owner}, intersectsOrTouchesInterval(begin, end)],
 		},
@@ -192,7 +194,9 @@ export const insertHook = (
 				begin: 1,
 			},
 		},
-	).fetch();
+	);
+
+	// console.debug({_intersected});
 
 	assert(
 		isContiguous(
@@ -260,27 +264,29 @@ export const insertHook = (
 
 	assert(!canBeSimplified(toInsert));
 
-	Availability.remove({_id: {$in: toDelete}});
+	await db.deleteMany(Availability, {_id: {$in: toDelete}});
 
-	for (const [a, b, w] of toInsert) {
-		// TODO use bulk insertion (and transaction! redundant?)
-		Availability.insert({
+	await db.insertMany(
+		Availability,
+		toInsert.map(([a, b, w]) => ({
 			...slot(a, b, w),
 			owner,
-		});
-	}
+		})),
+	);
 };
 
-export const removeHook = (
+export const removeHook = async (
+	db: Wrapper,
 	owner: string,
 	begin: Date,
 	end: Date,
 	weight: number,
 ) => {
-	insertHook(owner, begin, end, -weight);
+	await insertHook(db, owner, begin, end, -weight);
 };
 
-export const updateHook = (
+export const updateHook = async (
+	db: Wrapper,
 	owner: string,
 	oldBegin: Date,
 	oldEnd: Date,
@@ -295,8 +301,8 @@ export const updateHook = (
 		newWeight !== oldWeight
 	) {
 		// TODO optimize
-		insertHook(owner, newBegin, newEnd, newWeight);
-		removeHook(owner, oldBegin, oldEnd, oldWeight);
+		await insertHook(db, owner, newBegin, newEnd, newWeight);
+		await removeHook(db, owner, oldBegin, oldEnd, oldWeight);
 	}
 };
 

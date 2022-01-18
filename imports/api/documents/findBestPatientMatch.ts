@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Patients} from '../collection/patients';
 import {patients} from '../patients';
+import Wrapper from '../transaction/Wrapper';
 
 function* findBestPatientMatch_queries(entry) {
 	if (entry.patient) {
@@ -16,7 +17,7 @@ function* findBestPatientMatch_queries(entry) {
 	}
 }
 
-function findBestPatientMatch(owner, entry) {
+async function findBestPatientMatch(db: Wrapper, owner, entry) {
 	if (entry.patientId) {
 		return entry.patientId;
 	}
@@ -26,7 +27,8 @@ function findBestPatientMatch(owner, entry) {
 	const queries = findBestPatientMatch_queries(entry);
 
 	for (const query of queries) {
-		const matches = Patients.find({...query, owner}, firstTwo).fetch();
+		// eslint-disable-next-line no-await-in-loop
+		const matches = await db.fetch(Patients, {...query, owner}, firstTwo);
 		switch (matches.length) {
 			case 0:
 				// If no patient matches
@@ -43,9 +45,13 @@ function findBestPatientMatch(owner, entry) {
 	return undefined;
 }
 
-export default function findBestPatientMatchServerOnly(owner, entry) {
+export default async function findBestPatientMatchServerOnly(
+	db: Wrapper,
+	owner,
+	entry,
+) {
 	// This query depends on the entire database being available.
 	// Therefore, it cannot be simulated efficiently on the client.
-	if (Meteor.isServer) return findBestPatientMatch(owner, entry);
+	if (Meteor.isServer) return findBestPatientMatch(db, owner, entry);
 	return undefined;
 }

@@ -3,6 +3,7 @@ import {check} from 'meteor/check';
 import {Documents} from '../../collection/documents';
 import {documents} from '../../documents';
 import findBestPatientMatch from '../../documents/findBestPatientMatch';
+import executeTransaction from '../../transaction/executeTransaction';
 
 import define from '../define';
 
@@ -14,7 +15,6 @@ export default define({
 		check(document, Object);
 	},
 	async run(document: any) {
-		// TODO make atomic
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -24,75 +24,93 @@ export default define({
 		const result = [];
 
 		for await (const entry of entries) {
-			// Find best patient match for this document
+			// TODO split to new invoked method
+			await executeTransaction(async (db) => {
+				// Find best patient match for this document
 
-			const patientId = findBestPatientMatch(this.userId, entry);
+				const patientId = await findBestPatientMatch(db, this.userId, entry);
 
-			// Find document with matching source
+				// Find document with matching source
 
-			const existingDocument = Documents.findOne({
-				owner: this.userId,
-				source: entry.source,
-			});
-
-			if (!existingDocument) {
-				// Only create new document if there is no other document with
-				// matching source
-
-				const _id = Documents.insert({
-					...entry,
-					patientId,
-					deleted: false,
-					createdAt: new Date(),
+				const existingDocument = await db.findOne(Documents, {
 					owner: this.userId,
+					source: entry.source,
 				});
 
-				result.push(_id);
-			} else {
-				// We update the document if we found a matching patient and no
-				// patient had been assigned before.
+				if (existingDocument === null) {
+					// Only create new document if there is no other document with
+					// matching source
 
-				if (!existingDocument.patientId && patientId) {
-					// TODO Test this on all documents without a patientId when
-					// creating a new patient.
-					Documents.update(existingDocument._id, {$set: {patientId}});
-				}
-
-				// We update the document if it did not have a binary field before.
-
-				// if (!existingDocument.binary) {
-				// Documents.update(existingDocument._id, {
-				// $set: {
-				// binary: entry.binary,
-				// }
-				// });
-				// }
-
-				// We update the document if it had not been properly decoded before.
-
-				if (
-					existingDocument.parsed &&
-					(existingDocument.encoding !== entry.encoding ||
-						existingDocument.decoded !== entry.decoded)
-				) {
-					Documents.update(existingDocument._id, {
-						$set: {
-							...entry,
-							patientId,
-						},
+					const {insertedId} = await db.insertOne(Documents, {
+						...entry,
+						patientId,
+						deleted: false,
+						createdAt: new Date(),
+						owner: this.userId,
 					});
+
+					result.push(insertedId);
+				} else {
+					// We update the document if we found a matching patient and no
+					// patient had been assigned before.
+
+					if (!existingDocument.patientId && patientId) {
+						// TODO Test this on all documents without a patientId when
+						// creating a new patient.
+						await db.updateOne(
+							Documents,
+							{_id: existingDocument._id},
+							{$set: {patientId}},
+						);
+					}
+
+					// We update the document if it did not have a binary field before.
+
+					// if (!existingDocument.binary) {
+					// Documents.update(existingDocument._id, {
+					// $set: {
+					// binary: entry.binary,
+					// }
+					// });
+					// }
+
+					// We update the document if it had not been properly decoded before.
+
+					if (
+						existingDocument.parsed &&
+						(existingDocument.encoding !== entry.encoding ||
+							existingDocument.decoded !== entry.decoded)
+					) {
+						await db.updateOne(
+							Documents,
+							{_id: existingDocument._id},
+							{
+								$set: {
+									...entry,
+									patientId,
+								},
+							},
+						);
+					}
+
+					if (!existingDocument.parsed && !existingDocument.lastVersion) {
+						await db.updateOne(
+							Documents,
+							{_id: existingDocument._id},
+							{$set: {lastVersion: true}},
+						);
+					}
+
+					result.push(existingDocument._id);
 				}
 
-				if (!existingDocument.parsed && !existingDocument.lastVersion) {
-					Documents.update(existingDocument._id, {$set: {lastVersion: true}});
-				}
-
-				result.push(existingDocument._id);
-			}
-
-			updateLastVersionFlags(this.userId, entry);
+				await updateLastVersionFlags(db, this.userId, entry);
+			});
 		}
 
 		return result;
+	},
+	simulate(_document: any) {
+		throw new Error('simulation not-implemented');
 	},
 });

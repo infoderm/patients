@@ -14,6 +14,7 @@ interface Options<
 		| undefined;
 	returnStubValue?: boolean | undefined;
 	throwStubExceptions?: boolean | undefined;
+	noRetry?: boolean | undefined;
 }
 
 export default Options;

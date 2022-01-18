@@ -4,12 +4,12 @@ import {Mongo} from 'meteor/mongo';
 import {Appointments} from '../../collection/appointments';
 import {appointments} from '../../appointments';
 
-import invoke from '../invoke';
-
 import define from '../define';
 
 import {availability} from '../../availability';
 import {ConsultationDocument} from '../../collection/consultations';
+import compose from '../compose';
+import Wrapper from '../../transaction/Wrapper';
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -20,21 +20,22 @@ export default define({
 		check(appointmentId, String);
 		check(appointment, Object);
 	},
-	async run(appointmentId: string, appointment: any) {
+	async transaction(db: Wrapper, appointmentId: string, appointment: any) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
 		const owner = this.userId;
-		const item = Appointments.findOne({_id: appointmentId, owner});
-		if (!item) {
+		const item = await db.findOne(Appointments, {_id: appointmentId, owner});
+		if (item === null) {
 			throw new Meteor.Error('not-found');
 		}
 
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {
-			args.consultationFields.patientId = await invoke(
+			args.consultationFields.patientId = await compose(
+				db,
 				createPatientForAppointment,
 				this,
 				[args.patientFields],
@@ -57,7 +58,8 @@ export default define({
 		const newIsDone = fields.isDone ?? oldIsDone;
 		const newIsCancelled = oldIsCancelled;
 		const newWeight = newIsDone || newIsCancelled ? 0 : 1;
-		availability.updateHook(
+		await availability.updateHook(
+			db,
 			owner,
 			oldBegin,
 			oldEnd,
@@ -72,7 +74,7 @@ export default define({
 			$currentDate: {lastModifiedAt: true},
 		};
 
-		Appointments.update(appointmentId, modifier);
+		await db.updateOne(Appointments, {_id: appointmentId}, modifier);
 
 		return {
 			_id: appointmentId,

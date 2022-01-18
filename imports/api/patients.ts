@@ -23,6 +23,7 @@ import {
 	boundaryTrigrams,
 	junctionTrigrams,
 } from './string';
+import Wrapper from './transaction/Wrapper';
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
@@ -40,7 +41,12 @@ function normalizedName(firstname, lastname) {
 	return `${lastnameHash} ${firstnameHash}`;
 }
 
-function updateIndex(userId: string, _id: string, fields) {
+const updateIndex = async (
+	db: Wrapper,
+	userId: string,
+	_id: string,
+	fields,
+) => {
 	const {niss, firstname, lastname, birthdate, sex} = fields;
 	const [firstnameWords, middlenameWords] = splitNames(firstname ?? '');
 	const lastnameWords = keepUnique(words(lastname ?? ''));
@@ -70,13 +76,18 @@ function updateIndex(userId: string, _id: string, fields) {
 		owner: userId,
 	};
 
-	PatientsSearchIndex.upsert(_id, {
-		$set: upsertFields,
-		$currentDate: {lastModifiedAt: true},
-	});
-}
+	await db.updateOne(
+		PatientsSearchIndex,
+		{_id},
+		{
+			$set: upsertFields,
+			$currentDate: {lastModifiedAt: true},
+		},
+		{upsert: true},
+	);
+};
 
-function updateTags(userId, fields) {
+const updateTags = async (db: Wrapper, userId, fields) => {
 	for (const [tagCollection, tagList] of [
 		[insurances, fields.insurances],
 		[doctors, fields.doctors],
@@ -84,11 +95,12 @@ function updateTags(userId, fields) {
 	]) {
 		if (tagList) {
 			for (const tag of tagList) {
-				tagCollection.add(userId, tag);
+				// eslint-disable-next-line no-await-in-loop
+				await tagCollection.add(db, userId, tag);
 			}
 		}
 	}
-}
+};
 
 function sanitize({
 	niss,

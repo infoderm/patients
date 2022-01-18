@@ -8,6 +8,7 @@ import {books} from '../../books';
 
 import define from '../define';
 import {availability} from '../../availability';
+import Wrapper from '../../transaction/Wrapper';
 
 const {sanitize} = consultations;
 
@@ -16,7 +17,7 @@ export default define({
 	validate(consultation: any) {
 		check(consultation, Object);
 	},
-	run(consultation: any) {
+	async transaction(db: Wrapper, consultation: any) {
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
@@ -24,7 +25,11 @@ export default define({
 		const fields = sanitize(consultation);
 
 		if (fields.datetime && fields.book) {
-			books.add(this.userId, books.name(fields.datetime, fields.book));
+			await books.add(
+				db,
+				this.userId,
+				books.name(fields.datetime, fields.book),
+			);
 		}
 
 		const createdAt = new Date();
@@ -41,8 +46,8 @@ export default define({
 
 		const {begin, end} = document;
 
-		availability.insertHook(owner, begin, end, 0);
+		await availability.insertHook(db, owner, begin, end, 0);
 
-		return Consultations.insert(document);
+		return db.insertOne(Consultations, document);
 	},
 });

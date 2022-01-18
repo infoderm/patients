@@ -1,8 +1,16 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
+import Wrapper from './transaction/Wrapper';
+import Filter from './transaction/Filter';
 
-type OpFunction<T> = (existing: T, ...rest: any[]) => Mongo.Modifier<T>;
+type OpReturnValue<T> = Promise<Mongo.Modifier<T>> | Mongo.Modifier<T>;
+
+type OpFunction<T> = (
+	db: Wrapper,
+	existing: T,
+	...rest: any[]
+) => OpReturnValue<T>;
 
 type Op<T> = OpFunction<T> | Mongo.Modifier<T>;
 
@@ -11,26 +19,30 @@ const unconditionallyUpdateById = <T>(
 	op: Op<T>,
 	ownerKey = 'owner',
 ) =>
-	function (this: Meteor.MethodThisType, _id: string, ...rest: any[]) {
-		// TODO make atomic
+	async function (
+		this: Meteor.MethodThisType,
+		db: Wrapper,
+		_id: string,
+		...rest: any[]
+	) {
 		check(_id, String);
 
 		if (!this.userId) {
 			throw new Meteor.Error('not-authorized');
 		}
 
-		const selector = {_id, [ownerKey]: this.userId} as Mongo.Selector<T>;
-		const existing = Collection.findOne(selector);
-		if (!existing) {
+		const selector = {_id, [ownerKey]: this.userId} as unknown as Filter<T>;
+		const existing = await db.findOne(Collection, selector);
+		if (existing === null) {
 			throw new Meteor.Error('not-found');
 		}
 
 		const options =
 			op instanceof Function
-				? Reflect.apply(op, this, [existing, ...rest])
+				? await Reflect.apply(op, this, [db, existing, ...rest])
 				: op;
 
-		return Collection.update(_id, options);
+		return db.updateOne(Collection, {_id} as unknown as Filter<T>, options);
 	};
 
 export default unconditionallyUpdateById;

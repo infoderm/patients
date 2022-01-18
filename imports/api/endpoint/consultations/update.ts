@@ -11,6 +11,7 @@ import {books} from '../../books';
 
 import define from '../define';
 import {availability} from '../../availability';
+import Wrapper from '../../transaction/Wrapper';
 
 const {sanitize} = consultations;
 
@@ -20,19 +21,19 @@ export default define({
 		check(consultationId, String);
 		check(newfields, Object);
 	},
-	run(consultationId: string, newfields: any) {
+	async transaction(db: Wrapper, consultationId: string, newfields: any) {
 		const owner = this.userId;
-		const existing = Consultations.findOne({
+		const existing = await db.findOne(Consultations, {
 			_id: consultationId,
 			owner,
 		});
-		if (!existing) {
+		if (existing === null) {
 			throw new Meteor.Error('not-found');
 		}
 
 		const fields = sanitize(newfields);
 		if (fields.datetime && fields.book) {
-			books.add(owner, books.name(fields.datetime, fields.book));
+			await books.add(db, owner, books.name(fields.datetime, fields.book));
 		}
 
 		let $unset;
@@ -81,7 +82,8 @@ export default define({
 		const newIsDone = $set.isDone ?? oldIsDone;
 		const newIsCancelled = oldIsCancelled;
 		const newWeight = newIsDone || newIsCancelled ? 0 : 1;
-		availability.updateHook(
+		await availability.updateHook(
+			db,
 			owner,
 			oldBegin,
 			oldEnd,
@@ -91,6 +93,9 @@ export default define({
 			newWeight,
 		);
 
-		return Consultations.update(consultationId, modifier);
+		return db.updateOne(Consultations, {_id: consultationId}, modifier);
+	},
+	simulate(_consultationId: string, _newfields: any) {
+		throw new Error('simulation not-implemented');
 	},
 });
