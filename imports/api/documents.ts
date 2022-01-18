@@ -41,6 +41,10 @@ async function* sanitize({patientId, format: formatHint, array}) {
 		console.debug('trying to detect encoding...');
 		const encoding = await detectTextEncoding(array);
 		console.debug('encoding', encoding);
+		if (encoding === null) {
+			throw new Error('could not detect text encoding');
+		}
+
 		console.debug('trying to decode...');
 		const decoded = await decodeText(encoding, array);
 		console.debug('worked!');
