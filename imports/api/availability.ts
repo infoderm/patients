@@ -116,6 +116,12 @@ const slot = (begin: Date, end: Date, weight: number): SlotFields => {
 	};
 };
 
+export const initialSlot = (owner: string) => ({
+	...slot(beginningOfTime(), endOfTime(), 0),
+	_id: '?',
+	owner,
+});
+
 const simplify = (
 	slots: Array<[Date, Date, number]>,
 ): Array<[Date, Date, number]> => {
@@ -197,15 +203,7 @@ export const insertHook = (
 
 	// Initialize timeline with monolith event
 	const intersected: SlotDocument[] =
-		_intersected.length === 0
-			? [
-					{
-						...slot(beginningOfTime(), endOfTime(), 0),
-						_id: '?',
-						owner,
-					},
-			  ]
-			: _intersected;
+		_intersected.length === 0 ? [initialSlot(owner)] : _intersected;
 
 	assert(
 		isContiguous(
