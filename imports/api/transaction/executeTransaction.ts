@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
 import {SessionOptions, TransactionOptions} from 'mongodb';
 
-import ClientSessionWrapper from './ClientSessionWrapper';
+import MongoDBClientSessionWrapper from './ClientSessionWrapper';
 import Transaction from './Transaction';
 
 /**
@@ -14,10 +14,15 @@ const executeTransaction = async (
 	sessionOptions?: SessionOptions,
 ) => {
 	const {client} = MongoInternals.defaultRemoteCollectionDriver().mongo;
-	const session = client.startSession(sessionOptions);
+	// NOTE causalConsistency: true is the default but better be explicit
+	// see https://www.youtube.com/watch?v=x5UuQL9rA1c
+	const session = client.startSession({
+		causalConsistency: true,
+		...sessionOptions,
+	});
 	session.startTransaction(transactionOptions);
 	try {
-		const wrap = new ClientSessionWrapper(session);
+		const wrap = new MongoDBClientSessionWrapper(session);
 		const result = await transaction(wrap);
 		await session.commitTransaction();
 		return result;
