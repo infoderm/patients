@@ -104,7 +104,7 @@ export const weekShifted = (begin: Date, end: Date) => {
 	return [weekShiftedBegin, weekShiftedEnd];
 };
 
-const slot = (begin: Date, end: Date, weight: number): SlotFields => {
+export const slot = (begin: Date, end: Date, weight: number): SlotFields => {
 	const [weekShiftedBegin, weekShiftedEnd] = weekShifted(begin, end);
 	const measure = Number(end) - Number(begin);
 	return {
