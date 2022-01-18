@@ -1,21 +1,33 @@
 import snapshotTransaction from './snapshotTransaction';
-import ClientSessionWrapper from './ClientSessionWrapper';
+import MongoDBClientSessionWrapper from './ClientSessionWrapper';
+import Collection from './Collection';
+import Filter from './Filter';
 
-type ForEachAsyncCallback = (
-	txn: ClientSessionWrapper,
-	item: any,
+type ForEachAsyncCallback<T> = (
+	db: MongoDBClientSessionWrapper,
+	item: T,
 ) => Promise<any>;
 
-const forEachAsync = async (collection, fn: ForEachAsyncCallback) =>
-	snapshotTransaction(async (txn) => {
-		const cursor = txn.find(collection, {}).hint({$natural: 1});
+const forEachAsync = async <T, U = T>(
+	collection: Collection<T, U>,
+	filter: Filter<T>,
+	fn: ForEachAsyncCallback<T>,
+) =>
+	snapshotTransaction(async (db) => {
+		const label = `forEachAsync-${
+			collection.rawCollection().collectionName
+		}-${JSON.stringify(filter)}`;
+		console.time(label);
+		const cursor = db.find(collection, filter).hint({$natural: 1});
 		for (;;) {
 			// eslint-disable-next-line no-await-in-loop
 			const item = await cursor.next();
-			if (item === null) return;
+			if (item === null) break;
 			// eslint-disable-next-line no-await-in-loop
-			await fn(txn, item);
+			await fn(db, item);
 		}
+
+		console.timeEnd(label);
 	});
 
 export default forEachAsync;
