@@ -24,6 +24,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
+import useUniqueId from '../hooks/useUniqueId';
 
 const styles = (theme) => ({
 	container: {
@@ -46,6 +47,9 @@ const NewPatientForm = () => {
 	const [birthdate, setBirthdate] = useState('');
 	const [sex, setSex] = useState('');
 	const [noshow, setNoshow] = useState(0);
+
+	const lastnameId = useUniqueId('new-patient-form-input-lastname');
+	const firstnameId = useUniqueId('new-patient-form-input-firstname');
 
 	const history = useHistory();
 	const classes = useStyles();
@@ -85,6 +89,7 @@ const NewPatientForm = () => {
 							<Grid item xs={6}>
 								<TextField
 									fullWidth
+									id={lastnameId}
 									label="Last name"
 									value={lastname}
 									onChange={(e) => {
@@ -95,6 +100,7 @@ const NewPatientForm = () => {
 							<Grid item xs={6}>
 								<TextField
 									fullWidth
+									id={firstnameId}
 									label="First name"
 									value={firstname}
 									onChange={(e) => {
@@ -168,7 +174,6 @@ const NewPatientForm = () => {
 						<Button
 							className={classes.button}
 							color="primary"
-							aria-label="add"
 							endIcon={<PersonAddIcon />}
 							onClick={handleSubmit}
 						>
