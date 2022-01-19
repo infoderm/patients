@@ -14,9 +14,18 @@ const DocumentImportButton = ({onImport, children, ...rest}) => {
 		onImport(history, files);
 	};
 
+	const defaultText = 'Import Document';
+	const defaultIcon = <CloudUploadIcon />;
+	const computedChildren = children || defaultIcon;
+
+	const extraProps =
+		typeof computedChildren === 'string'
+			? {endIcon: defaultIcon}
+			: {'aria-label': defaultText};
+
 	return (
-		<InputFileButton onChange={onChange} {...rest}>
-			{children || <CloudUploadIcon />}
+		<InputFileButton onChange={onChange} {...extraProps} {...rest}>
+			{computedChildren}
 		</InputFileButton>
 	);
 };
