@@ -18,6 +18,8 @@
             "transform-remove-console",
             {
               "exclude": [
+                "time",
+                "timeEnd",
                 "log",
                 "error",
                 "warn"
