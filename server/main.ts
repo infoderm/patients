@@ -4,6 +4,7 @@ import assert from 'assert';
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {WebApp} from 'meteor/webapp';
+import {Accounts} from 'meteor/accounts-base';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
@@ -42,6 +43,11 @@ import '../imports/api/endpoint/_register/enabled';
 
 // DECLARE ALL ENABLED ICS ENDPOINTS
 import ics from './api/ics/index';
+
+if (Meteor.isTest || Meteor.isAppTest) {
+	// @ts-expect-error Missing from type definitions.
+	Accounts.removeDefaultRateLimit();
+}
 
 WebApp.connectHandlers.use('/api/ics', ics);
 
