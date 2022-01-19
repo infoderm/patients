@@ -88,6 +88,172 @@ const DrawerItem = ({expand, disabled, link}) => (
 	</Tooltip>
 );
 
+interface BlockLink {
+	title: string;
+	to: string;
+	icon: JSX.Element;
+	disabled?: boolean;
+}
+
+interface Block {
+	title: string;
+	links: BlockLink[];
+}
+
+export const navigationDrawerBlocks: Block[] = [
+	{
+		title: 'main',
+
+		links: [
+			{
+				to: '/new/patient',
+				icon: <PersonAddIcon />,
+				title: 'Nouveau',
+			},
+
+			{
+				to: '/consultations/today',
+				icon: <ScheduleIcon />,
+				title: "Aujourd'hui",
+			},
+
+			{
+				to: '/consultation/last',
+				icon: <BookmarkIcon />,
+				title: 'Dernière',
+			},
+
+			{
+				to: '/calendar/week/current',
+				icon: <TodayIcon />,
+				title: 'Agenda',
+			},
+
+			{
+				to: '/documents',
+				icon: <LibraryBooksIcon />,
+				title: 'Documents',
+			},
+		],
+	},
+
+	{
+		title: 'management',
+
+		links: [
+			{
+				to: '/books',
+				icon: <BookIcon />,
+				title: 'Carnets',
+			},
+
+			{
+				to: '/paid',
+				icon: <AccountBalanceIcon />,
+				title: 'Paid',
+			},
+
+			{
+				to: '/unpaid',
+				icon: <MoneyOffIcon />,
+				title: 'Unpaid',
+			},
+
+			{
+				to: '/sepa',
+				icon: <CropFreeIcon />,
+				title: 'SEPA',
+			},
+		],
+	},
+
+	{
+		title: 'issues',
+
+		links: [
+			{
+				to: '/issues',
+				icon: <ReportProblemIcon />,
+				title: 'Issues',
+			},
+
+			{
+				to: '/merge',
+				icon: <MergeTypeIcon />,
+				title: 'Merge',
+			},
+		],
+	},
+
+	{
+		title: 'tags',
+
+		links: [
+			{
+				to: '/doctors',
+				icon: <SupervisorAccountIcon />,
+				title: 'Doctors',
+			},
+
+			{
+				to: '/insurances',
+				icon: <BusinessIcon />,
+				title: 'Insurances',
+			},
+
+			{
+				to: '/allergies',
+				icon: <BugReportIcon />,
+				title: 'Allergies',
+			},
+		],
+	},
+
+	{
+		title: 'external',
+
+		links: [
+			{
+				to: '/drugs',
+				icon: <LocalPharmacyIcon />,
+				title: 'Drugs',
+				disabled: true,
+			},
+
+			{
+				to: '/hospitals',
+				icon: <LocalHospitalIcon />,
+				title: 'Hospitals',
+				disabled: true,
+			},
+		],
+	},
+
+	{
+		title: 'app',
+
+		links: [
+			{
+				to: '/settings',
+				icon: <SettingsIcon />,
+				title: 'Settings',
+			},
+
+			{
+				to: '/auth',
+				icon: <SecurityIcon />,
+				title: 'Auth',
+			},
+
+			{
+				to: '/stats',
+				icon: <BarChartIcon />,
+				title: 'Stats',
+			},
+		],
+	},
+];
+
 export default function NavigationDrawer({
 	currentUser,
 	navigationDrawerIsOpen,
@@ -99,160 +265,6 @@ export default function NavigationDrawer({
 		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
 		setSetting('navigation-drawer-is-open', newValue);
 	};
-
-	const blocks = [
-		{
-			title: 'main',
-
-			links: [
-				{
-					to: '/new/patient',
-					icon: <PersonAddIcon />,
-					title: 'Nouveau',
-				},
-
-				{
-					to: '/consultations/today',
-					icon: <ScheduleIcon />,
-					title: "Aujourd'hui",
-				},
-
-				{
-					to: '/consultation/last',
-					icon: <BookmarkIcon />,
-					title: 'Dernière',
-				},
-
-				{
-					to: '/calendar/week/current',
-					icon: <TodayIcon />,
-					title: 'Agenda',
-				},
-
-				{
-					to: '/documents',
-					icon: <LibraryBooksIcon />,
-					title: 'Documents',
-				},
-			],
-		},
-
-		{
-			title: 'management',
-
-			links: [
-				{
-					to: '/books',
-					icon: <BookIcon />,
-					title: 'Carnets',
-				},
-
-				{
-					to: '/paid',
-					icon: <AccountBalanceIcon />,
-					title: 'Paid',
-				},
-
-				{
-					to: '/unpaid',
-					icon: <MoneyOffIcon />,
-					title: 'Unpaid',
-				},
-
-				{
-					to: '/sepa',
-					icon: <CropFreeIcon />,
-					title: 'SEPA',
-				},
-			],
-		},
-
-		{
-			title: 'issues',
-
-			links: [
-				{
-					to: '/issues',
-					icon: <ReportProblemIcon />,
-					title: 'Issues',
-				},
-
-				{
-					to: '/merge',
-					icon: <MergeTypeIcon />,
-					title: 'Merge',
-				},
-			],
-		},
-
-		{
-			title: 'tags',
-
-			links: [
-				{
-					to: '/doctors',
-					icon: <SupervisorAccountIcon />,
-					title: 'Doctors',
-				},
-
-				{
-					to: '/insurances',
-					icon: <BusinessIcon />,
-					title: 'Insurances',
-				},
-
-				{
-					to: '/allergies',
-					icon: <BugReportIcon />,
-					title: 'Allergies',
-				},
-			],
-		},
-
-		{
-			title: 'external',
-
-			links: [
-				{
-					to: '/drugs',
-					icon: <LocalPharmacyIcon />,
-					title: 'Drugs',
-					disabled: true,
-				},
-
-				{
-					to: '/hospitals',
-					icon: <LocalHospitalIcon />,
-					title: 'Hospitals',
-					disabled: true,
-				},
-			],
-		},
-
-		{
-			title: 'app',
-
-			links: [
-				{
-					to: '/settings',
-					icon: <SettingsIcon />,
-					title: 'Settings',
-				},
-
-				{
-					to: '/auth',
-					icon: <SecurityIcon />,
-					title: 'Auth',
-				},
-
-				{
-					to: '/stats',
-					icon: <BarChartIcon />,
-					title: 'Stats',
-				},
-			],
-		},
-	];
 
 	return (
 		<Drawer
@@ -281,7 +293,7 @@ export default function NavigationDrawer({
 			</div>
 			<Divider />
 
-			{blocks.map(({title, links}) => (
+			{navigationDrawerBlocks.map(({title, links}) => (
 				<div key={title}>
 					<List>
 						{links.map((link) => (
