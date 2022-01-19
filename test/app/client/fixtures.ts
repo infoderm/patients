@@ -58,3 +58,12 @@ export const createUserWithPassword = async (
 	await createUserWithPasswordAndLogin(app, username, password);
 	await logout(app);
 };
+
+export const navigateTo = async (
+	{findByRole, user},
+	title: string,
+	url: string,
+) => {
+	await user.click(await findByRole('button', {name: title}));
+	await findByRole('heading', {name: url});
+};

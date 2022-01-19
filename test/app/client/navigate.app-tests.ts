@@ -6,12 +6,7 @@ import {
 
 import {navigationDrawerBlocks} from '../../../imports/ui/NavigationDrawer';
 
-import {setupApp, createUserWithPasswordAndLogin} from './fixtures';
-
-const navigateTo = async ({findByRole, user}, title: string, url: string) => {
-	await user.click(await findByRole('button', {name: title}));
-	await findByRole('heading', {name: url});
-};
+import {setupApp, createUserWithPasswordAndLogin, navigateTo} from './fixtures';
 
 const testNavigation = (title: string, url: string) => {
 	it(`should allow to reach ${url}`, async () => {
