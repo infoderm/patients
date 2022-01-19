@@ -152,11 +152,17 @@ const AttachFileButton = ({
 		}
 	};
 
-	const extraProps = children ? {} : {endIcon: <AttachFileIcon />};
+	const defaultText = 'Attach File';
+	const computedChildren = children ?? defaultText;
+
+	const extraProps =
+		typeof computedChildren === 'string'
+			? {endIcon: <AttachFileIcon />}
+			: {'aria-label': defaultText};
 
 	return (
 		<InputFileButton onChange={upload} {...extraProps} {...rest}>
-			{children ?? 'Attach File'}
+			{computedChildren}
 		</InputFileButton>
 	);
 };
