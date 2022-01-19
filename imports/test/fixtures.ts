@@ -12,6 +12,60 @@ import reset from '../api/endpoint/testing/reset';
 export const randomUserId = () => Random.id();
 export const randomPassword = () => Random.id();
 
+let resolving = 0;
+
+const resolveOnPopstate = async () =>
+	new Promise<void>((resolve) => {
+		let pos = ++resolving;
+		const eventType = 'popstate';
+		const resolver = () => {
+			// NOTE
+			// Order of execution is guaranteed in DOM3
+			// See https://stackoverflow.com/a/16273678
+			if (--pos !== 0) return;
+			--resolving;
+			window.removeEventListener(eventType, resolver);
+			resolve();
+		};
+
+		window.addEventListener(eventType, resolver);
+	});
+
+const historyBack = async () => {
+	const promise = resolveOnPopstate();
+	history.back();
+	return promise;
+};
+
+const historyGo = async (n: number) => {
+	const promise = resolveOnPopstate();
+	history.go(n);
+	return promise;
+};
+
+const rollBackHistory = async (to: number) => {
+	const current = await forgetHistory();
+	if (to < current) {
+		const steps = current - to;
+		console.debug({
+			location: location.href,
+			history: history.length,
+			steps,
+		});
+		await historyGo(-steps);
+	}
+};
+
+const pushDummyState = async () => {
+	history.pushState(null, '');
+};
+
+const forgetHistory = async () => {
+	pushDummyState();
+	await historyBack();
+	return history.length - 1;
+};
+
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
 		const cleanup = async () => {
@@ -20,12 +74,22 @@ export const client = (title, fn) => {
 			await call(reset);
 		};
 
-		const prepare = cleanup;
+		let original;
+
+		const prepare = async () => {
+			original = await forgetHistory();
+			await cleanup();
+		};
+
+		const restore = async () => {
+			await cleanup();
+			await rollBackHistory(original);
+		};
 
 		describe(title, () => {
 			beforeEach(prepare);
-			afterEach(cleanup);
 			fn();
+			afterEach(restore);
 		});
 	}
 };
@@ -40,8 +104,8 @@ export const server = (title, fn) => {
 
 		describe(title, () => {
 			beforeEach(prepare);
-			afterEach(cleanup);
 			fn();
+			afterEach(cleanup);
 		});
 	}
 };
