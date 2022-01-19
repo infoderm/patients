@@ -8,11 +8,23 @@ export const setupApp = () => {
 	};
 };
 
+/**
+ * @deprecated
+ */
+const flakyCloseModals = async ({user}) => {
+	// This is to escape any modals that have been opened by previous tests.
+	// TODO find way to do this in cleanup hook
+	await user.keyboard('[Escape]');
+	await user.keyboard('[Escape]');
+	await user.keyboard('[Escape]');
+};
+
 export const createUserWithPasswordAndLogin = async (
 	{getByRole, findByRole, getByLabelText, user},
 	username: string,
 	password: string,
 ) => {
+	await flakyCloseModals({user});
 	console.debug('Waiting for Sign in button');
 	await user.click(await findByRole('button', {name: 'Sign in'}));
 	console.debug('Waiting for Create account button');
@@ -20,8 +32,10 @@ export const createUserWithPasswordAndLogin = async (
 	console.debug('Waiting for Register button');
 	await findByRole('button', {name: 'Register'});
 	console.debug('Filling in username');
+	await user.clear(getByLabelText('Username'));
 	await user.type(getByLabelText('Username'), username);
 	console.debug('Filling in password');
+	await user.clear(getByLabelText('Password'));
 	await user.type(getByLabelText('Password'), password);
 	console.debug('Clicking the register button');
 	await user.click(getByRole('button', {name: 'Register'}));
@@ -35,6 +49,7 @@ export const createUserWithPasswordAndLogin = async (
 };
 
 export const logout = async ({getByRole, findByRole, user}) => {
+	await flakyCloseModals({user});
 	console.debug('Waiting for button "Logged in as ..."');
 	await user.click(await findByRole('button', {name: /^Logged in as /}));
 	console.debug('Waiting for Logout menuitem');
@@ -53,15 +68,26 @@ export const loginWithPassword = async (
 	username: string,
 	password: string,
 ) => {
+	await flakyCloseModals({user});
+	console.debug('Waiting for Sign in button');
 	await user.click(await findByRole('button', {name: 'Sign in'}));
+	console.debug('Waiting for Log in button');
 	await findByRole('button', {name: 'Log in'});
+	console.debug('Filling in username');
+	await user.clear(getByLabelText('Username'));
 	await user.type(getByLabelText('Username'), username);
+	console.debug('Filling in password');
+	await user.clear(getByLabelText('Password'));
 	await user.type(getByLabelText('Password'), password);
+	console.debug('Clicking the "Log in" button');
 	await user.click(getByRole('button', {name: 'Log in'}));
+	console.debug('Waiting for the "Log in" button to be removed');
 	await waitForElementToBeRemoved(() => {
 		return getByRole('button', {name: 'Log in'});
 	});
+	console.debug('Waiting for "Logged in as ..." button to appear');
 	await findByRole('button', {name: `Logged in as ${username}`});
+	console.debug('User succesfully logged in');
 };
 
 export const createUserWithPassword = async (
