@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 
@@ -34,17 +34,28 @@ const ColumnHeader = ({classes, day, col}) => {
 	);
 };
 
-const DayBox = ({classes, day, row, col, onSlotClick}) => (
-	<div
-		className={classNames(classes.dayBox, {
-			[classes[`col${col}`]]: true,
-			[classes[`row${row}`]]: true,
-		})}
-		onClick={() => {
-			onSlotClick?.(day);
-		}}
-	/>
-);
+const DayBox = ({classes, day, row, col, onSlotClick}) => {
+	const ariaLabel = `Schedule an appointment on ${dateFormat(day, 'PPPP')}`;
+	const role = onSlotClick ? 'button' : undefined;
+	const onClick = useMemo(() => {
+		return onSlotClick
+			? () => {
+					onSlotClick(day);
+			  }
+			: undefined;
+	}, [onSlotClick, day]);
+	return (
+		<div
+			className={classNames(classes.dayBox, {
+				[classes[`col${col}`]]: true,
+				[classes[`row${row}`]]: true,
+			})}
+			aria-label={ariaLabel}
+			role={role}
+			onClick={onClick}
+		/>
+	);
+};
 
 const setTime = (datetime: Date, HHmm: string) =>
 	dateParse(HHmm, 'HH:mm', datetime);

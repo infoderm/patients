@@ -87,9 +87,19 @@ const AvailabilityFragment = ({event, className, eventProps}) => {
 		'HH:mm',
 	)}`;
 	const title = time;
+	const ariaLabel = `Schedule an appointment starting on ${dateFormat(
+		event.begin,
+		'PPPPpppp',
+	)}`;
 	return (
 		<div className={className}>
-			<span style={style} onClick={event.onClick} {...eventProps}>
+			<span
+				style={style}
+				role="button"
+				aria-label={ariaLabel}
+				onClick={event.onClick}
+				{...eventProps}
+			>
 				{title}
 			</span>
 		</div>
