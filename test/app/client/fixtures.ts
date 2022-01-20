@@ -106,6 +106,37 @@ export const createUserWithPassword = async (
 	await logout(app);
 };
 
+export const changePassword = async (
+	{getByRole, findByRole, getByLabelText, findByText, user},
+	oldPassword: string,
+	newPassword: string,
+) => {
+	await flakyCloseModals({user});
+	console.debug('Waiting for button "Logged in as ..."');
+	await user.click(await findByRole('button', {name: /^Logged in as /}));
+	console.debug('Waiting for Change password menuitem');
+	await user.click(await findByRole('menuitem', {name: 'Change password'}));
+
+	console.debug('Waiting for Change password button');
+	await user.click(await findByRole('button', {name: 'Change password'}));
+
+	console.debug('Filling in old password');
+	await fillIn({user}, getByLabelText('Old password'), oldPassword);
+	console.debug('Filling in new password');
+	await fillIn({user}, getByLabelText('New password'), newPassword);
+
+	console.debug('Clicking the "Change password" button');
+	await user.click(await findByRole('button', {name: 'Change password'}));
+
+	console.debug('Waiting for the "Change password" button to be removed');
+	await waitForElementToBeRemoved(() => {
+		return getByRole('button', {name: 'Change password'});
+	});
+	console.debug('Waiting for confirmation snackbar to appear');
+	await findByText('Password changed successfully!');
+	console.debug('Password changed successfully');
+};
+
 export const navigateTo = async (
 	{findByRole, user},
 	title: string,
