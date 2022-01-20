@@ -10,6 +10,7 @@ import Popover from '@material-ui/core/Popover';
 import {useSnackbar} from 'notistack';
 import changePassword from '../../api/user/changePassword';
 
+import useUniqueId from '../hooks/useUniqueId';
 import {useStyles} from './Popover';
 
 const ChangePasswordPopover = ({anchorEl, handleClose}) => {
@@ -19,6 +20,11 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 	const [newPassword, setNewPassword] = useState('');
 	const [errorOldPassword, setErrorOldPassword] = useState('');
 	const [errorNewPassword, setErrorNewPassword] = useState('');
+
+	const id = useUniqueId('dashboard-change-password');
+
+	const oldPasswordInputId = `${id}-input-old-password`;
+	const newPasswordInputId = `${id}-input-new-password`;
 
 	const uiChangePassword = async (event) => {
 		event.preventDefault();
@@ -58,7 +64,7 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 	return (
 		<Popover
 			className={classes.popover}
-			id="dashboard-change-password"
+			id={id}
 			anchorEl={anchorEl}
 			open={Boolean(anchorEl)}
 			anchorOrigin={{
@@ -74,22 +80,28 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 			<form className={classes.form} autoComplete="off">
 				<TextField
 					autoFocus
+					id={oldPasswordInputId}
 					error={Boolean(errorOldPassword)}
 					helperText={errorOldPassword}
 					className={classes.row}
 					label="Old password"
 					type="password"
 					value={oldPassword}
-					onChange={(e) => setOldPassword(e.target.value)}
+					onChange={(e) => {
+						setOldPassword(e.target.value);
+					}}
 				/>
 				<TextField
+					id={newPasswordInputId}
 					error={Boolean(errorNewPassword)}
 					helperText={errorNewPassword}
 					className={classes.row}
 					label="New password"
 					type="password"
 					value={newPassword}
-					onChange={(e) => setNewPassword(e.target.value)}
+					onChange={(e) => {
+						setNewPassword(e.target.value);
+					}}
 				/>
 				<Button
 					type="submit"
