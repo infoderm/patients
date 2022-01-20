@@ -29,7 +29,7 @@ client(__filename, () => {
 
 		await findByRole('heading', {name: /^Results for query/});
 
-		await user.click(await findByRole('link', {name: /doe john/i}));
+		await user.click(await findByRole('link', {name: /john doe/i}));
 
 		await findByRole('heading', {name: `/patient/${patientId}`});
 	}).timeout(3000);
