@@ -145,3 +145,18 @@ export const navigateTo = async (
 	await user.click(await findByRole('button', {name: title}));
 	await findByRole('heading', {name: url});
 };
+
+export const createNewPatient = async (app, {firstname, lastname}) => {
+	await navigateTo(app, 'Nouveau', '/new/patient');
+
+	const {findByRole, getByLabelText, getByRole, user} = app;
+
+	await findByRole('button', {name: 'Create new patient'});
+	await user.type(getByLabelText('Last name'), lastname);
+	await user.type(getByLabelText('First name'), firstname);
+	await user.click(getByRole('button', {name: 'Create new patient'}));
+
+	await findByRole('heading', {name: /^\/patient\//});
+
+	return window.location.href.split('/').pop();
+};
