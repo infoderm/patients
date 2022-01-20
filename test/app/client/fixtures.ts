@@ -8,7 +8,7 @@ export const setupApp = () => {
 	};
 };
 
-const fillIn = async ({user}, element, value: string) => {
+export const fillIn = async ({user}, element: HTMLElement, value: string) => {
 	await user.clear(element);
 	if (value !== '') {
 		await user.type(element, value);
