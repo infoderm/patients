@@ -6,9 +6,9 @@ import {
 
 import {
 	setupApp,
-	fillIn,
 	createUserWithPasswordAndLogin,
 	createNewPatient,
+	searchForPatient,
 } from '../fixtures';
 
 client(__filename, () => {
@@ -23,14 +23,6 @@ client(__filename, () => {
 			lastname: 'Doe',
 		});
 
-		const {findByRole, getByPlaceholderText, user} = app;
-
-		await fillIn(app, getByPlaceholderText(/^Search a patient/), 'John Doe');
-
-		await findByRole('heading', {name: /^Results for query/});
-
-		await user.click(await findByRole('link', {name: /john doe/i}));
-
-		await findByRole('heading', {name: `/patient/${patientId}`});
+		await searchForPatient(app, 'John Doe', {name: 'John Doe', id: patientId});
 	}).timeout(3000);
 });
