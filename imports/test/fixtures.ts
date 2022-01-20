@@ -31,7 +31,7 @@ const resolveOnPopstate = async () =>
 		window.addEventListener(eventType, resolver);
 	});
 
-const historyBack = async () => {
+export const historyBack = async () => {
 	const promise = resolveOnPopstate();
 	history.back();
 	return promise;
