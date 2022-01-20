@@ -8,6 +8,17 @@ export const setupApp = () => {
 	};
 };
 
+const fillIn = async ({user}, element, value: string) => {
+	await user.clear(element);
+	if (value !== '') {
+		await user.type(element, value);
+	}
+	// NOTE
+	// Could also use user.type(element, value, {initialSelectionStart: 0, initialSelectionEnd: -1})
+	// or equivalent instead but not sure it models how most users would reset
+	// pre-filled input
+};
+
 /**
  * @deprecated
  */
@@ -32,11 +43,9 @@ export const createUserWithPasswordAndLogin = async (
 	console.debug('Waiting for Register button');
 	await findByRole('button', {name: 'Register'});
 	console.debug('Filling in username');
-	await user.clear(getByLabelText('Username'));
-	await user.type(getByLabelText('Username'), username);
+	await fillIn({user}, getByLabelText('Username'), username);
 	console.debug('Filling in password');
-	await user.clear(getByLabelText('Password'));
-	await user.type(getByLabelText('Password'), password);
+	await fillIn({user}, getByLabelText('Password'), password);
 	console.debug('Clicking the register button');
 	await user.click(getByRole('button', {name: 'Register'}));
 	console.debug('Waiting for the register button to be removed');
@@ -74,11 +83,9 @@ export const loginWithPassword = async (
 	console.debug('Waiting for Log in button');
 	await findByRole('button', {name: 'Log in'});
 	console.debug('Filling in username');
-	await user.clear(getByLabelText('Username'));
-	await user.type(getByLabelText('Username'), username);
+	await fillIn({user}, getByLabelText('Username'), username);
 	console.debug('Filling in password');
-	await user.clear(getByLabelText('Password'));
-	await user.type(getByLabelText('Password'), password);
+	await fillIn({user}, getByLabelText('Password'), password);
 	console.debug('Clicking the "Log in" button');
 	await user.click(getByRole('button', {name: 'Log in'}));
 	console.debug('Waiting for the "Log in" button to be removed');
