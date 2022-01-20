@@ -21,6 +21,7 @@ export default define({
 
 		const options = {};
 
+		// TODO Make it work when Availability is empty
 		return Availability.find(query, options);
 	},
 });
