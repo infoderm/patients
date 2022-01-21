@@ -12,6 +12,7 @@ import {
 	createNewPatient,
 	searchForPatient,
 	navigateTo,
+	fillIn,
 } from '../fixtures';
 
 const selectMobileClockButton = async ({user}, button) => {
@@ -177,5 +178,112 @@ client(__filename, () => {
 				});
 			});
 		}
+	}).timeout(15_000);
+
+	it('should allow to begin a consultation for a patient', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPasswordAndLogin(app, username, password);
+
+		const firstname = 'John';
+		const lastname = 'Doe';
+
+		const patientId = await createNewPatient(app, {
+			firstname,
+			lastname,
+		});
+
+		await scheduleAppointmentForPatient(app, {patientId, firstname, lastname});
+
+		await searchForPatient(app, `${lastname} ${firstname}`, {
+			name: `${firstname} ${lastname}`,
+			id: patientId,
+		});
+
+		await navigateTo(app, 'appointments', `/patient/${patientId}/appointments`);
+
+		const {user, userWithoutPointerEventsCheck, findByRole, findByText} = app;
+		console.debug('Click on 1:05 PM');
+		await userWithoutPointerEventsCheck.click(
+			await findByRole('link', {name: '1:05 PM'}),
+		);
+		console.debug("Confirm we are on the consultation's details page");
+		await findByRole('heading', {name: /^\/consultation\//});
+
+		console.debug('Click on "Begin consultation"');
+		await user.click(await findByRole('button', {name: 'Begin consultation'}));
+		console.debug("Confirm we are on the consultation's edition page");
+		await findByRole('heading', {name: /^\/edit\/consultation\//});
+
+		console.debug('Fill in text fields');
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Motif de la visite'}),
+			'my test reason',
+		);
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Examens déjà réalisés'}),
+			'my test done',
+		);
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Examens à réaliser'}),
+			'my test todo',
+		);
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Traitement'}),
+			'my test treatment',
+		);
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'À revoir'}),
+			'my test next',
+		);
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Autres remarques'}),
+			'my test more',
+		);
+
+		await fillIn(app, await findByRole('textbox', {name: 'Prix'}), '55');
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Carnet'}),
+			'test-book-id',
+		);
+
+		await user.click(await findByRole('button', {name: 'save'}));
+
+		await navigateTo(app, 'Dernière', '/consultation/last');
+
+		await user.click(
+			await findByRole('link', {
+				name: `${lastname} ${firstname}`,
+				exact: false,
+			}),
+		);
+
+		await navigateTo(app, 'appointments', `/patient/${patientId}/appointments`);
+
+		await findByRole('heading', {name: 'Nothing to see on page 1.'});
+
+		await navigateTo(
+			app,
+			'consultations',
+			`/patient/${patientId}/consultations`,
+		);
+
+		await findByText('my test reason');
+		await findByText('my test done');
+		await findByText('my test todo');
+		await findByText('my test treatment');
+		await findByText('my test next');
+		await findByText('my test more');
+		await findByText('test-book-id');
+
+		await findByText('À payé €55.00 de €55.00.');
 	}).timeout(15_000);
 });
