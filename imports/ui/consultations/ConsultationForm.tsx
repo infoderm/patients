@@ -21,6 +21,7 @@ import {books, useBooksFind} from '../../api/books';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import CurrencyAmountInput from '../input/CurrencyAmountInput';
+import useUniqueId from '../hooks/useUniqueId';
 
 const styles = (theme) => ({
 	multiline: {
@@ -77,12 +78,26 @@ const ConsultationForm = ({consultation, update}) => {
 			books.MAX_CONSULTATIONS + (_id && initialBookName === bookName ? 1 : 0) &&
 		books.isReal(bookName);
 
+	const formId = useUniqueId('consultation-form');
+	const reasonId = `${formId}-input-reason`;
+	const doneId = `${formId}-input-done`;
+	const todoId = `${formId}-input-todo`;
+	const treatmentId = `${formId}-input-treatment`;
+	const nextId = `${formId}-input-next`;
+	const moreId = `${formId}-input-more`;
+	const currencyId = `${formId}-input-currency`;
+	const paymentMethodId = `${formId}-input-paymentMethod`;
+	const priceId = `${formId}-input-price`;
+	const paidId = `${formId}-input-paid`;
+	const bookId = `${formId}-input-book`;
+
 	return (
 		<Paper className={classes.form}>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<TextField
 						multiline
+						id={reasonId}
 						readOnly={!update}
 						autoFocus={Boolean(update)}
 						label="Motif de la visite"
@@ -97,6 +112,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={12}>
 					<TextField
 						multiline
+						id={doneId}
 						readOnly={!update}
 						label="Examens déjà réalisés"
 						placeholder="Examens déjà réalisés"
@@ -110,6 +126,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={12}>
 					<TextField
 						multiline
+						id={todoId}
 						readOnly={!update}
 						label="Examens à réaliser"
 						placeholder="Examens à réaliser"
@@ -123,6 +140,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={12}>
 					<TextField
 						multiline
+						id={treatmentId}
 						readOnly={!update}
 						label="Traitement"
 						placeholder="Traitement"
@@ -136,6 +154,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={12}>
 					<TextField
 						multiline
+						id={nextId}
 						readOnly={!update}
 						label="À revoir"
 						placeholder="À revoir"
@@ -149,6 +168,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={12}>
 					<TextField
 						multiline
+						id={moreId}
 						readOnly={!update}
 						label="Autres remarques"
 						placeholder="Write some additional information about the consultation here"
@@ -164,6 +184,7 @@ const ConsultationForm = ({consultation, update}) => {
 					<TextField
 						fullWidth
 						select
+						id={currencyId}
 						readOnly={!update}
 						label="Currency"
 						value={currency}
@@ -177,6 +198,7 @@ const ConsultationForm = ({consultation, update}) => {
 					<TextField
 						fullWidth
 						select
+						id={paymentMethodId}
 						readOnly={!update}
 						label="Payment Method"
 						value={payment_method}
@@ -191,6 +213,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={3}>
 					<TextField
 						fullWidth
+						id={priceId}
 						readOnly={!update}
 						label="Prix"
 						value={priceString}
@@ -217,6 +240,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={3}>
 					<TextField
 						fullWidth
+						id={paidId}
 						readOnly={!update}
 						label="Payé"
 						value={paidString}
@@ -239,6 +263,7 @@ const ConsultationForm = ({consultation, update}) => {
 				<Grid item xs={3}>
 					{update ? (
 						<AutocompleteWithSuggestions
+							id={bookId}
 							itemToString={(x) => (x ? x.bookNumber : '')}
 							useSuggestions={makeSubstringSuggestions(
 								useBooksFind,
