@@ -1,3 +1,4 @@
+import {waitForElementToBeRemoved} from '@testing-library/dom';
 import {
 	client,
 	historyBack,
@@ -10,6 +11,7 @@ import {
 	createUserWithPasswordAndLogin,
 	createNewPatient,
 	searchForPatient,
+	navigateTo,
 } from '../fixtures';
 
 const selectMobileClockButton = async ({user}, button) => {
@@ -94,4 +96,86 @@ client(__filename, () => {
 
 		await scheduleAppointmentForPatient(app, {patientId, firstname, lastname});
 	}).timeout(10_000);
+
+	it('should allow to cancel an appointment for a patient', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPasswordAndLogin(app, username, password);
+
+		const firstname = 'John';
+		const lastname = 'Doe';
+
+		const patientId = await createNewPatient(app, {
+			firstname,
+			lastname,
+		});
+
+		await scheduleAppointmentForPatient(app, {patientId, firstname, lastname});
+
+		await searchForPatient(app, `${lastname} ${firstname}`, {
+			name: `${firstname} ${lastname}`,
+			id: patientId,
+		});
+
+		await navigateTo(app, 'appointments', `/patient/${patientId}/appointments`);
+
+		const {
+			user,
+			userWithoutPointerEventsCheck,
+			findByRole,
+			queryByRole,
+			getByRole,
+			findByLabelText,
+		} = app;
+		console.debug('Click on 1:05 PM');
+		await userWithoutPointerEventsCheck.click(
+			await findByRole('link', {name: '1:05 PM'}),
+		);
+		console.debug("Confirm we are on the consultation's details page");
+		await findByRole('heading', {name: /^\/consultation\//});
+
+		console.debug('Click on Cancel');
+		await user.click(await findByRole('button', {name: 'Cancel'}));
+		console.debug(
+			"Confirm we have opened the consultation's cancellation modal",
+		);
+		await findByRole('heading', {name: 'Cancel this appointment'});
+
+		console.debug('Set cancellation reason');
+		await user.click(await findByLabelText('Cancellation reason'));
+		await user.click(await findByRole('option', {name: 'patient-cancelled'}));
+		console.debug('Set cancellation explanation');
+		await user.type(
+			await findByRole('textbox', {name: 'Explanation for cancellation'}),
+			'test',
+		);
+		console.debug('Click on cancellation button');
+		await user.click(await findByRole('button', {name: 'Cancel Appointment'}));
+		await findByRole('button', {name: 'Uncancel'});
+		await navigateTo(app, 'Agenda', '/calendar/week/current');
+		await user.click(
+			await findByRole('button', {name: 'Show cancelled events'}),
+		);
+		await findByRole('link', {
+			name: `13:05-13:35 ${lastname} ${firstname}`,
+			exact: false,
+		});
+		await user.click(
+			await findByRole('button', {name: 'Hide cancelled events'}),
+		);
+		if (
+			queryByRole('link', {
+				name: `13:05-13:35 ${lastname} ${firstname}`,
+				exact: false,
+			}) !== null
+		) {
+			await waitForElementToBeRemoved(() => {
+				return getByRole('link', {
+					name: `13:05-13:35 ${lastname} ${firstname}`,
+					exact: false,
+				});
+			});
+		}
+	}).timeout(15_000);
 });
