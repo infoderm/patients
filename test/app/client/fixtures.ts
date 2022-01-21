@@ -141,11 +141,13 @@ export const changePassword = async (
 };
 
 export const navigateTo = async (
-	{findByRole, user},
+	{findByRole, userWithoutPointerEventsCheck},
 	title: string,
 	url: string | RegExp,
 ) => {
-	await user.click(await findByRole('button', {name: title}));
+	await userWithoutPointerEventsCheck.click(
+		await findByRole('button', {name: title}),
+	);
 	await findByRole('heading', {name: url});
 };
 
