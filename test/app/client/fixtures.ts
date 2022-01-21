@@ -1,9 +1,12 @@
 import {within, waitForElementToBeRemoved} from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
+import userEvent, {PointerEventsCheckLevel} from '@testing-library/user-event';
 
 export const setupApp = () => {
 	return {
 		user: userEvent.setup(),
+		userWithoutPointerEventsCheck: userEvent.setup({
+			pointerEventsCheck: PointerEventsCheckLevel.Never,
+		}),
 		...within(document.body),
 	};
 };
