@@ -12,7 +12,7 @@ import {
 	createNewPatient,
 	searchForPatient,
 	navigateTo,
-	fillIn,
+	editConsultation,
 } from '../fixtures';
 
 const selectMobileClockButton = async ({user}, button) => {
@@ -216,46 +216,17 @@ client(__filename, () => {
 		console.debug("Confirm we are on the consultation's edition page");
 		await findByRole('heading', {name: /^\/edit\/consultation\//});
 
-		console.debug('Fill in text fields');
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'Motif de la visite'}),
-			'my test reason',
-		);
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'Examens déjà réalisés'}),
-			'my test done',
-		);
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'Examens à réaliser'}),
-			'my test todo',
-		);
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'Traitement'}),
-			'my test treatment',
-		);
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'À revoir'}),
-			'my test next',
-		);
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'Autres remarques'}),
-			'my test more',
-		);
-
-		await fillIn(app, await findByRole('textbox', {name: 'Prix'}), '55');
-		await fillIn(
-			app,
-			await findByRole('textbox', {name: 'Carnet'}),
-			'test-book-id',
-		);
-
-		await user.click(await findByRole('button', {name: 'save'}));
+		await editConsultation(app, {
+			reason: 'my test reason',
+			done: 'my test done',
+			todo: 'my test todo',
+			treatment: 'my test treatment',
+			next: 'my test next',
+			more: 'my test more',
+			price: '55',
+			book: 'test-book-id',
+			save: true,
+		});
 
 		await navigateTo(app, 'Dernière', '/consultation/last');
 

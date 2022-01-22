@@ -173,3 +173,92 @@ export const searchForPatient = async (app, query, {name, id}) => {
 	await user.click(await findByRole('link', {name}));
 	await findByRole('heading', {name: `/patient/${id}`});
 };
+
+interface EditConsultationOptions {
+	reason?: string;
+	done?: string;
+	todo?: string;
+	treatment?: string;
+	next?: string;
+	more?: string;
+	price?: string;
+	paid?: string;
+	book?: string;
+	save?: boolean;
+}
+
+export const editConsultation = async (
+	app,
+	{
+		reason,
+		done,
+		todo,
+		treatment,
+		next,
+		more,
+		price,
+		paid,
+		book,
+		save,
+	}: EditConsultationOptions,
+) => {
+	const {user, findByRole} = app;
+	console.debug('Fill in text fields');
+	if (reason) {
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Motif de la visite'}),
+			reason,
+		);
+	}
+
+	if (done) {
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Examens déjà réalisés'}),
+			done,
+		);
+	}
+
+	if (todo) {
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Examens à réaliser'}),
+			todo,
+		);
+	}
+
+	if (treatment) {
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Traitement'}),
+			treatment,
+		);
+	}
+
+	if (next) {
+		await fillIn(app, await findByRole('textbox', {name: 'À revoir'}), next);
+	}
+
+	if (more) {
+		await fillIn(
+			app,
+			await findByRole('textbox', {name: 'Autres remarques'}),
+			more,
+		);
+	}
+
+	if (price) {
+		await fillIn(app, await findByRole('textbox', {name: 'Prix'}), price);
+	}
+
+	if (paid) {
+		await fillIn(app, await findByRole('textbox', {name: 'Payé'}), paid);
+	}
+
+	if (book) {
+		await fillIn(app, await findByRole('textbox', {name: 'Carnet'}), book);
+	}
+
+	if (save) await user.click(await findByRole('button', {name: 'save'}));
+};
