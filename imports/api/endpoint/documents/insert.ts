@@ -9,6 +9,10 @@ import define from '../define';
 
 const {sanitize, updateLastVersionFlags} = documents;
 
+const SIZE_16_MB = 16 * 1024 * 1024;
+// Good approximation
+const LENGTH_THRESHOLD = Math.floor(SIZE_16_MB / 8);
+
 export default define({
 	name: 'documents.insert',
 	validate(document: any) {
@@ -24,14 +28,20 @@ export default define({
 		const result = [];
 
 		for await (const entry of entries) {
+			if (entry.source.length >= LENGTH_THRESHOLD) {
+				throw new Meteor.Error('file-size-too-large');
+			}
+
 			// TODO split to new invoked method
 			await executeTransaction(async (db) => {
 				// Find best patient match for this document
 
+				console.debug('findBestPatientMatch');
 				const patientId = await findBestPatientMatch(db, this.userId, entry);
 
 				// Find document with matching source
 
+				console.debug('find existing document');
 				const existingDocument = await db.findOne(Documents, {
 					owner: this.userId,
 					source: entry.source,
@@ -41,6 +51,7 @@ export default define({
 					// Only create new document if there is no other document with
 					// matching source
 
+					console.debug('insert document');
 					const {insertedId} = await db.insertOne(Documents, {
 						...entry,
 						patientId,
@@ -57,6 +68,7 @@ export default define({
 					if (!existingDocument.patientId && patientId) {
 						// TODO Test this on all documents without a patientId when
 						// creating a new patient.
+						console.debug("update document's patient id");
 						await db.updateOne(
 							Documents,
 							{_id: existingDocument._id},
@@ -81,6 +93,7 @@ export default define({
 						(existingDocument.encoding !== entry.encoding ||
 							existingDocument.decoded !== entry.decoded)
 					) {
+						console.debug('update document completely');
 						await db.updateOne(
 							Documents,
 							{_id: existingDocument._id},
@@ -94,6 +107,7 @@ export default define({
 					}
 
 					if (!existingDocument.parsed && !existingDocument.lastVersion) {
+						console.debug('set last version flags');
 						await db.updateOne(
 							Documents,
 							{_id: existingDocument._id},
@@ -104,6 +118,7 @@ export default define({
 					result.push(existingDocument._id);
 				}
 
+				console.debug('update last version flags');
 				await updateLastVersionFlags(db, this.userId, entry);
 			});
 		}
