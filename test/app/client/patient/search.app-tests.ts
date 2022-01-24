@@ -24,5 +24,5 @@ client(__filename, () => {
 		});
 
 		await searchForPatient(app, 'John Doe', {name: 'John Doe', id: patientId});
-	}).timeout(3000);
+	});
 });

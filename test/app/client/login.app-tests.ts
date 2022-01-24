@@ -25,7 +25,7 @@ client(__filename, () => {
 			/Timed out/,
 		);
 		await app.findByText('User not found');
-	}).timeout(5000);
+	});
 
 	it('should not allow to log in with wrong password', async () => {
 		const username = randomUserId();
@@ -37,7 +37,7 @@ client(__filename, () => {
 			/Timed out/,
 		);
 		await app.findByText('Incorrect password');
-	}).timeout(5000);
+	});
 
 	it('should not allow to log in with wrong username', async () => {
 		const username = randomUserId();
@@ -49,7 +49,7 @@ client(__filename, () => {
 			/Timed out/,
 		);
 		await app.findByText('User not found');
-	}).timeout(5000);
+	});
 
 	it("should not allow to log in with other user's passowrd", async () => {
 		const username1 = randomUserId();

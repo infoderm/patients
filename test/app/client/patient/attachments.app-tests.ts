@@ -50,5 +50,5 @@ client(__filename, () => {
 		uploadFile(button, file);
 
 		await findByRole('heading', {name: 'Pièces jointes au patient'});
-	}).timeout(3000);
+	});
 });

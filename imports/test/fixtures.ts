@@ -86,7 +86,8 @@ export const client = (title, fn) => {
 			await rollBackHistory(original);
 		};
 
-		describe(title, () => {
+		describe(title, function () {
+			this.timeout(5000);
 			beforeEach(prepare);
 			fn();
 			afterEach(restore);
