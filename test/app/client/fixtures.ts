@@ -170,10 +170,15 @@ export const createNewPatient = async (app, {firstname, lastname}) => {
 	return window.location.href.split('/').pop();
 };
 
-export const searchForPatient = async (app, query, {name, id}) => {
-	const {findByRole, getByPlaceholderText, user} = app;
-	await fillIn(app, getByPlaceholderText(/^Search a patient/), query);
+export const searchResultsForQuery = async (app, query) => {
+	const {findByRole, getByRole} = app;
+	await fillIn(app, getByRole('searchbox', {name: 'Patient search'}), query);
 	await findByRole('heading', {name: /^Results for query/});
+};
+
+export const searchForPatient = async (app, query, {name, id}) => {
+	const {findByRole, user} = app;
+	await searchResultsForQuery(app, query);
 	await user.click(await findByRole('link', {name}));
 	await findByRole('heading', {name: `/patient/${id}`});
 };
