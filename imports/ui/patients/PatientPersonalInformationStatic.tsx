@@ -21,10 +21,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import {MobileDatePicker as DatePicker} from '@material-ui/pickers';
@@ -70,6 +67,7 @@ import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 import AttachFileButton from '../attachments/AttachFileButton';
 
+import useUniqueId from '../hooks/useUniqueId';
 import PatientDeletionDialog from './PatientDeletionDialog';
 
 const allergyChipProps = {
@@ -233,6 +231,24 @@ const PatientPersonalInformation = (props) => {
 	const localizeAge = useDateFormatAge();
 	const localizedDateMask = useDateMask();
 
+	const componentId = useUniqueId('patient-personal-information');
+
+	const attachFileButtonId = `${componentId}-attach-file-button`;
+
+	const nnInputId = `${componentId}-input-nn`;
+	const lastnameInputId = `${componentId}-input-lastname`;
+	const firstnameInputId = `${componentId}-input-firstname`;
+	const sexInputId = `${componentId}-input-sex`;
+	const birthdateInputId = `${componentId}-input-birthdate`;
+	const antecedentsInputId = `${componentId}-input-antecedents`;
+	const ongoingInputId = `${componentId}-input-ongoing`;
+	const streetandnumberInputId = `${componentId}-input-streetandnumber`;
+	const zipInputId = `${componentId}-input-zip`;
+	const municipalityInputId = `${componentId}-input-municipality`;
+	const phoneInputId = `${componentId}-input-phone`;
+	const aboutInputId = `${componentId}-input-about`;
+	const noshowInputId = `${componentId}-input-noshow`;
+
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -310,6 +326,7 @@ const PatientPersonalInformation = (props) => {
 									<Grid item xs={2}>
 										<TextField
 											fullWidth
+											id={nnInputId}
 											className={classes.formControl}
 											label="NISS"
 											value={patient.niss}
@@ -321,6 +338,7 @@ const PatientPersonalInformation = (props) => {
 									<Grid item xs={3}>
 										<TextField
 											fullWidth
+											id={lastnameInputId}
 											className={classes.formControl}
 											label="Last name"
 											value={patient.lastname}
@@ -332,6 +350,7 @@ const PatientPersonalInformation = (props) => {
 									<Grid item xs={3}>
 										<TextField
 											fullWidth
+											id={firstnameInputId}
 											className={classes.formControl}
 											label="First name"
 											value={patient.firstname}
@@ -341,29 +360,24 @@ const PatientPersonalInformation = (props) => {
 										/>
 									</Grid>
 									<Grid item xs={2}>
-										<FormControl
+										<TextField
+											select
 											fullWidth
+											id={sexInputId}
+											label="Sex"
 											margin="normal"
 											className={classes.formControl}
+											value={patient.sex || ''}
+											readOnly={!editing}
+											onChange={update('sex')}
 										>
-											<InputLabel htmlFor="sex">Sex</InputLabel>
-											<Select
-												value={patient.sex || ''}
-												inputProps={{
-													readOnly: !editing,
-													name: 'sex',
-													id: 'sex',
-												}}
-												onChange={update('sex')}
-											>
-												<MenuItem value="">
-													<em>None</em>
-												</MenuItem>
-												<MenuItem value="female">Female</MenuItem>
-												<MenuItem value="male">Male</MenuItem>
-												<MenuItem value="other">Other</MenuItem>
-											</Select>
-										</FormControl>
+											<MenuItem value="">
+												<em>None</em>
+											</MenuItem>
+											<MenuItem value="female">Female</MenuItem>
+											<MenuItem value="male">Male</MenuItem>
+											<MenuItem value="other">Other</MenuItem>
+										</TextField>
 									</Grid>
 									<Grid item xs={2}>
 										<DatePicker
@@ -373,6 +387,7 @@ const PatientPersonalInformation = (props) => {
 											label="Birth date"
 											renderInput={(props) => (
 												<TextField
+													id={birthdateInputId}
 													margin="normal"
 													InputLabelProps={{shrink: true}}
 													{...props}
@@ -394,6 +409,7 @@ const PatientPersonalInformation = (props) => {
 							<Grid item xs={12} md={6}>
 								<ColorizedTextarea
 									fullWidth
+									id={antecedentsInputId}
 									readOnly={!editing}
 									label="Antécédents"
 									placeholder={placeholder}
@@ -418,6 +434,7 @@ const PatientPersonalInformation = (props) => {
 							<Grid item xs={12} md={6}>
 								<ColorizedTextarea
 									fullWidth
+									id={ongoingInputId}
 									readOnly={!editing}
 									label="Traitement en cours"
 									placeholder={placeholder}
@@ -467,6 +484,7 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
+									id={streetandnumberInputId}
 									readOnly={!editing}
 									label="Rue et Numéro"
 									InputLabelProps={{
@@ -484,6 +502,7 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
+									id={zipInputId}
 									readOnly={!editing}
 									label="Code Postal"
 									InputLabelProps={{
@@ -501,6 +520,7 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
+									id={municipalityInputId}
 									readOnly={!editing}
 									label="Commune"
 									InputLabelProps={{
@@ -519,6 +539,7 @@ const PatientPersonalInformation = (props) => {
 								<TextField
 									fullWidth
 									multiline
+									id={phoneInputId}
 									readOnly={!editing}
 									InputLabelProps={{
 										shrink: true,
@@ -608,6 +629,7 @@ const PatientPersonalInformation = (props) => {
 							<Grid item xs={9}>
 								<ColorizedTextarea
 									fullWidth
+									id={aboutInputId}
 									readOnly={!editing}
 									label="About"
 									placeholder={placeholder}
@@ -631,6 +653,7 @@ const PatientPersonalInformation = (props) => {
 							</Grid>
 							<Grid item xs={3}>
 								<TextField
+									id={noshowInputId}
 									readOnly={!editing}
 									InputProps={{
 										startAdornment: reifiedNoShows ? (
@@ -665,6 +688,7 @@ const PatientPersonalInformation = (props) => {
 						col={2}
 						color="primary"
 						disabled={!dirty}
+						aria-label="Save"
 						onClick={saveDetails}
 					>
 						<SaveIcon />
@@ -672,6 +696,7 @@ const PatientPersonalInformation = (props) => {
 					<FixedFab
 						col={3}
 						color={dirty ? 'secondary' : 'default'}
+						aria-label="Undo"
 						onClick={() => {
 							dispatch({type: 'init', payload: props.patient});
 						}}
@@ -684,6 +709,7 @@ const PatientPersonalInformation = (props) => {
 					<FixedFab
 						col={2}
 						color="default"
+						tooltip="Edit info"
 						onClick={() => {
 							dispatch({type: 'editing'});
 						}}
@@ -691,6 +717,7 @@ const PatientPersonalInformation = (props) => {
 						<EditIcon />
 					</FixedFab>
 					<AttachFileButton
+						id={attachFileButtonId}
 						Button={FixedFab}
 						col={3}
 						color="default"
