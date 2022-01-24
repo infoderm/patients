@@ -36,21 +36,24 @@ function unpack(data, item) {
 	return ['unknown', item];
 }
 
-const handleDrop = (history) => (data) => {
-	console.log(data);
+const handleDrop = (history) => async (data) => {
+	console.debug('handleDrop', data);
 
 	for (const item of data.items) {
 		const [kind, object] = unpack(data, item);
 		switch (kind) {
 			case 'drugs':
-				insertDrugs(object);
+				// eslint-disable-next-line no-await-in-loop
+				await insertDrugs(object);
 				break;
 			case 'patient':
-				insertPatient(history, object);
+				// eslint-disable-next-line no-await-in-loop
+				await insertPatient(history, object);
 				break;
 			case 'healthone':
 			case 'DMA-REP':
-				insertDocument(history, kind, object);
+				// eslint-disable-next-line no-await-in-loop
+				await insertDocument(history, kind, object);
 				break;
 			default:
 				console.debug('handleDrop-default', kind, object);
