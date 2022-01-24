@@ -21,5 +21,7 @@ export default function CustomWholeWindowDropZone() {
 		}
 	};
 
-	return <WholeWindowDropZone callback={callback} />;
+	return (
+		<WholeWindowDropZone callback={callback} aria-label="Drop contents here" />
+	);
 }

@@ -35,10 +35,12 @@ const styles = () =>
 const useStyles = makeStyles(styles);
 
 interface Options {
+	[key: string]: any;
 	callback: (data: any) => Promise<void>;
+	className?: string;
 }
 
-const WholeWindowDropZone = ({callback}: Options) => {
+const WholeWindowDropZone = ({callback, className, ...rest}: Options) => {
 	const classes = useStyles();
 	const [visible, setVisible] = useState(false);
 
@@ -88,9 +90,14 @@ const WholeWindowDropZone = ({callback}: Options) => {
 
 	return (
 		<div
-			className={classNames(classes.root, {
-				[classes.visible]: visible,
-			})}
+			className={classNames(
+				classes.root,
+				{
+					[classes.visible]: visible,
+				},
+				className,
+			)}
+			{...rest}
 		>
 			<Fab color="primary">
 				<AddIcon />
