@@ -1,4 +1,8 @@
-import {within, waitForElementToBeRemoved} from '@testing-library/dom';
+import {
+	within,
+	fireEvent,
+	waitForElementToBeRemoved,
+} from '@testing-library/dom';
 import userEvent, {PointerEventsCheckLevel} from '@testing-library/user-event';
 
 export const setupApp = () => {
@@ -270,4 +274,16 @@ export const editConsultation = async (
 	}
 
 	if (save) await user.click(await findByRole('button', {name: 'save'}));
+};
+
+export const uploadFile = (button, file) => {
+	const input = button.parentElement.querySelector('input[type="file"]');
+	// await user.upload(input, file) does not work:
+	// Error: Unable to perform pointer interaction as the element has or
+	// inherits pointer-events set to "none".
+	// Also could not find good way to query "input" other than through its
+	// proxy button.
+	fireEvent.change(input, {
+		target: {files: [file]},
+	});
 };

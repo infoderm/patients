@@ -1,4 +1,3 @@
-import {fireEvent} from '@testing-library/dom';
 import {
 	client,
 	randomPassword,
@@ -11,19 +10,8 @@ import {
 	createUserWithPasswordAndLogin,
 	navigateTo,
 	createNewPatient,
+	uploadFile,
 } from '../fixtures';
-
-const uploadFile = (button, file) => {
-	const input = button.parentElement.querySelector('input[type="file"]');
-	// await user.upload(input, file) does not work:
-	// Error: Unable to perform pointer interaction as the element has or
-	// inherits pointer-events set to "none".
-	// Also could not find good way to query "input" other than through its
-	// proxy button.
-	fireEvent.change(input, {
-		target: {files: [file]},
-	});
-};
 
 client(__filename, () => {
 	it('should allow to attach a file to a patient', async () => {
