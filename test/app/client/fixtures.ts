@@ -8,6 +8,9 @@ export const setupApp = () => {
 		userWithoutPointerEventsCheck: user.setup({
 			pointerEventsCheck: PointerEventsCheckLevel.Never,
 		}),
+		userWithRealisticTypingSpeed: user.setup({
+			delay: 100,
+		}),
 		...within(document.body),
 	};
 };
