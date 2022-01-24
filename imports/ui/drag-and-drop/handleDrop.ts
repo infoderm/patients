@@ -9,23 +9,11 @@ function unpack(data, item) {
 			return ['drugs', f];
 		}
 
-		if (f.name.endsWith('.HLT')) {
-			return ['healthone', f];
+		if (item.type === 'application/pdf') {
+			return ['attachment', f];
 		}
 
-		if (f.name.endsWith('.LAB')) {
-			return ['healthone', f];
-		}
-
-		if (f.name.endsWith('.DAT')) {
-			return ['healthone', f];
-		}
-
-		if (f.name.endsWith('.REP')) {
-			return ['DMA-REP', f];
-		}
-
-		return ['unknown-file', f];
+		return ['document', f];
 	}
 
 	if (item.kind === 'string' && item.type === 'text/plain') {
@@ -50,11 +38,14 @@ const handleDrop = (history) => async (data) => {
 				// eslint-disable-next-line no-await-in-loop
 				await insertPatient(history, object);
 				break;
-			case 'healthone':
-			case 'DMA-REP':
+			case 'document':
 				// eslint-disable-next-line no-await-in-loop
-				await insertDocument(history, kind, object);
+				await insertDocument(history, undefined, object);
 				break;
+			case 'attachment':
+				throw new Error(
+					'Cannot drop PDFs! Please attach them to the patient directly.',
+				);
 			default:
 				console.debug('handleDrop-default', kind, object);
 				break;
