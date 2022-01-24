@@ -62,6 +62,7 @@ export default function FullTextSearchInput({className}) {
 				expands
 				className={classes.searchBox}
 				placeholder="Search a patient…"
+				aria-label="Patient search"
 				value={value}
 				onChange={onChange}
 				onBlur={onBlur}
