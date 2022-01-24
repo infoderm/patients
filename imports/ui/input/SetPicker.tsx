@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useCallback} from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
-import keycode from 'keycode';
 import {
 	useCombobox,
 	useMultipleSelection,
@@ -291,7 +290,7 @@ const SetPicker = (props: SetPickerProps) => {
 			inputValue.length > 0 &&
 			highlightedIndex === -1 &&
 			createNewItem &&
-			keycode(event) === 'enter'
+			event.key === 'Enter'
 		) {
 			// TODO avoid creating new item before multiset check,
 			// handle async item creation, use try/catch for error

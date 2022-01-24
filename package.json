@@ -86,7 +86,6 @@
     "iban": "^0.0.14",
     "ical-generator": "^3.2.0",
     "iconv-lite": "^0.6.3",
-    "keycode": "^2.2.1",
     "lodash.deburr": "^4.1.0",
     "lodash.omit": "^4.5.0",
     "medidoc": "1.0.1",
