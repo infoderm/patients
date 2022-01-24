@@ -41,7 +41,7 @@ async function* sanitize({
 	if (formatHint !== undefined) check(formatHint, String);
 	check(array, Uint8Array);
 
-	console.debug('Starting to sanitize');
+	console.debug('Starting to sanitize', {length: array.length});
 
 	const mangled = new TextDecoder('utf-8', {fatal: false}).decode(
 		array.buffer,
