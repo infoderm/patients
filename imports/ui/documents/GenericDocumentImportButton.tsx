@@ -4,7 +4,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import InputFileButton from '../input/InputFileButton';
 
-const DocumentImportButton = ({onImport, children, ...rest}) => {
+const GenericDocumentImportButton = ({onImport, children, ...rest}) => {
 	const history = useHistory();
 
 	const onChange = (event) => {
@@ -30,4 +30,4 @@ const DocumentImportButton = ({onImport, children, ...rest}) => {
 	);
 };
 
-export default DocumentImportButton;
+export default GenericDocumentImportButton;
