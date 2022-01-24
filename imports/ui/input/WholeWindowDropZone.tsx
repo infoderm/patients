@@ -34,7 +34,11 @@ const styles = () =>
 
 const useStyles = makeStyles(styles);
 
-const WholeWindowDropZone = ({callback}) => {
+interface Options {
+	callback: (data: any) => Promise<void>;
+}
+
+const WholeWindowDropZone = ({callback}: Options) => {
 	const classes = useStyles();
 	const [visible, setVisible] = useState(false);
 
@@ -62,7 +66,7 @@ const WholeWindowDropZone = ({callback}) => {
 			const data = e.dataTransfer;
 			try {
 				await callback(data);
-			} catch (error) {
+			} catch (error: unknown) {
 				console.error(error);
 			}
 		};

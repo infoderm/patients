@@ -5,10 +5,10 @@ import EidCardDialog from '../../ui/eid/EidCardDialog';
 
 import eidParseXML from '../eidParseXML';
 
-export default function insertPatient(history, xmlString) {
+const insertPatient = async (history, xmlString) => {
 	const eidInfo = eidParseXML(xmlString);
 
-	dialog((resolve) => (
+	return dialog<void>((resolve) => (
 		<EidCardDialog
 			open={false}
 			history={history}
@@ -18,4 +18,6 @@ export default function insertPatient(history, xmlString) {
 			}}
 		/>
 	));
-}
+};
+
+export default insertPatient;

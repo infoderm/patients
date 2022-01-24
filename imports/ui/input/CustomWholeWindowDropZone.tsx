@@ -6,10 +6,10 @@ import WholeWindowDropZone from './WholeWindowDropZone';
 export default function CustomWholeWindowDropZone() {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const onDrop = useOnDrop();
-	const callback = (data) => {
+	const callback = async (data) => {
 		const key = enqueueSnackbar('Processing data...', {variant: 'info'});
 		try {
-			onDrop(data);
+			await onDrop(data);
 			closeSnackbar(key);
 			enqueueSnackbar('Success!', {variant: 'success'});
 		} catch (error: unknown) {
