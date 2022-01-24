@@ -30,14 +30,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchBoxInternalsInput(props) {
-	const {className, expands, ...rest} = props;
+	const {className, expands, 'aria-label': ariaLabel, ...rest} = props;
 
 	const classes = useStyles();
 
 	return (
 		<InputBase
 			className={classNames(className, classes.Input)}
+			type="search"
 			inputProps={{
+				'aria-label': ariaLabel,
 				className: classNames(classes.inputInput, {
 					[classes.dynamic]: expands,
 				}),
