@@ -67,7 +67,7 @@ const createDataTransferFromFiles = (files: File[] = []): DataTransfer => {
 	return dt;
 };
 
-const exampleReport = `1/88888/77/321
+const exampleMedidocReport = `1/88888/77/321
 Notissor                Adrien
 Rue Jules                          123
 1000      Bruxelles
@@ -115,43 +115,92 @@ Cordiales salutations,
 #/
 `;
 
-client(__filename, () => {
-	it('should allow to attach documents to a patient by drag-and-drop', async () => {
+const dropFiles = async ({findByLabelText}, file) => {
+	fireEvent.drop(await findByLabelText(/drop contents here/i), {
+		dataTransfer: createDataTransferFromFiles([file]),
+	});
+};
+
+interface MacroExpected {
+	[key: string]: any;
+	exact?: boolean;
+	text: string;
+}
+
+interface MacroOptions {
+	firstname: string;
+	lastname: string;
+	contents: string;
+	filename: string;
+	metadata?: any;
+	method: typeof dropFiles;
+	expected: MacroExpected[];
+}
+
+const macro = (
+	title,
+	{
+		firstname,
+		lastname,
+		contents,
+		filename,
+		metadata,
+		method,
+		expected,
+	}: MacroOptions,
+) => {
+	return it(title, async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
 		await createUserWithPasswordAndLogin(app, username, password);
-
-		const firstname = 'Jane';
-		const lastname = 'Doe';
 
 		const patientId = await createNewPatient(app, {
 			firstname,
 			lastname,
 		});
 
-		const {findByLabelText, findByRole, findByText, user} = app;
+		const {findByRole, findByText, user} = app;
 
 		await navigateTo(app, 'Documents', '/documents');
 
 		await findByRole('heading', {name: 'Nothing to see on page 1.'});
 
-		const file = new File([exampleReport], 'test.REP');
+		const file = new File([contents], filename, metadata);
 
-		fireEvent.drop(await findByLabelText(/drop contents here/i), {
-			dataTransfer: createDataTransferFromFiles([file]),
-		});
+		await method(app, file);
 
 		await findByRole('heading', {name: '/documents'});
 
-		await user.click(await findByRole('link', {name: 'Doe Jane'}));
+		await user.click(
+			await findByRole('link', {name: `${lastname} ${firstname}`}),
+		);
 
 		await findByRole('heading', {name: `/patient/${patientId}`});
 
 		await user.click(await findByRole('button', {name: 'documents'}));
 
-		await findByText('PZ7654321Y9');
-		await findByText('Notissor Adrien');
-		await findByText('Cordiales salutations', {exact: false});
+		for (const {text, ...options} of expected) {
+			// eslint-disable-next-line no-await-in-loop
+			await findByText(text, options);
+		}
 	});
+};
+
+client(__filename, () => {
+	macro(
+		'should allow to attach documents to a patient by drag-and-drop (medidoc report)',
+		{
+			firstname: 'Jane',
+			lastname: 'Doe',
+			contents: exampleMedidocReport,
+			filename: 'test.rep',
+			method: dropFiles,
+			expected: [
+				{text: 'PZ7654321Y9'},
+				{text: 'Notissor Adrien'},
+				{text: 'Cordiales salutations', exact: false},
+			],
+		},
+	);
 });
