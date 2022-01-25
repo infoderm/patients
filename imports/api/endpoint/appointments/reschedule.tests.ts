@@ -12,7 +12,7 @@ import {
 import {Availability} from '../../collection/availability.mock';
 import {slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../util/datetime';
-import {dropIds, server} from '../../../test/fixtures';
+import {dropIds, server, throws} from '../../../test/fixtures';
 import invoke from '../invoke';
 import appointmentsReschedule from './reschedule';
 
@@ -32,6 +32,48 @@ const expected = ({owner, begin, end}) => [
 ];
 
 server(__filename, () => {
+	it('does not work without being logged in', async () => {
+		const userId = Random.id();
+
+		const appointmentId = await newAppointment({userId});
+
+		const before = Appointments.findOne();
+
+		const updated = newAppointmentFormData();
+
+		await throws(
+			async () => invoke(appointmentsReschedule, {}, [appointmentId, updated]),
+			/not-authorized/,
+		);
+
+		const after = Appointments.findOne();
+
+		assert.deepEqual(after, before);
+	});
+
+	it("cannot reschedule other user's appointments", async () => {
+		const userId = Random.id();
+
+		const appointmentId = await newAppointment({userId});
+
+		const before = Appointments.findOne();
+
+		const updated = newAppointmentFormData();
+
+		await throws(
+			async () =>
+				invoke(appointmentsReschedule, {userId: `${userId}x`}, [
+					appointmentId,
+					updated,
+				]),
+			/not-found/,
+		);
+
+		const after = Appointments.findOne();
+
+		assert.deepEqual(after, before);
+	});
+
 	it('updates availability', async () => {
 		const userId = Random.id();
 
