@@ -4,6 +4,7 @@ import {Meteor} from 'meteor/meteor';
 import {map} from '@iterable-iterator/map';
 import {sum} from '@iterable-iterator/reduce';
 
+import authorized from '../authorized';
 import Params from './Params';
 import Publication from './Publication';
 
@@ -13,6 +14,7 @@ const exactlyOne = (array: any[]) =>
 
 const define = <T, U = T>({
 	name,
+	authentication,
 	cursor,
 	cursors,
 	handle,
@@ -22,7 +24,14 @@ const define = <T, U = T>({
 		assert(exactlyOne(fns));
 		for (const fn of fns) {
 			if (fn) {
-				Meteor.publish(name, fn);
+				Meteor.publish(name, function (...args) {
+					if (!authorized(authentication ?? 'logged-in', this)) {
+						this.ready();
+						return;
+					}
+
+					return Reflect.apply(fn, this, args);
+				});
 				break;
 			}
 		}
