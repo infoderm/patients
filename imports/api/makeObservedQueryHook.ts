@@ -33,7 +33,7 @@ const makeObservedQueryHook =
 					}
 				},
 				onReady: () => {
-					const {results} = Collection.findOne({key});
+					const {results} = Collection.findOne({key}) ?? {results: []};
 					setResults(results);
 					setLoading(false);
 				},
