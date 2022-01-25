@@ -19,8 +19,9 @@ export default define({
 			_id: patientId,
 			owner: this.userId,
 		});
+
 		if (patient === null) {
-			throw new Meteor.Error('not-authorized');
+			throw new Meteor.Error('not-found');
 		}
 
 		const fields = sanitize(newfields);

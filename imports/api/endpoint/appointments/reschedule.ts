@@ -25,10 +25,6 @@ export default define({
 		appointmentId: string,
 		appointment: any,
 	) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const owner = this.userId;
 		const item = await db.findOne(Appointments, {_id: appointmentId, owner});
 		if (item === null) {

@@ -19,10 +19,6 @@ export default define({
 		oldBookId: string,
 		newBookNumberString: string,
 	) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const oldBook = await db.findOne(Books, {
 			_id: oldBookId,
 			owner: this.userId,

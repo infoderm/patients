@@ -17,14 +17,20 @@ export default define({
 		documentId: string,
 		patientId: string,
 	) {
-		const document = await db.findOne(Documents, {_id: documentId});
-		if (document === null || document.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own document');
+		const document = await db.findOne(Documents, {
+			_id: documentId,
+			owner: this.userId,
+		});
+		if (document === null) {
+			throw new Meteor.Error('not-found', 'user does not own document');
 		}
 
-		const patient = await db.findOne(Patients, {_id: patientId});
-		if (patient === null || patient.owner !== this.userId) {
-			throw new Meteor.Error('not-authorized', 'user does not own patient');
+		const patient = await db.findOne(Patients, {
+			_id: patientId,
+			owner: this.userId,
+		});
+		if (patient === null) {
+			throw new Meteor.Error('not-found', 'user does not own patient');
 		}
 
 		return db.updateOne(Documents, {_id: documentId}, {$set: {patientId}});

@@ -14,10 +14,6 @@ export default define({
 		check(patient, Object);
 	},
 	async transaction(db: TransactionDriver, patient: any) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const fields = sanitize(patient);
 
 		await updateTags(db, this.userId, fields);

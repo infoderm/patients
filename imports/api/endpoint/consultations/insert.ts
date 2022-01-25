@@ -19,10 +19,6 @@ export default define({
 		check(consultation, Object);
 	},
 	async transaction(db: TransactionDriver, consultation: any) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const fields = sanitize(consultation);
 		const owner = this.userId;
 

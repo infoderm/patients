@@ -8,13 +8,22 @@ import Transaction from './Transaction';
 import Executor from './Executor';
 
 const define = <T>(params: Params<T>): Endpoint<T> => {
-	const {testOnly, name, validate, run, simulate, transaction, options} =
-		params;
+	const {
+		testOnly,
+		authentication,
+		name,
+		validate,
+		run,
+		simulate,
+		transaction,
+		options,
+	} = params;
 	const executor =
 		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction);
 
 	const endpoint: Endpoint<T> = {
 		name,
+		authentication: authentication ?? 'logged-in',
 		validate,
 		transaction,
 		run: executor,

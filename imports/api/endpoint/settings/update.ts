@@ -13,10 +13,6 @@ export default define({
 		check(key, String);
 	},
 	run(key: string, value: any) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		// const updatedAt = new Date();
 		const owner = this.userId;
 		// const username = Meteor.users.findOne(this.userId).username;

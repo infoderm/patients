@@ -19,10 +19,6 @@ export default define({
 		check(document, Object);
 	},
 	async run(document: any) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const entries = sanitize(document);
 
 		const result = [];

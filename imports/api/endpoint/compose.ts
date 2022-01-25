@@ -8,6 +8,8 @@ const compose = <T>(
 	invocation: Partial<Meteor.MethodThisType>,
 	args: any[],
 ) => {
+	// TODO will need to check authorized here if we ever compose endpoints
+	// with different authorization levels
 	Reflect.apply(endpoint.validate, invocation, args);
 	if (!endpoint.transaction) {
 		throw new Error(
