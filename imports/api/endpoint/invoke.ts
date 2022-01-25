@@ -1,26 +1,13 @@
 import {Meteor} from 'meteor/meteor';
+import authorized from '../authorized';
 import Endpoint from './Endpoint';
-
-const authorized = <T>(
-	endpoint: Endpoint<T>,
-	invocation: Partial<Meteor.MethodThisType>,
-): boolean => {
-	switch (endpoint.authentication) {
-		case 'DANGEROUS-NONE':
-			return true;
-		case 'logged-in':
-			return typeof invocation.userId === 'string' && invocation.userId !== '';
-		default:
-			return false;
-	}
-};
 
 const invoke = <T>(
 	endpoint: Endpoint<T>,
 	invocation: Partial<Meteor.MethodThisType>,
 	args: any[],
 ) => {
-	if (!authorized(endpoint, invocation)) {
+	if (!authorized(endpoint.authentication, invocation)) {
 		throw new Meteor.Error('not-authorized');
 	}
 
