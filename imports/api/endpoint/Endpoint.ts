@@ -1,8 +1,8 @@
+import Authentication from '../Authentication';
 import Options from './Options';
 import Executor from './Executor';
 import Validator from './Validator';
 import Transaction from './Transaction';
-import Authentication from './Authentication';
 
 interface Endpoint<T> {
 	readonly name: string;
