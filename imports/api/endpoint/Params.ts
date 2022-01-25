@@ -1,3 +1,4 @@
+import Authentication from './Authentication';
 import Executor from './Executor';
 import Options from './Options';
 import Transaction from './Transaction';
@@ -5,6 +6,7 @@ import Validator from './Validator';
 
 interface ParamsCommon<T> {
 	readonly testOnly?: boolean;
+	readonly authentication?: Authentication;
 	readonly name: string;
 	readonly validate: Validator;
 	readonly options?: Options<T>;

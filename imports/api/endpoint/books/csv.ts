@@ -34,10 +34,6 @@ export default define({
 		lastBook: number,
 		maxRows: number,
 	) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const beginBook = firstBook;
 		const endBook = lastBook + 1;
 

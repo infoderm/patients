@@ -11,10 +11,6 @@ export default define({
 		for (const drug of drugs) check(drug, Object);
 	},
 	async transaction(db: TransactionDriver, drugs: any[]) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const createdAt = new Date();
 		const owner = this.userId;
 

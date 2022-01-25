@@ -37,7 +37,6 @@ export default define({
 		newPatient,
 	) {
 		// Here is what is done in this method
-		// (1) Check that user is connected
 		// (2) Check that each patient in `oldPatientIds` is owned by the user
 		// (3) Create new patient
 		// (4) Attach consultations in `consultationIds` to newly created patient
@@ -47,11 +46,6 @@ export default define({
 		// (8) Attach documents in `documentIds` to newly created patient
 		// (9) Remove documents that have not been attached
 		// (10) Remove patients in `oldPatientIds`
-
-		// (1)
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
 
 		// (2)
 		for (const oldPatientId of oldPatientIds) {

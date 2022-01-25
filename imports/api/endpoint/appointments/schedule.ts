@@ -18,10 +18,6 @@ export default define({
 		check(appointment, Object);
 	},
 	async transaction(db: TransactionDriver, appointment: any) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const args = sanitize(appointment);
 
 		if (args.createPatient) {

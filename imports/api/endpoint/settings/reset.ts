@@ -13,10 +13,6 @@ export default define({
 		check(key, String);
 	},
 	run(key: string) {
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		return Settings.remove({owner: this.userId, key});
 	},
 });

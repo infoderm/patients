@@ -27,10 +27,6 @@ const unconditionallyUpdateById = <T>(
 	) {
 		check(_id, String);
 
-		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
-		}
-
 		const selector = {_id, [ownerKey]: this.userId} as unknown as Filter<T>;
 		const existing = await db.findOne(Collection, selector);
 		if (existing === null) {
