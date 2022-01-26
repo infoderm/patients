@@ -4,7 +4,7 @@ import define from '../define';
 export default define({
 	testOnly: true,
 	authentication: 'DANGEROUS-NONE',
-	name: 'dev.testing.data.reset',
+	name: 'dev.reset',
 	validate() {
 		return undefined;
 	},
