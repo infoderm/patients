@@ -7,7 +7,7 @@ import {sorted} from '@iterable-iterator/sorted';
 import logout from '../api/user/logout';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
-import reset from '../api/endpoint/testing/reset';
+import reset from '../api/endpoint/_dev/reset';
 
 export const randomUserId = () => Random.id();
 export const randomPassword = () => Random.id();
