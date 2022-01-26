@@ -4,12 +4,12 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
+import {Appointments} from '../../collection/appointments';
+import {Availability} from '../../collection/availability';
 import {
-	Appointments,
-	newAppointmentFormData,
 	newAppointment,
-} from '../../collection/appointments.mock';
-import {Availability} from '../../collection/availability.mock';
+	newAppointmentFormData,
+} from '../../_dev/populate/appointments';
 import {slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../util/datetime';
 import {dropIds, server, throws} from '../../../test/fixtures';

@@ -1,8 +1,9 @@
 import faker from '@faker-js/faker';
-import {makeTemplate} from '../../test/fixtures';
 
-import scheduleAppointment from '../endpoint/appointments/schedule';
-import invoke from '../endpoint/invoke';
+import {makeTemplate} from '../../../test/fixtures';
+
+import scheduleAppointment from '../../endpoint/appointments/schedule';
+import invoke from '../../endpoint/invoke';
 
 export const newAppointmentFormData = makeTemplate({
 	datetime: () => faker.date.past(20),
@@ -22,5 +23,3 @@ export const newAppointment = async (invocation, extra?) => {
 	]);
 	return _id;
 };
-
-export {Appointments} from './appointments';

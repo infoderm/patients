@@ -4,12 +4,15 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
-import {Appointments, newAppointment} from '../../collection/appointments.mock';
-
-import {Availability} from '../../collection/availability.mock';
-import {initialSlot, slot} from '../../availability';
-import {beginningOfTime, endOfTime} from '../../../util/datetime';
 import {dropId, dropIds, server, throws} from '../../../test/fixtures';
+
+import {beginningOfTime, endOfTime} from '../../../util/datetime';
+
+import {Appointments} from '../../collection/appointments';
+import {Availability} from '../../collection/availability';
+import {newAppointment} from '../../_dev/populate/appointments';
+
+import {initialSlot, slot} from '../../availability';
 
 import invoke from '../invoke';
 import appointmentsCancel from './cancel';

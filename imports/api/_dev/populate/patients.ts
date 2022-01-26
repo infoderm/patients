@@ -6,12 +6,12 @@ import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 
-import {makeTemplate} from '../../test/fixtures';
+import {makeTemplate} from '../../../test/fixtures';
 
-import insertPatient from '../endpoint/patients/insert';
+import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../../patients';
 
-import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../patients';
-import invoke from '../endpoint/invoke';
+import insertPatient from '../../endpoint/patients/insert';
+import invoke from '../../endpoint/invoke';
 
 const AGE_MAX = 130;
 
@@ -54,6 +54,3 @@ export const newPatientFormData = makeTemplate({
 export const newPatient = async (invocation) => {
 	return invoke(insertPatient, invocation, [newPatientFormData()]);
 };
-
-export {patients} from '../patients';
-export {PatientDocument, Patients, PatientFields} from './patients';
