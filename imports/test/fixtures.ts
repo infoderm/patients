@@ -122,6 +122,12 @@ export const throws = async (
 		thrownError = error;
 	}
 
+	assert.notEqual(thrownError, undefined, 'Expected error to be thrown.');
+	assert.instanceOf(
+		thrownError,
+		Error,
+		'Expected thrown error to be an instance of Error.',
+	);
 	if (typeof expected === 'string') {
 		expect(thrownError.message).to.equal(expected);
 	} else if (expected instanceof RegExp) {
