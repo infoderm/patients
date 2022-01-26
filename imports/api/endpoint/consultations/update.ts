@@ -4,6 +4,7 @@ import {
 	Consultations,
 	ConsultationDocument,
 } from '../../collection/consultations';
+import {Patients} from '../../collection/patients';
 
 import {consultations, computedFields} from '../../consultations';
 
@@ -36,6 +37,16 @@ export default define({
 		}
 
 		const fields = sanitize(newfields);
+		if (fields.patientId) {
+			const patient = await db.findOne(Patients, {
+				_id: fields.patientId,
+				owner,
+			});
+			if (patient === null) {
+				throw new Meteor.Error('not-found');
+			}
+		}
+
 		if (fields.datetime && fields.book) {
 			await books.add(db, owner, books.name(fields.datetime, fields.book));
 		}
