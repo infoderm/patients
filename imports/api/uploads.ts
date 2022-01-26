@@ -13,7 +13,12 @@ const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 const _100MB = 128 * 1024 * 1024;
 const MAXIMUM_UPLOAD_SIZE = _100MB; // TODO allow user configuration
 
-export const Uploads = new FilesCollection({
+export interface MetadataType {
+	lastModified?: Date;
+	gridFsFileId?: string;
+}
+
+export const Uploads = new FilesCollection<MetadataType>({
 	collectionName: 'uploads',
 	allowClientCode: true,
 	onBeforeUpload(file) {

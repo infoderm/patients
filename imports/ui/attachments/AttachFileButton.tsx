@@ -8,7 +8,7 @@ import PropsOf from '../../util/PropsOf';
 
 import call from '../../api/endpoint/call';
 import Endpoint from '../../api/endpoint/Endpoint';
-import {Uploads} from '../../api/uploads';
+import {MetadataType, Uploads} from '../../api/uploads';
 
 import InputFileButton from '../input/InputFileButton';
 
@@ -118,7 +118,7 @@ const AttachFileButton = ({
 		};
 
 		for (const file of files) {
-			const meta: {lastModified?: Date} = {};
+			const meta: MetadataType = {};
 			if (Number.isInteger(file.lastModified)) {
 				meta.lastModified = new Date(file.lastModified);
 			}
