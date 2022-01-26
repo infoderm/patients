@@ -1,13 +1,15 @@
 import {check} from 'meteor/check';
 
 import {Appointments} from '../../collection/appointments';
+import {Patients} from '../../collection/patients';
 import {appointments} from '../../appointments';
+import {availability} from '../../availability';
+
+import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
-
-import {availability} from '../../availability';
 import compose from '../compose';
-import TransactionDriver from '../../transaction/TransactionDriver';
+
 import createPatientForAppointment from './createPatient';
 
 const {sanitize} = appointments;
@@ -20,6 +22,8 @@ export default define({
 	async transaction(db: TransactionDriver, appointment: any) {
 		const args = sanitize(appointment);
 
+		const owner = this.userId;
+
 		if (args.createPatient) {
 			args.consultationFields.patientId = await compose(
 				db,
@@ -27,9 +31,16 @@ export default define({
 				this,
 				[args.patientFields],
 			);
+		} else {
+			const patient = await db.findOne(Patients, {
+				_id: args.consultationFields.patientId,
+				owner,
+			});
+			if (patient === null) {
+				throw new Meteor.Error('not-found');
+			}
 		}
 
-		const owner = this.userId;
 		const {begin, end} = args.consultationFields;
 
 		await availability.insertHook(db, owner, begin, end, 1);
