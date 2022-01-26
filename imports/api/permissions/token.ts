@@ -5,7 +5,6 @@ import {
 import {extractSignature, sign, SignedDocument, verify} from '../../lib/hmac';
 import {encode as _encode, decode as _decode} from '../../lib/base64/rfc7515';
 import executeTransaction from '../transaction/executeTransaction';
-import {ICS_CALENDAR_READ} from './codes';
 
 export const encode = (_id: string, key: string) =>
 	_encode(JSON.stringify({_id, key}));
@@ -35,6 +34,7 @@ export class PermissionTokenValidationError extends Error {
 export const getPermissionsForToken = async (
 	token: string,
 	ipAddress: string,
+	query: string,
 ) =>
 	executeTransaction(
 		async (db): Promise<Omit<PermissionTokenDocument, '_id' | 'signature'>> => {
@@ -55,7 +55,7 @@ export const getPermissionsForToken = async (
 
 			const document = await db.findOne(PermissionTokens, {
 				_id,
-				permissions: ICS_CALENDAR_READ,
+				permissions: query,
 				validFrom: {$lte: now},
 				validUntil: {$gt: now}, // TODO use mongo's internal Date?
 			});

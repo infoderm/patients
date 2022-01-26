@@ -5,13 +5,18 @@ import ical, {ICalEventStatus} from 'ical-generator';
 
 import subWeeks from 'date-fns/subWeeks';
 import startOfWeek from 'date-fns/startOfWeek';
+
 import {Consultations} from '../../../imports/api/collection/consultations';
-import {event} from '../../../imports/api/events';
+
 import {
 	getPermissionsForToken,
 	PermissionTokenValidationError,
 } from '../../../imports/api/permissions/token';
+import {ICS_CALENDAR_READ} from '../../../imports/api/permissions/codes';
+
+import {event} from '../../../imports/api/events';
 import {get as getSetting} from '../../../imports/api/settings';
+
 import rateLimiter from './rateLimiter';
 
 const cache = new Map(); // TODO allow to clear cache / use LRU cache
@@ -23,7 +28,11 @@ const response = async (token, IPAddress, query, res) => {
 
 	try {
 		// NOTE this is a transaction
-		permissions = await getPermissionsForToken(token, IPAddress);
+		permissions = await getPermissionsForToken(
+			token,
+			IPAddress,
+			ICS_CALENDAR_READ,
+		);
 	} catch (error: unknown) {
 		if (error instanceof PermissionTokenValidationError) {
 			res.writeHead(error.getHTTPErrorCode()).end();
