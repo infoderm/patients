@@ -37,9 +37,9 @@ const encodeDocument = (encoding: string, document: Document) => {
 	}
 };
 
-export const extractSignature = (
-	signedDocument: SignedDocument,
-): {document: Document; signature: Signature} => {
+export const extractSignature = <T>(
+	signedDocument: T extends SignedDocument ? T : never,
+): {document: Omit<T, 'signature'>; signature: Signature} => {
 	const {signature, ...document} = signedDocument;
 	return {document, signature};
 };
