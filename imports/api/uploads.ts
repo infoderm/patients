@@ -44,7 +44,14 @@ export const Uploads = new FilesCollection<MetadataType>({
 
 		const unlink = (versionName: string) => {
 			// Unlink files from FS
-			this.unlink(this.collection.findOne(upload._id), versionName);
+			const document = this.collection.findOne(upload._id);
+			if (document !== undefined) {
+				this.unlink(document, versionName);
+			} else {
+				console.error(
+					`Could not unlink upload ${upload._id} because it could not be found.`,
+				);
+			}
 		};
 
 		// Move file to GridFS
