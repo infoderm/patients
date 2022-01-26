@@ -1,7 +1,9 @@
 import faker from '@faker-js/faker';
-import {makeTemplate} from '../../test/fixtures';
-import invoke from '../endpoint/invoke';
-import insertDocument from '../endpoint/documents/insert';
+
+import {makeTemplate} from '../../../test/fixtures';
+
+import invoke from '../../endpoint/invoke';
+import insertDocument from '../../endpoint/documents/insert';
 
 export const newDocumentFormData = makeTemplate({
 	format: () => undefined, // faker.company.bs(),
@@ -17,5 +19,3 @@ export const newDocument = async (invocation, extra?) => {
 	]);
 	return _id;
 };
-
-export {Documents} from './documents';

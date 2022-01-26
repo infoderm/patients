@@ -5,14 +5,12 @@ import {assert} from 'chai';
 import {Random} from 'meteor/random';
 
 import invoke from '../invoke';
-import {newPatient} from '../../collection/patients.mock';
-import {
-	Consultations,
-	newConsultation,
-} from '../../collection/consultations.mock';
-import {Books} from '../../collection/books.mock';
+import {Consultations} from '../../collection/consultations';
+import {Books} from '../../collection/books';
 import {books} from '../../books';
 import {server} from '../../../test/fixtures';
+import {newPatient} from '../../_dev/populate/patients';
+import {newConsultation} from '../../_dev/populate/consultations';
 import bookRename from './rename';
 
 server(__filename, () => {

@@ -6,15 +6,15 @@ import {Random} from 'meteor/random';
 
 import invoke from '../invoke';
 
-import {Patients, newPatient} from '../../collection/patients.mock';
+import {Patients} from '../../collection/patients';
 import {server, throws} from '../../../test/fixtures';
-import {
-	Consultations,
-	newConsultation,
-} from '../../collection/consultations.mock';
-import {newUpload, Uploads} from '../../uploads.mock';
-import consultationsRemove from './remove';
+import {Consultations} from '../../collection/consultations';
+import {Uploads} from '../../uploads';
+import {newPatient} from '../../_dev/populate/patients';
+import {newConsultation} from '../../_dev/populate/consultations';
+import {newUpload} from '../../_dev/populate/uploads';
 import consultationsAttach from './attach';
+import consultationsRemove from './remove';
 
 server(__filename, () => {
 	it('can remove consultation', async () => {

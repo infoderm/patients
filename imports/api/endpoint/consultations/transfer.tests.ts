@@ -4,14 +4,14 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
-import invoke from '../invoke';
-
-import {newPatient} from '../../collection/patients.mock';
 import {server, throws} from '../../../test/fixtures';
-import {
-	Consultations,
-	newConsultation,
-} from '../../collection/consultations.mock';
+
+import {Consultations} from '../../collection/consultations';
+
+import {newPatient} from '../../_dev/populate/patients';
+import {newConsultation} from '../../_dev/populate/consultations';
+
+import invoke from '../invoke';
 import consultationsTransfer from './transfer';
 
 server(__filename, () => {

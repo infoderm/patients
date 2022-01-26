@@ -10,12 +10,12 @@ import cancelAppointment from '../appointments/cancel';
 
 import invoke from '../invoke';
 
-import {newAppointment} from '../../collection/appointments.mock';
-import {Availability} from '../../collection/availability.mock';
+import {Availability} from '../../collection/availability';
 import {units} from '../../duration';
 import {initialSlot, slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../util/datetime';
 import {dropId, server} from '../../../test/fixtures';
+import {newAppointment} from '../../_dev/populate/appointments';
 import next from './next';
 
 const bookSlot = async (userId, begin, end) => {

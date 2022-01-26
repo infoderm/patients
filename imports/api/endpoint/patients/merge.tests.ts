@@ -4,16 +4,22 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
-import invoke from '../invoke';
-import {Patients, patients, newPatient} from '../../collection/patients.mock';
-import {
-	Consultations,
-	newConsultation,
-} from '../../collection/consultations.mock';
-import {Documents, newDocument} from '../../collection/documents.mock';
-import {Attachments} from '../../collection/attachments.mock';
-import {newUpload} from '../../uploads.mock';
 import {server, setLike} from '../../../test/fixtures';
+
+import {Patients} from '../../collection/patients';
+import {Consultations} from '../../collection/consultations';
+import {Documents} from '../../collection/documents';
+import {Attachments} from '../../collection/attachments';
+
+import {newPatient} from '../../_dev/populate/patients';
+import {newUpload} from '../../_dev/populate/uploads';
+import {newConsultation} from '../../_dev/populate/consultations';
+import {newDocument} from '../../_dev/populate/documents';
+
+import {patients} from '../../patients';
+
+import invoke from '../invoke';
+
 import patientsMerge from './merge';
 import patientsAttach from './attach';
 

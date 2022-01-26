@@ -4,15 +4,17 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
+import {server, throws} from '../../../test/fixtures';
+
+import {Patients} from '../../collection/patients';
+import {Consultations} from '../../collection/consultations';
+
+import {newPatient} from '../../_dev/populate/patients';
+import {newConsultation} from '../../_dev/populate/consultations';
+import {newAppointment} from '../../_dev/populate/appointments';
+
 import invoke from '../invoke';
 
-import {Patients, newPatient} from '../../collection/patients.mock';
-import {server, throws} from '../../../test/fixtures';
-import {
-	Consultations,
-	newConsultation,
-} from '../../collection/consultations.mock';
-import {newAppointment} from '../../collection/appointments.mock';
 import patientsRemove from './remove';
 
 server(__filename, () => {

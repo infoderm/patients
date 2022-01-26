@@ -1,8 +1,9 @@
 import faker from '@faker-js/faker';
-import {makeTemplate} from '../../test/fixtures';
-import invoke from '../endpoint/invoke';
 
-import insertConsultation from '../endpoint/consultations/insert';
+import {makeTemplate} from '../../../test/fixtures';
+
+import insertConsultation from '../../endpoint/consultations/insert';
+import invoke from '../../endpoint/invoke';
 
 export const newConsultationFormData = makeTemplate({
 	datetime: () => faker.date.past(20),
@@ -26,5 +27,3 @@ export const newConsultation = async (invocation, extra?) => {
 		newConsultationFormData(extra),
 	]);
 };
-
-export {Consultations} from './consultations';
