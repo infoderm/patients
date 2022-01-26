@@ -2,23 +2,23 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
-import invoke from '../invoke';
-
 import {Patients} from '../../collection/patients';
-import {server, throws} from '../../../test/fixtures';
+import {randomUserId, server, throws} from '../../../test/fixtures';
 import {Consultations} from '../../collection/consultations';
-import {Uploads} from '../../uploads';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 import {newUpload} from '../../_dev/populate/uploads';
+
+import {Uploads} from '../../uploads';
+
+import invoke from '../invoke';
+
 import consultationsAttach from './attach';
 import consultationsRemove from './remove';
 
 server(__filename, () => {
 	it('can remove consultation', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
 
@@ -37,7 +37,7 @@ server(__filename, () => {
 	});
 
 	it("cannot remove other user's consultation", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 
@@ -53,8 +53,24 @@ server(__filename, () => {
 		);
 	});
 
+	it('cannot remove consultation when not logged in', async () => {
+		const userId = randomUserId();
+
+		const patientAId = await newPatient({userId});
+
+		const {insertedId: consultationId} = await newConsultation(
+			{userId},
+			{patientId: patientAId},
+		);
+
+		return throws(
+			() => invoke(consultationsRemove, {userId: undefined}, [consultationId]),
+			/not-authorized/,
+		);
+	});
+
 	it("detaches removed consultation's attachments", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		assert.equal(Patients.find({}).count(), 0);
 
