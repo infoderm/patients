@@ -2,9 +2,13 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
-import {dropId, dropIds, server, throws} from '../../../test/fixtures';
+import {
+	dropId,
+	dropIds,
+	randomUserId,
+	server,
+	throws,
+} from '../../../test/fixtures';
 import {beginningOfTime, endOfTime} from '../../../util/datetime';
 
 import {Appointments} from '../../collection/appointments';
@@ -18,7 +22,7 @@ import appointmentsBeginConsultation from './beginConsultation';
 
 server(__filename, () => {
 	it('can begin consultation', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
@@ -35,7 +39,7 @@ server(__filename, () => {
 	});
 
 	it("cannot begin other user's consultation", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
@@ -48,8 +52,22 @@ server(__filename, () => {
 		);
 	});
 
+	it('cannot begin consultation when not logged in', async () => {
+		const userId = randomUserId();
+
+		const appointmentId = await newAppointment({userId});
+
+		return throws(
+			() =>
+				invoke(appointmentsBeginConsultation, {userId: undefined}, [
+					appointmentId,
+				]),
+			/not-authorized/,
+		);
+	});
+
 	it('restores availability', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
