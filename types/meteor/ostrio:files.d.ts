@@ -189,7 +189,7 @@ declare module 'meteor/ostrio:files' {
 		fileId?: string;
 	}
 
-	class FileUpload {
+	class FileUpload<MetadataType> {
 		file: File;
 		onPause: ReactiveVar<boolean>;
 		progress: ReactiveVar<number>;
@@ -201,7 +201,28 @@ declare module 'meteor/ostrio:files' {
 		toggle(): void;
 		pipe(): void;
 		start(): void;
-		on(event: string, callback: (err?: any, fileObject?: any) => void): void;
+		on(
+			event: 'start',
+			callback: (error: null, fileData: FileData<MetadataType>) => void,
+		): void;
+		on(event: 'data', callback: (data: string) => void): void;
+		on(event: 'readEnd', callback: () => void): void;
+		on(
+			event: 'progress',
+			callback: (progress: number, fileData: FileData<MetadataType>) => void,
+		): void;
+		on(
+			event: 'pause' | 'continue' | 'abort',
+			callback: (fileData: FileData<MetadataType>) => void,
+		): void;
+		on(
+			event: 'uploaded' | 'end',
+			callback: (error: Meteor.Error, fileRef: FileRef<MetadataType>) => void,
+		): void;
+		on(
+			event: 'error',
+			callback: (error: Meteor.Error, fileData: FileData<MetadataType>) => void,
+		): void;
 	}
 
 	class FileCursor<MetadataType> extends FileRef<MetadataType> {}
@@ -264,7 +285,7 @@ declare module 'meteor/ostrio:files' {
 		insert(
 			settings: InsertOptions<MetadataType>,
 			autoStart?: boolean,
-		): FileUpload;
+		): FileUpload<MetadataType>;
 		remove(
 			select: Mongo.Selector<FileObj<MetadataType>> | string,
 			callback?: (error: Meteor.Error) => void,
@@ -283,7 +304,10 @@ declare module 'meteor/ostrio:files' {
 		allow(options: Mongo.AllowDenyOptions): void;
 		deny(options: Mongo.AllowDenyOptions): void;
 		denyClient(): void;
-		on(event: string, callback: (fileRef: FileRef<MetadataType>) => void): void;
+		on(
+			event: 'afterUpload',
+			callback: (fileRef: FileRef<MetadataType>) => void,
+		): void;
 		unlink(
 			fileRef: FileObj<MetadataType>,
 			version?: string,
