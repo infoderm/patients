@@ -18,7 +18,7 @@ const downloadDocument = async (document) => {
 		//
 		// See: https://support.mediportal.be/fr/support/solutions/articles/1000303373-faq-messages-illisibles-dans-le-dossier-g%C3%A9n%C3%A9ralit%C3%A9s-
 		healthone: 'HLT',
-		medidoc: 'REP',
+		'DMA-REP': 'REP',
 		// 'medar' : 'MDR' ,
 	};
 
