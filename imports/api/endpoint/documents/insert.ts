@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
-import {documents} from '../../documents';
+import {DirtyDocument, documents} from '../../documents';
 import findBestPatientMatch from '../../documents/findBestPatientMatch';
 import executeTransaction from '../../transaction/executeTransaction';
 
@@ -18,7 +18,7 @@ export default define({
 	validate(document: any) {
 		check(document, Object);
 	},
-	async run(document: any) {
+	async run(document: DirtyDocument) {
 		const entries = sanitize(document);
 
 		const result = [];
