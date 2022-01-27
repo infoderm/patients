@@ -26,8 +26,8 @@ const detectFormat = (string: string): string | undefined => {
 	return matches.length === 1 ? matches[0] : undefined;
 };
 
-interface DirtyDocument {
-	patientId: string;
+export interface DirtyDocument {
+	patientId?: string;
 	format?: string;
 	array: Uint8Array;
 }

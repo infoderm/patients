@@ -19,6 +19,11 @@ function* findBestPatientMatch_queries(entry) {
 
 async function findBestPatientMatch(db: TransactionDriver, owner, entry) {
 	if (entry.patientId) {
+		const patient = await db.findOne(Patients, {_id: entry.patientId, owner});
+		if (patient === null) {
+			throw new Meteor.Error('not-found');
+		}
+
 		return entry.patientId;
 	}
 
