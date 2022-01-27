@@ -51,6 +51,6 @@ export const newPatientFormData = makeTemplate({
 	noshow: () => faker.datatype.number(3),
 });
 
-export const newPatient = async (invocation) => {
-	return invoke(insertPatient, invocation, [newPatientFormData()]);
+export const newPatient = async (invocation, extra?) => {
+	return invoke(insertPatient, invocation, [newPatientFormData(extra)]);
 };
