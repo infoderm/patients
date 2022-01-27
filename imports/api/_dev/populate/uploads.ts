@@ -2,9 +2,12 @@ import {FileRef} from 'meteor/ostrio:files';
 import {randomPNGBuffer, randomPNGDataURI} from '../../../test/png';
 import {MetadataType, Uploads} from '../../uploads';
 
-export const newUpload = async (invocation): Promise<FileRef<MetadataType>> => {
+export const newUpload = async (
+	invocation,
+	options?,
+): Promise<FileRef<MetadataType>> => {
 	const type = 'image/png';
-	const fileName = 'pic.png';
+	const fileName = options?.name ?? 'pic.png';
 	if (Meteor.isServer) {
 		const buffer = await randomPNGBuffer();
 		return new Promise((resolve, reject) => {
