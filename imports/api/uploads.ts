@@ -14,8 +14,10 @@ const _100MB = 128 * 1024 * 1024;
 const MAXIMUM_UPLOAD_SIZE = _100MB; // TODO allow user configuration
 
 export interface MetadataType {
+	createdAt?: Date;
 	lastModified?: Date;
 	gridFsFileId?: string;
+	isDeleted?: boolean;
 }
 
 export const Uploads = new FilesCollection<MetadataType>({
