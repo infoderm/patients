@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
@@ -19,6 +18,8 @@ import {capitalized} from '../../api/string';
 import Center from '../grid/Center';
 import {computeFixedFabStyle} from '../button/FixedFab';
 import YearJumper from '../navigation/YearJumper';
+import Filter from '../../api/transaction/Filter';
+import {ConsultationDocument} from '../../api/collection/consultations';
 import ConsultationsStatsCard from './ConsultationsStatsCard';
 import ConsultationsPager from './ConsultationsPager';
 
@@ -28,26 +29,24 @@ const useStyles = makeStyles((theme) => ({
 	cashToggle: computeFixedFabStyle({theme, col: 6}),
 }));
 
-export default function PaidConsultationsList({
+const PaidConsultationsList = ({
 	match,
 	payment_method,
 	year,
-	page,
-	perpage,
-}) {
+	page = 1,
+	perpage = 10,
+}) => {
 	const now = new Date();
-	payment_method = (match && match.params.payment_method) || payment_method;
-	page =
-		(match && match.params.page && Number.parseInt(match.params.page, 10)) ||
-		page;
-	year = (match && match.params.year) || year || dateFormat(now, 'yyyy');
+	payment_method = match?.params.payment_method || payment_method;
+	page = (match?.params.page && Number.parseInt(match.params.page, 10)) || page;
+	year = match?.params.year || year || dateFormat(now, 'yyyy');
 
 	const current = Number.parseInt(year, 10);
 
 	const begin = new Date(`${current}-01-01`);
 	const end = new Date(`${current + 1}-01-01`);
 
-	const query = {
+	const query: Filter<ConsultationDocument> = {
 		isDone: true,
 		datetime: {
 			$gte: begin,
@@ -134,14 +133,6 @@ export default function PaidConsultationsList({
 			</Fab>
 		</div>
 	);
-}
-
-PaidConsultationsList.defaultProps = {
-	page: 1,
-	perpage: 10,
 };
 
-PaidConsultationsList.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-};
+export default PaidConsultationsList;
