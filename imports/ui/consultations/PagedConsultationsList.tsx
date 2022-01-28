@@ -31,10 +31,10 @@ const PagedConsultationsList = ({
 	...rest
 }: PagedConsultationsListProps) => (
 	<div>
-		{loading ? (
+		{loading && items.length === 0 ? (
 			<Loading />
 		) : items.length > 0 ? (
-			<ConsultationsList items={items} {...rest} />
+			<ConsultationsList loading={loading} items={items} {...rest} />
 		) : (
 			<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 		)}

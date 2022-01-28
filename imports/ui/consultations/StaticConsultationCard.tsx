@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -26,10 +25,25 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-const StaticConsultationCard = (props) => {
+interface StaticConsultationCardProps {
+	consultation: any;
+	loading?: boolean;
+	found?: boolean;
+	attachments?: any[];
+	PatientChip?: JSX.Element;
+	showPrice?: boolean;
+	defaultExpanded?: boolean;
+}
+
+const StaticConsultationCard = (props: StaticConsultationCardProps) => {
 	const classes = useStyles();
 
-	const {loading, found, defaultExpanded, consultation} = props;
+	const {
+		consultation,
+		loading = false,
+		found = true,
+		defaultExpanded = false,
+	} = props;
 
 	const deleted = !loading && !found;
 
@@ -51,7 +65,7 @@ const StaticConsultationCard = (props) => {
 		owed,
 	};
 
-	const cardOpacity = {opacity: deleted ? 0.4 : 1};
+	const cardOpacity = {opacity: loading ? 0.7 : deleted ? 0.4 : 1};
 
 	return (
 		<Accordion
@@ -72,23 +86,5 @@ const StaticConsultationCard = (props) => {
 };
 
 StaticConsultationCard.projection = undefined;
-
-StaticConsultationCard.defaultProps = {
-	loading: false,
-	found: true,
-	PatientChip: undefined,
-	showPrice: false,
-	defaultExpanded: false,
-};
-
-StaticConsultationCard.propTypes = {
-	loading: PropTypes.bool,
-	found: PropTypes.bool,
-	consultation: PropTypes.object.isRequired,
-	attachments: PropTypes.array,
-	PatientChip: PropTypes.elementType,
-	showPrice: PropTypes.bool,
-	defaultExpanded: PropTypes.bool,
-};
 
 export default StaticConsultationCard;
