@@ -15,9 +15,11 @@ export default define({
 		check(newfields, Object);
 	},
 	async transaction(db: TransactionDriver, patientId: string, newfields: any) {
+		const owner = this.userId;
+
 		const patient = await db.findOne(Patients, {
 			_id: patientId,
-			owner: this.userId,
+			owner,
 		});
 
 		if (patient === null) {
@@ -26,14 +28,13 @@ export default define({
 
 		const fields = sanitize(newfields);
 
-		await updateTags(db, this.userId, fields);
+		await updateTags(db, owner, fields);
 
-		await updateIndex(db, this.userId, patientId, fields);
+		await updateIndex(db, owner, patientId, fields);
 
-		return db.updateOne(Patients, {_id: patientId}, {$set: fields});
+		return db.updateOne(Patients, {_id: patientId, owner}, {$set: fields});
 	},
-	simulate(patientId: string, newfields: any) {
-		const fields = sanitize(newfields);
-		return Patients.update(patientId, {$set: fields});
+	simulate(_patientId: string, _newfields: any) {
+		return undefined;
 	},
 });

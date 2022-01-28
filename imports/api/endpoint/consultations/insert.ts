@@ -53,4 +53,7 @@ export default define({
 
 		return db.insertOne(Consultations, document);
 	},
+	simulate(_consultation: any) {
+		return undefined;
+	},
 });

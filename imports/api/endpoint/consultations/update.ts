@@ -111,6 +111,6 @@ export default define({
 		return db.updateOne(Consultations, {_id: consultationId}, modifier);
 	},
 	simulate(_consultationId: string, _newfields: any) {
-		throw new Error('simulation not-implemented');
+		return undefined;
 	},
 });

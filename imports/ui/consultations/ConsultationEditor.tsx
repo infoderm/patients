@@ -288,9 +288,9 @@ const ConsultationEditor = ({consultation}) => {
 
 		try {
 			if (consultationId === undefined) {
-				const res = await call(insertConsultation, consultation);
+				const {insertedId} = await call(insertConsultation, consultation);
 				dispatch({type: 'save-success'});
-				history.push({pathname: `/edit/consultation/${res}`});
+				history.push({pathname: `/edit/consultation/${insertedId}`});
 			} else {
 				await call(updateConsultation, consultationId, consultation);
 				dispatch({type: 'save-success'});

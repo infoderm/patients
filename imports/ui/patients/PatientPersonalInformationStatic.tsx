@@ -1,5 +1,4 @@
 import React, {useReducer, useEffect, useMemo} from 'react';
-import PropTypes from 'prop-types';
 
 import {Prompt} from 'react-router';
 
@@ -181,7 +180,14 @@ const reducer = (state, action) => {
 	}
 };
 
-const PatientPersonalInformation = (props) => {
+interface PatientPersonalInformationStaticProps {
+	patient: any;
+	loading?: boolean;
+}
+
+const PatientPersonalInformationStatic = (
+	props: PatientPersonalInformationStaticProps,
+) => {
 	const {value: importantStrings} = useSetting('important-strings');
 
 	const importantStringsDict = useMemo(
@@ -198,7 +204,7 @@ const PatientPersonalInformation = (props) => {
 	}, [JSON.stringify(props.patient)]);
 
 	const {editing, dirty, deleting, patient} = state;
-	const {loading} = props;
+	const {loading = false} = props;
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -755,9 +761,4 @@ const PatientPersonalInformation = (props) => {
 	);
 };
 
-PatientPersonalInformation.propTypes = {
-	loading: PropTypes.bool,
-	patient: PropTypes.object.isRequired,
-};
-
-export default PatientPersonalInformation;
+export default PatientPersonalInformationStatic;
