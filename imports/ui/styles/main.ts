@@ -6,6 +6,7 @@ export default makeStyles((theme) => ({
 		overflow: 'hidden',
 		flexGrow: 1,
 		padding: theme.spacing(3),
+		paddingBottom: theme.spacing(13),
 		marginTop: 48,
 		[theme.breakpoints.up('sm')]: {
 			marginTop: 64,

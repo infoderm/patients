@@ -34,9 +34,6 @@ import PrecedingConsultationsList from './PrecedingConsultationsList';
 
 const styles = (theme) =>
 	createStyles({
-		container: {
-			paddingBottom: '6em',
-		},
 		main: {
 			marginTop: 64,
 			paddingTop: theme.spacing(3),
@@ -305,7 +302,7 @@ const ConsultationEditor = ({consultation}) => {
 	};
 
 	return (
-		<div className={classes.container}>
+		<div>
 			<Prompt
 				when={dirty}
 				message="You are trying to leave the page without saving your changes. Are you sure you want to continue?"

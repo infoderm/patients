@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import AlarmOffIcon from '@material-ui/icons/AlarmOff';
@@ -14,12 +12,6 @@ import FixedFab from '../button/FixedFab';
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
 import {ALL_WEEK_DAYS} from '../../util/datetime';
 
-const useStyles = makeStyles({
-	calendar: {
-		marginBottom: '6em',
-	},
-});
-
 const Planner = (props) => {
 	const {Calendar, CalendarProps, match} = props;
 
@@ -30,7 +22,6 @@ const Planner = (props) => {
 	const [showCancelledEvents, setShowCancelledEvents] = useState(false);
 	const [showNoShowEvents, setShowNoShowEvents] = useState(false);
 	const {value: displayedWeekDays} = useSettingCached('displayed-week-days');
-	const classes = useStyles();
 
 	const onSlotClick = (slot: Date, noInitialTime = true) => {
 		console.debug(slot);
@@ -42,7 +33,6 @@ const Planner = (props) => {
 	return (
 		<>
 			<Calendar
-				className={classes.calendar}
 				match={match}
 				displayedWeekDays={
 					displayAllWeekDays ? ALL_WEEK_DAYS : displayedWeekDays

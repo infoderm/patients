@@ -11,23 +11,22 @@ import Loading from '../navigation/Loading';
 import PatientHeader from './PatientHeader';
 import PatientPersonalInformation from './PatientPersonalInformation';
 
-const ConsultationsForPatient = lazy(() =>
-	import('../consultations/ConsultationsForPatient'),
+const ConsultationsForPatient = lazy(
+	async () => import('../consultations/ConsultationsForPatient'),
 );
-const AppointmentsForPatient = lazy(() =>
-	import('../appointments/AppointmentsForPatient'),
+const AppointmentsForPatient = lazy(
+	async () => import('../appointments/AppointmentsForPatient'),
 );
-const DocumentsForPatient = lazy(() =>
-	import('../documents/DocumentsForPatient'),
+const DocumentsForPatient = lazy(
+	async () => import('../documents/DocumentsForPatient'),
 );
-const AttachmentsForPatient = lazy(() =>
-	import('../attachments/AttachmentsForPatient'),
+const AttachmentsForPatient = lazy(
+	async () => import('../attachments/AttachmentsForPatient'),
 );
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		paddingTop: 80,
-		paddingBottom: 80,
 	},
 	container: {
 		padding: theme.spacing(3),
