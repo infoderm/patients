@@ -5,9 +5,9 @@ interface GenericErrorBoundaryProps {
 }
 
 export default class GenericErrorBoundary extends React.Component<GenericErrorBoundaryProps> {
-	state = {error: null, errorInfo: null};
+	override state = {error: null, errorInfo: null};
 
-	componentDidCatch(error, errorInfo) {
+	override componentDidCatch(error, errorInfo) {
 		// Catch errors in any components below and re-render with error message
 		this.setState({
 			error,
@@ -16,7 +16,7 @@ export default class GenericErrorBoundary extends React.Component<GenericErrorBo
 		// You can also log error messages to an error reporting service here
 	}
 
-	render() {
+	override render() {
 		const {component: RenderError, children} = this.props;
 		if (this.state.errorInfo) {
 			return (

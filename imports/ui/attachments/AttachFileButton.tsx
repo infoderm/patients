@@ -143,9 +143,9 @@ const AttachFileButton = ({
 				keyUpload = enqueueSnackbar(message, notistackInfoOptions);
 			});
 
-			upload.on('end', (err, fileObject) => {
+			upload.on('end', async (err, fileObject) => {
 				closeSnackbar(keyUpload);
-				onEnd(err, fileObject);
+				await onEnd(err, fileObject);
 			});
 
 			upload.start();

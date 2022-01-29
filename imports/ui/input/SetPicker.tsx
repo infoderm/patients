@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useCallback} from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 import {
 	useCombobox,
@@ -83,29 +82,27 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const SetPickerPropTypes = {
-	className: PropTypes.string,
-	Chip: PropTypes.elementType,
-	chipProps: PropTypes.oneOfType([PropTypes.func, PropTypes.any]),
-	withoutToggle: PropTypes.bool,
-	value: PropTypes.array.isRequired,
-	readOnly: PropTypes.bool,
-	useSuggestions: PropTypes.func.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired,
-	Item: PropTypes.elementType,
-	inputTransform: PropTypes.func,
-	onChange: PropTypes.func,
-	createNewItem: PropTypes.func,
-	maxCount: PropTypes.number,
-	multiset: PropTypes.bool,
-	TextFieldProps: PropTypes.object,
-	InputProps: PropTypes.object,
-	inputProps: PropTypes.object,
-	placeholder: PropTypes.string,
-};
-
-type SetPickerProps = InferProps<typeof SetPickerPropTypes>;
+interface SetPickerProps<ItemType, ChipProps> {
+	className?: string;
+	Chip?: React.ElementType;
+	chipProps?: ((item: ItemType, index: number) => ChipProps) | ChipProps;
+	withoutToggle?: boolean;
+	value: ItemType[];
+	readOnly?: boolean;
+	useSuggestions: (inputValue: string) => {loading?: boolean; results: any[]};
+	itemToKey: (item: ItemType) => string | number;
+	itemToString: (item: ItemType) => string;
+	Item?: React.ElementType;
+	inputTransform?: (inputValue: string) => string;
+	onChange?: (event: any) => void | Promise<void>;
+	createNewItem?: (inputValue: string) => ItemType;
+	maxCount?: number;
+	multiset?: boolean;
+	TextFieldProps?: any;
+	InputProps?: any;
+	inputProps?: any;
+	placeholder?: string;
+}
 
 const comboboxStateReducer = (state, {type, changes}) => {
 	switch (type) {
@@ -135,22 +132,22 @@ const comboboxStateReducer = (state, {type, changes}) => {
 
 const useSelectionManagement = (selectedItems, onChange) =>
 	useMemo(() => {
-		const setSelectedItems = (value) => {
-			onChange({
+		const setSelectedItems = async (value) => {
+			await onChange({
 				target: {
 					value,
 				},
 			});
 		};
 
-		const addSelectedItem = (item) => {
+		const addSelectedItem = async (item) => {
 			const newValue = selectedItems.slice();
 			newValue.push(item);
-			setSelectedItems(newValue);
+			await setSelectedItems(newValue);
 		};
 
-		const removeSelectedItem = (item) => {
-			setSelectedItems(selectedItems.filter((x) => x !== item));
+		const removeSelectedItem = async (item) => {
+			await setSelectedItems(selectedItems.filter((x) => x !== item));
 		};
 
 		return {
@@ -160,7 +157,9 @@ const useSelectionManagement = (selectedItems, onChange) =>
 		};
 	}, [selectedItems, onChange]);
 
-const SetPicker = (props: SetPickerProps) => {
+const SetPicker = <ItemType, ChipProps>(
+	props: SetPickerProps<ItemType, ChipProps>,
+) => {
 	const {
 		className,
 		useSuggestions,
@@ -213,10 +212,10 @@ const SetPicker = (props: SetPickerProps) => {
 
 	const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({
 		selectedItems,
-		onSelectedItemsChange: ({selectedItems}) => {
+		onSelectedItemsChange: async ({selectedItems}) => {
 			// This is called when hitting backspace on empty input, or when
 			// pressing delete or backspace key while a chip is focused.
-			if (selectedItems) setSelectedItems(selectedItems);
+			if (selectedItems) await setSelectedItems(selectedItems);
 		},
 	});
 
@@ -248,7 +247,7 @@ const SetPicker = (props: SetPickerProps) => {
 			}
 		},
 		stateReducer: comboboxStateReducer,
-		onStateChange: (changes) => {
+		onStateChange: async (changes) => {
 			const {type, selectedItem} = changes;
 			if (readOnly) {
 				return;
@@ -261,9 +260,9 @@ const SetPicker = (props: SetPickerProps) => {
 					// clicked or highlighted then the enter key is pressed.
 					if (selectedItem !== undefined) {
 						if (!multiset && isSelected(selectedItem)) {
-							removeSelectedItem(selectedItem);
+							await removeSelectedItem(selectedItem);
 						} else if (!full) {
-							addSelectedItem(selectedItem);
+							await addSelectedItem(selectedItem);
 						}
 
 						selectItem(null);
@@ -284,7 +283,7 @@ const SetPicker = (props: SetPickerProps) => {
 	 * Maybe we will use a more complicated solution later that will not need
 	 * this handler.
 	 */
-	const handleInputKeyDownEnter = (event) => {
+	const handleInputKeyDownEnter = async (event) => {
 		if (
 			!inputDisabled &&
 			inputValue.length > 0 &&
@@ -297,7 +296,7 @@ const SetPicker = (props: SetPickerProps) => {
 			// handling
 			const item = createNewItem(inputValue.trim());
 			if (item !== undefined && (multiset || !isSelected(item))) {
-				addSelectedItem(item);
+				await addSelectedItem(item);
 				resetInputValue();
 			}
 		}
@@ -371,7 +370,5 @@ const SetPicker = (props: SetPickerProps) => {
 		</div>
 	);
 };
-
-SetPicker.propTypes = SetPickerPropTypes;
 
 export default SetPicker;

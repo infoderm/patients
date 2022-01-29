@@ -1,6 +1,7 @@
 import Authentication from '../Authentication';
 import Executor from './Executor';
 import Options from './Options';
+import Simulator from './Simulator';
 import Transaction from './Transaction';
 import Validator from './Validator';
 
@@ -14,13 +15,13 @@ interface ParamsCommon<T> {
 
 interface ParamsWithTransaction<T> extends ParamsCommon<T> {
 	readonly transaction: Transaction;
-	readonly simulate?: Executor;
+	readonly simulate?: Simulator;
 	readonly run?: never;
 }
 
 interface ParamsWithoutTransaction<T> extends ParamsCommon<T> {
 	readonly transaction?: never;
-	readonly simulate?: Executor;
+	readonly simulate?: Simulator;
 	readonly run: Executor;
 }
 

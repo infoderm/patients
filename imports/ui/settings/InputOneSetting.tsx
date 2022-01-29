@@ -23,9 +23,9 @@ const InputOneSetting = (props) => {
 		setError(!outcome);
 	}, [validate, value]);
 
-	const onChange = (e) => {
+	const onChange = async (e) => {
 		const newValue = sanitize(e.target.value);
-		setValue(newValue);
+		await setValue(newValue);
 	};
 
 	return (

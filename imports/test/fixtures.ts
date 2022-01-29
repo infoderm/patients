@@ -56,7 +56,7 @@ const rollBackHistory = async (to: number) => {
 	}
 };
 
-const pushDummyState = async () => {
+const pushDummyState = () => {
 	history.pushState(null, '');
 };
 

@@ -12,9 +12,9 @@ const SelectOneSetting = (props) => {
 
 	const {loading, value, setValue} = useSetting(setting);
 
-	const onChange = (e) => {
+	const onChange = async (e) => {
 		const newValue = e.target.value;
-		setValue(newValue);
+		await setValue(newValue);
 	};
 
 	return (

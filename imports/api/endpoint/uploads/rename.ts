@@ -18,7 +18,7 @@ export default define({
 		}),
 		'userId',
 	),
-	simulate(uploadId: string, filename: string) {
+	simulate(uploadId: string, filename: string): void {
 		Uploads.collection.update(uploadId, {
 			$set: {name: filename},
 		});

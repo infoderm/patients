@@ -44,9 +44,9 @@ const InputManySetting = (props: Props) => {
 	const {loading, value, setValue} = useSetting(setting);
 
 	const onChange = useMemo(
-		() => (e) => {
+		() => async (e) => {
 			const newValue = e.target.value;
-			setValue(sort ? sort(newValue) : newValue);
+			await setValue(sort ? sort(newValue) : newValue);
 		},
 		[setValue, sort],
 	);

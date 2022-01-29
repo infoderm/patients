@@ -13,15 +13,15 @@ const styles = (theme) => ({
 const useStyles = makeStyles(styles);
 
 interface SelectionProps<Item, ChipProps> {
-	Chip: any;
-	chipProps: (item: Item, index: number) => ChipProps | ChipProps;
+	Chip: React.ElementType;
+	chipProps: ((item: Item, index: number) => ChipProps) | ChipProps;
 	selectedItems: Item[];
 	itemToString: (item: Item) => string;
 	getSelectedItemProps: (
 		options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
 	) => any;
 	readOnly: boolean;
-	removeSelectedItem: (item: Item) => void;
+	removeSelectedItem: (item: Item) => void | Promise<void>;
 }
 
 const Selection = React.memo(
@@ -36,8 +36,8 @@ const Selection = React.memo(
 	}: SelectionProps<any, any>) => {
 		const classes = useStyles();
 
-		const handleDelete = (item) => () => {
-			removeSelectedItem(item);
+		const handleDelete = (item) => async () => {
+			await removeSelectedItem(item);
 		};
 
 		const onClick = (e) => {

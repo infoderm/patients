@@ -65,9 +65,9 @@ export default function Header({currentUser, navigationDrawerIsOpen}) {
 	const classes = useStyles();
 	const location = useLocation();
 
-	const toggleNavigationDrawerIsOpen = () => {
+	const toggleNavigationDrawerIsOpen = async () => {
 		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
-		setSetting('navigation-drawer-is-open', newValue);
+		await setSetting('navigation-drawer-is-open', newValue);
 	};
 
 	return (

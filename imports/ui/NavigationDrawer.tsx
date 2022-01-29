@@ -261,9 +261,9 @@ export default function NavigationDrawer({
 	const theme = useTheme();
 	const classes = useStyles();
 
-	const toggleNavigationDrawerIsOpen = () => {
+	const toggleNavigationDrawerIsOpen = async () => {
 		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
-		setSetting('navigation-drawer-is-open', newValue);
+		await setSetting('navigation-drawer-is-open', newValue);
 	};
 
 	return (

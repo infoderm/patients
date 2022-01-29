@@ -71,8 +71,8 @@ const BooksList = ({match, year, page = 1, perpage = 10}: Props) => {
 				col={5}
 				color="default"
 				tooltip="Toggle sorting order"
-				onClick={() => {
-					setSortingOrder(-sortingOrder);
+				onClick={async () => {
+					await setSortingOrder(-sortingOrder);
 				}}
 			>
 				<SwapVertIcon />

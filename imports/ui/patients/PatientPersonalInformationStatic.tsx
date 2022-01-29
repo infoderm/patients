@@ -466,7 +466,7 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={12} md={12}>
 								<SetPicker
 									withoutToggle
-									itemToKey={(x) => x._id}
+									itemToKey={(x) => x.name}
 									itemToString={(x) => x.name}
 									createNewItem={(name) => ({name})}
 									useSuggestions={makeSubstringSuggestions(
@@ -480,7 +480,11 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveAllergyChip}
 									chipProps={allergyChipProps}
-									value={list(map((x) => ({name: x}), patient.allergies || []))}
+									value={
+										list(
+											map((x) => ({name: x}), patient.allergies || []),
+										) as Array<{name: string}>
+									}
 									placeholder={placeholder}
 									onChange={updateList('allergies')}
 								/>
@@ -569,7 +573,7 @@ const PatientPersonalInformationStatic = (
 								<SetPicker
 									withoutToggle
 									className={classes.setPicker}
-									itemToKey={(x) => x._id}
+									itemToKey={(x) => x.name}
 									itemToString={(x) => x.name}
 									createNewItem={(name) => ({name})}
 									useSuggestions={makeSubstringSuggestions(
@@ -592,7 +596,11 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveDoctorChip}
 									chipProps={doctorChipProps}
-									value={list(map((x) => ({name: x}), patient.doctors || []))}
+									value={
+										list(
+											map((x) => ({name: x}), patient.doctors || []),
+										) as Array<{name: string}>
+									}
 									placeholder={placeholder}
 									onChange={updateList('doctors')}
 								/>
@@ -601,7 +609,7 @@ const PatientPersonalInformationStatic = (
 								<SetPicker
 									withoutToggle
 									className={classes.setPicker}
-									itemToKey={(x) => x._id}
+									itemToKey={(x) => x.name}
 									itemToString={(x) => x.name}
 									createNewItem={(name) => ({name})}
 									useSuggestions={makeSubstringSuggestions(
@@ -624,9 +632,11 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveInsuranceChip}
 									chipProps={insuranceChipProps}
-									value={list(
-										map((x) => ({name: x}), patient.insurances || []),
-									)}
+									value={
+										list(
+											map((x) => ({name: x}), patient.insurances || []),
+										) as Array<{name: string}>
+									}
 									placeholder={placeholder}
 									onChange={updateList('insurances')}
 								/>

@@ -106,14 +106,14 @@ Meteor.startup(async () => {
 		Consultations,
 		{attachments: {$type: 'array'}},
 		async (db, {_id, attachments}) => {
-			db.updateMany(
+			await db.updateMany(
 				Attachments,
 				{_id: {$in: attachments}},
 				{
 					$addToSet: {'meta.attachedToConsultations': _id},
 				},
 			);
-			db.updateOne(Consultations, {_id}, {$unset: {attachments: true}});
+			await db.updateOne(Consultations, {_id}, {$unset: {attachments: true}});
 		},
 	);
 
@@ -124,7 +124,11 @@ Meteor.startup(async () => {
 		async (db, consultation) => {
 			const unpaid = isUnpaid(consultation);
 			if (unpaid !== consultation.unpaid) {
-				db.updateOne(Consultations, {_id: consultation._id}, {$set: {unpaid}});
+				await db.updateOne(
+					Consultations,
+					{_id: consultation._id},
+					{$set: {unpaid}},
+				);
 			}
 		},
 	);
