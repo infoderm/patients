@@ -226,6 +226,9 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 				{upsert: true},
 			);
 		},
+		simulate(tagId: string, _newname: string) {
+			Collection.remove(tagId);
+		},
 	});
 
 	const deleteEndpoint = defineEndpoint({
