@@ -12,6 +12,7 @@ import AppointmentCancellationReasonSetting from './AppointmentCancellationReaso
 import DisplayedWeekDaysSetting from './DisplayedWeekDaysSetting';
 import ImportantStringsSetting from './ImportantStringsSetting';
 import WeekStartsOnSetting from './WeekStartsOnSetting';
+import FirstWeekContainsDateSetting from './FirstWeekContainsDateSetting';
 import IBANSetting from './IBANSetting';
 import AccountHolderSetting from './AccountHolderSetting';
 import WorkScheduleSetting from './WorkScheduleSetting';
@@ -42,6 +43,7 @@ export default function Settings() {
 			<Typography variant="h3">Locale Settings</Typography>
 			<LanguageSetting className={classes.setting} />
 			<WeekStartsOnSetting className={classes.setting} />
+			<FirstWeekContainsDateSetting className={classes.setting} />
 
 			<Typography variant="h3">Other Settings</Typography>
 			<ImportantStringsSetting className={classes.setting} />

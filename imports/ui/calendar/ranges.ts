@@ -4,11 +4,12 @@ import endOfWeek from 'date-fns/endOfWeek';
 import endOfMonth from 'date-fns/endOfMonth';
 import addDays from 'date-fns/addDays';
 import {Locale} from 'date-fns';
+import {FirstWeekContainsDate, WeekStartsOn} from '../../i18n/datetime';
 
 interface WeekOptions {
 	locale?: Locale;
-	weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-	firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+	weekStartsOn?: WeekStartsOn;
+	firstWeekContainsDate?: FirstWeekContainsDate;
 }
 
 export function monthly(year: number, month: number, weekOptions: WeekOptions) {
@@ -23,7 +24,7 @@ export function weekly(year: number, week: number, weekOptions: WeekOptions) {
 	const someDayOfWeek = new Date(
 		year,
 		0,
-		(weekOptions.firstWeekContainsDate || 1) + (week - 1) * 7,
+		(weekOptions.firstWeekContainsDate ?? 1) + (week - 1) * 7,
 	);
 	const lastDayOfWeek = startOfDay(endOfWeek(someDayOfWeek, weekOptions));
 	const begin = startOfWeek(someDayOfWeek, weekOptions); // Inclusive

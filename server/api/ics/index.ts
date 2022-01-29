@@ -15,7 +15,7 @@ import {
 import {ICS_CALENDAR_READ} from '../../../imports/api/permissions/codes';
 
 import {event} from '../../../imports/api/events';
-import {get as getSetting} from '../../../imports/api/settings';
+import {getWeekStartsOn} from '../../../imports/i18n/datetime';
 
 import rateLimiter from './rateLimiter';
 
@@ -51,7 +51,7 @@ const response = async (token, IPAddress, query, res) => {
 		return;
 	}
 
-	const weekStartsOn = getSetting(owner, 'week-starts-on');
+	const weekStartsOn = await getWeekStartsOn(owner);
 
 	const startDate = subWeeks(startOfWeek(new Date(), {weekStartsOn}), 4);
 

@@ -2,7 +2,6 @@ import React from 'react';
 
 import {useHistory} from 'react-router-dom';
 
-import dateFormat from 'date-fns/format';
 import addWeeks from 'date-fns/addWeeks';
 import addDays from 'date-fns/addDays';
 import subWeeks from 'date-fns/subWeeks';
@@ -21,10 +20,13 @@ import {increasing} from '@total-order/date';
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 import setHours from 'date-fns/setHours';
-import {useDateFormat} from '../../i18n/datetime';
+import {
+	useDateFormat,
+	useFirstWeekContainsDate,
+	useWeekStartsOn,
+} from '../../i18n/datetime';
 
 import useEvents from '../events/useEvents';
-import {useSettingCached} from '../settings/hooks';
 
 import useAvailability from '../availability/useAvailability';
 import {SlotDocument} from '../../api/collection/availability';
@@ -116,12 +118,12 @@ const ReactiveWeeklyCalendar = (props) => {
 	const year = Number.parseInt(match.params.year, 10);
 	const week = Number.parseInt(match.params.week, 10);
 
-	const {value: weekStartsOn} = useSettingCached('week-starts-on');
+	const weekStartsOn = useWeekStartsOn();
+	const firstWeekContainsDate = useFirstWeekContainsDate();
 
 	const weekOptions = {
-		useAdditionalWeekYearTokens: true,
 		weekStartsOn,
-		firstWeekContainsDate: 1 as 1 | 2 | 3 | 4 | 5 | 6 | 7,
+		firstWeekContainsDate,
 	};
 
 	const [begin, end] = weekly(year, week, weekOptions);
@@ -135,11 +137,14 @@ const ReactiveWeeklyCalendar = (props) => {
 	);
 	const someDayOfPrevWeek = subWeeks(someDayOfWeek, 1);
 	const someDayOfNextWeek = addWeeks(someDayOfWeek, 1);
-	const prevWeek = dateFormat(someDayOfPrevWeek, 'YYYY/ww', weekOptions);
-	const nextWeek = dateFormat(someDayOfNextWeek, 'YYYY/ww', weekOptions);
-	const monthOfWeek = dateFormat(someDayOfWeek, 'yyyy/MM');
-
 	const localizedDateFormat = useDateFormat();
+	const prevWeek = localizedDateFormat(someDayOfPrevWeek, 'YYYY/ww', {
+		useAdditionalWeekYearTokens: true,
+	});
+	const nextWeek = localizedDateFormat(someDayOfNextWeek, 'YYYY/ww', {
+		useAdditionalWeekYearTokens: true,
+	});
+	const monthOfWeek = localizedDateFormat(someDayOfWeek, 'yyyy/MM');
 
 	const title = localizedDateFormat(
 		someDayOfWeek,

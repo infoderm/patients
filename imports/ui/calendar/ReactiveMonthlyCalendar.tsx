@@ -2,14 +2,16 @@ import React, {useMemo} from 'react';
 
 import {Link, useHistory} from 'react-router-dom';
 
-import dateFormat from 'date-fns/format';
 import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
 
-import {useDateFormat} from '../../i18n/datetime';
+import {
+	useDateFormat,
+	useFirstWeekContainsDate,
+	useWeekStartsOn,
+} from '../../i18n/datetime';
 
 import useEvents from '../events/useEvents';
-import {useSettingCached} from '../settings/hooks';
 
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';
@@ -29,10 +31,12 @@ const ReactiveMonthlyCalendar = (props) => {
 	const year = Number.parseInt(match.params.year, 10);
 	const month = Number.parseInt(match.params.month, 10);
 
-	const {value: weekStartsOn} = useSettingCached('week-starts-on');
+	const weekStartsOn = useWeekStartsOn();
+	const firstWeekContainsDate = useFirstWeekContainsDate();
 
 	const weekOptions = {
 		weekStartsOn,
+		firstWeekContainsDate,
 	};
 
 	const [begin, end] = monthly(year, month, weekOptions);
@@ -57,9 +61,11 @@ const ReactiveMonthlyCalendar = (props) => {
 
 	const history = useHistory();
 
-	const previousMonth = dateFormat(firstDayOfPrevMonth, 'yyyy/MM');
-	const nextMonth = dateFormat(firstDayOfNextMonth, 'yyyy/MM');
-	const firstWeekOfMonth = dateFormat(firstDayOfMonth, 'yyyy/ww');
+	const previousMonth = localizedDateFormat(firstDayOfPrevMonth, 'yyyy/MM');
+	const nextMonth = localizedDateFormat(firstDayOfNextMonth, 'yyyy/MM');
+	const firstWeekOfMonth = localizedDateFormat(firstDayOfMonth, 'YYYY/ww', {
+		useAdditionalWeekYearTokens: true,
+	});
 
 	const displayedEvents = events.filter(
 		(x) =>
@@ -69,17 +75,19 @@ const ReactiveMonthlyCalendar = (props) => {
 
 	const WeekNumber = useMemo(
 		() =>
-			({className, day, weekOptions}) =>
+			({className, day}) =>
 				(
 					<div className={className}>
 						<Link
-							to={`${baseURL}/week/${dateFormat(day, 'yyyy/ww', weekOptions)}`}
+							to={`${baseURL}/week/${localizedDateFormat(day, 'YYYY/ww', {
+								useAdditionalWeekYearTokens: true,
+							})}`}
 						>
-							{dateFormat(day, 'w', weekOptions)}
+							{localizedDateFormat(day, 'w')}
 						</Link>
 					</div>
 				),
-		[baseURL],
+		[baseURL, localizedDateFormat],
 	);
 
 	return (

@@ -8,34 +8,36 @@ import {sorted} from '@iterable-iterator/sorted';
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
 
-import {useDaysNames} from '../../i18n/datetime';
+import {useDaysNames, useWeekStartsOn, WeekStartsOn} from '../../i18n/datetime';
 
-import {useSettingCached} from './hooks';
 import InputManySetting from './InputManySetting';
 
 const KEY = 'displayed-week-days';
 
 export default function DisplayedWeekDaysSetting({className}) {
-	const {value: weekStartsOn} = useSettingCached('week-starts-on');
+	const weekStartsOn = useWeekStartsOn();
 
 	const compare = useMemo(
-		() => key(increasing, (x) => (7 + x - weekStartsOn) % 7),
+		() => key(increasing, (x: WeekStartsOn) => (7 + x - weekStartsOn) % 7),
 		[weekStartsOn],
 	);
 
-	const sort = useMemo(() => (items) => items.slice().sort(compare), [compare]);
+	const sort = useMemo(
+		() => (items: WeekStartsOn[]) => items.slice().sort(compare),
+		[compare],
+	);
 
-	const options = list(range(7));
+	const options: WeekStartsOn[] = list(range(7));
 
 	const DAYS = useDaysNames(options);
 
-	const formatDayOfWeek = (i) => DAYS[i];
+	const formatDayOfWeek = (i: WeekStartsOn) => DAYS[i];
 
-	const makeSuggestions = (value) => (inputValue) => ({
+	const makeSuggestions = (value: WeekStartsOn[]) => (inputValue: string) => ({
 		results: sorted(
 			compare,
 			filter(
-				(i) =>
+				(i: WeekStartsOn) =>
 					!value.includes(i) &&
 					formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()),
 				options,

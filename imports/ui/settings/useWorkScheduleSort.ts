@@ -5,7 +5,7 @@ import {increasing} from '@total-order/primitive';
 
 import {units as durationUnits} from '../../api/duration';
 import {mod} from '../../util/artithmetic';
-import {useSettingCached} from './hooks';
+import {useWeekStartsOn} from '../../i18n/datetime';
 
 export const weekSlotsCyclicOrder = (weekStartsOn: number) =>
 	key(increasing, ({beginModuloWeek}: {beginModuloWeek: number}) =>
@@ -13,7 +13,7 @@ export const weekSlotsCyclicOrder = (weekStartsOn: number) =>
 	);
 
 const useWorkScheduleSort = () => {
-	const {value: weekStartsOn} = useSettingCached('week-starts-on');
+	const weekStartsOn = useWeekStartsOn();
 
 	const compare = useMemo(
 		() => weekSlotsCyclicOrder(weekStartsOn),

@@ -4,7 +4,8 @@ import {Switch, Route} from 'react-router-dom';
 import startOfDay from 'date-fns/startOfDay';
 import startOfToday from 'date-fns/startOfToday';
 import dateParseISO from 'date-fns/parseISO';
-import dateFormat from 'date-fns/format';
+
+import {useDateFormat} from '../i18n/datetime';
 
 import Greetings from './navigation/Greetings';
 import NoMatch from './navigation/NoMatch';
@@ -93,6 +94,7 @@ const ConsultationsOfTheDayFromMatch = ({match}) => (
 );
 
 const CurrentMonthlyPlanner = ({match, ...rest}) => {
+	const dateFormat = useDateFormat();
 	const today = startOfToday();
 	const year = dateFormat(today, 'yyyy');
 	const month = dateFormat(today, 'MM');
@@ -108,8 +110,11 @@ const CurrentMonthlyPlanner = ({match, ...rest}) => {
 };
 
 const CurrentWeeklyPlanner = ({match, ...rest}) => {
+	const dateFormat = useDateFormat();
 	const today = startOfToday();
-	const year = dateFormat(today, 'yyyy');
+	const year = dateFormat(today, 'YYYY', {
+		useAdditionalWeekYearTokens: true,
+	});
 	const week = dateFormat(today, 'ww');
 	const matchWithParams = {
 		...match,

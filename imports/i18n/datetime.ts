@@ -13,6 +13,9 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 
 import startOfToday from 'date-fns/startOfToday';
 
+import {get as getSetting} from '../api/settings';
+
+import {useSettingCached} from '../ui/settings/hooks';
 import useLocaleKey from './useLocale';
 
 const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
@@ -21,14 +24,8 @@ const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
 	'fr-BE': async () => import('date-fns/locale/fr/index.js') as Promise<Locale>,
 };
 
-const loadLocale = async (key: string) =>
-	(
-		localeLoaders[key] ??
-		(async () =>
-			new Promise((resolve) => {
-				resolve(undefined);
-			}))
-	)();
+const loadLocale = async (key: string): Promise<Locale | undefined> =>
+	localeLoaders[key]?.();
 
 export const localeDescriptions: Readonly<Record<string, string>> = {
 	'en-US': 'English (US)',
@@ -43,6 +40,26 @@ export const maskMap = {
 };
 
 const localesCache = new Map<string, Locale>();
+
+const getLocale = async (owner: string): Promise<Locale | undefined> => {
+	const key = getSetting(owner, 'lang');
+	if (localesCache.has(key)) {
+		return localesCache.get(key);
+	}
+
+	return loadLocale(key).then(
+		(loadedLocale) => {
+			localesCache.set(key, loadedLocale);
+			return loadedLocale;
+		},
+		(error) => {
+			const message = error instanceof Error ? error.message : 'unknown error';
+			console.error(`failed to load locale ${key}: ${message}`);
+			console.debug({error});
+			return undefined;
+		},
+	);
+};
 
 export const useLocale = () => {
 	const key = useLocaleKey();
@@ -77,6 +94,67 @@ export const useLocale = () => {
 	return localesCache.has(key) ? localesCache.get(key) : lastLoadedLocale;
 };
 
+export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type FirstWeekContainsDate = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+const localeToWeekStartsOn = (locale: Locale): WeekStartsOn =>
+	locale?.options?.weekStartsOn ?? 0;
+
+export const useLocaleWeekStartsOn = (): WeekStartsOn => {
+	const locale = useLocale();
+	return localeToWeekStartsOn(locale);
+};
+
+export const useWeekStartsOn = (): WeekStartsOn => {
+	const localized = useLocaleWeekStartsOn();
+	const {value: setting} = useSettingCached('week-starts-on');
+	return setting === 'locale' ? localized : setting;
+};
+
+const localeToFirstWeekContainsDate = (locale: Locale): FirstWeekContainsDate =>
+	locale?.options?.firstWeekContainsDate ?? 1;
+
+export const useLocaleFirstWeekContainsDate = (): FirstWeekContainsDate => {
+	const locale = useLocale();
+	return localeToFirstWeekContainsDate(locale);
+};
+
+export const useFirstWeekContainsDate = (): FirstWeekContainsDate => {
+	const localized = useLocaleFirstWeekContainsDate();
+	const {value: setting} = useSettingCached('first-week-contains-date');
+	return setting === 'locale' ? localized : setting;
+};
+
+export const getWeekStartsOn = async (owner: string): Promise<WeekStartsOn> => {
+	const weekStartsOn = getSetting(owner, 'week-starts-on');
+	if (weekStartsOn !== 'locale') return weekStartsOn;
+	const locale = await getLocale(owner);
+	return localeToWeekStartsOn(locale);
+};
+
+export const getFirstWeekContainsDate = async (
+	owner: string,
+): Promise<FirstWeekContainsDate> => {
+	const firstWeekContainsDate = getSetting(owner, 'first-week-contains-date');
+	if (firstWeekContainsDate !== 'locale') return firstWeekContainsDate;
+	const locale = await getLocale(owner);
+	return localeToFirstWeekContainsDate(locale);
+};
+
+export const useDefaultDateFormatOptions = () => {
+	const locale = useLocale();
+	const weekStartsOn = useWeekStartsOn();
+	const firstWeekContainsDate = useFirstWeekContainsDate();
+	return useMemo(
+		() => ({
+			locale,
+			weekStartsOn,
+			firstWeekContainsDate,
+		}),
+		[locale, weekStartsOn, firstWeekContainsDate],
+	);
+};
+
 export const useDateMask = () => {
 	const key = useLocaleKey();
 	return maskMap[key];
@@ -94,58 +172,58 @@ const stringifyOptions = (options) => {
 		: JSON.stringify(rest);
 };
 
-export const useDateFormat = (defaultFormat = 'PP', defaultOptions?) => {
-	const locale = useLocale();
+export const useDateFormat = (hookFormat = 'PP', hookOptions?) => {
+	const defaultOptions = useDefaultDateFormatOptions();
 	return useMemo(
 		() =>
-			(date: number | Date, format = defaultFormat, options?) =>
+			(date: number | Date, format = hookFormat, options?) =>
 				dateFormat(date, format, {
-					locale,
 					...defaultOptions,
+					...hookOptions,
 					...options,
 				}),
-		[locale, defaultFormat, stringifyOptions(defaultOptions)],
+		[defaultOptions, hookFormat, stringifyOptions(hookOptions)],
 	);
 };
 
-const useLocalizedDateFormatDistanceOrRelative = (fn, defaultOptions) => {
-	const locale = useLocale();
+const useLocalizedDateFormatDistanceOrRelative = (fn, hookOptions) => {
+	const defaultOptions = useDefaultDateFormatOptions();
 	return useMemo(
 		() => (date, baseDate, options?) =>
 			fn(date, baseDate, {
-				locale,
 				...defaultOptions,
+				...hookOptions,
 				...options,
 			}),
-		[locale, fn, stringifyOptions(defaultOptions)],
+		[defaultOptions, fn, stringifyOptions(hookOptions)],
 	);
 };
 
-export const useDateFormatDistance = (defaultOptions?) =>
-	useLocalizedDateFormatDistanceOrRelative(dateFormatDistance, defaultOptions);
-export const useDateFormatDistanceStrict = (defaultOptions?) =>
+export const useDateFormatDistance = (hookOptions?) =>
+	useLocalizedDateFormatDistanceOrRelative(dateFormatDistance, hookOptions);
+export const useDateFormatDistanceStrict = (hookOptions?) =>
 	useLocalizedDateFormatDistanceOrRelative(
 		dateFormatDistanceStrict,
-		defaultOptions,
+		hookOptions,
 	);
-export const useDateFormatRelative = (defaultOptions?) =>
-	useLocalizedDateFormatDistanceOrRelative(dateFormatRelative, defaultOptions);
+export const useDateFormatRelative = (hookOptions?) =>
+	useLocalizedDateFormatDistanceOrRelative(dateFormatRelative, hookOptions);
 
-export const useDateFormatDuration = (defaultOptions?) => {
-	const locale = useLocale();
+export const useDateFormatDuration = (hookOptions?) => {
+	const defaultOptions = useDefaultDateFormatOptions();
 	return useMemo(
 		() => (duration: Duration, options?) =>
 			dateFormatDuration(duration, {
-				locale,
 				...defaultOptions,
+				...hookOptions,
 				...options,
 			}),
-		[locale, stringifyOptions(defaultOptions)],
+		[defaultOptions, stringifyOptions(hookOptions)],
 	);
 };
 
-export const useDateFormatAge = (defaultOptions?) => {
-	const tuple = useDateFormatDuration({...defaultOptions, delimiter: ','});
+export const useDateFormatAge = (hookOptions?) => {
+	const tuple = useDateFormatDuration({...hookOptions, delimiter: ','});
 	return useMemo(
 		() => (birthdate: Date, options?) => {
 			const thisMorning = startOfToday();
@@ -159,6 +237,15 @@ export const useDateFormatAge = (defaultOptions?) => {
 		},
 		[tuple],
 	);
+};
+
+const someDateAtGivenPositionOfYear = (i: number) => {
+	return new Date(1970, 0, i - 1);
+};
+
+export const useDaysPositions = (positions: number[]) => {
+	const format = useDateFormat('Do');
+	return positions.map((i) => format(someDateAtGivenPositionOfYear(i)));
 };
 
 const someDateAtGivenDayOfWeek = (i: number) => {
@@ -175,8 +262,8 @@ export const useDaysNames = (days: number[]) => {
 export const useDaysOfWeek = () => useDaysNames(list(range(7)));
 
 export const useIntlDateTimeFormat = (options?) => {
-	const locale = useLocaleKey();
-	return new Intl.DateTimeFormat(locale, options);
+	const key = useLocaleKey();
+	return new Intl.DateTimeFormat(key, options);
 };
 
 export const useDateFormatRange = (format, options?) => {
