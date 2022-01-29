@@ -1,11 +1,6 @@
 import {ALL_WEEK_DAYS} from '../util/datetime';
 import {Settings} from './collection/settings';
 
-const methods = {
-	update: 'settings.update',
-	reset: 'settings.reset',
-};
-
 const defaults = {
 	'navigation-drawer-is-open': 'closed',
 	'books-sorting-order': -1,
@@ -25,7 +20,6 @@ const defaults = {
 
 export const settings = {
 	defaults,
-	methods,
 };
 
 export function get(owner: string, key: string) {

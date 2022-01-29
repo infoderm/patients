@@ -7,7 +7,7 @@ import byKey from '../../api/publication/settings/byKey';
 import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/settings/update';
 
-const {defaults, methods} = _settings;
+const {defaults} = _settings;
 
 function subscribe(key: string) {
 	return _subscribe(byKey, key);
@@ -78,7 +78,6 @@ export const useSettingCached = (key: string) =>
 
 export const settings = {
 	defaults,
-	methods,
 	subscribe,
 	useSetting,
 	get,
