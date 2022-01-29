@@ -27,7 +27,7 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 		validate,
 		transaction,
 		run: executor,
-		options,
+		options: simulate ? {returnStubValue: false, ...options} : options,
 	};
 
 	if (!testOnly || Meteor.isTest || Meteor.isAppTest) {
