@@ -21,7 +21,9 @@ import red from '@material-ui/core/colors/red';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog';
-import StaticConsultationCardChips from './StaticConsultationCardChips';
+import StaticConsultationCardChips, {
+	StaticConsultationCardChipsProps,
+} from './StaticConsultationCardChips';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog';
 import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
 import ConsultationTransferDialog from './ConsultationTransferDialog';
@@ -37,10 +39,14 @@ const useStyles = makeStyles({
 	},
 });
 
-const ConsultationAdvancedActionsDialog = (props) => {
+interface Props extends StaticConsultationCardChipsProps {
+	open: boolean;
+	onClose: () => void;
+}
+
+const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 	const classes = useStyles();
 
-	const {open, onClose, ...rest} = props;
 	const {consultation} = rest;
 	const {isDone, scheduledDatetime} = consultation;
 	const [deleting, setDeleting] = useState(false);

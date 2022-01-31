@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -25,7 +24,19 @@ const useStyles = makeStyles({
 	},
 });
 
-const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	document: {_id: string};
+	existingLink: {_id: string};
+}
+
+const DocumentLinkingDialog = ({
+	open,
+	onClose,
+	document,
+	existingLink,
+}: Props) => {
 	const classes = useStyles();
 
 	const [patients, setPatients] = useState(existingLink ? [existingLink] : []);
@@ -85,13 +96,6 @@ const DocumentLinkingDialog = ({open, onClose, document, existingLink}) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-DocumentLinkingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	document: PropTypes.object,
-	existingLink: PropTypes.object,
 };
 
 DocumentLinkingDialog.projection = {

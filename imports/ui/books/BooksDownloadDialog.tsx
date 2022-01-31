@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 
 import addYears from 'date-fns/addYears';
 
@@ -29,20 +28,28 @@ import {books} from '../../api/books';
 import withLazyOpening from '../modal/withLazyOpening';
 import csv from '../../api/endpoint/books/csv';
 
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	initialBegin: Date;
+	initialEnd?: Date;
+	initialAdvancedFunctionality?: boolean;
+}
+
 const BooksDownloadDialog = ({
 	open,
 	onClose,
-	initialAdvancedFunctionality,
 	initialBegin,
 	initialEnd,
-}) => {
+	initialAdvancedFunctionality = false,
+}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [advancedFunctionality, setAdvancedFunctionality] = useState(
 		initialAdvancedFunctionality,
 	);
 	const [begin, setBegin] = useState(initialBegin);
-	const [end, setEnd] = useState(initialEnd || addYears(initialBegin, 1));
+	const [end, setEnd] = useState(initialEnd ?? addYears(initialBegin, 1));
 	const [firstBook, setFirstBook] = useState(String(books.DOWNLOAD_FIRST_BOOK));
 	const [lastBook, setLastBook] = useState(String(books.DOWNLOAD_LAST_BOOK));
 	const [maxRows, setMaxRows] = useState(String(books.DOWNLOAD_MAX_ROWS));
@@ -57,7 +64,7 @@ const BooksDownloadDialog = ({
 	useEffect(() => {
 		setAdvancedFunctionality(initialAdvancedFunctionality);
 		setBegin(initialBegin);
-		setEnd(initialEnd || addYears(initialBegin, 1));
+		setEnd(initialEnd ?? addYears(initialBegin, 1));
 		setFirstBook(String(books.DOWNLOAD_FIRST_BOOK));
 		setLastBook(String(books.DOWNLOAD_LAST_BOOK));
 		setMaxRows(String(books.DOWNLOAD_MAX_ROWS));
@@ -201,18 +208,6 @@ const BooksDownloadDialog = ({
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-BooksDownloadDialog.defaultProps = {
-	initialAdvancedFunctionality: false,
-};
-
-BooksDownloadDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	initialBegin: PropTypes.instanceOf(Date).isRequired,
-	initialEnd: PropTypes.instanceOf(Date),
-	initialAdvancedFunctionality: PropTypes.bool,
 };
 
 export default withLazyOpening(BooksDownloadDialog);

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
 
@@ -26,10 +25,19 @@ import ConfirmationTextField, {
 
 import call from '../../api/endpoint/call';
 import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
+import {ConsultationDocument} from '../../api/collection/consultations';
 
-const ConsultationAppointmentRestorationDialog = (props) => {
-	const {open, onClose, consultation} = props;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	consultation: ConsultationDocument;
+}
 
+const ConsultationAppointmentRestorationDialog = ({
+	open,
+	onClose,
+	consultation,
+}: Props) => {
 	const options = {fields: ConsultationAppointmentRestorationDialog.projection};
 	const deps = [
 		consultation.patientId,
@@ -132,12 +140,6 @@ const ConsultationAppointmentRestorationDialog = (props) => {
 ConsultationAppointmentRestorationDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
-
-ConsultationAppointmentRestorationDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(ConsultationAppointmentRestorationDialog);

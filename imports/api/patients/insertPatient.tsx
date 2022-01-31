@@ -1,11 +1,12 @@
 import React from 'react';
+import {History} from 'history';
 
 import dialog from '../../ui/modal/dialog';
 import EidCardDialog from '../../ui/eid/EidCardDialog';
 
 import eidParseXML from '../eidParseXML';
 
-const insertPatient = async (history, xmlString) => {
+const insertPatient = async (history: History, xmlString: string) => {
 	const eidInfo = eidParseXML(xmlString);
 
 	return dialog<void>((resolve) => (

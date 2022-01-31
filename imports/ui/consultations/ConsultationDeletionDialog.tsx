@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
 
@@ -14,6 +13,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import {ConsultationDocument} from '../../api/collection/consultations';
+
 import {normalized} from '../../api/string';
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
@@ -25,9 +26,13 @@ import ConfirmationTextField, {
 import call from '../../api/endpoint/call';
 import remove from '../../api/endpoint/consultations/remove';
 
-const ConsultationDeletionDialog = (props) => {
-	const {open, onClose, consultation} = props;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	consultation: ConsultationDocument;
+}
 
+const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 	const options = {fields: ConsultationDeletionDialog.projection};
 	const deps = [
 		consultation.patientId,
@@ -128,12 +133,6 @@ const ConsultationDeletionDialog = (props) => {
 ConsultationDeletionDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
-
-ConsultationDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(ConsultationDeletionDialog);

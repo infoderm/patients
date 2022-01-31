@@ -7,18 +7,20 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import DefaultConfirmIcon from '@material-ui/icons/Done';
 import DefaultCancelIcon from '@material-ui/icons/Cancel';
 
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
-interface Props {
+export interface ConfirmationDialogProps {
 	open?: boolean;
+	loading?: boolean;
 	onCancel: EventHandler;
 	onConfirm: EventHandler;
 	title: string;
-	text: string;
+	text: string | JSX.Element;
 	cancel: string;
 	confirm: string;
 	CancelIcon?: ElementType;
@@ -29,6 +31,7 @@ interface Props {
 
 const ConfirmationDialog = ({
 	open = false,
+	loading = false,
 	onCancel,
 	onConfirm,
 	title,
@@ -39,8 +42,9 @@ const ConfirmationDialog = ({
 	ConfirmIcon = DefaultConfirmIcon,
 	cancelColor = 'default',
 	confirmColor = 'primary',
-}: Props) => (
+}: ConfirmationDialogProps) => (
 	<Dialog open={open} onClose={onCancel}>
+		{loading && <LinearProgress />}
 		<DialogTitle>{title}</DialogTitle>
 		<DialogContent>
 			<DialogContentText>{text}</DialogContentText>

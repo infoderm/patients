@@ -34,7 +34,7 @@ interface ConsultationComputedFields {
 	end: Date;
 }
 
-interface ConsultationMetadata {
+export interface ConsultationMetadata {
 	_id: string;
 	owner: string;
 	createdAt: Date;

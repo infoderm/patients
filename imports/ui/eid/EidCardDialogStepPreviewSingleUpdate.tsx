@@ -45,6 +45,8 @@ import ReactivePatientCard from '../patients/ReactivePatientCard';
 import PatientsGrid from '../patients/PatientsGrid';
 import usePatient from '../patients/usePatient';
 
+import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
+
 const computeDifferences = function* (state, changes) {
 	for (const key of Object.keys(changes)) {
 		if (changes[key] === undefined) continue;
@@ -136,7 +138,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	eidInfo,
 	history,
 	onClose,
-}) => {
+}: EidCardDialogStepPreviewSingleProps) => {
 	const onOpen = () => {
 		history.push({pathname: `/patient/${patientId}`});
 		onClose();

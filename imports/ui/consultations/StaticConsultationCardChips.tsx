@@ -62,7 +62,7 @@ function paymentMethodIcon(payment_method) {
 	}
 }
 
-interface StaticConsultationCardChipsProps {
+export interface StaticConsultationCardChipsProps {
 	isNoShow: boolean;
 	patient: PatientDocument;
 	consultation: ConsultationDocument;

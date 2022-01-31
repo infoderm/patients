@@ -125,7 +125,7 @@ function sanitize({
 
 	noshow,
 	createdForAppointment,
-}): PatientFields & PatientComputedFields {
+}: Partial<PatientFields>): PatientFields & PatientComputedFields {
 	if (niss !== undefined) check(niss, String);
 	if (firstname !== undefined) check(firstname, String);
 	if (lastname !== undefined) check(lastname, String);

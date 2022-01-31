@@ -1,6 +1,6 @@
 import React, {useReducer, useEffect, useMemo} from 'react';
 
-import {Prompt} from 'react-router';
+import {Prompt} from 'react-router-dom';
 
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';

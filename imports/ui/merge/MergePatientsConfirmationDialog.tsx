@@ -1,16 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useHistory} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
-
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -18,7 +10,18 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import call from '../../api/endpoint/call';
 import patientsMerge from '../../api/endpoint/patients/merge';
 
+import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
+
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	toCreate: {};
+	consultationsToAttach: unknown[];
+	attachmentsToAttach: unknown[];
+	documentsToAttach: unknown[];
+	toDelete: unknown[];
+}
 
 const MergePatientsConfirmationDialog = ({
 	open,
@@ -28,7 +31,7 @@ const MergePatientsConfirmationDialog = ({
 	attachmentsToAttach,
 	documentsToAttach,
 	toDelete,
-}) => {
+}: Props) => {
 	const history = useHistory();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -58,17 +61,11 @@ const MergePatientsConfirmationDialog = ({
 	};
 
 	return (
-		<Dialog
+		<ConfirmationDialog
 			open={open}
-			// component="form"
-			aria-labelledby="merge-patients-confirmation-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="merge-patients-confirmation-dialog-title">
-				Merge {toDelete.length} patients
-			</DialogTitle>
-			<DialogContent>
-				<DialogContentText>
+			title={`Merge ${toDelete.length} patients`}
+			text={
+				<>
 					<b>1 new patient</b> will be created,{' '}
 					<b>{consultationsToAttach.length} consultations</b>,{' '}
 					<b>{documentsToAttach.length} documents</b>, and{' '}
@@ -76,37 +73,18 @@ const MergePatientsConfirmationDialog = ({
 					it, <b>{toDelete.length} patients will be deleted</b>. If you do not
 					want to merge those patients, click cancel. If you really want to
 					merge those patients, click the merge button.
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
-				<Button
-					color="secondary"
-					endIcon={<MergeTypeIcon />}
-					onClick={mergePatients}
-				>
-					Merge
-				</Button>
-			</DialogActions>
-		</Dialog>
+				</>
+			}
+			cancel="Cancel"
+			cancelColor="default"
+			CancelIcon={CancelIcon}
+			confirm="Merge"
+			confirmColor="secondary"
+			ConfirmIcon={MergeTypeIcon}
+			onCancel={onClose}
+			onConfirm={mergePatients}
+		/>
 	);
-};
-
-MergePatientsConfirmationDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	toCreate: PropTypes.object.isRequired,
-	consultationsToAttach: PropTypes.array.isRequired,
-	attachmentsToAttach: PropTypes.array.isRequired,
-	documentsToAttach: PropTypes.array.isRequired,
-	toDelete: PropTypes.array.isRequired,
 };
 
 export default withLazyOpening(MergePatientsConfirmationDialog);

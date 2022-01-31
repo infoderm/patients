@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
 
@@ -18,7 +17,13 @@ import withLazyOpening from '../modal/withLazyOpening';
 import call from '../../api/endpoint/call';
 import rename from '../../api/endpoint/uploads/rename';
 
-const AttachmentEditionDialog = ({open, onClose, attachment}) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	attachment: {_id: string; name: string};
+}
+
+const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [filename, setFilename] = useState(attachment.name || '');
 	const [filenameError, setFilenameError] = useState('');
@@ -96,12 +101,6 @@ const AttachmentEditionDialog = ({open, onClose, attachment}) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-AttachmentEditionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	attachment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AttachmentEditionDialog);

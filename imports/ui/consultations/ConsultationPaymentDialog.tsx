@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import dateFormat from 'date-fns/format';
 
@@ -16,9 +15,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import {useCurrencyFormat} from '../../i18n/currency';
+import {ConsultationDocument} from '../../api/collection/consultations';
 
 import {onlyASCII} from '../../api/string';
+
+import {useCurrencyFormat} from '../../i18n/currency';
 
 import {useSetting} from '../settings/hooks';
 
@@ -61,10 +62,14 @@ const useStyles = makeStyles({
 	},
 });
 
-const ConsultationPaymentDialog = (props) => {
-	const classes = useStyles();
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	consultation: ConsultationDocument;
+}
 
-	const {open, onClose, consultation} = props;
+const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
+	const classes = useStyles();
 
 	const {loading: loadingAccountHolder, value: accountHolder} =
 		useSetting('account-holder');
@@ -169,11 +174,6 @@ const ConsultationPaymentDialog = (props) => {
 ConsultationPaymentDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
-
-ConsultationPaymentDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
 };
 
 export default withLazyOpening(ConsultationPaymentDialog);

@@ -20,6 +20,7 @@ import dialog from '../modal/dialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
+import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const EidCardDialogStepPreviewSingleCreate = ({
 	onPrevStep,
@@ -27,7 +28,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 	eidInfo,
 	history,
 	onClose,
-}) => {
+}: EidCardDialogStepPreviewSingleProps) => {
 	assert(patientId === '?');
 	const onNext = async () => {
 		if (

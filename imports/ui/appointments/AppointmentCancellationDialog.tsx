@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -21,9 +20,13 @@ import withLazyOpening from '../modal/withLazyOpening';
 import cancel from '../../api/endpoint/appointments/cancel';
 import useUniqueId from '../hooks/useUniqueId';
 
-const AppointmentCancellationDialog = (props) => {
-	const {open, onClose, appointment} = props;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	appointment: any;
+}
 
+const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 	const {loading, value: reasons} = useSetting(
 		'appointment-cancellation-reason',
 	);
@@ -111,12 +114,6 @@ const AppointmentCancellationDialog = (props) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-AppointmentCancellationDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	appointment: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(AppointmentCancellationDialog);

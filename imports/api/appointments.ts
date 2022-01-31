@@ -2,7 +2,25 @@ import {check} from 'meteor/check';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
-function sanitize({datetime, duration, patient, phone, reason}) {
+export interface SanitizeParams {
+	datetime: Date;
+	duration: number;
+	patient: {
+		_id: string;
+		firstname: string;
+		lastname: string;
+	};
+	phone?: string;
+	reason: string;
+}
+
+function sanitize({
+	datetime,
+	duration,
+	patient,
+	phone,
+	reason,
+}: SanitizeParams) {
 	check(patient.firstname, String);
 	check(patient.lastname, String);
 	check(patient._id, String);

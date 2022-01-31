@@ -1,12 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
-import {books, useBooksFind} from '../../api/books';
 import rename from '../../api/endpoint/books/rename';
 
-export default function BookRenamingDialog({open, onClose, onRename, tag}) {
+import {books, useBooksFind} from '../../api/books';
+import TagDocument from '../../api/tags/TagDocument';
+
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	onRename: () => void;
+	tag: TagDocument;
+}
+
+const BookRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 	return (
 		<TagRenamingDialog
 			open={open}
@@ -23,11 +31,6 @@ export default function BookRenamingDialog({open, onClose, onRename, tag}) {
 			onRename={onRename}
 		/>
 	);
-}
-
-BookRenamingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onRename: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired,
 };
+
+export default BookRenamingDialog;

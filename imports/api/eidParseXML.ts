@@ -1,6 +1,7 @@
 import {xml2json} from 'xml-js';
+import {PatientIdFields} from './collection/patients';
 
-const eidParseXML = (xmlString: string) => {
+const eidParseXML = (xmlString: string): PatientIdFields => {
 	// TODO validate using xsd
 	const jsonString = xml2json(xmlString, {compact: true, spaces: 4});
 	const json = JSON.parse(jsonString);

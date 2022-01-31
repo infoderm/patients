@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,8 +9,24 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import CancelIcon from '@material-ui/icons/Cancel';
 
-const InformationDialog = ({open, onClose, title, text, close, CloseIcon}) => (
-	<Dialog open={open} /* component="form" */ onClose={onClose}>
+interface Props {
+	open?: boolean;
+	onClose: () => void;
+	title: string;
+	text: string | JSX.Element;
+	close: string;
+	CloseIcon: React.ElementType;
+}
+
+const InformationDialog = ({
+	open = false,
+	onClose,
+	title,
+	text,
+	close,
+	CloseIcon = CancelIcon,
+}: Props) => (
+	<Dialog open={open} onClose={onClose}>
 		<DialogTitle>{title}</DialogTitle>
 		<DialogContent>
 			<DialogContentText>{text}</DialogContentText>
@@ -28,19 +43,5 @@ const InformationDialog = ({open, onClose, title, text, close, CloseIcon}) => (
 		</DialogActions>
 	</Dialog>
 );
-
-InformationDialog.defaultProps = {
-	open: false,
-	CloseIcon: CancelIcon,
-};
-
-InformationDialog.propTypes = {
-	open: PropTypes.bool,
-	onClose: PropTypes.func.isRequired,
-	title: PropTypes.string.isRequired,
-	text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
-	close: PropTypes.string.isRequired,
-	CloseIcon: PropTypes.elementType,
-};
 
 export default InformationDialog;

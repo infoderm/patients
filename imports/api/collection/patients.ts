@@ -1,6 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 
-export interface PatientFields {
+export interface PatientIdFields {
 	niss: string;
 	firstname: string;
 	lastname: string;
@@ -8,14 +8,17 @@ export interface PatientFields {
 	sex: string;
 	photo: string;
 
-	antecedents: string;
-	ongoing: string;
-	about: string;
-
 	municipality: string;
 	streetandnumber: string;
 	zip: string;
+}
+
+export interface PatientFields extends PatientIdFields {
 	phone: string;
+
+	antecedents: string;
+	ongoing: string;
+	about: string;
 
 	allergies: string[];
 	doctors: string[];

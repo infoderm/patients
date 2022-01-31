@@ -1,28 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {useMemo} from 'react';
 import {useSnackbar} from 'notistack';
-
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import CheckIcon from '@material-ui/icons/Check';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import {ConsultationDocument} from '../../api/collection/consultations';
+import call from '../../api/endpoint/call';
+import update from '../../api/endpoint/consultations/update';
 
 import {useCurrencyFormat} from '../../i18n/currency';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
-import call from '../../api/endpoint/call';
-import update from '../../api/endpoint/consultations/update';
+import ConfirmationDialog from '../modal/ConfirmationDialog';
 
-const ConsultationDebtSettlementDialog = (props) => {
-	const {open, onClose, consultation} = props;
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	consultation: ConsultationDocument;
+}
 
+const ConsultationDebtSettlementDialog = ({
+	open,
+	onClose,
+	consultation,
+}: Props) => {
 	const {currency, price, paid} = consultation;
 
 	const owed = price - paid;
@@ -42,8 +44,8 @@ const ConsultationDebtSettlementDialog = (props) => {
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const clearDebtForThisConsultation =
-		(onClose, consultation) => async (event) => {
+	const clearDebtForThisConsultation = useMemo(() => {
+		return async (event) => {
 			event.preventDefault();
 
 			const fields = {
@@ -67,24 +69,19 @@ const ConsultationDebtSettlementDialog = (props) => {
 				enqueueSnackbar(message, {variant: 'error'});
 			}
 		};
+	}, [onClose, consultation, enqueueSnackbar, closeSnackbar]);
 
 	const patientIdentifier = found
 		? `${patient.firstname} ${patient.lastname}`
 		: `#${consultation.patientId}`;
 
 	return (
-		<Dialog
+		<ConfirmationDialog
 			open={open}
-			// component="form"
-			aria-labelledby="consultation-debt-settling-dialog-title"
-			onClose={onClose}
-		>
-			{loading && <LinearProgress />}
-			<DialogTitle id="consultation-debt-settling-dialog-title">
-				Clear debt of consultation for patient {patientIdentifier}
-			</DialogTitle>
-			<DialogContent>
-				<DialogContentText>
+			loading={loading}
+			title={`Clear debt of consultation for patient ${patientIdentifier}`}
+			text={
+				<>
 					Before settlement, the patient had paid <b>{currencyFormat(paid)}</b>{' '}
 					out of <b>{currencyFormat(price)}</b>. The patient thus{' '}
 					<b>owed {currencyFormat(owed)}</b> for this consultation.{' '}
@@ -95,32 +92,18 @@ const ConsultationDebtSettlementDialog = (props) => {
 					If you do not want to settle debt for this consultation, click cancel.
 					If you really want to settle debt for this consultation, click clear
 					debt.
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
-				<Button
-					color="primary"
-					endIcon={<CheckIcon />}
-					onClick={clearDebtForThisConsultation(onClose, consultation)}
-				>
-					Clear debt ({currencyFormat(owed)})
-				</Button>
-			</DialogActions>
-		</Dialog>
+				</>
+			}
+			cancel="Cancel"
+			CancelIcon={CancelIcon}
+			cancelColor="default"
+			confirm={`Clear debt (${currencyFormat(owed)})`}
+			ConfirmIcon={CheckIcon}
+			confirmColor="primary"
+			onCancel={onClose}
+			onConfirm={clearDebtForThisConsultation}
+		/>
 	);
-};
-
-ConsultationDebtSettlementDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
 };
 
 ConsultationDebtSettlementDialog.projection = {

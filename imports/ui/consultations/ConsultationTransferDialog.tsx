@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -41,7 +40,13 @@ const useStyles = makeStyles({
 	},
 });
 
-const ConsultationTransferDialog = ({open, onClose, consultation}) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	consultation: any;
+}
+
+const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 	const classes = useStyles();
 
 	const {patientId, isDone} = consultation;
@@ -162,12 +167,6 @@ const ConsultationTransferDialog = ({open, onClose, consultation}) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-ConsultationTransferDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	consultation: PropTypes.object,
 };
 
 ConsultationTransferDialog.projection = {

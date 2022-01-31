@@ -1,13 +1,23 @@
 import React, {useState} from 'react';
+import {History} from 'history';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
+import {PatientIdFields} from '../../api/collection/patients';
+
 import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
-const EidCardDialog = ({eidInfo, history, open, onClose}) => {
+interface Props {
+	history: History;
+	eidInfo: PatientIdFields;
+	open: boolean;
+	onClose: () => void;
+}
+
+const EidCardDialog = ({history, eidInfo, open, onClose}: Props) => {
 	const [selected, setSelected] = useState(new Set());
 	const [step, setStep] = useState('selection');
 
@@ -21,7 +31,9 @@ const EidCardDialog = ({eidInfo, history, open, onClose}) => {
 					selected={selected}
 					setSelected={setSelected}
 					onClose={onClose}
-					onNext={() => setStep('preview')}
+					onNext={() => {
+						setStep('preview');
+					}}
 				/>
 			)}
 			{step === 'preview' && selectionIsSingle && (
@@ -29,7 +41,9 @@ const EidCardDialog = ({eidInfo, history, open, onClose}) => {
 					eidInfo={eidInfo}
 					history={history}
 					patientId={selected[Symbol.iterator]().next().value}
-					onPrevStep={() => setStep('selection')}
+					onPrevStep={() => {
+						setStep('selection');
+					}}
 					onClose={onClose}
 				/>
 			)}

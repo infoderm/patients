@@ -1,26 +1,21 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import call from '../../api/endpoint/call';
 import reschedule from '../../api/endpoint/appointments/reschedule';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
-const propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	appointment: PropTypes.shape({
-		_id: PropTypes.string.isRequired,
-		patientId: PropTypes.string.isRequired,
-		datetime: PropTypes.instanceOf(Date).isRequired,
-	}).isRequired,
-};
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	appointment: {
+		_id: string;
+		patientId: string;
+		datetime: Date;
+	};
+}
 
-const EditAppointmentDialog = ({
-	open,
-	onClose,
-	appointment,
-}: InferProps<typeof propTypes>) => {
+const EditAppointmentDialog = ({open, onClose, appointment}: Props) => {
 	const onSubmit = async (args) => call(reschedule, appointment._id, args);
 
 	return (
@@ -34,7 +29,5 @@ const EditAppointmentDialog = ({
 		/>
 	);
 };
-
-EditAppointmentDialog.propTypes = propTypes;
 
 export default withLazyOpening(EditAppointmentDialog);

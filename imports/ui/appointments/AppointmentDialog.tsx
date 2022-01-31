@@ -2,7 +2,6 @@ import assert from 'assert';
 
 import React, {useMemo} from 'react';
 import {useHistory} from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -38,6 +37,9 @@ import TextField from '../input/TextField';
 import {useDateMask} from '../../i18n/datetime';
 
 import {msToString} from '../../api/duration';
+
+import {AppointmentDocument} from '../../api/collection/appointments';
+import {SanitizeParams} from '../../api/appointments';
 
 import {patients} from '../../api/patients';
 import {useSetting} from '../settings/hooks';
@@ -89,19 +91,27 @@ const unserializeTime = (time: string) =>
 
 const isEqual = (a, b) => a === b;
 
-const AppointmentDialog = (props) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	onSubmit: (args: SanitizeParams) => Promise<{_id: string}>;
+	initialDatetime: Date;
+	noInitialTime: boolean;
+	initialAppointment?: AppointmentDocument;
+	initialPatient?: {};
+}
+
+const AppointmentDialog = ({
+	initialDatetime,
+	noInitialTime = false,
+	initialAppointment,
+	initialPatient,
+	open,
+	onClose,
+	onSubmit,
+}: Props) => {
 	const classes = useStyles();
 	const history = useHistory();
-
-	const {
-		initialDatetime,
-		noInitialTime,
-		initialAppointment,
-		initialPatient,
-		open,
-		onClose,
-		onSubmit,
-	} = props;
 
 	const {loading, value: appointmentDuration} = useSetting(
 		'appointment-duration',
@@ -400,20 +410,6 @@ const AppointmentDialog = (props) => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-AppointmentDialog.defaultProps = {
-	noInitialTime: false,
-};
-
-AppointmentDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onSubmit: PropTypes.func.isRequired,
-	initialDatetime: PropTypes.instanceOf(Date).isRequired,
-	noInitialTime: PropTypes.bool,
-	initialAppointment: PropTypes.object,
-	initialPatient: PropTypes.object,
 };
 
 export default withLazyOpening(AppointmentDialog);

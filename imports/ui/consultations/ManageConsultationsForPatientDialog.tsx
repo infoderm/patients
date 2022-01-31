@@ -7,7 +7,6 @@ import isToday from 'date-fns/isToday';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
@@ -32,7 +31,7 @@ import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppoin
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
 import useConsultationsForPatient from './useConsultationsForPatient';
 
-const formatDatetime = (datetime) => {
+const formatDatetime = (datetime: Date) => {
 	if (isToday(datetime)) {
 		return `d'aujourd'hui à ${dateFormat(datetime, 'HH:mm')}`;
 	}
@@ -55,7 +54,17 @@ const useStyles = makeStyles({
 	},
 });
 
-const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
+interface Props {
+	onClose: () => void;
+	open: boolean;
+	patientId: string;
+}
+
+const ManageConsultationsForPatientDialog = ({
+	open,
+	onClose,
+	patientId,
+}: Props) => {
 	const classes = useStyles();
 	const history = useHistory();
 
@@ -159,12 +168,6 @@ const ManageConsultationsForPatientDialog = ({open, onClose, patientId}) => {
 			</List>
 		</Dialog>
 	);
-};
-
-ManageConsultationsForPatientDialog.propTypes = {
-	onClose: PropTypes.func.isRequired,
-	open: PropTypes.bool.isRequired,
-	patientId: PropTypes.string.isRequired,
 };
 
 export default withLazyOpening(ManageConsultationsForPatientDialog);

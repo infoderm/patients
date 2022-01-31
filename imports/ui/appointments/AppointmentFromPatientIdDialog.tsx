@@ -1,18 +1,14 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
 import AppointmentDialog from './AppointmentDialog';
 
-const propTypes = {
-	patientId: PropTypes.string.isRequired,
-};
+interface Props {
+	patientId: string;
+}
 
-const AppointmentFromPatientIdDialog = ({
-	patientId,
-	...rest
-}: InferProps<typeof propTypes>) => {
+const AppointmentFromPatientIdDialog = ({patientId, ...rest}: Props) => {
 	const options = {fields: {firstname: 1, lastname: 1, phone: 1}};
 
 	const deps = [patientId, JSON.stringify(options.fields)];
@@ -32,7 +28,5 @@ const AppointmentFromPatientIdDialog = ({
 
 	return <AppointmentDialog initialPatient={patient} {...rest} />;
 };
-
-AppointmentFromPatientIdDialog.propTypes = propTypes;
 
 export default withLazyOpening(AppointmentFromPatientIdDialog);

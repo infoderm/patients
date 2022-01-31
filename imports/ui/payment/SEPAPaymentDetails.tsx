@@ -57,10 +57,18 @@ interface Data {
 	unstructuredReference?: string;
 }
 
-const SEPAPaymentDetailsStatic = (props) => {
-	const classes = useStyles();
+interface SEPAPaymentDetailsStaticProps {
+	accountHolder: string;
+	iban: string;
+	currency: string;
+}
 
-	const {accountHolder, iban, currency} = props;
+const SEPAPaymentDetailsStatic = ({
+	accountHolder,
+	iban,
+	currency,
+}: SEPAPaymentDetailsStaticProps) => {
+	const classes = useStyles();
 
 	const defaultReference = format(startOfToday(), 'yyyy-MM-dd');
 

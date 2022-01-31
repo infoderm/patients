@@ -1,7 +1,6 @@
 import React, {useState, useReducer} from 'react';
 
-import {Prompt} from 'react-router';
-import {useHistory} from 'react-router-dom';
+import {Prompt, useHistory} from 'react-router-dom';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 

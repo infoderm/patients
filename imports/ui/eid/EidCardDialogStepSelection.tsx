@@ -30,6 +30,7 @@ import SearchBox from '../input/SearchBox';
 
 import mergeFields from '../../util/mergeFields';
 
+import {PatientIdFields} from '../../api/collection/patients';
 import {patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
@@ -113,13 +114,21 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+interface Props {
+	onClose: () => void;
+	onNext: () => void;
+	eidInfo: PatientIdFields;
+	selected: Set<{}>;
+	setSelected: (selection: Set<{}>) => void;
+}
+
 const EidCardDialogStepSelection = ({
 	onClose,
 	onNext,
 	eidInfo,
 	selected,
 	setSelected,
-}) => {
+}: Props) => {
 	const classes = useStyles();
 
 	const eidPatient = {_id: '?', ...patients.sanitize(eidInfo)};
@@ -162,17 +171,19 @@ const EidCardDialogStepSelection = ({
 	const selectionIsSingle = selected.size === 1;
 	const selectionIsValid = selectionIsSingle;
 
-	const onReset = () => setSelected(new Set());
+	const onReset = () => {
+		setSelected(new Set());
+	};
 
 	const eidPatients = [eidPatient];
 
-	const onCardClick = ({_id}) => {
+	const onCardClick = async ({_id}) => {
 		if (selected.has(_id)) {
 			const newSelected = new Set(selected);
 			newSelected.delete(_id);
 			setSelected(newSelected);
 		} else if (selected.size === 1) {
-			dialog((resolve) => (
+			await dialog<void>((resolve) => (
 				<InformationDialog
 					title="Attention!"
 					text={
@@ -305,7 +316,9 @@ const EidCardDialogStepSelection = ({
 										aria-expanded={nameMatchesExpanded}
 										aria-label="show more"
 										endIcon={<ExpandMoreIcon />}
-										onClick={() => setNameMatchesExpanded(!nameMatchesExpanded)}
+										onClick={() => {
+											setNameMatchesExpanded(!nameMatchesExpanded);
+										}}
 									>
 										{`Show ${nameMatchesExpanded ? 'less' : 'more'} options`}
 									</Button>
@@ -328,9 +341,9 @@ const EidCardDialogStepSelection = ({
 											<SearchBox
 												className={classes.searchBox}
 												value={patientSearchInput}
-												onChange={(event) =>
-													setPatientSearchinput(event.target.value)
-												}
+												onChange={(event) => {
+													setPatientSearchinput(event.target.value);
+												}}
 											/>
 										</Grid>
 										<Grid item xs={12}>
