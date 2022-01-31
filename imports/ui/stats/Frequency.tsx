@@ -21,6 +21,7 @@ const Chart = (props) => {
 				male: value.male ?? 0,
 				other: value.other ?? 0,
 				none: value[''] ?? 0,
+				undefined: value.undefined ?? 0,
 		  }));
 
 	const color = scaleOrdinal({

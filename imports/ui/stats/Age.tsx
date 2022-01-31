@@ -23,6 +23,7 @@ const Chart = (props) => {
 					male: 0,
 					other: 0,
 					none: 0,
+					undefined: 0,
 					...value,
 				}))
 				.sort((a, b) => {

@@ -32,7 +32,7 @@ const countPublication = (QueriedCollection, {fields, discretize, values}) =>
 		let total = 0;
 		const count = {};
 
-		const state = (): PollResult => ({
+		const state = (): PollResult<any> => ({
 			total,
 			count,
 		});

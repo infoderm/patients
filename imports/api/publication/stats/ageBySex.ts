@@ -4,13 +4,24 @@ import {publishCount} from '../../stats';
 import {Patients} from '../../collection/patients';
 import eidParseBirthdate from '../../eidParseBirthdate';
 
+const sexToString = (sex) => {
+	switch (sex) {
+		case undefined:
+			return 'undefined';
+		case '':
+			return 'none';
+		default:
+			return sex;
+	}
+};
+
 export default publishCount(Patients, {
 	fields: ['birthdate', 'sex'],
 	discretize: ({birthdate, sex}) => {
 		if (!birthdate)
 			return [
 				['key', 'unk'],
-				['sex', sex || 'none'],
+				['sex', sexToString(sex)],
 			];
 		const _birthdate = eidParseBirthdate(birthdate);
 		const thisMorning = startOfToday();
@@ -22,7 +33,7 @@ export default publishCount(Patients, {
 		const to = fr + incrementYears;
 		return [
 			['key', `${fr} à ${to}`],
-			['sex', sex || 'none'],
+			['sex', sexToString(sex)],
 		];
 	},
 	values: ['key', 'sex'],

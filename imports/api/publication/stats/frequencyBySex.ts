@@ -7,6 +7,14 @@ export const frequencySexKey = (query) =>
 	`frequencySex-${JSON.stringify(query ?? {})}`;
 export const frequencySexPublication = `${countCollection}.frequencySex`;
 
+export interface GenderCount {
+	other?: number;
+	female?: number;
+	male?: number;
+	''?: number;
+	undefined?: number;
+}
+
 export default define({
 	name: frequencySexPublication,
 	handle(query) {
@@ -21,9 +29,9 @@ export default define({
 		let total = 0;
 		const refs = new Map();
 		const pRefs = new Map();
-		const count = [{}];
+		const count: GenderCount[] = [{}];
 
-		const state = (): PollResult => ({
+		const state = (): PollResult<GenderCount[]> => ({
 			total,
 			count,
 		});
