@@ -1,8 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {ChromePicker} from 'react-color';
+import {ChromePicker, Color, ColorChangeHandler} from 'react-color';
 
-const PickerDialog = ({value, onClick, onChange}) => (
+interface Props {
+	value: Color;
+	onChange: ColorChangeHandler;
+	onClick: () => void;
+}
+
+const PickerDialog = ({value, onClick, onChange}: Props) => (
 	<div style={{position: 'absolute', zIndex: 2}}>
 		<div
 			style={{
@@ -17,11 +22,5 @@ const PickerDialog = ({value, onClick, onChange}) => (
 		<ChromePicker color={value} onChange={onChange} />
 	</div>
 );
-
-PickerDialog.propTypes = {
-	value: PropTypes.string,
-	onChange: PropTypes.func,
-	onClick: PropTypes.func,
-};
 
 export default PickerDialog;

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
@@ -10,21 +9,17 @@ import {colord} from 'colord';
 import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
 
+interface Props {
+	defaultValue: string;
+	onChange: (color: string) => void;
+	convert?: keyof typeof converters;
+}
+
 const ColorPicker = ({
-	// ColorPicker
 	defaultValue,
 	onChange,
-	convert,
-
-	// Text field
-	// name,
-	// id,
-	// hintText,
-	// placeholder,
-	// floatingLabelText,
-	// label,
-	// TextFieldProps,
-}) => {
+	convert = DEFAULT_CONVERTER,
+}: Props) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const [value, setValue] = useState(defaultValue);
 	const [previousDefaultValue, setPreviousDefaultValue] =
@@ -50,7 +45,9 @@ const ColorPicker = ({
 					color: colord(value).isLight() ? '#111' : '#ddd',
 				}}
 				label={value}
-				onClick={() => setShowPicker(true)}
+				onClick={() => {
+					setShowPicker(true);
+				}}
 			/>
 			{showPicker && (
 				<PickerDialog
@@ -68,16 +65,6 @@ const ColorPicker = ({
 			)}
 		</span>
 	);
-};
-
-ColorPicker.propTypes = {
-	defaultValue: PropTypes.string,
-	onChange: PropTypes.func,
-	convert: PropTypes.oneOf(Object.keys(converters)),
-};
-
-ColorPicker.defaultProps = {
-	convert: DEFAULT_CONVERTER,
 };
 
 export default ColorPicker;
