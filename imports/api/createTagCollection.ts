@@ -189,6 +189,13 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			const oldname = tag.name;
 			newname = newname.trim();
 
+			if (oldname === newname) {
+				throw new Meteor.Error(
+					'value-error',
+					'Cannot rename tag if the new name is the same as the old name.',
+				);
+			}
+
 			await db.updateMany(
 				Parent,
 				{[key]: oldname, owner},
