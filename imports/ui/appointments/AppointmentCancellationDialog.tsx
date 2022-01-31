@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
@@ -56,6 +57,7 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 			aria-labelledby={titleId}
 			onClose={onClose}
 		>
+			{loading && <LinearProgress />}
 			<DialogTitle id={titleId}>Cancel this appointment</DialogTitle>
 			<DialogContent>
 				<DialogContentText>

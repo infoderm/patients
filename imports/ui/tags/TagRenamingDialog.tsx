@@ -67,6 +67,7 @@ const TagRenamingDialog = ({
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
 	const [newnameError, setNewnameError] = useState('');
+	const [pending, setPending] = useState(false);
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
@@ -87,6 +88,7 @@ const TagRenamingDialog = ({
 		}
 
 		if (!error) {
+			setPending(true);
 			const key = enqueueSnackbar('Processing...', {
 				variant: 'info',
 				persist: true,
@@ -102,6 +104,7 @@ const TagRenamingDialog = ({
 				enqueueSnackbar(message, {variant: 'success'});
 				onRename(name);
 			} catch (error: unknown) {
+				setPending(false);
 				closeSnackbar(key);
 				console.error(error);
 				const message = error instanceof Error ? error.message : 'unknown err';
@@ -153,10 +156,16 @@ const TagRenamingDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
+				<Button
+					disabled={pending}
+					color="default"
+					endIcon={<CancelIcon />}
+					onClick={onClose}
+				>
 					Cancel
 				</Button>
 				<Button
+					disabled={pending}
 					color="secondary"
 					endIcon={<EditIcon />}
 					onClick={renameThisTagIfNameMatchesAndNewNameNotEmpty}

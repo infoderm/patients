@@ -17,6 +17,7 @@ type EventHandler = MouseEventHandler<HTMLButtonElement>;
 export interface ConfirmationDialogProps {
 	open?: boolean;
 	loading?: boolean;
+	pending?: boolean;
 	onCancel: EventHandler;
 	onConfirm: EventHandler;
 	title: string;
@@ -32,6 +33,7 @@ export interface ConfirmationDialogProps {
 const ConfirmationDialog = ({
 	open = false,
 	loading = false,
+	pending = false,
 	onCancel,
 	onConfirm,
 	title,
@@ -50,10 +52,16 @@ const ConfirmationDialog = ({
 			<DialogContentText>{text}</DialogContentText>
 		</DialogContent>
 		<DialogActions>
-			<Button color={cancelColor} endIcon={<CancelIcon />} onClick={onCancel}>
+			<Button
+				disabled={pending}
+				color={cancelColor}
+				endIcon={<CancelIcon />}
+				onClick={onCancel}
+			>
 				{cancel}
 			</Button>
 			<Button
+				disabled={pending}
 				color={confirmColor}
 				endIcon={<ConfirmIcon />}
 				onClick={onConfirm}

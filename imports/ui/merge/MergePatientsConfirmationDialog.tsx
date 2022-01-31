@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {useHistory} from 'react-router-dom';
 
@@ -34,9 +34,11 @@ const MergePatientsConfirmationDialog = ({
 }: Props) => {
 	const history = useHistory();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [pending, setPending] = useState(false);
 
 	const mergePatients = async (event) => {
 		event.preventDefault();
+		setPending(true);
 		const key = enqueueSnackbar('Processing...', {variant: 'info'});
 		try {
 			const _id = await call(
@@ -53,6 +55,7 @@ const MergePatientsConfirmationDialog = ({
 			enqueueSnackbar(message, {variant: 'success'});
 			history.push({pathname: `/patient/${_id}`});
 		} catch (error: unknown) {
+			setPending(false);
 			closeSnackbar(key);
 			console.error({error});
 			const message = error instanceof Error ? error.message : 'unknown error';
@@ -63,6 +66,7 @@ const MergePatientsConfirmationDialog = ({
 	return (
 		<ConfirmationDialog
 			open={open}
+			pending={pending}
 			title={`Merge ${toDelete.length} patients`}
 			text={
 				<>
