@@ -4,7 +4,11 @@ import {useCachedDoctor} from '../../api/doctors';
 
 import StaticDoctorCard from './StaticDoctorCard';
 
-const ReactiveDoctorCard = ({item}) => {
+interface Props {
+	item: {name: string};
+}
+
+const ReactiveDoctorCard = ({item}: Props) => {
 	const init = {...item};
 	const {name} = item;
 	const query = {name};

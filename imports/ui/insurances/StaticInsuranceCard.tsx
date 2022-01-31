@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 
@@ -34,7 +33,13 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const LoadedTagCard = ({loading, found, item}) => {
+interface LoadedTagCardProps {
+	loading: boolean;
+	found: boolean;
+	item: {name: string};
+}
+
+const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 	const classes = useStyles();
 	const {result} = useInsuranceStats(item.name);
 	const {count} = result ?? {};
@@ -75,15 +80,20 @@ const LoadedTagCard = ({loading, found, item}) => {
 	);
 };
 
-const StaticInsuranceCard = ({item, loading = false, found = true}) => {
+interface StaticInsuranceCardProps {
+	item?: {name: string};
+	loading?: boolean;
+	found?: boolean;
+}
+
+const StaticInsuranceCard = ({
+	item,
+	loading = false,
+	found = true,
+}: StaticInsuranceCardProps) => {
 	if (item === undefined) return null;
 
 	return <LoadedTagCard loading={loading} found={found} item={item} />;
-};
-
-StaticInsuranceCard.propTypes = {
-	item: PropTypes.object,
-	loading: PropTypes.bool,
 };
 
 export default StaticInsuranceCard;

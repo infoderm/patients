@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {useParams} from 'react-router-dom';
 
 import TagDetails from '../tags/TagDetails';
 
@@ -11,9 +11,16 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {useDoctor} from '../../api/doctors';
 import StaticDoctorCard from './StaticDoctorCard';
 
-export default function DoctorDetails({match, name, page, perpage}) {
-	name = (match && myDecodeURIComponent(match.params.name)) || name;
-	page = Number.parseInt(match?.params.page, 10) || page;
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
+const DoctorDetails = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
+	const params = useParams<{name: string; page?: string}>();
+	const name = myDecodeURIComponent(params.name);
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
 
 	return (
 		<TagDetails
@@ -30,14 +37,6 @@ export default function DoctorDetails({match, name, page, perpage}) {
 			perpage={perpage}
 		/>
 	);
-}
-
-DoctorDetails.defaultProps = {
-	page: 1,
-	perpage: 10,
 };
 
-DoctorDetails.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-};
+export default DoctorDetails;

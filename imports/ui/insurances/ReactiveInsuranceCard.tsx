@@ -4,7 +4,11 @@ import {useCachedInsurance} from '../../api/insurances';
 
 import StaticInsuranceCard from './StaticInsuranceCard';
 
-const ReactiveInsuranceCard = ({item}) => {
+interface Props {
+	item: {name: string};
+}
+
+const ReactiveInsuranceCard = ({item}: Props) => {
 	const init = {...item};
 	const {name} = item;
 	const query = {name};

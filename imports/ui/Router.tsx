@@ -281,58 +281,66 @@ export default function Router() {
 					component={UnpaidConsultationsList}
 				/>
 
-				<Route exact path="/stats" component={Stats} />
-				<Route exact path="/sepa" component={SEPAPaymentDetails} />
+				<Route children={<Stats />} exact path="/stats" />
+				<Route children={<SEPAPaymentDetails />} exact path="/sepa" />
 
 				<Route exact path="/issues" component={Issues} />
 				<Route exact path="/merge" component={MergePatientsForm} />
 
-				<Route exact path="/doctors" component={DoctorsList} />
-				<Route exact path="/doctors/page/:page" component={DoctorsList} />
-				<Route exact path="/doctors/:prefix" component={DoctorsList} />
+				<Route children={<DoctorsList />} exact path="/doctors" />
+				<Route children={<DoctorsList />} exact path="/doctors/page/:page" />
+				<Route children={<DoctorsList />} exact path="/doctors/:prefix" />
 				<Route
+					children={<DoctorsList />}
 					exact
 					path="/doctors/:prefix/page/:page"
-					component={DoctorsList}
 				/>
 
-				<Route exact path="/doctor/:name" component={DoctorDetails} />
+				<Route children={<DoctorDetails />} exact path="/doctor/:name" />
 				<Route
+					children={<DoctorDetails />}
 					exact
 					path="/doctor/:name/page/:page"
-					component={DoctorDetails}
 				/>
 
-				<Route exact path="/insurances" component={InsurancesList} />
-				<Route exact path="/insurances/page/:page" component={InsurancesList} />
-				<Route exact path="/insurances/:prefix" component={InsurancesList} />
+				<Route children={<InsurancesList />} exact path="/insurances" />
 				<Route
+					children={<InsurancesList />}
+					exact
+					path="/insurances/page/:page"
+				/>
+				<Route children={<InsurancesList />} exact path="/insurances/:prefix" />
+				<Route
+					children={<InsurancesList />}
 					exact
 					path="/insurances/:prefix/page/:page"
-					component={InsurancesList}
 				/>
 
-				<Route exact path="/insurance/:name" component={InsuranceDetails} />
+				<Route children={<InsuranceDetails />} exact path="/insurance/:name" />
 				<Route
+					children={<InsuranceDetails />}
 					exact
 					path="/insurance/:name/page/:page"
-					component={InsuranceDetails}
 				/>
 
-				<Route exact path="/allergies" component={AllergiesList} />
-				<Route exact path="/allergies/page/:page" component={AllergiesList} />
-				<Route exact path="/allergies/:prefix" component={AllergiesList} />
+				<Route children={<AllergiesList />} exact path="/allergies" />
 				<Route
+					children={<AllergiesList />}
+					exact
+					path="/allergies/page/:page"
+				/>
+				<Route children={<AllergiesList />} exact path="/allergies/:prefix" />
+				<Route
+					children={<AllergiesList />}
 					exact
 					path="/allergies/:prefix/page/:page"
-					component={AllergiesList}
 				/>
 
-				<Route exact path="/allergy/:name" component={AllergyDetails} />
+				<Route children={<AllergyDetails />} exact path="/allergy/:name" />
 				<Route
+					children={<AllergyDetails />}
 					exact
 					path="/allergy/:name/page/:page"
-					component={AllergyDetails}
 				/>
 
 				<Route exact path="/drugs" component={DrugsSearch} />

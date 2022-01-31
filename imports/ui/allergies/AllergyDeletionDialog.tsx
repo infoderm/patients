@@ -1,10 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TagDeletionDialog from '../tags/TagDeletionDialog';
 import {deleteAllergy} from '../../api/allergies';
 
-export default function AllergyDeletionDialog({open, onClose, tag}) {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	tag: {};
+}
+
+const AllergyDeletionDialog = ({open, onClose, tag}: Props) => {
 	return (
 		<TagDeletionDialog
 			open={open}
@@ -14,10 +19,6 @@ export default function AllergyDeletionDialog({open, onClose, tag}) {
 			onClose={onClose}
 		/>
 	);
-}
-
-AllergyDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired,
 };
+
+export default AllergyDeletionDialog;

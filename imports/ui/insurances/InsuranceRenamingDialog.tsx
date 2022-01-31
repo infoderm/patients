@@ -1,16 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameInsurance, useInsurancesFind} from '../../api/insurances';
 
-export default function InsuranceRenamingDialog({
-	open,
-	onClose,
-	onRename,
-	tag,
-}) {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	onRename: () => void;
+	tag: {};
+}
+
+const InsuranceRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 	return (
 		<TagRenamingDialog
 			open={open}
@@ -22,11 +23,6 @@ export default function InsuranceRenamingDialog({
 			onRename={onRename}
 		/>
 	);
-}
-
-InsuranceRenamingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onRename: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired,
 };
+
+export default InsuranceRenamingDialog;

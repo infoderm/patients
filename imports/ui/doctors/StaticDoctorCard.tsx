@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 
@@ -35,7 +34,13 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const LoadedTagCard = ({loading, found, item}) => {
+interface LoadedTagCardProps {
+	loading: boolean;
+	found: boolean;
+	item: {name: string};
+}
+
+const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 	const classes = useStyles();
 
 	const {result} = useDoctorStats(item.name);
@@ -79,16 +84,20 @@ const LoadedTagCard = ({loading, found, item}) => {
 	);
 };
 
-const StaticDoctorCard = ({item, loading = false, found = true}) => {
+interface StaticDoctorCardProps {
+	item?: {name: string};
+	loading?: boolean;
+	found?: boolean;
+}
+
+const StaticDoctorCard = ({
+	item,
+	loading = false,
+	found = true,
+}: StaticDoctorCardProps) => {
 	if (item === undefined) return null;
 
 	return <LoadedTagCard loading={loading} found={found} item={item} />;
-};
-
-StaticDoctorCard.propTypes = {
-	item: PropTypes.object,
-	loading: PropTypes.bool,
-	found: PropTypes.bool,
 };
 
 export default StaticDoctorCard;

@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {useParams, useLocation} from 'react-router-dom';
+
 import TagList from '../tags/TagList';
 
 import {useInsurancesFind} from '../../api/insurances';
@@ -8,9 +9,17 @@ import {escapeStringRegexp} from '../../api/string';
 import AlphabetJumper from '../navigation/AlphabetJumper';
 import ReactiveInsuranceCard from './ReactiveInsuranceCard';
 
-export default function InsurancesList({match, prefix, page, perpage}) {
-	page = Number.parseInt(match?.params.page, 10) || page;
-	prefix = match?.params.prefix || prefix;
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
+const InsurancesList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
+	const location = useLocation();
+	const params = useParams<{page?: string; prefix?: string}>();
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
+	const prefix = params.prefix;
 
 	const query = prefix
 		? {name: {$regex: '^' + escapeStringRegexp(prefix), $options: 'i'}}
@@ -23,21 +32,12 @@ export default function InsurancesList({match, prefix, page, perpage}) {
 				page={page}
 				perpage={perpage}
 				Card={ReactiveInsuranceCard}
-				url={match.url}
+				url={location.pathname}
 				query={query}
 				useTags={useInsurancesFind}
 			/>
 		</div>
 	);
-}
-
-InsurancesList.defaultProps = {
-	page: 1,
-	perpage: 10,
 };
 
-InsurancesList.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-	prefix: PropTypes.string,
-};
+export default InsurancesList;

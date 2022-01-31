@@ -1,11 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameDoctor, useDoctorsFind} from '../../api/doctors';
 
-export default function DoctorRenamingDialog({open, onClose, onRename, tag}) {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	onRename: () => void;
+	tag: {};
+}
+
+const DoctorRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 	return (
 		<TagRenamingDialog
 			open={open}
@@ -17,11 +23,6 @@ export default function DoctorRenamingDialog({open, onClose, onRename, tag}) {
 			onRename={onRename}
 		/>
 	);
-}
-
-DoctorRenamingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onRename: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired,
 };
+
+export default DoctorRenamingDialog;

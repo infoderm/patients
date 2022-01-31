@@ -231,6 +231,14 @@
     "overrides": [
       {
         "files": [
+          "imports/ui/Router.tsx"
+        ],
+        "rules": {
+          "react/no-children-prop": "off"
+        }
+      },
+      {
+        "files": [
           "**/client/**/*.{js,jsx,ts,tsx}",
           "imports/ui/**/*.{js,jsx,ts,tsx}"
         ],

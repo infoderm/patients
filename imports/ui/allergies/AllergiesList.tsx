@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {useParams, useLocation} from 'react-router-dom';
+
 import TagList from '../tags/TagList';
 
 import {useAllergiesFind} from '../../api/allergies';
@@ -8,12 +9,20 @@ import {escapeStringRegexp} from '../../api/string';
 import AlphabetJumper from '../navigation/AlphabetJumper';
 import ReactiveAllergyCard from './ReactiveAllergyCard';
 
-export default function AllergiesList({match, prefix, page, perpage}) {
-	page = Number.parseInt(match?.params.page, 10) || page;
-	prefix = match?.params.prefix || prefix;
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
+const AllergiesList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
+	const location = useLocation();
+	const params = useParams<{page?: string; prefix?: string}>();
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
+	const prefix = params.prefix;
 
 	const query = prefix
-		? {name: {$regex: '^' + escapeStringRegexp(prefix), $options: 'i'}}
+		? {name: {$regex: `^${escapeStringRegexp(prefix)}`, $options: 'i'}}
 		: {};
 
 	return (
@@ -23,21 +32,12 @@ export default function AllergiesList({match, prefix, page, perpage}) {
 				page={page}
 				perpage={perpage}
 				Card={ReactiveAllergyCard}
-				url={match.url}
+				url={location.pathname}
 				query={query}
 				useTags={useAllergiesFind}
 			/>
 		</div>
 	);
-}
-
-AllergiesList.defaultProps = {
-	page: 1,
-	perpage: 10,
 };
 
-AllergiesList.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-	prefix: PropTypes.string,
-};
+export default AllergiesList;

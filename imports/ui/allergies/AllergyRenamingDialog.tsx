@@ -1,11 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameAllergy, useAllergiesFind} from '../../api/allergies';
 
-export default function AllergyRenamingDialog({open, onClose, onRename, tag}) {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	onRename: () => void;
+	tag: {};
+}
+
+const AllergyRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 	return (
 		<TagRenamingDialog
 			open={open}
@@ -17,11 +23,6 @@ export default function AllergyRenamingDialog({open, onClose, onRename, tag}) {
 			onRename={onRename}
 		/>
 	);
-}
-
-AllergyRenamingDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onRename: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired,
 };
+
+export default AllergyRenamingDialog;

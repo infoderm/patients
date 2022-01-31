@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {useParams} from 'react-router-dom';
 
 import TagDetails from '../tags/TagDetails';
 
@@ -11,9 +11,16 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {useInsurance} from '../../api/insurances';
 import StaticInsuranceCard from './StaticInsuranceCard';
 
-export default function InsuranceDetails({match, name, page, perpage}) {
-	name = (match && myDecodeURIComponent(match.params.name)) || name;
-	page = Number.parseInt(match?.params.page, 10) || page;
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
+const InsuranceDetails = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
+	const params = useParams<{name: string; page?: string}>();
+	const name = myDecodeURIComponent(params.name);
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
 
 	return (
 		<TagDetails
@@ -30,14 +37,6 @@ export default function InsuranceDetails({match, name, page, perpage}) {
 			perpage={perpage}
 		/>
 	);
-}
-
-InsuranceDetails.defaultProps = {
-	page: 1,
-	perpage: 10,
 };
 
-InsuranceDetails.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-};
+export default InsuranceDetails;

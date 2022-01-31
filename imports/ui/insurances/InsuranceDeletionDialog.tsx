@@ -1,10 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TagDeletionDialog from '../tags/TagDeletionDialog';
 import {deleteInsurance} from '../../api/insurances';
 
-export default function InsuranceDeletionDialog({open, onClose, tag}) {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	tag: {};
+}
+
+const InsuranceDeletionDialog = ({open, onClose, tag}: Props) => {
 	return (
 		<TagDeletionDialog
 			open={open}
@@ -14,10 +19,6 @@ export default function InsuranceDeletionDialog({open, onClose, tag}) {
 			onClose={onClose}
 		/>
 	);
-}
-
-InsuranceDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	tag: PropTypes.object.isRequired,
 };
+
+export default InsuranceDeletionDialog;
