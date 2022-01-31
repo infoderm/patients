@@ -70,4 +70,11 @@ export default define({
 			return modifier;
 		},
 	),
+	simulate(
+		_consultationId: string,
+		_cancellationReason: string,
+		_cancellationExplanation: string,
+	): void {
+		return undefined;
+	},
 });

@@ -226,8 +226,8 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 				{upsert: true},
 			);
 		},
-		simulate(tagId: string, _newname: string) {
-			Collection.remove(tagId);
+		simulate(_tagId: string, _newname: string): void {
+			return undefined;
 		},
 	});
 
@@ -255,8 +255,8 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 
 			return db.deleteOne(Collection, {_id: tagId} as Filter<T>);
 		},
-		simulate(tagId: string) {
-			return Collection.remove(tagId);
+		simulate(_tagId: string): void {
+			return undefined;
 		},
 	});
 

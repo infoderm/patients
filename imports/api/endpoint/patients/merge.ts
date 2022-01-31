@@ -153,4 +153,13 @@ export default define({
 
 		return newPatientId;
 	},
+	simulate(
+		_oldPatientIds,
+		_consultationIds,
+		_attachmentIds,
+		_documentIds,
+		_newPatient,
+	): void {
+		return undefined;
+	},
 });
