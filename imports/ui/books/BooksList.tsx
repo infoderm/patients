@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {match} from 'react-router-dom';
+import {useLocation, useParams} from 'react-router-dom';
 
 import SaveIcon from '@material-ui/icons/Save';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -22,37 +22,40 @@ interface Params {
 }
 
 interface Props {
-	match?: match<Params>;
-	year?: string;
-	page?: number;
-	perpage?: number;
+	defaultPage?: number;
+	defaultPerpage?: number;
 }
 
-const BooksList = ({match, year, page = 1, perpage = 10}: Props) => {
+const toURL = (x: number) => `/books/${x}`;
+
+const BooksList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
+	const params = useParams<Params>();
+	const location = useLocation();
 	const [downloading, setDownloading] = useState(false);
 	const {value: sortingOrder, setValue: setSortingOrder} = useSettingCached(
 		'books-sorting-order',
 	);
 
-	page = Number.parseInt(match?.params.page, 10) || page;
-	year = match?.params.year || year || dateFormat(new Date(), 'yyyy');
+	const yearString = params.year ?? dateFormat(new Date(), 'yyyy');
 
-	const _year = Number.parseInt(year, 10);
+	const year = Number.parseInt(yearString, 10);
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
 
-	const query = {fiscalYear: _year};
+	const query = {fiscalYear: year};
 
-	const initialBegin = new Date(_year, 0, 1);
+	const initialBegin = new Date(year, 0, 1);
 
 	const sort = {fiscalYear: 1, bookNumber: sortingOrder};
 
 	return (
 		<div>
-			<YearJumper current={_year} toURL={(x) => `/books/${x}`} />
+			<YearJumper current={year} toURL={toURL} />
 			<TagList
 				page={page}
 				perpage={perpage}
 				Card={BookCard}
-				url={match.url}
+				url={location.pathname}
 				query={query}
 				sort={sort}
 				useTags={useBooks}

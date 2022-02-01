@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Issues() {
+const Issues = () => {
 	const classes = useStyles();
 
 	return (
@@ -42,4 +42,6 @@ export default function Issues() {
 			<DoctorsWithNonAlphabeticalSymbols className={classes.container} />
 		</div>
 	);
-}
+};
+
+export default Issues;

@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
@@ -20,6 +20,7 @@ import {useDateFormat} from '../../i18n/datetime';
 
 import {ALL_WEEK_DAYS, generateDays} from '../../util/datetime';
 import EventFragment from './EventFragment';
+import Event from './Event';
 
 const ColumnHeader = ({classes, day, col}) => {
 	const getDayName = useDateFormat('cccc');
@@ -120,9 +121,11 @@ function createOccupancyMap(begin: Date, end: Date): OccupancyMap {
 	return occupancy;
 }
 
-interface Event {
-	begin: Date;
-	end: Date;
+interface EventProps {
+	event: Event;
+	day: string;
+	slot: number;
+	slots: number;
 }
 
 /**
@@ -134,7 +137,7 @@ function* generateEventProps(
 	end: Date,
 	options: any,
 	events: Iterable<Event>,
-): IterableIterator<{event: Event; day: string; slot: number; slots: number}> {
+): IterableIterator<EventProps> {
 	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
 
 	let previousEvent: {end: Date};
@@ -203,15 +206,16 @@ function* generateEventProps(
 	}
 }
 
-/**
- * generateMoreProps.
- *
- * @param {Map<string, {totalEvents: number, shownEvents: number}>} occupancy
- * @param {Date} begin
- * @param {Date} end
- * @return {IterableIterator<{day: string, count: number}>}
- */
-function* generateMoreProps(occupancy, begin: Date, end: Date) {
+interface MoreProps {
+	day: string;
+	count: number;
+}
+
+function* generateMoreProps(
+	occupancy: Map<string, {totalEvents: number; shownEvents: number}>,
+	begin: Date,
+	end: Date,
+): IterableIterator<MoreProps> {
 	for (const day of generateDays(begin, end)) {
 		const key = dayKey(day);
 		const {totalEvents, shownEvents} = occupancy.get(key);
@@ -229,20 +233,32 @@ const More = ({className, count}) => (
 	<div className={className}>{count} more</div>
 );
 
-const CalendarDataGridPropTypes = {
-	DayHeader: PropTypes.elementType,
-	WeekNumber: PropTypes.elementType,
-	useStyles: PropTypes.func.isRequired,
-	rowSize: PropTypes.number.isRequired,
-	days: PropTypes.array.isRequired,
-	events: PropTypes.array.isRequired,
-	mores: PropTypes.array.isRequired,
-	weekOptions: PropTypes.object.isRequired,
-	onSlotClick: PropTypes.func,
-	onEventClick: PropTypes.func,
+interface CalendarDataGridStyles {
+	[key: string]: CSSProperties;
+	header: CSSProperties;
+	corner: CSSProperties;
+	grid: CSSProperties;
+	weekNumber: CSSProperties;
+	dayHeader: CSSProperties;
+	more: CSSProperties;
+}
+
+type CalendarDataGridClasses = {
+	[key in keyof CalendarDataGridStyles]: string;
 };
 
-type CalendarDataGridProps = InferProps<typeof CalendarDataGridPropTypes>;
+interface CalendarDataGridProps {
+	DayHeader?: React.ElementType;
+	WeekNumber?: React.ElementType;
+	useStyles: () => CalendarDataGridClasses;
+	rowSize: number;
+	days: DayProps[];
+	events: EventProps[];
+	mores: MoreProps[];
+	weekOptions: {};
+	onSlotClick?: () => void;
+	onEventClick?: () => void;
+}
 
 const CalendarDataGrid = ({
 	useStyles,
@@ -260,14 +276,7 @@ const CalendarDataGrid = ({
 	return (
 		<Paper>
 			<div className={classes.header}>
-				{WeekNumber && (
-					<div
-						className={classNames(classes.corner, {
-							[classes.col0]: true,
-							[classes.row0]: true,
-						})}
-					/>
-				)}
+				{WeekNumber && <div className={classes.corner} />}
 				{list(take(days, rowSize)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} {...props} />
 				))}
@@ -280,7 +289,6 @@ const CalendarDataGrid = ({
 							<WeekNumber
 								key={key}
 								className={classNames(classes.weekNumber, {
-									[classes.col0]: true,
 									[classes[`row${props.row}`]]: true,
 								})}
 								weekOptions={weekOptions}
@@ -334,26 +342,22 @@ const CalendarDataGrid = ({
 	);
 };
 
-CalendarDataGrid.propTypes = CalendarDataGridPropTypes;
-
-const CalendarDataPropTypes = {
-	begin: PropTypes.instanceOf(Date).isRequired,
-	end: PropTypes.instanceOf(Date).isRequired,
-	events: PropTypes.array.isRequired,
-	skipIdle: PropTypes.bool,
-	maxLines: PropTypes.number.isRequired,
-	minEventDuration: PropTypes.number,
-	dayBegins: PropTypes.string,
-	weekOptions: PropTypes.object,
-	DayHeader: PropTypes.elementType,
-	WeekNumber: PropTypes.elementType,
-	lineHeight: PropTypes.any,
-	displayedWeekDays: PropTypes.array,
-	onSlotClick: PropTypes.func,
-	onEventClick: PropTypes.func,
-};
-
-type CalendarDataProps = InferProps<typeof CalendarDataPropTypes>;
+interface CalendarDataProps {
+	begin: Date;
+	end: Date;
+	events: Event[];
+	skipIdle?: boolean;
+	maxLines: number;
+	minEventDuration?: number;
+	dayBegins?: string;
+	weekOptions?: {};
+	DayHeader: React.ElementType;
+	WeekNumber?: React.ElementType;
+	lineHeight?: string;
+	displayedWeekDays?: number[];
+	onSlotClick?: () => void;
+	onEventClick?: () => void;
+}
 
 const CalendarData = ({
 	events,
@@ -404,7 +408,7 @@ const CalendarData = ({
 		.filter((x) => Boolean(x))
 		.join(' ');
 
-	const gridStyles = {
+	const gridStyles: CalendarDataGridStyles = {
 		header: {
 			display: 'grid',
 			gridTemplateColumns,
@@ -530,7 +534,7 @@ const CalendarData = ({
 	}
 
 	const styles = createStyles(() => gridStyles);
-	const useStyles = makeStyles(styles);
+	const useStyles = makeStyles(styles) as () => CalendarDataGridClasses;
 
 	return (
 		<CalendarDataGrid
@@ -547,7 +551,5 @@ const CalendarData = ({
 		/>
 	);
 };
-
-CalendarData.propTypes = CalendarDataPropTypes;
 
 export default CalendarData;

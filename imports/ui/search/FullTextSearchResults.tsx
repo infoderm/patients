@@ -1,4 +1,5 @@
 import React from 'react';
+import {useParams} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -21,10 +22,15 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-export default function FullTextSearchResults({match}) {
+interface Params {
+	query: string;
+}
+
+const FullTextSearchResults = () => {
 	const classes = useStyles();
 	const [key, refresh] = useRandom();
-	const query = myDecodeURIComponent(match.params.query);
+	const {query: rawQuery} = useParams<Params>();
+	const query = myDecodeURIComponent(rawQuery);
 	return (
 		<div className={classes.root}>
 			<Typography className={classes.heading} variant="h3">
@@ -32,10 +38,12 @@ export default function FullTextSearchResults({match}) {
 			</Typography>
 			<PatientsObservedSearchResults
 				className={classes.results}
-				match={match}
+				query={query}
 				refresh={refresh}
 				refreshKey={key}
 			/>
 		</div>
 	);
-}
+};
+
+export default FullTextSearchResults;

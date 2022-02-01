@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useParams} from 'react-router-dom';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -11,9 +12,15 @@ import FixedFab from '../button/FixedFab';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
 import {ALL_WEEK_DAYS} from '../../util/datetime';
+import PropsOf from '../../util/PropsOf';
 
-const Planner = (props) => {
-	const {Calendar, CalendarProps, match} = props;
+interface Props<C> {
+	Calendar: C extends React.ElementType ? C : never;
+	CalendarProps?: PropsOf<C>;
+}
+
+const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
+	const {patientId} = useParams<{patientId?: string}>();
 
 	const [selectedSlot, setSelectedSlot] = useState(new Date());
 	const [noInitialTime, setNoInitialtime] = useState(true);
@@ -33,7 +40,6 @@ const Planner = (props) => {
 	return (
 		<>
 			<Calendar
-				match={match}
 				displayedWeekDays={
 					displayAllWeekDays ? ALL_WEEK_DAYS : displayedWeekDays
 				}
@@ -45,7 +51,7 @@ const Planner = (props) => {
 			<NewAppointmentDialog
 				noInitialTime={noInitialTime}
 				initialDatetime={selectedSlot}
-				patientId={match.params.patientId}
+				patientId={patientId}
 				open={creatingAppointment}
 				onClose={() => {
 					setCreatingAppointment(false);

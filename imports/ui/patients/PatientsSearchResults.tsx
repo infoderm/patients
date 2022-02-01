@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {match} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
 
@@ -13,32 +13,32 @@ import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
 interface Params {
-	query?: string;
+	query: string;
 	page?: string;
 }
 
 interface Props {
-	match?: match<Params>;
-	page?: number;
-	perpage?: number;
+	defaultPage?: number;
+	defaultPerpage?: number;
 }
 
 const PatientsSearchResults = ({
-	match,
-	page = 1,
-	perpage = 10,
+	defaultPage = 1,
+	defaultPerpage = 10,
 	...rest
 }: Props) => {
-	page = Number.parseInt(match?.params.page, 10) || page;
+	const params = useParams<Params>();
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
 
 	const {enqueueSnackbar} = useSnackbar();
 	const [loading, setLoading] = useState(true);
 	const [patients, setPatients] = useState([]);
 
-	const $search = myDecodeURIComponent(match.params.query);
+	const $search = myDecodeURIComponent(params.query);
 
 	useEffect(() => {
-		const query = {$text: {$search}};
+		const selector = {$text: {$search}};
 
 		const sort = {
 			score: {$meta: 'textScore'},
@@ -60,7 +60,7 @@ const PatientsSearchResults = ({
 		setLoading(true);
 		let cancelled = false;
 
-		call(find, query, options).then(
+		call(find, selector, options).then(
 			(res) => {
 				if (!cancelled) {
 					setLoading(false);
@@ -84,7 +84,7 @@ const PatientsSearchResults = ({
 		};
 	}, [$search, page, perpage, enqueueSnackbar]);
 
-	const root = `/search/${match.params.query}`;
+	const root = `/search/${params.query}`;
 
 	return (
 		<StaticPatientsList

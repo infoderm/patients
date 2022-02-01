@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -17,7 +16,21 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
+interface CalendarHeaderProps {
+	title?: string;
+	next?: () => void;
+	prev?: () => void;
+	weekly?: () => void;
+	monthly?: () => void;
+}
+
+const CalendarHeader = ({
+	title,
+	prev,
+	next,
+	weekly,
+	monthly,
+}: CalendarHeaderProps) => {
 	const classes = useStyles();
 
 	return (
@@ -75,14 +88,6 @@ const CalendarHeader = ({title, prev, next, weekly, monthly}) => {
 			</Grid>
 		</Grid>
 	);
-};
-
-CalendarHeader.propTypes = {
-	title: PropTypes.string,
-	next: PropTypes.func,
-	prev: PropTypes.func,
-	weekly: PropTypes.func,
-	monthly: PropTypes.func,
 };
 
 export default CalendarHeader;

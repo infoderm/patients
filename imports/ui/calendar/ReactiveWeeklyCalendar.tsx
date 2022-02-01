@@ -35,6 +35,7 @@ import {units as durationUnits} from '../../api/duration';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import {mod} from '../../util/artithmetic';
 import partitionEvents from '../../lib/interval/nonOverlappingIntersection';
+import PropsOf from '../../util/PropsOf';
 import {weekly} from './ranges';
 import StaticWeeklyCalendar from './StaticWeeklyCalendar';
 import DayHeader from './DayHeader';
@@ -104,20 +105,27 @@ const prepareAvailability = (
 	);
 };
 
-const ReactiveWeeklyCalendar = (props) => {
-	const {
-		className,
-		match,
-		displayedWeekDays,
-		showCancelledEvents,
-		showNoShowEvents,
-		onSlotClick,
-		...rest
-	} = props;
+interface Props
+	extends Omit<
+		PropsOf<typeof StaticWeeklyCalendar>,
+		'next' | 'prev' | 'monthly' | 'weekOptions' | 'DayHeader' | 'events'
+	> {
+	year: number;
+	week: number;
+	patientId?: string;
+	showCancelledEvents?: boolean;
+	showNoShowEvents?: boolean;
+}
 
-	const year = Number.parseInt(match.params.year, 10);
-	const week = Number.parseInt(match.params.week, 10);
-
+const ReactiveWeeklyCalendar = ({
+	year,
+	week,
+	patientId,
+	showCancelledEvents,
+	showNoShowEvents,
+	onSlotClick,
+	...rest
+}: Props) => {
 	const weekStartsOn = useWeekStartsOn();
 	const firstWeekContainsDate = useFirstWeekContainsDate();
 
@@ -151,9 +159,7 @@ const ReactiveWeeklyCalendar = (props) => {
 		"yyyy MMMM / 'Week' w",
 		weekOptions,
 	);
-	const baseURL = match.params.patientId
-		? `/new/appointment/for/${match.params.patientId}`
-		: '/calendar';
+	const baseURL = patientId ? `/new/appointment/for/${patientId}` : '/calendar';
 
 	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
@@ -202,7 +208,6 @@ const ReactiveWeeklyCalendar = (props) => {
 
 	return (
 		<StaticWeeklyCalendar
-			className={className}
 			title={title}
 			year={year}
 			week={week}
@@ -218,7 +223,6 @@ const ReactiveWeeklyCalendar = (props) => {
 			events={displayedEvents}
 			DayHeader={DayHeader}
 			weekOptions={weekOptions}
-			displayedWeekDays={displayedWeekDays}
 			onSlotClick={onSlotClick}
 			{...rest}
 		/>

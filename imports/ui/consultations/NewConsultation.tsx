@@ -1,4 +1,7 @@
 import React from 'react';
+import {useParams} from 'react-router-dom';
+
+import {myDecodeURIComponent} from '../../util/uri';
 
 import Loading from '../navigation/Loading';
 
@@ -6,14 +9,20 @@ import ConsultationEditor from './ConsultationEditor';
 
 import useBookPrefill from './useBookPrefill';
 
-const NewConsultationEditor = ({match}) => {
+interface Params {
+	id: string;
+}
+
+const NewConsultation = () => {
+	const params = useParams<Params>();
+	const patientId = myDecodeURIComponent(params.id);
 	const {loading, bookNumber} = useBookPrefill();
 
 	if (loading) return <Loading />;
 
 	const consultation = {
 		_id: undefined,
-		patientId: match.params.id,
+		patientId,
 		datetime: new Date(),
 		reason: '',
 		done: '',
@@ -31,4 +40,4 @@ const NewConsultationEditor = ({match}) => {
 	);
 };
 
-export default NewConsultationEditor;
+export default NewConsultation;

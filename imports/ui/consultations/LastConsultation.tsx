@@ -5,8 +5,7 @@ import ConsultationEditor from './ConsultationEditor';
 import useLastConsultation from './useLastConsultation';
 
 const LastConsultation = () => {
-	const {loading, consultation} = useLastConsultation();
-	const found = Boolean(consultation);
+	const {loading, found, consultation} = useLastConsultation();
 
 	return consultation?.doneDatetime ? (
 		<StaticConsultationDetails

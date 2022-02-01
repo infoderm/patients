@@ -1,12 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {range} from '@iterable-iterator/range';
 import {list} from '@iterable-iterator/list';
 
-import TabJumper from './TabJumper';
+import TabJumper, {Props as TabJumperProps} from './TabJumper';
 
-export default function YearJumper({current, ...rest}) {
+// Waiting for https://github.com/microsoft/TypeScript/pulls/47607
+// type Props =  Omit<PropsOf<typeof TabJumper<number>>, 'tabs' | 'number'>;
+// Workaround below
+type Props = Omit<TabJumperProps<number>, 'tabs'>;
+
+const YearJumper = ({current, ...rest}: Props) => {
 	const now = new Date();
 	const thisyear = now.getFullYear();
 	const end = Math.min(thisyear, current + 5) + 1;
@@ -16,8 +20,6 @@ export default function YearJumper({current, ...rest}) {
 	const tabs = list(years);
 
 	return <TabJumper tabs={tabs} current={current} {...rest} />;
-}
-
-YearJumper.propTypes = {
-	current: PropTypes.number.isRequired,
 };
+
+export default YearJumper;

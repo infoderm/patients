@@ -1,6 +1,7 @@
 import {Mongo} from 'meteor/mongo';
 
 interface DrugDocument {
+	_id: string;
 	owner: string;
 }
 

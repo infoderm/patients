@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 
 import DrugsTable from './DrugsTable';
 
-export default function DrugSearch() {
+const DrugSearch = () => {
 	const [query, setQuery] = useState('');
 
 	return (
@@ -13,9 +13,13 @@ export default function DrugSearch() {
 				autoFocus
 				label="Query"
 				value={query}
-				onChange={(e) => setQuery(e.target.value)}
+				onChange={(e) => {
+					setQuery(e.target.value);
+				}}
 			/>
 			<DrugsTable query={query} />
 		</div>
 	);
-}
+};
+
+export default DrugSearch;

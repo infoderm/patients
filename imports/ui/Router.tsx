@@ -1,11 +1,8 @@
 import React, {Suspense, lazy} from 'react';
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, useParams} from 'react-router-dom';
 
 import startOfDay from 'date-fns/startOfDay';
-import startOfToday from 'date-fns/startOfToday';
 import dateParseISO from 'date-fns/parseISO';
-
-import {useDateFormat} from '../i18n/datetime';
 
 import Greetings from './navigation/Greetings';
 import NoMatch from './navigation/NoMatch';
@@ -15,7 +12,9 @@ const FullTextSearchResults = lazy(
 	async () => import('./search/FullTextSearchResults'),
 );
 
-const PatientRecord = lazy(async () => import('./patients/PatientRecord'));
+const PatientRecordRoute = lazy(
+	async () => import('./patients/PatientRecordRoute'),
+);
 const NewPatientForm = lazy(async () => import('./patients/NewPatientForm'));
 
 const ConsultationsOfTheDay = lazy(
@@ -40,11 +39,18 @@ const NewConsultation = lazy(
 	async () => import('./consultations/NewConsultation'),
 );
 
-const MonthlyPlanner = lazy(
-	async () => import('./planner/PreconfiguredMonthlyPlanner'),
+const MonthlyPlannerRoute = lazy(
+	async () => import('./planner/MonthlyPlannerRoute'),
 );
-const WeeklyPlanner = lazy(
-	async () => import('./planner/PreconfiguredWeeklyPlanner'),
+const WeeklyPlannerRoute = lazy(
+	async () => import('./planner/WeeklyPlannerRoute'),
+);
+
+const CurrentMonthlyPlannerRoute = lazy(
+	async () => import('./planner/CurrentMonthlyPlannerRoute'),
+);
+const CurrentWeeklyPlannerRoute = lazy(
+	async () => import('./planner/CurrentWeeklyPlannerRoute'),
 );
 
 const BooksList = lazy(async () => import('./books/BooksList'));
@@ -89,203 +95,194 @@ const DrugDetails = lazy(async () => import('./drugs/DrugDetails'));
 const Settings = lazy(async () => import('./settings/Settings'));
 const Authentication = lazy(async () => import('./auth/Authentication'));
 
-const ConsultationsOfTheDayFromMatch = ({match}) => (
-	<ConsultationsOfTheDay day={startOfDay(dateParseISO(match.params.day))} />
-);
-
-const CurrentMonthlyPlanner = ({match, ...rest}) => {
-	const dateFormat = useDateFormat();
-	const today = startOfToday();
-	const year = dateFormat(today, 'yyyy');
-	const month = dateFormat(today, 'MM');
-	const matchWithParams = {
-		...match,
-		params: {
-			...match?.params,
-			year,
-			month,
-		},
-	};
-	return <MonthlyPlanner match={matchWithParams} {...rest} />;
-};
-
-const CurrentWeeklyPlanner = ({match, ...rest}) => {
-	const dateFormat = useDateFormat();
-	const today = startOfToday();
-	const year = dateFormat(today, 'YYYY', {
-		useAdditionalWeekYearTokens: true,
-	});
-	const week = dateFormat(today, 'ww');
-	const matchWithParams = {
-		...match,
-		params: {
-			...match?.params,
-			year,
-			week,
-		},
-	};
-	return <WeeklyPlanner match={matchWithParams} {...rest} />;
+const ConsultationsOfTheDayRoute = () => {
+	const {day} = useParams<{day: string}>();
+	return <ConsultationsOfTheDay day={startOfDay(dateParseISO(day))} />;
 };
 
 export default function Router() {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Switch>
-				<Route exact path="/" component={Greetings} />
+				<Route children={<Greetings />} exact path="/" />
 
-				<Route exact path="/search/:query" component={FullTextSearchResults} />
 				<Route
+					children={<FullTextSearchResults />}
+					exact
+					path="/search/:query"
+				/>
+				<Route
+					children={<FullTextSearchResults />}
 					exact
 					path="/search/:query/page/:page"
-					component={FullTextSearchResults}
 				/>
 
-				<Route exact path="/patient/:id" component={PatientRecord} />
-				<Route exact path="/patient/:id/:tab" component={PatientRecord} />
+				<Route children={<PatientRecordRoute />} exact path="/patient/:id" />
 				<Route
+					children={<PatientRecordRoute />}
+					exact
+					path="/patient/:id/:tab"
+				/>
+				<Route
+					children={<PatientRecordRoute />}
 					exact
 					path="/patient/:id/:tab/page/:page"
-					component={PatientRecord}
 				/>
-				<Route exact path="/new/patient" component={NewPatientForm} />
+				<Route children={<NewPatientForm />} exact path="/new/patient" />
 
-				<Route exact path="/documents" component={DocumentsList} />
-				<Route exact path="/documents/page/:page" component={DocumentsList} />
+				<Route children={<DocumentsList />} exact path="/documents" />
 				<Route
+					children={<DocumentsList />}
+					exact
+					path="/documents/page/:page"
+				/>
+				<Route
+					children={<DocumentsFromIdentifierList />}
 					exact
 					path="/documents/:identifier"
-					component={DocumentsFromIdentifierList}
 				/>
 				<Route
+					children={<DocumentsFromIdentifierList />}
 					exact
 					path="/documents/:identifier/page/:page"
-					component={DocumentsFromIdentifierList}
 				/>
-				<Route exact path="/document/:id" component={DocumentDetails} />
+				<Route children={<DocumentDetails />} exact path="/document/:id" />
 				<Route
+					children={<DocumentVersionsList />}
 					exact
 					path="/document/versions/:identifier/:reference"
-					component={DocumentVersionsList}
 				/>
 				<Route
+					children={<DocumentVersionsList />}
 					exact
 					path="/document/versions/:identifier/:reference/page/:page"
-					component={DocumentVersionsList}
 				/>
 
 				<Route
+					children={<ConsultationsOfTheDayRoute />}
 					exact
 					path="/calendar/day/:day"
-					component={ConsultationsOfTheDayFromMatch}
 				/>
 				<Route
+					children={<MonthlyPlannerRoute />}
 					exact
 					path="/calendar/month/:year/:month"
-					component={MonthlyPlanner}
 				/>
 				<Route
+					children={<CurrentMonthlyPlannerRoute />}
 					exact
 					path="/calendar/month/current"
-					component={CurrentMonthlyPlanner}
 				/>
 				<Route
+					children={<WeeklyPlannerRoute />}
 					exact
 					path="/calendar/week/:year/:week"
-					component={WeeklyPlanner}
 				/>
 				<Route
+					children={<CurrentWeeklyPlannerRoute />}
 					exact
 					path="/calendar/week/current"
-					component={CurrentWeeklyPlanner}
 				/>
 				<Route
+					children={<TodaysConsultations />}
 					exact
 					path="/consultations/today"
-					component={TodaysConsultations}
 				/>
 				<Route
+					children={<LastDayOfConsultations />}
 					exact
 					path="/consultations/last"
-					component={LastDayOfConsultations}
 				/>
-				<Route exact path="/consultation/last" component={LastConsultation} />
-				<Route exact path="/consultation/:id" component={ConsultationDetails} />
 				<Route
+					children={<LastConsultation />}
+					exact
+					path="/consultation/last"
+				/>
+				<Route
+					children={<ConsultationDetails />}
+					exact
+					path="/consultation/:id"
+				/>
+				<Route
+					children={<EditConsultation />}
 					exact
 					path="/edit/consultation/:id"
-					component={EditConsultation}
 				/>
 				<Route
+					children={<NewConsultation />}
 					exact
 					path="/new/consultation/for/:id"
-					component={NewConsultation}
 				/>
 
 				<Route
+					children={<CurrentWeeklyPlannerRoute />}
 					exact
 					path="/new/appointment/for/:patientId"
-					component={CurrentWeeklyPlanner}
 				/>
 				<Route
+					children={<MonthlyPlannerRoute />}
 					exact
 					path="/new/appointment/for/:patientId/month/:year/:month"
-					component={MonthlyPlanner}
 				/>
 				<Route
+					children={<WeeklyPlannerRoute />}
 					exact
 					path="/new/appointment/for/:patientId/week/:year/:week"
-					component={WeeklyPlanner}
 				/>
 
-				<Route exact path="/books" component={BooksList} />
-				<Route exact path="/books/page/:page" component={BooksList} />
-				<Route exact path="/books/:year" component={BooksList} />
-				<Route exact path="/books/:year/page/:page" component={BooksList} />
+				<Route children={<BooksList />} exact path="/books" />
+				<Route children={<BooksList />} exact path="/books/page/:page" />
+				<Route children={<BooksList />} exact path="/books/:year" />
+				<Route children={<BooksList />} exact path="/books/:year/page/:page" />
 
-				<Route exact path="/book/:year/:book" component={BookDetails} />
+				<Route children={<BookDetails />} exact path="/book/:year/:book" />
 				<Route
+					children={<BookDetails />}
 					exact
 					path="/book/:year/:book/page/:page"
-					component={BookDetails}
 				/>
 
-				<Route exact path="/paid" component={PaidConsultationsList} />
-				<Route exact path="/paid/:year" component={PaidConsultationsList} />
+				<Route children={<PaidConsultationsList />} exact path="/paid" />
+				<Route children={<PaidConsultationsList />} exact path="/paid/:year" />
 				<Route
+					children={<PaidConsultationsList />}
 					exact
 					path="/paid/:year/page/:page"
-					component={PaidConsultationsList}
 				/>
 
 				<Route
+					children={<PaidConsultationsList />}
 					exact
 					path="/paid/:payment_method"
-					component={PaidConsultationsList}
 				/>
 				<Route
+					children={<PaidConsultationsList />}
 					exact
 					path="/paid/:payment_method/:year"
-					component={PaidConsultationsList}
 				/>
 				<Route
+					children={<PaidConsultationsList />}
 					exact
 					path="/paid/:payment_method/:year/page/:page"
-					component={PaidConsultationsList}
 				/>
 
-				<Route exact path="/unpaid" component={UnpaidConsultationsList} />
-				<Route exact path="/unpaid/:year" component={UnpaidConsultationsList} />
+				<Route children={<UnpaidConsultationsList />} exact path="/unpaid" />
 				<Route
+					children={<UnpaidConsultationsList />}
+					exact
+					path="/unpaid/:year"
+				/>
+				<Route
+					children={<UnpaidConsultationsList />}
 					exact
 					path="/unpaid/:year/page/:page"
-					component={UnpaidConsultationsList}
 				/>
 
 				<Route children={<Stats />} exact path="/stats" />
 				<Route children={<SEPAPaymentDetails />} exact path="/sepa" />
 
-				<Route exact path="/issues" component={Issues} />
-				<Route exact path="/merge" component={MergePatientsForm} />
+				<Route children={<Issues />} exact path="/issues" />
+				<Route children={<MergePatientsForm />} exact path="/merge" />
 
 				<Route children={<DoctorsList />} exact path="/doctors" />
 				<Route children={<DoctorsList />} exact path="/doctors/page/:page" />
@@ -343,13 +340,13 @@ export default function Router() {
 					path="/allergy/:name/page/:page"
 				/>
 
-				<Route exact path="/drugs" component={DrugsSearch} />
-				<Route exact path="/drug/:id" component={DrugDetails} />
+				<Route children={<DrugsSearch />} exact path="/drugs" />
+				<Route children={<DrugDetails />} exact path="/drug/:id" />
 
-				<Route exact path="/settings" component={Settings} />
-				<Route exact path="/auth" component={Authentication} />
+				<Route children={<Settings />} exact path="/settings" />
+				<Route children={<Authentication />} exact path="/auth" />
 
-				<Route component={NoMatch} />
+				<Route children={<NoMatch />} />
 			</Switch>
 		</Suspense>
 	);

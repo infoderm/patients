@@ -107,7 +107,6 @@ const AvailabilityFragment = ({event, className, eventProps}) => {
 };
 
 interface Props {
-	calendar: string;
 	className: string;
 	event: any;
 	eventProps: any;

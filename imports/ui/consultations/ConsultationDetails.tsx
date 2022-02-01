@@ -1,11 +1,18 @@
 import React from 'react';
+import {useParams} from 'react-router-dom';
+import {myDecodeURIComponent} from '../../util/uri';
 
 import StaticConsultationDetails from './StaticConsultationDetails';
 import useConsultation from './useConsultation';
 
-const ConsultationDetails = ({match, consultationId}) => {
+interface Params {
+	id: string;
+}
+
+const ConsultationDetails = () => {
+	const params = useParams<Params>();
 	const init = {};
-	const query = consultationId ?? match.params.id;
+	const query = myDecodeURIComponent(params.id);
 	const options = {fields: StaticConsultationDetails.projection};
 	const deps = [query, JSON.stringify(StaticConsultationDetails.projection)];
 	const {

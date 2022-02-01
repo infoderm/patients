@@ -1,55 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import PropsOf from '../../util/PropsOf';
 import CalendarHeader from './CalendarHeader';
 import WeeklyCalendarData from './WeeklyCalendarData';
 
-const StaticWeeklyCalendar = (props) => {
-	const {
-		className,
-		events,
-		next,
-		prev,
-		monthly,
-		year,
-		week,
-		weekOptions,
-		DayHeader,
-		onSlotClick,
-		onEventClick,
-		...rest
-	} = props;
+interface Props extends PropsOf<typeof WeeklyCalendarData> {
+	className?: string;
+	title?: string;
+	next: () => void;
+	prev: () => void;
+	monthly: () => void;
+}
 
-	const title = props.title ?? `/calendar/week/${year}/${week}`;
+const StaticWeeklyCalendar = ({
+	className,
+	next,
+	prev,
+	monthly,
+	year,
+	week,
+	...rest
+}: Props) => {
+	const title = rest.title ?? `/calendar/week/${year}/${week}`;
 
 	return (
 		<div className={className}>
 			<CalendarHeader title={title} prev={prev} next={next} monthly={monthly} />
-			<WeeklyCalendarData
-				year={year}
-				week={week}
-				events={events}
-				weekOptions={weekOptions}
-				DayHeader={DayHeader}
-				onSlotClick={onSlotClick}
-				onEventClick={onEventClick}
-				{...rest}
-			/>
+			<WeeklyCalendarData year={year} week={week} {...rest} />
 		</div>
 	);
-};
-
-StaticWeeklyCalendar.propTypes = {
-	className: PropTypes.string,
-	title: PropTypes.string,
-	year: PropTypes.number.isRequired,
-	week: PropTypes.number.isRequired,
-	events: PropTypes.array.isRequired,
-	DayHeader: PropTypes.elementType.isRequired,
-	next: PropTypes.func,
-	prev: PropTypes.func,
-	monthly: PropTypes.func,
-	weekOptions: PropTypes.object,
 };
 
 export default StaticWeeklyCalendar;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {match} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {useTracker} from 'meteor/react-meteor-data';
 
@@ -10,6 +10,7 @@ import {Documents} from '../../api/collection/documents';
 
 import subscribe from '../../api/publication/subscribe';
 import findOne from '../../api/publication/documents/findOne';
+import {myDecodeURIComponent} from '../../util/uri';
 import DocumentCard from './DocumentCard';
 
 type DocumentId = string;
@@ -44,10 +45,6 @@ interface Params {
 	id: string;
 }
 
-interface ReactiveDocumentDetailsProps {
-	match: match<Params>;
-}
-
 const useDocument = (documentId: DocumentId) =>
 	useTracker(() => {
 		const handle = subscribe(findOne, documentId);
@@ -58,8 +55,9 @@ const useDocument = (documentId: DocumentId) =>
 		};
 	}, [documentId]);
 
-const ReactiveDocumentDetails = ({match}: ReactiveDocumentDetailsProps) => {
-	const documentId = match.params.id;
+const ReactiveDocumentDetails = () => {
+	const params = useParams<Params>();
+	const documentId = myDecodeURIComponent(params.id);
 
 	const {loading, result: document} = useDocument(documentId);
 	return (

@@ -10,11 +10,11 @@ import ConsultationsOfTheDay from './ConsultationsOfTheDay';
 import useLastConsultation from './useLastConsultation';
 
 const LastDayOfConsultations = () => {
-	const {loading, consultation} = useLastConsultation();
+	const {loading, found, consultation} = useLastConsultation();
 
 	if (loading) return <Loading />;
 
-	const consultationDate = consultation?.datetime
+	const consultationDate = found
 		? startOfDay(consultation.datetime)
 		: startOfToday();
 

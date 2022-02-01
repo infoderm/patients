@@ -1,18 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import {useParams} from 'react-router-dom';
 import FixedFab from '../button/FixedFab';
 
 import useDocuments from './useDocuments';
 import StaticDocumentList from './StaticDocumentList';
 import CustomDocumentImportButton from './CustomDocumentImportButton';
 
-const DocumentsList = ({match, page, perpage}) => {
-	page =
-		(match?.params.page && Number.parseInt(match.params.page, 10)) ||
-		page ||
-		DocumentsList.defaultProps.page;
-	perpage = perpage || DocumentsList.defaultProps.perpage;
+interface Params {
+	page?: string;
+}
+
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
+const DocumentsList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
+	const params = useParams<Params>();
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
 
 	const options = {
 		sort: {createdAt: -1},
@@ -42,16 +49,6 @@ const DocumentsList = ({match, page, perpage}) => {
 			/>
 		</>
 	);
-};
-
-DocumentsList.defaultProps = {
-	page: 1,
-	perpage: 10,
-};
-
-DocumentsList.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
 };
 
 export default DocumentsList;

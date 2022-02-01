@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useLocation, useParams} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -24,10 +25,27 @@ const useStyles = makeStyles((theme) => ({
 	cashToggle: computeFixedFabStyle({theme, col: 6}),
 }));
 
-const UnpaidConsultationsList = ({match, year, page = 1, perpage = 20}) => {
+interface Params {
+	payment_method?: string;
+	page?: string;
+	year?: string;
+}
+
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
+const UnpaidConsultationsList = ({
+	defaultPage = 1,
+	defaultPerpage = 10,
+}: Props) => {
 	const now = new Date();
-	page = (match?.params.page && Number.parseInt(match.params.page, 10)) || page;
-	year = match?.params.year || year || dateFormat(now, 'yyyy');
+	const params = useParams<Params>();
+	const location = useLocation();
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
+	const year = params.year || dateFormat(now, 'yyyy');
 
 	const current = Number.parseInt(year, 10);
 
@@ -59,7 +77,7 @@ const UnpaidConsultationsList = ({match, year, page = 1, perpage = 20}) => {
 	const sort = {datetime: 1};
 
 	const toURL = (x) => `/unpaid/${x}`;
-	const url = toURL(year);
+	const root = toURL(year);
 
 	const classes = useStyles();
 
@@ -67,8 +85,8 @@ const UnpaidConsultationsList = ({match, year, page = 1, perpage = 20}) => {
 		<div>
 			<YearJumper current={current} toURL={toURL} />
 			<ConsultationsPager
-				root={url}
-				url={match.url}
+				root={root}
+				url={location.pathname}
 				page={page}
 				perpage={perpage}
 				query={query}

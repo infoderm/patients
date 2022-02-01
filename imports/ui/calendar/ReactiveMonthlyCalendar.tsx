@@ -13,24 +13,31 @@ import {
 
 import useEvents from '../events/useEvents';
 
+import PropsOf from '../../util/PropsOf';
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';
 import {monthly} from './ranges';
 
-const ReactiveMonthlyCalendar = (props) => {
-	const {
-		className,
-		match,
-		displayedWeekDays,
-		showCancelledEvents,
-		showNoShowEvents,
-		onSlotClick,
-		...rest
-	} = props;
+interface Props
+	extends Omit<
+		PropsOf<typeof StaticMonthlyCalendar>,
+		'next' | 'prev' | 'weekly' | 'weekOptions' | 'DayHeader' | 'events'
+	> {
+	year: number;
+	month: number;
+	patientId?: string;
+	showCancelledEvents?: boolean;
+	showNoShowEvents?: boolean;
+}
 
-	const year = Number.parseInt(match.params.year, 10);
-	const month = Number.parseInt(match.params.month, 10);
-
+const ReactiveMonthlyCalendar = ({
+	year,
+	month,
+	patientId,
+	showCancelledEvents,
+	showNoShowEvents,
+	...rest
+}: Props) => {
 	const weekStartsOn = useWeekStartsOn();
 	const firstWeekContainsDate = useFirstWeekContainsDate();
 
@@ -50,9 +57,7 @@ const ReactiveMonthlyCalendar = (props) => {
 	const localizedDateFormat = useDateFormat();
 
 	const title = localizedDateFormat(firstDayOfMonth, 'yyyy MMMM');
-	const baseURL = match.params.patientId
-		? `/new/appointment/for/${match.params.patientId}`
-		: '/calendar';
+	const baseURL = patientId ? `/new/appointment/for/${patientId}` : '/calendar';
 
 	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
@@ -92,7 +97,6 @@ const ReactiveMonthlyCalendar = (props) => {
 
 	return (
 		<StaticMonthlyCalendar
-			className={className}
 			title={title}
 			year={year}
 			month={month}
@@ -109,8 +113,6 @@ const ReactiveMonthlyCalendar = (props) => {
 			DayHeader={DayHeader}
 			WeekNumber={WeekNumber}
 			weekOptions={weekOptions}
-			displayedWeekDays={displayedWeekDays}
-			onSlotClick={onSlotClick}
 			{...rest}
 		/>
 	);

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -37,7 +36,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ConsultationsOfTheDay = ({day}) => {
+interface Props {
+	day: Date;
+}
+
+const ConsultationsOfTheDay = ({day}: Props) => {
 	const [showConsultations, setShowConsultations] = useState(true);
 	const [showAppointments, setShowAppointments] = useState(true);
 	const [showCancelledAppointments, setShowCancelledAppointments] =
@@ -135,7 +138,9 @@ const ConsultationsOfTheDay = ({day}) => {
 				tooltip={
 					showConsultations ? 'Hide consultations' : 'Show consultations'
 				}
-				onClick={() => setShowConsultations(!showConsultations)}
+				onClick={() => {
+					setShowConsultations(!showConsultations);
+				}}
 			>
 				<FolderSharedIcon />
 			</FixedFab>
@@ -143,7 +148,9 @@ const ConsultationsOfTheDay = ({day}) => {
 				col={4}
 				color={showAppointments ? 'primary' : 'default'}
 				tooltip={showAppointments ? 'Hide appointments' : 'Show appointments'}
-				onClick={() => setShowAppointments(!showAppointments)}
+				onClick={() => {
+					setShowAppointments(!showAppointments);
+				}}
 			>
 				<AccessTimeIcon />
 			</FixedFab>
@@ -156,9 +163,9 @@ const ConsultationsOfTheDay = ({day}) => {
 							? 'Hide cancelled appointments'
 							: 'Show cancelled appointments'
 					}
-					onClick={() =>
-						setShowCancelledAppointments(!showCancelledAppointments)
-					}
+					onClick={() => {
+						setShowCancelledAppointments(!showCancelledAppointments);
+					}}
 				>
 					<AlarmOffIcon />
 				</FixedFab>
@@ -172,7 +179,9 @@ const ConsultationsOfTheDay = ({day}) => {
 							? 'Hide no-show appointments'
 							: 'Show no-show appointments'
 					}
-					onClick={() => setShowNoShowAppointments(!showNoShowAppointments)}
+					onClick={() => {
+						setShowNoShowAppointments(!showNoShowAppointments);
+					}}
 				>
 					<PhoneDisabledIcon />
 				</FixedFab>
@@ -181,10 +190,6 @@ const ConsultationsOfTheDay = ({day}) => {
 			<Next to={`/calendar/day/${dayAfter}`} />
 		</>
 	);
-};
-
-ConsultationsOfTheDay.propTypes = {
-	day: PropTypes.object.isRequired,
 };
 
 export default ConsultationsOfTheDay;

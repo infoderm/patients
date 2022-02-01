@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {useParams} from 'react-router-dom';
 import {myDecodeURIComponent} from '../../util/uri';
 import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
@@ -12,7 +13,7 @@ import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
 type Props = {
-	match: any;
+	query?: string;
 	page?: number;
 	perpage?: number;
 	refresh: () => void;
@@ -23,16 +24,17 @@ type Props = {
 >;
 
 const PatientsObservedSearchResults = (props: Props) => {
-	let {match, page, perpage, refresh, refreshKey, ...rest} = props;
+	let {query, page, perpage, refresh, refreshKey, ...rest} = props;
+	const params = useParams<{query?: string; page?: string}>();
 	page =
-		(match?.params.page && Number.parseInt(match.params.page, 10)) ||
+		Number.parseInt(params.page, 10) ||
 		page ||
 		PatientsObservedSearchResults.defaultProps.page;
 	perpage = perpage || PatientsObservedSearchResults.defaultProps.perpage;
 
-	const $search = normalizeSearch(myDecodeURIComponent(match.params.query));
+	const $search = normalizeSearch(myDecodeURIComponent(params.query));
 
-	const query = {$text: {$search}};
+	const selector = {$text: {$search}};
 
 	const sort = {
 		score: {$meta: 'textScore'},
@@ -58,12 +60,12 @@ const PatientsObservedSearchResults = (props: Props) => {
 	};
 
 	const {loading, results, dirty} = useAdvancedObservedPatients(
-		query,
+		selector,
 		options,
 		[$search, page, perpage, refreshKey],
 	);
 
-	const root = `/search/${match.params.query}`;
+	const root = location.pathname.split('/page/')[0];
 
 	return (
 		<>

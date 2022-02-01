@@ -1,9 +1,12 @@
 import React from 'react';
+import PropsOf from '../../util/PropsOf';
 import ReactiveWeeklyCalendar from '../calendar/ReactiveWeeklyCalendar';
 import Planner from './Planner';
 
-const WeeklyPlanner = (props) => (
-	<Planner Calendar={ReactiveWeeklyCalendar} {...props} />
+type Props = PropsOf<typeof ReactiveWeeklyCalendar>;
+
+const WeeklyPlanner = (props: Props) => (
+	<Planner Calendar={ReactiveWeeklyCalendar} CalendarProps={props} />
 );
 
 export default WeeklyPlanner;

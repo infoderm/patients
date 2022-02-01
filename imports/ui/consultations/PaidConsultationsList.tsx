@@ -1,6 +1,5 @@
 import React from 'react';
-
-import {Link} from 'react-router-dom';
+import {Link, useLocation, useParams} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -29,17 +28,28 @@ const useStyles = makeStyles((theme) => ({
 	cashToggle: computeFixedFabStyle({theme, col: 6}),
 }));
 
+interface Params {
+	payment_method?: string;
+	page?: string;
+	year?: string;
+}
+
+interface Props {
+	defaultPage?: number;
+	defaultPerpage?: number;
+}
+
 const PaidConsultationsList = ({
-	match,
-	payment_method,
-	year,
-	page = 1,
-	perpage = 10,
-}) => {
+	defaultPage = 1,
+	defaultPerpage = 10,
+}: Props) => {
 	const now = new Date();
-	payment_method = match?.params.payment_method || payment_method;
-	page = (match?.params.page && Number.parseInt(match.params.page, 10)) || page;
-	year = match?.params.year || year || dateFormat(now, 'yyyy');
+	const params = useParams<Params>();
+	const location = useLocation();
+	const payment_method = params.payment_method;
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
+	const year = params.year || dateFormat(now, 'yyyy');
 
 	const current = Number.parseInt(year, 10);
 
@@ -65,7 +75,7 @@ const PaidConsultationsList = ({
 		payment_method === method
 			? genericToURL(undefined)(`${year}/page/${page}`)
 			: genericToURL(method)(`${year}/page/${page}`);
-	const url = toURL(year);
+	const root = toURL(year);
 	const title = year;
 	const abbr = year.slice(-2);
 	const avatar = payment_method
@@ -89,15 +99,15 @@ const PaidConsultationsList = ({
 					<ConsultationsStatsCard
 						query={query}
 						title={title}
-						url={url}
+						url={root}
 						abbr={abbr}
 						avatar={avatar}
 					/>
 				</Center>
 			</div>
 			<ConsultationsPager
-				root={url}
-				url={match.url}
+				root={root}
+				url={location.pathname}
 				page={page}
 				perpage={perpage}
 				query={query}

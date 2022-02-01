@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {Key} from 'react';
 
 import {Link} from 'react-router-dom';
 
@@ -16,7 +15,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Jumper({items}) {
+interface Item<K> {
+	key: K;
+	url: string;
+	disabled: boolean;
+}
+
+interface Props<K> {
+	items: Array<Item<K>>;
+}
+
+const Jumper = <K extends Key>({items}: Props<K>) => {
 	const classes = useStyles();
 
 	return (
@@ -35,8 +44,6 @@ export default function Jumper({items}) {
 			))}
 		</div>
 	);
-}
-
-Jumper.propTypes = {
-	items: PropTypes.array.isRequired,
 };
+
+export default Jumper;

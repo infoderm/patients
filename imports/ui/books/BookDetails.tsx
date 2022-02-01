@@ -1,5 +1,5 @@
 import React from 'react';
-import {match} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {books} from '../../api/books';
 
@@ -15,21 +15,20 @@ import useConsultationsUnpaged from '../consultations/useConsultationsUnpaged';
 interface Params {
 	book: string;
 	year: string;
-	page: string;
+	page?: string;
 }
 
 interface Props {
-	match?: match<Params>;
-	year?: string;
-	book?: string;
-	page?: number;
-	perpage?: number;
+	defaultPage?: number;
+	defaultPerpage?: number;
 }
 
-const BookDetails = ({match, year, book, page = 1, perpage = 100}: Props) => {
-	year = match?.params.year || year;
-	book = (match && myDecodeURIComponent(match.params.book)) || book;
-	page = Number.parseInt(match?.params.page, 10) || page;
+const BookDetails = ({defaultPage = 1, defaultPerpage = 100}: Props) => {
+	const params = useParams<Params>();
+	const year = params.year;
+	const book = myDecodeURIComponent(params.book);
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
 
 	const name = books.format(year, book);
 

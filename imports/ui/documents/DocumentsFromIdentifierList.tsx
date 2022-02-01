@@ -1,6 +1,5 @@
 import React from 'react';
-
-import {match} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 import {myDecodeURIComponent} from '../../util/uri';
 
@@ -9,25 +8,25 @@ import StaticDocumentList from './StaticDocumentList';
 import useDocuments from './useDocuments';
 
 interface Params {
-	page: string;
 	identifier: string;
+	page?: string;
 }
 
 interface Props {
-	match: match<Params>;
-	page?: number;
-	perpage?: number;
+	defaultPage?: number;
+	defaultPerpage?: number;
 }
 
 const DocumentsFromIdentifierList = ({
-	match,
-	page = 1,
-	perpage = 10,
+	defaultPage = 1,
+	defaultPerpage = 10,
 }: Props) => {
-	page = (match.params.page && Number.parseInt(match.params.page, 10)) || page;
-	const identifier = myDecodeURIComponent(match.params.identifier);
+	const params = useParams<Params>();
+	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const perpage = defaultPerpage;
+	const identifier = myDecodeURIComponent(params.identifier);
 
-	const root = `/documents/${match.params.identifier}`;
+	const root = `/documents/${params.identifier}`;
 
 	const query = {identifier};
 	const sort = {
