@@ -111,7 +111,7 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.16.5",
+    "@babel/eslint-parser": "7.17.0",
     "@babel/plugin-syntax-jsx": "7.16.7",
     "@faker-js/faker": "5.5.3",
     "@fontsource/roboto": "4.5.2",
