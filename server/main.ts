@@ -71,6 +71,25 @@ Meteor.startup(async () => {
 		Availability,
 	];
 
+	// Check that all ids are strings
+	for (const collection of collections) {
+		// eslint-disable-next-line no-await-in-loop
+		await forEachAsync(
+			collection,
+			{_id: {$not: {$type: 'string'}}},
+			async (_db, {_id}) => {
+				if (typeof _id !== 'string') {
+					const hex = _id.toHexString();
+					throw new Error(
+						`Document ${hex} of ${
+							collection.rawCollection().collectionName
+						} has an _id that is not a string.`,
+					);
+				}
+			},
+		);
+	}
+
 	// Drop all indexes (if the collection is not empty)
 	for (const collection of collections) {
 		// eslint-disable-next-line no-await-in-loop
@@ -643,9 +662,9 @@ Meteor.startup(async () => {
 			db,
 			{_id, owner, createdAt, patientId, source, encoding, decoded, parsed},
 		) => {
-			if (!_id.toHexString && parsed && encoding) {
-				// we skip reparsing documents if the document _id is a string
-				// and it is already decoded and parsed
+			if (parsed && encoding) {
+				// we skip reparsing documents if they are already decoded and
+				// parsed
 				return;
 			}
 
