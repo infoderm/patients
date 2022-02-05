@@ -114,7 +114,7 @@
     "@babel/eslint-parser": "7.16.5",
     "@babel/plugin-syntax-jsx": "7.16.7",
     "@faker-js/faker": "5.5.3",
-    "@fontsource/roboto": "4.5.2",
+    "@fontsource/roboto": "4.5.3",
     "@testing-library/dom": "8.11.3",
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "14.0.0-beta.8",
