@@ -18,6 +18,8 @@ export interface MetadataType {
 	lastModified?: Date;
 	gridFsFileId?: string;
 	isDeleted?: boolean;
+	attachedToPatients?: string[];
+	attachedToConsultations?: string[];
 }
 
 export const Uploads = new FilesCollection<MetadataType>({
