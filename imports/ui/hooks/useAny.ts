@@ -1,16 +1,9 @@
-import {useState, useEffect} from 'react';
+import {useRef} from 'react';
 
 const useAny = (value: any) => {
-	const [any, setAny] = useState(false);
-	const toggleOnce = value || any;
-
-	useEffect(() => {
-		if (toggleOnce && !any) {
-			setAny(true);
-		}
-	}, [toggleOnce, any]);
-
-	return any;
+	const ref = useRef(false);
+	ref.current = value || ref.current;
+	return ref.current;
 };
 
 export default useAny;
