@@ -1,9 +1,5 @@
-import {useRef} from 'react';
+import useLastTruthyValue from './useLastTruthyValue';
 
-const useAny = (value: any) => {
-	const ref = useRef(false);
-	ref.current = value || ref.current;
-	return ref.current;
-};
+const useAny = (value: any): boolean => Boolean(useLastTruthyValue(value));
 
 export default useAny;

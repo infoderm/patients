@@ -1,5 +1,5 @@
-import useAny from './useAny';
+import useLastTruthyValue from './useLastTruthyValue';
 
-const useAll = (value: any) => !useAny(!value);
+const useAll = (value: any): boolean => !useLastTruthyValue(!value);
 
 export default useAll;
