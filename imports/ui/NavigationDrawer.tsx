@@ -91,6 +91,12 @@ export const navigationDrawerBlocks: Block[] = [
 			},
 
 			{
+				to: '/calendar/test',
+				icon: <TodayIcon />,
+				title: 'Test',
+			},
+
+			{
 				to: '/documents',
 				icon: <LibraryBooksIcon />,
 				title: 'Documents',

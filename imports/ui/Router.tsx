@@ -45,6 +45,7 @@ const MonthlyPlannerRoutes = lazy(
 const WeeklyPlannerRoutes = lazy(
 	async () => import('./planner/WeeklyPlannerRoutes'),
 );
+const TestPlanner = lazy(async () => import('./planner/Test'));
 
 const BooksListRoutes = lazy(async () => import('./books/BooksListRoutes'));
 const BookDetailsRoutes = lazy(async () => import('./books/BookDetailsRoutes'));
@@ -135,6 +136,7 @@ export default function Router() {
 					<Route element={<ConsultationsOfTheDayRoute />} path="day/:day" />
 					<Route element={<MonthlyPlannerRoutes />} path="month/*" />
 					<Route element={<WeeklyPlannerRoutes />} path="week/*" />
+					<Route element={<TestPlanner />} path="test" />
 				</Route>
 				<Route element={<TodaysConsultations />} path="consultations/today" />
 				<Route element={<LastDayOfConsultations />} path="consultations/last" />
