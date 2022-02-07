@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ChipProps} from '@material-ui/core/Chip';
+import {ChipProps} from '@mui/material/Chip';
 
 import StaticDoctorChip from './StaticDoctorChip';
 

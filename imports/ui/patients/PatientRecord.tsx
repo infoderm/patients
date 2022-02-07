@@ -1,6 +1,6 @@
 import React, {Suspense, lazy} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import {Route, Routes, useParams} from 'react-router-dom';
 import TabJumper from '../navigation/TabJumper';

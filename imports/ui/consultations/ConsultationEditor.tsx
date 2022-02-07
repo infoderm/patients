@@ -1,15 +1,15 @@
 import React, {useState, useReducer, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@mui/styles';
 
-import Grid from '@material-ui/core/Grid';
-import Fab from '@material-ui/core/Fab';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
-import SaveIcon from '@material-ui/icons/Save';
-import CheckIcon from '@material-ui/icons/Check';
-import blue from '@material-ui/core/colors/blue';
+import Grid from '@mui/material/Grid';
+import Fab from '@mui/material/Fab';
+import CircularProgress from '@mui/material/CircularProgress';
+import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
+import SaveIcon from '@mui/icons-material/Save';
+import CheckIcon from '@mui/icons-material/Check';
+import blue from '@mui/material/colors/blue';
 
 import dateParseISO from 'date-fns/parseISO';
 

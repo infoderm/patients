@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
 
-import {useTheme, makeStyles} from '@material-ui/core/styles';
+import {useTheme, makeStyles} from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
 	loadingAnimation: {

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Fab from '@material-ui/core/Fab';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
+import Fab from '@mui/material/Fab';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 import patientsAttach from '../../api/endpoint/patients/attach';
 

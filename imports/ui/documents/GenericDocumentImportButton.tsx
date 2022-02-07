@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import InputFileButton from '../input/InputFileButton';
 

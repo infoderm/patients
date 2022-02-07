@@ -1,16 +1,15 @@
 import React, {ElementType, MouseEventHandler} from 'react';
 
-import {PropTypes as MuiPropTypes} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Button, {ButtonProps} from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import DefaultConfirmIcon from '@material-ui/icons/Done';
-import DefaultCancelIcon from '@material-ui/icons/Cancel';
+import DefaultConfirmIcon from '@mui/icons-material/Done';
+import DefaultCancelIcon from '@mui/icons-material/Cancel';
 
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
@@ -26,8 +25,8 @@ export interface ConfirmationDialogProps {
 	confirm: string;
 	CancelIcon?: ElementType;
 	ConfirmIcon?: ElementType;
-	cancelColor?: MuiPropTypes.Color;
-	confirmColor?: MuiPropTypes.Color;
+	cancelColor?: ButtonProps['color'];
+	confirmColor?: ButtonProps['color'];
 }
 
 const ConfirmationDialog = ({
@@ -42,7 +41,7 @@ const ConfirmationDialog = ({
 	confirm,
 	CancelIcon = DefaultCancelIcon,
 	ConfirmIcon = DefaultConfirmIcon,
-	cancelColor = 'default',
+	cancelColor = undefined,
 	confirmColor = 'primary',
 }: ConfirmationDialogProps) => (
 	<Dialog open={open} onClose={onCancel}>

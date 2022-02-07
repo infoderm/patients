@@ -2,8 +2,8 @@ import React from 'react';
 
 import {useSnackbar} from 'notistack';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import call from '../../api/endpoint/call';
 import deleteDocument from '../../api/endpoint/documents/delete';
@@ -48,7 +48,6 @@ const DocumentDeletionDialog = ({open, onClose, document}: Props) => {
 			text="If you do not want to delete this document, click cancel. If you really want to delete this document from the system, click the delete button."
 			cancel="Cancel"
 			CancelIcon={CancelIcon}
-			cancelColor="default"
 			confirm="Delete"
 			ConfirmIcon={DeleteIcon}
 			confirmColor="secondary"

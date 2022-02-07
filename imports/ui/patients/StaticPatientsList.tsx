@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';

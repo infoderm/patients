@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@mui/styles';
 
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import blue from '@material-ui/core/colors/blue';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
+import blue from '@mui/material/colors/blue';
 
 import StaticTagCard from '../tags/StaticTagCard';
 

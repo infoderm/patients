@@ -1,34 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionDetails from '@mui/material/AccordionDetails';
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@mui/material/Avatar';
 
-import ErrorIcon from '@material-ui/icons/Error';
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
-import InfoIcon from '@material-ui/icons/Info';
-import DoneIcon from '@material-ui/icons/Done';
-import HourglassFullIcon from '@material-ui/icons/HourglassFull';
-import AlarmIcon from '@material-ui/icons/Alarm';
-import WarningIcon from '@material-ui/icons/Warning';
-import EditIcon from '@material-ui/icons/Edit';
-import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import BookIcon from '@material-ui/icons/Book';
-import AttachmentIcon from '@material-ui/icons/Attachment';
+import ErrorIcon from '@mui/icons-material/Error';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
+import InfoIcon from '@mui/icons-material/Info';
+import DoneIcon from '@mui/icons-material/Done';
+import HourglassFullIcon from '@mui/icons-material/HourglassFull';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import WarningIcon from '@mui/icons-material/Warning';
+import EditIcon from '@mui/icons-material/Edit';
+import EuroSymbolIcon from '@mui/icons-material/EuroSymbol';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import BookIcon from '@mui/icons-material/Book';
+import AttachmentIcon from '@mui/icons-material/Attachment';
 
-import red from '@material-ui/core/colors/red';
+import red from '@mui/material/colors/red';
 
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';

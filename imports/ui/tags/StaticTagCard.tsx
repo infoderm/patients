@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 import {useNavigate, Link, useParams} from 'react-router-dom';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@mui/styles';
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 
 import useIsMounted from '../hooks/useIsMounted';
 import DeleteButton from '../button/DeleteButton';

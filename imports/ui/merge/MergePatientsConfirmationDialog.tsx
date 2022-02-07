@@ -4,8 +4,8 @@ import {useNavigate} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
 
-import MergeTypeIcon from '@material-ui/icons/MergeType';
-import CancelIcon from '@material-ui/icons/Cancel';
+import MergeTypeIcon from '@mui/icons-material/MergeType';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import call from '../../api/endpoint/call';
 import patientsMerge from '../../api/endpoint/patients/merge';
@@ -80,7 +80,6 @@ const MergePatientsConfirmationDialog = ({
 				</>
 			}
 			cancel="Cancel"
-			cancelColor="default"
 			CancelIcon={CancelIcon}
 			confirm="Merge"
 			confirmColor="secondary"

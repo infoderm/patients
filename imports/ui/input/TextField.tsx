@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import MuiTextField, {
 	TextFieldProps as MuiTextFieldProps,
-} from '@material-ui/core/TextField';
+} from '@mui/material/TextField';
 
 const styles = () => ({
 	readOnlyInput: {

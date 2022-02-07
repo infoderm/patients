@@ -1,9 +1,8 @@
 import React, {useMemo} from 'react';
 import classNames from 'classnames';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
-import Paper from '@material-ui/core/Paper';
+import {makeStyles, createStyles, CSSProperties} from '@mui/styles';
+import Paper from '@mui/material/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import getMonth from 'date-fns/getMonth';

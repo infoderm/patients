@@ -1,14 +1,14 @@
 import React from 'react';
 
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-import EventIcon from '@material-ui/icons/Event';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import EventIcon from '@mui/icons-material/Event';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -36,7 +36,7 @@ const CalendarHeader = ({
 	return (
 		<Grid
 			container
-			justify="flex-start"
+			justifyContent="flex-start"
 			alignItems="center"
 			spacing={1}
 			className={classes.container}
@@ -44,7 +44,7 @@ const CalendarHeader = ({
 			<Grid item xs>
 				{title && <Typography variant="h6">{title}</Typography>}
 			</Grid>
-			<Grid item xs container justify="flex-end" spacing={1}>
+			<Grid item xs container justifyContent="flex-end" spacing={1}>
 				<Grid item>
 					<Button
 						disabled={!weekly}

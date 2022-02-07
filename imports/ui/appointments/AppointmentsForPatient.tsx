@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 
 import startOfToday from 'date-fns/startOfToday';
 

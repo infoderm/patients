@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import FaceIcon from '@material-ui/icons/Face';
+import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import FaceIcon from '@mui/icons-material/Face';
 
 import {useDateFormat} from '../../i18n/datetime';
 

@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
 
-import ColorLensIcon from '@material-ui/icons/ColorLens';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 import {colord} from 'colord';
 import {DEFAULT_CONVERTER, converters} from '../transformers';

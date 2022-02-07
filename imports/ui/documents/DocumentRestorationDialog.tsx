@@ -2,8 +2,8 @@ import React from 'react';
 
 import {useSnackbar} from 'notistack';
 
-import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
-import CancelIcon from '@material-ui/icons/Cancel';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import call from '../../api/endpoint/call';
 
@@ -45,7 +45,6 @@ const DocumentRestorationDialog = ({open, onClose, document}: Props) => {
 			text="If you do not want to restore this document, click cancel. If you really want to restore this document from the system, click the restore button."
 			cancel="Cancel"
 			CancelIcon={CancelIcon}
-			cancelColor="default"
 			confirm="Restore"
 			ConfirmIcon={RestoreFromTrashIcon}
 			confirmColor="primary"

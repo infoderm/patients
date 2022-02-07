@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 import {useSnackbar} from 'notistack';
 
-import CheckIcon from '@material-ui/icons/Check';
-import CancelIcon from '@material-ui/icons/Cancel';
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import {ConsultationDocument} from '../../api/collection/consultations';
 import call from '../../api/endpoint/call';
@@ -96,7 +96,6 @@ const ConsultationDebtSettlementDialog = ({
 			}
 			cancel="Cancel"
 			CancelIcon={CancelIcon}
-			cancelColor="default"
 			confirm={`Clear debt (${currencyFormat(owed)})`}
 			ConfirmIcon={CheckIcon}
 			confirmColor="primary"

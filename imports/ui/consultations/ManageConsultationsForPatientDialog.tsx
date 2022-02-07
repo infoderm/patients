@@ -5,24 +5,24 @@ import classNames from 'classnames';
 import dateFormat from 'date-fns/format';
 import isToday from 'date-fns/isToday';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import {makeStyles} from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import NewReleasesIcon from '@material-ui/icons/NewReleases';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import AlarmIcon from '@material-ui/icons/Alarm';
-import TodayIcon from '@material-ui/icons/Today';
+import makeStyles from '@mui/styles/makeStyles';
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import TodayIcon from '@mui/icons-material/Today';
 
-import blue from '@material-ui/core/colors/blue';
-import green from '@material-ui/core/colors/green';
-import orange from '@material-ui/core/colors/orange';
+import blue from '@mui/material/colors/blue';
+import green from '@mui/material/colors/green';
+import orange from '@mui/material/colors/orange';
 
 import call from '../../api/endpoint/call';
 import withLazyOpening from '../modal/withLazyOpening';

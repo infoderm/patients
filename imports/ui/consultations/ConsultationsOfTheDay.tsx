@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
@@ -12,12 +12,12 @@ import startOfDay from 'date-fns/startOfDay';
 
 import {count} from '@iterable-iterator/cardinality';
 
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import FolderSharedIcon from '@material-ui/icons/FolderShared';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
 import {TIME_BREAK} from '../constants';
 

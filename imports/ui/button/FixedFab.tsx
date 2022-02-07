@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
-import {Theme} from '@material-ui/core/styles/createMuiTheme';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
-import {useTheme} from '@material-ui/core/styles';
-import Fab, {FabProps} from '@material-ui/core/Fab';
+import {Theme, useTheme} from '@mui/material/styles';
+import {CSSProperties} from '@mui/styles';
+import Fab, {FabProps} from '@mui/material/Fab';
 
 import addTooltip from '../accessibility/addTooltip';
 

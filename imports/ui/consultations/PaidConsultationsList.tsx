@@ -1,9 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import MoneyIcon from '@material-ui/icons/Money';
-import PaymentIcon from '@material-ui/icons/Payment';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import MoneyIcon from '@mui/icons-material/Money';
+import PaymentIcon from '@mui/icons-material/Payment';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 

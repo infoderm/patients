@@ -3,25 +3,25 @@ import React, {useReducer, useEffect, useMemo} from 'react';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@mui/styles';
 import {useSnackbar} from 'notistack';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
-import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import UndoIcon from '@material-ui/icons/Undo';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
+import Paper from '@mui/material/Paper';
+import Avatar from '@mui/material/Avatar';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import UndoIcon from '@mui/icons-material/Undo';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import MenuItem from '@material-ui/core/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
 
-import {MobileDatePicker as DatePicker} from '@material-ui/pickers';
+import DatePicker from '@mui/lab/MobileDatePicker';
 
 import isValid from 'date-fns/isValid';
 import TextField from '../input/TextField';

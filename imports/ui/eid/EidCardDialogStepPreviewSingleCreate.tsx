@@ -1,16 +1,16 @@
 import assert from 'assert';
 import React from 'react';
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';

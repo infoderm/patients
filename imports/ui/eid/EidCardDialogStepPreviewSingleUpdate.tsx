@@ -1,34 +1,34 @@
 import assert from 'assert';
 import React from 'react';
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
-import EditAttributesIcon from '@material-ui/icons/EditAttributes';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import EditAttributesIcon from '@mui/icons-material/EditAttributes';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
-import red from '@material-ui/core/colors/red';
-import green from '@material-ui/core/colors/green';
+import red from '@mui/material/colors/red';
+import green from '@mui/material/colors/green';
 
 import diff from '../../util/diff';
 import {dataURL as pngDataURL} from '../../util/png';
@@ -201,7 +201,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 					: 'You are all set!'}
 			</DialogTitle>
 			<DialogContent>
-				<Grid container spacing={3} justify="center" alignItems="center">
+				<Grid container spacing={3} justifyContent="center" alignItems="center">
 					<Grid item xs={12}>
 						{differences.length > 0 && (
 							<>

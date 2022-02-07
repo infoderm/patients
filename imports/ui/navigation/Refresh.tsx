@@ -1,6 +1,6 @@
 import React from 'react';
 
-import RefreshIcon from '@material-ui/icons/Refresh';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import FixedFab from '../button/FixedFab';
 
 const Refresh = (props) => (

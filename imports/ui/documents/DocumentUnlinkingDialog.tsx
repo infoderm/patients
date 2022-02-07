@@ -1,7 +1,7 @@
 import React from 'react';
 
-import LinkOffIcon from '@material-ui/icons/LinkOff';
-import CancelIcon from '@material-ui/icons/Cancel';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import unlink from '../../api/endpoint/documents/unlink';
 
@@ -22,7 +22,6 @@ const DocumentUnlinkingDialog = ({open, onClose, document}: Props) => {
 			text="If you do not want to unlink this document, click cancel. If you really want to unlink this document from its patient, click the unlink button."
 			cancel="Cancel"
 			CancelIcon={CancelIcon}
-			cancelColor="default"
 			confirm="Unlink"
 			ConfirmIcon={LinkOffIcon}
 			confirmColor="secondary"

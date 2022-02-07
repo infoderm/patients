@@ -1,30 +1,31 @@
 import React, {useState, useEffect} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-import {fade} from '@material-ui/core/styles/colorManipulator';
+import makeStyles from '@mui/styles/makeStyles';
+import {alpha} from '@mui/material/styles';
 import classNames from 'classnames';
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import Typography from '@material-ui/core/Typography';
-import {Alert, AlertTitle} from '@material-ui/lab';
+import Typography from '@mui/material/Typography';
+import Alert from '@mui/lab/Alert';
+import AlertTitle from '@mui/lab/AlertTitle';
 
-import Grid from '@material-ui/core/Grid';
-import Collapse from '@material-ui/core/Collapse';
+import Grid from '@mui/material/Grid';
+import Collapse from '@mui/material/Collapse';
 
-import Button from '@material-ui/core/Button';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import DoneIcon from '@material-ui/icons/Done';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import green from '@material-ui/core/colors/green';
-import orange from '@material-ui/core/colors/orange';
-import red from '@material-ui/core/colors/red';
+import Button from '@mui/material/Button';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import DoneIcon from '@mui/icons-material/Done';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import green from '@mui/material/colors/green';
+import orange from '@mui/material/colors/orange';
+import red from '@mui/material/colors/red';
 import SearchBox from '../input/SearchBox';
 
 import CancelButton from '../button/CancelButton';
@@ -108,9 +109,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 
 	searchBox: {
-		background: fade(theme.palette.primary.light, 0.15),
+		background: alpha(theme.palette.primary.light, 0.15),
 		'&:hover': {
-			background: fade(theme.palette.primary.light, 0.25),
+			background: alpha(theme.palette.primary.light, 0.25),
 		},
 	},
 }));
@@ -229,7 +230,7 @@ const EidCardDialogStepSelection = ({
 			{displayLinearProgress && <LinearProgress />}
 			<DialogTitle id={titleId}>Select record to work with.</DialogTitle>
 			<DialogContent>
-				<Grid container spacing={3} justify="center" alignItems="center">
+				<Grid container spacing={3} alignItems="center">
 					<Grid item xs={12}>
 						<DialogContentText>
 							We have parsed the information on the eid card of the patient.
@@ -327,12 +328,7 @@ const EidCardDialogStepSelection = ({
 							)}
 							<Grid item xs={12}>
 								<Collapse in={nameMatchesExpanded} timeout="auto">
-									<Grid
-										container
-										spacing={3}
-										justify="center"
-										alignItems="center"
-									>
+									<Grid container spacing={3} alignItems="center">
 										<Grid item xs={12}>
 											<Typography variant="h5">
 												Approximate matches on patient&apos;s name

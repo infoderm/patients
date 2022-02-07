@@ -2,9 +2,9 @@ import React from 'react';
 
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';

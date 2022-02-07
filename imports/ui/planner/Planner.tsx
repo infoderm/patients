@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import PhoneDisabledIcon from '@material-ui/icons/PhoneDisabled';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
 import {useSettingCached} from '../settings/hooks';
 

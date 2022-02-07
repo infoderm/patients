@@ -3,17 +3,18 @@ import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
 import {
-	MuiThemeProvider,
-	createMuiTheme,
+	Theme,
+	ThemeProvider,
+	createTheme,
 	responsiveFontSizes,
-} from '@material-ui/core/styles';
+} from '@mui/material/styles';
 
 import {SnackbarProvider} from 'notistack';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import {LocalizationProvider} from '@material-ui/pickers';
-import AdapterDateFns from '@material-ui/pickers/adapter/date-fns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 import {useLocale} from '../i18n/datetime';
 
@@ -21,8 +22,12 @@ import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
 import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
 
-let muitheme = createMuiTheme();
-muitheme = responsiveFontSizes(muitheme);
+declare module '@mui/styles/defaultTheme' {
+	interface DefaultTheme extends Theme {}
+}
+
+let theme = createTheme();
+theme = responsiveFontSizes(theme);
 
 const App = () => {
 	const locale = useLocale();
@@ -30,7 +35,7 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<LocalizationProvider dateAdapter={AdapterDateFns} locale={locale}>
-				<MuiThemeProvider theme={muitheme}>
+				<ThemeProvider theme={theme}>
 					<CssBaseline />
 					<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
 						<ErrorBoundary>
@@ -40,7 +45,7 @@ const App = () => {
 							</div>
 						</ErrorBoundary>
 					</SnackbarProvider>
-				</MuiThemeProvider>
+				</ThemeProvider>
 			</LocalizationProvider>
 		</BrowserRouter>
 	);

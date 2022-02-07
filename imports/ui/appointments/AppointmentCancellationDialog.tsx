@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import AlarmOnIcon from '@material-ui/icons/AlarmOn';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 
 import call from '../../api/endpoint/call';
 
@@ -102,7 +102,7 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button color="default" endIcon={<AlarmOnIcon />} onClick={onClose}>
+				<Button endIcon={<AlarmOnIcon />} onClick={onClose}>
 					Do not cancel
 				</Button>
 				<Button

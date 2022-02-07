@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import orange from '@material-ui/core/colors/orange';
+import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import orange from '@mui/material/colors/orange';
 
 import StaticTagCard from '../tags/StaticTagCard';
 

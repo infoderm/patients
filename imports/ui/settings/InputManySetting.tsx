@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import SetPicker from '../input/SetPicker';
 
 import PropsOf from '../../util/PropsOf';

@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 
 import classNames from 'classnames';
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@mui/styles';
 
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
-import blue from '@material-ui/core/colors/blue';
+import blue from '@mui/material/colors/blue';
 
 const styles = () =>
 	createStyles({

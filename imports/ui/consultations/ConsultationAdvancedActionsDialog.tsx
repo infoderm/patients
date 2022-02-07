@@ -1,22 +1,22 @@
 import React, {useState} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import RestoreIcon from '@material-ui/icons/Restore';
-import LinkOffIcon from '@material-ui/icons/LinkOff';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RestoreIcon from '@mui/icons-material/Restore';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
 
-import blue from '@material-ui/core/colors/blue';
-import red from '@material-ui/core/colors/red';
+import blue from '@mui/material/colors/blue';
+import red from '@mui/material/colors/red';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 

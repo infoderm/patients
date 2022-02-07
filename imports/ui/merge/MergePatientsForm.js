@@ -3,11 +3,11 @@ import React, {useState} from 'react';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
 
 import MergePatientsFormStepSelect from './MergePatientsFormStepSelect';
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare';
