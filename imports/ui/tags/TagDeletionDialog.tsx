@@ -8,10 +8,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
-
 import {capitalized, normalized} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -19,6 +15,9 @@ import useIsMounted from '../hooks/useIsMounted';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
+
+import DeleteButton from '../button/DeleteButton';
+import CancelButton from '../button/CancelButton';
 
 import call from '../../api/endpoint/call';
 import Endpoint from '../../api/endpoint/Endpoint';
@@ -92,17 +91,11 @@ const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
-					Cancel
-				</Button>
-				<Button
+				<CancelButton onClick={onClose} />
+				<DeleteButton
 					disabled={ConfirmationTextFieldProps.error}
-					color="secondary"
-					endIcon={<DeleteIcon />}
 					onClick={deleteThisTagIfNameMatches}
-				>
-					Delete
-				</Button>
+				/>
 			</DialogActions>
 		</Dialog>
 	);

@@ -11,9 +11,9 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import useIsMounted from '../hooks/useIsMounted';
+import DeleteButton from '../button/DeleteButton';
 
 const styles = (theme) =>
 	createStyles({
@@ -169,12 +169,7 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 									<EditIcon />
 								</Button>
 							)}
-							{DeletionDialog && (
-								<Button color="secondary" onClick={openDeletionDialog}>
-									Delete
-									<DeleteIcon />
-								</Button>
-							)}
+							{DeletionDialog && <DeleteButton onClick={openDeletionDialog} />}
 							{RenamingDialog && (
 								<RenamingDialog
 									open={renaming}

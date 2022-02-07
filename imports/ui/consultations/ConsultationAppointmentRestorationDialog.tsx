@@ -11,7 +11,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import RestoreIcon from '@material-ui/icons/Restore';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
@@ -26,6 +25,8 @@ import ConfirmationTextField, {
 import call from '../../api/endpoint/call';
 import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
 import {ConsultationDocument} from '../../api/collection/consultations';
+import useUniqueId from '../hooks/useUniqueId';
+import CancelButton from '../button/CancelButton';
 
 interface Props {
 	open: boolean;
@@ -81,6 +82,10 @@ const ConsultationAppointmentRestorationDialog = ({
 		}
 	};
 
+	const titleId = useUniqueId(
+		'consultation-appointment-restoration-dialog-title',
+	);
+
 	const patientIdentifier = found
 		? `${patient.firstname} ${patient.lastname}`
 		: `#${consultation.patientId}`;
@@ -90,14 +95,9 @@ const ConsultationAppointmentRestorationDialog = ({
 		? "Patient's last name"
 		: 'Could not find patient.';
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="consultation-appointmentrestoration-dialog-title"
-			onClose={onClose}
-		>
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id="consultation-appointmentrestoration-dialog-title">
+			<DialogTitle id={titleId}>
 				Restore consultation&apos;s appointment for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>
@@ -116,14 +116,7 @@ const ConsultationAppointmentRestorationDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={!found || ConfirmationTextFieldProps.error}
 					color="secondary"

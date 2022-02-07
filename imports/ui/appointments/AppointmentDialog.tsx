@@ -25,7 +25,6 @@ import {
 } from '@material-ui/pickers';
 
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import dateFormat from 'date-fns/format';
 import isValid from 'date-fns/isValid';
@@ -33,6 +32,8 @@ import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
 import TextField from '../input/TextField';
+
+import CancelButton from '../button/CancelButton';
 
 import {useDateMask} from '../../i18n/datetime';
 
@@ -56,6 +57,7 @@ import {weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
+import useUniqueId from '../hooks/useUniqueId';
 
 const useStyles = makeStyles({
 	dialogPaper: {
@@ -251,10 +253,16 @@ const AppointmentDialog = ({
 			: '';
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
 
+	const titleId = useUniqueId('appointment-dialog-title');
+
 	return (
-		<Dialog classes={{paper: classes.dialogPaper}} open={open}>
+		<Dialog
+			aria-labelledby={titleId}
+			classes={{paper: classes.dialogPaper}}
+			open={open}
+		>
 			{loading && <LinearProgress />}
-			<DialogTitle>Schedule an appointment</DialogTitle>
+			<DialogTitle id={titleId}>Schedule an appointment</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
@@ -391,14 +399,7 @@ const AppointmentDialog = ({
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={patientList.length !== 1 || !validDate || !validTime}
 					color="primary"

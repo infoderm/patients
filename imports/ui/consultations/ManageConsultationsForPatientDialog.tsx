@@ -29,6 +29,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient';
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
+import useUniqueId from '../hooks/useUniqueId';
 import useConsultationsForPatient from './useConsultationsForPatient';
 
 const formatDatetime = (datetime: Date) => {
@@ -101,12 +102,12 @@ const ManageConsultationsForPatientDialog = ({
 
 	const loading = loadingAppointments || loadingConsultations;
 
+	const titleId = useUniqueId('manage-consultations-for-patient-dialog-title');
+
 	return (
-		<Dialog aria-labelledby="simple-dialog-title" open={open} onClose={onClose}>
+		<Dialog aria-labelledby={titleId} open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id="simple-dialog-title">
-				What do you want to do?
-			</DialogTitle>
+			<DialogTitle id={titleId}>What do you want to do?</DialogTitle>
 			<List>
 				{appointments.map(({_id, datetime}, i) => (
 					<ListItem

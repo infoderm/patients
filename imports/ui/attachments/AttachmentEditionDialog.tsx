@@ -11,11 +11,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import call from '../../api/endpoint/call';
 import rename from '../../api/endpoint/uploads/rename';
+import useUniqueId from '../hooks/useUniqueId';
+import CancelButton from '../button/CancelButton';
 
 interface Props {
 	open: boolean;
@@ -55,16 +56,11 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 		}
 	};
 
+	const titleId = useUniqueId('attachment-edition-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="attachment-edition-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="attachment-edition-dialog-title">
-				Edit attachment {attachment.name}
-			</DialogTitle>
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+			<DialogTitle id={titleId}>Edit attachment {attachment.name}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					You can edit the attachment&apos;s file name.
@@ -83,14 +79,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					color="primary"
 					endIcon={<SaveIcon />}

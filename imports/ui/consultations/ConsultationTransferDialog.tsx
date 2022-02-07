@@ -12,7 +12,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import call from '../../api/endpoint/call';
 
@@ -32,6 +31,7 @@ import ConfirmationTextField, {
 import makePatientsSuggestions from '../patients/makePatientsSuggestions';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 import transfer from '../../api/endpoint/consultations/transfer';
+import CancelButton from '../button/CancelButton';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 const useStyles = makeStyles({
@@ -144,14 +144,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={
 						patients.length !== 1 ||

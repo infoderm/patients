@@ -10,13 +10,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import LinkIcon from '@material-ui/icons/Link';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
 import call from '../../api/endpoint/call';
 import link from '../../api/endpoint/documents/link';
+import CancelButton from '../button/CancelButton';
 
 const useStyles = makeStyles({
 	dialogPaper: {
@@ -82,9 +82,7 @@ const DocumentLinkingDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={patients.length === 0}
 					color="secondary"

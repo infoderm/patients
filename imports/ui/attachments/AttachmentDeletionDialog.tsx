@@ -12,7 +12,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 import LinkOffIcon from '@material-ui/icons/LinkOff';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import {normalized} from '../../api/string';
 
@@ -25,6 +24,8 @@ import ConfirmationTextField, {
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
+import CancelButton from '../button/CancelButton';
+import useUniqueId from '../hooks/useUniqueId';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const useStyles = makeStyles({
@@ -82,14 +83,11 @@ const AttachmentDeletionDialog = ({
 		}
 	};
 
+	const titleId = useUniqueId('attachment-deletion-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="attachment-deletion-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="attachment-deletion-dialog-title">
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+			<DialogTitle id={titleId}>
 				Detach attachment {attachment.name}
 			</DialogTitle>
 			<DialogContent>
@@ -112,14 +110,7 @@ const AttachmentDeletionDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					color="secondary"
 					disabled={ConfirmationTextFieldProps.error}

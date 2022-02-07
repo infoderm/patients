@@ -23,6 +23,7 @@ import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
 import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const EidCardDialogStepPreviewSingleCreate = ({
+	titleId,
 	onPrevStep,
 	patientId,
 	eidInfo,
@@ -62,7 +63,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 
 	return (
 		<>
-			<DialogTitle>Review action</DialogTitle>
+			<DialogTitle id={titleId}>Review action</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					This is what the record will look like once created.
@@ -70,11 +71,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 				<GenericStaticPatientCard patient={eidPatient} />
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					startIcon={<SkipPreviousIcon />}
-					onClick={onPrevStep}
-				>
+				<Button startIcon={<SkipPreviousIcon />} onClick={onPrevStep}>
 					Prev
 				</Button>
 				<Button color="primary" endIcon={<SkipNextIcon />} onClick={onNext}>

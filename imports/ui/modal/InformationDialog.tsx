@@ -32,12 +32,7 @@ const InformationDialog = ({
 			<DialogContentText>{text}</DialogContentText>
 		</DialogContent>
 		<DialogActions>
-			<Button
-				type="submit"
-				color="default"
-				endIcon={<CloseIcon />}
-				onClick={onClose}
-			>
+			<Button color="default" endIcon={<CloseIcon />} onClick={onClose}>
 				{close}
 			</Button>
 		</DialogActions>

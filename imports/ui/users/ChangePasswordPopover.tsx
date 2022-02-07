@@ -1,7 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -13,7 +12,12 @@ import changePassword from '../../api/user/changePassword';
 import useUniqueId from '../hooks/useUniqueId';
 import {useStyles} from './Popover';
 
-const ChangePasswordPopover = ({anchorEl, handleClose}) => {
+interface Props {
+	anchorEl: HTMLElement;
+	handleClose: () => void;
+}
+
+const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [oldPassword, setOldPassword] = useState('');
@@ -114,11 +118,6 @@ const ChangePasswordPopover = ({anchorEl, handleClose}) => {
 			</form>
 		</Popover>
 	);
-};
-
-ChangePasswordPopover.propTypes = {
-	anchorEl: PropTypes.object,
-	handleClose: PropTypes.func.isRequired,
 };
 
 export default ChangePasswordPopover;
