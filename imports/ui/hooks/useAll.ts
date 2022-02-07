@@ -1,5 +1,5 @@
 import useAny from './useAny';
 
-const useAll = (value) => !useAny(!value);
+const useAll = (value: any) => !useAny(!value);
 
 export default useAll;

@@ -1,17 +1,17 @@
 import React from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import InputFileButton from '../input/InputFileButton';
 
 const GenericDocumentImportButton = ({onImport, children, ...rest}) => {
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const onChange = (event) => {
 		event.persist();
 		const files = event.target.files;
 		console.debug(files);
-		onImport(history, files);
+		onImport(navigate, files);
 	};
 
 	const defaultText = 'Import Document';

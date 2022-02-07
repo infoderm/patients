@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useLocation, useParams} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 
 import SaveIcon from '@material-ui/icons/Save';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -12,34 +12,32 @@ import {useBooks} from '../../api/books';
 import {useSettingCached} from '../settings/hooks';
 
 import YearJumper from '../navigation/YearJumper';
+import NoMatch from '../navigation/NoMatch';
 import FixedFab from '../button/FixedFab';
 import BookCard from './BookCard';
 import BooksDownloadDialog from './BooksDownloadDialog';
 
-interface Params {
-	year?: string;
-	page?: string;
-}
-
 interface Props {
-	defaultPage?: number;
+	type?: string;
+	filter?: string;
 	defaultPerpage?: number;
 }
 
-const toURL = (x: number) => `/books/${x}`;
-
-const BooksList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
-	const params = useParams<Params>();
-	const location = useLocation();
+const BooksList = ({
+	type = undefined,
+	filter = undefined,
+	defaultPerpage = 10,
+}: Props) => {
 	const [downloading, setDownloading] = useState(false);
 	const {value: sortingOrder, setValue: setSortingOrder} = useSettingCached(
 		'books-sorting-order',
 	);
 
-	const yearString = params.year ?? dateFormat(new Date(), 'yyyy');
+	if (type !== undefined && type !== 'year') return <NoMatch />;
 
+	const yearString = filter ?? dateFormat(new Date(), 'yyyy');
 	const year = Number.parseInt(yearString, 10);
-	const page = Number.parseInt(params.page, 10) || defaultPage;
+
 	const perpage = defaultPerpage;
 
 	const query = {fiscalYear: year};
@@ -48,18 +46,28 @@ const BooksList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
 
 	const sort = {fiscalYear: 1, bookNumber: sortingOrder};
 
+	const list = (
+		<TagList
+			perpage={perpage}
+			Card={BookCard}
+			query={query}
+			sort={sort}
+			useTags={useBooks}
+		/>
+	);
+
 	return (
 		<div>
-			<YearJumper current={year} toURL={toURL} />
-			<TagList
-				page={page}
-				perpage={perpage}
-				Card={BookCard}
-				url={location.pathname}
-				query={query}
-				sort={sort}
-				useTags={useBooks}
+			<YearJumper
+				current={year}
+				toURL={(x: number) =>
+					`${year !== undefined ? '../' : ''}query/year/${x}`
+				}
 			/>
+			<Routes>
+				<Route index element={list} />
+				<Route path="page/:page" element={list} />
+			</Routes>
 			<FixedFab
 				col={4}
 				color="secondary"

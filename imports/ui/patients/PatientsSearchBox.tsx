@@ -1,6 +1,6 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import {useHistory} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import {fade} from '@material-ui/core/styles/colorManipulator';
 
@@ -19,12 +19,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PatientsSearchBox = ({className}) => {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const classes = useStyles();
 
 	const handleChange = ({selectedItem = null}) => {
 		if (selectedItem) {
-			history.push(`/patient/${selectedItem._id}`);
+			navigate(`/patient/${selectedItem._id}`);
 		}
 	};
 

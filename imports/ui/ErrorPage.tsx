@@ -1,5 +1,5 @@
 import React from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -43,20 +43,20 @@ const useStyles = makeStyles(() => ({
 
 export default function ErrorPage({error, errorInfo, retry}) {
 	const classes = useStyles();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const reloadRoute = () => {
-		history.go(0);
+		navigate(0);
 	};
 
 	const goBackHome = () => {
-		history.push('/');
+		navigate('/');
 		retry();
 	};
 
 	const reloadApp = () => {
-		history.push('/');
-		history.go(0);
+		navigate('/');
+		navigate(0);
 	};
 
 	return (

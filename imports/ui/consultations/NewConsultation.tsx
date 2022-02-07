@@ -9,9 +9,9 @@ import ConsultationEditor from './ConsultationEditor';
 
 import useBookPrefill from './useBookPrefill';
 
-interface Params {
+type Params = {
 	id: string;
-}
+};
 
 const NewConsultation = () => {
 	const params = useParams<Params>();

@@ -41,9 +41,9 @@ const StaticDocumentDetails = ({
 	);
 };
 
-interface Params {
+type Params = {
 	id: string;
-}
+};
 
 const useDocument = (documentId: DocumentId) =>
 	useTracker(() => {

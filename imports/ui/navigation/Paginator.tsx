@@ -1,32 +1,59 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import PropTypes, {InferProps} from 'prop-types';
-
+import {useParams} from 'react-router-dom';
+import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
 import Prev from './Prev';
 import Next from './Next';
 
-const PaginatorPropTypes = {
-	root: PropTypes.string.isRequired,
-	page: PropTypes.number.isRequired,
-	end: PropTypes.bool,
-	disabled: PropTypes.bool,
-};
+interface Props {
+	root: string;
+	page?: number;
+	firstPage?: number;
+	end?: boolean;
+	disabled?: boolean;
+	loading?: boolean;
+}
 
-type Props = InferProps<typeof PaginatorPropTypes>;
+const PaginatorBase = ({
+	root,
+	firstPage = 1,
+	page = firstPage,
+	end = false,
+	disabled = false,
+	loading = false,
+}: Props) => {
+	const isFirstPage = page === firstPage;
+	const isOnlyPage = isFirstPage && end;
+	const [hide, setHide] = useState(loading && isOnlyPage);
 
-const Paginator = ({root, page, end = false, disabled = false}: Props) => {
-	if (page === 1 && end) {
+	useEffect(() => {
+		if (!loading) {
+			setHide(isOnlyPage);
+		}
+	}, [loading, isOnlyPage]);
+
+	if (hide) {
 		return null;
 	}
 
 	return (
 		<>
-			<Prev to={`${root}/page/${page - 1}`} disabled={disabled || page === 1} />
-			<Next to={`${root}/page/${page + 1}`} disabled={disabled || end} />
+			<Prev to={`${root}${page - 1}`} disabled={disabled || isFirstPage} />
+			<Next
+				to={`${root}${page + 1}`}
+				disabled={disabled || (!loading && end)}
+			/>
 		</>
 	);
 };
 
-Paginator.propTypes = PaginatorPropTypes;
+type Params = {page?: string};
+
+const Paginator = (props: Omit<Props, 'page' | 'root'>) => {
+	const params = useParams<Params>();
+	const page = parseNonNegativeIntegerStrictOrUndefined(params.page);
+	const root = `${page === undefined ? '' : '../'}page/`;
+	return <PaginatorBase page={page} root={root} {...props} />;
+};
 
 export default Paginator;

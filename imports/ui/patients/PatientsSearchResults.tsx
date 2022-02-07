@@ -12,10 +12,10 @@ import mergeFields from '../../util/mergeFields';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
-interface Params {
+type Params = {
 	query: string;
 	page?: string;
-}
+};
 
 interface Props {
 	defaultPage?: number;
@@ -84,15 +84,12 @@ const PatientsSearchResults = ({
 		};
 	}, [$search, page, perpage, enqueueSnackbar]);
 
-	const root = `/search/${params.query}`;
-
 	return (
 		<StaticPatientsList
 			page={page}
 			perpage={perpage}
 			loading={loading}
 			patients={patients}
-			root={root}
 			Card={ReactivePatientCard}
 			{...rest}
 		/>

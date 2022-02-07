@@ -7,26 +7,18 @@ import StaticDocumentList from './StaticDocumentList';
 
 import useDocuments from './useDocuments';
 
-interface Params {
+type Params = {
 	identifier: string;
-	page?: string;
-}
+};
 
 interface Props {
-	defaultPage?: number;
-	defaultPerpage?: number;
+	page?: number;
+	perpage?: number;
 }
 
-const DocumentsFromIdentifierList = ({
-	defaultPage = 1,
-	defaultPerpage = 10,
-}: Props) => {
+const DocumentsFromIdentifierList = ({page = 1, perpage = 10}: Props) => {
 	const params = useParams<Params>();
-	const page = Number.parseInt(params.page, 10) || defaultPage;
-	const perpage = defaultPerpage;
 	const identifier = myDecodeURIComponent(params.identifier);
-
-	const root = `/documents/${params.identifier}`;
 
 	const query = {identifier};
 	const sort = {
@@ -54,7 +46,6 @@ const DocumentsFromIdentifierList = ({
 			perpage={perpage}
 			loading={loading}
 			documents={documents}
-			root={root}
 		/>
 	);
 };

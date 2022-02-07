@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import AccordionActions from '@material-ui/core/AccordionActions';
 
@@ -39,7 +39,7 @@ const StaticConsultationCardActions = (props) => {
 	const [cancelling, setCancelling] = useState(false);
 	const [uncancelling, setUncancelling] = useState(false);
 
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const {
 		found,
@@ -54,7 +54,7 @@ const StaticConsultationCardActions = (props) => {
 		try {
 			await call(beginConsultation, _id);
 			console.log(`Consultation #${_id} started.`);
-			history.push({pathname: `/edit/consultation/${_id}`});
+			navigate(`/edit/consultation/${_id}`);
 		} catch (error: unknown) {
 			console.error(error);
 		}

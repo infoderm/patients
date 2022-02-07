@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import React, {useMemo} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -111,7 +111,7 @@ const AppointmentDialog = ({
 	onSubmit,
 }: Props) => {
 	const classes = useStyles();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const {loading, value: appointmentDuration} = useSetting(
 		'appointment-duration',
@@ -226,7 +226,7 @@ const AppointmentDialog = ({
 				);
 				onClose();
 				if (!initialAppointment) {
-					history.push({pathname: `/consultation/${res._id}`});
+					navigate({pathname: `/consultation/${res._id}`});
 				}
 			} catch (error: unknown) {
 				console.error({error});

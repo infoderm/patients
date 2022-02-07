@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {DependencyList, useState} from 'react';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -7,10 +6,8 @@ import Center from '../grid/Center';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-const ListWithHeader = (props) => {
-	const {name, Card, List, useItem, listProps, root, page, perpage} = props;
-
-	const {loading, item} = useItem(name);
+const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
+	const {loading, item} = useItem(name, [name]);
 
 	if (loading) return <Loading />;
 
@@ -28,18 +25,41 @@ const ListWithHeader = (props) => {
 					<Typography variant="h2">Patients</Typography>
 				</div>
 			)}
-			<List {...listProps} root={root} page={page} perpage={perpage} />
+			<List {...listProps} />
 		</div>
 	);
 };
 
-const TagDetails = (props) => {
+interface Props {
+	Card?: React.ElementType;
+
+	useItem?: (
+		name: string,
+		deps: DependencyList,
+	) => {loading: boolean; item?: unknown};
+	name: string;
+
+	List: React.ElementType;
+	listProps?: {};
+
+	useParents: (
+		selector: unknown,
+		options: unknown,
+		deps: DependencyList,
+	) => {loading: boolean; results: unknown[]; dirty?: boolean};
+	selector: {};
+	sort: {};
+	fields?: {};
+	page: number;
+	perpage: number;
+}
+
+const TagDetails = (props: Props) => {
 	const {
 		Card,
 		List,
 		useItem,
 		useParents,
-		root,
 		page,
 		perpage,
 		name,
@@ -73,32 +93,23 @@ const TagDetails = (props) => {
 		dirty,
 		refresh,
 		items: results,
+		page,
+		perpage,
 	};
 
-	if (!Card)
-		return <List {...listProps} root={root} page={page} perpage={perpage} />;
+	if (!Card) return <List {...listProps} />;
 
 	if (!useItem) throw new Error('useItem must be given if Card is given');
 
-	return <ListWithHeader {...props} listProps={listProps} />;
-};
-
-TagDetails.propTypes = {
-	Card: PropTypes.elementType,
-
-	useItem: PropTypes.func,
-	name: PropTypes.string.isRequired,
-
-	List: PropTypes.elementType.isRequired,
-	listProps: PropTypes.object,
-	root: PropTypes.string.isRequired,
-
-	useParents: PropTypes.func.isRequired,
-	selector: PropTypes.object.isRequired,
-	sort: PropTypes.object.isRequired,
-	fields: PropTypes.object,
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired,
+	return (
+		<ListWithHeader
+			List={List}
+			Card={Card}
+			useItem={useItem}
+			listProps={listProps}
+			name={name}
+		/>
+	);
 };
 
 export default TagDetails;

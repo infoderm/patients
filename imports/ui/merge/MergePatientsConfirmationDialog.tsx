@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
 
@@ -32,7 +32,7 @@ const MergePatientsConfirmationDialog = ({
 	documentsToAttach,
 	toDelete,
 }: Props) => {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [pending, setPending] = useState(false);
 
@@ -53,7 +53,7 @@ const MergePatientsConfirmationDialog = ({
 			const message = `Merged. Patient #${_id} created.`;
 			console.log(message);
 			enqueueSnackbar(message, {variant: 'success'});
-			history.push({pathname: `/patient/${_id}`});
+			navigate({pathname: `/patient/${_id}`});
 		} catch (error: unknown) {
 			setPending(false);
 			closeSnackbar(key);

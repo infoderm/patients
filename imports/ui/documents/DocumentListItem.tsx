@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
+import classNames from 'classnames';
 import {makeStyles} from '@material-ui/core/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -14,6 +14,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
+import PropsOf from '../../util/PropsOf';
+
 import DocumentChips from './DocumentChips';
 
 import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton';
@@ -21,6 +23,7 @@ import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton';
 
 const useStyles = makeStyles((theme) => ({
 	item: {
+		opacity: 1,
 		marginTop: theme.spacing(2),
 		marginBottom: theme.spacing(2),
 		paddingRight: theme.spacing(6 * 3),
@@ -29,25 +32,32 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		flexWrap: 'wrap',
 	},
+	loading: {
+		opacity: 0.7,
+	},
 }));
 
-const DocumentListItem = (props) => {
-	const classes = useStyles();
+interface Props extends PropsOf<typeof DocumentChips> {
+	loading?: boolean;
+}
 
-	const {document, PatientChip, VersionsChip} = props;
+const DocumentListItem = ({loading = false, document, ...rest}: Props) => {
+	const classes = useStyles();
 
 	const {_id} = document;
 
 	return (
-		<ListItem component={Paper} className={classes.item} variant="outlined">
+		<ListItem
+			component={Paper}
+			className={classNames(classes.item, {
+				[classes.loading]: loading,
+			})}
+			variant="outlined"
+		>
 			<ListItemText
 				primary={
 					<div className={classes.chips}>
-						<DocumentChips
-							document={document}
-							VersionsChip={VersionsChip}
-							PatientChip={PatientChip}
-						/>
+						<DocumentChips document={document} {...rest} />
 					</div>
 				}
 			/>
@@ -58,7 +68,7 @@ const DocumentListItem = (props) => {
 					component={Link}
 					rel="noreferrer"
 					target="_blank"
-					to={`/document/${_id.toHexString ? _id.toHexString() : _id}`}
+					to={`/document/${_id}`}
 					aria-label="Open in New Tab"
 				>
 					<OpenInNewIcon />
@@ -66,17 +76,6 @@ const DocumentListItem = (props) => {
 			</ListItemSecondaryAction>
 		</ListItem>
 	);
-};
-
-DocumentListItem.defaultProps = {
-	PatientChip: DocumentChips.defaultProps.PatientChip,
-	VersionsChip: DocumentChips.defaultProps.VersionsChip,
-};
-
-DocumentListItem.propTypes = {
-	document: PropTypes.object.isRequired,
-	PatientChip: PropTypes.elementType,
-	VersionsChip: PropTypes.elementType,
 };
 
 DocumentListItem.projection = {

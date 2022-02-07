@@ -17,4 +17,7 @@ export default define({
 			$set: {color: newColor},
 		}),
 	),
+	simulate(_tagId: string, _newColor: string): void {
+		return undefined;
+	},
 });

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 
@@ -27,6 +26,8 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
+import PropsOf from '../../util/PropsOf';
 
 import DocumentChips from './DocumentChips';
 import DocumentVersionsButton from './actions/DocumentVersionsButton';
@@ -56,7 +57,17 @@ const styles = () =>
 
 const useStyles = makeStyles(styles);
 
-const DocumentCard = (props) => {
+interface Props extends PropsOf<typeof DocumentChips> {
+	VersionsButton?: React.ElementType;
+	defaultExpanded?: boolean;
+}
+
+const DocumentCard = ({
+	document,
+	VersionsButton = DocumentVersionsButton,
+	defaultExpanded = false,
+	...rest
+}: Props) => {
 	const [linking, setLinking] = useState(false);
 	const [unlinking, setUnlinking] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -64,9 +75,6 @@ const DocumentCard = (props) => {
 	const [superdeleting, setSuperdeleting] = useState(false);
 
 	const classes = useStyles();
-
-	const {PatientChip, VersionsChip, VersionsButton, defaultExpanded, document} =
-		props;
 
 	const {patientId, parsed, format, kind, deleted} = document;
 
@@ -77,11 +85,7 @@ const DocumentCard = (props) => {
 		>
 			<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 				<div className={classes.chips}>
-					<DocumentChips
-						document={document}
-						VersionsChip={VersionsChip}
-						PatientChip={PatientChip}
-					/>
+					<DocumentChips document={document} {...rest} />
 				</div>
 			</AccordionSummary>
 			<AccordionDetails>
@@ -216,21 +220,6 @@ const DocumentCard = (props) => {
 			</AccordionActions>
 		</Accordion>
 	);
-};
-
-DocumentCard.defaultProps = {
-	PatientChip: DocumentChips.defaultProps.PatientChip,
-	VersionsChip: DocumentChips.defaultProps.VersionsChip,
-	VersionsButton: DocumentVersionsButton,
-	defaultExpanded: false,
-};
-
-DocumentCard.propTypes = {
-	document: PropTypes.object.isRequired,
-	PatientChip: PropTypes.elementType,
-	VersionsChip: PropTypes.elementType,
-	VersionsButton: PropTypes.elementType,
-	defaultExpanded: PropTypes.bool,
 };
 
 export default DocumentCard;

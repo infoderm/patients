@@ -1,8 +1,15 @@
+import {useNavigate} from 'react-router-dom';
 import createPromise from '../../util/createPromise';
 import call from '../endpoint/call';
 import insert from '../endpoint/documents/insert';
 
-export default async function insertDocument(history, format, fd) {
+type Format = undefined | string;
+
+export default async function insertDocument(
+	navigate: ReturnType<typeof useNavigate>,
+	format: Format,
+	fd: File,
+) {
 	console.debug('insert-document', format, fd);
 
 	const {promise, resolve, reject} = createPromise();
@@ -19,10 +26,7 @@ export default async function insertDocument(history, format, fd) {
 		try {
 			const result = await call(insert, op);
 			console.debug('Inserted/updated', result.length, 'documents.');
-			if (history && history.location.pathname !== '/documents') {
-				history.push({pathname: '/documents'});
-			}
-
+			navigate('/documents');
 			resolve(result);
 		} catch (error: unknown) {
 			console.error({error});

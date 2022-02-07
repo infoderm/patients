@@ -11,7 +11,6 @@ import ConsultationsList from './ConsultationsList';
 
 interface PagedConsultationsListProps
 	extends PropsOf<typeof ConsultationsList> {
-	root: string;
 	page: number;
 	perpage: number;
 	items: any[];
@@ -21,7 +20,6 @@ interface PagedConsultationsListProps
 }
 
 const PagedConsultationsList = ({
-	root,
 	loading = false,
 	page,
 	perpage,
@@ -38,7 +36,7 @@ const PagedConsultationsList = ({
 		) : (
 			<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 		)}
-		<Paginator page={page} end={items.length < perpage} root={root} />
+		<Paginator loading={loading} end={items.length < perpage} />
 		{refresh && dirty && <Refresh onClick={refresh} />}
 	</div>
 );

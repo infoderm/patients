@@ -1,4 +1,4 @@
-import {History} from 'history';
+import {useNavigate} from 'react-router-dom';
 
 import {PatientIdFields} from '../../api/collection/patients';
 
@@ -6,6 +6,6 @@ export default interface Props {
 	onPrevStep: () => void;
 	patientId: string;
 	eidInfo: PatientIdFields;
-	history: History;
+	navigate: ReturnType<typeof useNavigate>;
 	onClose: () => void;
 }

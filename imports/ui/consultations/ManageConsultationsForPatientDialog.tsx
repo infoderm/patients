@@ -1,5 +1,5 @@
 import React from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import classNames from 'classnames';
 
 import dateFormat from 'date-fns/format';
@@ -66,7 +66,7 @@ const ManageConsultationsForPatientDialog = ({
 	patientId,
 }: Props) => {
 	const classes = useStyles();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const {loading: loadingAppointments, results: appointments} =
 		useUpcomingAppointmentsForPatient(patientId, {
@@ -78,22 +78,22 @@ const ManageConsultationsForPatientDialog = ({
 		});
 
 	const createNewConsultation = () => {
-		history.push(`/new/consultation/for/${patientId}`);
+		navigate(`/new/consultation/for/${patientId}`);
 	};
 
 	const scheduleNewAppointment = () => {
-		history.push(`/new/appointment/for/${patientId}`);
+		navigate(`/new/appointment/for/${patientId}/week/current`);
 	};
 
 	const editExistingConsultation = (_id) => () => {
-		history.push(`/edit/consultation/${_id}`);
+		navigate(`/edit/consultation/${_id}`);
 	};
 
 	const beginThisConsultation = (_id) => async () => {
 		try {
 			await call(beginConsultation, _id);
 			console.log(`Consultation #${_id} started.`);
-			history.push({pathname: `/edit/consultation/${_id}`});
+			navigate({pathname: `/edit/consultation/${_id}`});
 		} catch (error: unknown) {
 			console.error({error});
 		}

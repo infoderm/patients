@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import addWeeks from 'date-fns/addWeeks';
 import addDays from 'date-fns/addDays';
@@ -112,7 +112,6 @@ interface Props
 	> {
 	year: number;
 	week: number;
-	patientId?: string;
 	showCancelledEvents?: boolean;
 	showNoShowEvents?: boolean;
 }
@@ -120,7 +119,6 @@ interface Props
 const ReactiveWeeklyCalendar = ({
 	year,
 	week,
-	patientId,
 	showCancelledEvents,
 	showNoShowEvents,
 	onSlotClick,
@@ -135,8 +133,6 @@ const ReactiveWeeklyCalendar = ({
 	};
 
 	const [begin, end] = weekly(year, week, weekOptions);
-
-	console.debug({begin, end});
 
 	const someDayOfWeek = new Date(
 		year,
@@ -159,7 +155,6 @@ const ReactiveWeeklyCalendar = ({
 		"yyyy MMMM / 'Week' w",
 		weekOptions,
 	);
-	const baseURL = patientId ? `/new/appointment/for/${patientId}` : '/calendar';
 
 	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
@@ -191,7 +186,7 @@ const ReactiveWeeklyCalendar = ({
 		),
 	);
 
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const displayedEvents = sorted(
 		key(increasing, (x) => x.begin),
@@ -212,13 +207,13 @@ const ReactiveWeeklyCalendar = ({
 			year={year}
 			week={week}
 			prev={() => {
-				history.push(`${baseURL}/week/${prevWeek}`);
+				navigate(`../${prevWeek}`);
 			}}
 			next={() => {
-				history.push(`${baseURL}/week/${nextWeek}`);
+				navigate(`../${nextWeek}`);
 			}}
 			monthly={() => {
-				history.push(`${baseURL}/month/${monthOfWeek}`);
+				navigate(`../../month/${monthOfWeek}`);
 			}}
 			events={displayedEvents}
 			DayHeader={DayHeader}

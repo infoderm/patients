@@ -14,11 +14,13 @@ import FixedFab from '../button/FixedFab';
 import ConsultationsPager from '../consultations/ConsultationsPager';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 
-const AppointmentsForPatient = (props) => {
+interface Props {
+	patientId: string;
+}
+
+const AppointmentsForPatient = ({patientId}: Props) => {
 	const [showCancelled, setShowCancelled] = useState(true);
 	const [showNoShow, setShowNoShow] = useState(true);
-
-	const {patientId, page, perpage} = props;
 
 	const options = {fields: {_id: 1}};
 
@@ -73,12 +75,10 @@ const AppointmentsForPatient = (props) => {
 	return (
 		<>
 			<ConsultationsPager
-				root={`/patient/${patientId}/appointments`}
-				page={page}
-				perpage={perpage}
+				defaultExpandedFirst
 				query={query}
 				sort={sort}
-				defaultExpandedFirst={page === 1}
+				perpage={5}
 			/>
 			<ManageConsultationsForPatientButton
 				Button={FixedFab}

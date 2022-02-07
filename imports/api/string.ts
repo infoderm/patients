@@ -207,12 +207,27 @@ export const parseNonNegativeIntegerStrict = (string: string, base = 10) =>
 		? Number.parseInt(string, base)
 		: Number.NaN;
 
+export const parseNonNegativeIntegerStrictOrDefault = (
+	string: string,
+	base?: number,
+	dflt?: any,
+) => {
+	const parsed = parseNonNegativeIntegerStrict(string, base);
+	return Number.isNaN(parsed) ? dflt : parsed;
+};
+
 export const parseNonNegativeIntegerStrictOrString = (
 	string: string,
 	base?: number,
 ) => {
-	const parsed = parseNonNegativeIntegerStrict(string, base);
-	return Number.isNaN(parsed) ? string : parsed;
+	return parseNonNegativeIntegerStrictOrDefault(string, base, string);
+};
+
+export const parseNonNegativeIntegerStrictOrUndefined = (
+	string: string,
+	base?: number,
+) => {
+	return parseNonNegativeIntegerStrictOrDefault(string, base, undefined);
 };
 
 export const parseUint32StrictOrString = (string: string, base?: number) => {

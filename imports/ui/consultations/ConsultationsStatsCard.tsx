@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import PropTypes, {InferProps} from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -69,17 +68,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ConsultationsStatsCardPropTypes = {
-	query: PropTypes.object.isRequired,
+interface Props {
+	query: {};
 
-	title: PropTypes.string.isRequired,
-	avatar: PropTypes.string.isRequired,
-	url: PropTypes.string,
-	actions: PropTypes.func,
-	abbr: PropTypes.string.isRequired,
-};
-
-type Props = InferProps<typeof ConsultationsStatsCardPropTypes>;
+	title: string;
+	avatar: string;
+	url?: string;
+	actions?: (item: {}) => React.ReactNode;
+	abbr: string;
+}
 
 const ConsultationsStatsCard = ({
 	query,
@@ -117,7 +114,7 @@ const ConsultationsStatsCard = ({
 					avatar={<Avatar className={classes.avatar}>{avatar}</Avatar>}
 					title={title}
 					subheader={subheader}
-					component={Link}
+					component={url ? Link : undefined}
 					to={url}
 				/>
 				<CardContent className={classes.content}>{content}</CardContent>
@@ -129,7 +126,5 @@ const ConsultationsStatsCard = ({
 		</Card>
 	);
 };
-
-ConsultationsStatsCard.propTypes = ConsultationsStatsCardPropTypes;
 
 export default ConsultationsStatsCard;

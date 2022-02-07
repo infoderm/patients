@@ -16,9 +16,9 @@ const styles = (theme) => ({
 
 const useStyles = makeStyles(styles);
 
-interface Params {
+type Params = {
 	id: string;
-}
+};
 
 const DrugDetails = () => {
 	const classes = useStyles();

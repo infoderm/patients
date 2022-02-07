@@ -3,6 +3,7 @@ import React from 'react';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 interface ConsultationsListProps {
+	className?: string;
 	loading?: boolean;
 	items: any[];
 	itemProps?: object;
@@ -10,12 +11,13 @@ interface ConsultationsListProps {
 }
 
 const ConsultationsList = ({
+	className = undefined,
 	loading = false,
 	items,
 	itemProps = undefined,
 	defaultExpandedFirst = false,
 }: ConsultationsListProps) => (
-	<div>
+	<div className={className}>
 		{items.map((consultation, i) => (
 			<ReactiveConsultationCard
 				key={consultation._id}

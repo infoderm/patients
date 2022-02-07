@@ -1,7 +1,5 @@
 import React, {useReducer, useEffect, useMemo} from 'react';
 
-import {Prompt} from 'react-router-dom';
-
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
@@ -54,6 +52,8 @@ import {
 	useDateFormatAge,
 	useDateMask,
 } from '../../i18n/datetime';
+
+import usePrompt from '../navigation/usePrompt';
 
 import SetPicker from '../input/SetPicker';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
@@ -206,6 +206,11 @@ const PatientPersonalInformationStatic = (
 	const {editing, dirty, deleting, patient} = state;
 	const {loading = false} = props;
 
+	usePrompt(
+		'You are trying to leave the page while in edit mode. Are you sure you want to continue?',
+		dirty,
+	);
+
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const classes = useStyles();
@@ -286,10 +291,6 @@ const PatientPersonalInformationStatic = (
 
 	return (
 		<Paper className={classes.root}>
-			<Prompt
-				when={dirty}
-				message="You are trying to leave the page while in edit mode. Are you sure you want to continue?"
-			/>
 			<Grid container spacing={3}>
 				<Grid item sm={4} md={2} className={classes.left}>
 					{patient.photo ? (
