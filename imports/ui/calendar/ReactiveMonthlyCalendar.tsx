@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
@@ -25,7 +25,6 @@ interface Props
 	> {
 	year: number;
 	month: number;
-	patientId?: string;
 	showCancelledEvents?: boolean;
 	showNoShowEvents?: boolean;
 }
@@ -33,7 +32,6 @@ interface Props
 const ReactiveMonthlyCalendar = ({
 	year,
 	month,
-	patientId,
 	showCancelledEvents,
 	showNoShowEvents,
 	...rest
@@ -48,8 +46,6 @@ const ReactiveMonthlyCalendar = ({
 
 	const [begin, end] = monthly(year, month, weekOptions);
 
-	console.debug({begin, end});
-
 	const firstDayOfMonth = new Date(year, month - 1, 1);
 	const firstDayOfPrevMonth = subMonths(firstDayOfMonth, 1);
 	const firstDayOfNextMonth = addMonths(firstDayOfMonth, 1);
@@ -57,14 +53,13 @@ const ReactiveMonthlyCalendar = ({
 	const localizedDateFormat = useDateFormat();
 
 	const title = localizedDateFormat(firstDayOfMonth, 'yyyy MMMM');
-	const baseURL = patientId ? `/new/appointment/for/${patientId}` : '/calendar';
 
 	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
 		Number(end),
 	]);
 
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const previousMonth = localizedDateFormat(firstDayOfPrevMonth, 'yyyy/MM');
 	const nextMonth = localizedDateFormat(firstDayOfNextMonth, 'yyyy/MM');
@@ -84,7 +79,7 @@ const ReactiveMonthlyCalendar = ({
 				(
 					<div className={className}>
 						<Link
-							to={`${baseURL}/week/${localizedDateFormat(day, 'YYYY/ww', {
+							to={`../../week/${localizedDateFormat(day, 'YYYY/ww', {
 								useAdditionalWeekYearTokens: true,
 							})}`}
 						>
@@ -92,7 +87,7 @@ const ReactiveMonthlyCalendar = ({
 						</Link>
 					</div>
 				),
-		[baseURL, localizedDateFormat],
+		[localizedDateFormat],
 	);
 
 	return (
@@ -101,13 +96,13 @@ const ReactiveMonthlyCalendar = ({
 			year={year}
 			month={month}
 			prev={() => {
-				history.push(`${baseURL}/month/${previousMonth}`);
+				navigate(`../${previousMonth}`);
 			}}
 			next={() => {
-				history.push(`${baseURL}/month/${nextMonth}`);
+				navigate(`../${nextMonth}`);
 			}}
 			weekly={() => {
-				history.push(`${baseURL}/week/${firstWeekOfMonth}`);
+				navigate(`../../week/${firstWeekOfMonth}`);
 			}}
 			events={displayedEvents}
 			DayHeader={DayHeader}

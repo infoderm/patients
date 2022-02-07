@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
+
+import {DocumentDocument} from '../../api/collection/documents';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -7,39 +8,33 @@ import Paginator from '../navigation/Paginator';
 
 import DocumentsPage from './DocumentsPage';
 
-const StaticDocumentListPropTypes = {
-	page: PropTypes.number.isRequired,
-	perpage: PropTypes.number.isRequired,
-	loading: PropTypes.bool,
-	documents: PropTypes.array.isRequired,
-	root: PropTypes.string.isRequired,
-};
-
-type Props = InferProps<typeof StaticDocumentListPropTypes>;
+interface Props {
+	page: number;
+	perpage: number;
+	loading?: boolean;
+	documents: DocumentDocument[];
+}
 
 const StaticDocumentList = ({
 	page,
 	perpage,
 	loading = false,
 	documents,
-	root,
 }: Props) => (
 	<>
 		<div>
-			{loading ? (
+			{loading && documents.length === 0 ? (
 				<Loading />
 			) : documents.length > 0 ? (
-				<DocumentsPage documents={documents} />
+				<DocumentsPage loading={loading} documents={documents} />
 			) : (
 				<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 			)}
 		</div>
-		<Paginator page={page} end={documents.length < perpage} root={root} />
+		<Paginator loading={loading} end={documents.length < perpage} />
 	</>
 );
 
 StaticDocumentList.projection = DocumentsPage.projection;
-
-StaticDocumentList.propTypes = StaticDocumentListPropTypes;
 
 export default StaticDocumentList;

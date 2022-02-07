@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -51,7 +51,7 @@ const NewPatientForm = () => {
 	const lastnameId = useUniqueId('new-patient-form-input-lastname');
 	const firstnameId = useUniqueId('new-patient-form-input-firstname');
 
-	const history = useHistory();
+	const navigate = useNavigate();
 	const classes = useStyles();
 
 	const handleSubmit = async (event) => {
@@ -68,7 +68,7 @@ const NewPatientForm = () => {
 
 		try {
 			const _id = await call(patientsInsert, patient);
-			history.push({pathname: `/patient/${_id}`});
+			navigate(`/patient/${_id}`);
 		} catch (error: unknown) {
 			console.error(error);
 		}

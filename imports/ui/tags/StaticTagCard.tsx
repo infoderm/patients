@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {useHistory, Link} from 'react-router-dom';
-import PropTypes, {InferProps} from 'prop-types';
+import {useNavigate, Link, useParams} from 'react-router-dom';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 
@@ -79,27 +78,25 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-export const StaticTagCardPropTypes = {
-	loading: PropTypes.bool.isRequired,
-	found: PropTypes.bool.isRequired,
-	tag: PropTypes.any.isRequired,
-	url: PropTypes.func.isRequired,
-	avatar: PropTypes.object.isRequired,
+export interface StaticTagCardProps {
+	loading: boolean;
+	found: boolean;
+	tag: {name: string};
+	url: (name: string) => string;
+	avatar: {};
 
-	subheader: PropTypes.string.isRequired,
-	content: PropTypes.element,
-	actions: PropTypes.element,
+	subheader: string;
+	content?: JSX.Element;
+	actions?: JSX.Element;
 
-	RenamingDialog: PropTypes.elementType,
-	DeletionDialog: PropTypes.elementType,
-	abbr: PropTypes.string,
-};
-
-export type StaticTagCardProps = InferProps<typeof StaticTagCardPropTypes>;
+	RenamingDialog?: React.ElementType;
+	DeletionDialog?: React.ElementType;
+	abbr?: string;
+}
 
 const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
-	(props, ref) => {
-		const {
+	(
+		{
 			loading,
 			found,
 			tag,
@@ -111,10 +108,12 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 			RenamingDialog,
 			DeletionDialog,
 			abbr,
-		} = props;
-
+		},
+		ref,
+	) => {
 		const classes = useStyles();
-		const history = useHistory();
+		const navigate = useNavigate();
+		const params = useParams<{name?: string}>();
 
 		const [deleting, setDeleting] = useState(false);
 		const [renaming, setRenaming] = useState(false);
@@ -138,11 +137,9 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 		const isMounted = useIsMounted();
 
 		const onRename = (newName) => {
-			const currentURL = history.location.pathname.replaceAll(' ', '%20');
-			const oldURL = url(tag.name);
-			if (currentURL === oldURL) {
+			if (params.name !== undefined) {
 				const newURL = url(newName);
-				history.push(newURL);
+				navigate(newURL);
 			} else if (isMounted()) {
 				closeRenamingDialog();
 			}
@@ -202,7 +199,5 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 		);
 	},
 );
-
-StaticTagCard.propTypes = StaticTagCardPropTypes;
 
 export default StaticTagCard;

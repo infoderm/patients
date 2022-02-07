@@ -21,7 +21,7 @@ const makeDebouncedResultsQuery =
 		}, deps);
 
 		const upToDate = useTracker(
-			() => Collection.find(query, options).fetch(),
+			() => (loading ? [] : Collection.find(query, options).fetch()),
 			[loading, ...deps],
 		);
 

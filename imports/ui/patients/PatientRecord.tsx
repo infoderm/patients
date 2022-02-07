@@ -2,10 +2,12 @@ import React, {Suspense, lazy} from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
 
+import {Route, Routes, useParams} from 'react-router-dom';
 import TabJumper from '../navigation/TabJumper';
 import NoMatch from '../navigation/NoMatch';
 import Loading from '../navigation/Loading';
 
+import {myEncodeURIComponent} from '../../util/uri';
 import PatientHeader from './PatientHeader';
 import PatientPersonalInformation from './PatientPersonalInformation';
 
@@ -15,8 +17,8 @@ const ConsultationsForPatient = lazy(
 const AppointmentsForPatient = lazy(
 	async () => import('../appointments/AppointmentsForPatient'),
 );
-const DocumentsForPatient = lazy(
-	async () => import('../documents/DocumentsForPatient'),
+const DocumentsForPatientPager = lazy(
+	async () => import('../documents/DocumentsForPatientPager'),
 );
 const AttachmentsForPatient = lazy(
 	async () => import('../attachments/AttachmentsForPatient'),
@@ -31,74 +33,67 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const tabs = [
+	'information',
+	'consultations',
+	'documents',
+	'attachments',
+	'appointments',
+];
+
+const PatientRecordTabs = () => {
+	const params = useParams<{tab?: string}>();
+	return (
+		<TabJumper
+			tabs={tabs}
+			current={params.tab ?? tabs[0]}
+			toURL={(x) => `${params.tab ? '../' : ''}${myEncodeURIComponent(x)}`}
+		/>
+	);
+};
+
 interface Props {
 	patientId: string;
-	tab?: string;
-	page?: number;
-	perpage?: number;
 }
 
-const PatientRecord = ({
-	patientId,
-	tab = 'information',
-	page = 1,
-	perpage = 5,
-}: Props) => {
+const PatientRecord = ({patientId}: Props) => {
 	const classes = useStyles();
-
-	const tabs = [
-		'information',
-		'consultations',
-		'documents',
-		'attachments',
-		'appointments',
-	];
 
 	return (
 		<div className={classes.root}>
 			<PatientHeader patientId={patientId} />
-			<TabJumper
-				tabs={tabs}
-				current={tab}
-				toURL={(tab) => `/patient/${patientId}/${tab}`}
-			/>
+			<Routes>
+				<Route index element={<PatientRecordTabs />} />
+				<Route path=":tab/*" element={<PatientRecordTabs />} />
+			</Routes>
 			<Suspense fallback={<Loading />}>
-				{tab === 'information' && (
-					<PatientPersonalInformation patientId={patientId} />
-				)}
-				{tab === 'appointments' && (
-					<AppointmentsForPatient
-						className={classes.container}
-						patientId={patientId}
-						page={page}
-						perpage={perpage}
+				<Routes>
+					<Route
+						path="/"
+						element={<PatientPersonalInformation patientId={patientId} />}
 					/>
-				)}
-				{tab === 'consultations' && (
-					<ConsultationsForPatient
-						className={classes.container}
-						patientId={patientId}
-						page={page}
-						perpage={perpage}
+					<Route
+						path="information/*"
+						element={<PatientPersonalInformation patientId={patientId} />}
 					/>
-				)}
-				{tab === 'documents' && (
-					<DocumentsForPatient
-						className={classes.container}
-						patientId={patientId}
-						page={page}
-						perpage={perpage}
+					<Route
+						path="appointments/*"
+						element={<AppointmentsForPatient patientId={patientId} />}
 					/>
-				)}
-				{tab === 'attachments' && (
-					<AttachmentsForPatient
-						className={classes.container}
-						patientId={patientId}
-						page={page}
-						perpage={perpage}
+					<Route
+						path="consultations/*"
+						element={<ConsultationsForPatient patientId={patientId} />}
 					/>
-				)}
-				{!tabs.includes(tab) && <NoMatch />}
+					<Route
+						path="documents/*"
+						element={<DocumentsForPatientPager patientId={patientId} />}
+					/>
+					<Route
+						path="attachments/*"
+						element={<AttachmentsForPatient patientId={patientId} />}
+					/>
+					<Route path="*" element={<NoMatch />} />
+				</Routes>
 			</Suspense>
 		</div>
 	);

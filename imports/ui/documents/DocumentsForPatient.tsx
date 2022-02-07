@@ -3,18 +3,31 @@ import React from 'react';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import usePatient from '../patients/usePatient';
-
+import PropsOf from '../../util/PropsOf';
+import Paginator from '../navigation/Paginator';
 import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 
-const DocumentsForPatient = ({patientId, page, perpage, ...rest}) => {
-	const {loading: loadingPatient, found: foundPatient} = usePatient(
-		{},
-		patientId,
-		{fields: {_id: 1}},
-		[patientId],
-	);
+interface Props
+	extends Omit<
+		PropsOf<typeof DocumentsForPatientStatic>,
+		'page' | 'perpage' | 'documents'
+	> {
+	patientId: string;
+	loading: boolean;
+	found: boolean;
+	page?: number;
+	perpage?: number;
+}
+
+const DocumentsForPatient = ({
+	patientId,
+	loading,
+	found,
+	page = 1,
+	perpage = 5,
+	...rest
+}: Props) => {
 	const query = {
 		patientId,
 		deleted: false,
@@ -32,26 +45,24 @@ const DocumentsForPatient = ({patientId, page, perpage, ...rest}) => {
 		deps,
 	);
 
-	if (loadingPatient) {
+	if (loading) {
 		return <Loading />;
 	}
 
-	if (!foundPatient) {
+	if (!found) {
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	if (loadingDocuments) {
-		return <Loading />;
-	}
-
 	return (
-		<DocumentsForPatientStatic
-			patientId={patientId}
-			page={page}
-			perpage={perpage}
-			documents={documents}
-			{...rest}
-		/>
+		<>
+			<DocumentsForPatientStatic
+				page={page}
+				documents={documents}
+				loading={loadingDocuments}
+				{...rest}
+			/>
+			<Paginator loading={loadingDocuments} end={documents.length < perpage} />
+		</>
 	);
 };
 

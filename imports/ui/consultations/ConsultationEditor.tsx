@@ -1,6 +1,5 @@
-import React, {useState, useReducer} from 'react';
-
-import {Prompt, useHistory} from 'react-router-dom';
+import React, {useState, useReducer, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {makeStyles, createStyles} from '@material-ui/core/styles';
 
@@ -27,6 +26,7 @@ import {computeFixedFabStyle} from '../button/FixedFab';
 
 import insertConsultation from '../../api/endpoint/consultations/insert';
 import updateConsultation from '../../api/endpoint/consultations/update';
+import usePrompt from '../navigation/usePrompt';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
@@ -79,6 +79,7 @@ const defaultState = {
 	dirty: false,
 	saving: false,
 	lastSaveWasSuccessful: false,
+	lastInsertedId: undefined,
 };
 
 type State = typeof defaultState;
@@ -126,10 +127,14 @@ const init = (consultation: ConsultationDocument): State => {
 	};
 };
 
-const reducer = (
-	state: State,
-	action: {type: string; key?: string; value?: any},
-) => {
+interface Action {
+	type: string;
+	key?: string;
+	value?: any;
+	insertedId?: string;
+}
+
+const reducer = (state: State, action: Action) => {
 	switch (action.type) {
 		case 'update':
 			switch (action.key) {
@@ -176,12 +181,23 @@ const reducer = (
 		case 'save':
 			return {...state, saving: true};
 		case 'save-success':
+			if (action.insertedId) {
+				return {
+					...state,
+					saving: false,
+					dirty: false,
+					lastSaveWasSuccessful: true,
+					lastInsertedId: action.insertedId,
+				};
+			}
+
 			return {
 				...state,
 				saving: false,
 				dirty: false,
 				lastSaveWasSuccessful: true,
 			};
+
 		case 'save-failure':
 			return {...state, saving: false, lastSaveWasSuccessful: false};
 		case 'not-dirty':
@@ -203,7 +219,7 @@ const Loader = ({loading, found, consultation}) => {
 
 const ConsultationEditor = ({consultation}) => {
 	const classes = useStyles();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	const [compare, setCompare] = useState(false);
 
@@ -229,8 +245,20 @@ const ConsultationEditor = ({consultation}) => {
 		dirty,
 		saving,
 		lastSaveWasSuccessful,
+		lastInsertedId,
 		priceWarning,
 	} = state;
+
+	usePrompt(
+		'You are trying to leave the page without saving your changes. Are you sure you want to continue?',
+		dirty,
+	);
+
+	useEffect(() => {
+		if (lastSaveWasSuccessful && lastInsertedId) {
+			navigate(`/edit/consultation/${lastInsertedId}`);
+		}
+	}, [navigate, lastSaveWasSuccessful, lastInsertedId]);
 
 	const showSuccess = !dirty && lastSaveWasSuccessful;
 
@@ -288,8 +316,7 @@ const ConsultationEditor = ({consultation}) => {
 		try {
 			if (consultationId === undefined) {
 				const {insertedId} = await call(insertConsultation, consultation);
-				dispatch({type: 'save-success'});
-				history.push({pathname: `/edit/consultation/${insertedId}`});
+				dispatch({type: 'save-success', insertedId});
 			} else {
 				await call(updateConsultation, consultationId, consultation);
 				dispatch({type: 'save-success'});
@@ -302,10 +329,6 @@ const ConsultationEditor = ({consultation}) => {
 
 	return (
 		<div>
-			<Prompt
-				when={dirty}
-				message="You are trying to leave the page without saving your changes. Are you sure you want to continue?"
-			/>
 			<ConsultationEditorHeader
 				consultation={consultation}
 				state={state}

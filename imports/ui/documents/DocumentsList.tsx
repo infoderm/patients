@@ -1,26 +1,17 @@
 import React from 'react';
 
-import {useParams} from 'react-router-dom';
 import FixedFab from '../button/FixedFab';
 
 import useDocuments from './useDocuments';
 import StaticDocumentList from './StaticDocumentList';
 import CustomDocumentImportButton from './CustomDocumentImportButton';
 
-interface Params {
-	page?: string;
-}
-
 interface Props {
-	defaultPage?: number;
-	defaultPerpage?: number;
+	page?: number;
+	perpage?: number;
 }
 
-const DocumentsList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
-	const params = useParams<Params>();
-	const page = Number.parseInt(params.page, 10) || defaultPage;
-	const perpage = defaultPerpage;
-
+const DocumentsList = ({page = 1, perpage = 10}: Props) => {
 	const options = {
 		sort: {createdAt: -1},
 		fields: StaticDocumentList.projection,
@@ -35,7 +26,6 @@ const DocumentsList = ({defaultPage = 1, defaultPerpage = 10}: Props) => {
 	return (
 		<>
 			<StaticDocumentList
-				root="/documents"
 				page={page}
 				perpage={perpage}
 				loading={loading}

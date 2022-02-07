@@ -1,20 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
+import PropsOf from '../../util/PropsOf';
+
 import FixedFab from '../button/FixedFab';
 
-const Next = ({to, ...rest}) => (
+interface Props extends PropsOf<typeof FixedFab> {
+	to: string;
+}
+
+const Next = ({to, ...rest}: Props) => (
 	<FixedFab col={2} color="primary" component={Link} to={to} {...rest}>
 		<NavigateNextIcon />
 	</FixedFab>
 );
-
-Next.propTypes = {
-	to: PropTypes.string.isRequired,
-};
 
 export default Next;

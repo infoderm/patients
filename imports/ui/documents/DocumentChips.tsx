@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
@@ -20,6 +19,8 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import {useDateFormat} from '../../i18n/datetime';
 
 import {myEncodeURIComponent} from '../../util/uri';
+
+import {DocumentDocument} from '../../api/collection/documents';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
@@ -55,30 +56,32 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const DocumentChips = (props) => {
+interface Props {
+	document: DocumentDocument;
+	PatientChip?: React.ElementType;
+	VersionsChip?: React.ElementType;
+}
+
+const DocumentChips = ({
+	document,
+	PatientChip = ReactivePatientChip,
+	VersionsChip = DocumentVersionsChip,
+}: Props) => {
 	const [linking, setLinking] = useState(false);
 
 	const {
-		PatientChip,
-		VersionsChip,
-		document: {
-			createdAt,
-			patientId,
-			parsed,
-			kind,
-			identifier,
-			reference,
-			status,
-			datetime,
-			deleted,
-			patient: subject,
-			anomalies,
-		},
-	} = props;
-
-	const {document} = props;
-
-	console.debug({document});
+		createdAt,
+		patientId,
+		parsed,
+		kind,
+		identifier,
+		reference,
+		status,
+		datetime,
+		deleted,
+		patient: subject,
+		anomalies,
+	} = document;
 
 	const classes = useStyles();
 
@@ -95,7 +98,9 @@ const DocumentChips = (props) => {
 				<Chip
 					icon={<BusinessIcon />}
 					component={Link}
-					to={`/documents/${myEncodeURIComponent(identifier)}`}
+					to={`/documents/filterBy/identifier/${myEncodeURIComponent(
+						identifier,
+					)}`}
 					label={identifier}
 					className={classNames(classes.chip, classes.maxWidthChip)}
 				/>
@@ -185,17 +190,6 @@ const DocumentChips = (props) => {
 			)}
 		</>
 	);
-};
-
-DocumentChips.defaultProps = {
-	PatientChip: ReactivePatientChip,
-	VersionsChip: DocumentVersionsChip,
-};
-
-DocumentChips.propTypes = {
-	document: PropTypes.object.isRequired,
-	PatientChip: PropTypes.elementType,
-	VersionsChip: PropTypes.elementType,
 };
 
 DocumentChips.projection = {

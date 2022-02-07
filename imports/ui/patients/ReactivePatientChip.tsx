@@ -1,23 +1,18 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
+import PropsOf from '../../util/PropsOf';
 import StaticPatientChip, {
 	projection as StaticPatientChipProjection,
 } from './StaticPatientChip';
 
 import usePatient from './usePatient';
 
-const ReactivePatientChipPropTypes = {
-	...StaticPatientChip.propTypes,
-	patient: PropTypes.shape({
-		_id: PropTypes.string.isRequired,
-	}).isRequired,
-};
-
-type ReactivePatientChipProps = InferProps<typeof ReactivePatientChipPropTypes>;
+interface Props extends PropsOf<typeof StaticPatientChip> {
+	patient: {_id: string};
+}
 
 const ReactivePatientChip = React.forwardRef(
-	({patient, ...rest}: ReactivePatientChipProps, ref) => {
+	({patient, ...rest}: Props, ref) => {
 		const patientId = patient._id;
 		const options = {fields: StaticPatientChipProjection};
 
@@ -39,8 +34,6 @@ const ReactivePatientChip = React.forwardRef(
 		return <StaticPatientChip ref={ref} {...props} />;
 	},
 );
-
-ReactivePatientChip.propTypes = ReactivePatientChipPropTypes;
 
 export default ReactivePatientChip;
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -8,6 +8,7 @@ import subDays from 'date-fns/subDays';
 import addHours from 'date-fns/addHours';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
+import startOfDay from 'date-fns/startOfDay';
 
 import {count} from '@iterable-iterator/cardinality';
 
@@ -28,7 +29,7 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
-import ReactiveConsultationCard from './ReactiveConsultationCard';
+import ConsultationsList from './ConsultationsList';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -49,13 +50,22 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 
 	const localizedDateFormat = useDateFormat();
 
-	const prevDay = subDays(day, 1);
-	const nextDay = addDays(day, 1);
+	const {nextDay, dayBefore, dayAfter} = useMemo(() => {
+		const prevDay = subDays(day, 1);
+		const nextDay = addDays(day, 1);
+		const dayBefore = format(prevDay, 'yyyy-MM-dd');
+		const dayAfter = format(nextDay, 'yyyy-MM-dd');
+		return {
+			nextDay,
+			dayBefore,
+			dayAfter,
+		};
+	}, [day]);
 
 	const query = {datetime: {$gte: day, $lt: nextDay}};
 	const options = {sort: {datetime: 1}};
-	const deps = [Number(day), Number(nextDay)];
-	const {results: consultations} = useConsultationsAndAppointments(
+	const deps = [Number(day)];
+	const {loading, results: consultations} = useConsultationsAndAppointments(
 		query,
 		options,
 		deps,
@@ -63,14 +73,10 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 
 	const classes = useStyles();
 
-	const dayBefore = format(prevDay, 'yyyy-MM-dd');
-	const dayAfter = format(nextDay, 'yyyy-MM-dd');
-
 	const thisMorning = startOfToday();
-	const pause = addHours(day, TIME_BREAK);
 	const am = consultations.filter(
 		(c) =>
-			isBefore(c.datetime, pause) &&
+			isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
 			(showConsultations || c.isDone === false) &&
 			(showAppointments || c.isDone !== false) &&
 			(showCancelledAppointments || c.isCancelled !== true) &&
@@ -81,7 +87,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 	);
 	const pm = consultations.filter(
 		(c) =>
-			!isBefore(c.datetime, pause) &&
+			!isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
 			(showConsultations || c.isDone === false) &&
 			(showAppointments || c.isDone !== false) &&
 			(showCancelledAppointments || c.isCancelled !== true) &&
@@ -102,34 +108,28 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		<>
 			<div>
 				<Typography variant="h4">{heading}</Typography>
-				{cam === 0 ? (
-					''
-				) : (
-					<div className={classes.container}>
-						{am.map((consultation) => (
-							<ReactiveConsultationCard
-								key={consultation._id}
-								consultation={consultation}
-								PatientChip={ReactivePatientChip}
-								showDate={false}
-							/>
-						))}
-					</div>
+				{cam === 0 ? null : (
+					<ConsultationsList
+						className={classes.container}
+						items={am}
+						loading={loading}
+						itemProps={{
+							PatientChip: ReactivePatientChip,
+							showDate: false,
+						}}
+					/>
 				)}
-				{cpm === 0 || cam === 0 ? '' : <Divider />}
-				{cpm === 0 ? (
-					''
-				) : (
-					<div className={classes.container}>
-						{pm.map((consultation) => (
-							<ReactiveConsultationCard
-								key={consultation._id}
-								consultation={consultation}
-								PatientChip={ReactivePatientChip}
-								showDate={false}
-							/>
-						))}
-					</div>
+				{cpm === 0 || cam === 0 ? null : <Divider />}
+				{cpm === 0 ? null : (
+					<ConsultationsList
+						className={classes.container}
+						items={pm}
+						loading={loading}
+						itemProps={{
+							PatientChip: ReactivePatientChip,
+							showDate: false,
+						}}
+					/>
 				)}
 			</div>
 			<FixedFab

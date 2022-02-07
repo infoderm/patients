@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 
-const useAny = (value) => {
+const useAny = (value: any) => {
 	const [any, setAny] = useState(false);
 	const toggleOnce = value || any;
 

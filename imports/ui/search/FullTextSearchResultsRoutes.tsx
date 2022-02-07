@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import {myDecodeURIComponent} from '../../util/uri';
 
 import useRandom from '../hooks/useRandom';
-import PatientsObservedSearchResults from '../patients/PatientsObservedSearchResults';
+import PatientsObservedSearchResultsPager from '../patients/PatientsObservedSearchResultsPager';
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -22,9 +22,9 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-interface Params {
+type Params = {
 	query: string;
-}
+};
 
 const FullTextSearchResults = () => {
 	const classes = useStyles();
@@ -36,7 +36,7 @@ const FullTextSearchResults = () => {
 			<Typography className={classes.heading} variant="h3">
 				Results for query `{query}`.
 			</Typography>
-			<PatientsObservedSearchResults
+			<PatientsObservedSearchResultsPager
 				className={classes.results}
 				query={query}
 				refresh={refresh}

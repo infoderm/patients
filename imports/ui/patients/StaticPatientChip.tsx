@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -35,21 +34,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const StaticPatientChipPropTypes = {
-	className: PropTypes.string,
-	loading: PropTypes.bool,
-	found: PropTypes.bool,
-	patient: PropTypes.shape({
-		_id: PropTypes.string.isRequired,
-		firstname: PropTypes.string,
-		lastname: PropTypes.string,
-		photo: PropTypes.string,
-	}).isRequired,
-	onClick: PropTypes.func,
-	onDelete: PropTypes.func,
-};
-
-type StaticPatientChipProps = InferProps<typeof StaticPatientChipPropTypes>;
+interface Props {
+	className?: string;
+	loading?: boolean;
+	found?: boolean;
+	patient: {
+		_id: string;
+		firstname?: string;
+		lastname?: string;
+		photo?: string;
+	};
+	onClick?: () => void;
+	onDelete?: () => void;
+}
 
 const StaticPatientChip = React.forwardRef(
 	(
@@ -60,7 +57,7 @@ const StaticPatientChip = React.forwardRef(
 			patient,
 			onClick = undefined,
 			onDelete = undefined,
-		}: StaticPatientChipProps,
+		}: Props,
 		ref,
 	) => {
 		const classes = useStyles();
@@ -113,8 +110,6 @@ const StaticPatientChip = React.forwardRef(
 		);
 	},
 );
-
-StaticPatientChip.propTypes = StaticPatientChipPropTypes;
 
 export default StaticPatientChip;
 

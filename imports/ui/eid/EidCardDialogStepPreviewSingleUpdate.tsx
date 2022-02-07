@@ -136,11 +136,11 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	onPrevStep,
 	patientId,
 	eidInfo,
-	history,
+	navigate,
 	onClose,
 }: EidCardDialogStepPreviewSingleProps) => {
 	const onOpen = () => {
-		history.push({pathname: `/patient/${patientId}`});
+		navigate(`/patient/${patientId}`);
 		onClose();
 	};
 

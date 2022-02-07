@@ -1,3 +1,4 @@
+import {useNavigate} from 'react-router-dom';
 import insertPatient from '../../api/patients/insertPatient';
 import insertDrugs from '../../api/drugs/insertDrugs';
 import insertDocument from '../../api/documents/insertDocument';
@@ -24,33 +25,34 @@ function unpack(data, item) {
 	return ['unknown', item];
 }
 
-const handleDrop = (history) => async (data) => {
-	console.debug('handleDrop', data);
+const handleDrop =
+	(navigate: ReturnType<typeof useNavigate>) => async (data) => {
+		console.debug('handleDrop', data);
 
-	for (const item of data.items) {
-		const [kind, object] = unpack(data, item);
-		switch (kind) {
-			case 'drugs':
-				// eslint-disable-next-line no-await-in-loop
-				await insertDrugs(object);
-				break;
-			case 'patient':
-				// eslint-disable-next-line no-await-in-loop
-				await insertPatient(history, object);
-				break;
-			case 'document':
-				// eslint-disable-next-line no-await-in-loop
-				await insertDocument(history, undefined, object);
-				break;
-			case 'attachment':
-				throw new Error(
-					'Cannot drop PDFs! Please attach them to the patient directly.',
-				);
-			default:
-				console.debug('handleDrop-default', kind, object);
-				break;
+		for (const item of data.items) {
+			const [kind, object] = unpack(data, item);
+			switch (kind) {
+				case 'drugs':
+					// eslint-disable-next-line no-await-in-loop
+					await insertDrugs(object);
+					break;
+				case 'patient':
+					// eslint-disable-next-line no-await-in-loop
+					await insertPatient(navigate, object);
+					break;
+				case 'document':
+					// eslint-disable-next-line no-await-in-loop
+					await insertDocument(navigate, undefined, object);
+					break;
+				case 'attachment':
+					throw new Error(
+						'Cannot drop PDFs! Please attach them to the patient directly.',
+					);
+				default:
+					console.debug('handleDrop-default', kind, object);
+					break;
+			}
 		}
-	}
-};
+	};
 
 export default handleDrop;

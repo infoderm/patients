@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
 
@@ -11,7 +12,10 @@ import GenericDocumentImportButton from './GenericDocumentImportButton';
 const CustomDocumentImportButton = (props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const onImport = async (history, files) => {
+	const onImport = async (
+		navigate: ReturnType<typeof useNavigate>,
+		files: File[],
+	) => {
 		const key = enqueueSnackbar('Processing documents...', {variant: 'info'});
 		try {
 			if (any(map(({type}) => type === 'application/pdf', files))) {
@@ -21,7 +25,7 @@ const CustomDocumentImportButton = (props) => {
 			}
 
 			await Promise.all(
-				map(async (file) => insertDocument(history, undefined, file), files),
+				map(async (file) => insertDocument(navigate, undefined, file), files),
 			);
 			closeSnackbar(key);
 			enqueueSnackbar('Success!', {variant: 'success'});

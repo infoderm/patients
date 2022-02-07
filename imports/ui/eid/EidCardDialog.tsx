@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {History} from 'history';
+import {useNavigate} from 'react-router-dom';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -11,13 +11,13 @@ import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
 interface Props {
-	history: History;
+	navigate: ReturnType<typeof useNavigate>;
 	eidInfo: PatientIdFields;
 	open: boolean;
 	onClose: () => void;
 }
 
-const EidCardDialog = ({history, eidInfo, open, onClose}: Props) => {
+const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 	const [selected, setSelected] = useState(new Set());
 	const [step, setStep] = useState('selection');
 
@@ -39,7 +39,7 @@ const EidCardDialog = ({history, eidInfo, open, onClose}: Props) => {
 			{step === 'preview' && selectionIsSingle && (
 				<EidCardDialogStepPreviewSingle
 					eidInfo={eidInfo}
-					history={history}
+					navigate={navigate}
 					patientId={selected[Symbol.iterator]().next().value}
 					onPrevStep={() => {
 						setStep('selection');

@@ -26,7 +26,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 	onPrevStep,
 	patientId,
 	eidInfo,
-	history,
+	navigate,
 	onClose,
 }: EidCardDialogStepPreviewSingleProps) => {
 	assert(patientId === '?');
@@ -50,7 +50,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 		) {
 			try {
 				const _id = await call(patientsInsert, eidInfo);
-				history.push({pathname: `/patient/${_id}`});
+				navigate({pathname: `/patient/${_id}`});
 				onClose();
 			} catch (error: unknown) {
 				console.error(error);

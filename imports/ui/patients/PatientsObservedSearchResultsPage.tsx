@@ -1,8 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import {useParams} from 'react-router-dom';
-import {myDecodeURIComponent} from '../../util/uri';
 import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 
@@ -13,7 +10,7 @@ import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
 type Props = {
-	query?: string;
+	query: string;
 	page?: number;
 	perpage?: number;
 	refresh: () => void;
@@ -23,16 +20,15 @@ type Props = {
 	'page' | 'perpage' | 'loading' | 'patients' | 'root' | 'Card'
 >;
 
-const PatientsObservedSearchResults = (props: Props) => {
-	let {query, page, perpage, refresh, refreshKey, ...rest} = props;
-	const params = useParams<{query?: string; page?: string}>();
-	page =
-		Number.parseInt(params.page, 10) ||
-		page ||
-		PatientsObservedSearchResults.defaultProps.page;
-	perpage = perpage || PatientsObservedSearchResults.defaultProps.perpage;
-
-	const $search = normalizeSearch(myDecodeURIComponent(params.query));
+const PatientsObservedSearchResults = ({
+	query,
+	page = 1,
+	perpage = 5,
+	refresh = undefined,
+	refreshKey = undefined,
+	...rest
+}: Props) => {
+	const $search = normalizeSearch(query);
 
 	const selector = {$text: {$search}};
 
@@ -65,8 +61,6 @@ const PatientsObservedSearchResults = (props: Props) => {
 		[$search, page, perpage, refreshKey],
 	);
 
-	const root = location.pathname.split('/page/')[0];
-
 	return (
 		<>
 			<StaticPatientsList
@@ -74,27 +68,12 @@ const PatientsObservedSearchResults = (props: Props) => {
 				perpage={perpage}
 				loading={loading}
 				patients={results}
-				root={root}
 				Card={ReactivePatientCard}
 				{...rest}
 			/>
 			{refresh && dirty && <Refresh onClick={refresh} />}
 		</>
 	);
-};
-
-PatientsObservedSearchResults.defaultProps = {
-	page: 1,
-	perpage: 5,
-	refresh: undefined,
-	refreshKey: undefined,
-};
-
-PatientsObservedSearchResults.propTypes = {
-	page: PropTypes.number,
-	perpage: PropTypes.number,
-	refresh: PropTypes.func,
-	refreshKey: PropTypes.any,
 };
 
 export default PatientsObservedSearchResults;

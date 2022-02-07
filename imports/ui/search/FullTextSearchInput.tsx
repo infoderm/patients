@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
 import {fade} from '@material-ui/core/styles/colorManipulator';
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FullTextSearchInput({className}) {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const classes = useStyles();
 	const [lastHistoryUpdate, setLastHistoryUpdate] = useState(0);
 	const [value, setValue] = useState('');
@@ -37,9 +37,9 @@ export default function FullTextSearchInput({className}) {
 				const now = Date.now();
 				const timeSinceLastHistoryUpdate = now - lastHistoryUpdate;
 				if (timeSinceLastHistoryUpdate >= THRESHOLD_HISTORY_PUSH) {
-					history.push(url);
+					navigate(url);
 				} else {
-					history.replace(url);
+					navigate(url, {replace: true});
 				}
 
 				setLastHistoryUpdate(now);

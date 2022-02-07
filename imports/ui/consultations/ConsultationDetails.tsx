@@ -5,9 +5,9 @@ import {myDecodeURIComponent} from '../../util/uri';
 import StaticConsultationDetails from './StaticConsultationDetails';
 import useConsultation from './useConsultation';
 
-interface Params {
+type Params = {
 	id: string;
-}
+};
 
 const ConsultationDetails = () => {
 	const params = useParams<Params>();
