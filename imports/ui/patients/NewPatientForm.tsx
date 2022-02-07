@@ -2,25 +2,25 @@ import React, {useState} from 'react';
 
 import {useNavigate} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
@@ -78,7 +78,7 @@ const NewPatientForm = () => {
 		<Grid
 			container
 			className={classes.container}
-			justify="center"
+			justifyContent="center"
 			alignItems="center"
 		>
 			<Grid item xs={12} sm={12} md={8} lg={6} xl={4}>
@@ -119,7 +119,7 @@ const NewPatientForm = () => {
 											id: 'sex-input',
 										}}
 										onChange={(e) => {
-											setSex(e.target.value as string);
+											setSex(e.target.value);
 										}}
 									>
 										<MenuItem value="">

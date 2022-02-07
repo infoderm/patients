@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Route, Routes} from 'react-router-dom';
 
-import SaveIcon from '@material-ui/icons/Save';
-import SwapVertIcon from '@material-ui/icons/SwapVert';
+import SaveIcon from '@mui/icons-material/Save';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
 import dateFormat from 'date-fns/format';
 

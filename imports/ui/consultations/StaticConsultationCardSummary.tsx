@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionSummary from '@mui/material/AccordionSummary';
 
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 

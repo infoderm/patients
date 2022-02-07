@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
-import CardMedia from '@material-ui/core/CardMedia';
+import CardMedia from '@mui/material/CardMedia';
 
 import PropsOf from '../../util/PropsOf';
 

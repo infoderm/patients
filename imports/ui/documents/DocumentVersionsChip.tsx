@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import Chip from '@material-ui/core/Chip';
+import Chip from '@mui/material/Chip';
 
-import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import {myEncodeURIComponent} from '../../util/uri';
 import useDocumentVersions from './useDocumentVersions';

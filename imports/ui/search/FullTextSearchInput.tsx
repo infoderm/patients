@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 
 import {useNavigate} from 'react-router-dom';
-import {makeStyles} from '@material-ui/core/styles';
-import {fade} from '@material-ui/core/styles/colorManipulator';
+import makeStyles from '@mui/styles/makeStyles';
+import {alpha} from '@mui/material/styles';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
@@ -15,9 +15,9 @@ const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;
 
 const useStyles = makeStyles((theme) => ({
 	searchBox: {
-		background: fade(theme.palette.common.white, 0.15),
+		background: alpha(theme.palette.common.white, 0.15),
 		'&:hover': {
-			background: fade(theme.palette.common.white, 0.25),
+			background: alpha(theme.palette.common.white, 0.25),
 		},
 	},
 }));

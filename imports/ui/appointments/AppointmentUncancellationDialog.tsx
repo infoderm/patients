@@ -1,7 +1,7 @@
 import React from 'react';
 
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import AlarmOnIcon from '@material-ui/icons/AlarmOn';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 
 import uncancel from '../../api/endpoint/appointments/uncancel';
 
@@ -25,7 +25,6 @@ const AppointmentUncancellationDialog = ({
 		text="If you do not want to cancel this appointment, click cancel. If you really want to cancel this appointment from the system, click cancel."
 		cancel="Do not uncancel"
 		CancelIcon={AlarmOffIcon}
-		cancelColor="default"
 		confirm="Uncancel Appointment"
 		ConfirmIcon={AlarmOnIcon}
 		confirmColor="primary"

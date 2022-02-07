@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
 import {useSetting} from './hooks';
 

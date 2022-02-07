@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AccordionActions from '@material-ui/core/AccordionActions';
+import AccordionActions from '@mui/material/AccordionActions';
 
 import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
 

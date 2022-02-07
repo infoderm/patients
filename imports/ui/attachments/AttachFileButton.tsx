@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 
-import Button from '@material-ui/core/Button';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
+import Button from '@mui/material/Button';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
 
 import PropsOf from '../../util/PropsOf';

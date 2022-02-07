@@ -3,12 +3,12 @@ import React, {useState} from 'react';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
 
 import {PatientDocument, PatientFields} from '../../api/collection/patients';
 import PatientSheet from '../patients/PatientSheet';
@@ -83,11 +83,7 @@ const StaticMergePatientsFormStepPrepare = ({
 			<Grid item container xs={12} spacing={1}>
 				{onPrevStep && (
 					<Grid item>
-						<Button
-							color="default"
-							startIcon={<SkipPreviousIcon />}
-							onClick={onPrevStep}
-						>
+						<Button startIcon={<SkipPreviousIcon />} onClick={onPrevStep}>
 							Prev
 						</Button>
 					</Grid>

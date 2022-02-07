@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
-import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import {myEncodeURIComponent} from '../../../util/uri';
 import useDocumentVersions from '../useDocumentVersions';

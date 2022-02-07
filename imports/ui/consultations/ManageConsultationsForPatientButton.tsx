@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 import PropTypes, {InferProps} from 'prop-types';
-import AssistantIcon from '@material-ui/icons/Assistant';
+import AssistantIcon from '@mui/icons-material/Assistant';
 
 import PropsOf from '../../util/PropsOf';
 import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';

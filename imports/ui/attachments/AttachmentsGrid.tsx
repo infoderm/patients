@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import AttachmentCard from './AttachmentCard';
 
 const AttachmentsGrid = ({

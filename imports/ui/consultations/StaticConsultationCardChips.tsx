@@ -2,16 +2,16 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
 
-import MoneyIcon from '@material-ui/icons/Money';
-import PaymentIcon from '@material-ui/icons/Payment';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import AttachmentIcon from '@material-ui/icons/Attachment';
+import MoneyIcon from '@mui/icons-material/Money';
+import PaymentIcon from '@mui/icons-material/Payment';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import dateFormat from 'date-fns/format';
 

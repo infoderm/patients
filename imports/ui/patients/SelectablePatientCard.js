@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import ButtonBase from '@material-ui/core/ButtonBase';
-import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
-import RadioButtonUncheckedOutlinedIcon from '@material-ui/icons/RadioButtonUncheckedOutlined';
+import ButtonBase from '@mui/material/ButtonBase';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import RadioButtonUncheckedOutlinedIcon from '@mui/icons-material/RadioButtonUncheckedOutlined';
 
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 

@@ -16,18 +16,13 @@
         "@types/mocha",
         "@types/node",
         "faker",
-        "notistack",
         "healthone",
         "medidoc",
         "total-order",
-        "typescript",
-        "react-router",
-        "react-router-dom",
-        "@types/react-router-dom"
+        "typescript"
       ],
       "matchPackagePrefixes": [
         "@combinatorics/",
-        "@material-ui/",
         "@total-order/",
         "@set-theory/",
         "@iterable-iterator/",

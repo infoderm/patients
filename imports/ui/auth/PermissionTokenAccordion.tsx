@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Accordion from '@material-ui/core/Accordion';
-import Divider from '@material-ui/core/Divider';
+import Accordion from '@mui/material/Accordion';
+import Divider from '@mui/material/Divider';
 
 import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
 

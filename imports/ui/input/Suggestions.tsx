@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
+import {makeStyles, createStyles} from '@mui/styles';
+import Paper from '@mui/material/Paper';
+import MenuItem from '@mui/material/MenuItem';
 
 const SuggestionPropTypes = {
 	highlightedIndex: PropTypes.number.isRequired,

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-import Button from '@material-ui/core/Button';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Button from '@mui/material/Button';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import LoginPopover from './LoginPopover';
 import RegisterPopover from './RegisterPopover';

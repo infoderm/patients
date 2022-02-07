@@ -4,19 +4,19 @@ import addYears from 'date-fns/addYears';
 
 import {useSnackbar} from 'notistack';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
-import {MobileDatePicker as DatePicker} from '@material-ui/pickers';
+import DatePicker from '@mui/lab/DatePicker';
 
-import SaveIcon from '@material-ui/icons/Save';
-import TuneIcon from '@material-ui/icons/Tune';
+import SaveIcon from '@mui/icons-material/Save';
+import TuneIcon from '@mui/icons-material/Tune';
 
 import CancelButton from '../button/CancelButton';
 
@@ -185,7 +185,6 @@ const BooksDownloadDialog = ({
 				<CancelButton onClick={onClose} />
 				<Button
 					disabled={advancedFunctionality}
-					color="default"
 					endIcon={<TuneIcon />}
 					onClick={() => {
 						setAdvancedFunctionality(true);

@@ -1,6 +1,6 @@
 import React, {DependencyList, useState} from 'react';
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
 import Center from '../grid/Center';
 import Loading from '../navigation/Loading';

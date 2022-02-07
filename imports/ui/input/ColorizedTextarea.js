@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import colorizeText from '../text/colorizeText';
 

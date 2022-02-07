@@ -2,11 +2,11 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import FaceIcon from '@material-ui/icons/Face';
+import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import FaceIcon from '@mui/icons-material/Face';
 
-import {MobileDateTimePicker as DateTimePicker} from '@material-ui/pickers';
+import DateTimePicker from '@mui/lab/MobileDateTimePicker';
 
 import {dataURL as pngDataURL} from '../../util/png';
 

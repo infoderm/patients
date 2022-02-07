@@ -3,9 +3,9 @@ import {Meteor} from 'meteor/meteor';
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Popover from '@material-ui/core/Popover';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Popover from '@mui/material/Popover';
 
 import {useSnackbar} from 'notistack';
 import createUserWithPassword from '../../api/user/createUserWithPassword';

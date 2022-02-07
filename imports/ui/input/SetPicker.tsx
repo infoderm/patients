@@ -9,14 +9,14 @@ import {
 import {any} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
+import {makeStyles, createStyles} from '@mui/styles';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
-import DefaultChip from '@material-ui/core/Chip';
+import DefaultChip from '@mui/material/Chip';
 
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import TextField from './TextField';

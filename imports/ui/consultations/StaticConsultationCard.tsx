@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import Accordion from '@material-ui/core/Accordion';
+import Accordion from '@mui/material/Accordion';
 
-import Divider from '@material-ui/core/Divider';
+import Divider from '@mui/material/Divider';
 
 import virtualFields from '../../api/consultations/virtualFields';
 

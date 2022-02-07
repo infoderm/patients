@@ -1,12 +1,12 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import RotateRightIcon from '@material-ui/icons/RotateRight';
-import HomeIcon from '@material-ui/icons/Home';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
+import HomeIcon from '@mui/icons-material/Home';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 import NoContent from './navigation/NoContent';
 

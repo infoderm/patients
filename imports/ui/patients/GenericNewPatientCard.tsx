@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Button from '@material-ui/core/Button';
-import FaceIcon from '@material-ui/icons/Face';
+import Button from '@mui/material/Button';
+import FaceIcon from '@mui/icons-material/Face';
 
 const useStyles = makeStyles(() => ({
 	buttonTile: {

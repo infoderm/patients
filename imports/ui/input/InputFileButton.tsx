@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-import MuiButton from '@material-ui/core/Button';
+import makeStyles from '@mui/styles/makeStyles';
+import MuiButton from '@mui/material/Button';
 
 import PropsOf from '../../util/PropsOf';
 

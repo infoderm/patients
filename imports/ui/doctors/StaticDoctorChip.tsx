@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import Chip, {ChipProps} from '@material-ui/core/Chip';
+import Chip, {ChipProps} from '@mui/material/Chip';
 
 import {myEncodeURIComponent} from '../../util/uri';
 

@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 
 import {Link, useNavigate} from 'react-router-dom';
 
-import AccordionActions from '@material-ui/core/AccordionActions';
+import AccordionActions from '@mui/material/AccordionActions';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import EditIcon from '@material-ui/icons/Edit';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
-import SmartphoneIcon from '@material-ui/icons/Smartphone';
-import FolderSharedIcon from '@material-ui/icons/FolderShared';
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import AlarmOnIcon from '@material-ui/icons/AlarmOn';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import EditIcon from '@mui/icons-material/Edit';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import EuroSymbolIcon from '@mui/icons-material/EuroSymbol';
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import AlarmOnIcon from '@mui/icons-material/AlarmOn';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import consultationsAttach from '../../api/endpoint/consultations/attach';
 

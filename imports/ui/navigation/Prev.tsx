@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 import PropsOf from '../../util/PropsOf';
 

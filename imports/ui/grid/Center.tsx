@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Grid, {GridProps} from '@material-ui/core/Grid';
+import Grid, {GridProps} from '@mui/material/Grid';
 
 const Center = ({
 	xs = 12,
@@ -11,7 +11,7 @@ const Center = ({
 	spacing = 3,
 	...rest
 }: GridProps) => (
-	<Grid container spacing={spacing} justify="center" alignItems="center">
+	<Grid container spacing={spacing} justifyContent="center" alignItems="center">
 		<Grid item xs={xs} sm={sm} md={md} lg={lg} xl={xl} {...rest} />
 	</Grid>
 );

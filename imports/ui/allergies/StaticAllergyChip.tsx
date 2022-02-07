@@ -1,12 +1,12 @@
 import React from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-import {darken} from '@material-ui/core/styles/colorManipulator';
+import makeStyles from '@mui/styles/makeStyles';
+import {darken} from '@mui/material/styles';
 import classNames from 'classnames';
 
 import {Link} from 'react-router-dom';
 
-import Chip, {ChipProps} from '@material-ui/core/Chip';
+import Chip, {ChipProps} from '@mui/material/Chip';
 
 import {colord} from 'colord';
 

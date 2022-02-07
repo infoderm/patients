@@ -2,10 +2,10 @@ import React from 'react';
 
 import {scaleOrdinal} from '@visx/scale';
 
-import blue from '@material-ui/core/colors/blue';
-import pink from '@material-ui/core/colors/pink';
-import purple from '@material-ui/core/colors/purple';
-import grey from '@material-ui/core/colors/grey';
+import blue from '@mui/material/colors/blue';
+import pink from '@mui/material/colors/pink';
+import purple from '@mui/material/colors/purple';
+import grey from '@mui/material/colors/grey';
 
 import StackedBarChart from './StackedBarChart';
 import useFrequencyStats from './useFrequencyStats';

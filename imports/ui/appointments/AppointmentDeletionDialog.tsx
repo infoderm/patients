@@ -1,7 +1,7 @@
 import React from 'react';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import appointmentsRemove from '../../api/endpoint/appointments/remove';
 
@@ -21,7 +21,6 @@ const AppointmentDeletionDialog = ({open, onClose, appointment}: Props) => (
 		text="If you do not want to delete this appointment, click cancel. If you really want to delete this appointment from the system, click delete."
 		cancel="Cancel"
 		CancelIcon={CancelIcon}
-		cancelColor="default"
 		confirm="Delete"
 		ConfirmIcon={DeleteIcon}
 		confirmColor="secondary"

@@ -2,19 +2,19 @@ import React, {useState} from 'react';
 
 import {Link} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import Chip from '@material-ui/core/Chip';
+import Chip from '@mui/material/Chip';
 
-import ErrorIcon from '@material-ui/icons/Error';
-import BusinessIcon from '@material-ui/icons/Business';
-import DeleteIcon from '@material-ui/icons/Delete';
-import LinkOffIcon from '@material-ui/icons/LinkOff';
-import BugReportIcon from '@material-ui/icons/BugReport';
-import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
-import DoneIcon from '@material-ui/icons/Done';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import ErrorIcon from '@mui/icons-material/Error';
+import BusinessIcon from '@mui/icons-material/Business';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import DoneIcon from '@mui/icons-material/Done';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 import {useDateFormat} from '../../i18n/datetime';
 

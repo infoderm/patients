@@ -1,36 +1,36 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import classNames from 'classnames';
-import {useTheme, makeStyles} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import {useTheme, makeStyles} from '@mui/styles';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import BusinessIcon from '@material-ui/icons/Business';
-import BugReportIcon from '@material-ui/icons/BugReport';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import TodayIcon from '@material-ui/icons/Today';
-import LocalPharmacyIcon from '@material-ui/icons/LocalPharmacy';
-import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import MoneyOffIcon from '@material-ui/icons/MoneyOff';
-import BookIcon from '@material-ui/icons/Book';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import ReportProblemIcon from '@material-ui/icons/ReportProblem';
-import SettingsIcon from '@material-ui/icons/Settings';
-import MergeTypeIcon from '@material-ui/icons/MergeType';
-import CropFreeIcon from '@material-ui/icons/CropFree';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import SecurityIcon from '@material-ui/icons/Security';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import BusinessIcon from '@mui/icons-material/Business';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import TodayIcon from '@mui/icons-material/Today';
+import LocalPharmacyIcon from '@mui/icons-material/LocalPharmacy';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import BookIcon from '@mui/icons-material/Book';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import SettingsIcon from '@mui/icons-material/Settings';
+import MergeTypeIcon from '@mui/icons-material/MergeType';
+import CropFreeIcon from '@mui/icons-material/CropFree';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import SecurityIcon from '@mui/icons-material/Security';
 
 import {setSetting} from './settings/hooks';
 import Tooltip from './accessibility/Tooltip';
@@ -56,9 +56,9 @@ const useStyles = makeStyles((theme) => ({
 			duration: theme.transitions.duration.leavingScreen,
 		}),
 		overflowX: 'hidden',
-		width: theme.spacing(7) + 1,
+		width: `calc(${theme.spacing(7)} + '1px')`,
 		[theme.breakpoints.up('sm')]: {
-			width: theme.spacing(9) + 1,
+			width: `calc(${theme.spacing(9)} + '1px')`,
 		},
 	},
 	drawer: {

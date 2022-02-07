@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
-import blue from '@material-ui/core/colors/blue';
+import {makeStyles, createStyles} from '@mui/styles';
+import blue from '@mui/material/colors/blue';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import {useSnackbar} from 'notistack';
 import downloadDocument from './downloadDocument';
 

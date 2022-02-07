@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import TextField from './TextField';
 
 import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify';

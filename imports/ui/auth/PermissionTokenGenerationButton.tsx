@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 import {useSnackbar} from 'notistack';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 import call from '../../api/endpoint/call';
 import generate from '../../api/endpoint/permissions/token/generate';
 import useSaveTextToClipboardAndNotify from '../input/useSaveTextToClipboardAndNotify';

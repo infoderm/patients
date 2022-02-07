@@ -1,7 +1,7 @@
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import IconButton from '@mui/material/IconButton';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 

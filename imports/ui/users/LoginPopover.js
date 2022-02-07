@@ -3,10 +3,10 @@ import {Meteor} from 'meteor/meteor';
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Popover from '@material-ui/core/Popover';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Popover from '@mui/material/Popover';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import {useSnackbar} from 'notistack';
 import loginWithPassword from '../../api/user/loginWithPassword';

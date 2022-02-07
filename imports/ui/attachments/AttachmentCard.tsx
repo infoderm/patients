@@ -1,27 +1,27 @@
 import React, {useReducer} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 import format from 'date-fns/format';
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
 
-import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import PhotoIcon from '@material-ui/icons/Photo';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import LinkIcon from '@material-ui/icons/Link';
-import LinkOffIcon from '@material-ui/icons/LinkOff';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import EditIcon from '@material-ui/icons/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PhotoIcon from '@mui/icons-material/Photo';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import AttachmentIcon from '@mui/icons-material/Attachment';
+import LinkIcon from '@mui/icons-material/Link';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 import {FileObj} from 'meteor/ostrio:files';
 import {link} from '../../api/attachments';

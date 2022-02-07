@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@mui/styles';
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
@@ -102,7 +102,7 @@ const SEPAPaymentDetailsStatic = ({
 		<Grid
 			container
 			className={classes.container}
-			justify="center"
+			justifyContent="center"
 			alignItems="center"
 		>
 			<Grid item>
