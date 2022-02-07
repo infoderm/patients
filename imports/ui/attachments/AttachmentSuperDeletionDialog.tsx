@@ -12,10 +12,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import {Uploads} from '../../api/uploads';
 import {normalized} from '../../api/string';
+
+import CancelButton from '../button/CancelButton';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
@@ -23,6 +24,7 @@ import ConfirmationTextField, {
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
+import useUniqueId from '../hooks/useUniqueId';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const useStyles = makeStyles({
@@ -71,14 +73,11 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 		}
 	};
 
+	const titleId = useUniqueId('attachment-super-deletion-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="attachment-deletion-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="attachment-deletion-dialog-title">
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+			<DialogTitle id={titleId}>
 				Delete attachment {attachment.name}
 			</DialogTitle>
 			<DialogContent>
@@ -101,14 +100,7 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					color="secondary"
 					disabled={ConfirmationTextFieldProps.error}

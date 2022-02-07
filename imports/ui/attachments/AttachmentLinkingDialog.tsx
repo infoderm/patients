@@ -10,7 +10,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import LinkIcon from '@material-ui/icons/Link';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import call from '../../api/endpoint/call';
 import patientsAttach from '../../api/endpoint/patients/attach';
@@ -18,6 +17,8 @@ import patientsAttach from '../../api/endpoint/patients/attach';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
+import useUniqueId from '../hooks/useUniqueId';
+import CancelButton from '../button/CancelButton';
 
 const useStyles = makeStyles({
 	dialogPaper: {
@@ -59,16 +60,16 @@ const AttachmentLinkingDialog = ({
 		}
 	};
 
+	const titleId = useUniqueId('attachment-linking-dialog-title');
+
 	return (
 		<Dialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			aria-labelledby="attachment-linking-dialog-title"
+			aria-labelledby={titleId}
 			onClose={onClose}
 		>
-			<DialogTitle id="attachment-linking-dialog-title">
-				Link attachment {attachment._id}
-			</DialogTitle>
+			<DialogTitle id={titleId}>Link attachment {attachment._id}</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
 				<DialogContentText>
 					If you do not want to link this attachment, click cancel. If you
@@ -88,9 +89,7 @@ const AttachmentLinkingDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button color="default" endIcon={<CancelIcon />} onClick={onClose}>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={patient.length === 0}
 					color="secondary"

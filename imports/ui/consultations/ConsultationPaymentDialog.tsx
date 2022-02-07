@@ -26,6 +26,7 @@ import {useSetting} from '../settings/hooks';
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
 import SEPAPaymentQRCode from '../payment/SEPAPaymentQRCode';
+import useUniqueId from '../hooks/useUniqueId';
 
 const SIZE_CODE = 256;
 const SIZE_PROGRESS = 128;
@@ -122,15 +123,12 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 		opacity: loading ? 0.4 : found ? 1 : 0.2,
 	};
 
+	const titleId = useUniqueId('consultation-debt-settling-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="consultation-debt-settling-dialog-title"
-			onClose={onClose}
-		>
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id="consultation-debt-settling-dialog-title">
+			<DialogTitle id={titleId}>
 				Payment of consultation for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>
@@ -158,12 +156,7 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 				</div>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="primary"
-					endIcon={<CloseIcon />}
-					onClick={onClose}
-				>
+				<Button color="primary" endIcon={<CloseIcon />} onClick={onClose}>
 					Close
 				</Button>
 			</DialogActions>

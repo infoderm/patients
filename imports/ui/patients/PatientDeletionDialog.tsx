@@ -1,17 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useSnackbar} from 'notistack';
 
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import call from '../../api/endpoint/call';
 import patientsRemove from '../../api/endpoint/patients/remove';
@@ -19,13 +14,27 @@ import patientsRemove from '../../api/endpoint/patients/remove';
 import {normalized} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
+import useUniqueId from '../hooks/useUniqueId';
+
+import DeleteButton from '../button/DeleteButton';
+import CancelButton from '../button/CancelButton';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 import StaticPatientCard from './StaticPatientCard';
 
-const PatientDeletionDialog = ({open, onClose, patient}) => {
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	patient: {
+		_id: string;
+		lastname: string;
+		firstname: string;
+	};
+}
+
+const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
@@ -59,14 +68,11 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 		}
 	};
 
+	const titleId = useUniqueId('patient-deletion-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="patient-deletion-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="patient-deletion-dialog-title">
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+			<DialogTitle id={titleId}>
 				Delete patient {patient.firstname} {patient.lastname}
 			</DialogTitle>
 			<DialogContent>
@@ -85,31 +91,14 @@ const PatientDeletionDialog = ({open, onClose, patient}) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
-				<Button
+				<CancelButton onClick={onClose} />
+				<DeleteButton
 					disabled={ConfirmationTextFieldProps.error}
-					color="secondary"
-					endIcon={<DeleteIcon />}
 					onClick={deleteThisPatientIfLastNameMatches}
-				>
-					Delete
-				</Button>
+				/>
 			</DialogActions>
 		</Dialog>
 	);
-};
-
-PatientDeletionDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	patient: PropTypes.object.isRequired,
 };
 
 export default withLazyOpening(PatientDeletionDialog);

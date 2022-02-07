@@ -6,9 +6,12 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DocumentDeletionGenericButton from './DocumentDeletionGenericButton';
 
 const DocumentDeletionButton = (props) => (
-	<DocumentDeletionGenericButton component={Button} {...props}>
+	<DocumentDeletionGenericButton
+		component={Button}
+		endIcon={<DeleteIcon />}
+		{...props}
+	>
 		Delete
-		<DeleteIcon />
 	</DocumentDeletionGenericButton>
 );
 

@@ -16,10 +16,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {MobileDatePicker as DatePicker} from '@material-ui/pickers';
 
 import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
 import TuneIcon from '@material-ui/icons/Tune';
 
+import CancelButton from '../button/CancelButton';
+
 import GridContainerInsideDialogContent from '../grid/GridContainerInsideDialogContent';
+
+import useUniqueId from '../hooks/useUniqueId';
 
 import saveTextAs from '../output/saveTextAs';
 
@@ -96,16 +99,11 @@ const BooksDownloadDialog = ({
 		}
 	};
 
+	const titleId = useUniqueId('books-download-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="books-download-dialog-title"
-			onClose={onClose}
-		>
-			<DialogTitle id="books-download-dialog-title">
-				Download book data as CSV
-			</DialogTitle>
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+			<DialogTitle id={titleId}>Download book data as CSV</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					{advancedFunctionality ? 'Tune parameters' : 'Choose year'} then click
@@ -184,14 +182,7 @@ const BooksDownloadDialog = ({
 				</GridContainerInsideDialogContent>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={advancedFunctionality}
 					color="default"

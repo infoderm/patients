@@ -20,13 +20,14 @@ import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import CancelIcon from '@material-ui/icons/Cancel';
 import DoneIcon from '@material-ui/icons/Done';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import green from '@material-ui/core/colors/green';
 import orange from '@material-ui/core/colors/orange';
 import red from '@material-ui/core/colors/red';
 import SearchBox from '../input/SearchBox';
+
+import CancelButton from '../button/CancelButton';
 
 import mergeFields from '../../util/mergeFields';
 
@@ -115,6 +116,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
+	titleId: string;
 	onClose: () => void;
 	onNext: () => void;
 	eidInfo: PatientIdFields;
@@ -123,6 +125,7 @@ interface Props {
 }
 
 const EidCardDialogStepSelection = ({
+	titleId,
 	onClose,
 	onNext,
 	eidInfo,
@@ -224,9 +227,7 @@ const EidCardDialogStepSelection = ({
 	return (
 		<>
 			{displayLinearProgress && <LinearProgress />}
-			<DialogTitle id="simple-dialog-title">
-				Select record to work with.
-			</DialogTitle>
+			<DialogTitle id={titleId}>Select record to work with.</DialogTitle>
 			<DialogContent>
 				<Grid container spacing={3} justify="center" alignItems="center">
 					<Grid item xs={12}>
@@ -381,14 +382,7 @@ const EidCardDialogStepSelection = ({
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton onClick={onClose} />
 				<Button
 					disabled={!selection}
 					endIcon={<CancelOutlinedIcon />}

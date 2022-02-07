@@ -1,5 +1,4 @@
 import React, {useReducer} from 'react';
-import PropTypes from 'prop-types';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -24,10 +23,13 @@ import LinkOffIcon from '@material-ui/icons/LinkOff';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
+import {FileObj} from 'meteor/ostrio:files';
 import {link} from '../../api/attachments';
 import patientsDetach from '../../api/endpoint/patients/detach';
 import consultationsDetach from '../../api/endpoint/consultations/detach';
 
+import useUniqueId from '../hooks/useUniqueId';
+import {MetadataType} from '../../api/uploads';
 import AttachmentThumbnail from './AttachmentThumbnail';
 import AttachmentEditionDialog from './AttachmentEditionDialog';
 import AttachmentLinkingDialog from './AttachmentLinkingDialog';
@@ -98,12 +100,19 @@ const reducer = (state, action) => {
 	}
 };
 
-const AttachmentCard = (props) => {
+interface Props {
+	attachment: FileObj<MetadataType>;
+	info?: {
+		parentCollection: string;
+		parentId: string;
+	};
+}
+
+const AttachmentCard = ({attachment, info}: Props) => {
 	const classes = useStyles();
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	const {menu, editing, linking, deleting, superDeleting} = state;
-	const {attachment, info} = props;
 
 	const headerClasses = {
 		content: classes.headerContent,
@@ -138,6 +147,8 @@ const AttachmentCard = (props) => {
 			? consultationsDetach
 			: undefined;
 
+	const menuId = useUniqueId('attachment-card-more-menu');
+
 	return (
 		<Card className={classes.card}>
 			<CardHeader
@@ -158,26 +169,38 @@ const AttachmentCard = (props) => {
 				action={
 					<>
 						<IconButton
-							aria-owns={menu ? 'simple-menu' : null}
+							aria-owns={menu ? menuId : null}
 							aria-haspopup="true"
-							onClick={(event) => dispatch({type: 'openMenu', event})}
+							onClick={(event) => {
+								dispatch({type: 'openMenu', event});
+							}}
 						>
 							<MoreVertIcon />
 						</IconButton>
 						<Menu
-							id="simple-menu"
+							id={menuId}
 							anchorEl={menu}
 							open={Boolean(menu)}
-							onClose={() => dispatch({type: 'closeMenu'})}
+							onClose={() => {
+								dispatch({type: 'closeMenu'});
+							}}
 						>
-							<MenuItem onClick={() => dispatch({type: 'openEditionDialog'})}>
+							<MenuItem
+								onClick={() => {
+									dispatch({type: 'openEditionDialog'});
+								}}
+							>
 								<ListItemIcon>
 									<EditIcon />
 								</ListItemIcon>
 								<ListItemText>Rename</ListItemText>
 							</MenuItem>
 							{detached && (
-								<MenuItem onClick={() => dispatch({type: 'openLinkingDialog'})}>
+								<MenuItem
+									onClick={() => {
+										dispatch({type: 'openLinkingDialog'});
+									}}
+								>
 									<ListItemIcon>
 										<LinkIcon />
 									</ListItemIcon>
@@ -186,7 +209,9 @@ const AttachmentCard = (props) => {
 							)}
 							{info && (
 								<MenuItem
-									onClick={() => dispatch({type: 'openDeletionDialog'})}
+									onClick={() => {
+										dispatch({type: 'openDeletionDialog'});
+									}}
 								>
 									<ListItemIcon>
 										<LinkOffIcon />
@@ -196,7 +221,9 @@ const AttachmentCard = (props) => {
 							)}
 							{detached && (
 								<MenuItem
-									onClick={() => dispatch({type: 'openSuperDeletionDialog'})}
+									onClick={() => {
+										dispatch({type: 'openSuperDeletionDialog'});
+									}}
 								>
 									<ListItemIcon>
 										<DeleteForeverIcon />
@@ -208,13 +235,17 @@ const AttachmentCard = (props) => {
 						<AttachmentEditionDialog
 							open={editing}
 							attachment={attachment}
-							onClose={() => dispatch({type: 'closeEditionDialog'})}
+							onClose={() => {
+								dispatch({type: 'closeEditionDialog'});
+							}}
 						/>
 						{detached && (
 							<AttachmentLinkingDialog
 								open={linking}
 								attachment={attachment}
-								onClose={() => dispatch({type: 'closeLinkingDialog'})}
+								onClose={() => {
+									dispatch({type: 'closeLinkingDialog'});
+								}}
 							/>
 						)}
 						{info && (
@@ -223,14 +254,18 @@ const AttachmentCard = (props) => {
 								itemId={info.parentId}
 								attachment={attachment}
 								endpoint={detach}
-								onClose={() => dispatch({type: 'closeDeletionDialog'})}
+								onClose={() => {
+									dispatch({type: 'closeDeletionDialog'});
+								}}
 							/>
 						)}
 						{detached && (
 							<AttachmentSuperDeletionDialog
 								open={superDeleting}
 								attachment={attachment}
-								onClose={() => dispatch({type: 'closeSuperDeletionDialog'})}
+								onClose={() => {
+									dispatch({type: 'closeSuperDeletionDialog'});
+								}}
 							/>
 						)}
 					</>
@@ -244,11 +279,6 @@ const AttachmentCard = (props) => {
 			/>
 		</Card>
 	);
-};
-
-AttachmentCard.propTypes = {
-	attachment: PropTypes.object.isRequired,
-	info: PropTypes.object,
 };
 
 export default AttachmentCard;

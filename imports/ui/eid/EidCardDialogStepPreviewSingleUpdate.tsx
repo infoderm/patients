@@ -133,6 +133,7 @@ const DifferenceRow = (props) => {
 };
 
 const EidCardDialogStepPreviewSingleUpdate = ({
+	titleId,
 	onPrevStep,
 	patientId,
 	eidInfo,
@@ -192,7 +193,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	return (
 		<>
 			{loading && <LinearProgress />}
-			<DialogTitle>
+			<DialogTitle id={titleId}>
 				{notFound
 					? 'Patient not found :-('
 					: loading || differences.length > 0
@@ -281,11 +282,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 				</Grid>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					startIcon={<SkipPreviousIcon />}
-					onClick={onPrevStep}
-				>
+				<Button startIcon={<SkipPreviousIcon />} onClick={onPrevStep}>
 					Prev
 				</Button>
 				{differences.length > 0 && (

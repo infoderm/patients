@@ -2,16 +2,12 @@ import React from 'react';
 
 import {useSnackbar} from 'notistack';
 
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 import {ConsultationDocument} from '../../api/collection/consultations';
 
@@ -25,6 +21,9 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField';
 import call from '../../api/endpoint/call';
 import remove from '../../api/endpoint/consultations/remove';
+import useUniqueId from '../hooks/useUniqueId';
+import CancelButton from '../button/CancelButton';
+import DeleteButton from '../button/DeleteButton';
 
 interface Props {
 	open: boolean;
@@ -82,15 +81,13 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 		: found
 		? "Patient's last name"
 		: 'Could not find patient.';
+
+	const titleId = useUniqueId('consultation-deletion-dialog-title');
+
 	return (
-		<Dialog
-			open={open}
-			// component="form"
-			aria-labelledby="consultation-deletion-dialog-title"
-			onClose={onClose}
-		>
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id="consultation-deletion-dialog-title">
+			<DialogTitle id={titleId}>
 				Delete consultation for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>
@@ -109,22 +106,11 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					type="submit"
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
-				<Button
+				<CancelButton onClick={onClose} />
+				<DeleteButton
 					disabled={!found || ConfirmationTextFieldProps.error}
-					color="secondary"
-					endIcon={<DeleteIcon />}
 					onClick={deleteThisConsultationIfPatientsLastNameMatches}
-				>
-					Delete
-				</Button>
+				/>
 			</DialogActions>
 		</Dialog>
 	);

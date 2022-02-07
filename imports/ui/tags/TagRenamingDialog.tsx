@@ -11,7 +11,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import EditIcon from '@material-ui/icons/Edit';
-import CancelIcon from '@material-ui/icons/Cancel';
+
+import CancelButton from '../button/CancelButton';
 
 import {capitalized, normalized, normalizeInput} from '../../api/string';
 
@@ -156,14 +157,7 @@ const TagRenamingDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Button
-					disabled={pending}
-					color="default"
-					endIcon={<CancelIcon />}
-					onClick={onClose}
-				>
-					Cancel
-				</Button>
+				<CancelButton disabled={pending} onClick={onClose} />
 				<Button
 					disabled={pending}
 					color="secondary"

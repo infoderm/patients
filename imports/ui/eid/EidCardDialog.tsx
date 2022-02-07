@@ -2,11 +2,13 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
 import {PatientIdFields} from '../../api/collection/patients';
 
+import useUniqueId from '../hooks/useUniqueId';
 import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
@@ -23,10 +25,13 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 
 	const selectionIsSingle = selected.size === 1;
 
+	const titleId = useUniqueId('eid-card-dialog-title');
+
 	return (
-		<Dialog aria-labelledby="simple-dialog-title" open={open} onClose={onClose}>
+		<Dialog aria-labelledby={titleId} open={open} onClose={onClose}>
 			{step === 'selection' && (
 				<EidCardDialogStepSelection
+					titleId={titleId}
 					eidInfo={eidInfo}
 					selected={selected}
 					setSelected={setSelected}
@@ -38,6 +43,7 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 			)}
 			{step === 'preview' && selectionIsSingle && (
 				<EidCardDialogStepPreviewSingle
+					titleId={titleId}
 					eidInfo={eidInfo}
 					navigate={navigate}
 					patientId={selected[Symbol.iterator]().next().value}
@@ -48,11 +54,14 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 				/>
 			)}
 			{step === 'preview' && !selectionIsSingle && (
-				<DialogContent>
-					<DialogContentText>
-						Cannot handle 0-selection or multi-selection at the moment.
-					</DialogContentText>
-				</DialogContent>
+				<>
+					<DialogTitle id={titleId}>Error</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							Cannot handle 0-selection or multi-selection at the moment.
+						</DialogContentText>
+					</DialogContent>
+				</>
 			)}
 		</Dialog>
 	);
