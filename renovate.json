@@ -17,6 +17,8 @@
         "@types/node",
         "faker",
         "notistack",
+        "healthone",
+        "medidoc",
         "total-order",
         "typescript",
         "react-router",
