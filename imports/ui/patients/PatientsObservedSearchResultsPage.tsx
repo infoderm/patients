@@ -20,7 +20,7 @@ type Props = {
 	'page' | 'perpage' | 'loading' | 'patients' | 'root' | 'Card'
 >;
 
-const PatientsObservedSearchResults = ({
+const PatientsObservedSearchResultsPage = ({
 	query,
 	page = 1,
 	perpage = 5,
@@ -76,4 +76,4 @@ const PatientsObservedSearchResults = ({
 	);
 };
 
-export default PatientsObservedSearchResults;
+export default PatientsObservedSearchResultsPage;

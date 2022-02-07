@@ -27,8 +27,6 @@ const StaticPatientsList = ({
 	Card,
 	...rest
 }: Props) => {
-	if (loading && patients.length === 0) return <Loading />;
-
 	const style = {
 		transition: 'opacity 200ms ease-out',
 		opacity: loading ? 0.4 : undefined,
@@ -37,26 +35,30 @@ const StaticPatientsList = ({
 	return (
 		<>
 			<div style={style} {...rest}>
-				{patients.length > 0 ? (
+				{patients.length === 0 ? (
+					loading ? (
+						<Loading />
+					) : page === 1 ? (
+						<div>
+							<NoContent>No patients match the current query.</NoContent>
+							<Grid container spacing={3}>
+								<Grid item sm="auto" md="auto" lg={3} xl={4} />
+								<PatientGridItem Card={NewPatientCard} />
+								<Grid item sm="auto" md="auto" lg={3} xl={4} />
+							</Grid>
+						</div>
+					) : (
+						<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+					)
+				) : (
 					<PatientsPage
 						patients={patients}
 						Card={Card}
 						NewCard={NewPatientCard}
 					/>
-				) : page === 1 ? (
-					<div>
-						<NoContent>No patients match the current query.</NoContent>
-						<Grid container spacing={3}>
-							<Grid item sm="auto" md="auto" lg={3} xl={4} />
-							<PatientGridItem Card={NewPatientCard} />
-							<Grid item sm="auto" md="auto" lg={3} xl={4} />
-						</Grid>
-					</div>
-				) : (
-					<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
 				)}
 			</div>
-			<Paginator disabled={loading} end={patients.length < perpage} />
+			<Paginator loading={loading} end={patients.length < perpage} />
 		</>
 	);
 };
