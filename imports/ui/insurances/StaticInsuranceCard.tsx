@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
@@ -17,21 +17,17 @@ import {myEncodeURIComponent} from '../../util/uri';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';
 
-const styles = (theme) =>
-	createStyles({
-		avatar: {
-			color: '#fff',
-			backgroundColor: red[500],
-		},
-		patientChip: {
-			marginRight: theme.spacing(1),
-			backgroundColor: '#aaa',
-			fontWeight: 'normal',
-			color: '#fff',
-		},
-	});
+const InsuranceAvatar = styled(Avatar)({
+	color: '#fff',
+	backgroundColor: red[500],
+});
 
-const useStyles = makeStyles(styles);
+const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
+	marginRight: theme.spacing(1),
+	backgroundColor: '#aaa',
+	fontWeight: 'normal',
+	color: '#fff',
+}));
 
 interface LoadedTagCardProps {
 	loading: boolean;
@@ -40,7 +36,6 @@ interface LoadedTagCardProps {
 }
 
 const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
-	const classes = useStyles();
 	const {result} = useInsuranceStats(item.name);
 	const {count} = result ?? {};
 	const {results: patients} = usePatientsInsuredBy(item.name, {
@@ -54,11 +49,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 		) : (
 			<div>
 				{patients.map((patient) => (
-					<StaticPatientChip
-						key={patient._id}
-						patient={patient}
-						className={classes.patientChip}
-					/>
+					<GreyPatientChip key={patient._id} patient={patient} />
 				))}
 				{count > patients.length && (
 					<Chip label={`+ ${count - patients.length}`} />
@@ -73,7 +64,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 			subheader={subheader}
 			content={content}
 			url={(name) => `/insurance/${myEncodeURIComponent(name)}`}
-			avatar={<Avatar className={classes.avatar}>In</Avatar>}
+			avatar={<InsuranceAvatar>In</InsuranceAvatar>}
 			DeletionDialog={InsuranceDeletionDialog}
 			RenamingDialog={InsuranceRenamingDialog}
 		/>

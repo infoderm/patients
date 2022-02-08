@@ -1,9 +1,9 @@
 import React from 'react';
 
-import useStyles from './styles/main';
 import NoContent from './navigation/NoContent';
 import Router from './Router';
 import ErrorBoundary from './ErrorBoundary';
+import Main from './Main';
 
 const Child = ({loading, loggingIn, currentUser}) => {
 	if (loading) return <NoContent>Loading...</NoContent>;
@@ -17,14 +17,10 @@ const Child = ({loading, loggingIn, currentUser}) => {
 	);
 };
 
-const Content = (props) => {
-	const classes = useStyles();
-
-	return (
-		<main className={classes.main}>
-			<Child {...props} />
-		</main>
-	);
-};
+const Content = (props) => (
+	<Main>
+		<Child {...props} />
+	</Main>
+);
 
 export default Content;

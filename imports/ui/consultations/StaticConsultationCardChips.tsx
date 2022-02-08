@@ -1,11 +1,8 @@
 import React from 'react';
 
-import {Link} from 'react-router-dom';
+import {styled} from '@mui/material/styles';
 
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
-
-import Chip from '@mui/material/Chip';
+import MuiChip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 
 import MoneyIcon from '@mui/icons-material/Money';
@@ -14,6 +11,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import dateFormat from 'date-fns/format';
+import UnstyledLinkChip from '../chips/LinkChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
@@ -21,34 +19,58 @@ import {PatientDocument} from '../../api/collection/patients';
 import {ConsultationDocument} from '../../api/collection/consultations';
 import {msToString, msToStringShort} from '../../api/duration';
 
-const useStyles = makeStyles((theme) => ({
-	chips: {
-		display: 'flex',
-		justifyContent: 'center',
-		flexWrap: 'wrap',
-		marginRight: -theme.spacing(1),
-		marginBottom: -theme.spacing(1),
-	},
-	chip: {
-		marginRight: theme.spacing(1),
-		marginBottom: theme.spacing(1),
-	},
-	priceChip: {
+const Chips = styled('div')(({theme}) => ({
+	display: 'flex',
+	justifyContent: 'center',
+	flexWrap: 'wrap',
+	marginRight: theme.spacing(-1),
+	marginBottom: theme.spacing(-1),
+}));
+
+const additionalProps = new Set<number | string | Symbol>([
+	'didNotOrWillNotHappen',
+	'isPrice',
+	'isDebt',
+	'bold',
+]);
+const shouldForwardProp = (prop) => !additionalProps.has(prop);
+const styles: any = ({
+	theme,
+	didNotOrWillNotHappen,
+	isPrice,
+	isDebt,
+	bold,
+}) => ({
+	marginRight: theme.spacing(1),
+	marginBottom: theme.spacing(1),
+	...(isPrice && {
 		backgroundColor: '#228d57',
 		color: '#e8e9c9',
-	},
-	debtChip: {
+	}),
+	...(isDebt && {
 		backgroundColor: '#f88',
 		color: '#fff',
-	},
-	didNotHappenChip: {
+	}),
+	...(didNotOrWillNotHappen && {
 		backgroundColor: '#ff7961',
 		color: '#fff',
-	},
-	boldChip: {
+	}),
+	...(bold && {
 		fontWeight: 'bold',
-	},
-}));
+	}),
+});
+
+interface AdditionalChipProps {
+	didNotOrWillNotHappen?: boolean;
+	isPrice?: boolean;
+	isDebt?: boolean;
+	bold?: boolean;
+}
+
+const Chip = styled(MuiChip, {shouldForwardProp})<AdditionalChipProps>(styles);
+const LinkChip = styled(UnstyledLinkChip, {
+	shouldForwardProp,
+})<AdditionalChipProps>(styles);
 
 function paymentMethodIcon(payment_method) {
 	switch (payment_method) {
@@ -81,8 +103,6 @@ export interface StaticConsultationCardChipsProps {
 const StaticConsultationCardChips = (
 	props: StaticConsultationCardChipsProps,
 ) => {
-	const classes = useStyles();
-
 	const {
 		isNoShow,
 		didNotOrWillNotHappen,
@@ -114,24 +134,18 @@ const StaticConsultationCardChips = (
 	const currencyFormat = useCurrencyFormat(currency);
 
 	return (
-		<div className={classes.chips}>
+		<Chips>
 			{showDate && (
-				<Chip
+				<LinkChip
 					label={localizedDateFormat(datetime, 'PPPP')}
-					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: didNotOrWillNotHappen,
-					})}
-					component={Link}
+					didNotOrWillNotHappen={didNotOrWillNotHappen}
 					to={`/calendar/day/${dateFormat(datetime, 'yyyy-MM-dd')}`}
 				/>
 			)}
 			{showTime && (
-				<Chip
+				<LinkChip
 					label={localizedDateFormat(datetime, 'p')}
-					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: didNotOrWillNotHappen,
-					})}
-					component={Link}
+					didNotOrWillNotHappen={didNotOrWillNotHappen}
 					to={`/consultation/${_id}`}
 				/>
 			)}
@@ -139,12 +153,9 @@ const StaticConsultationCardChips = (
 				? doneDatetime && (
 						<Chip
 							label={msToStringShort(Number(doneDatetime) - Number(datetime))}
-							className={classes.chip}
 						/>
 				  )
-				: duration && (
-						<Chip label={msToString(duration)} className={classes.chip} />
-				  )}
+				: duration && <Chip label={msToString(duration)} />}
 			{!PatientChip || !patientId ? null : (
 				<PatientChip
 					loading={loadingPatient}
@@ -152,24 +163,8 @@ const StaticConsultationCardChips = (
 					patient={patient || {_id: patientId}}
 				/>
 			)}
-			{isCancelled && (
-				<Chip
-					label="cancelled"
-					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: true,
-						[classes.boldChip]: true,
-					})}
-				/>
-			)}
-			{isNoShow && (
-				<Chip
-					label="PVPP"
-					className={classNames(classes.chip, {
-						[classes.didNotHappenChip]: true,
-						[classes.boldChip]: true,
-					})}
-				/>
-			)}
+			{isCancelled && <Chip didNotOrWillNotHappen bold label="cancelled" />}
+			{isNoShow && <Chip didNotOrWillNotHappen bold label="PVPP" />}
 			{attachments === undefined || attachments.length === 0 ? (
 				''
 			) : (
@@ -180,31 +175,18 @@ const StaticConsultationCardChips = (
 						</Avatar>
 					}
 					label={attachments.length}
-					className={classes.chip}
 				/>
 			)}
 			{!missingPaymentData && showPrice && (
 				<Chip
-					className={classNames(
-						classes.chip,
-						classes.boldChip,
-						classes.priceChip,
-					)}
+					bold
+					isPrice
 					avatar={<Avatar>{paymentMethodIcon(payment_method)}</Avatar>}
 					label={currencyFormat(price)}
 				/>
 			)}
-			{owes && (
-				<Chip
-					label={`Doit ${currencyFormat(owed)}`}
-					className={classNames(
-						classes.chip,
-						classes.boldChip,
-						classes.debtChip,
-					)}
-				/>
-			)}
-		</div>
+			{owes && <Chip bold isDebt label={`Doit ${currencyFormat(owed)}`} />}
+		</Chips>
 	);
 };
 

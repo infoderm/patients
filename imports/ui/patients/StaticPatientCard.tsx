@@ -1,11 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
-const StaticPatientCard = (props) => {
+interface Props {
+	patient: {
+		_id: string;
+		firstname: string;
+		lastname: string;
+	};
+}
+
+const StaticPatientCard = (props: Props) => {
 	const firstname = props.patient.firstname || '?';
 	const lastname = props.patient.lastname || '?';
 	const ariaLabel = `${firstname} ${lastname}`;
@@ -20,9 +27,5 @@ const StaticPatientCard = (props) => {
 };
 
 StaticPatientCard.projection = GenericStaticPatientCard.projection;
-
-StaticPatientCard.propTypes = {
-	patient: PropTypes.object.isRequired,
-};
 
 export default StaticPatientCard;

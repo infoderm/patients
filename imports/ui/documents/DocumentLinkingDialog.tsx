@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import MuiDialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
+import MuiDialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
@@ -18,27 +18,29 @@ import call from '../../api/endpoint/call';
 import link from '../../api/endpoint/documents/link';
 import CancelButton from '../button/CancelButton';
 
-const useStyles = makeStyles({
-	dialogPaper: {
+const Dialog = styled(MuiDialog)({
+	'& .MuiDialog-paper': {
 		overflow: 'visible',
 	},
+});
+
+const DialogContent = styled(MuiDialogContent)({
+	overflow: 'visible',
 });
 
 interface Props {
 	open: boolean;
 	onClose: () => void;
 	document: {_id: string};
-	existingLink: {_id: string};
+	existingLink?: {_id: string};
 }
 
 const DocumentLinkingDialog = ({
 	open,
 	onClose,
 	document,
-	existingLink,
+	existingLink = undefined,
 }: Props) => {
-	const classes = useStyles();
-
 	const [patients, setPatients] = useState(existingLink ? [existingLink] : []);
 
 	const isMounted = useIsMounted();
@@ -57,13 +59,9 @@ const DocumentLinkingDialog = ({
 	};
 
 	return (
-		<Dialog
-			classes={{paper: classes.dialogPaper}}
-			open={open}
-			onClose={onClose}
-		>
+		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>Link document {document._id.toString()}</DialogTitle>
-			<DialogContent className={classes.dialogPaper}>
+			<DialogContent>
 				<DialogContentText>
 					If you do not want to link this document, click cancel. If you really
 					want to link this document, enter the name of the patient to link it

@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
 import FaceIcon from '@mui/icons-material/Face';
 
 import {useDateFormat} from '../../i18n/datetime';
@@ -12,17 +10,20 @@ import {dataURL as pngDataURL} from '../../util/png';
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 
 import TextField from '../input/TextField';
+import {Subheader, SubheaderAvatar} from '../Subheader';
 import CopiableTextField from '../input/CopiableTextField';
-
-import useStyles from '../styles/subheader';
 
 import useCachedPatient from './useCachedPatient';
 
-const PatientHeader = ({patientId}) => {
+interface Props {
+	patientId: string;
+}
+
+const PatientHeader = ({patientId}: Props) => {
 	const init = {_id: patientId};
 	const query = patientId;
 	const options = {};
-	const deps = [query];
+	const deps = [patientId];
 
 	const {
 		loading,
@@ -30,24 +31,21 @@ const PatientHeader = ({patientId}) => {
 		fields: patient,
 	} = useCachedPatient(init, query, options, deps);
 
-	const classes = useStyles();
-
 	const localizeBirthdate = useDateFormat('PPP');
 
 	const textPlaceHolder = loading ? '' : '?';
 
 	return (
-		<Grid container className={classes.container} spacing={3}>
+		<Subheader container spacing={3}>
 			<Grid item>
 				{!patient.photo ? (
-					<Avatar className={classes.avatar}>
+					<SubheaderAvatar>
 						<FaceIcon />
-					</Avatar>
+					</SubheaderAvatar>
 				) : (
-					<Avatar
+					<SubheaderAvatar
 						alt={`${patient.firstname} ${patient.lastname}`}
 						src={pngDataURL(patient.photo)}
-						className={classes.avatar}
 					/>
 				)}
 			</Grid>
@@ -96,12 +94,8 @@ const PatientHeader = ({patientId}) => {
 					error={!loading && !found}
 				/>
 			</Grid>
-		</Grid>
+		</Subheader>
 	);
-};
-
-PatientHeader.propTypes = {
-	patientId: PropTypes.string.isRequired,
 };
 
 export default PatientHeader;

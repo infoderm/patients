@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {Link} from 'react-router-dom';
-
 import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
 import FaceIcon from '@mui/icons-material/Face';
 
 import DateTimePicker from '@mui/lab/MobileDateTimePicker';
@@ -12,12 +9,12 @@ import {dataURL as pngDataURL} from '../../util/png';
 
 import {useDateMask} from '../../i18n/datetime';
 
+import {LinkedSubheaderAvatar, Subheader} from '../Subheader';
+
 import TextField from '../input/TextField';
 import CopiableTextField from '../input/CopiableTextField';
 
 import usePatient from '../patients/usePatient';
-
-import useStyles from '../styles/subheader';
 
 const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const patientId = consultation.patientId;
@@ -36,8 +33,6 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 
 	const {loading, fields: patient} = usePatient(init, query, options, deps);
 
-	const classes = useStyles();
-
 	const localizedDateMask = useDateMask();
 
 	const {datetime, doneDatetime} = state;
@@ -45,22 +40,16 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const textPlaceHolder = loading ? '' : '?';
 
 	return (
-		<Grid container className={classes.container} spacing={3}>
+		<Subheader container spacing={3}>
 			<Grid item>
 				{!patient.photo ? (
-					<Avatar
-						className={classes.avatar}
-						component={Link}
-						to={`/patient/${patientId}`}
-					>
+					<LinkedSubheaderAvatar to={`/patient/${patientId}`}>
 						<FaceIcon />
-					</Avatar>
+					</LinkedSubheaderAvatar>
 				) : (
-					<Avatar
+					<LinkedSubheaderAvatar
 						alt={`${patient.firstname} ${patient.lastname}`}
 						src={pngDataURL(patient.photo)}
-						className={classes.avatar}
-						component={Link}
 						to={`/patient/${patientId}`}
 					/>
 				)}
@@ -116,7 +105,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 					}}
 				/>
 			</Grid>
-		</Grid>
+		</Subheader>
 	);
 };
 

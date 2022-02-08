@@ -12,8 +12,8 @@ import DialogActions from '@mui/material/DialogActions';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/lab/Alert';
-import AlertTitle from '@mui/lab/AlertTitle';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';

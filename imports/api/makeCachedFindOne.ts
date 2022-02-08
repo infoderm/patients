@@ -8,7 +8,7 @@ const makeCachedFindOne =
 	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
 	(
 		init: Partial<U>,
-		query: Mongo.Selector<T>,
+		query: Mongo.Selector<T> | string,
 		options: Mongo.Options<T>,
 		deps: DependencyList,
 	) => {

@@ -24,7 +24,7 @@ const PaginatorBase = ({
 }: Props) => {
 	const isFirstPage = page === firstPage;
 	const isOnlyPage = isFirstPage && end;
-	const [hide, setHide] = useState(loading && isOnlyPage);
+	const [hide, setHide] = useState(loading);
 
 	useEffect(() => {
 		if (!loading) {

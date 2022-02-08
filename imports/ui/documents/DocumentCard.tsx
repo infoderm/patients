@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -10,7 +10,7 @@ import AccordionActions from '@mui/material/AccordionActions';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-import List from '@mui/material/List';
+import MuiList from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -43,19 +43,15 @@ import DocumentSource from './DocumentSource';
 import DocumentDownloadButton from './actions/DocumentDownloadButton';
 import DocumentDeletionButton from './actions/DocumentDeletionButton';
 
-const styles = () =>
-	createStyles({
-		chips: {
-			display: 'flex',
-			justifyContent: 'center',
-			flexWrap: 'wrap',
-		},
-		list: {
-			width: '100%',
-		},
-	});
+const Chips = styled('div')({
+	display: 'flex',
+	justifyContent: 'center',
+	flexWrap: 'wrap',
+});
 
-const useStyles = makeStyles(styles);
+const List = styled(MuiList)({
+	width: '100%',
+});
 
 interface Props extends PropsOf<typeof DocumentChips> {
 	VersionsButton?: React.ElementType;
@@ -74,8 +70,6 @@ const DocumentCard = ({
 	const [restoring, setRestoring] = useState(false);
 	const [superdeleting, setSuperdeleting] = useState(false);
 
-	const classes = useStyles();
-
 	const {patientId, parsed, format, kind, deleted} = document;
 
 	return (
@@ -84,12 +78,12 @@ const DocumentCard = ({
 			TransitionProps={{unmountOnExit: true}}
 		>
 			<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-				<div className={classes.chips}>
+				<Chips>
 					<DocumentChips document={document} {...rest} />
-				</div>
+				</Chips>
 			</AccordionSummary>
 			<AccordionDetails>
-				<List className={classes.list}>
+				<List>
 					{parsed && format === 'healthone' && kind === 'lab' && (
 						<ListItem>
 							<ListItemAvatar>
@@ -184,7 +178,7 @@ const DocumentCard = ({
 				<DocumentLinkingDialog
 					open={linking}
 					document={document}
-					existingLink={{_id: patientId}}
+					existingLink={patientId ? {_id: patientId} : undefined}
 					onClose={() => {
 						setLinking(false);
 					}}

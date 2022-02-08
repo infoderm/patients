@@ -11,6 +11,10 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
 import {PatientDocument, PatientFields} from '../../api/collection/patients';
+import {ConsultationDocument} from '../../api/collection/consultations';
+import {DocumentDocument} from '../../api/collection/documents';
+import {AttachmentDocument} from '../../api/collection/attachments';
+
 import PatientSheet from '../patients/PatientSheet';
 
 import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog';
@@ -25,13 +29,13 @@ interface StaticMergePatientsFormStepPrepareProps {
 	onPrevStep?: () => void;
 	error?: MergeInfoError;
 	oldPatients?: PatientDocument[];
-	consultations?: Record<string, unknown[]>;
-	attachments?: Record<string, unknown[]>;
-	documents?: Record<string, unknown[]>;
+	consultations?: Record<string, ConsultationDocument[]>;
+	attachments?: Record<string, AttachmentDocument[]>;
+	documents?: Record<string, DocumentDocument[]>;
 	newPatient?: PatientFields;
-	newConsultations?: unknown[];
-	newAttachments?: unknown[];
-	newDocuments?: unknown[];
+	newConsultations?: ConsultationDocument[];
+	newAttachments?: AttachmentDocument[];
+	newDocuments?: DocumentDocument[];
 }
 
 const StaticMergePatientsFormStepPrepare = ({

@@ -23,13 +23,13 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 
-import {FileObj} from 'meteor/ostrio:files';
+import {AttachmentDocument} from '../../api/collection/attachments';
+
 import {link} from '../../api/attachments';
 import patientsDetach from '../../api/endpoint/patients/detach';
 import consultationsDetach from '../../api/endpoint/consultations/detach';
 
 import useUniqueId from '../hooks/useUniqueId';
-import {MetadataType} from '../../api/uploads';
 import AttachmentThumbnail from './AttachmentThumbnail';
 import AttachmentEditionDialog from './AttachmentEditionDialog';
 import AttachmentLinkingDialog from './AttachmentLinkingDialog';
@@ -101,7 +101,7 @@ const reducer = (state, action) => {
 };
 
 interface Props {
-	attachment: FileObj<MetadataType>;
+	attachment: AttachmentDocument;
 	info?: {
 		parentCollection: string;
 		parentId: string;

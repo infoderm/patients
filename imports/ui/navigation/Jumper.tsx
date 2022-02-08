@@ -1,18 +1,20 @@
 import React, {Key} from 'react';
-
 import {Link} from 'react-router-dom';
 
-import makeStyles from '@mui/styles/makeStyles';
-import Button from '@mui/material/Button';
+import {styled} from '@mui/material/styles';
+import MuiButton from '@mui/material/Button';
 
-const useStyles = makeStyles((theme) => ({
-	buttons: {
-		paddingBottom: theme.spacing(3),
-		textAlign: 'center',
-	},
-	button: {
-		margin: theme.spacing(1),
-	},
+const Buttons = styled('div')(({theme}) => ({
+	paddingBottom: theme.spacing(3),
+	textAlign: 'center',
+}));
+
+const UnstyledLinkButton = ({to, ...rest}) => {
+	return <MuiButton component={Link} to={to} {...rest} />;
+};
+
+const LinkButton = styled(UnstyledLinkButton)(({theme}) => ({
+	margin: theme.spacing(1),
 }));
 
 interface Item<K> {
@@ -26,23 +28,14 @@ interface Props<K> {
 }
 
 const Jumper = <K extends Key>({items}: Props<K>) => {
-	const classes = useStyles();
-
 	return (
-		<div className={classes.buttons}>
+		<Buttons>
 			{items.map(({key, url, disabled}) => (
-				<Button
-					key={key}
-					className={classes.button}
-					variant="outlined"
-					component={Link}
-					to={url}
-					disabled={disabled}
-				>
+				<LinkButton key={key} variant="outlined" to={url} disabled={disabled}>
 					{key}
-				</Button>
+				</LinkButton>
 			))}
-		</div>
+		</Buttons>
 	);
 };
 

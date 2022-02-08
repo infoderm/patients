@@ -55,15 +55,20 @@ const useStyles = makeStyles((theme) => ({
 	content: {
 		flex: '1 0 auto',
 	},
-	photoPlaceHolder: {
-		position: 'absolute',
-		right: 0,
-		top: 0,
+	photoContainer: {
+		position: 'relative',
 		display: 'flex',
-		fontSize: '4rem',
 		margin: 0,
 		width: 140,
-		height: 200,
+	},
+	photoPlaceHolder: {
+		position: 'absolute',
+		display: 'flex',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		fontSize: '4rem',
 		alignItems: 'center',
 		justifyContent: 'center',
 		color: '#fff',
@@ -71,10 +76,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	photo: {
 		position: 'absolute',
-		right: 0,
 		top: 0,
-		width: 140,
-		height: 200,
+		bottom: 0,
+		left: 0,
+		right: 0,
 	},
 	actions: {
 		display: 'flex',
@@ -158,22 +163,24 @@ const GenericStaticPatientCard = ({
 					)}
 				</CardActions>
 			</div>
-			{photoTransition((style, item) =>
-				item ? (
-					<CardMedia
-						component={animated.div}
-						className={classes.photo}
-						image={pngDataURL(item)}
-						title={`${firstname} ${lastname}`}
-						style={style as unknown as React.CSSProperties}
-					/>
-				) : (
-					<animated.div className={classes.photoPlaceHolder} style={style}>
-						{firstname[0]}
-						{lastname[0]}
-					</animated.div>
-				),
-			)}
+			<div className={classes.photoContainer}>
+				{photoTransition((style, item) =>
+					item ? (
+						<CardMedia
+							component={animated.div}
+							className={classes.photo}
+							image={pngDataURL(item)}
+							title={`${firstname} ${lastname}`}
+							style={style as unknown as React.CSSProperties}
+						/>
+					) : (
+						<animated.div className={classes.photoPlaceHolder} style={style}>
+							{firstname[0]}
+							{lastname[0]}
+						</animated.div>
+					),
+				)}
+			</div>
 		</Card>
 	);
 };
