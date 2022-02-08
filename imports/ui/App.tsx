@@ -3,7 +3,6 @@ import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
 import {
-	Theme,
 	ThemeProvider,
 	createTheme,
 	responsiveFontSizes,
@@ -21,10 +20,6 @@ import {useLocale} from '../i18n/datetime';
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
 import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
-
-declare module '@mui/styles/defaultTheme' {
-	interface DefaultTheme extends Theme {}
-}
 
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
