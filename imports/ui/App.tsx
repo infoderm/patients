@@ -6,6 +6,7 @@ import {
 	ThemeProvider,
 	createTheme,
 	responsiveFontSizes,
+	StyledEngineProvider,
 } from '@mui/material/styles';
 
 import {SnackbarProvider} from 'notistack';
@@ -21,7 +22,16 @@ import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
 import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
 
-let theme = createTheme();
+let theme = createTheme({
+	components: {
+		MuiTextField: {
+			defaultProps: {
+				variant: 'standard',
+			},
+		},
+	},
+});
+
 theme = responsiveFontSizes(theme);
 
 const App = () => {
@@ -30,17 +40,19 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<LocalizationProvider dateAdapter={AdapterDateFns} locale={locale}>
-				<ThemeProvider theme={theme}>
-					<CssBaseline />
-					<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
-						<ErrorBoundary>
-							<div>
-								<CustomWholeWindowDropZone />
-								<AppFrame />
-							</div>
-						</ErrorBoundary>
-					</SnackbarProvider>
-				</ThemeProvider>
+				<StyledEngineProvider injectFirst>
+					<ThemeProvider theme={theme}>
+						<CssBaseline />
+						<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
+							<ErrorBoundary>
+								<div>
+									<CustomWholeWindowDropZone />
+									<AppFrame />
+								</div>
+							</ErrorBoundary>
+						</SnackbarProvider>
+					</ThemeProvider>
+				</StyledEngineProvider>
 			</LocalizationProvider>
 		</BrowserRouter>
 	);
