@@ -1,15 +1,17 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
+
+import PropsOf from '../../util/PropsOf';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
 import SearchBoxInternalsInputContainer from './SearchBoxInternalsInputContainer';
 import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
-const SearchBox = ({
-	className,
-	...rest
-}: InferProps<typeof SearchBox.propTypes>) => (
+interface Props extends PropsOf<typeof SearchBoxInternalsInput> {
+	className?: string;
+}
+
+const SearchBox = ({className, ...rest}: Props) => (
 	<SearchBoxInternalsContainer>
 		<SearchBoxInternalsInputContainer className={className}>
 			<SearchBoxInternalsAdornment />
@@ -17,10 +19,5 @@ const SearchBox = ({
 		</SearchBoxInternalsInputContainer>
 	</SearchBoxInternalsContainer>
 );
-
-SearchBox.propTypes = {
-	className: PropTypes.string,
-	expands: PropTypes.bool,
-};
 
 export default SearchBox;

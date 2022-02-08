@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import {alpha} from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function FullTextSearchInput({className}) {
+const FullTextSearchInput = ({sx}) => {
 	const navigate = useNavigate();
 	const classes = useStyles();
 	const [lastHistoryUpdate, setLastHistoryUpdate] = useState(0);
@@ -57,7 +58,7 @@ export default function FullTextSearchInput({className}) {
 	};
 
 	return (
-		<div className={className}>
+		<Box sx={sx}>
 			<SearchBox
 				expands
 				className={classes.searchBox}
@@ -67,6 +68,8 @@ export default function FullTextSearchInput({className}) {
 				onChange={onChange}
 				onBlur={onBlur}
 			/>
-		</div>
+		</Box>
 	);
-}
+};
+
+export default FullTextSearchInput;

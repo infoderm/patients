@@ -1,8 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import classNames from 'classnames';
-import {useTheme, makeStyles} from '@mui/styles';
-import Drawer from '@mui/material/Drawer';
+import {styled, useTheme, Theme, CSSObject} from '@mui/material/styles';
+import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -36,44 +35,6 @@ import {setSetting} from './settings/hooks';
 import Tooltip from './accessibility/Tooltip';
 
 export const drawerWidthOpen = 215;
-
-const useStyles = makeStyles((theme) => ({
-	drawerPaper: {
-		position: 'fixed',
-		height: '100vh',
-		overflowY: 'scroll',
-	},
-	drawerOpen: {
-		width: drawerWidthOpen,
-		transition: theme.transitions.create('width', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	},
-	drawerClosed: {
-		transition: theme.transitions.create('width', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-		overflowX: 'hidden',
-		width: `calc(${theme.spacing(7)} + '1px')`,
-		[theme.breakpoints.up('sm')]: {
-			width: `calc(${theme.spacing(9)} + '1px')`,
-		},
-	},
-	drawer: {
-		width: drawerWidthOpen,
-		flexShrink: 0,
-		whiteSpace: 'nowrap',
-	},
-	drawerHeader: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'flex-end',
-		padding: '0 8px',
-		...theme.mixins.toolbar,
-	},
-}));
 
 const DrawerItem = ({expand, disabled, link}) => (
 	<Tooltip
@@ -254,12 +215,58 @@ export const navigationDrawerBlocks: Block[] = [
 	},
 ];
 
+const openedMixin = (theme: Theme): CSSObject => ({
+	width: drawerWidthOpen,
+	transition: theme.transitions.create('width', {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.enteringScreen,
+	}),
+	overflowX: 'hidden',
+});
+
+const closedMixin = (theme: Theme): CSSObject => ({
+	transition: theme.transitions.create('width', {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	overflowX: 'hidden',
+	width: `calc(${theme.spacing(7)} + 1px)`,
+	[theme.breakpoints.up('sm')]: {
+		width: `calc(${theme.spacing(9)} + 1px)`,
+	},
+});
+
+const DrawerHeader = styled('div')(({theme}) => ({
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'flex-end',
+	padding: theme.spacing(0, 1),
+	// necessary for content to be below app bar
+	...theme.mixins.toolbar,
+}));
+
+const Drawer = styled(MuiDrawer, {
+	shouldForwardProp: (prop) => prop !== 'open',
+})(({theme, open}) => ({
+	width: drawerWidthOpen,
+	flexShrink: 0,
+	whiteSpace: 'nowrap',
+	boxSizing: 'border-box',
+	...(open && {
+		...openedMixin(theme),
+		'& .MuiDrawer-paper': openedMixin(theme),
+	}),
+	...(!open && {
+		...closedMixin(theme),
+		'& .MuiDrawer-paper': closedMixin(theme),
+	}),
+}));
+
 export default function NavigationDrawer({
 	currentUser,
 	navigationDrawerIsOpen,
 }) {
 	const theme = useTheme();
-	const classes = useStyles();
 
 	const toggleNavigationDrawerIsOpen = async () => {
 		const newValue = navigationDrawerIsOpen === 'open' ? 'closed' : 'open';
@@ -267,22 +274,8 @@ export default function NavigationDrawer({
 	};
 
 	return (
-		<Drawer
-			open={navigationDrawerIsOpen === 'open'}
-			variant="permanent"
-			className={classNames({
-				[classes.drawerOpen]: navigationDrawerIsOpen === 'open',
-				[classes.drawerClosed]: navigationDrawerIsOpen === 'closed',
-			})}
-			classes={{
-				paper: classNames({
-					[classes.drawerOpen]: navigationDrawerIsOpen === 'open',
-					[classes.drawerClosed]: navigationDrawerIsOpen === 'closed',
-				}),
-			}}
-			anchor="left"
-		>
-			<div className={classes.drawerHeader}>
+		<Drawer variant="permanent" open={navigationDrawerIsOpen === 'open'}>
+			<DrawerHeader>
 				<IconButton onClick={toggleNavigationDrawerIsOpen}>
 					{theme.direction === 'rtl' ? (
 						<ChevronRightIcon />
@@ -290,9 +283,8 @@ export default function NavigationDrawer({
 						<ChevronLeftIcon />
 					)}
 				</IconButton>
-			</div>
+			</DrawerHeader>
 			<Divider />
-
 			{navigationDrawerBlocks.map(({title, links}) => (
 				<div key={title}>
 					<List>
