@@ -54,6 +54,7 @@ import {
 } from '../../i18n/datetime';
 
 import usePrompt from '../navigation/usePrompt';
+import NoContent from '../navigation/NoContent';
 
 import SetPicker from '../input/SetPicker';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
@@ -138,20 +139,24 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const initialState = {
-	patient: undefined,
+interface State {
+	patient: any;
+	editing: boolean;
+	dirty: boolean;
+	deleting: boolean;
+}
+
+const initialState = (patient: any): State => ({
+	patient,
 	editing: false,
 	dirty: false,
 	deleting: false,
-};
+});
 
-/**
- * reducer.
- *
- * @param {Object} state
- * @param {{type: string, key?: string, value?: any, payload?: any}} action
- */
-const reducer = (state, action) => {
+const reducer = (
+	state: State,
+	action: {type: string; key?: string; value?: any; payload?: any},
+) => {
 	switch (action.type) {
 		case 'update':
 			return {
@@ -192,19 +197,21 @@ const PatientPersonalInformationStatic = (
 
 	const importantStringsDict = useMemo(
 		() =>
-			// return makeAnyIndex(importantStrings);
+			// makeAnyIndex(importantStrings);
 			makeRegExpIndex(importantStrings),
 		[importantStrings],
 	);
 
-	const [state, dispatch] = useReducer(reducer, initialState);
-
-	useEffect(() => {
-		dispatch({type: 'init', payload: props.patient});
-	}, [JSON.stringify(props.patient)]);
+	const [state, dispatch] = useReducer(reducer, initialState(props.patient));
 
 	const {editing, dirty, deleting, patient} = state;
 	const {loading = false} = props;
+
+	useEffect(() => {
+		if (patient !== props.patient) {
+			dispatch({type: 'init', payload: props.patient});
+		}
+	}, [JSON.stringify(props.patient)]);
 
 	usePrompt(
 		'You are trying to leave the page while in edit mode. Are you sure you want to continue?',
@@ -261,11 +268,11 @@ const PatientPersonalInformationStatic = (
 	const noshowInputId = `${componentId}-input-noshow`;
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <NoContent>Loading...</NoContent>;
 	}
 
 	if (!patient) {
-		return <div>Patient not found.</div>;
+		return <NoContent>Patient not found.</NoContent>;
 	}
 
 	const placeholder = !editing ? '?' : 'Write some information here';
@@ -420,8 +427,8 @@ const PatientPersonalInformationStatic = (
 									readOnly={!editing}
 									label="Antécédents"
 									placeholder={placeholder}
-									rows={minRows}
-									rowsMax={maxRows}
+									minRows={minRows}
+									maxRows={maxRows}
 									className={classes.multiline}
 									InputLabelProps={{
 										shrink: true,
@@ -445,8 +452,8 @@ const PatientPersonalInformationStatic = (
 									readOnly={!editing}
 									label="Traitement en cours"
 									placeholder={placeholder}
-									rows={minRows}
-									rowsMax={maxRows}
+									minRows={minRows}
+									maxRows={maxRows}
 									className={classes.multiline}
 									InputLabelProps={{
 										shrink: true,
@@ -650,8 +657,8 @@ const PatientPersonalInformationStatic = (
 									readOnly={!editing}
 									label="About"
 									placeholder={placeholder}
-									rows={2}
-									rowsMax={maxRows}
+									minRows={2}
+									maxRows={maxRows}
 									className={classes.multiline}
 									InputLabelProps={{
 										shrink: true,

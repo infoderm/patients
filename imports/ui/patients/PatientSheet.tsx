@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -11,6 +10,10 @@ import TextField from '@mui/material/TextField';
 import {dataURL as pngDataURL} from '../../util/png';
 
 import SetPicker from '../input/SetPicker';
+import {PatientFields} from '../../api/collection/patients';
+import {ConsultationDocument} from '../../api/collection/consultations';
+import {DocumentDocument} from '../../api/collection/documents';
+import {AttachmentDocument} from '../../api/collection/attachments';
 
 const useStyles = makeStyles((theme) => ({
 	photoPlaceHolder: {
@@ -45,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 	multiline: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing(2)}px)`,
+		width: `calc(100% - ${theme.spacing(2)})`,
 		'& textarea': {
 			color: 'black !important',
 		},
@@ -80,17 +83,27 @@ const minRows = 8;
 const maxRows = 100;
 
 const LargeMultilineReadOnlyTextField = (props) => (
-	<MultilineReadOnlyTextField rows={minRows} rowsMax={maxRows} {...props} />
+	<MultilineReadOnlyTextField minRows={minRows} maxRows={maxRows} {...props} />
 );
 
 const SmallMultilineReadOnlyTextField = (props) => (
 	<MultilineReadOnlyTextField rows={1} {...props} />
 );
 
-const PatientSheet = (props) => {
-	const classes = useStyles();
+interface Props {
+	patient: PatientFields;
+	consultations: ConsultationDocument[];
+	attachments: AttachmentDocument[];
+	documents: DocumentDocument[];
+}
 
-	const {patient, consultations, attachments, documents} = props;
+const PatientSheet = ({
+	patient,
+	consultations,
+	attachments,
+	documents,
+}: Props) => {
+	const classes = useStyles();
 
 	return (
 		<Paper>
@@ -223,8 +236,8 @@ const PatientSheet = (props) => {
 
 							<Grid item xs={9}>
 								<MultilineReadOnlyTextField
-									rows={2}
-									rowsMax={maxRows}
+									minRows={2}
+									maxRows={maxRows}
 									label="About"
 									value={patient.about}
 								/>
@@ -280,13 +293,6 @@ const PatientSheet = (props) => {
 			</Grid>
 		</Paper>
 	);
-};
-
-PatientSheet.propTypes = {
-	patient: PropTypes.object.isRequired,
-	consultations: PropTypes.array.isRequired,
-	attachments: PropTypes.array.isRequired,
-	documents: PropTypes.array.isRequired,
 };
 
 export default PatientSheet;

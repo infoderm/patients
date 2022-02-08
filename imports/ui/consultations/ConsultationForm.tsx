@@ -27,7 +27,7 @@ const styles = (theme) => ({
 	multiline: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing(2)}px)`,
+		width: `calc(100% - ${theme.spacing(2)})`,
 	},
 	form: {
 		padding: theme.spacing(3),

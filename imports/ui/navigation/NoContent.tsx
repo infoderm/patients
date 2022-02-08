@@ -1,23 +1,14 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles(() => ({
-	empty: {
-		textAlign: 'center',
-		margin: '3em 0',
-		color: '#999',
-	},
-}));
+const SpacedTypography = styled(Typography)({
+	textAlign: 'center',
+	margin: '3em 0',
+	color: '#999',
+});
 
-const NoContent = ({children, ...props}) => {
-	const classes = useStyles();
-	return (
-		<Typography className={classes.empty} variant="h3" {...props}>
-			{children}
-		</Typography>
-	);
-};
+const NoContent = (props) => <SpacedTypography variant="h3" {...props} />;
 
 export default NoContent;

@@ -1,11 +1,10 @@
 import React from 'react';
 
+import {styled} from '@mui/material/styles';
+
 import {Link} from 'react-router-dom';
 
-import classNames from 'classnames';
-import makeStyles from '@mui/styles/makeStyles';
-
-import ListItem from '@mui/material/ListItem';
+import MuiListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
@@ -21,20 +20,22 @@ import DocumentChips from './DocumentChips';
 import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton';
 import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton';
 
-const useStyles = makeStyles((theme) => ({
-	item: {
-		opacity: 1,
-		marginTop: theme.spacing(2),
-		marginBottom: theme.spacing(2),
-		paddingRight: theme.spacing(6 * 3),
-	},
-	chips: {
-		display: 'flex',
-		flexWrap: 'wrap',
-	},
-	loading: {
-		opacity: 0.7,
-	},
+const Chips = styled('div')({
+	display: 'flex',
+	flexWrap: 'wrap',
+});
+
+const UnstyledListItem = (props) => (
+	<MuiListItem component={Paper} {...props} />
+);
+
+const ListItem = styled(UnstyledListItem, {
+	shouldForwardProp: (prop) => prop !== 'loading',
+})<{loading: boolean}>(({theme, loading}) => ({
+	marginTop: theme.spacing(2),
+	marginBottom: theme.spacing(2),
+	paddingRight: theme.spacing(6 * 3),
+	opacity: loading ? 0.7 : 1,
 }));
 
 interface Props extends PropsOf<typeof DocumentChips> {
@@ -42,23 +43,15 @@ interface Props extends PropsOf<typeof DocumentChips> {
 }
 
 const DocumentListItem = ({loading = false, document, ...rest}: Props) => {
-	const classes = useStyles();
-
 	const {_id} = document;
 
 	return (
-		<ListItem
-			component={Paper}
-			className={classNames(classes.item, {
-				[classes.loading]: loading,
-			})}
-			variant="outlined"
-		>
+		<ListItem loading={loading} variant="outlined">
 			<ListItemText
 				primary={
-					<div className={classes.chips}>
+					<Chips>
 						<DocumentChips document={document} {...rest} />
-					</div>
+					</Chips>
 				}
 			/>
 			<ListItemSecondaryAction>

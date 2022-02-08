@@ -1,41 +1,57 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
-
 import {Link} from 'react-router-dom';
 
-import Chip from '@mui/material/Chip';
+import {styled} from '@mui/material/styles';
+import MuiChip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
-const useStyles = makeStyles((theme) => ({
-	chip: {
-		marginRight: theme.spacing(1),
-		fontWeight: 'bold',
-		maxWidth: '200px',
-	},
-	loading: {
-		backgroundColor: '#aaa',
-		color: '#fff',
-	},
-	found: {
-		backgroundColor: '#88f',
-		color: '#fff',
-	},
-	notfound: {
-		backgroundColor: '#f88',
-		color: '#fff',
-	},
-	willBeCreated: {
-		backgroundColor: '#8f8',
-		color: '#222',
-	},
+interface MuiChipProps {
+	loading: boolean | undefined;
+	found: boolean | undefined;
+	willBeCreated: boolean;
+	component: React.ElementType | undefined;
+	to: string | undefined;
+}
+
+const additionalProps = new Set<string | number | Symbol>([
+	'loading',
+	'found',
+	'willBeCreated',
+]);
+
+const Chip = styled(MuiChip, {
+	shouldForwardProp: (prop) => !additionalProps.has(prop),
+})<MuiChipProps>(({theme, loading, found, willBeCreated}) => ({
+	marginRight: theme.spacing(1),
+	fontWeight: 'bold',
+	maxWidth: '200px',
+	...(willBeCreated
+		? {
+				backgroundColor: '#8f8',
+				color: '#222',
+		  }
+		: loading
+		? {
+				backgroundColor: '#aaa',
+				color: '#fff',
+		  }
+		: found
+		? {
+				backgroundColor: '#88f',
+				color: '#fff',
+		  }
+		: {
+				backgroundColor: '#f88',
+				color: '#fff',
+		  }),
 }));
 
 interface Props {
 	className?: string;
+	style?: React.CSSProperties;
 	loading?: boolean;
 	found?: boolean;
 	patient: {
@@ -51,17 +67,16 @@ interface Props {
 const StaticPatientChip = React.forwardRef(
 	(
 		{
-			className = undefined,
+			className,
+			style,
 			loading = false,
 			found = true,
 			patient,
 			onClick = undefined,
 			onDelete = undefined,
 		}: Props,
-		ref,
+		ref: any,
 	) => {
-		const classes = useStyles();
-
 		let component: React.ElementType;
 		let to: string;
 		if (!onClick && !onDelete) {
@@ -75,6 +90,8 @@ const StaticPatientChip = React.forwardRef(
 			<Chip
 				ref={ref}
 				key={patient._id}
+				className={className}
+				style={style}
 				avatar={
 					!loading && found && patient.photo ? (
 						<Avatar src={pngDataURL(patient.photo)} />
@@ -91,17 +108,9 @@ const StaticPatientChip = React.forwardRef(
 							: `Not found`
 						: `${patient.lastname} ${patient.firstname}`
 				}
-				className={classNames(
-					classes.chip,
-					loading
-						? classes.loading
-						: found
-						? classes.found
-						: willBeCreated
-						? classes.willBeCreated
-						: classes.notfound,
-					className,
-				)}
+				loading={loading}
+				found={found}
+				willBeCreated={willBeCreated}
 				component={component}
 				to={to}
 				onClick={onClick}

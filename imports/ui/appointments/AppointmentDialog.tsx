@@ -3,23 +3,23 @@ import assert from 'assert';
 import React, {useMemo} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import MuiDialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
+import MuiDialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import Alert from '@mui/lab/Alert';
-import AlertTitle from '@mui/lab/AlertTitle';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import DatePicker from '@mui/lab/MobileDatePicker';
 import TimePicker from '@mui/lab/MobileTimePicker';
 
@@ -58,14 +58,19 @@ import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIn
 import isContiguous from '../../lib/interval/isContiguous';
 import useUniqueId from '../hooks/useUniqueId';
 
-const useStyles = makeStyles({
-	dialogPaper: {
+const Dialog = styled(MuiDialog)({
+	'& .MuiDialog-paper': {
 		overflow: 'visible',
 	},
-	multiline: {
-		overflow: 'auto',
-		width: '100%',
-	},
+});
+
+const DialogContent = styled(MuiDialogContent)({
+	overflow: 'visible',
+});
+
+const Multiline = styled(TextField)({
+	overflow: 'auto',
+	width: '100%',
 });
 
 const usePhone = (patientList) => {
@@ -111,7 +116,6 @@ const AppointmentDialog = ({
 	onClose,
 	onSubmit,
 }: Props) => {
-	const classes = useStyles();
 	const navigate = useNavigate();
 
 	const {loading, value: appointmentDuration} = useSetting(
@@ -255,14 +259,10 @@ const AppointmentDialog = ({
 	const titleId = useUniqueId('appointment-dialog-title');
 
 	return (
-		<Dialog
-			aria-labelledby={titleId}
-			classes={{paper: classes.dialogPaper}}
-			open={open}
-		>
+		<Dialog aria-labelledby={titleId} open={open}>
 			{loading && <LinearProgress />}
 			<DialogTitle id={titleId}>Schedule an appointment</DialogTitle>
-			<DialogContent className={classes.dialogPaper}>
+			<DialogContent>
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
 						<DatePicker
@@ -350,14 +350,13 @@ const AppointmentDialog = ({
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<TextField
+						<Multiline
 							multiline
 							label="Numéro de téléphone"
 							placeholder={phonePlaceholder}
 							helperText={phoneHelperText}
 							error={phoneError}
 							rows={1}
-							className={classes.multiline}
 							value={phone}
 							InputLabelProps={{shrink: true}}
 							margin="normal"
@@ -367,12 +366,11 @@ const AppointmentDialog = ({
 						/>
 					</Grid>
 					<Grid item xs={12}>
-						<TextField
+						<Multiline
 							multiline
 							label="Motif de la visite"
 							placeholder="Motif de la visite"
 							rows={4}
-							className={classes.multiline}
 							value={reason}
 							margin="normal"
 							onChange={(e) => setReason(e.target.value)}

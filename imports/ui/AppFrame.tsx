@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useTracker} from 'meteor/react-meteor-data';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -18,20 +18,19 @@ import NavigationDrawer from './NavigationDrawer';
 import useLoggingIn from './users/useLoggingIn';
 import useUser from './users/useUser';
 
-const useStyles = makeStyles(() => ({
-	appFrame: {
-		position: 'relative',
-		display: 'flex',
-		width: '100%',
-		minHeight: '100vh',
-	},
-	progress: {
-		display: 'block',
-		position: 'fixed',
-		width: '100%',
-		zIndex: 9999,
-	},
-}));
+const Progress = styled(LinearProgress)({
+	display: 'block',
+	position: 'fixed',
+	width: '100%',
+	zIndex: 9999,
+});
+
+const Frame = styled('div')({
+	position: 'relative',
+	display: 'flex',
+	width: '100%',
+	minHeight: '100vh',
+});
 
 const useUISettings = () =>
 	useTracker(() => {
@@ -49,14 +48,13 @@ const useUISettings = () =>
 	}, []);
 
 const AppFrame = () => {
-	const classes = useStyles();
 	const {loading, textTransform, navigationDrawerIsOpen} = useUISettings();
 	const loggingIn = useLoggingIn();
 	const currentUser = useUser();
 
 	return (
-		<div className={classes.appFrame} style={{textTransform}}>
-			{loading && <LinearProgress className={classes.progress} />}
+		<Frame style={{textTransform}}>
+			{loading && <Progress />}
 			<Header
 				navigationDrawerIsOpen={navigationDrawerIsOpen}
 				currentUser={currentUser}
@@ -71,7 +69,7 @@ const AppFrame = () => {
 				currentUser={currentUser}
 				loading={loading}
 			/>
-		</div>
+		</Frame>
 	);
 };
 

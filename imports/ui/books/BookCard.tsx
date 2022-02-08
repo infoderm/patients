@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -18,19 +17,18 @@ import useBookStats from './useBookStats';
 
 import BookRenamingDialog from './BookRenamingDialog';
 
-const useStyles = makeStyles(() => ({
-	avatar: {
-		color: '#fff',
-		backgroundColor: orange[500],
-	},
-	content: {
-		lineHeight: 1.35,
-	},
-}));
+const BookAvatar = styled(Avatar)({
+	color: '#fff',
+	backgroundColor: orange[500],
+});
 
-export default function BookCard({item}) {
-	const classes = useStyles();
+interface Props {
+	item: {
+		name: string;
+	};
+}
 
+const BookCard = ({item}: Props) => {
 	const dateFormatRange = useDateFormatRange('PPP');
 
 	const [year, book] = books.split(item.name);
@@ -42,12 +40,12 @@ export default function BookCard({item}) {
 
 	const content =
 		count === undefined ? (
-			<Typography className={classes.content} variant="body1">
+			<Typography variant="body1">
 				Total ... <br />
 				... — ...
 			</Typography>
 		) : count === 0 ? null : (
-			<Typography className={classes.content} variant="body1">
+			<Typography variant="body1">
 				Total {total} € <br />
 				{dateFormatRange(first, last)}
 			</Typography>
@@ -61,13 +59,11 @@ export default function BookCard({item}) {
 			url={(_name) => `/book/${year}/${myEncodeURIComponent(book)}`}
 			subheader={subheader}
 			content={content}
-			avatar={<Avatar className={classes.avatar}>Bk</Avatar>}
+			avatar={<BookAvatar>Bk</BookAvatar>}
 			abbr={`/${book.slice(0, 2)}`}
 			RenamingDialog={BookRenamingDialog}
 		/>
 	);
-}
-
-BookCard.propTypes = {
-	item: PropTypes.object.isRequired,
 };
+
+export default BookCard;

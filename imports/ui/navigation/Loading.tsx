@@ -1,21 +1,17 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
 
-import {useTheme, makeStyles} from '@mui/styles';
+import {styled, useTheme} from '@mui/material/styles';
 
-const useStyles = makeStyles(() => ({
-	loadingAnimation: {
-		margin: 'auto',
-	},
-}));
+const StyledAnimation = styled(ReactLoading)({
+	margin: 'auto',
+});
 
 const Loading = (props) => {
 	const theme = useTheme();
-	const classes = useStyles();
 	return (
 		<div>
-			<ReactLoading
-				className={classes.loadingAnimation}
+			<StyledAnimation
 				type="bubbles"
 				color={theme.palette.primary.main}
 				height={200}

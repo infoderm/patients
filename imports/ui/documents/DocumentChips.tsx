@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
 
-import {Link} from 'react-router-dom';
+import {styled, useTheme} from '@mui/material/styles';
 
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
-
-import Chip from '@mui/material/Chip';
+import MuiChip from '@mui/material/Chip';
 
 import ErrorIcon from '@mui/icons-material/Error';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -15,6 +12,7 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import DoneIcon from '@mui/icons-material/Done';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import UnstyledLinkChip from '../chips/LinkChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -27,33 +25,55 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import DocumentLinkingDialog from './DocumentLinkingDialog';
 import DocumentVersionsChip from './DocumentVersionsChip';
 
-const useStyles = makeStyles((theme) => ({
-	chip: {
-		marginRight: theme.spacing(1),
-		marginTop: theme.spacing(1 / 2),
-		marginBottom: theme.spacing(1 / 2),
-	},
-	maxWidthChip: {
+const chipMargins = (theme) => ({
+	marginRight: theme.spacing(1),
+	marginTop: theme.spacing(1 / 2),
+	marginBottom: theme.spacing(1 / 2),
+});
+
+interface AdditionalLinkChipProps {
+	maxWidth?: boolean;
+}
+
+const LinkChip = styled(UnstyledLinkChip, {
+	shouldForwardProp: (prop) => prop !== 'maxWidth',
+})<AdditionalLinkChipProps>(({theme, maxWidth}) => ({
+	...chipMargins(theme),
+	...(maxWidth && {
 		maxWidth: '200px',
-	},
-	unlinkedpatientchip: {
+	}),
+}));
+
+interface ChipProps {
+	maxWidth?: boolean;
+	kind?: string;
+}
+
+const Chip = styled(MuiChip, {
+	shouldForwardProp: (prop) => prop !== 'maxWidth' && prop !== 'kind',
+})<ChipProps>(({theme, maxWidth, kind}) => ({
+	...chipMargins(theme),
+	...(maxWidth && {
+		maxWidth: '200px',
+	}),
+	...(kind === 'unlinked' && {
 		backgroundColor: '#f88',
 		color: '#fff',
 		fontWeight: 'bold',
-	},
-	linkoffchip: {
+	}),
+	...(kind === 'linkoff' && {
 		backgroundColor: '#f88',
 		color: '#fff',
-	},
-	anomalieschip: {
+	}),
+	...(kind === 'anomalies' && {
 		backgroundColor: '#fa8',
-	},
-	partialchip: {
+	}),
+	...(kind === 'partial' && {
 		backgroundColor: '#fa8',
-	},
-	completechip: {
+	}),
+	...(kind === 'complete' && {
 		backgroundColor: '#8fa',
-	},
+	}),
 }));
 
 interface Props {
@@ -67,6 +87,7 @@ const DocumentChips = ({
 	PatientChip = ReactivePatientChip,
 	VersionsChip = DocumentVersionsChip,
 }: Props) => {
+	const theme = useTheme();
 	const [linking, setLinking] = useState(false);
 
 	const {
@@ -83,54 +104,44 @@ const DocumentChips = ({
 		anomalies,
 	} = document;
 
-	const classes = useStyles();
-
 	const localizedDate = useDateFormat('PPPP');
 
 	return (
 		<>
 			{parsed ? (
-				<Chip label={localizedDate(datetime)} className={classes.chip} />
+				<Chip label={localizedDate(datetime)} />
 			) : (
-				<Chip label={localizedDate(createdAt)} className={classes.chip} />
+				<Chip label={localizedDate(createdAt)} />
 			)}
 			{parsed && (
-				<Chip
+				<LinkChip
+					maxWidth
 					icon={<BusinessIcon />}
-					component={Link}
 					to={`/documents/filterBy/identifier/${myEncodeURIComponent(
 						identifier,
 					)}`}
 					label={identifier}
-					className={classNames(classes.chip, classes.maxWidthChip)}
 				/>
 			)}
 			{parsed && (
-				<Chip
+				<LinkChip
+					maxWidth
 					icon={<ConfirmationNumberIcon />}
-					component={Link}
 					to={`/document/versions/${myEncodeURIComponent(
 						identifier,
 					)}/${myEncodeURIComponent(reference)}`}
 					label={reference}
-					className={classNames(classes.chip, classes.maxWidthChip)}
 				/>
 			)}
-			{parsed ? null : (
-				<Chip
-					icon={<BugReportIcon />}
-					label="parsing error"
-					className={classes.chip}
-				/>
-			)}
+			{parsed ? null : <Chip icon={<BugReportIcon />} label="parsing error" />}
 			{PatientChip && patientId && (
-				<PatientChip className={classes.chip} patient={{_id: patientId}} />
+				<PatientChip style={chipMargins(theme)} patient={{_id: patientId}} />
 			)}
 			{patientId ? null : parsed ? (
 				<Chip
 					icon={<LinkOffIcon />}
 					label={`${subject.lastname} ${subject.firstname}`}
-					className={classNames(classes.chip, classes.unlinkedpatientchip)}
+					kind="unlinked"
 					onClick={(e) => {
 						e.stopPropagation();
 						setLinking(true);
@@ -140,7 +151,7 @@ const DocumentChips = ({
 				<Chip
 					icon={<LinkOffIcon />}
 					label="not linked"
-					className={classNames(classes.chip, classes.linkoffchip)}
+					kind="linkoff"
 					onClick={(e) => {
 						e.stopPropagation();
 						setLinking(true);
@@ -148,36 +159,19 @@ const DocumentChips = ({
 				/>
 			)}
 			{parsed && kind === 'lab' && anomalies ? (
-				<Chip
-					icon={<ErrorIcon />}
-					label={anomalies}
-					className={classNames(classes.chip, classes.anomalieschip)}
-				/>
+				<Chip icon={<ErrorIcon />} label={anomalies} kind="anomalies" />
 			) : null}
 			{parsed && status && status === 'partial' ? (
-				<Chip
-					icon={<HourglassEmptyIcon />}
-					label={status}
-					className={classNames(classes.chip, classes.partialchip)}
-				/>
+				<Chip icon={<HourglassEmptyIcon />} label={status} kind="partial" />
 			) : null}
 			{parsed && status && status === 'complete' ? (
-				<Chip
-					icon={<DoneIcon />}
-					label={status}
-					className={classNames(classes.chip, classes.completechip)}
-				/>
+				<Chip icon={<DoneIcon />} label={status} kind="complete" />
 			) : null}
 			{deleted && (
-				<Chip
-					icon={<DeleteIcon />}
-					label="deleted"
-					color="secondary"
-					className={classes.chip}
-				/>
+				<Chip icon={<DeleteIcon />} label="deleted" color="secondary" />
 			)}
 			{!deleted && VersionsChip && (
-				<VersionsChip document={document} className={classes.chip} />
+				<VersionsChip style={chipMargins(theme)} document={document} />
 			)}
 			{!patientId && (
 				<DocumentLinkingDialog

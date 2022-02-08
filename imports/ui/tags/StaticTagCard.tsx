@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {useNavigate, Link, useParams} from 'react-router-dom';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
+import Box from '@mui/material/Box';
+import MuiCard from '@mui/material/Card';
+import MuiCardHeader from '@mui/material/CardHeader';
+import MuiCardContent from '@mui/material/CardContent';
+import MuiCardActions from '@mui/material/CardActions';
+import MuiCardMedia from '@mui/material/CardMedia';
 
 import Button from '@mui/material/Button';
 
@@ -15,68 +17,70 @@ import EditIcon from '@mui/icons-material/Edit';
 import useIsMounted from '../hooks/useIsMounted';
 import DeleteButton from '../button/DeleteButton';
 
-const styles = (theme) =>
-	createStyles({
-		card: {
-			position: 'relative',
-			overflow: 'visible',
-			display: 'flex',
-			minHeight: 200,
-		},
-		details: {
-			display: 'flex',
-			flex: 1,
-			flexDirection: 'column',
-			minWidth: 300,
-		},
-		header: {
-			flex: 1,
-			'& > div': {
-				minWidth: 0,
-				'& > span': {
-					whiteSpace: 'nowrap',
-					overflow: 'hidden',
-					textOverflow: 'ellipsis',
-				},
-			},
-		},
-		content: {
-			flex: '1 0 auto',
-		},
-		photoPlaceHolder: {
-			display: 'flex',
-			fontSize: '4rem',
-			margin: 0,
-			width: 140,
-			height: 200,
-			alignItems: 'center',
-			justifyContent: 'center',
-			color: '#fff',
-			backgroundColor: '#999',
-			flex: 'none',
-		},
-		actions: {
-			display: 'flex',
-			paddingLeft: theme.spacing(2),
-		},
-		name: {
-			display: 'flex',
-		},
-		veil: {
-			position: 'absolute',
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-			top: 0,
-			bottom: 0,
-			left: 0,
-			right: 0,
-			zIndex: 1,
-			fontSize: '2rem',
-		},
-	});
+const Card = styled(MuiCard, {
+	shouldForwardProp: (prop) => prop !== 'deleted',
+})<{deleted: boolean}>(({deleted}) => ({
+	position: 'relative',
+	overflow: 'visible',
+	display: 'flex',
+	minHeight: 200,
+	opacity: deleted ? 0.4 : 1,
+}));
 
-const useStyles = makeStyles(styles);
+const CardDetails = styled(Box)({
+	display: 'flex',
+	flex: 1,
+	flexDirection: 'column',
+	minWidth: 300,
+});
+
+const UnstyledLinkedCardHeader = ({to, ...rest}) => {
+	return <MuiCardHeader component={Link} to={to} {...rest} />;
+};
+
+const LinkedCardHeader = styled(UnstyledLinkedCardHeader)({
+	flex: 1,
+	'& > div': {
+		minWidth: 0,
+		'& > span': {
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+		},
+	},
+});
+
+const CardContent = styled(MuiCardContent)({
+	flex: '1 0 auto',
+});
+
+const CardActions = styled(MuiCardActions)(({theme}) => ({
+	display: 'flex',
+	paddingLeft: theme.spacing(2),
+}));
+
+const CardMedia = styled(MuiCardMedia)({
+	display: 'flex',
+	fontSize: '4rem',
+	width: 140,
+	alignItems: 'center',
+	justifyContent: 'center',
+	color: '#fff',
+	backgroundColor: '#999',
+});
+
+const Veil = styled('div')({
+	position: 'absolute',
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	top: 0,
+	bottom: 0,
+	left: 0,
+	right: 0,
+	zIndex: 1,
+	fontSize: '2rem',
+});
 
 export interface StaticTagCardProps {
 	loading: boolean;
@@ -111,7 +115,6 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 		},
 		ref,
 	) => {
-		const classes = useStyles();
 		const navigate = useNavigate();
 		const params = useParams<{name?: string}>();
 
@@ -146,23 +149,20 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 		};
 
 		const deleted = !loading && !found;
-		const cardOpacity = {opacity: deleted ? 0.4 : 1};
 
 		return (
-			<Card ref={ref} className={classes.card} style={cardOpacity}>
-				{deleted && <div className={classes.veil}>DELETED</div>}
-				<div className={classes.details}>
-					<CardHeader
-						className={classes.header}
+			<Card ref={ref} deleted={deleted}>
+				{deleted && <Veil>DELETED</Veil>}
+				<CardDetails>
+					<LinkedCardHeader
 						avatar={avatar}
 						title={tag.name}
 						subheader={subheader}
-						component={Link}
 						to={url(tag.name)}
 					/>
-					<CardContent className={classes.content}>{content}</CardContent>
+					<CardContent>{content}</CardContent>
 					{!deleted && (
-						<CardActions disableSpacing className={classes.actions}>
+						<CardActions disableSpacing>
 							{RenamingDialog && (
 								<Button color="primary" onClick={openRenamingDialog}>
 									Rename
@@ -188,8 +188,8 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 							{actions}
 						</CardActions>
 					)}
-				</div>
-				<div className={classes.photoPlaceHolder}>{abbr || tag.name[0]}</div>
+				</CardDetails>
+				<CardMedia>{abbr || tag.name[0]}</CardMedia>
 			</Card>
 		);
 	},

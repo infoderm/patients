@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
@@ -24,17 +24,16 @@ import changeColor from '../../api/endpoint/allergies/changeColor';
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';
 
-const useStyles = makeStyles((theme) => ({
-	avatar: {
-		color: '#fff',
-		backgroundColor: green[500],
-	},
-	patientChip: {
-		marginRight: theme.spacing(1),
-		backgroundColor: '#aaa',
-		fontWeight: 'normal',
-		color: '#fff',
-	},
+const AllergyAvatar = styled(Avatar)({
+	color: '#fff',
+	backgroundColor: green[500],
+});
+
+const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
+	marginRight: theme.spacing(1),
+	backgroundColor: '#aaa',
+	fontWeight: 'normal',
+	color: '#fff',
 }));
 
 interface StaticAllergyCardProps {
@@ -61,8 +60,6 @@ interface LoadedTagCardProps {
 
 const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 	({loading, found, item}, ref) => {
-		const classes = useStyles();
-
 		const {result} = useAllergyStats(item.name);
 		const {count} = result ?? {};
 		const {results: patients} = usePatientsHavingAllergy(item.name, {
@@ -89,11 +86,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 			) : (
 				<div>
 					{patients.map((patient) => (
-						<StaticPatientChip
-							key={patient._id}
-							patient={patient}
-							className={classes.patientChip}
-						/>
+						<GreyPatientChip key={patient._id} patient={patient} />
 					))}
 					{count !== undefined && count > patients.length && (
 						<Chip label={`+ ${count - patients.length}`} />
@@ -116,7 +109,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 						onChange={debounce(onChange, 1000)}
 					/>
 				}
-				avatar={<Avatar className={classes.avatar}>Al</Avatar>}
+				avatar={<AllergyAvatar>Al</AllergyAvatar>}
 				DeletionDialog={AllergyDeletionDialog}
 				RenamingDialog={AllergyRenamingDialog}
 			/>

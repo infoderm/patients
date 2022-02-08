@@ -2,7 +2,7 @@ import React from 'react';
 
 import {enumerate} from '@iterable-iterator/zip';
 
-function* split(s) {
+function* split(s: string) {
 	const n = s.length;
 	let word = '';
 	for (let i = 0; i < n; ++i) {
@@ -29,13 +29,10 @@ function* split(s) {
 	}
 }
 
-/**
- * colorizeText.
- *
- * @param {Function} matches
- * @param {string} text
- */
-export default function colorizeText(matches, text) {
+export default function colorizeText(
+	matches: (piece: string) => boolean,
+	text: string,
+) {
 	if (!text) return [];
 	if (!matches) return [text];
 

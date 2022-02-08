@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
@@ -18,21 +18,17 @@ import {myEncodeURIComponent} from '../../util/uri';
 import DoctorRenamingDialog from './DoctorRenamingDialog';
 import DoctorDeletionDialog from './DoctorDeletionDialog';
 
-const styles = (theme) =>
-	createStyles({
-		avatar: {
-			color: '#fff',
-			backgroundColor: blue[500],
-		},
-		patientChip: {
-			marginRight: theme.spacing(1),
-			backgroundColor: '#aaa',
-			fontWeight: 'normal',
-			color: '#fff',
-		},
-	});
+const DoctorAvatar = styled(Avatar)({
+	color: '#fff',
+	backgroundColor: blue[500],
+});
 
-const useStyles = makeStyles(styles);
+const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
+	marginRight: theme.spacing(1),
+	backgroundColor: '#aaa',
+	fontWeight: 'normal',
+	color: '#fff',
+}));
 
 interface LoadedTagCardProps {
 	loading: boolean;
@@ -41,8 +37,6 @@ interface LoadedTagCardProps {
 }
 
 const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
-	const classes = useStyles();
-
 	const {result} = useDoctorStats(item.name);
 	const {count} = result ?? {};
 	const {results: patients} = usePatientsGoingToDoctor(item.name, {
@@ -57,11 +51,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 		) : (
 			<div>
 				{patients.map((patient) => (
-					<StaticPatientChip
-						key={patient._id}
-						patient={patient}
-						className={classes.patientChip}
-					/>
+					<GreyPatientChip key={patient._id} patient={patient} />
 				))}
 				{count > patients.length && (
 					<Chip label={`+ ${count - patients.length}`} />
@@ -77,7 +67,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 			url={(name: string) => `/doctor/${myEncodeURIComponent(name)}`}
 			subheader={subheader}
 			content={content}
-			avatar={<Avatar className={classes.avatar}>Dr</Avatar>}
+			avatar={<DoctorAvatar>Dr</DoctorAvatar>}
 			DeletionDialog={DoctorDeletionDialog}
 			RenamingDialog={DoctorRenamingDialog}
 		/>
