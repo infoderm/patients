@@ -34,7 +34,6 @@ const DocumentsList = ({page = 1, perpage = 10}: Props) => {
 			<CustomDocumentImportButton
 				Button={FixedFab}
 				col={4}
-				color="default"
 				tooltip="Import documents"
 			/>
 		</>

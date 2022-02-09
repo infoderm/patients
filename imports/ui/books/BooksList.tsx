@@ -80,7 +80,6 @@ const BooksList = ({
 			</FixedFab>
 			<FixedFab
 				col={5}
-				color="default"
 				tooltip="Toggle sorting order"
 				onClick={async () => {
 					await setSortingOrder(-sortingOrder);
