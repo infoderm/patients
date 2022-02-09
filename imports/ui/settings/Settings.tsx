@@ -16,6 +16,9 @@ import FirstWeekContainsDateSetting from './FirstWeekContainsDateSetting';
 import IBANSetting from './IBANSetting';
 import AccountHolderSetting from './AccountHolderSetting';
 import WorkScheduleSetting from './WorkScheduleSetting';
+import ThemePaletteModeSetting from './ThemePaletteModeSetting';
+import ThemePalettePrimarySetting from './ThemePalettePrimarySetting';
+import ThemePaletteSecondarySetting from './ThemePaletteSecondarySetting';
 
 const useStyles = makeStyles((theme) => ({
 	setting: {
@@ -39,6 +42,11 @@ export default function Settings() {
 			<Typography variant="h3">UI Settings</Typography>
 			<NavigationDrawerIsOpenSetting className={classes.setting} />
 			<TextTransformSetting className={classes.setting} />
+
+			<Typography variant="h3">Theme Settings</Typography>
+			<ThemePaletteModeSetting className={classes.setting} />
+			<ThemePalettePrimarySetting className={classes.setting} />
+			<ThemePaletteSecondarySetting className={classes.setting} />
 
 			<Typography variant="h3">Locale Settings</Typography>
 			<LanguageSetting className={classes.setting} />
