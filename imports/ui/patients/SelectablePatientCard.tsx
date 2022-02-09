@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
@@ -40,20 +39,33 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const SelectablePatientCard = ({onClick, selected, Card, patient, ...rest}) => {
+interface Props {
+	patient: {_id: string};
+	onClick: (patient: {_id: string}) => void;
+	selected?: boolean | undefined;
+	Card?: React.ElementType;
+}
+
+const SelectablePatientCard = ({
+	onClick,
+	selected = undefined,
+	Card = GenericStaticPatientCard,
+	patient,
+	...rest
+}: Props) => {
 	const classes = useStyles();
 
 	return (
 		<div className={classes.root}>
 			<Card patient={patient} {...rest} />
-			{selected === true && (
+			{selected !== undefined && selected && (
 				<CheckCircleOutlinedIcon
 					className={classes.checkbox}
 					color="primary"
 					fontSize="large"
 				/>
 			)}
-			{selected === false && (
+			{selected !== undefined && !selected && (
 				<RadioButtonUncheckedOutlinedIcon
 					className={classes.checkbox}
 					color="action"
@@ -63,26 +75,17 @@ const SelectablePatientCard = ({onClick, selected, Card, patient, ...rest}) => {
 			<ButtonBase
 				focusRipple
 				className={classNames(classes.veil, {
-					[classes.veilSelected]: selected === true,
-					[classes.veilNotSelected]: selected === false,
+					[classes.veilSelected]: selected !== undefined && selected,
+					[classes.veilNotSelected]: selected !== undefined && !selected,
 				})}
-				onClick={() => onClick(patient)}
+				onClick={() => {
+					onClick(patient);
+				}}
 			/>
 		</div>
 	);
 };
 
 SelectablePatientCard.projection = GenericStaticPatientCard.projection;
-
-SelectablePatientCard.defaultProps = {
-	selected: undefined,
-	Card: GenericStaticPatientCard,
-};
-
-SelectablePatientCard.propTypes = {
-	selected: PropTypes.bool,
-	onClick: PropTypes.func.isRequired,
-	Card: PropTypes.elementType,
-};
 
 export default SelectablePatientCard;

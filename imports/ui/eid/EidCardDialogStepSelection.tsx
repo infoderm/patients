@@ -119,8 +119,8 @@ interface Props {
 	onClose: () => void;
 	onNext: () => void;
 	eidInfo: PatientIdFields;
-	selected: Set<{}>;
-	setSelected: (selection: Set<{}>) => void;
+	selected: Set<string>;
+	setSelected: (selection: Set<string>) => void;
 }
 
 const EidCardDialogStepSelection = ({
