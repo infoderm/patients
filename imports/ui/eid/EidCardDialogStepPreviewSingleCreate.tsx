@@ -16,7 +16,7 @@ import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import {patients} from '../../api/patients';
 
-import dialog from '../modal/dialog';
+import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
@@ -31,6 +31,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 	onClose,
 }: EidCardDialogStepPreviewSingleProps) => {
 	assert(patientId === '?');
+	const dialog = useDialog();
 	const onNext = async () => {
 		if (
 			await dialog((resolve) => (

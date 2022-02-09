@@ -14,6 +14,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {useLocale} from '../i18n/datetime';
 
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
+import ModalProvider from './modal/ModelProvider';
 import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
 import useUserTheme from './useUserTheme';
@@ -27,15 +28,17 @@ const App = () => {
 			<LocalizationProvider dateAdapter={AdapterDateFns} locale={locale}>
 				<StyledEngineProvider injectFirst>
 					<ThemeProvider theme={theme}>
-						<CssBaseline />
-						<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
-							<ErrorBoundary>
-								<div>
-									<CustomWholeWindowDropZone />
-									<AppFrame />
-								</div>
-							</ErrorBoundary>
-						</SnackbarProvider>
+						<ModalProvider>
+							<CssBaseline />
+							<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
+								<ErrorBoundary>
+									<div>
+										<CustomWholeWindowDropZone />
+										<AppFrame />
+									</div>
+								</ErrorBoundary>
+							</SnackbarProvider>
+						</ModalProvider>
 					</ThemeProvider>
 				</StyledEngineProvider>
 			</LocalizationProvider>
