@@ -2,15 +2,11 @@ import {Meteor} from 'meteor/meteor';
 
 import React, {useState} from 'react';
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Popover from '@mui/material/Popover';
-
 import {useSnackbar} from 'notistack';
 import changePassword from '../../api/user/changePassword';
 
 import useUniqueId from '../hooks/useUniqueId';
-import {useStyles} from './Popover';
+import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 interface Props {
 	anchorEl: HTMLElement;
@@ -18,7 +14,6 @@ interface Props {
 }
 
 const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [oldPassword, setOldPassword] = useState('');
 	const [newPassword, setNewPassword] = useState('');
@@ -67,7 +62,6 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 
 	return (
 		<Popover
-			className={classes.popover}
 			id={id}
 			anchorEl={anchorEl}
 			open={Boolean(anchorEl)}
@@ -81,13 +75,12 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 			}}
 			onClose={handleClose}
 		>
-			<form className={classes.form} autoComplete="off">
-				<TextField
+			<Form autoComplete="off">
+				<RowTextField
 					autoFocus
 					id={oldPasswordInputId}
 					error={Boolean(errorOldPassword)}
 					helperText={errorOldPassword}
-					className={classes.row}
 					label="Old password"
 					type="password"
 					value={oldPassword}
@@ -95,11 +88,10 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 						setOldPassword(e.target.value);
 					}}
 				/>
-				<TextField
+				<RowTextField
 					id={newPasswordInputId}
 					error={Boolean(errorNewPassword)}
 					helperText={errorNewPassword}
-					className={classes.row}
 					label="New password"
 					type="password"
 					value={newPassword}
@@ -107,15 +99,10 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 						setNewPassword(e.target.value);
 					}}
 				/>
-				<Button
-					type="submit"
-					color="secondary"
-					className={classes.row}
-					onClick={uiChangePassword}
-				>
+				<RowButton type="submit" color="secondary" onClick={uiChangePassword}>
 					Change password
-				</Button>
-			</form>
+				</RowButton>
+			</Form>
 		</Popover>
 	);
 };

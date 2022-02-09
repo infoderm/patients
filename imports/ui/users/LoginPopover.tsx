@@ -1,20 +1,21 @@
 import {Meteor} from 'meteor/meteor';
 
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Popover from '@mui/material/Popover';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import {useSnackbar} from 'notistack';
 import loginWithPassword from '../../api/user/loginWithPassword';
 
-import {useStyles} from './Popover';
+import {Popover, Form, RowTextField, RowButton} from './Popover';
 
-const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
-	const classes = useStyles();
+interface Props {
+	anchorEl: HTMLElement;
+	handleClose: () => void;
+	changeMode: (mode: string) => void;
+}
+
+const LoginPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -75,7 +76,6 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 
 	return (
 		<Popover
-			className={classes.popover}
 			id="login-popover"
 			anchorEl={anchorEl}
 			open={Boolean(anchorEl)}
@@ -89,56 +89,52 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}) => {
 			}}
 			onClose={handleClose}
 		>
-			<form className={classes.form} autoComplete="off">
-				<TextField
+			<Form autoComplete="off">
+				<RowTextField
 					autoFocus
 					id="login-popover-input-username"
 					error={Boolean(errorUsername)}
 					helperText={errorUsername}
-					className={classes.row}
 					label="Username"
 					value={username}
 					disabled={loggingIn}
-					onChange={(e) => setUsername(e.target.value)}
+					onChange={(e) => {
+						setUsername(e.target.value);
+					}}
 				/>
-				<TextField
+				<RowTextField
 					id="login-popover-input-password"
 					error={Boolean(errorPassword)}
 					helperText={errorPassword}
-					className={classes.row}
 					label="Password"
 					type="password"
 					value={password}
 					disabled={loggingIn}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={(e) => {
+						setPassword(e.target.value);
+					}}
 				/>
-				<Button
+				<RowButton
 					type="submit"
 					color="primary"
-					className={classes.row}
 					disabled={loggingIn}
 					onClick={login}
 				>
 					Log in
-				</Button>
-				<Button
+				</RowButton>
+				<RowButton
 					color="secondary"
-					className={classes.row}
 					disabled={loggingIn}
-					onClick={() => changeMode('register')}
+					onClick={() => {
+						changeMode('register');
+					}}
 				>
 					Create account?
-				</Button>
-			</form>
+				</RowButton>
+			</Form>
 			{loggingIn && <LinearProgress />}
 		</Popover>
 	);
-};
-
-LoginPopover.propTypes = {
-	anchorEl: PropTypes.object,
-	handleClose: PropTypes.func.isRequired,
-	changeMode: PropTypes.func.isRequired,
 };
 
 export default LoginPopover;

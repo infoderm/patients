@@ -1,19 +1,19 @@
 import {Meteor} from 'meteor/meteor';
 
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
-
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Popover from '@mui/material/Popover';
 
 import {useSnackbar} from 'notistack';
 import createUserWithPassword from '../../api/user/createUserWithPassword';
 
-import {useStyles} from './Popover';
+import {Popover, Form, RowTextField, RowButton} from './Popover';
 
-const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
-	const classes = useStyles();
+interface Props {
+	anchorEl: HTMLElement;
+	handleClose: () => void;
+	changeMode: (mode: string) => void;
+}
+
+const RegisterPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -70,7 +70,6 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 
 	return (
 		<Popover
-			className={classes.popover}
 			id="register-popover"
 			anchorEl={anchorEl}
 			open={Boolean(anchorEl)}
@@ -84,51 +83,43 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}) => {
 			}}
 			onClose={handleClose}
 		>
-			<form className={classes.form} autoComplete="off">
-				<TextField
+			<Form autoComplete="off">
+				<RowTextField
 					autoFocus
 					id="register-popover-input-username"
 					error={Boolean(errorUsername)}
 					helperText={errorUsername}
-					className={classes.row}
 					label="Username"
 					value={username}
-					onChange={(e) => setUsername(e.target.value)}
+					onChange={(e) => {
+						setUsername(e.target.value);
+					}}
 				/>
-				<TextField
+				<RowTextField
 					id="register-popover-input-password"
 					error={Boolean(errorPassword)}
 					helperText={errorPassword}
-					className={classes.row}
 					label="Password"
 					type="password"
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={(e) => {
+						setPassword(e.target.value);
+					}}
 				/>
-				<Button
-					type="submit"
-					color="primary"
-					className={classes.row}
-					onClick={register}
-				>
+				<RowButton type="submit" color="primary" onClick={register}>
 					Register
-				</Button>
-				<Button
+				</RowButton>
+				<RowButton
 					color="secondary"
-					className={classes.row}
-					onClick={() => changeMode('login')}
+					onClick={() => {
+						changeMode('login');
+					}}
 				>
 					Already registered?
-				</Button>
-			</form>
+				</RowButton>
+			</Form>
 		</Popover>
 	);
-};
-
-RegisterPopover.propTypes = {
-	anchorEl: PropTypes.object,
-	handleClose: PropTypes.func.isRequired,
-	changeMode: PropTypes.func.isRequired,
 };
 
 export default RegisterPopover;
