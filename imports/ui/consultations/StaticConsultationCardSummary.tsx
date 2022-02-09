@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -8,22 +8,26 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
-const useStyles = makeStyles({
-	summary: {
+const PREFIX = 'StaticConsultationCardSummary';
+
+const classes = {
+	summary: `${PREFIX}-summary`,
+};
+
+const StyledAccordionSummary = styled(AccordionSummary)({
+	[`&.${classes.summary}`]: {
 		position: 'relative',
 	},
 });
 
 const StaticConsultationCardSummary = (props) => {
-	const classes = useStyles();
-
 	return (
-		<AccordionSummary
+		<StyledAccordionSummary
 			className={classes.summary}
 			expandIcon={<ExpandMoreIcon />}
 		>
 			<StaticConsultationCardChips {...props} />
-		</AccordionSummary>
+		</StyledAccordionSummary>
 	);
 };
 

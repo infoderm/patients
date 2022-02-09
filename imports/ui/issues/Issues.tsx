@@ -1,5 +1,5 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
 
@@ -11,17 +11,21 @@ import MangledDocuments from './MangledDocuments';
 import UnattachedUploads from './UnattachedUploads';
 import DoctorsWithNonAlphabeticalSymbols from './DoctorsWithNonAlphabeticalSymbols';
 
-const useStyles = makeStyles((theme) => ({
-	container: {
+const PREFIX = 'Issues';
+
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.container}`]: {
 		padding: theme.spacing(3),
 	},
 }));
 
 const Issues = () => {
-	const classes = useStyles();
-
 	return (
-		<div>
+		<Root>
 			<Typography variant="h3">Uploads that are not attached</Typography>
 			<UnattachedUploads className={classes.container} />
 			<Typography variant="h3">Documents that are not parsed</Typography>
@@ -40,7 +44,7 @@ const Issues = () => {
 				Doctors with non alphabetical symbols
 			</Typography>
 			<DoctorsWithNonAlphabeticalSymbols className={classes.container} />
-		</div>
+		</Root>
 	);
 };
 

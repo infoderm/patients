@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import classNames from 'classnames';
 
 import ButtonBase from '@mui/material/ButtonBase';
@@ -9,11 +9,22 @@ import RadioButtonUncheckedOutlinedIcon from '@mui/icons-material/RadioButtonUnc
 
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
-const useStyles = makeStyles((theme) => ({
-	root: {
+const PREFIX = 'SelectablePatientCard';
+
+const classes = {
+	root: `${PREFIX}-root`,
+	veil: `${PREFIX}-veil`,
+	veilSelected: `${PREFIX}-veilSelected`,
+	veilNotSelected: `${PREFIX}-veilNotSelected`,
+	checkbox: `${PREFIX}-checkbox`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`&.${classes.root}`]: {
 		position: 'relative',
 	},
-	veil: {
+
+	[`& .${classes.veil}`]: {
 		width: '100%',
 		position: 'absolute',
 		top: 0,
@@ -26,13 +37,16 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: 'transparent',
 		transition: 'background-color 500ms ease-out',
 	},
-	veilSelected: {
+
+	[`& .${classes.veilSelected}`]: {
 		backgroundColor: 'rgba(128,128,255,0.25)',
 	},
-	veilNotSelected: {
+
+	[`& .${classes.veilNotSelected}`]: {
 		backgroundColor: 'rgba(255,255,255,0.5)',
 	},
-	checkbox: {
+
+	[`& .${classes.checkbox}`]: {
 		position: 'absolute',
 		bottom: theme.spacing(2),
 		right: theme.spacing(2),
@@ -53,10 +67,8 @@ const SelectablePatientCard = ({
 	patient,
 	...rest
 }: Props) => {
-	const classes = useStyles();
-
 	return (
-		<div className={classes.root}>
+		<Root className={classes.root}>
 			<Card patient={patient} {...rest} />
 			{selected !== undefined && selected && (
 				<CheckCircleOutlinedIcon
@@ -82,7 +94,7 @@ const SelectablePatientCard = ({
 					onClick(patient);
 				}}
 			/>
-		</div>
+		</Root>
 	);
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -15,18 +14,34 @@ import {useDateFormatRange} from '../../i18n/datetime';
 
 import useConsultationsStats from './useConsultationsStats';
 
-const useStyles = makeStyles((theme) => ({
-	card: {
+const PREFIX = 'ConsultationsStatsCard';
+
+const classes = {
+	card: `${PREFIX}-card`,
+	details: `${PREFIX}-details`,
+	header: `${PREFIX}-header`,
+	content: `${PREFIX}-content`,
+	photoPlaceHolder: `${PREFIX}-photoPlaceHolder`,
+	actions: `${PREFIX}-actions`,
+	name: `${PREFIX}-name`,
+	avatar: `${PREFIX}-avatar`,
+	paragraph: `${PREFIX}-paragraph`,
+};
+
+const StyledCard = styled(Card)(({theme}) => ({
+	[`&.${classes.card}`]: {
 		display: 'flex',
 		minHeight: 200,
 	},
-	details: {
+
+	[`& .${classes.details}`]: {
 		display: 'flex',
 		flex: 1,
 		flexDirection: 'column',
 		minWidth: 300,
 	},
-	header: {
+
+	[`& .${classes.header}`]: {
 		flex: 1,
 		'& > div': {
 			minWidth: 0,
@@ -37,10 +52,12 @@ const useStyles = makeStyles((theme) => ({
 			},
 		},
 	},
-	content: {
+
+	[`& .${classes.content}`]: {
 		flex: '1 0 auto',
 	},
-	photoPlaceHolder: {
+
+	[`& .${classes.photoPlaceHolder}`]: {
 		display: 'flex',
 		fontSize: '4rem',
 		margin: 0,
@@ -52,18 +69,22 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: '#999',
 		flex: 'none',
 	},
-	actions: {
+
+	[`& .${classes.actions}`]: {
 		display: 'flex',
 		paddingLeft: theme.spacing(2),
 	},
-	name: {
+
+	[`& .${classes.name}`]: {
 		display: 'flex',
 	},
-	avatar: {
+
+	[`& .${classes.avatar}`]: {
 		color: '#111',
 		backgroundColor: 'yellow',
 	},
-	paragraph: {
+
+	[`& .${classes.paragraph}`]: {
 		lineHeight: 1.35,
 	},
 }));
@@ -86,7 +107,6 @@ const ConsultationsStatsCard = ({
 	actions = () => null,
 	abbr,
 }: Props) => {
-	const classes = useStyles();
 	const dateFormatRange = useDateFormatRange('PPP');
 	const {result} = useConsultationsStats(query);
 	const {count, total, first, last} = result ?? {};
@@ -107,7 +127,7 @@ const ConsultationsStatsCard = ({
 		);
 
 	return (
-		<Card className={classes.card}>
+		<StyledCard className={classes.card}>
 			<div className={classes.details}>
 				<CardHeader
 					className={classes.header}
@@ -123,7 +143,7 @@ const ConsultationsStatsCard = ({
 				</CardActions>
 			</div>
 			<div className={classes.photoPlaceHolder}>{abbr || title.slice(-2)}</div>
-		</Card>
+		</StyledCard>
 	);
 };
 

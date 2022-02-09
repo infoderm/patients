@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 
-import {useNavigate} from 'react-router-dom';
+import {styled} from '@mui/material/styles';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {useNavigate} from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 
@@ -26,19 +26,27 @@ import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import useUniqueId from '../hooks/useUniqueId';
 
-const styles = (theme) => ({
-	container: {
+const PREFIX = 'NewPatientForm';
+
+const classes = {
+	container: `${PREFIX}-container`,
+	form: `${PREFIX}-form`,
+	button: `${PREFIX}-button`,
+};
+
+const StyledGrid = styled(Grid)(({theme}) => ({
+	[`&.${classes.container}`]: {
 		height: '100%',
 	},
-	form: {
+
+	[`& .${classes.form}`]: {
 		padding: theme.spacing(1.5),
 	},
-	button: {
+
+	[`& .${classes.button}`]: {
 		marginLeft: 'auto',
 	},
-});
-
-const useStyles = makeStyles(styles);
+}));
 
 const NewPatientForm = () => {
 	const [niss, setNiss] = useState('');
@@ -52,7 +60,6 @@ const NewPatientForm = () => {
 	const firstnameId = useUniqueId('new-patient-form-input-firstname');
 
 	const navigate = useNavigate();
-	const classes = useStyles();
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -75,7 +82,7 @@ const NewPatientForm = () => {
 	};
 
 	return (
-		<Grid
+		<StyledGrid
 			container
 			className={classes.container}
 			justifyContent="center"
@@ -182,7 +189,7 @@ const NewPatientForm = () => {
 					</CardActions>
 				</Card>
 			</Grid>
-		</Grid>
+		</StyledGrid>
 	);
 };
 

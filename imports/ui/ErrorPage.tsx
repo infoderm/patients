@@ -1,7 +1,7 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import {useNavigate} from 'react-router-dom';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import RotateRightIcon from '@mui/icons-material/RotateRight';
@@ -10,21 +10,35 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 import NoContent from './navigation/NoContent';
 
-const useStyles = makeStyles(() => ({
-	explanation: {
+const PREFIX = 'ErrorPage';
+
+const classes = {
+	explanation: `${PREFIX}-explanation`,
+	details: `${PREFIX}-details`,
+	summary: `${PREFIX}-summary`,
+	pre: `${PREFIX}-pre`,
+	buttons: `${PREFIX}-buttons`,
+	button: `${PREFIX}-button`,
+};
+
+const Root = styled('div')(() => ({
+	[`& .${classes.explanation}`]: {
 		textAlign: 'center',
 		fontSize: '1.3em',
 		fontWeight: 'bold',
 	},
-	details: {
+
+	[`& .${classes.details}`]: {
 		padding: '1em',
 	},
-	summary: {
+
+	[`& .${classes.summary}`]: {
 		fontSize: '2em',
 		cursor: 'pointer',
 		color: '#d44',
 	},
-	pre: {
+
+	[`& .${classes.pre}`]: {
 		whiteSpace: 'pre-wrap',
 		backgroundColor: '#333',
 		color: '#ccc',
@@ -32,17 +46,18 @@ const useStyles = makeStyles(() => ({
 		borderRadius: '.5em',
 		textTransform: 'initial',
 	},
-	buttons: {
+
+	[`& .${classes.buttons}`]: {
 		textAlign: 'center',
 		paddingBottom: '2em',
 	},
-	button: {
+
+	[`& .${classes.button}`]: {
 		margin: '1em',
 	},
 }));
 
 export default function ErrorPage({error, errorInfo, retry}) {
-	const classes = useStyles();
 	const navigate = useNavigate();
 
 	const reloadRoute = () => {
@@ -60,7 +75,7 @@ export default function ErrorPage({error, errorInfo, retry}) {
 	};
 
 	return (
-		<div>
+		<Root>
 			<NoContent>Something went wrong.</NoContent>
 			<p className={classes.explanation}>
 				To restore the app to a working state first try one of the buttons.
@@ -114,6 +129,6 @@ export default function ErrorPage({error, errorInfo, retry}) {
 					{errorInfo.componentStack}
 				</pre>
 			</details>
-		</div>
+		</Root>
 	);
 }

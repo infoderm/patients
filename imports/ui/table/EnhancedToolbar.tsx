@@ -1,7 +1,8 @@
 import React from 'react';
 
+import {styled, lighten} from '@mui/material/styles';
+
 import classNames from 'classnames';
-import {makeStyles} from '@mui/styles';
 
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -9,13 +10,23 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {lighten} from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) => ({
-	root: {
+const PREFIX = 'EnhancedTableToolbar';
+
+const classes = {
+	root: `${PREFIX}-root`,
+	highlight: `${PREFIX}-highlight`,
+	spacer: `${PREFIX}-spacer`,
+	actions: `${PREFIX}-actions`,
+	title: `${PREFIX}-title`,
+};
+
+const StyledToolbar = styled(Toolbar)(({theme}) => ({
+	[`&.${classes.root}`]: {
 		paddingRight: theme.spacing(1),
 	},
-	highlight:
+
+	[`&.${classes.highlight}`]:
 		theme.palette.mode === 'light'
 			? {
 					color: theme.palette.secondary.dark,
@@ -25,13 +36,16 @@ const useStyles = makeStyles((theme) => ({
 					color: lighten(theme.palette.secondary.light, 0.4),
 					backgroundColor: theme.palette.secondary.dark,
 			  },
-	spacer: {
+
+	[`& .${classes.spacer}`]: {
 		flex: '1 1 100%',
 	},
-	actions: {
+
+	[`& .${classes.actions}`]: {
 		color: theme.palette.text.secondary,
 	},
-	title: {
+
+	[`& .${classes.title}`]: {
 		flex: '0 0 auto',
 	},
 }));
@@ -42,10 +56,8 @@ interface Props {
 }
 
 const EnhancedTableToolbar = ({onDelete, numSelected}: Props) => {
-	const classes = useStyles();
-
 	return (
-		<Toolbar
+		<StyledToolbar
 			className={classNames(classes.root, {
 				[classes.highlight]: numSelected > 0,
 			})}
@@ -73,7 +85,7 @@ const EnhancedTableToolbar = ({onDelete, numSelected}: Props) => {
 					</Tooltip>
 				)}
 			</div>
-		</Toolbar>
+		</StyledToolbar>
 	);
 };
 

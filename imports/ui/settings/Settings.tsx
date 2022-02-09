@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import CurrencySetting from './CurrencySetting';
@@ -20,17 +20,21 @@ import ThemePaletteModeSetting from './ThemePaletteModeSetting';
 import ThemePalettePrimarySetting from './ThemePalettePrimarySetting';
 import ThemePaletteSecondarySetting from './ThemePaletteSecondarySetting';
 
-const useStyles = makeStyles((theme) => ({
-	setting: {
+const PREFIX = 'Settings';
+
+const classes = {
+	setting: `${PREFIX}-setting`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.setting}`]: {
 		marginBottom: theme.spacing(3),
 	},
 }));
 
 export default function Settings() {
-	const classes = useStyles();
-
 	return (
-		<div>
+		<Root>
 			<Typography variant="h2">Settings</Typography>
 			<Typography>Global settings for the whole app.</Typography>
 
@@ -59,6 +63,6 @@ export default function Settings() {
 			<AppointmentCancellationReasonSetting className={classes.setting} />
 			<DisplayedWeekDaysSetting className={classes.setting} />
 			<WorkScheduleSetting className={classes.setting} />
-		</div>
+		</Root>
 	);
 }

@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
+import {styled} from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -23,25 +22,31 @@ import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import CurrencyAmountInput from '../input/CurrencyAmountInput';
 import useUniqueId from '../hooks/useUniqueId';
 
-const styles = (theme) => ({
-	multiline: {
+const PREFIX = 'ConsultationForm';
+
+const classes = {
+	multiline: `${PREFIX}-multiline`,
+	form: `${PREFIX}-form`,
+	hidden: `${PREFIX}-hidden`,
+};
+
+const StyledPaper = styled(Paper)(({theme}) => ({
+	[`& .${classes.multiline}`]: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing(2)})`,
 	},
-	form: {
+
+	[`&.${classes.form}`]: {
 		padding: theme.spacing(3),
 	},
-	hidden: {
+
+	[`& .${classes.hidden}`]: {
 		display: 'none',
 	},
-});
-
-const useStyles = makeStyles(styles);
+}));
 
 const ConsultationForm = ({consultation, update}) => {
-	const classes = useStyles();
-
 	const {
 		_id,
 		datetime,
@@ -92,7 +97,7 @@ const ConsultationForm = ({consultation, update}) => {
 	const bookId = `${formId}-input-book`;
 
 	return (
-		<Paper className={classes.form}>
+		<StyledPaper className={classes.form}>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<TextField
@@ -294,7 +299,7 @@ const ConsultationForm = ({consultation, update}) => {
 					)}
 				</Grid>
 			</Grid>
-		</Paper>
+		</StyledPaper>
 	);
 };
 

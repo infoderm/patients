@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
 
 import Button from '@mui/material/Button';
@@ -27,11 +27,18 @@ import Endpoint from '../../api/endpoint/Endpoint';
 import call from '../../api/endpoint/call';
 import TagDocument from '../../api/tags/TagDocument';
 
-const useStyles = makeStyles({
-	root: {
+const PREFIX = 'TagRenamingDialog';
+
+const classes = {
+	root: `${PREFIX}-root`,
+	content: `${PREFIX}-content`,
+};
+
+const StyledDialog = styled(Dialog)({
+	[`& .${classes.root}`]: {
 		overflowY: 'visible',
 	},
-	content: {
+	[`& .${classes.content}`]: {
 		overflowY: 'visible',
 	},
 });
@@ -64,7 +71,6 @@ const TagRenamingDialog = ({
 	nameKeyTitle = 'name',
 	nameFormat = defaultNameFormat,
 }: Props) => {
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
 	const [newnameError, setNewnameError] = useState('');
@@ -115,7 +121,7 @@ const TagRenamingDialog = ({
 	};
 
 	return (
-		<Dialog
+		<StyledDialog
 			open={open}
 			PaperProps={{className: classes.root}}
 			onClose={onClose}
@@ -167,7 +173,7 @@ const TagRenamingDialog = ({
 					Rename
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</StyledDialog>
 	);
 };
 

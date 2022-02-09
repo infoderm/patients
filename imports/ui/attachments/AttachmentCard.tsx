@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import format from 'date-fns/format';
 
@@ -36,25 +36,39 @@ import AttachmentLinkingDialog from './AttachmentLinkingDialog';
 import AttachmentDeletionDialog from './AttachmentDeletionDialog';
 import AttachmentSuperDeletionDialog from './AttachmentSuperDeletionDialog';
 
-const useStyles = makeStyles((theme) => ({
-	card: {
+const PREFIX = 'AttachmentCard';
+
+const classes = {
+	card: `${PREFIX}-card`,
+	headerContent: `${PREFIX}-headerContent`,
+	headerContentTitle: `${PREFIX}-headerContentTitle`,
+	headerContentSubheader: `${PREFIX}-headerContentSubheader`,
+	thumbnail: `${PREFIX}-thumbnail`,
+};
+
+const StyledCard = styled(Card)(({theme}) => ({
+	[`&.${classes.card}`]: {
 		display: 'block',
 		margin: theme.spacing(1),
 	},
-	headerContent: {
+
+	[`& .${classes.headerContent}`]: {
 		overflow: 'hidden',
 	},
-	headerContentTitle: {
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-	},
-	headerContentSubheader: {
+
+	[`& .${classes.headerContentTitle}`]: {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
 	},
-	thumbnail: {
+
+	[`& .${classes.headerContentSubheader}`]: {
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+	},
+
+	[`& .${classes.thumbnail}`]: {
 		height: 300,
 	},
 }));
@@ -109,7 +123,6 @@ interface Props {
 }
 
 const AttachmentCard = ({attachment, info}: Props) => {
-	const classes = useStyles();
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	const {menu, editing, linking, deleting, superDeleting} = state;
@@ -150,7 +163,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 	const menuId = useUniqueId('attachment-card-more-menu');
 
 	return (
-		<Card className={classes.card}>
+		<StyledCard className={classes.card}>
 			<CardHeader
 				classes={headerClasses}
 				avatar={
@@ -277,7 +290,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 				attachmentId={attachment._id}
 				{...anchorProps}
 			/>
-		</Card>
+		</StyledCard>
 	);
 };
 

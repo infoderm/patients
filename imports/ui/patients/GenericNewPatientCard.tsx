@@ -1,12 +1,18 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
 import FaceIcon from '@mui/icons-material/Face';
 
-const useStyles = makeStyles(() => ({
-	buttonTile: {
+const PREFIX = 'GenericNewPatientCard';
+
+const classes = {
+	buttonTile: `${PREFIX}-buttonTile`,
+};
+
+const StyledButton = styled(Button)(() => ({
+	[`&.${classes.buttonTile}`]: {
 		backgroundColor: '#aaa',
 		minHeight: 200,
 		fontSize: '1rem',
@@ -14,10 +20,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const GenericNewPatientCard = (props) => {
-	const classes = useStyles();
-
 	return (
-		<Button
+		<StyledButton
 			fullWidth
 			variant="contained"
 			className={classes.buttonTile}
@@ -25,7 +29,7 @@ const GenericNewPatientCard = (props) => {
 			{...props}
 		>
 			Add a new patient
-		</Button>
+		</StyledButton>
 	);
 };
 

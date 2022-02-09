@@ -1,4 +1,5 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import {useNavigate} from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -7,7 +8,6 @@ import isToday from 'date-fns/isToday';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -30,6 +30,29 @@ import beginConsultation from '../../api/endpoint/appointments/beginConsultation
 import useUniqueId from '../hooks/useUniqueId';
 import useConsultationsForPatient from './useConsultationsForPatient';
 
+const PREFIX = 'ManageConsultationsForPatientDialog';
+
+const classes = {
+	avatarBegin: `${PREFIX}-avatarBegin`,
+	avatarEdit: `${PREFIX}-avatarEdit`,
+	avatarSchedule: `${PREFIX}-avatarSchedule`,
+};
+
+const StyledDialog = styled(Dialog)({
+	[`& .${classes.avatarBegin}`]: {
+		backgroundColor: green[100],
+		color: green[600],
+	},
+	[`& .${classes.avatarEdit}`]: {
+		backgroundColor: blue[100],
+		color: blue[600],
+	},
+	[`& .${classes.avatarSchedule}`]: {
+		backgroundColor: orange[100],
+		color: orange[600],
+	},
+});
+
 const formatDatetime = (datetime: Date) => {
 	if (isToday(datetime)) {
 		return `d'aujourd'hui à ${dateFormat(datetime, 'HH:mm')}`;
@@ -37,21 +60,6 @@ const formatDatetime = (datetime: Date) => {
 
 	return `du ${dateFormat(datetime, 'dd/MM/yyyy à HH:mm')}`;
 };
-
-const useStyles = makeStyles({
-	avatarBegin: {
-		backgroundColor: green[100],
-		color: green[600],
-	},
-	avatarEdit: {
-		backgroundColor: blue[100],
-		color: blue[600],
-	},
-	avatarSchedule: {
-		backgroundColor: orange[100],
-		color: orange[600],
-	},
-});
 
 interface Props {
 	onClose: () => void;
@@ -64,7 +72,6 @@ const ManageConsultationsForPatientDialog = ({
 	onClose,
 	patientId,
 }: Props) => {
-	const classes = useStyles();
 	const navigate = useNavigate();
 
 	const {loading: loadingAppointments, results: appointments} =
@@ -103,7 +110,7 @@ const ManageConsultationsForPatientDialog = ({
 	const titleId = useUniqueId('manage-consultations-for-patient-dialog-title');
 
 	return (
-		<Dialog aria-labelledby={titleId} open={open} onClose={onClose}>
+		<StyledDialog aria-labelledby={titleId} open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
 			<DialogTitle id={titleId}>What do you want to do?</DialogTitle>
 			<List>
@@ -165,7 +172,7 @@ const ManageConsultationsForPatientDialog = ({
 					<ListItemText primary="Créer une nouvelle consultation vierge" />
 				</ListItem>
 			</List>
-		</Dialog>
+		</StyledDialog>
 	);
 };
 

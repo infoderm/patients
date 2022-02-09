@@ -1,9 +1,8 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import PropTypes, {InferProps} from 'prop-types';
 
 import {useTransition, animated} from 'react-spring';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -21,15 +20,34 @@ import {dataURL as pngDataURL} from '../../util/png';
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
 
-const useStyles = makeStyles((theme) => ({
-	card: {
+const PREFIX = 'GenericStaticPatientCard';
+
+const classes = {
+	card: `${PREFIX}-card`,
+	veil: `${PREFIX}-veil`,
+	details: `${PREFIX}-details`,
+	header: `${PREFIX}-header`,
+	content: `${PREFIX}-content`,
+	photoContainer: `${PREFIX}-photoContainer`,
+	photoPlaceHolder: `${PREFIX}-photoPlaceHolder`,
+	photo: `${PREFIX}-photo`,
+	actions: `${PREFIX}-actions`,
+	male: `${PREFIX}-male`,
+	female: `${PREFIX}-female`,
+	name: `${PREFIX}-name`,
+	scoreChip: `${PREFIX}-scoreChip`,
+};
+
+const StyledCard = styled(Card)(({theme}) => ({
+	[`&.${classes.card}`]: {
 		position: 'relative',
 		transition: 'opacity 500ms ease-out',
 		display: 'flex',
 		minHeight: 200,
 		minWidth: 400,
 	},
-	veil: {
+
+	[`& .${classes.veil}`]: {
 		position: 'absolute',
 		display: 'flex',
 		justifyContent: 'center',
@@ -41,24 +59,29 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: 1,
 		fontSize: '2rem',
 	},
-	details: {
+
+	[`& .${classes.details}`]: {
 		display: 'flex',
 		flex: 1,
 		flexDirection: 'column',
 	},
-	header: {
+
+	[`& .${classes.header}`]: {
 		flex: '1 0 auto',
 	},
-	content: {
+
+	[`& .${classes.content}`]: {
 		flex: '1 0 auto',
 	},
-	photoContainer: {
+
+	[`& .${classes.photoContainer}`]: {
 		position: 'relative',
 		display: 'flex',
 		margin: 0,
 		width: 140,
 	},
-	photoPlaceHolder: {
+
+	[`& .${classes.photoPlaceHolder}`]: {
 		position: 'absolute',
 		display: 'flex',
 		top: 0,
@@ -71,29 +94,35 @@ const useStyles = makeStyles((theme) => ({
 		color: '#fff',
 		backgroundColor: '#999',
 	},
-	photo: {
+
+	[`& .${classes.photo}`]: {
 		position: 'absolute',
 		top: 0,
 		bottom: 0,
 		left: 0,
 		right: 0,
 	},
-	actions: {
+
+	[`& .${classes.actions}`]: {
 		display: 'flex',
 		paddingLeft: theme.spacing(2),
 	},
-	male: {
+
+	[`& .${classes.male}`]: {
 		color: '#fff',
 		backgroundColor: blue[500],
 	},
-	female: {
+
+	[`& .${classes.female}`]: {
 		color: '#fff',
 		backgroundColor: pink[500],
 	},
-	name: {
+
+	[`& .${classes.name}`]: {
 		display: 'flex',
 	},
-	scoreChip: {
+
+	[`& .${classes.scoreChip}`]: {
 		marginLeft: theme.spacing(1),
 		color: '#fff',
 		backgroundColor: red[500],
@@ -108,8 +137,6 @@ const GenericStaticPatientCard = ({
 	showScore,
 	...rest
 }: InferProps<typeof GenericStaticPatientCard.propTypes>) => {
-	const classes = useStyles();
-
 	const localizeBirthdate = useDateFormat('PPPP');
 
 	const {birthdate, photo, niss, score} = patient;
@@ -136,7 +163,7 @@ const GenericStaticPatientCard = ({
 	const cardOpacity = {opacity: deleted ? 0.4 : 1};
 
 	return (
-		<Card className={classes.card} style={cardOpacity} {...rest}>
+		<StyledCard className={classes.card} style={cardOpacity} {...rest}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<div className={classes.details}>
 				<CardHeader
@@ -178,7 +205,7 @@ const GenericStaticPatientCard = ({
 					),
 				)}
 			</div>
-		</Card>
+		</StyledCard>
 	);
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Fab from '@mui/material/Fab';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -13,8 +13,15 @@ import PropsOf from '../../util/PropsOf';
 import AttachFileButton from './AttachFileButton';
 import AttachmentsForPatientPager from './AttachmentsForPatientPager';
 
-const useStyles = makeStyles((theme) => ({
-	attachButton: computeFixedFabStyle({theme, col: 4}),
+const PREFIX = 'AttachmentsForPatientStatic';
+
+const classes = {
+	attachButton: `${PREFIX}-attachButton`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.attachButton}`]: computeFixedFabStyle({theme, col: 4}),
 }));
 
 interface Props extends PropsOf<typeof AttachmentsForPatientPager> {
@@ -22,10 +29,8 @@ interface Props extends PropsOf<typeof AttachmentsForPatientPager> {
 }
 
 const AttachmentsForPatientStatic = ({patientId, ...rest}: Props) => {
-	const classes = useStyles();
-
 	return (
-		<>
+		<Root>
 			<AttachmentsForPatientPager patientId={patientId} {...rest} />
 			<AttachFileButton
 				Button={Fab}
@@ -36,7 +41,7 @@ const AttachmentsForPatientStatic = ({patientId, ...rest}: Props) => {
 			>
 				<AttachFileIcon />
 			</AttachFileButton>
-		</>
+		</Root>
 	);
 };
 

@@ -1,15 +1,23 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
-const useStyles = makeStyles((theme) => ({
-	container: {
+const PREFIX = 'HealthOneReportContents';
+
+const classes = {
+	container: `${PREFIX}-container`,
+	paper: `${PREFIX}-paper`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`&.${classes.container}`]: {
 		maxWidth: 1200,
 		margin: '0 auto',
 		marginTop: theme.spacing(3),
 	},
-	paper: {
+
+	[`& .${classes.paper}`]: {
 		display: 'inline-block',
 		whiteSpace: 'pre-wrap',
 		padding: theme.spacing(3),
@@ -17,12 +25,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HealthOneReportContents = ({document: {decoded, source}}) => {
-	const classes = useStyles();
-
 	return (
-		<div className={classes.container}>
+		<Root className={classes.container}>
 			<Paper className={classes.paper}>{decoded || source}</Paper>
-		</div>
+		</Root>
 	);
 };
 

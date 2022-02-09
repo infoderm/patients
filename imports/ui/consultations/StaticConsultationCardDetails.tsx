@@ -1,7 +1,6 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import PropTypes from 'prop-types';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 import AccordionDetails from '@mui/material/AccordionDetails';
 
@@ -34,11 +33,21 @@ import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
 import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
 
-const useStyles = makeStyles(() => ({
-	details: {
+const PREFIX = 'StaticConsultationCardDetails';
+
+const classes = {
+	details: `${PREFIX}-details`,
+	veil: `${PREFIX}-veil`,
+	link: `${PREFIX}-link`,
+	avatarIssues: `${PREFIX}-avatarIssues`,
+};
+
+const StyledAccordionDetails = styled(AccordionDetails)(() => ({
+	[`&.${classes.details}`]: {
 		position: 'relative',
 	},
-	veil: {
+
+	[`& .${classes.veil}`]: {
 		position: 'absolute',
 		display: 'flex',
 		justifyContent: 'center',
@@ -50,10 +59,12 @@ const useStyles = makeStyles(() => ({
 		zIndex: 1,
 		fontSize: '2rem',
 	},
-	link: {
+
+	[`& .${classes.link}`]: {
 		fontWeight: 'bold',
 	},
-	avatarIssues: {
+
+	[`& .${classes.avatarIssues}`]: {
 		backgroundColor: red[100],
 		color: red[600],
 	},
@@ -106,8 +117,6 @@ const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
 );
 
 const StaticConsultationCardDetails = (props) => {
-	const classes = useStyles();
-
 	const {
 		deleted,
 		missingPaymentData,
@@ -137,7 +146,7 @@ const StaticConsultationCardDetails = (props) => {
 	const currencyFormat = useCurrencyFormat(currency);
 
 	return (
-		<AccordionDetails className={classes.details}>
+		<StyledAccordionDetails className={classes.details}>
 			{deleted && <div className={classes.veil}>DELETED</div>}
 			<List>
 				{isDone && missingPaymentData && (
@@ -254,7 +263,7 @@ const StaticConsultationCardDetails = (props) => {
 					/>
 				)}
 			</List>
-		</AccordionDetails>
+		</StyledAccordionDetails>
 	);
 };
 

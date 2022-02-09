@@ -1,18 +1,26 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 
-const useStyles = makeStyles((theme) => ({
-	suggestions: {
+const PREFIX = 'SearchBoxInternalsSuggestions';
+
+const classes = {
+	suggestions: `${PREFIX}-suggestions`,
+	itemText: `${PREFIX}-itemText`,
+};
+
+const StyledPaper = styled(Paper)(({theme}) => ({
+	[`&.${classes.suggestions}`]: {
 		position: 'absolute',
 		marginTop: theme.spacing(1),
 		left: 0,
 		right: 0,
 	},
-	itemText: {
+
+	[`& .${classes.itemText}`]: {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 	},
@@ -31,10 +39,8 @@ export default function SearchBoxInternalsSuggestions(props) {
 		highlightedIndex,
 	} = props;
 
-	const classes = useStyles();
-
 	return (
-		<Paper square className={classes.suggestions} {...getMenuProps()}>
+		<StyledPaper square className={classes.suggestions} {...getMenuProps()}>
 			{isOpen &&
 				suggestions.map((item, index) => (
 					<MenuItem
@@ -52,7 +58,7 @@ export default function SearchBoxInternalsSuggestions(props) {
 						<span className={classes.itemText}>{itemToString(item)}</span>
 					</MenuItem>
 				))}
-		</Paper>
+		</StyledPaper>
 	);
 }
 

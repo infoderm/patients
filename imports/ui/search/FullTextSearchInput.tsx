@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 
+import {styled, alpha} from '@mui/material/styles';
+
 import {useNavigate} from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
-import {alpha} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
 import {myEncodeURIComponent} from '../../util/uri';
@@ -11,11 +11,14 @@ import SearchBox from '../input/SearchBox';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 
-const THRESHOLD_HISTORY_PUSH = 2000; // 2 seconds
-const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;
+const PREFIX = 'FullTextSearchInput';
 
-const useStyles = makeStyles((theme) => ({
-	searchBox: {
+const classes = {
+	searchBox: `${PREFIX}-searchBox`,
+};
+
+const StyledBox = styled(Box)(({theme}) => ({
+	[`& .${classes.searchBox}`]: {
 		background: alpha(theme.palette.common.white, 0.15),
 		'&:hover': {
 			background: alpha(theme.palette.common.white, 0.25),
@@ -23,9 +26,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const THRESHOLD_HISTORY_PUSH = 2000; // 2 seconds
+const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;
+
 const FullTextSearchInput = ({sx}) => {
 	const navigate = useNavigate();
-	const classes = useStyles();
+
 	const [lastHistoryUpdate, setLastHistoryUpdate] = useState(0);
 	const [value, setValue] = useState('');
 	const [pending, setPending] = useState(undefined);
@@ -58,7 +64,7 @@ const FullTextSearchInput = ({sx}) => {
 	};
 
 	return (
-		<Box sx={sx}>
+		<StyledBox sx={sx}>
 			<SearchBox
 				expands
 				className={classes.searchBox}
@@ -68,7 +74,7 @@ const FullTextSearchInput = ({sx}) => {
 				onChange={onChange}
 				onBlur={onBlur}
 			/>
-		</Box>
+		</StyledBox>
 	);
 };
 
