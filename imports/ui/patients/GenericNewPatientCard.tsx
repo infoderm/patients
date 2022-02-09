@@ -7,6 +7,7 @@ import FaceIcon from '@mui/icons-material/Face';
 
 const useStyles = makeStyles(() => ({
 	buttonTile: {
+		backgroundColor: '#aaa',
 		minHeight: 200,
 		fontSize: '1rem',
 	},
