@@ -1,37 +1,37 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 import {blue} from '@mui/material/colors';
 
+import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import {useSnackbar} from 'notistack';
+import PropsOf from '../../../util/PropsOf';
 import downloadDocument from './downloadDocument';
 
-const styles = () =>
-	createStyles({
-		saveButtonWrapper: {
-			position: 'relative',
-			display: 'inline',
-		},
-		saveButtonProgress: {
-			color: blue[900],
-			position: 'absolute',
-			top: -14,
-			left: 0,
-			zIndex: 1,
-		},
-	});
+const Button = styled(Box)({
+	position: 'relative',
+	display: 'inline',
+});
 
-const useStyles = makeStyles(styles);
+const Progress = styled(CircularProgress)({
+	color: blue[900],
+	position: 'absolute',
+	top: -14,
+	left: 0,
+	zIndex: 1,
+});
+
+type Props<C> = {
+	document: {};
+	component: React.ElementType;
+} & PropsOf<C>;
 
 const DocumentDownloadGenericButton = ({
 	document,
-	children,
 	component: Component,
 	...rest
-}) => {
-	const classes = useStyles();
+}: Props<typeof Component>) => {
 	const {enqueueSnackbar} = useSnackbar();
 	const [downloading, setDownloading] = useState(false);
 
@@ -52,20 +52,11 @@ const DocumentDownloadGenericButton = ({
 	const props = downloading ? {...rest, disabled: true} : rest;
 
 	return (
-		<div className={classes.saveButtonWrapper}>
-			<Component color="primary" onClick={onClick} {...props}>
-				{children}
-			</Component>
-			{downloading && (
-				<CircularProgress size={48} className={classes.saveButtonProgress} />
-			)}
-		</div>
+		<Button>
+			<Component color="primary" onClick={onClick} {...props} />
+			{downloading && <Progress size={48} />}
+		</Button>
 	);
-};
-
-DocumentDownloadGenericButton.propTypes = {
-	document: PropTypes.object.isRequired,
-	component: PropTypes.elementType.isRequired,
 };
 
 export default DocumentDownloadGenericButton;
