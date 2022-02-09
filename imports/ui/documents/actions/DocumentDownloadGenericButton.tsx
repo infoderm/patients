@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {makeStyles, createStyles} from '@mui/styles';
-import blue from '@mui/material/colors/blue';
+import {blue} from '@mui/material/colors';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import {useSnackbar} from 'notistack';

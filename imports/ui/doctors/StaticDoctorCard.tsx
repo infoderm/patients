@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
-import blue from '@mui/material/colors/blue';
+import {blue} from '@mui/material/colors';
 
 import StaticTagCard from '../tags/StaticTagCard';
 

@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
-import orange from '@mui/material/colors/orange';
+import {orange} from '@mui/material/colors';
 
 import StaticTagCard from '../tags/StaticTagCard';
 

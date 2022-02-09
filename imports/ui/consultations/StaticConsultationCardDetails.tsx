@@ -28,7 +28,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import BookIcon from '@mui/icons-material/Book';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 
-import red from '@mui/material/colors/red';
+import {red} from '@mui/material/colors';
 
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';

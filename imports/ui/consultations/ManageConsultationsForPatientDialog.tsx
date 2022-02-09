@@ -20,9 +20,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import TodayIcon from '@mui/icons-material/Today';
 
-import blue from '@mui/material/colors/blue';
-import green from '@mui/material/colors/green';
-import orange from '@mui/material/colors/orange';
+import {blue, green, orange} from '@mui/material/colors';
 
 import call from '../../api/endpoint/call';
 import withLazyOpening from '../modal/withLazyOpening';

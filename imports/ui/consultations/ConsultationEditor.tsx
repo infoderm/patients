@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
-import blue from '@mui/material/colors/blue';
+import {blue} from '@mui/material/colors';
 
 import dateParseISO from 'date-fns/parseISO';
 
