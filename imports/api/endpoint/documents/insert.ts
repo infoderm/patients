@@ -121,7 +121,7 @@ export default define({
 
 		return result;
 	},
-	simulate(_document: any) {
-		throw new Error('simulation not-implemented');
+	simulate(_document: any): void {
+		return undefined;
 	},
 });
