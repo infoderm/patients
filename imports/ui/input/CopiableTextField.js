@@ -27,6 +27,7 @@ const CopiableTextField = (props) => {
 				endAdornment: readOnly && value && (
 					<InputAdornment position="end">
 						<IconButton
+							size="large"
 							aria-label="copy"
 							onClick={copyValueToClipboard}
 							onMouseDown={(e) => e.preventDefault()}

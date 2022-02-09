@@ -52,6 +52,7 @@ const ToggleButton = ({
 	return (
 		<InputAdornment position="end">
 			<IconButton
+				size="large"
 				{...getToggleButtonProps({
 					className: classNames({
 						[classes.hidden]: readOnly || !hasSuggestions,

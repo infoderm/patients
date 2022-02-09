@@ -66,6 +66,7 @@ export default function Header({currentUser, navigationDrawerIsOpen}) {
 		<AppBar position="fixed" open={open}>
 			<Toolbar>
 				<IconButton
+					size="large"
 					color="inherit"
 					aria-label="open drawer"
 					edge="start"

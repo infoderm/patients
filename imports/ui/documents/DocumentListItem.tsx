@@ -58,6 +58,7 @@ const DocumentListItem = ({loading = false, document, ...rest}: Props) => {
 				<DocumentDeletionIconButton document={document} />
 				<DocumentDownloadIconButton document={document} />
 				<IconButton
+					size="large"
 					component={Link}
 					rel="noreferrer"
 					target="_blank"

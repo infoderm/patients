@@ -182,6 +182,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 				action={
 					<>
 						<IconButton
+							size="large"
 							aria-owns={menu ? menuId : null}
 							aria-haspopup="true"
 							onClick={(event) => {

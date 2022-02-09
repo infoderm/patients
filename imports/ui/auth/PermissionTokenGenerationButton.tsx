@@ -45,6 +45,7 @@ const PermissionTokenGenerationButton = ({className}: Props) => {
 				variant: 'info',
 				action: (key) => (
 					<IconButton
+						size="large"
 						onClick={() => {
 							saveTextToClipboard(token);
 							closeSnackbar(key);
