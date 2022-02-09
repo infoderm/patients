@@ -732,7 +732,6 @@ const PatientPersonalInformationStatic = (
 				<>
 					<FixedFab
 						col={2}
-						color="default"
 						tooltip="Edit info"
 						onClick={() => {
 							dispatch({type: 'editing'});
@@ -744,7 +743,6 @@ const PatientPersonalInformationStatic = (
 						id={attachFileButtonId}
 						Button={FixedFab}
 						col={3}
-						color="default"
 						endpoint={patientsAttach}
 						item={patient._id}
 					>

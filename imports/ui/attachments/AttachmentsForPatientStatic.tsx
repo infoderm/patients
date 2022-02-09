@@ -35,7 +35,6 @@ const AttachmentsForPatientStatic = ({patientId, ...rest}: Props) => {
 			<AttachFileButton
 				Button={Fab}
 				className={classes.attachButton}
-				color="default"
 				endpoint={patientsAttach}
 				item={patientId}
 			>
