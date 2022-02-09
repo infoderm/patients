@@ -74,7 +74,7 @@ const styles = (theme) =>
 			flexWrap: 'wrap',
 		},
 		inputInput: {
-			margin: `${theme.spacing(1) / 2}px 0`,
+			margin: `${theme.spacing(1 / 2)} 0`,
 			width: 'auto',
 			flexGrow: 1,
 		},

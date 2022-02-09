@@ -6,7 +6,7 @@ import {UseMultipleSelectionGetSelectedItemPropsOptions} from 'downshift';
 
 const styles = (theme) => ({
 	chip: {
-		margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`,
+		margin: `${theme.spacing(1 / 2)} ${theme.spacing(1 / 4)}`,
 	},
 });
 
