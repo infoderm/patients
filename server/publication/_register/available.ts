@@ -43,8 +43,6 @@ import '../../../imports/api/publication/drugs/findOne';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/drugs/find';
 // eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/drugs/search';
-// eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/events/intersects';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/events/interval';
