@@ -13,12 +13,14 @@ interface Props {
 	defaultValue: string;
 	onChange: (color: string) => void;
 	convert?: keyof typeof converters;
+	readOnly?: boolean;
 }
 
 const ColorPicker = ({
 	defaultValue,
 	onChange,
 	convert = DEFAULT_CONVERTER,
+	readOnly = false,
 }: Props) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const [value, setValue] = useState(defaultValue);
@@ -45,11 +47,15 @@ const ColorPicker = ({
 					color: colord(value).isLight() ? '#111' : '#ddd',
 				}}
 				label={value}
-				onClick={() => {
-					setShowPicker(true);
-				}}
+				onClick={
+					readOnly
+						? undefined
+						: () => {
+								setShowPicker(true);
+						  }
+				}
 			/>
-			{showPicker && (
+			{!readOnly && showPicker && (
 				<PickerDialog
 					value={value}
 					onClick={() => {
