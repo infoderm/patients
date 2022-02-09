@@ -2,12 +2,7 @@ import React from 'react';
 
 import {BrowserRouter} from 'react-router-dom';
 
-import {
-	ThemeProvider,
-	createTheme,
-	responsiveFontSizes,
-	StyledEngineProvider,
-} from '@mui/material/styles';
+import {ThemeProvider, StyledEngineProvider} from '@mui/material/styles';
 
 import {SnackbarProvider} from 'notistack';
 
@@ -21,21 +16,11 @@ import {useLocale} from '../i18n/datetime';
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
 import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
-
-let theme = createTheme({
-	components: {
-		MuiTextField: {
-			defaultProps: {
-				variant: 'standard',
-			},
-		},
-	},
-});
-
-theme = responsiveFontSizes(theme);
+import useUserTheme from './useUserTheme';
 
 const App = () => {
 	const locale = useLocale();
+	const theme = useUserTheme();
 
 	return (
 		<BrowserRouter>
