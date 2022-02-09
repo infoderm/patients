@@ -20,7 +20,7 @@ interface Props {
 }
 
 const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
-	const [selected, setSelected] = useState(new Set());
+	const [selected, setSelected] = useState(new Set<string>());
 	const [step, setStep] = useState('selection');
 
 	const selectionIsSingle = selected.size === 1;
