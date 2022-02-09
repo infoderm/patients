@@ -358,48 +358,27 @@ interface CalendarDataProps {
 	onEventClick?: () => void;
 }
 
-const CalendarData = ({
-	events,
-	begin,
-	end,
-	lineHeight = '25px',
+interface MakeGridStylesOptions {
+	displayWeekNumbers: boolean;
+	nrows: number;
+	headerHeight: number;
+	lineHeight: string;
+	rowSize: number;
+	maxLines: number;
+	eventProps: EventProps[];
+	daysProps: DayProps[];
+}
+
+const makeGridStyles = ({
+	displayWeekNumbers,
+	nrows,
+	headerHeight,
+	lineHeight,
+	rowSize,
 	maxLines,
-	skipIdle = false,
-	minEventDuration,
-	dayBegins,
-	DayHeader,
-	WeekNumber,
-	weekOptions,
-	displayedWeekDays = ALL_WEEK_DAYS,
-	onSlotClick,
-	onEventClick,
-}: CalendarDataProps) => {
-	const days = differenceInDays(end, begin); // Should be a multiple of 7
-	if (days % 7 !== 0) console.warn(`days (= ${days}) is not a multiple of 7`);
-
-	const _displayedWeekDays = new Set(displayedWeekDays);
-	const rowSize = _displayedWeekDays.size;
-
-	const nrows = days / 7;
-
-	const daysProps = [...generateDaysProps(begin, end, _displayedWeekDays)];
-
-	const occupancy = createOccupancyMap(begin, end);
-	const eventPropsOptions = {
-		maxLines: maxLines - 2,
-		skipIdle,
-		minEventDuration,
-		dayBegins,
-	};
-	const eventProps = [
-		...generateEventProps(occupancy, begin, end, eventPropsOptions, events),
-	];
-	const moreProps = [...generateMoreProps(occupancy, begin, end)];
-
-	const headerHeight = 2;
-
-	const displayWeekNumbers = Boolean(WeekNumber);
-
+	eventProps,
+	daysProps,
+}: MakeGridStylesOptions) => {
 	const gridTemplateColumns = [
 		displayWeekNumbers && '25px',
 		`repeat(${rowSize}, 1fr)`,
@@ -533,7 +512,57 @@ const CalendarData = ({
 	}
 
 	const styles = createStyles(() => gridStyles);
-	const useStyles = makeStyles(styles) as () => CalendarDataGridClasses;
+	return makeStyles(styles) as () => CalendarDataGridClasses;
+};
+
+const CalendarData = ({
+	events,
+	begin,
+	end,
+	lineHeight = '25px',
+	maxLines,
+	skipIdle = false,
+	minEventDuration,
+	dayBegins,
+	DayHeader,
+	WeekNumber,
+	weekOptions,
+	displayedWeekDays = ALL_WEEK_DAYS,
+	onSlotClick,
+	onEventClick,
+}: CalendarDataProps) => {
+	const days = differenceInDays(end, begin); // Should be a multiple of 7
+	if (days % 7 !== 0) console.warn(`days (= ${days}) is not a multiple of 7`);
+
+	const _displayedWeekDays = new Set(displayedWeekDays);
+	const rowSize = _displayedWeekDays.size;
+
+	const daysProps = Array.from(
+		generateDaysProps(begin, end, _displayedWeekDays),
+	);
+
+	const occupancy = createOccupancyMap(begin, end);
+	const eventPropsOptions = {
+		maxLines: maxLines - 2,
+		skipIdle,
+		minEventDuration,
+		dayBegins,
+	};
+	const eventProps = Array.from(
+		generateEventProps(occupancy, begin, end, eventPropsOptions, events),
+	);
+	const moreProps = Array.from(generateMoreProps(occupancy, begin, end));
+
+	const useStyles = makeGridStyles({
+		displayWeekNumbers: Boolean(WeekNumber),
+		nrows: days / 7,
+		lineHeight,
+		headerHeight: 2,
+		rowSize,
+		maxLines,
+		eventProps,
+		daysProps,
+	});
 
 	return (
 		<CalendarDataGrid
