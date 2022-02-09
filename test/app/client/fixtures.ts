@@ -154,7 +154,7 @@ export const navigateTo = async (
 	url: string | RegExp,
 ) => {
 	await userWithoutPointerEventsCheck.click(
-		await findByRole('button', {name: title}),
+		await findByRole('link', {name: title}),
 	);
 	await findByRole('heading', {name: url});
 };

@@ -141,7 +141,7 @@ const macro = (
 
 		await findByRole('heading', {name: `/patient/${patientId}`});
 
-		await user.click(await findByRole('button', {name: 'documents'}));
+		await user.click(await findByRole('link', {name: 'documents'}));
 
 		for (const {text, ...options} of expected) {
 			// eslint-disable-next-line no-await-in-loop

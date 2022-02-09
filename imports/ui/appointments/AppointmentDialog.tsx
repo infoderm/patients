@@ -20,8 +20,8 @@ import MenuItem from '@mui/material/MenuItem';
 
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import DatePicker from '@mui/lab/MobileDatePicker';
-import TimePicker from '@mui/lab/MobileTimePicker';
+import DatePicker from '@mui/lab/DatePicker';
+import TimePicker from '@mui/lab/DesktopTimePicker';
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 

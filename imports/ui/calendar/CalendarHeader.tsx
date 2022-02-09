@@ -22,6 +22,7 @@ interface CalendarHeaderProps {
 	prev?: () => void;
 	weekly?: () => void;
 	monthly?: () => void;
+	navigationRole?: 'button' | 'link';
 }
 
 const CalendarHeader = ({
@@ -30,6 +31,7 @@ const CalendarHeader = ({
 	next,
 	weekly,
 	monthly,
+	navigationRole,
 }: CalendarHeaderProps) => {
 	const classes = useStyles();
 
@@ -47,6 +49,7 @@ const CalendarHeader = ({
 			<Grid item xs container justifyContent="flex-end" spacing={1}>
 				<Grid item>
 					<Button
+						role={navigationRole}
 						disabled={!weekly}
 						color="primary"
 						endIcon={<ViewWeekIcon />}
@@ -57,6 +60,7 @@ const CalendarHeader = ({
 				</Grid>
 				<Grid item>
 					<Button
+						role={navigationRole}
 						disabled={!monthly}
 						color="primary"
 						endIcon={<EventIcon />}
@@ -67,6 +71,7 @@ const CalendarHeader = ({
 				</Grid>
 				<Grid item>
 					<Button
+						role={navigationRole}
 						disabled={!prev}
 						color="primary"
 						startIcon={<SkipPreviousIcon />}
@@ -77,6 +82,7 @@ const CalendarHeader = ({
 				</Grid>
 				<Grid item>
 					<Button
+						role={navigationRole}
 						disabled={!next}
 						color="primary"
 						endIcon={<SkipNextIcon />}

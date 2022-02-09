@@ -1,3 +1,4 @@
+import assert from 'assert';
 import dateFormat from 'date-fns/format';
 
 import {
@@ -57,11 +58,21 @@ const editPatient = async (
 		action,
 	}: EditPatientOptions,
 ) => {
-	const {user, userWithRealisticTypingSpeed, findByRole, findByLabelText} = app;
+	const {
+		user,
+		userWithRealisticTypingSpeed,
+		findByRole,
+		findAllByRole,
+		findByLabelText,
+	} = app;
 	await user.click(await findByRole('button', {name: /^edit info/i}));
 
 	if (typeof nn === 'string') {
-		await fillIn(app, await findByRole('textbox', {name: 'NISS'}), nn);
+		const matches = await findAllByRole('textbox', {name: 'NISS'});
+		const inputs = matches.filter((x) => x.attributes.readonly === undefined);
+		assert(inputs.length === 1);
+		const input = inputs[0];
+		await fillIn(app, input, nn);
 	}
 
 	if (typeof lastname === 'string') {
@@ -278,5 +289,5 @@ client(__filename, () => {
 		await searchResultsForQuery(app, 'Jane');
 
 		await findByText('F');
-	}).timeout(25_000);
+	}).timeout(35_000);
 });

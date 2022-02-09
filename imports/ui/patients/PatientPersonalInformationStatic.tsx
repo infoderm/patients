@@ -21,7 +21,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 
-import DatePicker from '@mui/lab/MobileDatePicker';
+import DatePicker from '@mui/lab/DatePicker';
 
 import isValid from 'date-fns/isValid';
 import TextField from '../input/TextField';
