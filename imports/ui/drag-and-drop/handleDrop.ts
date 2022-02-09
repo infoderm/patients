@@ -2,6 +2,7 @@ import {useNavigate} from 'react-router-dom';
 import insertPatient from '../../api/patients/insertPatient';
 import insertDrugs from '../../api/drugs/insertDrugs';
 import insertDocument from '../../api/documents/insertDocument';
+import useDialog from '../modal/useDialog';
 
 function unpack(data, item) {
 	if (item.kind === 'file') {
@@ -26,7 +27,11 @@ function unpack(data, item) {
 }
 
 const handleDrop =
-	(navigate: ReturnType<typeof useNavigate>) => async (data) => {
+	(
+		navigate: ReturnType<typeof useNavigate>,
+		dialog: ReturnType<typeof useDialog>,
+	) =>
+	async (data) => {
 		console.debug('handleDrop', data);
 
 		for (const item of data.items) {
@@ -38,7 +43,7 @@ const handleDrop =
 					break;
 				case 'patient':
 					// eslint-disable-next-line no-await-in-loop
-					await insertPatient(navigate, object);
+					await insertPatient(navigate, dialog, object);
 					break;
 				case 'document':
 					// eslint-disable-next-line no-await-in-loop

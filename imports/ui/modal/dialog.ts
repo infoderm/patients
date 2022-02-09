@@ -1,52 +1,68 @@
+import assert from 'assert';
 import {cloneElement} from 'react';
-import {render, unmountComponentAtNode} from 'react-dom';
 
 const DEFAULT_OPTIONS = {
 	unmountDelay: 3000,
 	openKey: 'open',
-	parent: () => document.body,
+	append: (_child: JSX.Element) => {
+		throw new Error('append not implemented');
+	},
+	replace: (_target: JSX.Element, _replacement: JSX.Element) => {
+		throw new Error('replace not implemented');
+	},
+	remove: (_child: JSX.Element) => {
+		throw new Error('remove not implemented');
+	},
+	key: undefined,
 };
 
-type Options = typeof DEFAULT_OPTIONS;
+export type Options = typeof DEFAULT_OPTIONS;
 
 type Resolve<T> = (value: T | PromiseLike<T>) => void;
 type Reject = () => void;
 
-type ComponentExecutor<T> = (resolve: Resolve<T>, reject: Reject) => any;
+export type ComponentExecutor<T> = (resolve: Resolve<T>, reject: Reject) => any;
 
 const dialog = async <T>(
 	componentExecutor: ComponentExecutor<T>,
 	options?: Options,
 ) => {
-	const {unmountDelay, openKey, parent} = {...DEFAULT_OPTIONS, ...options};
+	const {unmountDelay, openKey, append, replace, remove, key} = {
+		...DEFAULT_OPTIONS,
+		...options,
+	};
 
-	const container = document.createElement('div');
-	parent().append(container);
+	let currentChild: JSX.Element = null;
+
+	const render = (resolve, reject, open) => {
+		const target = currentChild;
+		currentChild = cloneElement(componentExecutor(resolve, reject), {
+			key,
+			[openKey]: open,
+		});
+		if (target === null) {
+			append(currentChild);
+		} else {
+			replace(target, currentChild);
+		}
+	};
 
 	const unmount = () => {
-		unmountComponentAtNode(container);
-		container.remove();
+		assert(currentChild !== null);
+		remove(currentChild);
+		currentChild = null;
 	};
 
 	const promise = new Promise<T>((resolve, reject) => {
-		render(
-			cloneElement(componentExecutor(resolve, reject), {
-				[openKey]: true,
-			}),
-			container,
-		);
+		render(resolve, reject, true);
 	});
 
 	return promise.finally(() => {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const noop = () => {};
-		render(
-			cloneElement(componentExecutor(noop, noop), {[openKey]: false}),
-			container,
-			() => {
-				setTimeout(unmount, unmountDelay);
-			},
-		);
+		render(noop, noop, false);
+		// TODO start timeout after context change
+		setTimeout(unmount, unmountDelay);
 	});
 };
 

@@ -19,7 +19,7 @@ import {ConsultationDocument} from '../../api/collection/consultations';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import dialog from '../modal/dialog';
+import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import {computeFixedFabStyle} from '../button/FixedFab';
@@ -220,6 +220,7 @@ const Loader = ({loading, found, consultation}) => {
 const ConsultationEditor = ({consultation}) => {
 	const classes = useStyles();
 	const navigate = useNavigate();
+	const dialog = useDialog();
 
 	const [compare, setCompare] = useState(false);
 

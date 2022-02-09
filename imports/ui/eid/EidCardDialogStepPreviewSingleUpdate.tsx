@@ -36,7 +36,7 @@ import call from '../../api/endpoint/call';
 import patientsUpdate from '../../api/endpoint/patients/update';
 import {patients} from '../../api/patients';
 
-import dialog from '../modal/dialog';
+import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
@@ -139,6 +139,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	navigate,
 	onClose,
 }: EidCardDialogStepPreviewSingleProps) => {
+	const dialog = useDialog();
 	const onOpen = () => {
 		navigate(`/patient/${patientId}`);
 		onClose();

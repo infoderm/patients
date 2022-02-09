@@ -34,7 +34,7 @@ import {PatientIdFields} from '../../api/collection/patients';
 import {patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
-import dialog from '../modal/dialog';
+import useDialog from '../modal/useDialog';
 import InformationDialog from '../modal/InformationDialog';
 
 import makePatientsSuggestions from '../patients/makePatientsSuggestions';
@@ -132,6 +132,7 @@ const EidCardDialogStepSelection = ({
 	setSelected,
 }: Props) => {
 	const classes = useStyles();
+	const dialog = useDialog();
 
 	const eidPatient = {_id: '?', ...patients.sanitize(eidInfo)};
 
