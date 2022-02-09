@@ -6,6 +6,7 @@ import _subscribe from '../../api/publication/subscribe';
 import byKey from '../../api/publication/settings/byKey';
 import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/settings/update';
+import reset from '../../api/endpoint/settings/reset';
 
 const {defaults} = _settings;
 
@@ -52,6 +53,15 @@ export const setSetting = async (key: string, newValue: any) => {
 	}
 };
 
+export const resetSetting = async (key: string) => {
+	try {
+		await call(reset, key);
+		console.debug('Setting', key, 'reset');
+	} catch (error: unknown) {
+		console.error({error});
+	}
+};
+
 export const useSetting = (key: string, getFn = get) => {
 	// TODO use only one tracker
 	const loading = useTracker(() => {
@@ -66,10 +76,13 @@ export const useSetting = (key: string, getFn = get) => {
 		[key],
 	);
 
+	const resetValue = useMemo(() => async () => resetSetting(key), [key]);
+
 	return {
 		loading,
 		value,
 		setValue,
+		resetValue,
 	};
 };
 
