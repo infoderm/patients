@@ -2,7 +2,11 @@ import React from 'react';
 
 import SelectOneSetting from './SelectOneSetting';
 
-const NavigationDrawerIsOpenSetting = ({className}) => {
+interface Props {
+	className?: string;
+}
+
+const NavigationDrawerIsOpenSetting = ({className}: Props) => {
 	const options = ['open', 'closed'];
 
 	return (
