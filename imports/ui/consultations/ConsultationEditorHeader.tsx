@@ -3,7 +3,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import FaceIcon from '@mui/icons-material/Face';
 
-import DateTimePicker from '@mui/lab/MobileDateTimePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 
 import {dataURL as pngDataURL} from '../../util/png';
 

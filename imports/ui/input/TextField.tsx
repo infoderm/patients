@@ -28,13 +28,24 @@ type Props = MuiTextFieldProps & AddedProps;
 const TextField = React.forwardRef<any, Props>((props, ref) => {
 	const classes = useStyles();
 
-	const {readOnly, InputProps, ...rest} = props;
+	const {readOnly, InputProps, inputProps, ...rest} = props;
 
 	const patchedInputProps = readOnly
 		? {readOnly: true, className: classes.readOnlyInput, ...InputProps}
 		: InputProps;
 
-	return <MuiTextField ref={ref} InputProps={patchedInputProps} {...rest} />;
+	const patchedInputInputProps = readOnly
+		? {'aria-readonly': true, ...inputProps}
+		: inputProps;
+
+	return (
+		<MuiTextField
+			ref={ref}
+			InputProps={patchedInputProps}
+			inputProps={patchedInputInputProps}
+			{...rest}
+		/>
+	);
 });
 
 export default TextField;

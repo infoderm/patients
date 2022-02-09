@@ -13,17 +13,8 @@ import {
 	searchForPatient,
 	navigateTo,
 	editConsultation,
+	fillIn,
 } from '../fixtures';
-
-const selectMobileClockButton = async ({user}, button) => {
-	while (!Array.from(button.classList).includes('Mui-focusVisible')) {
-		console.debug(button.classList);
-		// eslint-disable-next-line no-await-in-loop
-		await user.keyboard('[Tab]');
-	}
-
-	await user.keyboard('[Enter]');
-};
 
 const scheduleAppointmentForPatient = async (
 	app,
@@ -49,22 +40,9 @@ const scheduleAppointmentForPatient = async (
 	});
 	console.debug({buttons: buttons.length});
 	await user.click(buttons[0]);
-	console.debug('Click on choose time');
-	await user.click(await findByRole('textbox', {name: /^Choose time/}));
-	console.debug('Select 1');
-	await selectMobileClockButton(
-		app,
-		await findByRole('button', {name: '1 hours'}),
-	);
-	console.debug('Select 05');
-	await selectMobileClockButton(
-		app,
-		await findByRole('button', {name: '05 minutes'}),
-	);
-	console.debug('Click on PM');
-	await user.click(await findByRole('button', {name: 'PM'}));
-	console.debug('Click on OK');
-	await user.click(await findByRole('button', {name: 'OK'}));
+	const time = '01:05 pm';
+	console.debug(`Set time to ${time}`);
+	await fillIn(app, await findByRole('textbox', {name: 'Time'}), time);
 	console.debug('Set duration to 30m');
 	await user.click(await findByRole('button', {name: '15m'}));
 	await user.click(await findByRole('option', {name: '30m'}));

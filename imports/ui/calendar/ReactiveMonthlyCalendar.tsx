@@ -95,6 +95,7 @@ const ReactiveMonthlyCalendar = ({
 			title={title}
 			year={year}
 			month={month}
+			navigationRole="link"
 			prev={() => {
 				navigate(`../${previousMonth}`);
 			}}

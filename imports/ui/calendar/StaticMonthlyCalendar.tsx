@@ -10,10 +10,12 @@ interface Props extends PropsOf<typeof MonthlyCalendarData> {
 	next: () => void;
 	prev: () => void;
 	weekly: () => void;
+	navigationRole?: 'button' | 'link';
 }
 
 const StaticMonthlyCalendar = ({
 	className,
+	navigationRole,
 	next,
 	prev,
 	weekly,
@@ -25,7 +27,13 @@ const StaticMonthlyCalendar = ({
 
 	return (
 		<div className={className}>
-			<CalendarHeader title={title} prev={prev} next={next} weekly={weekly} />
+			<CalendarHeader
+				title={title}
+				navigationRole={navigationRole}
+				prev={prev}
+				next={next}
+				weekly={weekly}
+			/>
 			<MonthlyCalendarData year={year} month={month} {...rest} />
 		</div>
 	);

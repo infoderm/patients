@@ -206,6 +206,7 @@ const ReactiveWeeklyCalendar = ({
 			title={title}
 			year={year}
 			week={week}
+			navigationRole="link"
 			prev={() => {
 				navigate(`../${prevWeek}`);
 			}}

@@ -10,10 +10,12 @@ interface Props extends PropsOf<typeof WeeklyCalendarData> {
 	next: () => void;
 	prev: () => void;
 	monthly: () => void;
+	navigationRole?: 'button' | 'link';
 }
 
 const StaticWeeklyCalendar = ({
 	className,
+	navigationRole,
 	next,
 	prev,
 	monthly,
@@ -25,7 +27,13 @@ const StaticWeeklyCalendar = ({
 
 	return (
 		<div className={className}>
-			<CalendarHeader title={title} prev={prev} next={next} monthly={monthly} />
+			<CalendarHeader
+				title={title}
+				navigationRole={navigationRole}
+				prev={prev}
+				next={next}
+				monthly={monthly}
+			/>
 			<WeeklyCalendarData year={year} week={week} {...rest} />
 		</div>
 	);

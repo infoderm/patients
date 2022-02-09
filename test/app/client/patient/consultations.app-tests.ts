@@ -71,7 +71,7 @@ client(__filename, () => {
 
 		await findByText('À payé €0.00 de €45.00.');
 
-		await user.click(await findByRole('button', {name: 'Edit'}));
+		await user.click(await findByRole('link', {name: 'Edit'}));
 
 		await editConsultation(app, {
 			reason: 'my test reason edited',
@@ -90,5 +90,5 @@ client(__filename, () => {
 		await findByText('test-book-id');
 
 		await findByText('À payé €45.00 de €45.00.');
-	}).timeout(15_000);
+	}).timeout(30_000);
 });
