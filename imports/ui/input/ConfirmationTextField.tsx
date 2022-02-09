@@ -65,6 +65,7 @@ const ConfirmationTextField = ({onAutoFill, ...rest}) => (
 			endAdornment: (
 				<InputAdornment position="end">
 					<IconButton
+						size="large"
 						aria-label="autofill"
 						onClick={onAutoFill}
 						onMouseDown={(e) => {

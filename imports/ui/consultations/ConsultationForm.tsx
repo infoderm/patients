@@ -228,6 +228,7 @@ const ConsultationForm = ({consultation, update}) => {
 							endAdornment: (
 								<InputAdornment position="end">
 									<IconButton
+										size="large"
 										className={classNames({
 											[classes.hidden]: !priceWarning,
 										})}
@@ -254,7 +255,7 @@ const ConsultationForm = ({consultation, update}) => {
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
-									<IconButton>
+									<IconButton size="large">
 										{syncPaid ? <LinkIcon /> : <LinkOffIcon />}
 									</IconButton>
 								</InputAdornment>

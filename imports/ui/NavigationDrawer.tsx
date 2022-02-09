@@ -276,7 +276,7 @@ export default function NavigationDrawer({
 	return (
 		<Drawer variant="permanent" open={navigationDrawerIsOpen === 'open'}>
 			<DrawerHeader>
-				<IconButton onClick={toggleNavigationDrawerIsOpen}>
+				<IconButton size="large" onClick={toggleNavigationDrawerIsOpen}>
 					{theme.direction === 'rtl' ? (
 						<ChevronRightIcon />
 					) : (

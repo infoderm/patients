@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DocumentDeletionGenericButton from './DocumentDeletionGenericButton';
 
 const DocumentDeletionIconButton = (props) => (
-	<DocumentDeletionGenericButton component={IconButton} {...props}>
+	<DocumentDeletionGenericButton component={IconButton} size="large" {...props}>
 		<DeleteIcon />
 	</DocumentDeletionGenericButton>
 );

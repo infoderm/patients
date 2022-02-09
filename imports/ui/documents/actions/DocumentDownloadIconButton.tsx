@@ -6,7 +6,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 
 const DocumentDownloadIconButton = (props) => (
-	<DocumentDownloadGenericButton component={IconButton} {...props}>
+	<DocumentDownloadGenericButton component={IconButton} size="large" {...props}>
 		<CloudDownloadIcon />
 	</DocumentDownloadGenericButton>
 );
