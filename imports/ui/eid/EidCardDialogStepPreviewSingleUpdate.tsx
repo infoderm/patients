@@ -27,8 +27,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
-import red from '@mui/material/colors/red';
-import green from '@mui/material/colors/green';
+import {red, green} from '@mui/material/colors';
 
 import diff from '../../util/diff';
 import {dataURL as pngDataURL} from '../../util/png';

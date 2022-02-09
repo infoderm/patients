@@ -14,10 +14,7 @@ import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 
-import blue from '@mui/material/colors/blue';
-import pink from '@mui/material/colors/pink';
-import red from '@mui/material/colors/red';
-import yellow from '@mui/material/colors/yellow';
+import {blue, pink, red, yellow} from '@mui/material/colors';
 
 import {dataURL as pngDataURL} from '../../util/png';
 

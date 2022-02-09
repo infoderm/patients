@@ -15,8 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 
-import blue from '@mui/material/colors/blue';
-import red from '@mui/material/colors/red';
+import {blue, red} from '@mui/material/colors';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 

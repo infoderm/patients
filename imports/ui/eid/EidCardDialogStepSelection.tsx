@@ -23,9 +23,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import green from '@mui/material/colors/green';
-import orange from '@mui/material/colors/orange';
-import red from '@mui/material/colors/red';
+import {red, orange, green} from '@mui/material/colors';
 import SearchBox from '../input/SearchBox';
 
 import CancelButton from '../button/CancelButton';

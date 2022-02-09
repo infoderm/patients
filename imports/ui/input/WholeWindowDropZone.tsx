@@ -6,7 +6,7 @@ import {makeStyles, createStyles} from '@mui/styles';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
-import blue from '@mui/material/colors/blue';
+import {blue} from '@mui/material/colors';
 
 const styles = () =>
 	createStyles({

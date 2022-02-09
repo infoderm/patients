@@ -8,10 +8,7 @@ import {localPoint} from '@visx/event';
 
 import {increasing} from '@total-order/primitive';
 
-import blue from '@mui/material/colors/blue';
-import pink from '@mui/material/colors/pink';
-import purple from '@mui/material/colors/purple';
-import grey from '@mui/material/colors/grey';
+import {blue, pink, purple, grey} from '@mui/material/colors';
 
 import useSexStats from './useSexStats';
 
