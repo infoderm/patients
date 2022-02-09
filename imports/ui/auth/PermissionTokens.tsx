@@ -1,34 +1,38 @@
 import React from 'react';
 
+import {styled} from '@mui/material/styles';
+
 import Typography from '@mui/material/Typography';
 
-import makeStyles from '@mui/styles/makeStyles';
 import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
 
 import PermissionTokenAccordion from './PermissionTokenAccordion';
 import PermissionTokenGenerationButton from './PermissionTokenGenerationButton';
 import usePermissionTokens from './usePermissionTokens';
 
-interface Props {
-	className?: string;
-}
+const PREFIX = 'PermissionTokens';
 
-const styles = (theme) => ({
-	list: {
+const classes = {
+	list: `${PREFIX}-list`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.list}`]: {
 		marginTop: theme.spacing(3),
 		marginBottom: theme.spacing(2),
 		marginLeft: theme.spacing(1),
 		marginRight: theme.spacing(1),
 	},
-});
+}));
 
-const useStyles = makeStyles(styles);
+interface Props {
+	className?: string;
+}
 
 const PermissionTokens = ({className}: Props) => {
-	const classes = useStyles();
 	const {results} = usePermissionTokens({}, {}, []);
 	return (
-		<div className={className}>
+		<Root className={className}>
 			<Typography variant="h4">
 				Permission Tokens <PermissionTokenGenerationButton />
 			</Typography>
@@ -40,7 +44,7 @@ const PermissionTokens = ({className}: Props) => {
 					/>
 				))}
 			</div>
-		</div>
+		</Root>
 	);
 };
 

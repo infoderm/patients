@@ -1,6 +1,6 @@
 import React, {Suspense, lazy} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import {Route, Routes, useParams} from 'react-router-dom';
 import TabJumper from '../navigation/TabJumper';
@@ -10,6 +10,23 @@ import Loading from '../navigation/Loading';
 import {myEncodeURIComponent} from '../../util/uri';
 import PatientHeader from './PatientHeader';
 import PatientPersonalInformation from './PatientPersonalInformation';
+
+const PREFIX = 'PatientRecord';
+
+const classes = {
+	root: `${PREFIX}-root`,
+	container: `${PREFIX}-container`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`&.${classes.root}`]: {
+		paddingTop: 80,
+	},
+
+	[`& .${classes.container}`]: {
+		padding: theme.spacing(3),
+	},
+}));
 
 const ConsultationsForPatient = lazy(
 	async () => import('../consultations/ConsultationsForPatient'),
@@ -23,15 +40,6 @@ const DocumentsForPatientPager = lazy(
 const AttachmentsForPatient = lazy(
 	async () => import('../attachments/AttachmentsForPatient'),
 );
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		paddingTop: 80,
-	},
-	container: {
-		padding: theme.spacing(3),
-	},
-}));
 
 const tabs = [
 	'information',
@@ -57,10 +65,8 @@ interface Props {
 }
 
 const PatientRecord = ({patientId}: Props) => {
-	const classes = useStyles();
-
 	return (
-		<div className={classes.root}>
+		<Root className={classes.root}>
 			<PatientHeader patientId={patientId} />
 			<Routes>
 				<Route index element={<PatientRecordTabs />} />
@@ -95,7 +101,7 @@ const PatientRecord = ({patientId}: Props) => {
 					<Route path="*" element={<NoMatch />} />
 				</Routes>
 			</Suspense>
-		</div>
+		</Root>
 	);
 };
 

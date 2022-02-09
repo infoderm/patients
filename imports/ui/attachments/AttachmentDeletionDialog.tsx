@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
 
 import Dialog from '@mui/material/Dialog';
@@ -28,8 +28,14 @@ import CancelButton from '../button/CancelButton';
 import useUniqueId from '../hooks/useUniqueId';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
-const useStyles = makeStyles({
-	thumbnail: {
+const PREFIX = 'AttachmentDeletionDialog';
+
+const classes = {
+	thumbnail: `${PREFIX}-thumbnail`,
+};
+
+const StyledDialog = styled(Dialog)({
+	[`& .${classes.thumbnail}`]: {
 		height: 300,
 	},
 });
@@ -49,7 +55,6 @@ const AttachmentDeletionDialog = ({
 	attachment,
 	endpoint,
 }: Props) => {
-	const classes = useStyles();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const getError = (expected: string, value: string) =>
@@ -86,7 +91,7 @@ const AttachmentDeletionDialog = ({
 	const titleId = useUniqueId('attachment-deletion-dialog-title');
 
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+		<StyledDialog open={open} aria-labelledby={titleId} onClose={onClose}>
 			<DialogTitle id={titleId}>
 				Detach attachment {attachment.name}
 			</DialogTitle>
@@ -120,7 +125,7 @@ const AttachmentDeletionDialog = ({
 					Detach
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</StyledDialog>
 	);
 };
 

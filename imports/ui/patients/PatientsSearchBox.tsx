@@ -1,16 +1,20 @@
 import React from 'react';
+import {styled, alpha} from '@mui/material/styles';
 import {useNavigate} from 'react-router-dom';
-
-import makeStyles from '@mui/styles/makeStyles';
-import {alpha} from '@mui/material/styles';
 
 import {patients} from '../../api/patients';
 
 import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions';
 import usePatientsSuggestions from './usePatientsSuggestions';
 
-const useStyles = makeStyles((theme) => ({
-	searchBox: {
+const PREFIX = 'PatientsSearchBox';
+
+const classes = {
+	searchBox: `${PREFIX}-searchBox`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.searchBox}`]: {
 		background: alpha(theme.palette.common.white, 0.15),
 		'&:hover': {
 			background: alpha(theme.palette.common.white, 0.25),
@@ -20,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 
 const PatientsSearchBox = ({className}) => {
 	const navigate = useNavigate();
-	const classes = useStyles();
 
 	const handleChange = ({selectedItem = null}) => {
 		if (selectedItem) {
@@ -29,7 +32,7 @@ const PatientsSearchBox = ({className}) => {
 	};
 
 	return (
-		<div className={className}>
+		<Root className={className}>
 			<SearchBoxWithSuggestions
 				expands
 				className={classes.searchBox}
@@ -39,7 +42,7 @@ const PatientsSearchBox = ({className}) => {
 				placeholder="Search a patient…"
 				onSelectedItemChange={handleChange}
 			/>
-		</div>
+		</Root>
 	);
 };
 

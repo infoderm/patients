@@ -1,11 +1,17 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import SearchIcon from '@mui/icons-material/Search';
 
-const useStyles = makeStyles((theme) => ({
-	adornment: {
+const PREFIX = 'SearchBoxInternalsAdornment';
+
+const classes = {
+	adornment: `${PREFIX}-adornment`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`&.${classes.adornment}`]: {
 		display: 'inline-flex',
 		width: theme.spacing(9),
 		height: '100%',
@@ -16,11 +22,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchBoxInternalsAdornment() {
-	const classes = useStyles();
-
 	return (
-		<div className={classes.adornment}>
+		<Root className={classes.adornment}>
 			<SearchIcon />
-		</div>
+		</Root>
 	);
 }

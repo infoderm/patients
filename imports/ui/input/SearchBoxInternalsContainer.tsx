@@ -1,10 +1,16 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import classNames from 'classnames';
 
-const useStyles = makeStyles((theme) => ({
-	container: {
+const PREFIX = 'SearchBoxInternalsContainer';
+
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`&.${classes.container}`]: {
 		display: 'block',
 		position: 'relative',
 		marginLeft: theme.spacing(1),
@@ -21,8 +27,7 @@ export default function SearchBoxInternalsContainer({
 	className,
 	children,
 }: Props) {
-	const classes = useStyles();
 	return (
-		<div className={classNames(classes.container, className)}>{children}</div>
+		<Root className={classNames(classes.container, className)}>{children}</Root>
 	);
 }

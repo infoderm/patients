@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -34,8 +34,14 @@ import transfer from '../../api/endpoint/consultations/transfer';
 import CancelButton from '../button/CancelButton';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
-const useStyles = makeStyles({
-	dialogPaper: {
+const PREFIX = 'ConsultationTransferDialog';
+
+const classes = {
+	dialogPaper: `${PREFIX}-dialogPaper`,
+};
+
+const StyledDialog = styled(Dialog)({
+	[`& .${classes.dialogPaper}`]: {
 		overflow: 'visible',
 	},
 });
@@ -47,8 +53,6 @@ interface Props {
 }
 
 const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
-	const classes = useStyles();
-
 	const {patientId, isDone} = consultation;
 
 	const itemKind = isDone ? 'consultation' : 'appointment';
@@ -97,7 +101,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 	};
 
 	return (
-		<Dialog
+		<StyledDialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
 			onClose={onClose}
@@ -158,7 +162,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 					Transfer
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</StyledDialog>
 	);
 };
 

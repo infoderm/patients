@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from 'react';
+import {styled} from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-
-import {makeStyles} from '@mui/styles';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -21,6 +20,29 @@ import useDrugs from '../drugs/useDrugs';
 import EnhancedTableHead, {Order} from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedToolbar';
 
+const PREFIX = 'EnhancedTable';
+
+const classes = {
+	root: `${PREFIX}-root`,
+	table: `${PREFIX}-table`,
+	tableWrapper: `${PREFIX}-tableWrapper`,
+};
+
+const StyledPaper = styled(Paper)(({theme}) => ({
+	[`&.${classes.root}`]: {
+		width: '100%',
+		marginTop: theme.spacing(3),
+	},
+
+	[`& .${classes.table}`]: {
+		minWidth: 800,
+	},
+
+	[`& .${classes.tableWrapper}`]: {
+		overflowX: 'auto',
+	},
+}));
+
 function sortRows<T>(data: T[], order: Order, orderBy: string) {
 	return order === 'desc'
 		? Array.from(data).sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
@@ -31,22 +53,8 @@ interface Props {
 	query: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		width: '100%',
-		marginTop: theme.spacing(3),
-	},
-	table: {
-		minWidth: 800,
-	},
-	tableWrapper: {
-		overflowX: 'auto',
-	},
-}));
-
 const EnhancedTable = ({query}: Props) => {
 	// TODO split away drug specifics
-	const classes = useStyles();
 
 	// TODO correctly use pagination
 	const limit = 20;
@@ -122,7 +130,7 @@ const EnhancedTable = ({query}: Props) => {
 		rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
 	return (
-		<Paper className={classes.root}>
+		<StyledPaper className={classes.root}>
 			<EnhancedTableToolbar
 				numSelected={selected.size}
 				onDelete={handleDelete}
@@ -192,7 +200,7 @@ const EnhancedTable = ({query}: Props) => {
 					</TableFooter>
 				</Table>
 			</div>
-		</Paper>
+		</StyledPaper>
 	);
 };
 

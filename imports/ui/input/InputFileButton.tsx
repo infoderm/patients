@@ -1,12 +1,18 @@
 import React, {useRef} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import MuiButton from '@mui/material/Button';
 
 import PropsOf from '../../util/PropsOf';
 
-const useStyles = makeStyles(() => ({
-	container: {
+const PREFIX = 'InputFileButton';
+
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+const Root = styled('div')(() => ({
+	[`&.${classes.container}`]: {
 		display: 'inline',
 	},
 }));
@@ -30,11 +36,10 @@ const InputFileButton = <C extends React.ElementType>({
 	Button = MuiButton,
 	...rest
 }: Props<C>) => {
-	const classes = useStyles();
 	const ref = useRef<HTMLInputElement>(null);
 
 	return (
-		<div className={classes.container}>
+		<Root className={classes.container}>
 			<Button
 				{...rest}
 				onClick={() => {
@@ -48,7 +53,7 @@ const InputFileButton = <C extends React.ElementType>({
 				type="file"
 				onChange={onChange}
 			/>
-		</div>
+		</Root>
 	);
 };
 

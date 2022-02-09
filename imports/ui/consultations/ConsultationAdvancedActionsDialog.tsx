@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
@@ -27,12 +27,20 @@ import ConsultationDeletionDialog from './ConsultationDeletionDialog';
 import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
 import ConsultationTransferDialog from './ConsultationTransferDialog';
 
-const useStyles = makeStyles({
-	primary: {
+const PREFIX = 'ConsultationAdvancedActionsDialog';
+
+const classes = {
+	primary: `${PREFIX}-primary`,
+	secondary: `${PREFIX}-secondary`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+	[`& .${classes.primary}`]: {
 		backgroundColor: blue[100],
 		color: blue[600],
 	},
-	secondary: {
+	[`& .${classes.secondary}`]: {
 		backgroundColor: red[100],
 		color: red[600],
 	},
@@ -44,8 +52,6 @@ interface Props extends StaticConsultationCardChipsProps {
 }
 
 const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
-	const classes = useStyles();
-
 	const {consultation} = rest;
 	const {isDone, scheduledDatetime} = consultation;
 	const [deleting, setDeleting] = useState(false);
@@ -53,7 +59,7 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 	const [transferring, setTransferring] = useState(false);
 
 	return (
-		<>
+		<Root>
 			<Dialog open={open} onClose={onClose}>
 				<DialogTitle>What is the problem?</DialogTitle>
 				<DialogContent>
@@ -141,7 +147,6 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 					}}
 				/>
 			)}
-
 			{isDone && scheduledDatetime && (
 				<ConsultationAppointmentRestorationDialog
 					open={restoreAppointment}
@@ -151,7 +156,6 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 					}}
 				/>
 			)}
-
 			<ConsultationTransferDialog
 				open={transferring}
 				consultation={consultation}
@@ -159,7 +163,7 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 					setTransferring(false);
 				}}
 			/>
-		</>
+		</Root>
 	);
 };
 

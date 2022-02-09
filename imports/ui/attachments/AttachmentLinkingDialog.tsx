@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -20,8 +20,14 @@ import PatientPicker from '../patients/PatientPicker';
 import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
 
-const useStyles = makeStyles({
-	dialogPaper: {
+const PREFIX = 'AttachmentLinkingDialog';
+
+const classes = {
+	dialogPaper: `${PREFIX}-dialogPaper`,
+};
+
+const StyledDialog = styled(Dialog)({
+	[`& .${classes.dialogPaper}`]: {
 		overflow: 'visible',
 	},
 });
@@ -39,8 +45,6 @@ const AttachmentLinkingDialog = ({
 	attachment,
 	existingLink,
 }: Props) => {
-	const classes = useStyles();
-
 	const [patient, setPatient] = useState(existingLink ? [existingLink] : []);
 
 	const isMounted = useIsMounted();
@@ -63,7 +67,7 @@ const AttachmentLinkingDialog = ({
 	const titleId = useUniqueId('attachment-linking-dialog-title');
 
 	return (
-		<Dialog
+		<StyledDialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
 			aria-labelledby={titleId}
@@ -99,7 +103,7 @@ const AttachmentLinkingDialog = ({
 					Link
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</StyledDialog>
 	);
 };
 

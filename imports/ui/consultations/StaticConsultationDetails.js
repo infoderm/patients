@@ -1,5 +1,5 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -7,15 +7,19 @@ import NoContent from '../navigation/NoContent';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
-const useStyles = makeStyles((theme) => ({
-	container: {
+const PREFIX = 'StaticConsultationDetails';
+
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`&.${classes.container}`]: {
 		padding: theme.spacing(3),
 	},
 }));
 
 const StaticConsultationDetails = ({loading, found, consultation}) => {
-	const classes = useStyles();
-
 	if (loading) {
 		return <Loading />;
 	}
@@ -25,13 +29,13 @@ const StaticConsultationDetails = ({loading, found, consultation}) => {
 	}
 
 	return (
-		<div className={classes.container}>
+		<Root className={classes.container}>
 			<ReactiveConsultationCard
 				defaultExpanded
 				PatientChip={ReactivePatientChip}
 				consultation={consultation}
 			/>
-		</div>
+		</Root>
 	);
 };
 

@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
@@ -31,8 +31,15 @@ import {useDateFormat} from '../../i18n/datetime';
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 import ConsultationsList from './ConsultationsList';
 
-const useStyles = makeStyles((theme) => ({
-	container: {
+const PREFIX = 'ConsultationsOfTheDay';
+
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.container}`]: {
 		padding: theme.spacing(3),
 	},
 }));
@@ -71,8 +78,6 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		deps,
 	);
 
-	const classes = useStyles();
-
 	const thisMorning = startOfToday();
 	const am = consultations.filter(
 		(c) =>
@@ -105,7 +110,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 	)} (AM: ${cam}, PM: ${cpm})`;
 
 	return (
-		<>
+		<Root>
 			<div>
 				<Typography variant="h4">{heading}</Typography>
 				{cam === 0 ? null : (
@@ -188,7 +193,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 			)}
 			<Prev to={`/calendar/day/${dayBefore}`} />
 			<Next to={`/calendar/day/${dayAfter}`} />
-		</>
+		</Root>
 	);
 };
 

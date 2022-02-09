@@ -1,6 +1,6 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -15,8 +15,18 @@ import {ConsultationDocument} from '../../api/collection/consultations';
 import {DocumentDocument} from '../../api/collection/documents';
 import {AttachmentDocument} from '../../api/collection/attachments';
 
-const useStyles = makeStyles((theme) => ({
-	photoPlaceHolder: {
+const PREFIX = 'PatientSheet';
+
+const classes = {
+	photoPlaceHolder: `${PREFIX}-photoPlaceHolder`,
+	photo: `${PREFIX}-photo`,
+	formControl: `${PREFIX}-formControl`,
+	container: `${PREFIX}-container`,
+	multiline: `${PREFIX}-multiline`,
+};
+
+const StyledPaper = styled(Paper)(({theme}) => ({
+	[`& .${classes.photoPlaceHolder}`]: {
 		display: 'flex',
 		fontSize: '4rem',
 		margin: 0,
@@ -29,23 +39,27 @@ const useStyles = makeStyles((theme) => ({
 		verticalAlign: 'top',
 		marginRight: theme.spacing(2),
 	},
-	photo: {
+
+	[`& .${classes.photo}`]: {
 		width: 140,
 		height: 200,
 		verticalAlign: 'top',
 		marginRight: theme.spacing(2),
 	},
-	formControl: {
+
+	[`& .${classes.formControl}`]: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
 		'& input, & div': {
 			color: 'black !important',
 		},
 	},
-	container: {
+
+	[`& .${classes.container}`]: {
 		padding: theme.spacing(3),
 	},
-	multiline: {
+
+	[`& .${classes.multiline}`]: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing(2)})`,
@@ -70,12 +84,10 @@ const CustomTextField = ({value, ...rest}) => (
 );
 
 const ReadOnlyTextField = (props) => {
-	const classes = useStyles();
 	return <CustomTextField className={classes.formControl} {...props} />;
 };
 
 const MultilineReadOnlyTextField = (props) => {
-	const classes = useStyles();
 	return <CustomTextField multiline className={classes.multiline} {...props} />;
 };
 
@@ -103,10 +115,8 @@ const PatientSheet = ({
 	attachments,
 	documents,
 }: Props) => {
-	const classes = useStyles();
-
 	return (
-		<Paper>
+		<StyledPaper>
 			<Grid container className={classes.container}>
 				<Grid item sm={4} md={2}>
 					{patient.photo ? (
@@ -291,7 +301,7 @@ const PatientSheet = ({
 					</form>
 				</Grid>
 			</Grid>
-		</Paper>
+		</StyledPaper>
 	);
 };
 

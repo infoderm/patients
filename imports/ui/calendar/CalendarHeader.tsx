@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {styled} from '@mui/material/styles';
+
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -8,10 +10,14 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ViewWeekIcon from '@mui/icons-material/ViewWeek';
 import EventIcon from '@mui/icons-material/Event';
 
-import makeStyles from '@mui/styles/makeStyles';
+const PREFIX = 'CalendarHeader';
 
-const useStyles = makeStyles((theme) => ({
-	container: {
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+const StyledGrid = styled(Grid)(({theme}) => ({
+	[`&.${classes.container}`]: {
 		marginBottom: theme.spacing(1),
 	},
 }));
@@ -33,10 +39,8 @@ const CalendarHeader = ({
 	monthly,
 	navigationRole,
 }: CalendarHeaderProps) => {
-	const classes = useStyles();
-
 	return (
-		<Grid
+		<StyledGrid
 			container
 			justifyContent="flex-start"
 			alignItems="center"
@@ -92,7 +96,7 @@ const CalendarHeader = ({
 					</Button>
 				</Grid>
 			</Grid>
-		</Grid>
+		</StyledGrid>
 	);
 };
 

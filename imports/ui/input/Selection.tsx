@@ -1,16 +1,21 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import {UseMultipleSelectionGetSelectedItemPropsOptions} from 'downshift';
 
-const styles = (theme) => ({
-	chip: {
+const PREFIX = 'Selection';
+
+const classes = {
+	chip: `${PREFIX}-chip`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.chip}`]: {
 		margin: `${theme.spacing(1 / 2)} ${theme.spacing(1 / 4)}`,
 	},
-});
-
-const useStyles = makeStyles(styles);
+}));
 
 interface SelectionProps<Item, ChipProps> {
 	Chip: React.ElementType;
@@ -34,8 +39,6 @@ const Selection = React.memo(
 		readOnly,
 		removeSelectedItem,
 	}: SelectionProps<any, any>) => {
-		const classes = useStyles();
-
 		const handleDelete = (item) => async () => {
 			await removeSelectedItem(item);
 		};
@@ -45,7 +48,7 @@ const Selection = React.memo(
 		};
 
 		return (
-			<>
+			<Root>
 				{selectedItems.map((item, index) => (
 					<Chip
 						key={itemToString(item)}
@@ -59,7 +62,7 @@ const Selection = React.memo(
 						{...getSelectedItemProps({selectedItem: item, index, onClick})}
 					/>
 				))}
-			</>
+			</Root>
 		);
 	},
 );

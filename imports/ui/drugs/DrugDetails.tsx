@@ -1,5 +1,5 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import {styled} from '@mui/material/styles';
 
 import {useParams} from 'react-router-dom';
 import Loading from '../navigation/Loading';
@@ -8,20 +8,23 @@ import NoContent from '../navigation/NoContent';
 import {myDecodeURIComponent} from '../../util/uri';
 import useDrug from './useDrug';
 
-const styles = (theme) => ({
-	container: {
+const PREFIX = 'DrugDetails';
+
+const classes = {
+	container: `${PREFIX}-container`,
+};
+
+const Root = styled('div')(({theme}) => ({
+	[`& .${classes.container}`]: {
 		padding: theme.spacing(3),
 	},
-});
-
-const useStyles = makeStyles(styles);
+}));
 
 type Params = {
 	id: string;
 };
 
 const DrugDetails = () => {
-	const classes = useStyles();
 	const params = useParams<Params>();
 	const drugId = myDecodeURIComponent(params.id);
 	const {
@@ -46,11 +49,11 @@ const DrugDetails = () => {
 	}
 
 	return (
-		<div>
+		<Root>
 			<div className={classes.container}>
 				<pre>{JSON.stringify(drug, null, 4)}</pre>
 			</div>
-		</div>
+		</Root>
 	);
 };
 
