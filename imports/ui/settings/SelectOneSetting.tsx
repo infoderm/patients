@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Typography from '@mui/material/Typography';
 
@@ -7,9 +6,23 @@ import ValuePicker from '../input/ValuePicker';
 
 import {useSetting} from './hooks';
 
-const SelectOneSetting = (props) => {
-	const {className, setting, options, optionToString, label, title} = props;
+interface Props {
+	className?: string;
+	title?: string;
+	label?: string;
+	setting: string;
+	options: string[];
+	optionToString?: (option: string) => string;
+}
 
+const SelectOneSetting = ({
+	className,
+	setting,
+	options,
+	optionToString,
+	label,
+	title,
+}: Props) => {
 	const {loading, value, setValue} = useSetting(setting);
 
 	const onChange = async (e) => {
@@ -30,15 +43,6 @@ const SelectOneSetting = (props) => {
 			/>
 		</div>
 	);
-};
-
-SelectOneSetting.propTypes = {
-	className: PropTypes.string,
-	title: PropTypes.string,
-	label: PropTypes.string,
-	setting: PropTypes.string.isRequired,
-	options: PropTypes.array.isRequired,
-	optionToString: PropTypes.func,
 };
 
 export default SelectOneSetting;
