@@ -1,7 +1,12 @@
+import {indigo, pink} from '@mui/material/colors';
+
 import {ALL_WEEK_DAYS} from '../util/datetime';
 import {Settings} from './collection/settings';
 
 const defaults = {
+	'theme-palette-mode': 'light',
+	'theme-palette-primary': indigo[500],
+	'theme-palette-secondary': pink.A400,
 	'navigation-drawer-is-open': 'closed',
 	'books-sorting-order': -1,
 	currency: 'EUR',
