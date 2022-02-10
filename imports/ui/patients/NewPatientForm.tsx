@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {styled} from '@mui/material/styles';
-
-import {useNavigate} from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 
@@ -17,14 +16,24 @@ import Checkbox from '@mui/material/Checkbox';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
+import DatePicker from '@mui/lab/DatePicker';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import call from '../../api/endpoint/call';
+import {useSnackbar} from 'notistack';
+
+import isValid from 'date-fns/isValid';
+import dateFormat from 'date-fns/format';
+
+import {BIRTHDATE_FORMAT} from '../../api/collection/patients';
+
 import patientsInsert from '../../api/endpoint/patients/insert';
+import call from '../../api/endpoint/call';
+
 import useUniqueId from '../hooks/useUniqueId';
+import useBirthdatePickerProps from '../birthdate/useBirthdatePickerProps';
 
 const PREFIX = 'NewPatientForm';
 
@@ -48,38 +57,93 @@ const StyledGrid = styled(Grid)(({theme}) => ({
 	},
 }));
 
+interface OnSubmitProps {
+	niss: string;
+	firstname: string;
+	lastname: string;
+	birthdate: Date | null;
+	sex: string;
+	noshow: number;
+}
+
+const useSubmit = ({
+	niss,
+	firstname,
+	lastname,
+	birthdate,
+	sex,
+	noshow,
+}: OnSubmitProps) => {
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const navigate = useNavigate();
+	return useCallback(
+		async (event) => {
+			event.preventDefault();
+
+			const serializeDate = (datetime: Date) =>
+				dateFormat(datetime, BIRTHDATE_FORMAT);
+
+			const patient = {
+				niss,
+				firstname,
+				lastname,
+				birthdate:
+					birthdate !== null && isValid(birthdate)
+						? serializeDate(birthdate)
+						: undefined,
+				sex,
+				noshow,
+			};
+
+			const key = enqueueSnackbar(
+				`Creating patient ${lastname} ${firstname}...`,
+				{
+					variant: 'info',
+					persist: true,
+				},
+			);
+
+			return call(patientsInsert, patient).then(
+				(_id) => {
+					closeSnackbar(key);
+					enqueueSnackbar('Patient created!', {variant: 'success'});
+					navigate(`/patient/${_id}`);
+				},
+				(error: unknown) => {
+					closeSnackbar(key);
+					const message =
+						error instanceof Error ? error.message : 'unknown error';
+					enqueueSnackbar(message, {variant: 'error'});
+				},
+			);
+		},
+		[niss, firstname, lastname, birthdate, sex, noshow],
+	);
+};
+
 const NewPatientForm = () => {
 	const [niss, setNiss] = useState('');
 	const [firstname, setFirstname] = useState('');
 	const [lastname, setLastname] = useState('');
-	const [birthdate, setBirthdate] = useState('');
+	const [error, setError] = useState(null);
+	const [birthdate, setBirthdate] = useState<Date | null>(null);
 	const [sex, setSex] = useState('');
 	const [noshow, setNoshow] = useState(0);
 
-	const lastnameId = useUniqueId('new-patient-form-input-lastname');
-	const firstnameId = useUniqueId('new-patient-form-input-firstname');
+	const formId = useUniqueId('new-patient-form');
+	const lastnameId = `${formId}-input-lastname`;
+	const firstnameId = `${formId}-input-firstname`;
 
-	const navigate = useNavigate();
+	const birthdatePickerProps = useBirthdatePickerProps();
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
-		const patient = {
-			niss,
-			firstname,
-			lastname,
-			birthdate,
-			sex,
-			noshow,
-		};
-
-		try {
-			const _id = await call(patientsInsert, patient);
-			navigate(`/patient/${_id}`);
-		} catch (error: unknown) {
-			console.error(error);
-		}
-	};
+	const submit = useSubmit({
+		niss,
+		firstname,
+		lastname,
+		birthdate,
+		sex,
+		noshow,
+	});
 
 	return (
 		<StyledGrid
@@ -139,16 +203,33 @@ const NewPatientForm = () => {
 								</FormControl>
 							</Grid>
 							<Grid item xs={6}>
-								<TextField
-									fullWidth
-									type="date"
-									label="Birth date"
-									InputLabelProps={{
-										shrink: true,
-									}}
+								<DatePicker
+									{...birthdatePickerProps}
+									label="Birthdate"
 									value={birthdate}
-									onChange={(e) => {
-										setBirthdate(e.target.value);
+									renderInput={(props) => (
+										<TextField
+											{...props}
+											fullWidth
+											helperText={error}
+											InputLabelProps={{shrink: true}}
+										/>
+									)}
+									onChange={(pickedDatetime) => {
+										setBirthdate(pickedDatetime);
+									}}
+									onError={(reason) => {
+										setError(
+											reason === null
+												? null
+												: reason === 'maxDate'
+												? 'Birthdate is in the future'
+												: reason === 'minDate'
+												? 'Birthdate is too far in the past'
+												: reason === 'invalidDate'
+												? 'Birthdate is invalid'
+												: reason,
+										);
 									}}
 								/>
 							</Grid>
@@ -179,10 +260,11 @@ const NewPatientForm = () => {
 					</CardContent>
 					<CardActions>
 						<Button
+							disabled={Boolean(error)}
 							className={classes.button}
 							color="primary"
 							endIcon={<PersonAddIcon />}
-							onClick={handleSubmit}
+							onClick={submit}
 						>
 							Create new patient
 						</Button>

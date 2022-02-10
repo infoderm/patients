@@ -47,11 +47,9 @@ import {
 	makeRegExpIndex,
 } from '../../api/string';
 
-import {
-	useDateFormat,
-	useDateFormatAge,
-	useDateMask,
-} from '../../i18n/datetime';
+import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
+
+import useBirthdatePickerProps from '../birthdate/useBirthdatePickerProps';
 
 import usePrompt from '../navigation/usePrompt';
 import NoContent from '../navigation/NoContent';
@@ -247,7 +245,7 @@ const PatientPersonalInformationStatic = (
 
 	const localizeBirthdate = useDateFormat('PPP');
 	const localizeAge = useDateFormatAge();
-	const localizedDateMask = useDateMask();
+	const birthdatePickerProps = useBirthdatePickerProps();
 
 	const componentId = useUniqueId('patient-personal-information');
 
@@ -394,11 +392,11 @@ const PatientPersonalInformationStatic = (
 										</TextField>
 									</Grid>
 									<Grid item xs={2}>
-										<DatePicker
-											disabled={!editing}
-											mask={localizedDateMask}
-											value={_birthdate}
+										<DatePicker<Date>
+											{...birthdatePickerProps}
 											label="Birth date"
+											value={_birthdate}
+											disabled={!editing}
 											renderInput={(props) => (
 												<TextField
 													id={birthdateInputId}
