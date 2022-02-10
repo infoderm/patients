@@ -14,7 +14,7 @@ const Loading = (props) => {
 			<StyledAnimation
 				type="bubbles"
 				color={theme.palette.primary.main}
-				height={200}
+				height={400}
 				width={400}
 				delay={250}
 				{...props}
