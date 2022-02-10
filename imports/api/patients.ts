@@ -6,7 +6,11 @@ import {_chain} from '@iterable-iterator/chain';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
-import {PatientFields, PatientComputedFields} from './collection/patients';
+import {
+	PatientFields,
+	PatientComputedFields,
+	SEX_ALLOWED,
+} from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
 
@@ -23,10 +27,8 @@ import {
 	boundaryTrigrams,
 	junctionTrigrams,
 } from './string';
-import TransactionDriver from './transaction/TransactionDriver';
 
-export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
-export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
+import TransactionDriver from './transaction/TransactionDriver';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);

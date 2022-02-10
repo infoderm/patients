@@ -42,13 +42,13 @@ const createItemList = (files: File[]): DataTransferItemList => {
 	const list: DataTransferItemList & Iterable<DataTransferItem> = {
 		...files.map(fileToItem),
 		length: files.length,
-		add: () => {
+		add() {
 			throw new Error('not-implemented');
 		},
-		remove: () => {
+		remove() {
 			throw new Error('not-implemented');
 		},
-		clear: () => {
+		clear() {
 			throw new Error('not-implemented');
 		},
 		*[Symbol.iterator]() {

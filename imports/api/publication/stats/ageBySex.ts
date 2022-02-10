@@ -17,7 +17,7 @@ const sexToString = (sex) => {
 
 export default publishCount(Patients, {
 	fields: ['birthdate', 'sex'],
-	discretize: ({birthdate, sex}) => {
+	discretize({birthdate, sex}) {
 		if (!birthdate)
 			return [
 				['key', 'unk'],

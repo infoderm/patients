@@ -32,12 +32,12 @@ export const books = {
 	cache: {Stats},
 	sanitizeInput,
 	sanitize,
-	add: async (
+	async add(
 		db: TransactionDriver,
 		owner: string,
 		name: string,
 		verbatim = false,
-	) => {
+	) {
 		check(owner, String);
 		check(name, String);
 
@@ -60,7 +60,7 @@ export const books = {
 		return db.updateOne(Books, key, {$set: fields}, {upsert: true});
 	},
 
-	remove: async (db: TransactionDriver, owner, name) => {
+	async remove(db: TransactionDriver, owner, name) {
 		check(owner, String);
 		check(name, String);
 
@@ -78,12 +78,12 @@ export const books = {
 
 	name: (datetime, book) => books.format(datetime.getFullYear(), book),
 
-	split: (name: string): [string, string] => {
+	split(name: string): [string, string] {
 		const pivot = name.indexOf('/');
 		return [name.slice(0, pivot), name.slice(pivot + 1)];
 	},
 
-	parse: (name: string) => {
+	parse(name: string) {
 		const [year, book] = books.split(name);
 
 		const fiscalYear = parseUint32StrictOrString(year);
@@ -92,7 +92,7 @@ export const books = {
 		return [fiscalYear, bookNumber];
 	},
 
-	range: (name: string): [string, Date, Date] => {
+	range(name: string): [string, Date, Date] {
 		const [year, book] = books.split(name);
 
 		const begin = dateParseISO(`${year}-01-01`);
@@ -101,7 +101,7 @@ export const books = {
 		return [book, begin, end];
 	},
 
-	selector: (name: string) => {
+	selector(name: string) {
 		const [book, begin, end] = books.range(name);
 
 		return {
@@ -113,7 +113,7 @@ export const books = {
 		};
 	},
 
-	isReal: (name: string) => {
+	isReal(name: string) {
 		const [fiscalYear, bookNumber] = books.parse(name);
 		if (typeof fiscalYear !== 'number') return false;
 		if (typeof bookNumber !== 'number') return false;

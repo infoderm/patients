@@ -4,13 +4,13 @@ import {cloneElement} from 'react';
 const DEFAULT_OPTIONS = {
 	unmountDelay: 3000,
 	openKey: 'open',
-	append: (_child: JSX.Element) => {
+	append(_child: JSX.Element) {
 		throw new Error('append not implemented');
 	},
-	replace: (_target: JSX.Element, _replacement: JSX.Element) => {
+	replace(_target: JSX.Element, _replacement: JSX.Element) {
 		throw new Error('replace not implemented');
 	},
-	remove: (_child: JSX.Element) => {
+	remove(_child: JSX.Element) {
 		throw new Error('remove not implemented');
 	},
 	key: undefined,

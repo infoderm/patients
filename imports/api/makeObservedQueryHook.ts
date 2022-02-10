@@ -41,14 +41,14 @@ const makeObservedQueryHook =
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query, options});
 			const handle = subscribe(publication, key, query, options, {
-				onStop: () => {
+				onStop() {
 					if (handleRef.current === handle) {
 						dirty.current = true;
 						loading.current = false;
 						forceUpdate();
 					}
 				},
-				onReady: () => {
+				onReady() {
 					if (handleRef.current === handle) {
 						results.current = Collection.findOne({key})?.results ?? [];
 						loading.current = false;

@@ -67,7 +67,7 @@ export default function SearchBoxWithSuggestions(props: Props) {
 		items: suggestions,
 		itemToString,
 		inputValue,
-		onInputValueChange: ({inputValue}) => {
+		onInputValueChange({inputValue}) {
 			setInputValue(inputValue);
 		},
 		stateReducer: comboboxStateReducer,

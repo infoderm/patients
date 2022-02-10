@@ -8,7 +8,7 @@ import format from 'date-fns/format';
 
 import {makeTemplate} from '../../../test/fixtures';
 
-import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../../patients';
+import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../../collection/patients';
 
 import insertPatient from '../../endpoint/patients/insert';
 import invoke from '../../endpoint/invoke';

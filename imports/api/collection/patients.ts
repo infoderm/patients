@@ -1,11 +1,15 @@
 import {Mongo} from 'meteor/mongo';
 
+export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
+export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
+export type SexAllowed = typeof SEX_ALLOWED[number];
+
 export interface PatientIdFields {
 	niss: string;
 	firstname: string;
 	lastname: string;
 	birthdate: string;
-	sex: string;
+	sex: SexAllowed;
 	photo: string;
 
 	municipality: string;

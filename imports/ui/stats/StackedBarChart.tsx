@@ -55,7 +55,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 	for (const item of data) {
 		const itemKeys = keysFn(item);
 		for (const key of itemKeys) keySet.add(key);
-		const t = sum(map((key) => item[key], itemKeys));
+		const t: number = sum(map((key) => item[key], itemKeys));
 		totals[item.key] = t;
 		total += t;
 	}

@@ -39,7 +39,7 @@ const makeObservedQuerySubscription = <T, U = T>(
 		};
 
 		const observers: Mongo.ObserveChangesCallbacks<T> = {
-			added: (_id, fields) => {
+			added(_id, fields) {
 				if (initializing) results.push({_id, ...fields});
 				else if (observe.added) stop();
 			},

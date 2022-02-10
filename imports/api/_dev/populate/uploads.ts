@@ -36,7 +36,7 @@ export const newUpload = async (
 			isBase64: true,
 			fileName,
 			chunkSize: 'dynamic',
-			onUploaded: (error, fileRef) => {
+			onUploaded(error, fileRef) {
 				if (error) {
 					reject(error);
 				} else {

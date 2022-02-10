@@ -11,14 +11,14 @@ const insertDrugs = async (fd) => {
 	Papa.parse(fd, {
 		header: true,
 		dynamicTyping: true,
-		chunk: async (results, _parser) => {
+		async chunk(results: {data: unknown[]}, _parser: unknown) {
 			await call(insertMany, results.data);
 			i += results.data.length;
 		},
-		error: (error) => {
+		error(error: unknown) {
 			reject(error);
 		},
-		complete: () => {
+		complete() {
 			console.log(i);
 			resolve(i);
 		},

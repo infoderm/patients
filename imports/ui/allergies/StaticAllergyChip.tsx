@@ -22,7 +22,7 @@ interface AddedProps {
 type StaticAllergyChipProps = ChipProps & AddedProps;
 
 const styles = {
-	chip: ({loading, color, clickable}) => {
+	chip({loading, color, clickable}) {
 		const backgroundColor = loading ? '#999' : color;
 		const computedColor = loading
 			? '#eee'

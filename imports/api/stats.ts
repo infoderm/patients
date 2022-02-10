@@ -2,6 +2,7 @@ import {Subscription} from 'meteor/meteor';
 
 import {countCollection, PollResult} from './collection/stats';
 import define from './publication/define';
+import Collection from './transaction/Collection';
 
 export const countPublicationName = (QueriedCollection, {values}) =>
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;
@@ -11,16 +12,25 @@ export const countPublicationKey = (QueriedCollection, {values}, query) =>
 		query ?? {},
 	)}`;
 
-export const getCountOptions = (options) =>
+interface CountOptions {
+	fields: string[];
+	discretize: (x: object) => Iterable<[string, string | number]>;
+	values: string[];
+}
+
+export const getCountOptions = (options): CountOptions =>
 	typeof options === 'string'
 		? getCountOptions({fields: [options]})
 		: {
 				discretize: (x) => options.fields.map((key) => [key, x[key]]),
-				values: [...options.fields],
+				values: Array.from(options.fields),
 				...options,
 		  };
 
-const countPublication = (QueriedCollection, {fields, discretize, values}) =>
+const countPublication = <T, U = T>(
+	QueriedCollection: Collection<T, U>,
+	{fields, discretize, values}: CountOptions,
+) =>
 	function (this: Subscription, query) {
 		const collection = countCollection;
 		const key = countPublicationKey(QueriedCollection, {values}, query);
@@ -43,7 +53,7 @@ const countPublication = (QueriedCollection, {fields, discretize, values}) =>
 			let current = count;
 			for (const [key, value] of discretize(object)) {
 				if (key === values[values.length - 1]) {
-					if (value in current) current[value] += 1;
+					if (value in current) (current[value] as number) += 1;
 					else current[value] = 1;
 				} else {
 					if (!(value in current)) current[value] = {};
@@ -101,7 +111,9 @@ const countPublication = (QueriedCollection, {fields, discretize, values}) =>
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => handle.stop());
+		this.onStop(() => {
+			handle.stop();
+		});
 	};
 
 export const publishCount = (QueriedCollection, options) => {

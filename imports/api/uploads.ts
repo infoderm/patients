@@ -130,9 +130,16 @@ export const Uploads = new FilesCollection<MetadataType>({
 				const {gridFsFileId} = upload.versions[versionName].meta ?? {};
 				if (gridFsFileId) {
 					const gfsId = createObjectId(gridFsFileId);
-					bucket.delete(gfsId, (error) => {
+					bucket.delete(gfsId, (error: unknown) => {
 						if (error) {
-							throw error;
+							if (error instanceof Error) {
+								throw error;
+							} else {
+								console.debug({error});
+								throw new Error(
+									'Unknown error during bucket.delete in Uploads#onAfterRemove.',
+								);
+							}
 						}
 					});
 				}

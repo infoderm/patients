@@ -27,8 +27,8 @@ export default define({
 			},
 		};
 		let total = 0;
-		const refs = new Map();
-		const pRefs = new Map();
+		const refs = new Map<string, string>();
+		const pRefs = new Map<string, {freq: number; sex: string}>();
 		const count: GenderCount[] = [{}];
 
 		const state = (): PollResult<GenderCount[]> => ({
@@ -45,7 +45,7 @@ export default define({
 			if (count[patient.freq] === undefined) count[patient.freq] = {};
 			if (count[patient.freq][patient.sex] === undefined)
 				count[patient.freq][patient.sex] = 0;
-			count[patient.freq][patient.sex] += 1;
+			(count[patient.freq][patient.sex] as number) += 1;
 		};
 
 		const dec = (patientId: string) => {
@@ -57,7 +57,7 @@ export default define({
 			if (count[patient.freq] === undefined) count[patient.freq] = {};
 			if (count[patient.freq][patient.sex] === undefined)
 				count[patient.freq][patient.sex] = 0;
-			count[patient.freq][patient.sex] += 1;
+			(count[patient.freq][patient.sex] as number) += 1;
 		};
 
 		let initializing = true;
@@ -71,28 +71,28 @@ export default define({
 			{owner: this.userId},
 			{fields: {sex: 1}},
 		).observeChanges({
-			added: (_id, {sex}) => {
+			added(_id, {sex}) {
 				pRefs.set(_id, {freq: 0, sex});
 				if (count[0][sex] === undefined) count[0][sex] = 0;
-				count[0][sex] += 1;
+				(count[0][sex] as number) += 1;
 				commit();
 			},
-			changed: (_id, {sex}) => {
+			changed(_id, {sex}) {
 				const {freq, sex: prev} = pRefs.get(_id);
 				count[freq][prev] -= 1;
 				if (count[freq][sex] === undefined) count[freq][sex] = 0;
-				count[freq][sex] += 1;
+				(count[freq][sex] as number) += 1;
 				pRefs.set(_id, {freq, sex});
 				commit();
 			},
-			removed: (_id) => {
+			removed(_id) {
 				pRefs.delete(_id);
 				// everything should be commited by the consultations observer
 			},
 		});
 
 		const cHandle = Consultations.find(selector, options).observeChanges({
-			added: (_id, {patientId}) => {
+			added(_id, {patientId}) {
 				total += 1;
 				inc(patientId);
 				refs.set(_id, patientId);
@@ -102,7 +102,7 @@ export default define({
 			// changed: ... // TODO We assume a consultation does not change
 			// patientId. Handle that.
 
-			removed: (_id) => {
+			removed(_id) {
 				total -= 1;
 				const patientId = refs.get(_id);
 				dec(patientId);

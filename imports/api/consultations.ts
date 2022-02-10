@@ -99,7 +99,7 @@ export function setupConsultationsStatsPublication(collection, query, init?) {
 
 		changed: (_id, fields) => {
 			const [oldPrice, minRef, maxRef] = refs.get(_id);
-			let newPrice = oldPrice;
+			let newPrice: number = oldPrice;
 			if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
 				newPrice = fields.price;
 				if (oldPrice) total -= oldPrice;

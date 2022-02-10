@@ -97,7 +97,7 @@ const prepareAvailability = (
 			calendar: 'availability',
 			begin,
 			end,
-			onClick: () => {
+			onClick() {
 				onSlotClick(begin, false);
 			},
 		}),

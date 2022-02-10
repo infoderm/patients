@@ -35,25 +35,25 @@ const makeCachedFindOneOpt =
 
 			let queryHandle: Meteor.LiveQueryHandle;
 			const handle = subscribe(publication, query, options, {
-				onStop: (e: Meteor.Error) => {
+				onStop(e: Meteor.Error) {
 					console.debug('onStop()', {e, queryHandle});
 					if (queryHandle) queryHandle.stop();
 					else reset();
 				},
-				onReady: () => {
+				onReady() {
 					console.debug('onReady()');
 					setLoading(false);
 					queryHandle = Collection.find(query, options).observeChanges({
-						added: (_id, upToDate) => {
+						added(_id, upToDate) {
 							setFound(true);
 							current = {...init, ...upToDate};
 							setFields(current);
 						},
-						changed: (_id, upToDate) => {
+						changed(_id, upToDate) {
 							current = {...current, ...upToDate};
 							setFields(current);
 						},
-						removed: (_id) => {
+						removed(_id) {
 							setFound(false);
 						},
 					});

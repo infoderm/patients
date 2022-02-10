@@ -274,7 +274,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			parentPublicationStats: statsPublication,
 		},
 
-		add: async (db: TransactionDriver, owner: string, name: string) => {
+		async add(db: TransactionDriver, owner: string, name: string) {
 			check(owner, String);
 			check(name, String);
 
@@ -298,7 +298,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 			);
 		},
 
-		remove: async (db: TransactionDriver, owner: string, name: string) => {
+		async remove(db: TransactionDriver, owner: string, name: string) {
 			check(owner, String);
 			check(name, String);
 

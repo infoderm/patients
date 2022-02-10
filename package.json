@@ -146,7 +146,7 @@
     "simpl-schema": "1.12.0",
     "total-order": "3.0.1",
     "typescript": "^4.3.5",
-    "xo": "0.47.0"
+    "xo": "0.48.0"
   },
   "postinstall": {
     "@fontsource/roboto/300.css": "copy public/@fontsource/roboto/",
@@ -204,6 +204,7 @@
       "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/prefer-node-protocol": "off",
+      "unicorn/prefer-json-parse-buffer": "off",
       "react/function-component-definition": "off",
       "react/state-in-constructor": "off",
       "react/static-property-placement": "off",

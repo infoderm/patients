@@ -213,7 +213,7 @@ const SetPicker = <ItemType, ChipProps>(
 
 	const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({
 		selectedItems,
-		onSelectedItemsChange: async ({selectedItems}) => {
+		async onSelectedItemsChange({selectedItems}) {
 			// This is called when hitting backspace on empty input, or when
 			// pressing delete or backspace key while a chip is focused.
 			if (selectedItems) await setSelectedItems(selectedItems);
@@ -240,7 +240,7 @@ const SetPicker = <ItemType, ChipProps>(
 		inputValue,
 		selectedItem: null,
 		items: suggestions,
-		onInputValueChange: ({inputValue}) => {
+		onInputValueChange({inputValue}) {
 			if (full) {
 				resetInputValue();
 			} else {
@@ -248,7 +248,7 @@ const SetPicker = <ItemType, ChipProps>(
 			}
 		},
 		stateReducer: comboboxStateReducer,
-		onStateChange: async (changes) => {
+		async onStateChange(changes) {
 			const {type, selectedItem} = changes;
 			if (readOnly) {
 				return;
