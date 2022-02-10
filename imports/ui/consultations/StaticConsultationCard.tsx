@@ -4,6 +4,8 @@ import {styled} from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';
 import Divider from '@mui/material/Divider';
 
+import PropsOf from '../../util/PropsOf';
+
 import virtualFields from '../../api/consultations/virtualFields';
 
 import StaticConsultationCardSummary from './StaticConsultationCardSummary';
@@ -36,13 +38,18 @@ const Accordion = styled(MuiAccordion, {shouldForwardProp})<AdditionalProps>(
 	}),
 );
 
-interface StaticConsultationCardProps {
+interface StaticConsultationCardProps
+	extends Omit<
+		PropsOf<typeof StaticConsultationCardActions>,
+		| 'isNoShow'
+		| 'missingPaymentData'
+		| 'didNotOrWillNotHappen'
+		| 'owes'
+		| 'owed'
+	> {
 	consultation: any;
 	loading?: boolean;
 	found?: boolean;
-	attachments?: any[];
-	PatientChip?: JSX.Element;
-	showPrice?: boolean;
 	defaultExpanded?: boolean;
 }
 

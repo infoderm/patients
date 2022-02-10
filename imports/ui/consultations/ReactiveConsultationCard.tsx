@@ -1,9 +1,12 @@
 import React from 'react';
+import PropsOf from '../../util/PropsOf';
 import useAttachments from '../attachments/useAttachments';
 
 import StaticConsultationCard from './StaticConsultationCard';
 
-const ReactiveConsultationCard = ({consultation, ...rest}) => {
+type Props = Omit<PropsOf<typeof StaticConsultationCard>, 'attachments'>;
+
+const ReactiveConsultationCard = ({consultation, ...rest}: Props) => {
 	const query = {'meta.attachedToConsultations': consultation._id};
 
 	const options = {
@@ -17,13 +20,13 @@ const ReactiveConsultationCard = ({consultation, ...rest}) => {
 
 	const {results: attachments} = useAttachments(query, options, deps);
 
-	const props = {
-		consultation,
-		attachments,
-		...rest,
-	};
-
-	return <StaticConsultationCard {...props} />;
+	return (
+		<StaticConsultationCard
+			consultation={consultation}
+			attachments={attachments}
+			{...rest}
+		/>
+	);
 };
 
 ReactiveConsultationCard.projection = StaticConsultationCard.projection;

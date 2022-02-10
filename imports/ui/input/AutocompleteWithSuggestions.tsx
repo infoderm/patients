@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -10,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import PropsOf from '../../util/PropsOf';
 
 interface BaseProps {
-	itemToString: (x: any) => any;
+	itemToString?: (x: any) => any;
 	useSuggestions: (x: string) => {loading: boolean; results: any[]};
 	inputValue: string;
 	TextFieldProps?: any;
@@ -21,7 +20,7 @@ type Props = BaseProps &
 	Omit<PropsOf<typeof Autocomplete>, 'renderInput' | 'options'>;
 
 const AutocompleteWithSuggestions = ({
-	itemToString,
+	itemToString = (x: any): any => x,
 	useSuggestions,
 	TextFieldProps,
 	InputProps,
@@ -64,14 +63,6 @@ const AutocompleteWithSuggestions = ({
 			{...rest}
 		/>
 	);
-};
-
-AutocompleteWithSuggestions.defaultProps = {
-	itemToString: (x: any): any => x,
-};
-
-AutocompleteWithSuggestions.propTypes = {
-	itemToString: PropTypes.func,
 };
 
 export default AutocompleteWithSuggestions;

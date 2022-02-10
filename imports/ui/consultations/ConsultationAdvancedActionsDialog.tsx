@@ -15,38 +15,27 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 
-import {blue, red} from '@mui/material/colors';
+import {red} from '@mui/material/colors';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog';
-import StaticConsultationCardChips, {
-	StaticConsultationCardChipsProps,
-} from './StaticConsultationCardChips';
+import PropsOf from '../../util/PropsOf';
+import StaticConsultationCardChips from './StaticConsultationCardChips';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog';
 import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
 import ConsultationTransferDialog from './ConsultationTransferDialog';
 
-const PREFIX = 'ConsultationAdvancedActionsDialog';
-
-const classes = {
-	primary: `${PREFIX}-primary`,
-	secondary: `${PREFIX}-secondary`,
-};
-
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')({
-	[`& .${classes.primary}`]: {
-		backgroundColor: blue[100],
-		color: blue[600],
-	},
-	[`& .${classes.secondary}`]: {
-		backgroundColor: red[100],
-		color: red[600],
-	},
+const SecondaryAvatar = styled(Avatar)({
+	backgroundColor: red[100],
+	color: red[600],
 });
 
-interface Props extends StaticConsultationCardChipsProps {
+interface Props
+	extends Omit<
+		PropsOf<typeof StaticConsultationCardChips>,
+		'showDate' | 'showTime' | 'showPrice' | 'PatientChip'
+	> {
 	open: boolean;
 	onClose: () => void;
 }
@@ -59,7 +48,7 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 	const [transferring, setTransferring] = useState(false);
 
 	return (
-		<Root>
+		<>
 			<Dialog open={open} onClose={onClose}>
 				<DialogTitle>What is the problem?</DialogTitle>
 				<DialogContent>
@@ -81,9 +70,9 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 							}}
 						>
 							<ListItemAvatar>
-								<Avatar className={classes.secondary}>
+								<SecondaryAvatar>
 									<RestoreIcon />
-								</Avatar>
+								</SecondaryAvatar>
 							</ListItemAvatar>
 							<ListItemText primary="This consultation should not have been started yet" />
 						</ListItem>
@@ -96,9 +85,9 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 						}}
 					>
 						<ListItemAvatar>
-							<Avatar className={classes.secondary}>
+							<SecondaryAvatar>
 								<LinkOffIcon />
-							</Avatar>
+							</SecondaryAvatar>
 						</ListItemAvatar>
 						<ListItemText
 							primary={
@@ -116,9 +105,9 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 						}}
 					>
 						<ListItemAvatar>
-							<Avatar className={classes.secondary}>
+							<SecondaryAvatar>
 								<DeleteIcon />
-							</Avatar>
+							</SecondaryAvatar>
 						</ListItemAvatar>
 						<ListItemText
 							primary={
@@ -163,7 +152,7 @@ const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 					setTransferring(false);
 				}}
 			/>
-		</Root>
+		</>
 	);
 };
 

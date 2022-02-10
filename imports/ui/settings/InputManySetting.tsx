@@ -1,5 +1,4 @@
 import React, {useMemo} from 'react';
-import PropTypes from 'prop-types';
 
 import Typography from '@mui/material/Typography';
 import SetPicker from '../input/SetPicker';
@@ -10,7 +9,7 @@ import {useSetting} from './hooks';
 interface BaseProps {
 	className?: string;
 	setting: string;
-	makeSuggestions: (
+	makeSuggestions?: (
 		value: any[],
 	) => (x: string) => {loading?: boolean; results: any[]};
 	title: string;
@@ -29,18 +28,16 @@ type Props = BaseProps &
 
 const identity = (x) => x;
 
-const InputManySetting = (props: Props) => {
-	const {
-		className,
-		setting,
-		makeSuggestions,
-		title,
-		label,
-		placeholder,
-		sort,
-		...rest
-	} = props;
-
+const InputManySetting = ({
+	className = undefined,
+	setting,
+	makeSuggestions = () => () => ({results: []}),
+	label = undefined,
+	placeholder = undefined,
+	title,
+	sort = undefined,
+	...rest
+}: Props) => {
 	const {loading, value, setValue} = useSetting(setting);
 
 	const onChange = useMemo(
@@ -76,21 +73,6 @@ const InputManySetting = (props: Props) => {
 			/>
 		</div>
 	);
-};
-
-InputManySetting.defaultProps = {
-	makeSuggestions: () => () => ({results: []}),
-	label: undefined,
-	placeholder: undefined,
-};
-
-InputManySetting.propTypes = {
-	className: PropTypes.string,
-	setting: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
-	makeSuggestions: PropTypes.func,
-	label: PropTypes.string,
-	placeholder: PropTypes.string,
 };
 
 export default InputManySetting;

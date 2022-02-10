@@ -2,6 +2,8 @@ import React from 'react';
 
 import Grid from '@mui/material/Grid';
 
+import {PatientDocument} from '../../api/collection/patients';
+
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 import Paginator from '../navigation/Paginator';
@@ -15,7 +17,7 @@ interface Props {
 	page: number;
 	perpage: number;
 	loading?: boolean;
-	patients: unknown[];
+	patients: PatientDocument[];
 	Card?: React.ElementType;
 }
 

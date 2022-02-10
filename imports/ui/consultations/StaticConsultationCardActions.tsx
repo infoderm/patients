@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {Link, useNavigate} from 'react-router-dom';
 
@@ -17,6 +16,8 @@ import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
+import PropsOf from '../../util/PropsOf';
+
 import consultationsAttach from '../../api/endpoint/consultations/attach';
 
 import AttachFileButton from '../attachments/AttachFileButton';
@@ -31,7 +32,27 @@ import ConsultationPaymentDialog from './ConsultationPaymentDialog';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
 import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';
 
-const StaticConsultationCardActions = (props) => {
+interface Props
+	extends Omit<
+		PropsOf<typeof ConsultationAdvancedActionsDialog>,
+		'open' | 'onClose'
+	> {
+	found?: boolean;
+	attachAction?: boolean;
+	editAction?: boolean;
+	moreAction?: boolean;
+	owes: boolean;
+}
+
+const StaticConsultationCardActions = ({
+	found = true,
+	attachAction = true,
+	editAction = true,
+	moreAction = true,
+	owes,
+	consultation,
+	...rest
+}: Props) => {
 	const [paying, setPaying] = useState(false);
 	const [settling, setSettling] = useState(false);
 	const [more, setMore] = useState(false);
@@ -41,14 +62,7 @@ const StaticConsultationCardActions = (props) => {
 
 	const navigate = useNavigate();
 
-	const {
-		found,
-		attachAction,
-		editAction,
-		moreAction,
-		owes,
-		consultation: {_id, isDone, isCancelled, payment_method},
-	} = props;
+	const {_id, isDone, isCancelled, payment_method} = consultation;
 
 	const beginThisConsultation = async () => {
 		try {
@@ -167,7 +181,7 @@ const StaticConsultationCardActions = (props) => {
 			{!owes || payment_method !== 'wire' ? null : (
 				<ConsultationPaymentDialog
 					open={paying}
-					consultation={props.consultation}
+					consultation={consultation}
 					onClose={() => {
 						setPaying(false);
 					}}
@@ -176,7 +190,7 @@ const StaticConsultationCardActions = (props) => {
 			{!owes ? null : (
 				<ConsultationDebtSettlementDialog
 					open={settling}
-					consultation={props.consultation}
+					consultation={consultation}
 					onClose={() => {
 						setSettling(false);
 					}}
@@ -185,16 +199,18 @@ const StaticConsultationCardActions = (props) => {
 			{moreAction && (
 				<ConsultationAdvancedActionsDialog
 					open={more}
+					owes={owes}
+					consultation={consultation}
 					onClose={() => {
 						setMore(false);
 					}}
-					{...props}
+					{...rest}
 				/>
 			)}
 			{!isDone && isCancelled ? (
 				<AppointmentUncancellationDialog
 					open={uncancelling}
-					appointment={props.consultation}
+					appointment={consultation}
 					onClose={() => {
 						setUncancelling(false);
 					}}
@@ -202,7 +218,7 @@ const StaticConsultationCardActions = (props) => {
 			) : (
 				<AppointmentCancellationDialog
 					open={cancelling}
-					appointment={props.consultation}
+					appointment={consultation}
 					onClose={() => {
 						setCancelling(false);
 					}}
@@ -211,7 +227,7 @@ const StaticConsultationCardActions = (props) => {
 			{editAction && !isDone && !isCancelled && (
 				<EditAppointmentDialog
 					open={editing}
-					appointment={props.consultation}
+					appointment={consultation}
 					onClose={() => {
 						setEditing(false);
 					}}
@@ -237,21 +253,6 @@ StaticConsultationCardActions.projection = {
 	_id: 1,
 	isDone: 1,
 	payment_method: 1,
-};
-
-StaticConsultationCardActions.defaultProps = {
-	found: true,
-	attachAction: true,
-	editAction: true,
-	moreAction: true,
-};
-
-StaticConsultationCardActions.propTypes = {
-	found: PropTypes.bool,
-	attachAction: PropTypes.bool,
-	editAction: PropTypes.bool,
-	moreAction: PropTypes.bool,
-	consultation: PropTypes.object.isRequired,
 };
 
 export default StaticConsultationCardActions;

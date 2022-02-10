@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 
@@ -12,6 +11,7 @@ import FaceIcon from '@mui/icons-material/Face';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
+import {PatientDocument} from '../../api/collection/patients';
 import {patients} from '../../api/patients';
 
 import SetPicker from '../input/SetPicker';
@@ -45,12 +45,19 @@ const Suggestion = ({item: patient}) => {
 	);
 };
 
+interface Props {
+	selection: PatientDocument[];
+	setSelection: (selection: PatientDocument[]) => void;
+	label?: string;
+	placeholder?: string;
+}
+
 const MergePatientsFormStepSelect = ({
 	selection,
 	setSelection,
-	placeholder,
-	label,
-}) => (
+	label = 'Select patients',
+	placeholder = 'Select patients by entering their names here',
+}: Props) => (
 	<Grid container spacing={2}>
 		<Grid item xs={12}>
 			<SetPicker
@@ -64,7 +71,9 @@ const MergePatientsFormStepSelect = ({
 				}}
 				value={selection}
 				placeholder={placeholder}
-				onChange={(e) => setSelection(e.target.value)}
+				onChange={(e) => {
+					setSelection(e.target.value);
+				}}
 			/>
 		</Grid>
 		<Grid item container xs={12} spacing={3}>
@@ -78,17 +87,5 @@ const MergePatientsFormStepSelect = ({
 		</Grid>
 	</Grid>
 );
-
-MergePatientsFormStepSelect.defaultProps = {
-	label: 'Select patients',
-	placeholder: 'Select patients by entering their names here',
-};
-
-MergePatientsFormStepSelect.propTypes = {
-	selection: PropTypes.array.isRequired,
-	setSelection: PropTypes.func.isRequired,
-	label: PropTypes.string,
-	placeholder: PropTypes.string,
-};
 
 export default MergePatientsFormStepSelect;

@@ -18,6 +18,7 @@ const StaticPatientCard = (props: Props) => {
 	const ariaLabel = `${firstname} ${lastname}`;
 	return (
 		<GenericStaticPatientCard
+			// @ts-expect-error No way to branch on Card type.
 			component={Link}
 			to={`/patient/${props.patient._id}`}
 			aria-label={ariaLabel}

@@ -4,19 +4,10 @@ import {styled} from '@mui/material/styles';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import ReactivePatientChip from '../patients/ReactivePatientChip';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
-const PREFIX = 'StaticConsultationDetails';
-
-const classes = {
-	container: `${PREFIX}-container`,
-};
-
 const Root = styled('div')(({theme}) => ({
-	[`&.${classes.container}`]: {
-		padding: theme.spacing(3),
-	},
+	padding: theme.spacing(3),
 }));
 
 const StaticConsultationDetails = ({loading, found, consultation}) => {
@@ -29,12 +20,8 @@ const StaticConsultationDetails = ({loading, found, consultation}) => {
 	}
 
 	return (
-		<Root className={classes.container}>
-			<ReactiveConsultationCard
-				defaultExpanded
-				PatientChip={ReactivePatientChip}
-				consultation={consultation}
-			/>
+		<Root>
+			<ReactiveConsultationCard defaultExpanded consultation={consultation} />
 		</Root>
 	);
 };

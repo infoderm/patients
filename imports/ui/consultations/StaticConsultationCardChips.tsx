@@ -84,15 +84,15 @@ function paymentMethodIcon(payment_method) {
 	}
 }
 
-export interface StaticConsultationCardChipsProps {
+interface StaticConsultationCardChipsProps {
 	isNoShow: boolean;
-	patient: PatientDocument;
+	patient?: PatientDocument;
 	consultation: ConsultationDocument;
 	PatientChip: React.ElementType;
-	showDate: boolean;
-	showTime: boolean;
-	showPrice: boolean;
-	loadingPatient: boolean;
+	showDate?: boolean;
+	showTime?: boolean;
+	showPrice?: boolean;
+	loadingPatient?: boolean;
 	missingPaymentData: boolean;
 	didNotOrWillNotHappen: boolean;
 	owes: boolean;
@@ -160,7 +160,7 @@ const StaticConsultationCardChips = (
 				<PatientChip
 					loading={loadingPatient}
 					found={Boolean(patient)}
-					patient={patient || {_id: patientId}}
+					patient={patient ?? {_id: patientId}}
 				/>
 			)}
 			{isCancelled && <Chip didNotOrWillNotHappen bold label="cancelled" />}

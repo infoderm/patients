@@ -1,6 +1,5 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
-import PropTypes, {InferProps} from 'prop-types';
 
 import {useTransition, animated} from 'react-spring';
 
@@ -19,6 +18,8 @@ import {dataURL as pngDataURL} from '../../util/png';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
+import PropsOf from '../../util/PropsOf';
+import {PatientDocument} from '../../api/collection/patients';
 
 const PREFIX = 'GenericStaticPatientCard';
 
@@ -129,14 +130,33 @@ const StyledCard = styled(Card)(({theme}) => ({
 	},
 }));
 
+const projection = {
+	firstname: 1,
+	lastname: 1,
+	birthdate: 1,
+	sex: 1,
+	niss: 1,
+	photo: 1,
+};
+
+type Projection = typeof projection;
+
+interface GenericStaticPatientCardProps extends PropsOf<typeof StyledCard> {
+	patient: Pick<PatientDocument, keyof Projection> & {score?: number};
+	loading?: boolean;
+	found?: boolean;
+	highlightNn?: boolean | string;
+	showScore?: boolean;
+}
+
 const GenericStaticPatientCard = ({
-	loading,
-	found,
 	patient,
-	highlightNn,
-	showScore,
+	loading = false,
+	found = true,
+	highlightNn = false,
+	showScore = false,
 	...rest
-}: InferProps<typeof GenericStaticPatientCard.propTypes>) => {
+}: GenericStaticPatientCardProps) => {
 	const localizeBirthdate = useDateFormat('PPPP');
 
 	const {birthdate, photo, niss, score} = patient;
@@ -209,28 +229,6 @@ const GenericStaticPatientCard = ({
 	);
 };
 
-GenericStaticPatientCard.projection = {
-	firstname: 1,
-	lastname: 1,
-	birthdate: 1,
-	sex: 1,
-	niss: 1,
-	photo: 1,
-};
-
-GenericStaticPatientCard.defaultProps = {
-	loading: false,
-	found: true,
-	highlightNn: false,
-	showScore: false,
-};
-
-GenericStaticPatientCard.propTypes = {
-	loading: PropTypes.bool,
-	found: PropTypes.bool,
-	highlightNn: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-	showScore: PropTypes.bool,
-	patient: PropTypes.object.isRequired,
-};
+GenericStaticPatientCard.projection = projection;
 
 export default GenericStaticPatientCard;

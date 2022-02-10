@@ -1,20 +1,22 @@
 import React, {useState} from 'react';
 
-import Button from '@mui/material/Button';
-
-import PropTypes, {InferProps} from 'prop-types';
 import AssistantIcon from '@mui/icons-material/Assistant';
 
 import PropsOf from '../../util/PropsOf';
 import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';
 
-const ManageConsultationsForPatientButton = ({
+interface ExtraProps<B> {
+	Button: B;
+	patientId: string;
+	children: React.ReactNode;
+}
+
+const ManageConsultationsForPatientButton = <B extends React.ElementType>({
 	Button,
 	patientId,
 	children,
 	...rest
-}: InferProps<typeof ManageConsultationsForPatientButton.propTypes> &
-	PropsOf<typeof Button>) => {
+}: ExtraProps<B> & PropsOf<B>) => {
 	const [open, setOpen] = useState(false);
 	return (
 		<>
@@ -35,16 +37,6 @@ const ManageConsultationsForPatientButton = ({
 			/>
 		</>
 	);
-};
-
-ManageConsultationsForPatientButton.propTypes = {
-	Button: PropTypes.elementType,
-	patientId: PropTypes.string.isRequired,
-	children: PropTypes.node,
-};
-
-ManageConsultationsForPatientButton.defaultProps = {
-	Button,
 };
 
 export default ManageConsultationsForPatientButton;

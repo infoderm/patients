@@ -1,19 +1,34 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
 import {useSetting} from './hooks';
 
-// TODO validate should have three possible outcomes
-//       1 valid input (sync)
-//      -1 intermediate input (no sync, update, error/warning? label)
-//       0 wrong input (no sync, no update)
+interface Outcome {
+	outcome: -1 | 0 | 1;
+	//  1 valid input (sync)
+	// -1 intermediate input (no sync, update, error/warning? label)
+	//  0 wrong input (no sync, no update)
+}
 
-const InputOneSetting = (props) => {
-	const {className, setting, sanitize, validate, label, title} = props;
+interface Props {
+	className?: string;
+	title?: string;
+	label?: string;
+	setting: string;
+	sanitize?: (inputValue: string) => any;
+	validate?: (x: any) => Outcome;
+}
 
+const InputOneSetting = ({
+	className,
+	setting,
+	sanitize = (x) => x,
+	validate = () => ({outcome: 1}),
+	label,
+	title,
+}: Props) => {
 	const {loading, value, setValue} = useSetting(setting);
 
 	const [error, setError] = useState(false);
@@ -40,22 +55,6 @@ const InputOneSetting = (props) => {
 			/>
 		</div>
 	);
-};
-
-InputOneSetting.propTypes = {
-	className: PropTypes.string,
-	title: PropTypes.string,
-	label: PropTypes.string,
-	setting: PropTypes.string.isRequired,
-	sanitize: PropTypes.func,
-	validate: PropTypes.func,
-};
-
-InputOneSetting.defaultProps = {
-	sanitize: (x) => x,
-	validate: () => ({
-		outcome: 1,
-	}),
 };
 
 export default InputOneSetting;
