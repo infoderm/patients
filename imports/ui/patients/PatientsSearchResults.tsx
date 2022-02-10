@@ -64,7 +64,7 @@ const PatientsSearchResults = ({
 			(res) => {
 				if (!cancelled) {
 					setLoading(false);
-					setPatients(res);
+					setPatients(res as unknown[]);
 				}
 			},
 			(error) => {

@@ -108,7 +108,7 @@ const HealthOneLabResultsTable = ({document}) => {
 			default:
 				if (result.flag !== '') {
 					className = classes.unknownFlagRow;
-				} else if (result.code && result.code.startsWith('t_')) {
+				} else if (result.code?.startsWith('t_')) {
 					className =
 						result.name && /^[A-Z ]*$/.test(result.name)
 							? classes.headerRow
@@ -161,7 +161,7 @@ const HealthOneLabResultsTable = ({document}) => {
 				</TableHead>
 				<TableBody>
 					{rows.map((row, i) => {
-						const isResult = row.code && row.code.match(/^\d+$/);
+						const isResult = row.code?.match(/^\d+$/);
 						const comment = row.measure ? row.measure.split('\t') : [];
 						comment.pop();
 						return (

@@ -1,11 +1,8 @@
 /**
  * Merge fields for use with MongoDB.
- *
- * @param {...Object} args
- * @return {Object}
  */
-const mergeFields = (...args) => {
-	let result;
+const mergeFields = (...args: Array<Record<string, any> | undefined>) => {
+	let result: undefined | Record<string, any>;
 	let sidedness = 0;
 	for (const fields of args) {
 		if (!fields) continue;
@@ -14,9 +11,14 @@ const mergeFields = (...args) => {
 			if (result === undefined) result = {};
 			if (sidedness === 1 && key !== '_id') {
 				if (value) result[key] = value;
-				else delete result[key];
-			} else if (value) delete result[key];
-			else result[key] = 0;
+				else {
+					// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+					delete result[key];
+				}
+			} else if (value) {
+				// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+				delete result[key];
+			} else result[key] = 0;
 		}
 	}
 

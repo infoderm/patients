@@ -47,7 +47,7 @@ server(__filename, () => {
 		);
 
 		return throws(
-			() =>
+			async () =>
 				invoke(consultationsRemove, {userId: `${userId}x`}, [consultationId]),
 			/not-found/,
 		);
@@ -64,7 +64,8 @@ server(__filename, () => {
 		);
 
 		return throws(
-			() => invoke(consultationsRemove, {userId: undefined}, [consultationId]),
+			async () =>
+				invoke(consultationsRemove, {userId: undefined}, [consultationId]),
 			/not-authorized/,
 		);
 	});

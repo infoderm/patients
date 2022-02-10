@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Patients} from '../../collection/patients';
+import {PatientDocument, Patients} from '../../collection/patients';
 
 import define from '../define';
 
@@ -10,10 +10,13 @@ export default define({
 		check(query, Object);
 		check(options, Object);
 	},
-	async run(query: any, options: any) {
+	async run(
+		query: any,
+		options: any,
+	): Promise<Array<Partial<PatientDocument>>> {
 		return Patients.find({...query, owner: this.userId}, options).fetch();
 	},
-	simulate(_query: any, _options: any) {
-		throw new Error('simulation not-implemented');
+	simulate(_query: any, _options: any): void {
+		return undefined;
 	},
 });

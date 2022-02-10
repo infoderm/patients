@@ -13,7 +13,7 @@ import {MetadataType, Uploads} from '../../api/uploads';
 import InputFileButton from '../input/InputFileButton';
 
 interface Props extends Omit<PropsOf<typeof InputFileButton>, 'onChange'> {
-	endpoint: Endpoint<unknown>;
+	endpoint: Endpoint<any>;
 	item: string;
 	children?: ReactNode;
 }

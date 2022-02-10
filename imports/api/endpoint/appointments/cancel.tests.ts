@@ -41,7 +41,7 @@ server(__filename, () => {
 		const appointmentId = await newAppointment({userId});
 
 		return throws(
-			() =>
+			async () =>
 				invoke(appointmentsCancel, {userId: `${userId}x`}, [
 					appointmentId,
 					'',

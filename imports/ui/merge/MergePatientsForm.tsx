@@ -37,7 +37,9 @@ const MergePatientsForm = () => {
 								variant="contained"
 								color="primary"
 								endIcon={<SkipNextIcon />}
-								onClick={() => setStep('prepare')}
+								onClick={() => {
+									setStep('prepare');
+								}}
 							>
 								Next
 							</Button>
@@ -50,7 +52,9 @@ const MergePatientsForm = () => {
 			return (
 				<MergePatientsFormStepPrepare
 					toMerge={list(map((x) => x._id, toMerge))}
-					onPrevStep={() => setStep('select')}
+					onPrevStep={() => {
+						setStep('select');
+					}}
 				/>
 			);
 		default:

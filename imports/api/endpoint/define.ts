@@ -6,8 +6,9 @@ import Endpoint from './Endpoint';
 import invoke from './invoke';
 import Transaction from './Transaction';
 import Executor from './Executor';
+import Simulator from './Simulator';
 
-const define = <T>(params: Params<T>): Endpoint<T> => {
+const define = <R>(params: Params<R>): Endpoint<R> => {
 	const {
 		testOnly,
 		authentication,
@@ -21,7 +22,7 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 	const executor =
 		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction);
 
-	const endpoint: Endpoint<T> = {
+	const endpoint: Endpoint<R> = {
 		name,
 		authentication: authentication ?? 'logged-in',
 		validate,
@@ -32,7 +33,7 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 
 	if (!testOnly || Meteor.isTest || Meteor.isAppTest) {
 		Meteor.methods({
-			[params.name](...args: any[]) {
+			async [params.name](...args: any[]) {
 				return invoke(endpoint, this, args);
 			},
 		});
@@ -43,7 +44,7 @@ const define = <T>(params: Params<T>): Endpoint<T> => {
 
 export default define;
 
-const wrapTransactionServer = (txn: Transaction): Executor => {
+const wrapTransactionServer = <R>(txn: Transaction<R>): Executor<R> => {
 	return async function (...args: any[]) {
 		return executeTransaction(async (db) =>
 			Reflect.apply(txn, this, [db, ...args]),
@@ -51,14 +52,14 @@ const wrapTransactionServer = (txn: Transaction): Executor => {
 	};
 };
 
-const wrapTransactionClient = (txn: Transaction): Executor => {
+const wrapTransactionClient = <R>(txn: Transaction<R>): Simulator => {
 	const db = new MeteorTransactionSimulationDriver();
 	return function (...args: any[]) {
 		Reflect.apply(txn, this, [db, ...args]);
 	};
 };
 
-const wrapTransaction = (txn: Transaction): Executor => {
+const wrapTransaction = <R>(txn: Transaction<R>): Executor<R> | Simulator => {
 	return Meteor.isServer
 		? wrapTransactionServer(txn)
 		: wrapTransactionClient(txn);

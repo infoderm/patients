@@ -49,7 +49,7 @@ interface Props {
 	onRename: (name: string) => void;
 	title: string;
 	useTagsFind?: () => void;
-	endpoint: Endpoint<unknown>;
+	endpoint: Endpoint<void>;
 	tag: TagDocument;
 	nameKey?: string;
 	nameKeyTitle?: string;

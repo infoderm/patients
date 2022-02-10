@@ -38,7 +38,7 @@ server(__filename, () => {
 		const invocation = {userId: `${userId}x`};
 
 		return throws(
-			() => invoke(patientsRemove, invocation, [patientId]),
+			async () => invoke(patientsRemove, invocation, [patientId]),
 			/not-found/,
 		);
 	});

@@ -53,7 +53,7 @@ export default define({
 		const _id = PermissionTokens.insert(permissionToken);
 		return encode(_id, key);
 	},
-	simulate(_permissions: string[]) {
-		throw new Error('simulation not-implemented');
+	simulate(_permissions: string[]): void {
+		return undefined;
 	},
 });

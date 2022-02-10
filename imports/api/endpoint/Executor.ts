@@ -3,6 +3,6 @@
 // type Arg = EJSONable | EJSONable[] | EJSONableProperty | EJSONableProperty[];
 type Arg = any;
 
-type Executor = (...args: Arg[]) => any;
+type Executor<R> = (...args: Arg[]) => Promise<R> | R;
 
 export default Executor;

@@ -51,7 +51,7 @@ server(__filename, () => {
 		await invoke(appointmentsCancel, {userId}, [appointmentId, '', '']);
 
 		return throws(
-			() =>
+			async () =>
 				invoke(appointmentsUncancel, {userId: `${userId}x`}, [appointmentId]),
 			/not-found/,
 		);

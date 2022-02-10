@@ -44,7 +44,7 @@ server(__filename, () => {
 		const appointmentId = await newAppointment({userId});
 
 		return throws(
-			() =>
+			async () =>
 				invoke(appointmentsBeginConsultation, {userId: `${userId}x`}, [
 					appointmentId,
 				]),
@@ -58,7 +58,7 @@ server(__filename, () => {
 		const appointmentId = await newAppointment({userId});
 
 		return throws(
-			() =>
+			async () =>
 				invoke(appointmentsBeginConsultation, {userId: undefined}, [
 					appointmentId,
 				]),

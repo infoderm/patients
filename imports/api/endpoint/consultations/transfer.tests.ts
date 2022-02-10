@@ -47,7 +47,7 @@ server(__filename, () => {
 		);
 
 		return throws(
-			() =>
+			async () =>
 				invoke(consultationsTransfer, {userId: `${userId}x`}, [
 					consultationId,
 					patientBId,

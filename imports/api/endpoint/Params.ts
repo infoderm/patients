@@ -5,26 +5,26 @@ import Simulator from './Simulator';
 import Transaction from './Transaction';
 import Validator from './Validator';
 
-interface ParamsCommon<T> {
+interface ParamsCommon<R> {
 	readonly testOnly?: boolean;
 	readonly authentication?: Authentication;
 	readonly name: string;
 	readonly validate: Validator;
-	readonly options?: Options<T>;
+	readonly options?: Options<R>;
 }
 
-interface ParamsWithTransaction<T> extends ParamsCommon<T> {
-	readonly transaction: Transaction;
+interface ParamsWithTransaction<R> extends ParamsCommon<R> {
+	readonly transaction: Transaction<R>;
 	readonly simulate?: Simulator;
 	readonly run?: never;
 }
 
-interface ParamsWithoutTransaction<T> extends ParamsCommon<T> {
+interface ParamsWithoutTransaction<R> extends ParamsCommon<R> {
 	readonly transaction?: never;
 	readonly simulate?: Simulator;
-	readonly run: Executor;
+	readonly run: Executor<R>;
 }
 
-type Params<T> = ParamsWithTransaction<T> | ParamsWithoutTransaction<T>;
+type Params<R> = ParamsWithTransaction<R> | ParamsWithoutTransaction<R>;
 
 export default Params;

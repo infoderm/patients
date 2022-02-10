@@ -1,4 +1,6 @@
 import assert from 'assert';
+// @ts-expect-error Needs more recent @types/node
+import {Buffer} from 'buffer';
 import promisify from '../util/promisify';
 
 type SUPPORTED_HASH_ALGOS = 'sha256';
@@ -76,13 +78,13 @@ export const genKey = async (bytes: number, hmac: HMACConfig): Promise<Key> => {
 	assert(Number.isInteger(bytes) && bytes >= 1 && bytes <= 2 ** 31 - 1);
 	// TODO use this once we get to node v15.x
 	// const { generateKey } = await crypto();
-	// const generate = promisify(generateKey);
+	// const generate = promisify<unknown>(generateKey);
 	// const type = 'hmac';
 	// const length = bytes * 8;
 	// const keyObject = await generate(type, {length});
 	// return keyObject.export().toString(hmac.keyEncoding);
 	const {randomBytes} = await crypto();
-	const generate = promisify(randomBytes);
+	const generate = promisify<Buffer>(randomBytes);
 	const buffer = await generate(bytes);
 	return buffer.toString(hmac.keyEncoding);
 };

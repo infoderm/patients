@@ -36,7 +36,8 @@ server(__filename, () => {
 		const appointmentId = await newAppointment({userId});
 
 		return throws(
-			() => invoke(appointmentsRemove, {userId: `${userId}x`}, [appointmentId]),
+			async () =>
+				invoke(appointmentsRemove, {userId: `${userId}x`}, [appointmentId]),
 			/not-found/,
 		);
 	});

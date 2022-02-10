@@ -11,10 +11,9 @@ import useSaveTextToClipboardAndNotify from './useSaveTextToClipboardAndNotify';
 const CopiableTextField = (props) => {
 	const {value, placeholder, readOnly, InputLabelProps, InputProps} = props;
 	const saveTextToClipboard = useSaveTextToClipboardAndNotify();
-	const copyValueToClipboard = useCallback(
-		() => saveTextToClipboard(value),
-		[saveTextToClipboard, value],
-	);
+	const copyValueToClipboard = useCallback(() => {
+		saveTextToClipboard(value);
+	}, [saveTextToClipboard, value]);
 
 	return (
 		<TextField
@@ -30,7 +29,9 @@ const CopiableTextField = (props) => {
 							size="large"
 							aria-label="copy"
 							onClick={copyValueToClipboard}
-							onMouseDown={(e) => e.preventDefault()}
+							onMouseDown={(e) => {
+								e.preventDefault();
+							}}
 						>
 							<FileCopyIcon />
 						</IconButton>
