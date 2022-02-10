@@ -2,12 +2,12 @@ import {useMemo} from 'react';
 
 import {createTheme, responsiveFontSizes} from '@mui/material/styles';
 
-import {useSetting} from './settings/hooks';
+import {useSettingCached} from './settings/hooks';
 
 const useUserTheme = () => {
-	const {value: mode} = useSetting('theme-palette-mode');
-	const {value: primary} = useSetting('theme-palette-primary');
-	const {value: secondary} = useSetting('theme-palette-secondary');
+	const {value: mode} = useSettingCached('theme-palette-mode');
+	const {value: primary} = useSettingCached('theme-palette-primary');
+	const {value: secondary} = useSettingCached('theme-palette-secondary');
 	return useMemo(() => {
 		return responsiveFontSizes(
 			createTheme({
