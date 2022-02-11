@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useCallback} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
 import {Settings} from '../../api/collection/settings';
 import {settings as _settings} from '../../api/settings';
@@ -7,42 +7,66 @@ import byKey from '../../api/publication/settings/byKey';
 import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/settings/update';
 import reset from '../../api/endpoint/settings/reset';
+import useUserId from '../users/useUserId';
+import useLoggingOut from '../users/useLoggingOut';
+import useLoggingIn from '../users/useLoggingIn';
 
 const {defaults} = _settings;
 
-function subscribe(key: string) {
-	return _subscribe(byKey, key);
-}
+const subscribe = (key: string) => _subscribe(byKey, key);
 
-function get(key: string) {
+const get = (_loading: boolean, _userId: string | null, key: string) => {
 	const item = Settings.findOne({key});
-	if (item === undefined) {
-		return defaults[key];
-	}
+	return item === undefined ? defaults[key] : item.value;
+};
 
-	return item.value;
-}
-
-const localStoragePrefix = 'u3208hfosjas-';
-function getWithBrowserCache(key: string) {
+const localStoragePrefix = 'u3208hfosjas';
+const localStorageKey = (filter: string, key: string) =>
+	`${localStoragePrefix}-${filter}-${key}`;
+const defaultFilter = () => 'default';
+const userFilter = (userId: string) => `user-${userId}`;
+const userOrDefaultFilter = (userId: string | null) =>
+	userId === null ? defaultFilter() : userFilter(userId);
+const getWithBrowserCache = (
+	loading: boolean,
+	userId: string | null,
+	key: string,
+) => {
 	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
-	// TODO AVOID CLASHES BY ADDING USER ID's TO THE KEY?
 	// + clear own cache on logout?!
 	// + clear other's cache on login
 	// + warning message if cache was found on login
 	// OR maybe if not logged in and not logging in clear all cache with
 	// warning
 	const item = Settings.findOne({key});
-	const localStorageKey = localStoragePrefix + key;
 	if (item === undefined) {
-		const cached = window.localStorage.getItem(localStorageKey);
-		if (cached !== null) return JSON.parse(cached);
-		return defaults[key];
+		if (!loading && userId !== null) {
+			window.localStorage.removeItem(localStorageKey(defaultFilter(), key));
+			window.localStorage.removeItem(localStorageKey(userFilter(userId), key));
+
+			return defaults[key];
+		}
+
+		const cached = window.localStorage.getItem(
+			localStorageKey(userOrDefaultFilter(userId), key),
+		);
+		return cached === null ? defaults[key] : JSON.parse(cached);
 	}
 
-	window.localStorage.setItem(localStorageKey, JSON.stringify(item.value));
+	const storedValue = JSON.stringify(item.value);
+	window.localStorage.setItem(
+		localStorageKey(defaultFilter(), key),
+		storedValue,
+	);
+	if (userId !== null) {
+		window.localStorage.setItem(
+			localStorageKey(userFilter(userId), key),
+			storedValue,
+		);
+	}
+
 	return item.value;
-}
+};
 
 export const setSetting = async (key: string, newValue: any) => {
 	try {
@@ -62,24 +86,31 @@ export const resetSetting = async (key: string) => {
 	}
 };
 
-export const useSetting = (key: string, getFn = get) => {
-	// TODO use only one tracker
-	const loading = useTracker(() => {
+export const useSetting = (key: string, getFn: typeof get = get) => {
+	const userId = useUserId();
+	const loggingIn = useLoggingIn();
+	const loggingOut = useLoggingOut();
+	const ready = useTracker(() => {
 		const handle = subscribe(key);
-		return !handle.ready();
+		return handle.ready();
 	}, [key]);
 
-	const value = useTracker(() => getFn(key), [key]);
+	const loading = loggingIn || loggingOut || !ready;
 
-	const setValue = useMemo(
-		() => async (newValue: any) => setSetting(key, newValue),
+	const value = useTracker(
+		() => getFn(loading, userId, key),
+		[getFn, loading, userId, key],
+	);
+
+	const setValue = useCallback(
+		async (newValue: any) => setSetting(key, newValue),
 		[key],
 	);
 
-	const resetValue = useMemo(() => async () => resetSetting(key), [key]);
+	const resetValue = useCallback(async () => resetSetting(key), [key]);
 
 	return {
-		loading,
+		loading: !ready,
 		value,
 		setValue,
 		resetValue,

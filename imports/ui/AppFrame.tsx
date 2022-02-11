@@ -1,15 +1,10 @@
 import React from 'react';
 
-import {useTracker} from 'meteor/react-meteor-data';
-
 import {styled} from '@mui/material/styles';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
-import {all} from '@iterable-iterator/reduce';
-import {map} from '@iterable-iterator/map';
-
-import {settings} from './settings/hooks';
+import {useSettingCached} from './settings/hooks';
 
 import Header from './Header';
 import Content from './Content';
@@ -33,26 +28,26 @@ const Frame = styled('div')({
 	minHeight: '100vh',
 });
 
-const useUISettings = () =>
-	useTracker(() => {
-		const handles = [
-			settings.subscribe('text-transform'),
-			settings.subscribe('navigation-drawer-is-open'),
-		];
-		return {
-			loading: !all(map((x) => x.ready(), handles)),
-			textTransform: settings.getWithBrowserCache('text-transform'),
-			navigationDrawerIsOpen: settings.getWithBrowserCache(
-				'navigation-drawer-is-open',
-			),
-		};
-	}, []);
+const useUISettings = () => {
+	const {loading: loadingTextTransform, value: textTransform} =
+		useSettingCached('text-transform');
+	const {
+		loading: loadingNavigationDrawerIsOpen,
+		value: navigationDrawerIsOpen,
+	} = useSettingCached('navigation-drawer-is-open');
+	const loading = loadingTextTransform || loadingNavigationDrawerIsOpen;
+	return {
+		loading,
+		textTransform,
+		navigationDrawerIsOpen,
+	};
+};
 
 const AppFrame = () => {
-	const {loading, textTransform, navigationDrawerIsOpen} = useUISettings();
 	const loggingIn = useLoggingIn();
 	const loggingOut = useLoggingOut();
 	const currentUser = useUser();
+	const {loading, textTransform, navigationDrawerIsOpen} = useUISettings();
 
 	return (
 		<Frame style={{textTransform}}>
