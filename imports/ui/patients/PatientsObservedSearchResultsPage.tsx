@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
+
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+
+import PropsOf from '../../util/PropsOf';
+
+import FixedFab from '../button/FixedFab';
 
 import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 
 import Refresh from '../navigation/Refresh';
-import PropsOf from '../../util/PropsOf';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
@@ -28,12 +34,17 @@ const PatientsObservedSearchResultsPage = ({
 	refreshKey = undefined,
 	...rest
 }: Props) => {
+	const [showDead, setShowDead] = useState(false);
 	const $search = normalizeSearch(query);
 
-	const selector = {$text: {$search}};
+	const selector = {
+		$text: {$search},
+		deathdateModifiedAt: showDead ? undefined : {$not: {$type: 'date'}},
+	};
 
 	const sort = {
 		score: {$meta: 'textScore'},
+		deathdateModifiedAt: -1,
 		lastModifiedAt: -1,
 		lastname: 1,
 		firstname: 1,
@@ -42,7 +53,7 @@ const PatientsObservedSearchResultsPage = ({
 		niss: 1,
 	};
 	const fields = mergeFields(
-		sort,
+		Object.fromEntries(Object.keys(sort).map((key) => [key, 1])),
 		StaticPatientsList.projection,
 		// We fetch the picture through a dedicated subscription to get live
 		// updates while avoiding double loading on init.
@@ -58,7 +69,7 @@ const PatientsObservedSearchResultsPage = ({
 	const {loading, results, dirty} = useAdvancedObservedPatients(
 		selector,
 		options,
-		[$search, page, perpage, refreshKey],
+		[$search, showDead, page, perpage, refreshKey],
 	);
 
 	return (
@@ -71,6 +82,16 @@ const PatientsObservedSearchResultsPage = ({
 				Card={ReactivePatientCard}
 				{...rest}
 			/>
+			<FixedFab
+				col={4}
+				tooltip={showDead ? 'Show alive patients only' : 'Show all patients'}
+				color={showDead ? 'default' : 'primary'}
+				onClick={() => {
+					setShowDead(!showDead);
+				}}
+			>
+				{showDead ? <HeartBrokenIcon /> : <MonitorHeartIcon />}
+			</FixedFab>
 			{refresh && dirty && <Refresh onClick={refresh} />}
 		</>
 	);

@@ -17,6 +17,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import UndoIcon from '@mui/icons-material/Undo';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
@@ -24,6 +26,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DatePicker from '@mui/lab/DatePicker';
 
 import isValid from 'date-fns/isValid';
+import Button from '@mui/material/Button';
 import TextField from '../input/TextField';
 import FixedFab from '../button/FixedFab';
 
@@ -41,6 +44,8 @@ import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 import call from '../../api/endpoint/call';
 import patientsUpdate from '../../api/endpoint/patients/update';
 import patientsAttach from '../../api/endpoint/patients/attach';
+
+import {PatientDocument} from '../../api/collection/patients';
 
 import {
 	// makeAnyIndex,
@@ -138,13 +143,13 @@ const styles = (theme) =>
 const useStyles = makeStyles(styles);
 
 interface State {
-	patient: any;
+	patient: PatientDocument;
 	editing: boolean;
 	dirty: boolean;
 	deleting: boolean;
 }
 
-const initialState = (patient: any): State => ({
+const initialState = (patient: PatientDocument): State => ({
 	patient,
 	editing: false,
 	dirty: false,
@@ -155,13 +160,28 @@ const reducer = (
 	state: State,
 	action: {type: string; key?: string; value?: any; payload?: any},
 ) => {
+	console.debug({state, action});
 	switch (action.type) {
 		case 'update':
-			return {
-				...state,
-				patient: {...state.patient, [action.key]: action.value},
-				dirty: true,
-			};
+			switch (action.key) {
+				case 'deathdateModifiedAt':
+					return {
+						...state,
+						patient: {
+							...state.patient,
+							[action.key]: action.value,
+							deathdate: null,
+						},
+						dirty: true,
+					};
+				default:
+					return {
+						...state,
+						patient: {...state.patient, [action.key]: action.value},
+						dirty: true,
+					};
+			}
+
 		case 'editing':
 			return {...state, editing: true};
 		case 'not-editing':
@@ -184,7 +204,7 @@ const reducer = (
 };
 
 interface PatientPersonalInformationStaticProps {
-	patient: any;
+	patient: PatientDocument;
 	loading?: boolean;
 }
 
@@ -256,6 +276,7 @@ const PatientPersonalInformationStatic = (
 	const firstnameInputId = `${componentId}-input-firstname`;
 	const sexInputId = `${componentId}-input-sex`;
 	const birthdateInputId = `${componentId}-input-birthdate`;
+	const deathdateInputId = `${componentId}-input-deathdate`;
 	const antecedentsInputId = `${componentId}-input-antecedents`;
 	const ongoingInputId = `${componentId}-input-ongoing`;
 	const streetandnumberInputId = `${componentId}-input-streetandnumber`;
@@ -287,12 +308,19 @@ const PatientPersonalInformationStatic = (
 	const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
 
 	const _birthdate = eidParseBirthdate(patient.birthdate);
-	const displayedAge = localizeAge(_birthdate);
+	const deathdateModifiedAt = patient.deathdateModifiedAt ?? null;
+	const deathdate = patient.deathdate ?? null;
+	const displayedAge = localizeAge(
+		_birthdate,
+		deathdate ?? deathdateModifiedAt,
+	);
 
 	const hardCodedNoShows: number = patient.noshow || 0;
 	const totalNoShow =
 		hardCodedNoShows +
 		(typeof reifiedNoShows === 'number' ? reifiedNoShows : 0);
+
+	const isDead = deathdateModifiedAt !== null;
 
 	return (
 		<Paper className={classes.root}>
@@ -310,21 +338,57 @@ const PatientPersonalInformationStatic = (
 							{patient.lastname ? patient.lastname[0] : '?'}
 						</div>
 					)}
-					{!patient.birthdate ? (
-						''
-					) : (
+					{!patient.birthdate ? null : (
 						<Typography variant="h5">
 							{localizeBirthdate(_birthdate)}
 						</Typography>
 					)}
-					{!patient.birthdate ? (
-						''
-					) : (
+					{!patient.birthdate ? null : (
 						<Typography variant="h5">{displayedAge}</Typography>
 					)}
-					{!totalNoShow ? (
-						''
-					) : (
+					{(editing || isDead) && (
+						<Button
+							disabled={!editing}
+							color={isDead ? 'secondary' : 'primary'}
+							startIcon={isDead ? <HeartBrokenIcon /> : <MonitorHeartIcon />}
+							onClick={() => {
+								dispatch({
+									type: 'update',
+									key: 'deathdateModifiedAt',
+									value: isDead ? null : new Date(),
+								});
+							}}
+						>
+							{`Décédé${patient.sex === 'female' ? 'e' : ''}${
+								isDead ? '' : ' ?'
+							}`}
+						</Button>
+					)}
+					{editing && isDead && (
+						<DatePicker<Date>
+							{...birthdatePickerProps}
+							label="Death date"
+							value={deathdate}
+							renderInput={(props) => (
+								<TextField
+									id={deathdateInputId}
+									margin="normal"
+									InputLabelProps={{shrink: true}}
+									{...props}
+								/>
+							)}
+							onChange={(date) => {
+								if (isValid(date)) {
+									dispatch({
+										type: 'update',
+										key: 'deathdate',
+										value: date,
+									});
+								}
+							}}
+						/>
+					)}
+					{!totalNoShow ? null : (
 						<Typography className={classes.problem} variant="h4">
 							PVPP = {totalNoShow}
 						</Typography>

@@ -278,6 +278,7 @@ Meteor.startup(async () => {
 				lastnameWords: 'text',
 				innerTrigrams: 'text',
 				outerTrigrams: 'text',
+				deathdateModifiedAt: -1,
 				lastModifiedAt: -1,
 				lastname: 1,
 				firstname: 1,

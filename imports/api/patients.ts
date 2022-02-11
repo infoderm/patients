@@ -6,6 +6,7 @@ import {_chain} from '@iterable-iterator/chain';
 import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
+import isValid from 'date-fns/isValid';
 import {
 	PatientFields,
 	PatientComputedFields,
@@ -49,7 +50,8 @@ const updateIndex = async (
 	_id: string,
 	fields,
 ) => {
-	const {niss, firstname, lastname, birthdate, sex} = fields;
+	const {niss, firstname, lastname, birthdate, deathdateModifiedAt, sex} =
+		fields;
 	const [firstnameWords, middlenameWords] = splitNames(firstname ?? '');
 	const lastnameWords = keepUnique(words(lastname ?? ''));
 
@@ -74,6 +76,7 @@ const updateIndex = async (
 		firstname,
 		lastname,
 		birthdate,
+		deathdateModifiedAt,
 		sex,
 		owner: userId,
 	};
@@ -112,6 +115,9 @@ function sanitize({
 	sex,
 	photo,
 
+	deathdateModifiedAt,
+	deathdate,
+
 	antecedents,
 	ongoing,
 	about,
@@ -134,6 +140,20 @@ function sanitize({
 	if (birthdate !== undefined) check(birthdate, String);
 	if (sex !== undefined) check(sex, String);
 	if (photo !== undefined) check(photo, String);
+
+	if (deathdateModifiedAt !== undefined && deathdateModifiedAt !== null) {
+		check(deathdateModifiedAt, Date);
+		if (!isValid(deathdateModifiedAt)) {
+			throw new Error('Invalid date given for field `deathdateModifiedAt`');
+		}
+	}
+
+	if (deathdate !== undefined && deathdate !== null) {
+		check(deathdate, Date);
+		if (!isValid(deathdate)) {
+			throw new Error('Invalid date given for field `deathdateModifiedAt`');
+		}
+	}
 
 	if (antecedents !== undefined) check(antecedents, String);
 	if (ongoing !== undefined) check(ongoing, String);
@@ -194,6 +214,9 @@ function sanitize({
 		sex,
 		photo,
 		normalizedName: normalizedName(firstname, lastname),
+
+		deathdateModifiedAt,
+		deathdate,
 
 		antecedents,
 		ongoing,

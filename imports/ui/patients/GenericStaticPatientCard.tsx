@@ -12,6 +12,8 @@ import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+
 import {blue, pink, red, yellow} from '@mui/material/colors';
 
 import {dataURL as pngDataURL} from '../../util/png';
@@ -37,6 +39,7 @@ const classes = {
 	female: `${PREFIX}-female`,
 	name: `${PREFIX}-name`,
 	scoreChip: `${PREFIX}-scoreChip`,
+	deadChip: `${PREFIX}-deadChip`,
 };
 
 const StyledCard = styled(Card)(({theme}) => ({
@@ -128,11 +131,16 @@ const StyledCard = styled(Card)(({theme}) => ({
 		color: '#fff',
 		backgroundColor: red[500],
 	},
+
+	[`& .${classes.deadChip}`]: {
+		marginLeft: theme.spacing(1),
+	},
 }));
 
 const projection = {
 	firstname: 1,
 	lastname: 1,
+	deathdateModifiedAt: 1,
 	birthdate: 1,
 	sex: 1,
 	niss: 1,
@@ -164,6 +172,8 @@ const GenericStaticPatientCard = ({
 	const firstname = patient.firstname || '?';
 	const lastname = patient.lastname || '?';
 	const sex = patient.sex || 'N';
+
+	const isDead = patient.deathdateModifiedAt instanceof Date;
 
 	const photoTransition = useTransition([photo], {
 		from: {opacity: 0},
@@ -203,6 +213,13 @@ const GenericStaticPatientCard = ({
 						<Chip
 							className={classes.scoreChip}
 							label={`Search score: ${score.toFixed(3)}`}
+						/>
+					)}
+					{isDead && (
+						<Chip
+							className={classes.deadChip}
+							icon={<HeartBrokenIcon />}
+							label={`Décédé${sex === 'female' ? 'e' : ''}`}
 						/>
 					)}
 				</CardActions>

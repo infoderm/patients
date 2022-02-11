@@ -18,6 +18,8 @@ export interface PatientIdFields {
 }
 
 export interface PatientFields extends PatientIdFields {
+	deathdateModifiedAt?: Date;
+	deathdate?: Date;
 	phone: string;
 
 	antecedents: string;
