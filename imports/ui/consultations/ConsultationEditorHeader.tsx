@@ -7,7 +7,7 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
-import {useDateMask} from '../../i18n/datetime';
+import {useDateTimeMask} from '../../i18n/datetime';
 
 import {LinkedSubheaderAvatar, Subheader} from '../Subheader';
 
@@ -33,7 +33,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 
 	const {loading, fields: patient} = usePatient(init, query, options, deps);
 
-	const localizedDateMask = useDateMask();
+	const localizedDateTimeMask = useDateTimeMask();
 
 	const {datetime, doneDatetime} = state;
 
@@ -80,7 +80,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			</Grid>
 			<Grid item xs={2}>
 				<DateTimePicker
-					mask={localizedDateMask}
+					mask={localizedDateTimeMask}
 					value={datetime}
 					label="Begin"
 					renderInput={(props) => (
@@ -94,7 +94,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			<Grid item xs={2}>
 				<DateTimePicker
 					disabled
-					mask={localizedDateMask}
+					mask={localizedDateTimeMask}
 					value={doneDatetime}
 					label="End"
 					renderInput={(props) => (

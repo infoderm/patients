@@ -33,10 +33,16 @@ export const localeDescriptions: Readonly<Record<string, string>> = {
 	'nl-BE': 'Nederlands (Belgïe)',
 };
 
-export const maskMap = {
+export const dateMaskMap = {
 	'en-US': '__/__/____',
-	'nl-BE': '__-__-____',
+	'nl-BE': '__.__.____',
 	'fr-BE': '__/__/____',
+};
+
+export const dateTimeMaskMap = {
+	'en-US': `${dateMaskMap['en-US']} __:__ _M`,
+	'nl-BE': `${dateMaskMap['nl-BE']} __:__`,
+	'fr-BE': `${dateMaskMap['fr-BE']} __:__`,
 };
 
 const localesCache = new Map<string, Locale>();
@@ -157,7 +163,12 @@ export const useDefaultDateFormatOptions = () => {
 
 export const useDateMask = () => {
 	const key = useLocaleKey();
-	return maskMap[key];
+	return dateMaskMap[key];
+};
+
+export const useDateTimeMask = () => {
+	const key = useLocaleKey();
+	return dateTimeMaskMap[key];
 };
 
 const stringifyOptions = (options) => {
