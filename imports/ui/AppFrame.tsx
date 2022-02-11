@@ -16,6 +16,7 @@ import Content from './Content';
 import NavigationDrawer from './NavigationDrawer';
 
 import useLoggingIn from './users/useLoggingIn';
+import useLoggingOut from './users/useLoggingOut';
 import useUser from './users/useUser';
 
 const Progress = styled(LinearProgress)({
@@ -50,6 +51,7 @@ const useUISettings = () =>
 const AppFrame = () => {
 	const {loading, textTransform, navigationDrawerIsOpen} = useUISettings();
 	const loggingIn = useLoggingIn();
+	const loggingOut = useLoggingOut();
 	const currentUser = useUser();
 
 	return (
@@ -64,8 +66,8 @@ const AppFrame = () => {
 				currentUser={currentUser}
 			/>
 			<Content
-				navigationDrawerIsOpen={navigationDrawerIsOpen}
 				loggingIn={loggingIn}
+				loggingOut={loggingOut}
 				currentUser={currentUser}
 				loading={loading}
 			/>
