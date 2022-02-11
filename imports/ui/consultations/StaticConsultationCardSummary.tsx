@@ -6,26 +6,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import AccordionSummary from '@mui/material/AccordionSummary';
 
+import PropsOf from '../../util/PropsOf';
+
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
-const PREFIX = 'StaticConsultationCardSummary';
-
-const classes = {
-	summary: `${PREFIX}-summary`,
-};
-
 const StyledAccordionSummary = styled(AccordionSummary)({
-	[`&.${classes.summary}`]: {
-		position: 'relative',
-	},
+	position: 'relative',
 });
 
-const StaticConsultationCardSummary = (props) => {
+const StaticConsultationCardSummary = (
+	props: PropsOf<typeof StaticConsultationCardChips>,
+) => {
 	return (
-		<StyledAccordionSummary
-			className={classes.summary}
-			expandIcon={<ExpandMoreIcon />}
-		>
+		<StyledAccordionSummary expandIcon={<ExpandMoreIcon />}>
 			<StaticConsultationCardChips {...props} />
 		</StyledAccordionSummary>
 	);

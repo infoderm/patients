@@ -88,7 +88,7 @@ interface StaticConsultationCardChipsProps {
 	isNoShow: boolean;
 	patient?: PatientDocument;
 	consultation: ConsultationDocument;
-	PatientChip: React.ElementType;
+	PatientChip?: React.ElementType;
 	showDate?: boolean;
 	showTime?: boolean;
 	showPrice?: boolean;
@@ -100,36 +100,32 @@ interface StaticConsultationCardChipsProps {
 	attachments: any[];
 }
 
-const StaticConsultationCardChips = (
-	props: StaticConsultationCardChipsProps,
-) => {
-	const {
-		isNoShow,
-		didNotOrWillNotHappen,
-		missingPaymentData,
-		owes,
-		owed,
-		PatientChip,
-		showDate = true,
-		showTime = true,
-		showPrice = false,
-		loadingPatient,
-		patient,
-		consultation: {
-			_id,
-			patientId,
-			datetime,
-			doneDatetime,
-			duration,
-			isDone,
-			isCancelled,
-			currency,
-			payment_method,
-			price,
-		},
-		attachments,
-	} = props;
-
+const StaticConsultationCardChips = ({
+	isNoShow,
+	didNotOrWillNotHappen,
+	missingPaymentData,
+	owes,
+	owed,
+	PatientChip,
+	showDate = true,
+	showTime = true,
+	showPrice = false,
+	loadingPatient,
+	patient,
+	consultation: {
+		_id,
+		patientId,
+		datetime,
+		doneDatetime,
+		duration,
+		isDone,
+		isCancelled,
+		currency,
+		payment_method,
+		price,
+	},
+	attachments,
+}: StaticConsultationCardChipsProps) => {
 	const localizedDateFormat = useDateFormat();
 	const currencyFormat = useCurrencyFormat(currency);
 

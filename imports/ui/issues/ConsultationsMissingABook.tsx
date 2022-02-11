@@ -1,8 +1,9 @@
 import React from 'react';
 
-import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
-
 import {useConsultationsMissingABook} from '../../api/issues';
+
+import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
+import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 const ConsultationsMissingABook = (props) => {
 	const {loading, results: consultations} = useConsultationsMissingABook();
@@ -21,6 +22,7 @@ const ConsultationsMissingABook = (props) => {
 				<ReactiveConsultationCard
 					key={consultation._id}
 					consultation={consultation}
+					PatientChip={ReactivePatientChip}
 				/>
 			))}
 		</div>

@@ -38,20 +38,22 @@ const Accordion = styled(MuiAccordion, {shouldForwardProp})<AdditionalProps>(
 	}),
 );
 
-interface StaticConsultationCardProps
-	extends Omit<
-		PropsOf<typeof StaticConsultationCardActions>,
-		| 'isNoShow'
-		| 'missingPaymentData'
-		| 'didNotOrWillNotHappen'
-		| 'owes'
-		| 'owed'
-	> {
+type StaticConsultationCardProps = {
 	consultation: any;
 	loading?: boolean;
 	found?: boolean;
 	defaultExpanded?: boolean;
-}
+} & Omit<
+	PropsOf<typeof StaticConsultationCardSummary> &
+		PropsOf<typeof StaticConsultationCardActions> &
+		PropsOf<typeof StaticConsultationCardDetails>,
+	| 'deleted'
+	| 'didNotOrWillNotHappen'
+	| 'isNoShow'
+	| 'missingPaymentData'
+	| 'owes'
+	| 'owed'
+>;
 
 const StaticConsultationCard = (props: StaticConsultationCardProps) => {
 	const {
