@@ -72,4 +72,7 @@ export default define({
 			return modifier;
 		},
 	),
+	simulate(_consultationId: string): void {
+		return undefined;
+	},
 });
