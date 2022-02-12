@@ -104,7 +104,7 @@
     "react-loading": "^2.0.3",
     "react-number-format": "^4.9.1",
     "react-router-dom": "^6.2.1",
-    "react-spring": "^9.4.2",
+    "react-spring": "^9.4.3",
     "regenerator-runtime": "^0.13.9",
     "sepa-payment-qr-code": "^1.0.0",
     "use-debounce": "^7.0.1",
