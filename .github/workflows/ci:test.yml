@@ -16,6 +16,8 @@ jobs:
 
       - name: Install 💾
         uses: meteor-actions/install@v2
+        with:
+          executable_version: 2.5.6
 
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v2
@@ -42,6 +44,8 @@ jobs:
 
       - name: Install 💾
         uses: meteor-actions/install@v2
+        with:
+          executable_version: 2.5.6
 
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v2
