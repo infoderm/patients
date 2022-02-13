@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 
 import ConsultationsMissingAPrice from './ConsultationsMissingAPrice';
 import ConsultationsMissingABook from './ConsultationsMissingABook';
+import ConsultationsWithPriceZeroNotInBookZero from './ConsultationsWithPriceZeroNotInBookZero';
 import UnlinkedDocuments from './UnlinkedDocuments';
 import UnparsedDocuments from './UnparsedDocuments';
 import MangledDocuments from './MangledDocuments';
@@ -40,6 +41,10 @@ const Issues = () => {
 			<ConsultationsMissingAPrice className={classes.container} />
 			<Typography variant="h3">Consultations missing a book</Typography>
 			<ConsultationsMissingABook className={classes.container} />
+			<Typography variant="h3">
+				Consultations with price 0 not in book 0
+			</Typography>
+			<ConsultationsWithPriceZeroNotInBookZero className={classes.container} />
 			<Typography variant="h3">
 				Doctors with non alphabetical symbols
 			</Typography>

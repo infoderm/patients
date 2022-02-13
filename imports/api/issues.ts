@@ -31,6 +31,18 @@ export const useConsultationsMissingABook = makeFilteredCollection(
 	'issues.ConsultationsMissingABook',
 );
 
+export const useConsultationsWithPriceZeroNotInBookZero =
+	makeFilteredCollection(
+		Consultations,
+		{
+			isDone: true,
+			price: 0,
+			book: {$ne: '0'},
+		},
+		undefined,
+		'issues.ConsultationsWithPriceZeroNotInBookZero',
+	);
+
 export const useConsultationsMissingAPrice = makeFilteredCollection(
 	Consultations,
 	{
