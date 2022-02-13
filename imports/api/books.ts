@@ -121,5 +121,4 @@ export const books = {
 	DOWNLOAD_FIRST_BOOK: 1,
 	DOWNLOAD_LAST_BOOK: 99,
 	DOWNLOAD_MAX_ROWS: 60,
-	RARE: ['0'],
 };

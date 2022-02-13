@@ -50,9 +50,9 @@ export const findLastConsultationInInterval = (
 		...filter,
 	});
 
-export const filterNotInRareBooks = () => ({
+export const filterBookPrefill = () => ({
 	book: {
-		$nin: books.RARE,
+		$regex: /^[1-9]\d*$/,
 	},
 });
 

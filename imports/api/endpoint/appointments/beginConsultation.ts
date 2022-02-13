@@ -6,7 +6,7 @@ import {ConsultationDocument} from '../../collection/consultations';
 
 import {
 	findLastConsultationInInterval,
-	filterNotInRareBooks,
+	filterBookPrefill,
 } from '../../consultations';
 
 import {Appointments} from '../../collection/appointments';
@@ -37,7 +37,7 @@ export default define({
 				db,
 				thisYearsInterval(),
 				{
-					...filterNotInRareBooks(),
+					...filterBookPrefill(),
 					owner,
 				},
 			);

@@ -1,9 +1,9 @@
-import {filterNotInRareBooks} from '../../api/consultations';
+import {filterBookPrefill} from '../../api/consultations';
 import useLastConsultationOfThisYear from './useLastConsultationOfThisYear';
 
 const useBookPrefill = () => {
 	const {loading, consultation} = useLastConsultationOfThisYear(
-		filterNotInRareBooks(),
+		filterBookPrefill(),
 	);
 
 	const bookNumber = consultation ? consultation.book : '1';
