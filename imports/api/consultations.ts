@@ -208,13 +208,18 @@ function sanitize({
 	};
 }
 
-export const computedFields = (owner: string, state, changes) => {
-	const isLastConsultation =
-		Consultations.findOne({
-			owner,
-			isDone: true,
-			datetime: {$gt: changes.datetime ?? state?.datetime},
-		}) === undefined;
+export const computedFields = async (
+	db: TransactionDriver,
+	owner: string,
+	state,
+	changes,
+) => {
+	const laterConsultation = await db.findOne(Consultations, {
+		owner,
+		isDone: true,
+		datetime: {$gt: changes.datetime ?? state?.datetime},
+	});
+	const isLastConsultation = laterConsultation === undefined;
 
 	if (!isLastConsultation) return undefined;
 

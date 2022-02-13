@@ -73,9 +73,11 @@ export default define({
 			};
 		}
 
+		const computed = await computedFields(db, owner, existing, fields);
+
 		const $set = {
 			...fields,
-			...computedFields(owner, existing, fields),
+			...computed,
 		};
 
 		const modifier: Mongo.Modifier<ConsultationDocument> = {

@@ -39,9 +39,11 @@ export default define({
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
+		const computed = await computedFields(db, this.userId, undefined, fields);
+
 		const document = {
 			...fields,
-			...computedFields(this.userId, undefined, fields),
+			...computed,
 			createdAt,
 			lastModifiedAt,
 			owner,
