@@ -197,6 +197,7 @@ interface EditConsultationOptions {
 	price?: string;
 	paid?: string;
 	book?: string;
+	inBookNumber?: string;
 	save?: boolean;
 }
 
@@ -212,12 +213,13 @@ export const editConsultation = async (
 		price,
 		paid,
 		book,
+		inBookNumber,
 		save,
 	}: EditConsultationOptions,
 ) => {
 	const {user, findByRole} = app;
 	console.debug('Fill in text fields');
-	if (reason) {
+	if (reason !== undefined) {
 		await fillIn(
 			app,
 			await findByRole('textbox', {name: 'Motif de la visite'}),
@@ -225,7 +227,7 @@ export const editConsultation = async (
 		);
 	}
 
-	if (done) {
+	if (done !== undefined) {
 		await fillIn(
 			app,
 			await findByRole('textbox', {name: 'Examens déjà réalisés'}),
@@ -233,7 +235,7 @@ export const editConsultation = async (
 		);
 	}
 
-	if (todo) {
+	if (todo !== undefined) {
 		await fillIn(
 			app,
 			await findByRole('textbox', {name: 'Examens à réaliser'}),
@@ -241,7 +243,7 @@ export const editConsultation = async (
 		);
 	}
 
-	if (treatment) {
+	if (treatment !== undefined) {
 		await fillIn(
 			app,
 			await findByRole('textbox', {name: 'Traitement'}),
@@ -249,11 +251,11 @@ export const editConsultation = async (
 		);
 	}
 
-	if (next) {
+	if (next !== undefined) {
 		await fillIn(app, await findByRole('textbox', {name: 'À revoir'}), next);
 	}
 
-	if (more) {
+	if (more !== undefined) {
 		await fillIn(
 			app,
 			await findByRole('textbox', {name: 'Autres remarques'}),
@@ -261,16 +263,20 @@ export const editConsultation = async (
 		);
 	}
 
-	if (price) {
+	if (price !== undefined) {
 		await fillIn(app, await findByRole('textbox', {name: 'Prix'}), price);
 	}
 
-	if (paid) {
+	if (paid !== undefined) {
 		await fillIn(app, await findByRole('textbox', {name: 'Payé'}), paid);
 	}
 
-	if (book) {
+	if (book !== undefined) {
 		await fillIn(app, await findByRole('textbox', {name: 'Carnet'}), book);
+	}
+
+	if (inBookNumber !== undefined) {
+		await fillIn(app, await findByRole('textbox', {name: 'N°'}), inBookNumber);
 	}
 
 	if (save) await user.click(await findByRole('button', {name: 'save'}));
