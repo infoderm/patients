@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {styled} from '@mui/material/styles';
 
 import dateParseISO from 'date-fns/parseISO';
+import getYear from 'date-fns/getYear';
 
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -138,6 +139,8 @@ const ConsultationForm = ({consultation, update}: Props) => {
 
 	const inBookNumberCollides =
 		!loadingInBookNumberCollisions && inBookNumberCollisions?.count >= 1;
+
+	const consultationYear = getYear(datetime);
 
 	return (
 		<StyledPaper className={classes.form}>
@@ -305,6 +308,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								useBooksFind,
 								[],
 								'bookNumber',
+								{fiscalYear: consultationYear},
 							)}
 							TextFieldProps={{
 								label: 'Carnet',
