@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 
 import MoneyIcon from '@mui/icons-material/Money';
@@ -22,6 +22,7 @@ interface Props {
 }
 
 const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
+	const [showBookZero, setShowBookZero] = useState(false);
 	const begin = new Date(`${year}-01-01`);
 	const end = new Date(`${year + 1}-01-01`);
 
@@ -34,6 +35,7 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 	};
 
 	if (payment_method) query.payment_method = payment_method;
+	if (!showBookZero) query.book = {$ne: '0'};
 
 	const sort = {datetime: -1};
 
@@ -80,6 +82,15 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 					PatientChip: ReactivePatientChip,
 				}}
 			/>
+			<FixedFab
+				col={7}
+				color={showBookZero ? 'primary' : 'default'}
+				onClick={() => {
+					setShowBookZero(!showBookZero);
+				}}
+			>
+				0
+			</FixedFab>
 			<FixedFab
 				col={6}
 				component={Link}
