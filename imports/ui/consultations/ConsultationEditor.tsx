@@ -11,8 +11,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
 import {blue} from '@mui/material/colors';
 
-import dateParseISO from 'date-fns/parseISO';
-
 import call from '../../api/endpoint/call';
 import {ConsultationDocument} from '../../api/collection/consultations';
 
@@ -28,7 +26,7 @@ import insertConsultation from '../../api/endpoint/consultations/insert';
 import updateConsultation from '../../api/endpoint/consultations/update';
 import usePrompt from '../navigation/usePrompt';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
-import ConsultationForm from './ConsultationForm';
+import ConsultationForm, {defaultState, State} from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
 
 const styles = (theme) =>
@@ -49,40 +47,6 @@ const styles = (theme) =>
 	});
 
 const useStyles = makeStyles(styles);
-
-const defaultDate = '1970-01-01';
-const defaultTime = '00:00';
-
-const datetimeParse = (date, time) => dateParseISO(`${date}T${time}:00`);
-
-const defaultState = {
-	_id: undefined,
-	datetime: datetimeParse(defaultDate, defaultTime),
-	doneDatetime: undefined,
-	reason: '',
-	done: '',
-	todo: '',
-	treatment: '',
-	next: '',
-	more: '',
-
-	currency: 'EUR',
-	payment_method: 'cash',
-	priceString: '',
-	paidString: '',
-	book: '',
-
-	syncPaid: true,
-	priceWarning: false,
-	priceError: true,
-	paidError: true,
-	dirty: false,
-	saving: false,
-	lastSaveWasSuccessful: false,
-	lastInsertedId: undefined,
-};
-
-type State = typeof defaultState;
 
 const removeUndefined = <T,>(object: T) =>
 	Object.fromEntries(

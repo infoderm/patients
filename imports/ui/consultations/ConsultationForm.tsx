@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {styled} from '@mui/material/styles';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+
+import dateParseISO from 'date-fns/parseISO';
 
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -45,7 +45,51 @@ const StyledPaper = styled(Paper)(({theme}) => ({
 	},
 }));
 
-const ConsultationForm = ({consultation, update}) => {
+const defaultDate = '1970-01-01';
+const defaultTime = '00:00';
+
+const datetimeParse = (date, time) => dateParseISO(`${date}T${time}:00`);
+
+export const defaultState = {
+	_id: undefined,
+	datetime: datetimeParse(defaultDate, defaultTime),
+	doneDatetime: undefined,
+	reason: '',
+	done: '',
+	todo: '',
+	treatment: '',
+	next: '',
+	more: '',
+
+	currency: 'EUR',
+	payment_method: 'cash',
+	priceString: '',
+	paidString: '',
+	book: '',
+	inBookNumberString: '',
+
+	syncPaid: true,
+	priceWarning: false,
+	priceError: true,
+	paidError: true,
+	inBookNumberError: true,
+	dirty: false,
+	saving: false,
+	lastSaveWasSuccessful: false,
+	lastInsertedId: undefined,
+};
+
+export type State = typeof defaultState;
+
+interface Props {
+	consultation: State;
+	update?: (
+		key: string,
+		transform?: (x: any) => any,
+	) => (event: {target: {value: any}}) => void;
+}
+
+const ConsultationForm = ({consultation, update}: Props) => {
 	const {
 		_id,
 		datetime,
@@ -206,9 +250,7 @@ const ConsultationForm = ({consultation, update}) => {
 								<InputAdornment position="end">
 									<IconButton
 										size="large"
-										className={classNames({
-											[classes.hidden]: !priceWarning,
-										})}
+										className={priceWarning ? undefined : classes.hidden}
 									>
 										<WarningIcon />
 									</IconButton>
@@ -263,7 +305,7 @@ const ConsultationForm = ({consultation, update}) => {
 							inputValue={book}
 							onInputChange={(event, newInputValue) => {
 								if (event) {
-									return update(
+									update(
 										'book',
 										books.sanitizeInput,
 									)({target: {value: newInputValue}});
@@ -277,11 +319,6 @@ const ConsultationForm = ({consultation, update}) => {
 			</Grid>
 		</StyledPaper>
 	);
-};
-
-ConsultationForm.propTypes = {
-	consultation: PropTypes.object.isRequired,
-	update: PropTypes.func,
 };
 
 export default ConsultationForm;
