@@ -29,17 +29,13 @@ export default define({
 		}
 
 		if (fields.datetime && fields.book) {
-			await books.add(
-				db,
-				this.userId,
-				books.name(fields.datetime, fields.book),
-			);
+			await books.add(db, owner, books.name(fields.datetime, fields.book));
 		}
 
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
-		const computed = await computedFields(db, this.userId, undefined, fields);
+		const computed = await computedFields(db, owner, undefined, fields);
 
 		const document = {
 			...fields,
