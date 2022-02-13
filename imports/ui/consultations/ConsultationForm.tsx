@@ -30,14 +30,14 @@ const classes = {
 };
 
 const StyledPaper = styled(Paper)(({theme}) => ({
+	[`&.${classes.form}`]: {
+		padding: theme.spacing(3),
+	},
+
 	[`& .${classes.multiline}`]: {
 		margin: theme.spacing(1),
 		overflow: 'auto',
 		width: `calc(100% - ${theme.spacing(2)})`,
-	},
-
-	[`&.${classes.form}`]: {
-		padding: theme.spacing(3),
 	},
 
 	[`& .${classes.hidden}`]: {
