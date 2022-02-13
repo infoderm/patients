@@ -219,7 +219,7 @@ export const computedFields = async (
 		isDone: true,
 		datetime: {$gt: changes.datetime ?? state?.datetime},
 	});
-	const isLastConsultation = laterConsultation === undefined;
+	const isLastConsultation = laterConsultation === null;
 
 	if (!isLastConsultation) return undefined;
 
