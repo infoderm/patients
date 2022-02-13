@@ -138,6 +138,7 @@ const StaticConsultationCardDetails = (props) => {
 			price,
 			paid,
 			book,
+			inBookNumber,
 		},
 		attachments,
 	} = props;
@@ -236,7 +237,7 @@ const StaticConsultationCardDetails = (props) => {
 					<ConsultationsCardListItem
 						Icon={BookIcon}
 						primary="Carnet"
-						secondary={book}
+						secondary={inBookNumber ? `${book} - ${inBookNumber}` : book}
 					/>
 				)}
 				{attachments === undefined || attachments.length === 0 ? null : (

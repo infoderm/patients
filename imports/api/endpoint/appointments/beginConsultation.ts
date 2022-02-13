@@ -42,6 +42,7 @@ export default define({
 				},
 			);
 			const book = lastConsultationOfThisYear?.book;
+			const inBookNumber = (lastConsultationOfThisYear?.inBookNumber ?? 0) + 1;
 			const realDatetime = new Date();
 			const modifier = {
 				$set: {
@@ -53,6 +54,7 @@ export default define({
 					lastModifiedAt: realDatetime,
 					isDone: true,
 					book,
+					inBookNumber,
 				},
 			};
 			const {begin: newBegin, end: newEnd, isDone: newIsDone} = modifier.$set;

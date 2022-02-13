@@ -103,11 +103,13 @@ const ConsultationForm = ({consultation, update}: Props) => {
 
 		currency,
 		payment_method,
+		inBookNumberString,
 		priceString,
 		paidString,
 		book,
 
 		syncPaid,
+		inBookNumberError,
 		priceWarning,
 		priceError,
 		paidError,
@@ -118,13 +120,24 @@ const ConsultationForm = ({consultation, update}: Props) => {
 	const initialBookName = books.name(initialDatetime, initialBook);
 
 	const bookName = books.name(datetime, book);
-	const {loading, result} = useBookStats(bookName);
+	const {loading: loadingBookStats, result: bookStats} = useBookStats(bookName);
 
 	const bookIsFull =
-		!loading &&
-		result?.count >=
+		!loadingBookStats &&
+		bookStats?.count >=
 			books.MAX_CONSULTATIONS + (_id && initialBookName === bookName ? 1 : 0) &&
 		books.isReal(bookName);
+
+	const {
+		loading: loadingInBookNumberCollisions,
+		result: inBookNumberCollisions,
+	} = useBookStats(bookName, {
+		_id: {$nin: [_id]},
+		inBookNumber: Number.parseInt(inBookNumberString, 10) ?? undefined,
+	});
+
+	const inBookNumberCollides =
+		!loadingInBookNumberCollisions && inBookNumberCollisions?.count >= 1;
 
 	return (
 		<StyledPaper className={classes.form}>
@@ -284,7 +297,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 						onChange={update?.('paidString')}
 					/>
 				</Grid>
-				<Grid item xs={3}>
+				<Grid item xs={2}>
 					{update ? (
 						<AutocompleteWithSuggestions
 							itemToString={(x) => (x ? x.bookNumber : '')}
@@ -315,6 +328,18 @@ const ConsultationForm = ({consultation, update}: Props) => {
 					) : (
 						<TextField readOnly label="Carnet" value={book} margin="normal" />
 					)}
+				</Grid>
+				<Grid item xs={1}>
+					<TextField
+						fullWidth
+						readOnly={!update}
+						label="N°"
+						value={inBookNumberString}
+						margin="normal"
+						error={inBookNumberError || inBookNumberCollides}
+						helperText={inBookNumberCollides && 'Collision'}
+						onChange={update?.('inBookNumberString')}
+					/>
 				</Grid>
 			</Grid>
 		</StyledPaper>

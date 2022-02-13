@@ -56,6 +56,8 @@ const removeUndefined = <T,>(object: T) =>
 const isZero = (x: string) => Number.parseInt(x, 10) === 0;
 const isValidAmount = (amount: string) => /^\d+$/.test(amount);
 
+const isValidInBookNumber = (numberString: string) =>
+	/^[1-9]\d*$/.test(numberString);
 const init = (consultation: ConsultationDocument): State => {
 	const priceString = Number.isFinite(consultation.price)
 		? String(consultation.price)
@@ -64,6 +66,11 @@ const init = (consultation: ConsultationDocument): State => {
 		? String(consultation.paid)
 		: '';
 
+	const inBookNumberString =
+		Number.isInteger(consultation.inBookNumber) &&
+		consultation.inBookNumber >= 1
+			? String(consultation.inBookNumber)
+			: '';
 	return {
 		...defaultState,
 		...removeUndefined({
@@ -82,11 +89,13 @@ const init = (consultation: ConsultationDocument): State => {
 			priceString,
 			paidString,
 			book: consultation.book,
+			inBookNumberString,
 
 			syncPaid: priceString === paidString,
 			priceWarning: isZero(priceString),
 			priceError: !isValidAmount(priceString),
 			paidError: !isValidAmount(paidString),
+			inBookNumberError: !isValidInBookNumber(inBookNumberString),
 		}),
 	};
 };
@@ -130,6 +139,16 @@ const reducer = (state: State, action: Action) => {
 						priceError: !isValidAmount(priceString),
 						paidString,
 						paidError: !isValidAmount(paidString),
+						dirty: true,
+					};
+				}
+
+				case 'inBookNumberString': {
+					const inBookNumberString = action.value;
+					return {
+						...state,
+						inBookNumberString,
+						inBookNumberError: !isValidInBookNumber(inBookNumberString),
 						dirty: true,
 					};
 				}
@@ -207,6 +226,7 @@ const ConsultationEditor = ({consultation}) => {
 		paidString,
 		book,
 
+		inBookNumberString,
 		dirty,
 		saving,
 		lastSaveWasSuccessful,
@@ -251,6 +271,7 @@ const ConsultationEditor = ({consultation}) => {
 			price: Number.parseInt(priceString, 10),
 			paid: Number.parseInt(paidString, 10),
 			book,
+			inBookNumber: Number.parseInt(inBookNumberString, 10),
 		};
 
 		if (

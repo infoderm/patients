@@ -19,6 +19,7 @@ interface ConsultationFields {
 	paid?: number;
 	unpaid?: boolean;
 	book?: string;
+	inBookNumber?: number;
 	payment_method?: string;
 	isDone: boolean;
 	isCancelled?: boolean;

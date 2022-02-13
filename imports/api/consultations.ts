@@ -148,6 +148,7 @@ function sanitize({
 	price,
 	paid,
 	book,
+	inBookNumber,
 	payment_method,
 }) {
 	check(patientId, String);
@@ -164,10 +165,15 @@ function sanitize({
 	if (price !== undefined) check(price, Number);
 	if (paid !== undefined) check(paid, Number);
 	if (book !== undefined) check(book, String);
+	if (inBookNumber !== undefined) check(inBookNumber, Number);
 	if (payment_method !== undefined) check(payment_method, String);
 
 	price = Number.isFinite(price) ? price : undefined;
 	paid = Number.isFinite(paid) ? paid : undefined;
+	inBookNumber =
+		Number.isInteger(inBookNumber) && inBookNumber >= 1
+			? inBookNumber
+			: undefined;
 
 	reason = reason?.trim();
 	done = done?.trim();
@@ -196,6 +202,7 @@ function sanitize({
 		paid,
 		unpaid: isUnpaid({price, paid}),
 		book,
+		inBookNumber,
 		payment_method,
 		isDone: true,
 	};
