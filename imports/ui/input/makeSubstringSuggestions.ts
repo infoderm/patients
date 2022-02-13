@@ -38,7 +38,6 @@ const makeSubstringSuggestions =
 
 		const {loading, ...rest} = useCollectionFind(query, options, [
 			$regex,
-			JSON.stringify($nin),
 			// refreshKey,
 		]);
 
