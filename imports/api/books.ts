@@ -9,7 +9,6 @@ import {normalized, normalizeInput, parseUint32StrictOrString} from './string';
 
 import {Books, collection} from './collection/books';
 import {BooksCache} from './collection/books/cache';
-import {Stats} from './collection/books/stats';
 
 import publication from './publication/books/find';
 import cachePublication from './publication/books/observe';
@@ -27,9 +26,7 @@ export const books = {
 	options: {
 		collection,
 		parentPublication: 'book.consultations',
-		parentPublicationStats: 'book.stats',
 	},
-	cache: {Stats},
 	sanitizeInput,
 	sanitize,
 	async add(

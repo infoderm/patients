@@ -1,7 +1,8 @@
 import {Mongo} from 'meteor/mongo';
-import {collection} from '../consultations';
+import {collection, ConsultationDocument} from '../consultations';
 
-export const key = (query, init = undefined) => JSON.stringify({query, init});
+export const key = (query: Mongo.Selector<ConsultationDocument>) =>
+	JSON.stringify(query);
 
 export interface ConsultationsStats {
 	count: number;

@@ -56,9 +56,9 @@ export const filterNotInRareBooks = () => ({
 	},
 });
 
-export function setupConsultationsStatsPublication(collection, query, init?) {
+export function setupConsultationsStatsPublication(collection, query) {
 	// Generate unique key depending on parameters
-	const key = statsKey(query, init);
+	const key = statsKey(query);
 	const selector = {
 		...query,
 		isDone: true,
@@ -73,7 +73,6 @@ export function setupConsultationsStatsPublication(collection, query, init?) {
 	let total = 0;
 
 	const state = () => ({
-		...init,
 		count,
 		total,
 		first: minHeap.head(),

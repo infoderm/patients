@@ -13,8 +13,6 @@ import '../../../imports/api/publication/attachments/attachment';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/availability/intersects';
 // eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/books/consultations/stats';
-// eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/books/consultations';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/books/find';

@@ -10,10 +10,13 @@ const useConsultationsStats = (query) =>
 
 		const handle = subscribe(publication, query);
 		const loading = !handle.ready();
+		const result = loading ? undefined : Stats.findOne(key(query));
+		const found = Boolean(result);
 
 		return {
 			loading,
-			result: loading ? undefined : Stats.findOne(key(query)),
+			found,
+			result,
 		};
 	}, [JSON.stringify(query)]);
 
