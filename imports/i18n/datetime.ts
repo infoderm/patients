@@ -27,12 +27,6 @@ const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
 const loadLocale = async (key: string): Promise<Locale | undefined> =>
 	localeLoaders[key]?.();
 
-export const localeDescriptions: Readonly<Record<string, string>> = {
-	'en-US': 'English (US)',
-	'fr-BE': 'Français (Belgique)',
-	'nl-BE': 'Nederlands (Belgïe)',
-};
-
 export const dateMaskMap = {
 	'en-US': '__/__/____',
 	'nl-BE': '__.__.____',

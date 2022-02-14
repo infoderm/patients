@@ -1,13 +1,18 @@
 import React from 'react';
+import availableLocales, {
+	localeDescriptions,
+} from '../../i18n/availableLocales';
+import {navigatorLocale} from '../../i18n/navigator';
 
-import {localeDescriptions as LANGUAGES} from '../../i18n/datetime';
 import SelectOneSetting from './SelectOneSetting';
 
+const options = ['navigator', ...availableLocales];
+const optionToString = (x) =>
+	x === 'navigator'
+		? `${localeDescriptions[navigatorLocale()]} (same as navigator)`
+		: localeDescriptions[x];
+
 const LanguageSetting = ({className}) => {
-	const options = [...Object.keys(LANGUAGES)];
-
-	const optionToString = (x) => LANGUAGES[x];
-
 	return (
 		<SelectOneSetting
 			className={className}
