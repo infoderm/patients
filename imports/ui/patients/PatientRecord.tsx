@@ -31,6 +31,7 @@ const Root = styled('div')(({theme}) => ({
 const ConsultationsForPatient = lazy(
 	async () => import('../consultations/ConsultationsForPatient'),
 );
+const PatientHistory = lazy(async () => import('./PatientHistory'));
 const AppointmentsForPatient = lazy(
 	async () => import('../appointments/AppointmentsForPatient'),
 );
@@ -43,6 +44,7 @@ const AttachmentsForPatient = lazy(
 
 const tabs = [
 	'information',
+	'history',
 	'consultations',
 	'documents',
 	'attachments',
@@ -81,6 +83,10 @@ const PatientRecord = ({patientId}: Props) => {
 					<Route
 						path="information/*"
 						element={<PatientPersonalInformation patientId={patientId} />}
+					/>
+					<Route
+						path="history/*"
+						element={<PatientHistory patientId={patientId} />}
 					/>
 					<Route
 						path="appointments/*"
