@@ -13,6 +13,7 @@ import NavigationDrawer from './NavigationDrawer';
 import useLoggingIn from './users/useLoggingIn';
 import useLoggingOut from './users/useLoggingOut';
 import useUser from './users/useUser';
+import useStatusNotifications from './users/useStatusNotifications';
 
 const Progress = styled(LinearProgress)({
 	display: 'block',
@@ -44,6 +45,7 @@ const useUISettings = () => {
 };
 
 const AppFrame = () => {
+	useStatusNotifications();
 	const loggingIn = useLoggingIn();
 	const loggingOut = useLoggingOut();
 	const currentUser = useUser();

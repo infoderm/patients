@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -9,12 +9,15 @@ import {useSnackbar} from 'notistack';
 
 import logout from '../../api/user/logout';
 
+import reconnect from '../../api/connection/reconnect';
+import disconnect from '../../api/connection/disconnect';
 import ChangePasswordPopover from './ChangePasswordPopover';
+import useStatus from './useStatus';
 
 const Logout = () => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const uiLogout = async () => {
+	const uiLogout = useCallback(async () => {
 		const key = enqueueSnackbar('Logging out...', {
 			variant: 'info',
 			persist: true,
@@ -31,9 +34,21 @@ const Logout = () => {
 				enqueueSnackbar(message, {variant: 'error'});
 			},
 		);
-	};
+	}, [enqueueSnackbar, closeSnackbar]);
 
 	return <MenuItem onClick={uiLogout}>Logout</MenuItem>;
+};
+
+const OfflineOnlineToggle = () => {
+	const {status} = useStatus();
+	switch (status) {
+		case 'connected':
+			return <MenuItem onClick={disconnect}>Work offline</MenuItem>;
+		case 'offline':
+			return <MenuItem onClick={reconnect}>Work online</MenuItem>;
+		default:
+			return <MenuItem disabled>Work offline</MenuItem>;
+	}
 };
 
 const OptionsPopover = ({anchorEl, handleClose, changeMode}) => {
@@ -50,6 +65,7 @@ const OptionsPopover = ({anchorEl, handleClose, changeMode}) => {
 		>
 			<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
 			<Logout />
+			<OfflineOnlineToggle />
 		</Menu>
 	);
 };
