@@ -1,4 +1,4 @@
-import React, {useReducer, useEffect, useMemo} from 'react';
+import React, {useReducer, useEffect} from 'react';
 
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
@@ -35,9 +35,7 @@ import {dataURL as pngDataURL} from '../../util/png';
 import {useInsurancesFind} from '../../api/insurances';
 import {useDoctorsFind} from '../../api/doctors';
 import {useAllergiesFind} from '../../api/allergies';
-import {useSetting} from '../settings/hooks';
 
-import eidParseBirthdate from '../../api/eidParseBirthdate';
 import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
@@ -46,11 +44,6 @@ import patientsUpdate from '../../api/endpoint/patients/update';
 import patientsAttach from '../../api/endpoint/patients/attach';
 
 import {PatientDocument} from '../../api/collection/patients';
-
-import {
-	// makeAnyIndex,
-	makeRegExpIndex,
-} from '../../api/string';
 
 import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
 
@@ -71,6 +64,8 @@ import ManageConsultationsForPatientButton from '../consultations/ManageConsulta
 import AttachFileButton from '../attachments/AttachFileButton';
 
 import useUniqueId from '../hooks/useUniqueId';
+import useImportantStringsDict from '../settings/useImportantStringsDict';
+import virtualFields from '../../api/patients/virtualFields';
 import PatientDeletionDialog from './PatientDeletionDialog';
 
 const allergyChipProps = {
@@ -211,14 +206,7 @@ interface PatientPersonalInformationStaticProps {
 const PatientPersonalInformationStatic = (
 	props: PatientPersonalInformationStaticProps,
 ) => {
-	const {value: importantStrings} = useSetting('important-strings');
-
-	const importantStringsDict = useMemo(
-		() =>
-			// makeAnyIndex(importantStrings);
-			makeRegExpIndex(importantStrings),
-		[importantStrings],
-	);
+	const importantStringsDict = useImportantStringsDict();
 
 	const [state, dispatch] = useReducer(reducer, initialState(props.patient));
 
@@ -307,20 +295,18 @@ const PatientPersonalInformationStatic = (
 
 	const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
 
-	const _birthdate = eidParseBirthdate(patient.birthdate);
-	const deathdateModifiedAt = patient.deathdateModifiedAt ?? null;
-	const deathdate = patient.deathdate ?? null;
-	const displayedAge = localizeAge(
-		_birthdate,
-		deathdate ?? deathdateModifiedAt,
-	);
+	const {
+		birthdate: _birthdate,
+		deathdateLegal,
+		deathdate,
+		isDead,
+	} = virtualFields(patient);
+	const displayedAge = localizeAge(_birthdate, deathdate);
 
 	const hardCodedNoShows: number = patient.noshow || 0;
 	const totalNoShow =
 		hardCodedNoShows +
 		(typeof reifiedNoShows === 'number' ? reifiedNoShows : 0);
-
-	const isDead = deathdateModifiedAt !== null;
 
 	return (
 		<Paper className={classes.root}>
@@ -368,7 +354,7 @@ const PatientPersonalInformationStatic = (
 						<DatePicker<Date>
 							{...birthdatePickerProps}
 							label="Death date"
-							value={deathdate}
+							value={deathdateLegal}
 							renderInput={(props) => (
 								<TextField
 									id={deathdateInputId}
