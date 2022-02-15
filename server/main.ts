@@ -450,6 +450,54 @@ Meteor.startup(async () => {
 		},
 	);
 
+	await Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			datetime: -1,
+			price: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	await Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			datetime: -1,
+			paid: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	await Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			datetime: -1,
+			payment_method: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
+	await Consultations.rawCollection().createIndex(
+		{
+			owner: 1,
+			isDone: 1,
+			datetime: -1,
+			currency: 1,
+		},
+		{
+			background: true,
+		},
+	);
+
 	await Events.rawCollection().createIndex(
 		{
 			owner: 1,

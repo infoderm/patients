@@ -3,7 +3,7 @@ import {styled} from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
 
-import ConsultationsMissingAPrice from './ConsultationsMissingAPrice';
+import ConsultationsMissingPaymentData from './ConsultationsMissingPaymentData';
 import ConsultationsMissingABook from './ConsultationsMissingABook';
 import ConsultationsWithPriceZeroNotInBookZero from './ConsultationsWithPriceZeroNotInBookZero';
 import UnlinkedDocuments from './UnlinkedDocuments';
@@ -37,8 +37,8 @@ const Issues = () => {
 			<MangledDocuments className={classes.container} />
 			<Typography variant="h3">Documents that are not linked</Typography>
 			<UnlinkedDocuments className={classes.container} />
-			<Typography variant="h3">Consultations missing a price</Typography>
-			<ConsultationsMissingAPrice className={classes.container} />
+			<Typography variant="h3">Consultations missing payment data</Typography>
+			<ConsultationsMissingPaymentData className={classes.container} />
 			<Typography variant="h3">Consultations missing a book</Typography>
 			<ConsultationsMissingABook className={classes.container} />
 			<Typography variant="h3">
