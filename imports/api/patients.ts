@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import {check, Match} from 'meteor/check';
 
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
@@ -126,6 +126,7 @@ function sanitize({
 	streetandnumber,
 	zip,
 	phone,
+	email,
 
 	insurances,
 	doctors,
@@ -163,6 +164,14 @@ function sanitize({
 	if (streetandnumber !== undefined) check(streetandnumber, String);
 	if (zip !== undefined) check(zip, String);
 	if (phone !== undefined) check(phone, String);
+	if (email !== undefined)
+		check(email, [
+			{
+				address: String,
+				// eslint-disable-next-line new-cap
+				comment: Match.Maybe(String),
+			},
+		]);
 
 	if (insurances !== undefined) check(insurances, [String]);
 	if (doctors !== undefined) check(doctors, [String]);
@@ -226,6 +235,7 @@ function sanitize({
 		streetandnumber,
 		zip,
 		phone,
+		email,
 
 		allergies,
 		doctors,

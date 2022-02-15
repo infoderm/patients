@@ -27,6 +27,9 @@ import DatePicker from '@mui/lab/DatePicker';
 
 import isValid from 'date-fns/isValid';
 import Button from '@mui/material/Button';
+
+import {parseOneAddress, ParsedMailbox} from 'email-addresses';
+
 import TextField from '../input/TextField';
 import FixedFab from '../button/FixedFab';
 
@@ -43,7 +46,7 @@ import call from '../../api/endpoint/call';
 import patientsUpdate from '../../api/endpoint/patients/update';
 import patientsAttach from '../../api/endpoint/patients/attach';
 
-import {PatientDocument} from '../../api/collection/patients';
+import {PatientDocument, Email} from '../../api/collection/patients';
 
 import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
 
@@ -203,6 +206,8 @@ interface PatientPersonalInformationStaticProps {
 	patient: PatientDocument;
 	loading?: boolean;
 }
+
+const noSuggestions = () => ({results: []});
 
 const PatientPersonalInformationStatic = (
 	props: PatientPersonalInformationStaticProps,
@@ -749,6 +754,47 @@ const PatientPersonalInformationStatic = (
 									onChange={update('noshow', (v) =>
 										v === '' ? 0 : Number.parseInt(v, 10),
 									)}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<SetPicker
+									readOnly={!editing}
+									useSuggestions={noSuggestions}
+									itemToKey={(email) => email.address}
+									itemToString={(email) => email.address}
+									inputValidation={(inputString) =>
+										parseOneAddress(inputString) === null
+											? {state: 0}
+											: {state: 1}
+									}
+									createNewItem={(inputString) => {
+										const parsed = parseOneAddress(
+											inputString,
+										) as ParsedMailbox | null;
+										if (parsed === null) return undefined;
+										const {name, address} = parsed;
+										if (name === null) return {address};
+										return {
+											address,
+											comment: name,
+										};
+									}}
+									TextFieldProps={{
+										fullWidth: true,
+										label: 'e-mail addresses',
+										margin: 'normal',
+										style: {
+											height: '100%',
+										},
+									}}
+									InputProps={{
+										style: {
+											height: '100%',
+										},
+									}}
+									value={(patient.email ?? []) as Email[]}
+									placeholder={placeholder}
+									onChange={update('email')}
 								/>
 							</Grid>
 						</Grid>

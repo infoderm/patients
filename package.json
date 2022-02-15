@@ -80,6 +80,7 @@
     "date-fns": "^2.28.0",
     "debounce": "^1.2.1",
     "downshift": "^6.1.7",
+    "email-addresses": "^5.0.0",
     "escape-string-regexp": "^5.0.0",
     "express": "^4.17.2",
     "fast-diff": "^1.2.0",

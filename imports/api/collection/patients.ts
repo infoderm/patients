@@ -17,6 +17,11 @@ export interface PatientIdFields {
 	zip: string;
 }
 
+export interface Email {
+	address: string;
+	comment?: string;
+}
+
 export interface PatientFields extends PatientIdFields {
 	deathdateModifiedAt?: Date;
 	deathdate?: Date;
@@ -29,6 +34,8 @@ export interface PatientFields extends PatientIdFields {
 	allergies: string[];
 	doctors: string[];
 	insurances: string[];
+
+	email?: Email[];
 
 	noshow?: number;
 	createdForAppointment?: boolean;
