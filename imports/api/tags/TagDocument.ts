@@ -1,7 +1,7 @@
 import {FormattedLine, NormalizedLine} from '../string';
 
 export interface TagNameFields {
-	displayName: FormattedLine;
+	displayName?: FormattedLine;
 	name: NormalizedLine;
 }
 

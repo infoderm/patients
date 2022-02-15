@@ -8,6 +8,7 @@ import invoke from '../invoke';
 import {Consultations} from '../../collection/consultations';
 import {Books} from '../../collection/books';
 import {books} from '../../books';
+import {NormalizedLine} from '../../string';
 import {server} from '../../../test/fixtures';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
@@ -31,7 +32,7 @@ server(__filename, () => {
 
 		const newBookNumber = `renamed-${oldBookNumber}`;
 
-		const name = books.name(datetime, oldBookNumber);
+		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
 		const {_id} = Books.findOne({name});
 
@@ -77,7 +78,7 @@ server(__filename, () => {
 
 		const newBookNumber = `renamed-${oldBookNumber}`;
 
-		const name = books.name(datetime, oldBookNumber);
+		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
 		const {_id} = Books.findOne({name});
 
@@ -151,7 +152,7 @@ server(__filename, () => {
 
 		const newBookNumber = `renamed-${oldBookNumber}`;
 
-		const name = books.name(datetime, oldBookNumber);
+		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
 		const {_id} = Books.findOne({name, owner: userId});
 

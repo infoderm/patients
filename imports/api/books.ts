@@ -6,6 +6,7 @@ import addYears from 'date-fns/addYears';
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
 import {
+	NormalizedLine,
 	normalizedLine,
 	normalizedLineInput,
 	parseUint32StrictOrString,
@@ -42,18 +43,18 @@ export const books = {
 		check(owner, String);
 		check(name, String);
 
-		name = verbatim ? name : sanitize(name);
+		const normalizedName = verbatim ? (name as NormalizedLine) : sanitize(name);
 
-		const [fiscalYear, bookNumber] = books.parse(name);
+		const [fiscalYear, bookNumber] = books.parse(normalizedName);
 
 		const key = {
 			owner,
-			name,
+			name: normalizedName,
 		};
 
 		const fields = {
 			owner,
-			name,
+			name: normalizedName,
 			fiscalYear,
 			bookNumber,
 		};
@@ -65,11 +66,11 @@ export const books = {
 		check(owner, String);
 		check(name, String);
 
-		name = sanitize(name);
+		const normalizedName = sanitize(name);
 
 		const fields = {
 			owner,
-			name,
+			name: normalizedName,
 		};
 
 		return db.deleteOne(Books, fields);
