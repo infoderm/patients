@@ -1,3 +1,4 @@
+import {Mongo} from 'meteor/mongo';
 import {DependencyList} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
 

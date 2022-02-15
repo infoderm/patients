@@ -1,7 +1,9 @@
 import {Mongo} from 'meteor/mongo';
 
+import {NormalizedLine} from '../string';
+
 export interface BookFields {
-	name: string;
+	name: NormalizedLine;
 }
 
 interface BookComputedFields {

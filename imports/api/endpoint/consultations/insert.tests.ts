@@ -6,6 +6,7 @@ import {randomUserId, server, throws} from '../../../test/fixtures';
 
 import {Books} from '../../collection/books';
 import {Availability} from '../../collection/availability';
+import {NormalizedLine} from '../../string';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 
@@ -51,7 +52,7 @@ server(__filename, () => {
 		const datetime = new Date();
 		const book = 'test-book-id';
 
-		const bookName = books.name(datetime, book);
+		const bookName = books.name(datetime, book) as NormalizedLine;
 
 		assert.equal(Books.findOne({name: bookName, owner: userId}), undefined);
 
