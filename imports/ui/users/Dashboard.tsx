@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -39,13 +39,39 @@ const Logout = () => {
 	return <MenuItem onClick={uiLogout}>Logout</MenuItem>;
 };
 
-const OfflineOnlineToggle = () => {
+interface OfflineOnlineToggleProps {
+	onSuccess: () => void;
+}
+
+const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 	const {status} = useStatus();
+	const [previous, setPrevious] = useState(0);
+
+	const online = useCallback(() => {
+		setPrevious(-1);
+		reconnect();
+	}, [setPrevious]);
+
+	const offline = useCallback(() => {
+		setPrevious(1);
+		disconnect();
+	}, [setPrevious]);
+
+	useEffect(() => {
+		if (
+			(previous === -1 && status === 'connected') ||
+			(previous === 1 && status === 'offline')
+		) {
+			setPrevious(0);
+			onSuccess();
+		}
+	}, [status]);
+
 	switch (status) {
 		case 'connected':
-			return <MenuItem onClick={disconnect}>Work offline</MenuItem>;
+			return <MenuItem onClick={offline}>Work offline</MenuItem>;
 		case 'offline':
-			return <MenuItem onClick={reconnect}>Work online</MenuItem>;
+			return <MenuItem onClick={online}>Work online</MenuItem>;
 		default:
 			return <MenuItem disabled>Work offline</MenuItem>;
 	}
@@ -65,7 +91,7 @@ const OptionsPopover = ({anchorEl, handleClose, changeMode}) => {
 		>
 			<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
 			<Logout />
-			<OfflineOnlineToggle />
+			<OfflineOnlineToggle onSuccess={handleClose} />
 		</Menu>
 	);
 };
