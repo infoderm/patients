@@ -2,11 +2,7 @@ import React, {ReactNode} from 'react';
 
 import Button from '@mui/material/Button';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import {
-	useSnackbar,
-	OptionsObject as NotistackOptionsObject,
-	SnackbarKey,
-} from 'notistack';
+import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
 
 import PropsOf from '../../util/PropsOf';
 
@@ -15,26 +11,13 @@ import Endpoint from '../../api/endpoint/Endpoint';
 import {MetadataType, Uploads} from '../../api/uploads';
 
 import InputFileButton from '../input/InputFileButton';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props extends Omit<PropsOf<typeof InputFileButton>, 'onChange'> {
 	endpoint: Endpoint<any>;
 	item: string;
 	children?: ReactNode;
 }
-
-const DEBOUNCE_DELAY = 500;
-
-const makeUpdate = ({enqueueSnackbar, closeSnackbar}) => {
-	let key: SnackbarKey;
-	let timeout;
-	return (message: string, options: NotistackOptionsObject) => {
-		clearTimeout(timeout);
-		if (key !== undefined) closeSnackbar(key);
-		timeout = setTimeout(() => {
-			key = enqueueSnackbar(message, options);
-		}, DEBOUNCE_DELAY);
-	};
-};
 
 const AttachFileButton = ({
 	endpoint,
@@ -45,7 +28,7 @@ const AttachFileButton = ({
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const upload = (event) => {
-		const uploadFeedback = makeUpdate({enqueueSnackbar, closeSnackbar});
+		const uploadFeedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 		const files = event.target.files;
 
 		const totalCount = files.length;
@@ -115,7 +98,10 @@ const AttachFileButton = ({
 				const message = `[Upload] File "${fileObject.name} (${fileObject._id})" successfully uploaded`;
 				console.log(message);
 				uploadFileFeedback(message, {variant: 'info'});
-				const attachFeedback = makeUpdate({enqueueSnackbar, closeSnackbar});
+				const attachFeedback = debounceSnackbar({
+					enqueueSnackbar,
+					closeSnackbar,
+				});
 				attachFeedback(
 					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${endpoint.name}".`,
 					notistackInfoOptions,
@@ -153,7 +139,10 @@ const AttachFileButton = ({
 
 			const message = '[Upload] init';
 			console.log(message);
-			const uploadFileFeedback = makeUpdate({enqueueSnackbar, closeSnackbar});
+			const uploadFileFeedback = debounceSnackbar({
+				enqueueSnackbar,
+				closeSnackbar,
+			});
 			uploadFileFeedback(message, notistackInfoOptions);
 			upload.on('start', () => {
 				const message = '[Upload] started';
