@@ -2,7 +2,11 @@ import React, {ReactNode} from 'react';
 
 import Button from '@mui/material/Button';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
+import {
+	useSnackbar,
+	OptionsObject as NotistackOptionsObject,
+	SnackbarKey,
+} from 'notistack';
 
 import PropsOf from '../../util/PropsOf';
 
@@ -18,6 +22,20 @@ interface Props extends Omit<PropsOf<typeof InputFileButton>, 'onChange'> {
 	children?: ReactNode;
 }
 
+const DEBOUNCE_DELAY = 500;
+
+const makeUpdate = ({enqueueSnackbar, closeSnackbar}) => {
+	let key: SnackbarKey;
+	let timeout;
+	return (message: string, options: NotistackOptionsObject) => {
+		clearTimeout(timeout);
+		if (key !== undefined) closeSnackbar(key);
+		timeout = setTimeout(() => {
+			key = enqueueSnackbar(message, options);
+		}, DEBOUNCE_DELAY);
+	};
+};
+
 const AttachFileButton = ({
 	endpoint,
 	item: itemId,
@@ -27,6 +45,7 @@ const AttachFileButton = ({
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const upload = (event) => {
+		const uploadFeedback = makeUpdate({enqueueSnackbar, closeSnackbar});
 		const files = event.target.files;
 
 		const totalCount = files.length;
@@ -36,13 +55,12 @@ const AttachFileButton = ({
 			`[Upload] Uploading ${
 				totalCount - uploadedCount - erroredCount
 			} file(s).`;
-		let uploadingKey = enqueueSnackbar(uploadingMessage(), {variant: 'info'});
+		uploadFeedback(uploadingMessage(), {variant: 'info'});
 		const updateUploadingNotification = () => {
-			closeSnackbar(uploadingKey);
 			const uploadingCount = totalCount - uploadedCount - erroredCount;
 			if (uploadingCount === 0) {
 				const messageDone = `[Upload] Done. (total: ${totalCount}, uploaded: ${uploadedCount}, failed: ${erroredCount})`;
-				uploadingKey = enqueueSnackbar(messageDone, {
+				uploadFeedback(messageDone, {
 					variant:
 						erroredCount === 0
 							? 'success'
@@ -52,6 +70,7 @@ const AttachFileButton = ({
 					persist: true,
 					action: (key) => (
 						<Button
+							color="inherit"
 							onClick={() => {
 								closeSnackbar(key);
 							}}
@@ -61,7 +80,7 @@ const AttachFileButton = ({
 					),
 				});
 			} else {
-				uploadingKey = enqueueSnackbar(uploadingMessage(), {variant: 'info'});
+				uploadFeedback(uploadingMessage(), {variant: 'info'});
 			}
 		};
 
@@ -75,6 +94,7 @@ const AttachFileButton = ({
 			persist: true,
 			action: (key) => (
 				<Button
+					color="inherit"
 					onClick={() => {
 						closeSnackbar(key);
 					}}
@@ -84,32 +104,31 @@ const AttachFileButton = ({
 			),
 		};
 
-		const onEnd = async (err, fileObject) => {
+		const onEnd = async (err, fileObject, uploadFileFeedback) => {
 			if (err) {
 				++erroredCount;
 				const message = `[Upload] Error during upload: ${err.message}`;
 				console.error(message, err);
-				enqueueSnackbar(message, notistackErrorOptions);
+				uploadFileFeedback(message, notistackErrorOptions);
 			} else {
 				++uploadedCount;
 				const message = `[Upload] File "${fileObject.name} (${fileObject._id})" successfully uploaded`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'info'});
-				const key2 = enqueueSnackbar(
+				uploadFileFeedback(message, {variant: 'info'});
+				const attachFeedback = makeUpdate({enqueueSnackbar, closeSnackbar});
+				attachFeedback(
 					`[Attach] Attaching file "${fileObject.name} (${fileObject._id})" to item "${itemId}" using method "${endpoint.name}".`,
 					notistackInfoOptions,
 				);
 				try {
 					await call(endpoint, itemId, fileObject._id);
-					closeSnackbar(key2);
 					const message = `[Attach] File "${fileObject.name} (${fileObject._id})" successfully attached to item "${itemId}" using method "${endpoint.name}".`;
 					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
+					attachFeedback(message, {variant: 'success'});
 				} catch (error: unknown) {
-					closeSnackbar(key2);
 					const message =
 						error instanceof Error ? error.message : 'unknown error';
-					enqueueSnackbar(message, notistackErrorOptions);
+					attachFeedback(message, notistackErrorOptions);
 					console.error({error});
 				}
 			}
@@ -134,18 +153,16 @@ const AttachFileButton = ({
 
 			const message = '[Upload] init';
 			console.log(message);
-			let keyUpload = enqueueSnackbar(message, notistackInfoOptions);
-
+			const uploadFileFeedback = makeUpdate({enqueueSnackbar, closeSnackbar});
+			uploadFileFeedback(message, notistackInfoOptions);
 			upload.on('start', () => {
 				const message = '[Upload] started';
 				console.log(message);
-				closeSnackbar(keyUpload);
-				keyUpload = enqueueSnackbar(message, notistackInfoOptions);
+				uploadFileFeedback(message, notistackInfoOptions);
 			});
 
 			upload.on('end', async (err, fileObject) => {
-				closeSnackbar(keyUpload);
-				await onEnd(err, fileObject);
+				await onEnd(err, fileObject, uploadFileFeedback);
 			});
 
 			upload.start();
