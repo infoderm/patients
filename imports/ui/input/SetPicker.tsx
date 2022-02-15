@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useCallback} from 'react';
+import React, {useEffect, useMemo, useCallback, useState} from 'react';
 import classNames from 'classnames';
 import {
 	useCombobox,
@@ -95,6 +95,7 @@ interface SetPickerProps<ItemType, ChipProps> {
 	itemToString: (item: ItemType) => string;
 	Item?: React.ElementType;
 	inputTransform?: (inputValue: string) => string;
+	inputValidation?: InputValidation;
 	onChange?: (event: any) => void | Promise<void>;
 	createNewItem?: (inputValue: string) => ItemType;
 	maxCount?: number;
@@ -158,6 +159,14 @@ const useSelectionManagement = (selectedItems, onChange) =>
 		};
 	}, [selectedItems, onChange]);
 
+type InputValidation = (inputValue: string) => {
+	state: -1 | 0 | 1;
+	message?: string;
+};
+
+const DEFAULT_INPUT_TRANSFORM = (x: string): string => x;
+const DEFAULT_INPUT_VALIDATION: InputValidation = () => ({state: 1});
+
 const SetPicker = <ItemType, ChipProps>(
 	props: SetPickerProps<ItemType, ChipProps>,
 ) => {
@@ -180,7 +189,8 @@ const SetPicker = <ItemType, ChipProps>(
 		maxCount = Number.POSITIVE_INFINITY,
 		createNewItem,
 		multiset = false,
-		inputTransform = (x: string): string => x,
+		inputTransform = DEFAULT_INPUT_TRANSFORM,
+		inputValidation = DEFAULT_INPUT_VALIDATION,
 	} = props;
 
 	const classes = useStyles();
@@ -188,6 +198,8 @@ const SetPicker = <ItemType, ChipProps>(
 	const emptyInput = inputTransform('');
 
 	const [inputValue, setInputValue] = useStateWithInitOverride(emptyInput);
+	const [error, setError] = useState(false);
+	const [helperText, setHelperText] = useState(undefined);
 
 	const selectedItems = value;
 	const count = selectedItems.length;
@@ -202,10 +214,11 @@ const SetPicker = <ItemType, ChipProps>(
 
 	const hasSuggestions = Boolean(suggestions?.length);
 
-	const resetInputValue = useCallback(
-		() => setInputValue(emptyInput),
-		[setInputValue, emptyInput],
-	);
+	const resetInputValue = useCallback(() => {
+		setInputValue(emptyInput);
+		setError(false);
+		setHelperText(undefined);
+	}, [setInputValue, emptyInput]);
 
 	useEffect(() => {
 		if (inputDisabled) resetInputValue();
@@ -244,7 +257,15 @@ const SetPicker = <ItemType, ChipProps>(
 			if (full) {
 				resetInputValue();
 			} else {
-				setInputValue(inputTransform(inputValue.trimStart()));
+				const newInputValue = inputTransform(inputValue.trimStart());
+				if (newInputValue === emptyInput) {
+					resetInputValue();
+				} else {
+					setInputValue(newInputValue);
+					const {state, message} = inputValidation(newInputValue);
+					setError(!state);
+					setHelperText(message);
+				}
 			}
 		},
 		stateReducer: comboboxStateReducer,
@@ -308,6 +329,8 @@ const SetPicker = <ItemType, ChipProps>(
 			<TextField
 				fullWidth
 				readOnly={readOnly}
+				error={error}
+				helperText={helperText}
 				{...getComboboxProps()}
 				{...TextFieldProps}
 				InputLabelProps={getLabelProps()}
