@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ErrorInfo} from 'react';
 
 interface GenericErrorBoundaryProps {
 	component: React.ElementType;
@@ -7,7 +7,7 @@ interface GenericErrorBoundaryProps {
 export default class GenericErrorBoundary extends React.Component<GenericErrorBoundaryProps> {
 	override state = {error: null, errorInfo: null};
 
-	override componentDidCatch(error, errorInfo) {
+	override componentDidCatch(error: unknown, errorInfo: ErrorInfo) {
 		// Catch errors in any components below and re-render with error message
 		this.setState({
 			error,
