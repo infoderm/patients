@@ -725,6 +725,7 @@ const PatientPersonalInformationStatic = (
 							</Grid>
 							<Grid item xs={3}>
 								<TextField
+									fullWidth
 									id={noshowInputId}
 									readOnly={!editing}
 									InputProps={{
