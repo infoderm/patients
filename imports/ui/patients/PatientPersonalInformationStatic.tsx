@@ -66,6 +66,7 @@ import AttachFileButton from '../attachments/AttachFileButton';
 import useUniqueId from '../hooks/useUniqueId';
 import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import PatientDeletionDialog from './PatientDeletionDialog';
 
 const allergyChipProps = {
@@ -229,22 +230,21 @@ const PatientPersonalInformationStatic = (
 	const classes = useStyles();
 
 	const saveDetails = async (_event) => {
-		const key = enqueueSnackbar('Processing...', {
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Processing...', {
 			variant: 'info',
 			persist: true,
 		});
 
 		try {
 			await call(patientsUpdate, patient._id, patient);
-			closeSnackbar(key);
 			const message = `Patient #${patient._id} updated.`;
 			console.log(message);
-			enqueueSnackbar(message, {variant: 'success'});
+			feedback(message, {variant: 'success'});
 			dispatch({type: 'not-editing'});
 		} catch (error: unknown) {
-			closeSnackbar(key);
 			const message = error instanceof Error ? error.message : 'unknown error';
-			enqueueSnackbar(message, {variant: 'error'});
+			feedback(message, {variant: 'error'});
 			console.error({error});
 		}
 	};
