@@ -18,6 +18,7 @@ import ModalProvider from './modal/ModelProvider';
 import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
 import useUserTheme from './useUserTheme';
+import StatusNotifications from './StatusNotifications';
 
 const App = () => {
 	const locale = useLocale();
@@ -30,14 +31,13 @@ const App = () => {
 					<ThemeProvider theme={theme}>
 						<ModalProvider>
 							<CssBaseline />
-							<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
-								<ErrorBoundary>
-									<div>
-										<CustomWholeWindowDropZone />
-										<AppFrame />
-									</div>
-								</ErrorBoundary>
-							</SnackbarProvider>
+							<ErrorBoundary>
+								<StatusNotifications />
+								<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
+									<CustomWholeWindowDropZone />
+									<AppFrame />
+								</SnackbarProvider>
+							</ErrorBoundary>
 						</ModalProvider>
 					</ThemeProvider>
 				</StyledEngineProvider>

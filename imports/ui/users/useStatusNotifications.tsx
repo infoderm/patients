@@ -53,7 +53,10 @@ const useStatusNotifications = () => {
 
 					break;
 				case 'connecting':
-					key = enqueueSnackbar('Connecting', {variant: 'info', persist: true});
+					key = enqueueSnackbar('Connecting', {
+						variant: 'default',
+						persist: true,
+					});
 					break;
 				case 'failed':
 					key = enqueueSnackbar(
