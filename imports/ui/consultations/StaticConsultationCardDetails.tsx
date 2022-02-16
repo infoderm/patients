@@ -82,18 +82,16 @@ function paymentMethodString(payment_method) {
 	}
 }
 
-const ConsultationsCardListItemBase = ({
-	avatar,
-	primary,
-	secondary,
-	...rest
-}) => (
+const ConsultationsCardListItemBase = ({avatar, ...rest}) => (
 	<ListItem>
 		<ListItemAvatar>{avatar}</ListItemAvatar>
 		<ListItemText
-			primary={primary}
-			secondary={secondary}
+			primaryTypographyProps={{
+				variant: 'subtitle2',
+			}}
 			secondaryTypographyProps={{
+				variant: 'body1',
+				color: 'text.primary',
 				style: {
 					whiteSpace: 'pre-wrap',
 				},
@@ -103,15 +101,13 @@ const ConsultationsCardListItemBase = ({
 	</ListItem>
 );
 
-const ConsultationsCardListItem = ({Icon, primary, secondary, ...rest}) => (
+const ConsultationsCardListItem = ({Icon, ...rest}) => (
 	<ConsultationsCardListItemBase
 		avatar={
 			<Avatar>
 				<Icon />
 			</Avatar>
 		}
-		primary={primary}
-		secondary={secondary}
 		{...rest}
 	/>
 );
@@ -179,7 +175,13 @@ const StaticConsultationCardDetails = (props) => {
 				)}
 				<ConsultationsCardListItem
 					Icon={InfoIcon}
-					primary={isDone ? 'Motif de la consultation' : 'Motif du rendez-vous'}
+					primary={
+						reason
+							? isDone
+								? 'Motif de la consultation'
+								: 'Motif du rendez-vous'
+							: 'Sans motif'
+					}
 					secondary={reason}
 				/>
 				{isDone && done && (
@@ -199,11 +201,11 @@ const StaticConsultationCardDetails = (props) => {
 				{isDone && (
 					<ConsultationsCardListItem
 						Icon={EditIcon}
-						primary="Traitement"
+						primary={treatment ? 'Traitement' : 'Pas de traitement'}
 						secondary={treatment}
 					/>
 				)}
-				{isDone && (
+				{isDone && next && (
 					<ConsultationsCardListItem
 						Icon={AlarmIcon}
 						primary="À revoir"
@@ -245,7 +247,7 @@ const StaticConsultationCardDetails = (props) => {
 						disableTypography
 						Icon={AttachmentIcon}
 						primary={
-							<Typography variant="subtitle1">
+							<Typography variant="subtitle2">
 								{attachments.length} attachments
 							</Typography>
 						}
