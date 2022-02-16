@@ -6,10 +6,9 @@ import Button from '@mui/material/Button';
 
 import {msToStringShort} from '../../api/duration';
 import reconnect from '../../api/connection/reconnect';
-import sleep from '../../util/sleep';
 import useStatus from './useStatus';
 
-const DELAY = 500;
+const DEBOUNCE_DELAY = 500;
 
 const useStatusNotifications = () => {
 	const isFirstRender = useRef(true);
@@ -42,9 +41,7 @@ const useStatusNotifications = () => {
 
 	useEffect(() => {
 		let key;
-		let isMounted = true;
-		void sleep(DELAY).then(() => {
-			if (!isMounted) return;
+		const timeout = setTimeout(() => {
 			switch (status) {
 				case 'connected':
 					if (!isFirstRender.current) {
@@ -91,11 +88,11 @@ const useStatusNotifications = () => {
 			}
 
 			isFirstRender.current = false;
-		});
+		}, DEBOUNCE_DELAY);
 
 		return () => {
-			isMounted = false;
-			closeSnackbar(key);
+			clearTimeout(timeout);
+			if (key !== undefined) closeSnackbar(key);
 		};
 	}, [
 		status,
