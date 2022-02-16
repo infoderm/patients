@@ -56,7 +56,7 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 				onClose={newAppointmentDialogOnClose}
 			/>
 			<FixedFab
-				col={3}
+				col={4}
 				tooltip={displayAllWeekDays ? 'Show work days only' : 'Show all days'}
 				color={displayAllWeekDays ? 'primary' : 'default'}
 				onClick={toggleDisplayAllWeekDays}
@@ -64,7 +64,7 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 				{displayAllWeekDays ? <VisibilityIcon /> : <VisibilityOffIcon />}
 			</FixedFab>
 			<FixedFab
-				col={4}
+				col={5}
 				tooltip={showNoShowEvents ? 'Hide no-shows' : 'Show no-shows'}
 				color={showNoShowEvents ? 'primary' : 'default'}
 				onClick={toggleShowNoShowEvents}
@@ -72,7 +72,7 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 				<PhoneDisabledIcon />
 			</FixedFab>
 			<FixedFab
-				col={5}
+				col={6}
 				tooltip={
 					showCancelledEvents
 						? 'Hide cancelled events'
