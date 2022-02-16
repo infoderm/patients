@@ -7,6 +7,7 @@ import {any} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
 import insertDocument from '../../api/documents/insertDocument';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import GenericDocumentImportButton from './GenericDocumentImportButton';
 
 const CustomDocumentImportButton = (props) => {
@@ -16,7 +17,8 @@ const CustomDocumentImportButton = (props) => {
 		navigate: ReturnType<typeof useNavigate>,
 		files: File[],
 	) => {
-		const key = enqueueSnackbar('Processing documents...', {variant: 'info'});
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Processing documents...', {variant: 'info', persist: true});
 		try {
 			if (any(map(({type}) => type === 'application/pdf', files))) {
 				throw new Error(
@@ -27,14 +29,12 @@ const CustomDocumentImportButton = (props) => {
 			await Promise.all(
 				map(async (file) => insertDocument(navigate, undefined, file), files),
 			);
-			closeSnackbar(key);
-			enqueueSnackbar('Success!', {variant: 'success'});
+			feedback('Success!', {variant: 'success'});
 		} catch (error: unknown) {
-			closeSnackbar(key);
 			const message = error instanceof Error ? error.message : 'unknown error';
 			console.error(message);
 			console.debug({error});
-			enqueueSnackbar(message, {variant: 'error'});
+			feedback(message, {variant: 'error'});
 		}
 	};
 

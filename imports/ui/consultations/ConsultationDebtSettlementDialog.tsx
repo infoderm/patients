@@ -13,6 +13,7 @@ import {useCurrencyFormat} from '../../i18n/currency';
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -53,20 +54,19 @@ const ConsultationDebtSettlementDialog = ({
 				paid: consultation.price,
 			};
 
-			const key = enqueueSnackbar('Processing...', {variant: 'info'});
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {variant: 'info', persist: true});
 			try {
 				await call(update, consultation._id, fields);
-				closeSnackbar(key);
 				const message = `Consultation #${consultation._id} updated.`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				onClose();
 			} catch (error: unknown) {
-				closeSnackbar(key);
 				console.error({error});
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			}
 		};
 	}, [onClose, consultation, enqueueSnackbar, closeSnackbar]);

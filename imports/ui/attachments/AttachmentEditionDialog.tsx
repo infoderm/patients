@@ -17,6 +17,7 @@ import call from '../../api/endpoint/call';
 import rename from '../../api/endpoint/uploads/rename';
 import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -35,23 +36,22 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 			setFilenameError('Filename cannot be empty');
 		} else {
 			setFilenameError('');
-			const key = enqueueSnackbar('Saving changes...', {
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Saving changes...', {
 				variant: 'info',
 				persist: true,
 			});
 			try {
 				await call(rename, attachment._id, filename);
-				closeSnackbar(key);
 				const message = `Attachment ${attachment._id} changed name to ${filename}.`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				onClose();
 			} catch (error: unknown) {
-				closeSnackbar(key);
 				console.error({error});
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			}
 		}
 	};

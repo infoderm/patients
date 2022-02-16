@@ -21,6 +21,7 @@ import CancelButton from '../button/CancelButton';
 
 import call from '../../api/endpoint/call';
 import Endpoint from '../../api/endpoint/Endpoint';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -49,24 +50,23 @@ const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 	const deleteThisTagIfNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
-			const key = enqueueSnackbar('Processing...', {
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {
 				variant: 'info',
 				persist: true,
 			});
 
 			try {
 				await call(endpoint, tag._id);
-				closeSnackbar(key);
 				const message = `${Title} #${tag._id} deleted (using ${endpoint.name}).`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				if (isMounted()) onClose();
 			} catch (error: unknown) {
-				closeSnackbar(key);
 				console.error(error);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			}
 		}
 	};

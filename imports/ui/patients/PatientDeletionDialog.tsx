@@ -22,6 +22,7 @@ import CancelButton from '../button/CancelButton';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import StaticPatientCard from './StaticPatientCard';
 
 interface Props {
@@ -47,23 +48,22 @@ const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 	const deleteThisPatientIfLastNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
-			const key = enqueueSnackbar('Processing...', {
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {
 				variant: 'info',
 				persist: true,
 			});
 			try {
 				await call(patientsRemove, patient._id);
-				closeSnackbar(key);
 				const message = `Patient #${patient._id} deleted.`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				if (isMounted()) onClose();
 			} catch (error: unknown) {
-				closeSnackbar(key);
 				console.error({error});
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			}
 		}
 	};

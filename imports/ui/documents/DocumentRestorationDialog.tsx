@@ -10,6 +10,7 @@ import call from '../../api/endpoint/call';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import restore from '../../api/endpoint/documents/restore';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -22,19 +23,18 @@ const DocumentRestorationDialog = ({open, onClose, document}: Props) => {
 
 	const restoreThisDocument = async (event) => {
 		event.preventDefault();
-		const key = enqueueSnackbar('Processing...', {variant: 'info'});
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Processing...', {variant: 'info', persist: true});
 		try {
 			await call(restore, document._id);
-			closeSnackbar(key);
 			const message = `Document #${document._id} restored.`;
 			console.log(message);
-			enqueueSnackbar(message, {variant: 'success'});
+			feedback(message, {variant: 'success'});
 			onClose();
 		} catch (error: unknown) {
-			closeSnackbar(key);
 			console.error(error);
 			const message = error instanceof Error ? error.message : 'unknown error';
-			enqueueSnackbar(message, {variant: 'error'});
+			feedback(message, {variant: 'error'});
 		}
 	};
 

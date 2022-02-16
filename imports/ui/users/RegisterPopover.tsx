@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import {useSnackbar} from 'notistack';
 import createUserWithPassword from '../../api/user/createUserWithPassword';
 
+import debounceSnackbar from '../../util/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 interface Props {
@@ -22,20 +23,19 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 
 	const register = async (event) => {
 		event.preventDefault();
-		const key = enqueueSnackbar('Creating account...', {
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Creating account...', {
 			variant: 'info',
 			persist: true,
 		});
 		return createUserWithPassword(username, password).then(
 			() => {
-				closeSnackbar(key);
-				enqueueSnackbar('Welcome!', {variant: 'success'});
+				feedback('Welcome!', {variant: 'success'});
 			},
 			(error) => {
-				closeSnackbar(key);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 				const reason = error instanceof Meteor.Error ? error.reason : undefined;
 				switch (reason) {
 					case 'Need to set a username or email': {

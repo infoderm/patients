@@ -30,6 +30,7 @@ import call from '../../api/endpoint/call';
 import {books} from '../../api/books';
 import withLazyOpening from '../modal/withLazyOpening';
 import csv from '../../api/endpoint/books/csv';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -78,14 +79,14 @@ const BooksDownloadDialog = ({
 		const _firstBook = Number.parseInt(firstBook, 10);
 		const _lastBook = Number.parseInt(lastBook, 10);
 		const _maxRows = Number.parseInt(maxRows, 10);
-		const key = enqueueSnackbar('Creating report...', {
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Creating report...', {
 			variant: 'info',
 			persist: true,
 		});
 		try {
 			const res = await call(csv, begin, end, _firstBook, _lastBook, _maxRows);
-			closeSnackbar(key);
-			enqueueSnackbar('Report ready!', {variant: 'success'});
+			feedback('Report ready!', {variant: 'success'});
 			const filename = advancedFunctionality
 				? 'carnets.csv'
 				: `carnets-${begin.getFullYear()}.csv`;
@@ -93,9 +94,8 @@ const BooksDownloadDialog = ({
 			onClose();
 		} catch (error: unknown) {
 			console.error(error);
-			closeSnackbar(key);
 			const message = error instanceof Error ? error.message : 'unknown error';
-			enqueueSnackbar(message, {variant: 'error'});
+			feedback(message, {variant: 'error'});
 		}
 	};
 

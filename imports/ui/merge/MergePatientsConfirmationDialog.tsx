@@ -12,6 +12,7 @@ import patientsMerge from '../../api/endpoint/patients/merge';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -39,7 +40,8 @@ const MergePatientsConfirmationDialog = ({
 	const mergePatients = async (event) => {
 		event.preventDefault();
 		setPending(true);
-		const key = enqueueSnackbar('Processing...', {variant: 'info'});
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Processing...', {variant: 'info', persist: true});
 		try {
 			const _id = await call(
 				patientsMerge,
@@ -49,17 +51,15 @@ const MergePatientsConfirmationDialog = ({
 				documentsToAttach,
 				toCreate,
 			);
-			closeSnackbar(key);
 			const message = `Merged. Patient #${_id} created.`;
 			console.log(message);
-			enqueueSnackbar(message, {variant: 'success'});
+			feedback(message, {variant: 'success'});
 			navigate({pathname: `/patient/${_id}`});
 		} catch (error: unknown) {
 			setPending(false);
-			closeSnackbar(key);
 			console.error({error});
 			const message = error instanceof Error ? error.message : 'unknown error';
-			enqueueSnackbar(message, {variant: 'error'});
+			feedback(message, {variant: 'error'});
 		}
 	};
 

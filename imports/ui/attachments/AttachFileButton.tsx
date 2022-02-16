@@ -97,7 +97,7 @@ const AttachFileButton = ({
 				++uploadedCount;
 				const message = `[Upload] File "${fileObject.name} (${fileObject._id})" successfully uploaded`;
 				console.log(message);
-				uploadFileFeedback(message, {variant: 'info'});
+				uploadFileFeedback(message, {variant: 'success'});
 				const attachFeedback = debounceSnackbar({
 					enqueueSnackbar,
 					closeSnackbar,

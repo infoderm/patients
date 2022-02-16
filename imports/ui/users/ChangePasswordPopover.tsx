@@ -6,6 +6,7 @@ import {useSnackbar} from 'notistack';
 import changePassword from '../../api/user/changePassword';
 
 import useUniqueId from '../hooks/useUniqueId';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 interface Props {
@@ -27,24 +28,23 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 
 	const uiChangePassword = async (event) => {
 		event.preventDefault();
-		const key = enqueueSnackbar('Changing password...', {
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Changing password...', {
 			variant: 'info',
 			persist: true,
 		});
 		return changePassword(oldPassword, newPassword).then(
 			() => {
-				closeSnackbar(key);
 				const message = 'Password changed successfully!';
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				setErrorOldPassword('');
 				setErrorNewPassword('');
 				handleClose();
 			},
 			(error) => {
-				closeSnackbar(key);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 				const reason = error instanceof Meteor.Error ? error.reason : undefined;
 				if (reason === 'Incorrect password' || reason === 'Match failed') {
 					setErrorOldPassword('Incorrect password');

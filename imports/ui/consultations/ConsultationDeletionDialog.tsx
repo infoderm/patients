@@ -24,6 +24,7 @@ import remove from '../../api/endpoint/consultations/remove';
 import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
 import DeleteButton from '../button/DeleteButton';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 interface Props {
 	open: boolean;
@@ -55,20 +56,19 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 	const deleteThisConsultationIfPatientsLastNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
-			const key = enqueueSnackbar('Processing...', {variant: 'info'});
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {variant: 'info', persist: true});
 			try {
 				await call(remove, consultation._id);
-				closeSnackbar(key);
 				const message = `Consultation #${consultation._id} deleted.`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				if (isMounted()) onClose();
 			} catch (error: unknown) {
-				closeSnackbar(key);
 				console.error(error);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			}
 		}
 	};

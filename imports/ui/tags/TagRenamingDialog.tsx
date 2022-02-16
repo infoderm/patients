@@ -26,6 +26,7 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import Endpoint from '../../api/endpoint/Endpoint';
 import call from '../../api/endpoint/call';
 import TagDocument from '../../api/tags/TagDocument';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 const PREFIX = 'TagRenamingDialog';
 
@@ -96,26 +97,25 @@ const TagRenamingDialog = ({
 
 		if (!error) {
 			setPending(true);
-			const key = enqueueSnackbar('Processing...', {
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {
 				variant: 'info',
 				persist: true,
 			});
 			try {
 				await call(endpoint, tag._id, name);
-				closeSnackbar(key);
 				const message = `${Title} #${tag._id} renamed from ${nameFormat(
 					tag,
 					tag[nameKey],
 				)} to ${nameFormat(tag, name)} (using ${endpoint.name}).`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				onRename(name);
 			} catch (error: unknown) {
 				setPending(false);
-				closeSnackbar(key);
 				console.error(error);
 				const message = error instanceof Error ? error.message : 'unknown err';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			}
 		}
 	};

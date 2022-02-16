@@ -11,6 +11,7 @@ import logout from '../../api/user/logout';
 
 import reconnect from '../../api/connection/reconnect';
 import disconnect from '../../api/connection/disconnect';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import ChangePasswordPopover from './ChangePasswordPopover';
 import useStatus from './useStatus';
 
@@ -18,20 +19,19 @@ const Logout = () => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const uiLogout = useCallback(async () => {
-		const key = enqueueSnackbar('Logging out...', {
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Logging out...', {
 			variant: 'info',
 			persist: true,
 		});
 		return logout().then(
 			() => {
-				closeSnackbar(key);
-				enqueueSnackbar('See you soon!', {variant: 'success'});
+				feedback('See you soon!', {variant: 'success'});
 			},
 			(error) => {
-				closeSnackbar(key);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 			},
 		);
 	}, [enqueueSnackbar, closeSnackbar]);

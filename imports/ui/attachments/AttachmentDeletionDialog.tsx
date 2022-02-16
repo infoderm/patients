@@ -26,6 +26,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import CancelButton from '../button/CancelButton';
 import useUniqueId from '../hooks/useUniqueId';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const PREFIX = 'AttachmentDeletionDialog';
@@ -70,19 +71,18 @@ const AttachmentDeletionDialog = ({
 	const detachThisAttachmentIfAttachmentNameMatches = async (event) => {
 		event.preventDefault();
 		if (validate()) {
-			const key = enqueueSnackbar('Processing...', {variant: 'info'});
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {variant: 'info', persist: true});
 			try {
 				await call(endpoint, itemId, attachment._id);
-				closeSnackbar(key);
 				const message = `[Detach] Attachment ${attachment.name} detached with ${endpoint.name}(${itemId}).`;
 				console.log(message);
-				enqueueSnackbar(message, {variant: 'success'});
+				feedback(message, {variant: 'success'});
 				if (isMounted()) onClose();
 			} catch (error: unknown) {
-				closeSnackbar(key);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 				console.error({error});
 			}
 		}

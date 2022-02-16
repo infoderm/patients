@@ -7,6 +7,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import {useSnackbar} from 'notistack';
 import loginWithPassword from '../../api/user/loginWithPassword';
 
+import debounceSnackbar from '../../util/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 interface Props {
@@ -26,22 +27,21 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 	const login = async (event) => {
 		event.preventDefault();
 		setLoggingIn(true);
-		const key = enqueueSnackbar('Logging in...', {
+		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+		feedback('Logging in...', {
 			variant: 'info',
 			persist: true,
 		});
 		return loginWithPassword(username, password).then(
 			() => {
 				setLoggingIn(false);
-				closeSnackbar(key);
-				enqueueSnackbar('Welcome back!', {variant: 'success'});
+				feedback('Welcome back!', {variant: 'success'});
 			},
 			(error) => {
 				setLoggingIn(false);
-				closeSnackbar(key);
 				const message =
 					error instanceof Error ? error.message : 'unknown error';
-				enqueueSnackbar(message, {variant: 'error'});
+				feedback(message, {variant: 'error'});
 				const reason = error instanceof Meteor.Error ? error.reason : undefined;
 				switch (reason) {
 					case 'User not found': {

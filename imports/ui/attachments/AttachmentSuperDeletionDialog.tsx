@@ -25,6 +25,7 @@ import ConfirmationTextField, {
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import useUniqueId from '../hooks/useUniqueId';
+import debounceSnackbar from '../../util/debounceSnackbar';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const PREFIX = 'AttachmentSuperDeletionDialog';
@@ -61,17 +62,17 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 	const trashThisAttachmentIfAttachmentNameMatches = (event) => {
 		event.preventDefault();
 		if (validate()) {
-			const key = enqueueSnackbar('Processing...', {variant: 'info'});
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback('Processing...', {variant: 'info', persist: true});
 			Uploads.remove({_id: attachment._id}, (err) => {
-				closeSnackbar(key);
 				if (err) {
 					const message = `[Trash] Error during removal: ${err.message}`;
 					console.error(message, {err});
-					enqueueSnackbar(message, {variant: 'error'});
+					feedback(message, {variant: 'error'});
 				} else {
 					const message = '[Trash] File removed from DB and FS';
 					console.log(message);
-					enqueueSnackbar(message, {variant: 'success'});
+					feedback(message, {variant: 'success'});
 					if (isMounted()) onClose();
 				}
 			});

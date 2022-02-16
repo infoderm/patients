@@ -34,6 +34,7 @@ import call from '../../api/endpoint/call';
 
 import useUniqueId from '../hooks/useUniqueId';
 import useBirthdatePickerProps from '../birthdate/useBirthdatePickerProps';
+import debounceSnackbar from '../../util/debounceSnackbar';
 
 const PREFIX = 'NewPatientForm';
 
@@ -95,25 +96,21 @@ const useSubmit = ({
 				noshow,
 			};
 
-			const key = enqueueSnackbar(
-				`Creating patient ${lastname} ${firstname}...`,
-				{
-					variant: 'info',
-					persist: true,
-				},
-			);
+			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+			feedback(`Creating patient ${lastname} ${firstname}...`, {
+				variant: 'info',
+				persist: true,
+			});
 
 			return call(patientsInsert, patient).then(
 				(_id) => {
-					closeSnackbar(key);
-					enqueueSnackbar('Patient created!', {variant: 'success'});
+					feedback('Patient created!', {variant: 'success'});
 					navigate(`/patient/${_id}`);
 				},
 				(error: unknown) => {
-					closeSnackbar(key);
 					const message =
 						error instanceof Error ? error.message : 'unknown error';
-					enqueueSnackbar(message, {variant: 'error'});
+					feedback(message, {variant: 'error'});
 				},
 			);
 		},
