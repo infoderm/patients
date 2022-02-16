@@ -19,6 +19,7 @@ import ErrorBoundary from './ErrorBoundary';
 import AppFrame from './AppFrame';
 import useUserTheme from './useUserTheme';
 import StatusNotifications from './StatusNotifications';
+import PlannerProvider from './planner/PlannerProvider';
 
 const App = () => {
 	const locale = useLocale();
@@ -31,13 +32,15 @@ const App = () => {
 					<ThemeProvider theme={theme}>
 						<ModalProvider>
 							<CssBaseline />
-							<ErrorBoundary>
-								<StatusNotifications />
-								<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
-									<CustomWholeWindowDropZone />
-									<AppFrame />
-								</SnackbarProvider>
-							</ErrorBoundary>
+							<PlannerProvider>
+								<ErrorBoundary>
+									<StatusNotifications />
+									<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
+										<CustomWholeWindowDropZone />
+										<AppFrame />
+									</SnackbarProvider>
+								</ErrorBoundary>
+							</PlannerProvider>
 						</ModalProvider>
 					</ThemeProvider>
 				</StyledEngineProvider>

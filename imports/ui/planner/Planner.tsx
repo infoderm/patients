@@ -10,8 +10,8 @@ import FixedFab from '../button/FixedFab';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
 import PropsOf from '../../util/PropsOf';
+import usePlannerContextState from './usePlannerContextState';
 import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialogState';
-import usePlannerState from './usePlannerState';
 
 interface Props<C> {
 	Calendar: C extends React.ElementType ? C : never;
@@ -29,7 +29,7 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 		displayAllWeekDays,
 		toggleDisplayAllWeekDays,
 		displayedWeekDays,
-	} = usePlannerState();
+	} = usePlannerContextState();
 
 	const {
 		open: newAppointmentDialogOpen,
