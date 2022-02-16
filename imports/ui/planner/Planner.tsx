@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useParams} from 'react-router-dom';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -6,13 +6,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
-import {useSettingCached} from '../settings/hooks';
-
 import FixedFab from '../button/FixedFab';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
-import {ALL_WEEK_DAYS} from '../../util/datetime';
 import PropsOf from '../../util/PropsOf';
+import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialogState';
+import usePlannerState from './usePlannerState';
 
 interface Props<C> {
 	Calendar: C extends React.ElementType ? C : never;
@@ -22,27 +21,28 @@ interface Props<C> {
 const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 	const {patientId} = useParams<{patientId?: string}>();
 
-	const [selectedSlot, setSelectedSlot] = useState(new Date());
-	const [noInitialTime, setNoInitialtime] = useState(true);
-	const [creatingAppointment, setCreatingAppointment] = useState(false);
-	const [displayAllWeekDays, setDisplayAllWeekDays] = useState(false);
-	const [showCancelledEvents, setShowCancelledEvents] = useState(false);
-	const [showNoShowEvents, setShowNoShowEvents] = useState(false);
-	const {value: displayedWeekDays} = useSettingCached('displayed-week-days');
+	const {
+		showCancelledEvents,
+		toggleShowCancelledEvents,
+		showNoShowEvents,
+		toggleShowNoShowEvents,
+		displayAllWeekDays,
+		toggleDisplayAllWeekDays,
+		displayedWeekDays,
+	} = usePlannerState();
 
-	const onSlotClick = (slot: Date, noInitialTime = true) => {
-		console.debug(slot);
-		setSelectedSlot(slot);
-		setNoInitialtime(noInitialTime);
-		setCreatingAppointment(true);
-	};
+	const {
+		open: newAppointmentDialogOpen,
+		onClose: newAppointmentDialogOnClose,
+		openOn: onSlotClick,
+		initialDatetime: selectedSlot,
+		noInitialTime,
+	} = usePlannerNewAppointmentDialogState();
 
 	return (
 		<>
 			<Calendar
-				displayedWeekDays={
-					displayAllWeekDays ? ALL_WEEK_DAYS : displayedWeekDays
-				}
+				displayedWeekDays={displayedWeekDays}
 				showCancelledEvents={showCancelledEvents}
 				showNoShowEvents={showNoShowEvents}
 				onSlotClick={onSlotClick}
@@ -52,18 +52,14 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 				noInitialTime={noInitialTime}
 				initialDatetime={selectedSlot}
 				patientId={patientId}
-				open={creatingAppointment}
-				onClose={() => {
-					setCreatingAppointment(false);
-				}}
+				open={newAppointmentDialogOpen}
+				onClose={newAppointmentDialogOnClose}
 			/>
 			<FixedFab
 				col={3}
 				tooltip={displayAllWeekDays ? 'Show work days only' : 'Show all days'}
 				color={displayAllWeekDays ? 'primary' : 'default'}
-				onClick={() => {
-					setDisplayAllWeekDays(!displayAllWeekDays);
-				}}
+				onClick={toggleDisplayAllWeekDays}
 			>
 				{displayAllWeekDays ? <VisibilityIcon /> : <VisibilityOffIcon />}
 			</FixedFab>
@@ -71,9 +67,7 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 				col={4}
 				tooltip={showNoShowEvents ? 'Hide no-shows' : 'Show no-shows'}
 				color={showNoShowEvents ? 'primary' : 'default'}
-				onClick={() => {
-					setShowNoShowEvents(!showNoShowEvents);
-				}}
+				onClick={toggleShowNoShowEvents}
 			>
 				<PhoneDisabledIcon />
 			</FixedFab>
@@ -85,9 +79,7 @@ const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 						: 'Show cancelled events'
 				}
 				color={showCancelledEvents ? 'primary' : 'default'}
-				onClick={() => {
-					setShowCancelledEvents(!showCancelledEvents);
-				}}
+				onClick={toggleShowCancelledEvents}
 			>
 				<AlarmOffIcon />
 			</FixedFab>
