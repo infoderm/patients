@@ -22,6 +22,11 @@ const useUserTheme = () => {
 							variant: 'standard',
 						},
 					},
+					MuiFormControl: {
+						defaultProps: {
+							variant: 'standard',
+						},
+					},
 				},
 			}),
 		);
