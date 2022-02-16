@@ -159,7 +159,6 @@ const reducer = (
 	state: State,
 	action: {type: string; key?: string; value?: any; payload?: any},
 ) => {
-	console.debug({state, action});
 	switch (action.type) {
 		case 'update':
 			switch (action.key) {
