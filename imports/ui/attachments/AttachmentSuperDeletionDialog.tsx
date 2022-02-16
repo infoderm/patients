@@ -28,16 +28,8 @@ import useUniqueId from '../hooks/useUniqueId';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
-const PREFIX = 'AttachmentSuperDeletionDialog';
-
-const classes = {
-	thumbnail: `${PREFIX}-thumbnail`,
-};
-
-const StyledDialog = styled(Dialog)({
-	[`& .${classes.thumbnail}`]: {
-		height: 300,
-	},
+const Thumbnail = styled(AttachmentThumbnail)({
+	height: 300,
 });
 
 interface Props {
@@ -82,7 +74,7 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 	const titleId = useUniqueId('attachment-super-deletion-dialog-title');
 
 	return (
-		<StyledDialog open={open} aria-labelledby={titleId} onClose={onClose}>
+		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
 			<DialogTitle id={titleId}>
 				Delete attachment {attachment.name}
 			</DialogTitle>
@@ -92,11 +84,7 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 					really want to delete this attachment from the system, enter its
 					filename below and click the delete button.
 				</DialogContentText>
-				<AttachmentThumbnail
-					className={classes.thumbnail}
-					height={600}
-					attachmentId={attachment._id}
-				/>
+				<Thumbnail height={600} attachmentId={attachment._id} />
 				<ConfirmationTextField
 					fullWidth
 					autoFocus
@@ -116,7 +104,7 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 					Delete forever
 				</Button>
 			</DialogActions>
-		</StyledDialog>
+		</Dialog>
 	);
 };
 
