@@ -37,6 +37,7 @@ import colorizeText from '../text/colorizeText';
 
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 import patientVirtualFields from '../../api/patients/virtualFields';
+import NoContent from '../navigation/NoContent';
 import usePatient from './usePatient';
 
 interface PatientHistoryProps {
@@ -267,8 +268,12 @@ const PatientHistory = ({patientId}: PatientHistoryProps) => {
 	const dateFormat = useDateFormat();
 	const importantStringsDict = useImportantStringsDict();
 
-	if (loading && results.length === 0) {
+	if (loadingPatient || (loading && results.length === 0)) {
 		return <Loading />;
+	}
+
+	if (!foundPatient) {
+		return <NoContent>Patient not found.</NoContent>;
 	}
 
 	return (
