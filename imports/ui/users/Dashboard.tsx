@@ -12,6 +12,7 @@ import logout from '../../api/user/logout';
 import reconnect from '../../api/connection/reconnect';
 import disconnect from '../../api/connection/disconnect';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useUniqueId from '../hooks/useUniqueId';
 import ChangePasswordPopover from './ChangePasswordPopover';
 import useStatus from './useStatus';
 
@@ -77,14 +78,14 @@ const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 	}
 };
 
-const OptionsPopover = ({anchorEl, handleClose, changeMode}) => {
+const OptionsPopover = ({id, anchorEl, handleClose, changeMode}) => {
 	const handleModeChangePassword = () => {
 		changeMode('change-password');
 	};
 
 	return (
 		<Menu
-			id="dashboard-options"
+			id={id}
 			anchorEl={anchorEl}
 			open={Boolean(anchorEl)}
 			onClose={handleClose}
@@ -113,10 +114,14 @@ const Dashboard = ({currentUser}) => {
 		setMode(newMode);
 	};
 
+	const dashboardId = useUniqueId('dashboard');
+	const optionsPopoverId = `${dashboardId}-options`;
+	const changePasswordPopoverId = `${dashboardId}-changePassword`;
+
 	return (
 		<div>
 			<Button
-				aria-owns={
+				aria-controls={
 					anchorEl
 						? mode === 'options'
 							? 'dashboard-options'
@@ -124,21 +129,24 @@ const Dashboard = ({currentUser}) => {
 						: null
 				}
 				aria-haspopup="true"
+				aria-expanded={anchorEl ? 'true' : undefined}
 				style={{color: 'inherit'}}
 				endIcon={<AccountCircleIcon />}
 				onClick={handleClick}
 			>
 				Logged in as {currentUser.username}
 			</Button>
-			{mode === 'options' ? (
-				<OptionsPopover
-					anchorEl={anchorEl}
-					handleClose={handleClose}
-					changeMode={changeMode}
-				/>
-			) : (
-				<ChangePasswordPopover anchorEl={anchorEl} handleClose={handleClose} />
-			)}
+			<OptionsPopover
+				id={optionsPopoverId}
+				anchorEl={mode === 'options' ? anchorEl : undefined}
+				handleClose={handleClose}
+				changeMode={changeMode}
+			/>
+			<ChangePasswordPopover
+				id={changePasswordPopoverId}
+				anchorEl={mode === 'options' ? undefined : anchorEl}
+				handleClose={handleClose}
+			/>
 		</div>
 	);
 };

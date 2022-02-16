@@ -15,7 +15,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import withLazyOpening from '../modal/withLazyOpening';
 import call from '../../api/endpoint/call';
 import rename from '../../api/endpoint/uploads/rename';
-import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 
@@ -56,11 +55,9 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 		}
 	};
 
-	const titleId = useUniqueId('attachment-edition-dialog-title');
-
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
-			<DialogTitle id={titleId}>Edit attachment {attachment.name}</DialogTitle>
+		<Dialog open={open} onClose={onClose}>
+			<DialogTitle>Edit attachment {attachment.name}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					You can edit the attachment&apos;s file name.

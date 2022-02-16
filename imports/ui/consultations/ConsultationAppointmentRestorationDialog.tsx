@@ -25,7 +25,6 @@ import ConfirmationTextField, {
 import call from '../../api/endpoint/call';
 import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
 import {ConsultationDocument} from '../../api/collection/consultations';
-import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 
@@ -82,10 +81,6 @@ const ConsultationAppointmentRestorationDialog = ({
 		}
 	};
 
-	const titleId = useUniqueId(
-		'consultation-appointment-restoration-dialog-title',
-	);
-
 	const patientIdentifier = found
 		? `${patient.firstname} ${patient.lastname}`
 		: `#${consultation.patientId}`;
@@ -95,9 +90,9 @@ const ConsultationAppointmentRestorationDialog = ({
 		? "Patient's last name"
 		: 'Could not find patient.';
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+		<Dialog open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id={titleId}>
+			<DialogTitle>
 				Restore consultation&apos;s appointment for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>

@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-	titleId: string;
+	titleId?: string;
 	onClose: () => void;
 	onNext: () => void;
 	eidInfo: PatientIdFields;

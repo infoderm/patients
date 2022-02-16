@@ -32,7 +32,6 @@ import {BIRTHDATE_FORMAT} from '../../api/collection/patients';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import call from '../../api/endpoint/call';
 
-import useUniqueId from '../hooks/useUniqueId';
 import useBirthdatePickerProps from '../birthdate/useBirthdatePickerProps';
 import debounceSnackbar from '../../util/debounceSnackbar';
 
@@ -127,10 +126,6 @@ const NewPatientForm = () => {
 	const [sex, setSex] = useState('');
 	const [noshow, setNoshow] = useState(0);
 
-	const formId = useUniqueId('new-patient-form');
-	const lastnameId = `${formId}-input-lastname`;
-	const firstnameId = `${formId}-input-firstname`;
-
 	const birthdatePickerProps = useBirthdatePickerProps();
 
 	const submit = useSubmit({
@@ -157,7 +152,6 @@ const NewPatientForm = () => {
 							<Grid item xs={6}>
 								<TextField
 									fullWidth
-									id={lastnameId}
 									label="Last name"
 									value={lastname}
 									onChange={(e) => {
@@ -168,7 +162,6 @@ const NewPatientForm = () => {
 							<Grid item xs={6}>
 								<TextField
 									fullWidth
-									id={firstnameId}
 									label="First name"
 									value={firstname}
 									onChange={(e) => {

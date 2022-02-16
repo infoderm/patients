@@ -17,7 +17,6 @@ import patientsAttach from '../../api/endpoint/patients/attach';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
-import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
 
 const PREFIX = 'AttachmentLinkingDialog';
@@ -64,16 +63,13 @@ const AttachmentLinkingDialog = ({
 		}
 	};
 
-	const titleId = useUniqueId('attachment-linking-dialog-title');
-
 	return (
 		<StyledDialog
 			classes={{paper: classes.dialogPaper}}
 			open={open}
-			aria-labelledby={titleId}
 			onClose={onClose}
 		>
-			<DialogTitle id={titleId}>Link attachment {attachment._id}</DialogTitle>
+			<DialogTitle>Link attachment {attachment._id}</DialogTitle>
 			<DialogContent className={classes.dialogPaper}>
 				<DialogContentText>
 					If you do not want to link this attachment, click cancel. If you

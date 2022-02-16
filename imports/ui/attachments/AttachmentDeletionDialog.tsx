@@ -25,7 +25,6 @@ import ConfirmationTextField, {
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import CancelButton from '../button/CancelButton';
-import useUniqueId from '../hooks/useUniqueId';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
@@ -88,13 +87,9 @@ const AttachmentDeletionDialog = ({
 		}
 	};
 
-	const titleId = useUniqueId('attachment-deletion-dialog-title');
-
 	return (
-		<StyledDialog open={open} aria-labelledby={titleId} onClose={onClose}>
-			<DialogTitle id={titleId}>
-				Detach attachment {attachment.name}
-			</DialogTitle>
+		<StyledDialog open={open} onClose={onClose}>
+			<DialogTitle>Detach attachment {attachment.name}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					If you do not want to detach this attachment, click cancel. If you

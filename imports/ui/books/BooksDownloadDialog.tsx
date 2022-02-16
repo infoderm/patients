@@ -22,8 +22,6 @@ import CancelButton from '../button/CancelButton';
 
 import GridContainerInsideDialogContent from '../grid/GridContainerInsideDialogContent';
 
-import useUniqueId from '../hooks/useUniqueId';
-
 import saveTextAs from '../output/saveTextAs';
 
 import call from '../../api/endpoint/call';
@@ -99,11 +97,9 @@ const BooksDownloadDialog = ({
 		}
 	};
 
-	const titleId = useUniqueId('books-download-dialog-title');
-
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
-			<DialogTitle id={titleId}>Download book data as CSV</DialogTitle>
+		<Dialog open={open} onClose={onClose}>
+			<DialogTitle>Download book data as CSV</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					{advancedFunctionality ? 'Tune parameters' : 'Choose year'} then click

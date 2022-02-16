@@ -56,7 +56,6 @@ import {weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
-import useUniqueId from '../hooks/useUniqueId';
 
 const Dialog = styled(MuiDialog)({
 	'& .MuiDialog-paper': {
@@ -256,12 +255,10 @@ const AppointmentDialog = ({
 			: '';
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
 
-	const titleId = useUniqueId('appointment-dialog-title');
-
 	return (
-		<Dialog aria-labelledby={titleId} open={open}>
+		<Dialog open={open}>
 			{loading && <LinearProgress />}
-			<DialogTitle id={titleId}>Schedule an appointment</DialogTitle>
+			<DialogTitle>Schedule an appointment</DialogTitle>
 			<DialogContent>
 				<Grid container spacing={3}>
 					<Grid item xs={4}>

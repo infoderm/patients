@@ -14,7 +14,6 @@ import patientsRemove from '../../api/endpoint/patients/remove';
 import {normalized} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
-import useUniqueId from '../hooks/useUniqueId';
 
 import DeleteButton from '../button/DeleteButton';
 import CancelButton from '../button/CancelButton';
@@ -68,11 +67,9 @@ const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 		}
 	};
 
-	const titleId = useUniqueId('patient-deletion-dialog-title');
-
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
-			<DialogTitle id={titleId}>
+		<Dialog open={open} onClose={onClose}>
+			<DialogTitle>
 				Delete patient {patient.firstname} {patient.lastname}
 			</DialogTitle>
 			<DialogContent>

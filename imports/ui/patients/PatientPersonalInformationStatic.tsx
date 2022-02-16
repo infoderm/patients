@@ -66,7 +66,6 @@ import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 import AttachFileButton from '../attachments/AttachFileButton';
 
-import useUniqueId from '../hooks/useUniqueId';
 import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
 import debounceSnackbar from '../../util/debounceSnackbar';
@@ -259,25 +258,6 @@ const PatientPersonalInformationStatic = (
 	const localizeAge = useDateFormatAge();
 	const birthdatePickerProps = useBirthdatePickerProps();
 
-	const componentId = useUniqueId('patient-personal-information');
-
-	const attachFileButtonId = `${componentId}-attach-file-button`;
-
-	const nnInputId = `${componentId}-input-nn`;
-	const lastnameInputId = `${componentId}-input-lastname`;
-	const firstnameInputId = `${componentId}-input-firstname`;
-	const sexInputId = `${componentId}-input-sex`;
-	const birthdateInputId = `${componentId}-input-birthdate`;
-	const deathdateInputId = `${componentId}-input-deathdate`;
-	const antecedentsInputId = `${componentId}-input-antecedents`;
-	const ongoingInputId = `${componentId}-input-ongoing`;
-	const streetandnumberInputId = `${componentId}-input-streetandnumber`;
-	const zipInputId = `${componentId}-input-zip`;
-	const municipalityInputId = `${componentId}-input-municipality`;
-	const phoneInputId = `${componentId}-input-phone`;
-	const aboutInputId = `${componentId}-input-about`;
-	const noshowInputId = `${componentId}-input-noshow`;
-
 	if (loading) {
 		return <NoContent>Loading...</NoContent>;
 	}
@@ -361,7 +341,6 @@ const PatientPersonalInformationStatic = (
 							value={deathdateLegal}
 							renderInput={(props) => (
 								<TextField
-									id={deathdateInputId}
 									margin="normal"
 									InputLabelProps={{shrink: true}}
 									{...props}
@@ -392,7 +371,6 @@ const PatientPersonalInformationStatic = (
 									<Grid item xs={2}>
 										<TextField
 											fullWidth
-											id={nnInputId}
 											className={classes.formControl}
 											label="NISS"
 											value={patient.niss}
@@ -404,7 +382,6 @@ const PatientPersonalInformationStatic = (
 									<Grid item xs={3}>
 										<TextField
 											fullWidth
-											id={lastnameInputId}
 											className={classes.formControl}
 											label="Last name"
 											value={patient.lastname}
@@ -416,7 +393,6 @@ const PatientPersonalInformationStatic = (
 									<Grid item xs={3}>
 										<TextField
 											fullWidth
-											id={firstnameInputId}
 											className={classes.formControl}
 											label="First name"
 											value={patient.firstname}
@@ -429,7 +405,6 @@ const PatientPersonalInformationStatic = (
 										<TextField
 											select
 											fullWidth
-											id={sexInputId}
 											label="Sex"
 											margin="normal"
 											className={classes.formControl}
@@ -453,7 +428,6 @@ const PatientPersonalInformationStatic = (
 											disabled={!editing}
 											renderInput={(props) => (
 												<TextField
-													id={birthdateInputId}
 													margin="normal"
 													InputLabelProps={{shrink: true}}
 													{...props}
@@ -475,7 +449,6 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={12} md={6}>
 								<ColorizedTextarea
 									fullWidth
-									id={antecedentsInputId}
 									readOnly={!editing}
 									label="Antécédents"
 									placeholder={placeholder}
@@ -500,7 +473,6 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={12} md={6}>
 								<ColorizedTextarea
 									fullWidth
-									id={ongoingInputId}
 									readOnly={!editing}
 									label="Traitement en cours"
 									placeholder={placeholder}
@@ -554,7 +526,6 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									id={streetandnumberInputId}
 									readOnly={!editing}
 									label="Rue et Numéro"
 									InputLabelProps={{
@@ -572,7 +543,6 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									id={zipInputId}
 									readOnly={!editing}
 									label="Code Postal"
 									InputLabelProps={{
@@ -590,7 +560,6 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									id={municipalityInputId}
 									readOnly={!editing}
 									label="Commune"
 									InputLabelProps={{
@@ -609,7 +578,6 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									id={phoneInputId}
 									readOnly={!editing}
 									InputLabelProps={{
 										shrink: true,
@@ -705,7 +673,6 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={9}>
 								<ColorizedTextarea
 									fullWidth
-									id={aboutInputId}
 									readOnly={!editing}
 									label="About"
 									placeholder={placeholder}
@@ -730,7 +697,6 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={3}>
 								<TextField
 									fullWidth
-									id={noshowInputId}
 									readOnly={!editing}
 									InputProps={{
 										startAdornment: reifiedNoShows ? (
@@ -834,7 +800,6 @@ const PatientPersonalInformationStatic = (
 						<EditIcon />
 					</FixedFab>
 					<AttachFileButton
-						id={attachFileButtonId}
 						Button={FixedFab}
 						col={3}
 						endpoint={patientsAttach}

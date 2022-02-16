@@ -5,26 +5,21 @@ import React, {useState} from 'react';
 import {useSnackbar} from 'notistack';
 import changePassword from '../../api/user/changePassword';
 
-import useUniqueId from '../hooks/useUniqueId';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 interface Props {
+	id: string;
 	anchorEl: HTMLElement;
 	handleClose: () => void;
 }
 
-const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
+const ChangePasswordPopover = ({id, anchorEl, handleClose}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [oldPassword, setOldPassword] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 	const [errorOldPassword, setErrorOldPassword] = useState('');
 	const [errorNewPassword, setErrorNewPassword] = useState('');
-
-	const id = useUniqueId('dashboard-change-password');
-
-	const oldPasswordInputId = `${id}-input-old-password`;
-	const newPasswordInputId = `${id}-input-new-password`;
 
 	const uiChangePassword = async (event) => {
 		event.preventDefault();
@@ -78,7 +73,6 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 			<Form autoComplete="off">
 				<RowTextField
 					autoFocus
-					id={oldPasswordInputId}
 					error={Boolean(errorOldPassword)}
 					helperText={errorOldPassword}
 					label="Old password"
@@ -89,7 +83,6 @@ const ChangePasswordPopover = ({anchorEl, handleClose}: Props) => {
 					}}
 				/>
 				<RowTextField
-					id={newPasswordInputId}
 					error={Boolean(errorNewPassword)}
 					helperText={errorNewPassword}
 					label="New password"

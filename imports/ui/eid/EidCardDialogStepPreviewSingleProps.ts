@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {PatientIdFields} from '../../api/collection/patients';
 
 export default interface Props {
-	titleId: string;
+	titleId?: string;
 	onPrevStep: () => void;
 	patientId: string;
 	eidInfo: PatientIdFields;

@@ -8,7 +8,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 
 import {PatientIdFields} from '../../api/collection/patients';
 
-import useUniqueId from '../hooks/useUniqueId';
 import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
@@ -25,13 +24,10 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 
 	const selectionIsSingle = selected.size === 1;
 
-	const titleId = useUniqueId('eid-card-dialog-title');
-
 	return (
-		<Dialog aria-labelledby={titleId} open={open} onClose={onClose}>
+		<Dialog open={open} onClose={onClose}>
 			{step === 'selection' && (
 				<EidCardDialogStepSelection
-					titleId={titleId}
 					eidInfo={eidInfo}
 					selected={selected}
 					setSelected={setSelected}
@@ -43,7 +39,6 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 			)}
 			{step === 'preview' && selectionIsSingle && (
 				<EidCardDialogStepPreviewSingle
-					titleId={titleId}
 					eidInfo={eidInfo}
 					navigate={navigate}
 					patientId={selected[Symbol.iterator]().next().value}
@@ -55,7 +50,7 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 			)}
 			{step === 'preview' && !selectionIsSingle && (
 				<>
-					<DialogTitle id={titleId}>Error</DialogTitle>
+					<DialogTitle>Error</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
 							Cannot handle 0-selection or multi-selection at the moment.

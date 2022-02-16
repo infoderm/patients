@@ -21,7 +21,6 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField';
 import call from '../../api/endpoint/call';
 import remove from '../../api/endpoint/consultations/remove';
-import useUniqueId from '../hooks/useUniqueId';
 import CancelButton from '../button/CancelButton';
 import DeleteButton from '../button/DeleteButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
@@ -82,12 +81,10 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 		? "Patient's last name"
 		: 'Could not find patient.';
 
-	const titleId = useUniqueId('consultation-deletion-dialog-title');
-
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
+		<Dialog open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id={titleId}>
+			<DialogTitle>
 				Delete consultation for patient {patientIdentifier}
 			</DialogTitle>
 			<DialogContent>

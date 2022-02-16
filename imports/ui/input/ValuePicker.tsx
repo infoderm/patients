@@ -1,7 +1,6 @@
 import React from 'react';
 
 import FormControl from '@mui/material/FormControl';
-import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -32,22 +31,17 @@ const ValuePicker = ({
 	pairToKey = (option, _index) => option,
 	...rest
 }: Props) => {
-	const inputId = useUniqueId('value-picker-select');
-
-	const input = <Input id={inputId} />;
-
-	const inputProps = {
-		name,
-		id: inputId,
-	};
+	const id = useUniqueId('value-picker');
+	const selectId = `${id}-select`;
+	const labelId = `${id}-label`;
 
 	return (
 		<FormControl>
-			{label && <InputLabel htmlFor={inputId}>{label}</InputLabel>}
+			{label && <InputLabel id={labelId}>{label}</InputLabel>}
 			<Select
+				labelId={labelId}
+				id={selectId}
 				value={value}
-				input={input}
-				inputProps={inputProps}
 				onChange={onChange}
 				{...rest}
 			>

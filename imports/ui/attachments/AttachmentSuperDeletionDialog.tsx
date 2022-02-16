@@ -24,7 +24,6 @@ import ConfirmationTextField, {
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
-import useUniqueId from '../hooks/useUniqueId';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
@@ -71,13 +70,9 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 		}
 	};
 
-	const titleId = useUniqueId('attachment-super-deletion-dialog-title');
-
 	return (
-		<Dialog open={open} aria-labelledby={titleId} onClose={onClose}>
-			<DialogTitle id={titleId}>
-				Delete attachment {attachment.name}
-			</DialogTitle>
+		<Dialog open={open} onClose={onClose}>
+			<DialogTitle>Delete attachment {attachment.name}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					If you do not want to delete this attachment, click cancel. If you

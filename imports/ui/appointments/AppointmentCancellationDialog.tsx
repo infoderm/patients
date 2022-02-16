@@ -19,7 +19,6 @@ import call from '../../api/endpoint/call';
 import {useSetting} from '../settings/hooks';
 import withLazyOpening from '../modal/withLazyOpening';
 import cancel from '../../api/endpoint/appointments/cancel';
-import useUniqueId from '../hooks/useUniqueId';
 
 interface Props {
 	open: boolean;
@@ -45,20 +44,10 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 		}
 	};
 
-	const dialogId = useUniqueId('dialog-appointment-cancellation');
-	const titleId = `${dialogId}-title`;
-	const cancellationReasonInputId = `${dialogId}-input-reason`;
-	const cancellationExplanationInputId = `${dialogId}-input-explanation`;
-
 	return (
-		<Dialog
-			id={dialogId}
-			open={open}
-			aria-labelledby={titleId}
-			onClose={onClose}
-		>
+		<Dialog open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
-			<DialogTitle id={titleId}>Cancel this appointment</DialogTitle>
+			<DialogTitle>Cancel this appointment</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					If you do not want to cancel this appointment, click cancel. If you
@@ -67,7 +56,6 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 				<TextField
 					select
 					fullWidth
-					id={cancellationReasonInputId}
 					margin="normal"
 					label="Cancellation reason"
 					InputProps={{
@@ -87,7 +75,6 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 				</TextField>
 				<TextField
 					fullWidth
-					id={cancellationExplanationInputId}
 					margin="normal"
 					label="Explanation for cancellation"
 					placeholder="Please give an explanation for the cancellation (optional)"

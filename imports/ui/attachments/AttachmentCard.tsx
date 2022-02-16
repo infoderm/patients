@@ -163,6 +163,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 			: undefined;
 
 	const menuId = useUniqueId('attachment-card-more-menu');
+	const open = Boolean(menu);
 
 	return (
 		<StyledCard className={classes.card}>
@@ -185,8 +186,9 @@ const AttachmentCard = ({attachment, info}: Props) => {
 					<>
 						<IconButton
 							size="large"
-							aria-owns={menu ? menuId : null}
+							aria-controls={open ? menuId : null}
 							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
 							onClick={(event) => {
 								dispatch({type: 'openMenu', event});
 							}}
@@ -196,7 +198,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 						<Menu
 							id={menuId}
 							anchorEl={menu}
-							open={Boolean(menu)}
+							open={open}
 							onClose={() => {
 								dispatch({type: 'closeMenu'});
 							}}
