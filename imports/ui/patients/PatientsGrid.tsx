@@ -35,6 +35,4 @@ const PatientsGrid = ({
 	</Grid>
 );
 
-PatientsGrid.projection = StaticPatientCard.projection;
-
 export default PatientsGrid;
