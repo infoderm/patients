@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
 import {Theme, useTheme} from '@mui/material/styles';
 import {CSSProperties} from '@mui/styles';
@@ -8,7 +7,7 @@ import Fab, {FabProps} from '@mui/material/Fab';
 import addTooltip from '../accessibility/addTooltip';
 
 interface Options {
-	theme: Theme;
+	theme?: Theme;
 	row?: number;
 	col?: number;
 	style?: object;
@@ -18,8 +17,8 @@ const DEFAULT_ROW = 1;
 const DEFAULT_COL = 1;
 
 export const computeFixedFabStyle = ({
-	style,
-	theme,
+	theme = undefined,
+	style = undefined,
 	row = DEFAULT_ROW,
 	col = DEFAULT_COL,
 }: Options): CSSProperties => ({
@@ -29,29 +28,20 @@ export const computeFixedFabStyle = ({
 	right: theme?.spacing(3 + 9 * (col - 1)),
 });
 
-const propTypes = {
-	col: PropTypes.number,
-	row: PropTypes.number,
-	style: PropTypes.object,
-	component: PropTypes.elementType,
-	children: PropTypes.oneOfType([
-		PropTypes.arrayOf(PropTypes.node),
-		PropTypes.node,
-	]).isRequired,
-};
-
-type Props = InferProps<typeof propTypes>;
+interface FixedFabExtraProps {
+	col?: number;
+	row?: number;
+}
 
 const FixedFab = React.forwardRef(
 	(
 		{
 			col = DEFAULT_COL,
 			row = DEFAULT_ROW,
-			style,
-			children,
-			component,
+			style = undefined,
+			component = undefined,
 			...rest
-		}: Props & FabProps<typeof component>,
+		}: FabProps<typeof component> & FixedFabExtraProps,
 		ref,
 	) => {
 		const theme = useTheme();
@@ -59,13 +49,9 @@ const FixedFab = React.forwardRef(
 		const computedStyle = computeFixedFabStyle({theme, col, row, style});
 
 		return (
-			<Fab style={computedStyle} component={component} {...rest} ref={ref}>
-				{children}
-			</Fab>
+			<Fab style={computedStyle} component={component} {...rest} ref={ref} />
 		);
 	},
 );
-
-FixedFab.propTypes = propTypes;
 
 export default addTooltip(FixedFab);

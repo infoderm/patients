@@ -83,21 +83,21 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-interface SetPickerProps<ItemType, ChipProps> {
+interface SetPickerProps<Item, ChipProps> {
 	className?: string;
 	Chip?: React.ElementType;
-	chipProps?: ((item: ItemType, index: number) => ChipProps) | ChipProps;
+	chipProps?: ((item: Item, index: number) => ChipProps) | ChipProps;
 	withoutToggle?: boolean;
-	value: ItemType[];
+	value: Item[];
 	readOnly?: boolean;
 	useSuggestions: (inputValue: string) => {loading?: boolean; results: any[]};
-	itemToKey: (item: ItemType) => string | number;
-	itemToString: (item: ItemType) => string;
+	itemToKey: (item: Item) => React.Key;
+	itemToString: (item: Item) => string;
 	Item?: React.ElementType;
 	inputTransform?: (inputValue: string) => string;
 	inputValidation?: InputValidation;
 	onChange?: (event: any) => void | Promise<void>;
-	createNewItem?: (inputValue: string) => ItemType;
+	createNewItem?: (inputValue: string) => Item;
 	maxCount?: number;
 	multiset?: boolean;
 	TextFieldProps?: any;

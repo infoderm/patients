@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -8,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
 import useAny from '../hooks/useAny';
+import PropsOf from '../../util/PropsOf';
 
 export const useConfirmationTextFieldState = (
 	expected: string,
@@ -59,7 +59,14 @@ export const useConfirmationTextFieldState = (
 	};
 };
 
-const ConfirmationTextField = ({onAutoFill, ...rest}) => (
+interface ConfirmationTextFieldAdditionalProps {
+	onAutoFill: () => void;
+}
+
+const ConfirmationTextField = ({
+	onAutoFill,
+	...rest
+}: ConfirmationTextFieldAdditionalProps & PropsOf<typeof TextField>) => (
 	<TextField
 		InputProps={{
 			endAdornment: (
@@ -80,9 +87,5 @@ const ConfirmationTextField = ({onAutoFill, ...rest}) => (
 		{...rest}
 	/>
 );
-
-ConfirmationTextField.propTypes = {
-	onAutoFill: PropTypes.func.isRequired,
-};
 
 export default ConfirmationTextField;

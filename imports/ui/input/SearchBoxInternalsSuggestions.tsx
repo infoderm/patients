@@ -1,9 +1,13 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
-import PropTypes from 'prop-types';
 
 import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
+import {
+	GetPropsCommonOptions,
+	UseComboboxGetItemPropsOptions,
+	UseComboboxGetMenuPropsOptions,
+} from 'downshift';
 
 const PREFIX = 'SearchBoxInternalsSuggestions';
 
@@ -26,19 +30,32 @@ const StyledPaper = styled(Paper)(({theme}) => ({
 	},
 }));
 
-export default function SearchBoxInternalsSuggestions(props) {
-	const {
-		isOpen,
-		loading,
-		suggestions,
-		itemToKey,
-		itemToString,
-		getMenuProps,
-		getItemProps,
-		selectedItem,
-		highlightedIndex,
-	} = props;
+interface SearchBoxInternalsSuggestionsProps<Item> {
+	isOpen: boolean;
+	loading: boolean;
+	suggestions: Item[];
+	itemToKey: (item: Item) => React.Key;
+	itemToString: (item: Item) => string;
+	getMenuProps: (
+		options?: UseComboboxGetMenuPropsOptions,
+		otherOptions?: GetPropsCommonOptions,
+	) => any;
+	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
+	highlightedIndex?: number;
+	selectedItem: Item;
+}
 
+const SearchBoxInternalsSuggestions = <Item,>({
+	isOpen,
+	loading,
+	suggestions,
+	itemToKey,
+	itemToString,
+	getMenuProps,
+	getItemProps,
+	selectedItem,
+	highlightedIndex,
+}: SearchBoxInternalsSuggestionsProps<Item>) => {
 	return (
 		<StyledPaper square className={classes.suggestions} {...getMenuProps()}>
 			{isOpen &&
@@ -60,14 +77,6 @@ export default function SearchBoxInternalsSuggestions(props) {
 				))}
 		</StyledPaper>
 	);
-}
-
-SearchBoxInternalsSuggestions.propTypes = {
-	isOpen: PropTypes.bool.isRequired,
-	loading: PropTypes.bool.isRequired,
-	suggestions: PropTypes.array.isRequired,
-	itemToString: PropTypes.func.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	getItemProps: PropTypes.func.isRequired,
-	highlightedIndex: PropTypes.number,
 };
+
+export default SearchBoxInternalsSuggestions;

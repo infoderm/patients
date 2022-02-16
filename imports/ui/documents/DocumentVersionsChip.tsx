@@ -1,16 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
 import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import Chip from '@mui/material/Chip';
+import Chip, {ChipProps} from '@mui/material/Chip';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import {myEncodeURIComponent} from '../../util/uri';
+import {DocumentDocument} from '../../api/collection/documents';
 import useDocumentVersions from './useDocumentVersions';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +20,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const DocumentVersionsChip = ({document, className, ...rest}) => {
+interface DocumentVersionsChipProps
+	extends Omit<ChipProps<typeof Link>, 'component' | 'to'> {
+	document: DocumentDocument;
+}
+
+const DocumentVersionsChip = ({
+	document,
+	className,
+	...rest
+}: DocumentVersionsChipProps) => {
 	const classes = useStyles();
 
 	const {loading, versions} = useDocumentVersions(document);
@@ -41,11 +50,6 @@ const DocumentVersionsChip = ({document, className, ...rest}) => {
 			{...rest}
 		/>
 	);
-};
-
-DocumentVersionsChip.propTypes = {
-	document: PropTypes.object.isRequired,
-	className: PropTypes.string,
 };
 
 export default DocumentVersionsChip;

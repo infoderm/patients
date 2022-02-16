@@ -5,6 +5,15 @@ interface Patient {
 	lastname: string;
 }
 
+export interface DocumentResult {
+	name: string;
+	flag?: string;
+	code?: string;
+	measure?: string;
+	unit?: string;
+	normal?: string;
+}
+
 export interface DocumentDocument {
 	_id: string;
 	owner: string;
@@ -24,6 +33,7 @@ export interface DocumentDocument {
 	patient?: Patient;
 	deleted?: boolean;
 	status?: string;
+	results?: DocumentResult[];
 }
 
 export const Documents = new Mongo.Collection<DocumentDocument>('documents');

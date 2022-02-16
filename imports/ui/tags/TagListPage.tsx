@@ -1,4 +1,5 @@
 import React, {DependencyList} from 'react';
+import TagDocument from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';
 
@@ -21,7 +22,7 @@ interface Props {
 		query: unknown,
 		options: unknown,
 		deps: DependencyList,
-	) => {loading: boolean; dirty?: boolean; results: unknown[]};
+	) => {loading: boolean; dirty?: boolean; results: TagDocument[]};
 }
 
 const TagList = ({

@@ -1,6 +1,5 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
-import PropTypes from 'prop-types';
 
 import AccordionDetails from '@mui/material/AccordionDetails';
 
@@ -32,6 +31,9 @@ import {red} from '@mui/material/colors';
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
 import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
+import {ConsultationDocument} from '../../api/collection/consultations';
+import {AttachmentDocument} from '../../api/collection/attachments';
+import PropsOf from '../../util/PropsOf';
 
 const PREFIX = 'StaticConsultationCardDetails';
 
@@ -82,7 +84,15 @@ function paymentMethodString(payment_method) {
 	}
 }
 
-const ConsultationsCardListItemBase = ({avatar, ...rest}) => (
+interface ConsultationsCardListItemBaseProps
+	extends PropsOf<typeof ListItemText> {
+	avatar: React.ReactNode;
+}
+
+const ConsultationsCardListItemBase = ({
+	avatar,
+	...rest
+}: ConsultationsCardListItemBaseProps) => (
 	<ListItem>
 		<ListItemAvatar>{avatar}</ListItemAvatar>
 		<ListItemText
@@ -101,7 +111,15 @@ const ConsultationsCardListItemBase = ({avatar, ...rest}) => (
 	</ListItem>
 );
 
-const ConsultationsCardListItem = ({Icon, ...rest}) => (
+interface ConsultationsCardListItemProps
+	extends Omit<PropsOf<typeof ConsultationsCardListItemBase>, 'avatar'> {
+	Icon: React.ElementType;
+}
+
+const ConsultationsCardListItem = ({
+	Icon,
+	...rest
+}: ConsultationsCardListItemProps) => (
 	<ConsultationsCardListItemBase
 		avatar={
 			<Avatar>
@@ -112,7 +130,17 @@ const ConsultationsCardListItem = ({Icon, ...rest}) => (
 	/>
 );
 
-const StaticConsultationCardDetails = (props) => {
+interface StaticConsultationCardDetailsProps {
+	deleted: boolean;
+	missingPaymentData: boolean;
+	isNoShow: boolean;
+	consultation: ConsultationDocument;
+	attachments: AttachmentDocument[];
+}
+
+const StaticConsultationCardDetails = (
+	props: StaticConsultationCardDetailsProps,
+) => {
 	const {
 		deleted,
 		missingPaymentData,
@@ -268,10 +296,6 @@ const StaticConsultationCardDetails = (props) => {
 			</List>
 		</StyledAccordionDetails>
 	);
-};
-
-StaticConsultationCardDetails.propTypes = {
-	consultation: PropTypes.object.isRequired,
 };
 
 export default StaticConsultationCardDetails;

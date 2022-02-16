@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {UseComboboxReturnValue} from 'downshift';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
 import SearchBoxInternalsInputContainer from './SearchBoxInternalsInputContainer';
@@ -7,24 +7,25 @@ import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions';
 
-export default function SearchBoxWithSuggestionsInternals(props) {
-	const {
-		className,
-		suggestions,
-		itemToKey,
-		itemToString,
-		expands,
-		placeholder,
-		getComboboxProps,
-		getInputProps,
-		getMenuProps,
-		getItemProps,
-		isOpen,
-		loading,
-		selectedItem,
-		highlightedIndex,
-	} = props;
+interface SearchBoxWithSuggestionsInternalsProps<Item>
+	extends UseComboboxReturnValue<Item> {
+	className?: string;
+	expands?: boolean;
+	loading: boolean;
+	placeholder?: string;
+	suggestions: Item[];
+	itemToKey: (item: Item) => React.Key;
+	itemToString: (item: Item) => string;
+}
 
+const SearchBoxWithSuggestionsInternals = <Item,>({
+	className,
+	expands = false,
+	placeholder,
+	getComboboxProps,
+	getInputProps,
+	...rest
+}: SearchBoxWithSuggestionsInternalsProps<Item>) => {
 	return (
 		<SearchBoxInternalsContainer>
 			<SearchBoxInternalsInputContainer
@@ -40,32 +41,9 @@ export default function SearchBoxWithSuggestionsInternals(props) {
 					})}
 				/>
 			</SearchBoxInternalsInputContainer>
-			<SearchBoxInternalsSuggestions
-				{...{
-					isOpen,
-					loading,
-					suggestions,
-					itemToKey,
-					itemToString,
-					getMenuProps,
-					getItemProps,
-					selectedItem,
-					highlightedIndex,
-				}}
-			/>
+			<SearchBoxInternalsSuggestions {...rest} />
 		</SearchBoxInternalsContainer>
 	);
-}
-
-SearchBoxWithSuggestionsInternals.propTypes = {
-	suggestions: PropTypes.array.isRequired,
-	itemToString: PropTypes.func.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	getInputProps: PropTypes.func.isRequired,
-	getItemProps: PropTypes.func.isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	loading: PropTypes.bool.isRequired,
-	inputValue: PropTypes.string,
-	highlightedIndex: PropTypes.number,
-	placeholder: PropTypes.string,
 };
+
+export default SearchBoxWithSuggestionsInternals;

@@ -1,16 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {Link} from 'react-router-dom';
 
-import Button from '@mui/material/Button';
+import Button, {ButtonProps} from '@mui/material/Button';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import {myEncodeURIComponent} from '../../../util/uri';
 import useDocumentVersions from '../useDocumentVersions';
+import {DocumentDocument} from '../../../api/collection/documents';
 
-const DocumentVersionsButton = ({document, ...rest}) => {
+interface DocumentVersionsButtonProps
+	extends Omit<ButtonProps<typeof Link>, 'component' | 'to'> {
+	document: DocumentDocument;
+}
+
+const DocumentVersionsButton = ({
+	document,
+	...rest
+}: DocumentVersionsButtonProps) => {
 	const {loading, versions} = useDocumentVersions(document);
 
 	if (loading || versions.length <= 1) return null;
@@ -30,10 +38,6 @@ const DocumentVersionsButton = ({document, ...rest}) => {
 			<DynamicFeedIcon />
 		</Button>
 	);
-};
-
-DocumentVersionsButton.propTypes = {
-	document: PropTypes.object.isRequired,
 };
 
 export default DocumentVersionsButton;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 
 import CardMedia from '@mui/material/CardMedia';
 
@@ -9,15 +8,18 @@ import {link} from '../../api/attachments';
 import useAttachment from './useAttachment';
 import useThumbnail from './useThumbnail';
 
-const propTypes = {
-	attachmentId: PropTypes.string.isRequired,
-	height: PropTypes.number.isRequired,
-	width: PropTypes.number,
-};
+interface AttachmentThumbnailProps extends PropsOf<typeof CardMedia> {
+	attachmentId: string;
+	height: number;
+	width?: number;
+}
 
-type Props = InferProps<typeof propTypes> & PropsOf<typeof CardMedia>;
-
-const AttachmentThumbnail = ({attachmentId, width, height, ...rest}: Props) => {
+const AttachmentThumbnail = ({
+	attachmentId,
+	width,
+	height,
+	...rest
+}: AttachmentThumbnailProps) => {
 	const {loading, fields: attachment} = useAttachment(
 		{},
 		attachmentId,
@@ -33,7 +35,5 @@ const AttachmentThumbnail = ({attachmentId, width, height, ...rest}: Props) => {
 
 	return <CardMedia {...rest} image={src} />;
 };
-
-AttachmentThumbnail.propTypes = propTypes;
 
 export default AttachmentThumbnail;

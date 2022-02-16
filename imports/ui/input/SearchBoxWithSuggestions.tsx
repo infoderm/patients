@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 
 import {useCombobox, UseComboboxProps} from 'downshift';
 
@@ -30,37 +29,37 @@ const comboboxStateReducer = (state, {type, changes}) => {
 	}
 };
 
-type Props = {
-	useSuggestions: (x: string) => {loading?: boolean; results: any[]};
-	itemToKey: (x: any) => any;
+type SearchBoxWithSuggestionsProps<Item> = {
+	useSuggestions: (x: string) => {loading?: boolean; results: Item[]};
+	itemToKey: (x: Item) => React.Key;
 	expands?: boolean;
 	placeholder?: string;
 	className?: string;
-} & Omit<UseComboboxProps<any>, 'items'>;
+} & Omit<
+	UseComboboxProps<Item>,
+	'items' | 'inputValue' | 'onInputValueChange' | 'stateReducer'
+>;
 
-export default function SearchBoxWithSuggestions(props: Props) {
-	const {
-		useSuggestions,
-		itemToKey,
-		itemToString,
-		expands,
-		placeholder,
-		className,
-		...rest
-	} = props;
-
+const SearchBoxWithSuggestions = <Item,>({
+	useSuggestions,
+	itemToKey,
+	itemToString,
+	expands,
+	placeholder,
+	className,
+	...rest
+}: SearchBoxWithSuggestionsProps<Item>) => {
 	const [inputValue, setInputValue] = useState('');
 	const {loading, results: suggestions} = useSuggestions(inputValue);
 
 	const internalsProps = {
-		useSuggestions,
+		className,
+		expands,
+		loading,
+		placeholder,
+		suggestions,
 		itemToKey,
 		itemToString,
-		expands,
-		placeholder,
-		className,
-		loading,
-		suggestions,
 	};
 
 	const downshiftProps = useCombobox({
@@ -80,11 +79,6 @@ export default function SearchBoxWithSuggestions(props: Props) {
 			{...internalsProps}
 		/>
 	);
-}
-
-SearchBoxWithSuggestions.propTypes = {
-	useSuggestions: PropTypes.func.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	placeholder: PropTypes.string,
-	className: PropTypes.string,
 };
+
+export default SearchBoxWithSuggestions;

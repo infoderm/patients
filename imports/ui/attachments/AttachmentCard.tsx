@@ -114,12 +114,14 @@ const reducer = (state, action) => {
 	}
 };
 
+export interface AttachmentInfo {
+	parentCollection: string;
+	parentId: string;
+}
+
 interface Props {
 	attachment: AttachmentDocument;
-	info?: {
-		parentCollection: string;
-		parentId: string;
-	};
+	info?: AttachmentInfo;
 }
 
 const AttachmentCard = ({attachment, info}: Props) => {

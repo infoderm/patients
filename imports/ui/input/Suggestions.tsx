@@ -1,25 +1,23 @@
 import React from 'react';
-import PropTypes, {InferProps} from 'prop-types';
 import classNames from 'classnames';
 
 import {makeStyles, createStyles} from '@mui/styles';
 import Paper from '@mui/material/Paper';
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem, {MenuItemProps} from '@mui/material/MenuItem';
+import {UseComboboxGetItemPropsOptions} from 'downshift';
 
-const SuggestionPropTypes = {
-	highlightedIndex: PropTypes.number.isRequired,
-	index: PropTypes.number.isRequired,
-	item: PropTypes.any.isRequired,
-	selectedItems: PropTypes.array.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired,
-	Item: PropTypes.elementType,
-};
+interface SuggestionProps<Item> extends Omit<MenuItemProps<'div'>, 'ref'> {
+	highlightedIndex: number;
+	index: number;
+	item: Item;
+	selectedItems: Item[];
+	itemToKey: (item: Item) => React.Key;
+	itemToString: (item: Item) => string;
+	Item?: React.ElementType;
+}
 
-type SuggestionProps = InferProps<typeof SuggestionPropTypes>;
-
-const Suggestion = React.forwardRef<any, SuggestionProps>(
-	(
+const Suggestion = React.forwardRef(
+	<ItemType,>(
 		{
 			item,
 			index,
@@ -29,8 +27,8 @@ const Suggestion = React.forwardRef<any, SuggestionProps>(
 			itemToString,
 			Item,
 			...rest
-		},
-		ref,
+		}: SuggestionProps<ItemType>,
+		ref: React.Ref<HTMLDivElement>,
 	) => {
 		const isHighlighted = highlightedIndex === index;
 		const isSelected = selectedItems.map(itemToKey).includes(itemToKey(item));
@@ -51,21 +49,17 @@ const Suggestion = React.forwardRef<any, SuggestionProps>(
 	},
 );
 
-Suggestion.propTypes = SuggestionPropTypes;
-
-const SuggestionsPropTypes = {
-	hide: PropTypes.bool,
-	loading: PropTypes.bool,
-	suggestions: PropTypes.array.isRequired,
-	getItemProps: PropTypes.func.isRequired,
-	highlightedIndex: PropTypes.number,
-	selectedItems: PropTypes.array.isRequired,
-	itemToKey: PropTypes.func.isRequired,
-	itemToString: PropTypes.func.isRequired,
-	Item: PropTypes.elementType,
-};
-
-type SuggestionsProps = InferProps<typeof SuggestionsPropTypes>;
+interface SuggestionsProps<Item> {
+	hide?: boolean;
+	loading?: boolean;
+	suggestions: Item[];
+	highlightedIndex?: number;
+	selectedItems: Item[];
+	itemToKey: (item: Item) => React.Key;
+	itemToString: (item: Item) => string;
+	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
+	Item?: React.ElementType;
+}
 
 const styles = (theme) =>
 	createStyles({
@@ -83,8 +77,8 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const Suggestions = React.forwardRef<any, SuggestionsProps>(
-	(
+const Suggestions = React.forwardRef(
+	<ItemType,>(
 		{
 			hide = false,
 			loading = false,
@@ -96,8 +90,8 @@ const Suggestions = React.forwardRef<any, SuggestionsProps>(
 			itemToString,
 			Item,
 			...rest
-		},
-		ref,
+		}: SuggestionsProps<ItemType>,
+		ref: React.Ref<HTMLDivElement>,
 	) => {
 		const classes = useStyles();
 
@@ -129,7 +123,5 @@ const Suggestions = React.forwardRef<any, SuggestionsProps>(
 		);
 	},
 );
-
-Suggestions.propTypes = SuggestionsPropTypes;
 
 export default Suggestions;

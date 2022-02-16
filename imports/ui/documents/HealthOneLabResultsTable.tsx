@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {makeStyles, createStyles} from '@mui/styles';
 
 import Typography from '@mui/material/Typography';
@@ -9,6 +8,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import {DocumentDocument, DocumentResult} from '../../api/collection/documents';
 
 const styles = (theme) =>
 	createStyles({
@@ -57,14 +57,20 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-const HealthOneLabResultsTable = ({document}) => {
+interface HealthOneLabResultsTableProps {
+	document: DocumentDocument;
+}
+
+const HealthOneLabResultsTable = ({
+	document,
+}: HealthOneLabResultsTableProps) => {
 	const classes = useStyles();
 
 	if (!document.results || document.results.length === 0) {
 		return <Typography>No results</Typography>;
 	}
 
-	const rows = [];
+	const rows: Array<DocumentResult & {className: string}> = [];
 
 	for (const result of document.results) {
 		let className = classes.row;
@@ -161,7 +167,7 @@ const HealthOneLabResultsTable = ({document}) => {
 				</TableHead>
 				<TableBody>
 					{rows.map((row, i) => {
-						const isResult = row.code?.match(/^\d+$/);
+						const isResult = /^\d+$/.exec(row.code);
 						const comment = row.measure ? row.measure.split('\t') : [];
 						comment.pop();
 						return (
@@ -204,10 +210,6 @@ const HealthOneLabResultsTable = ({document}) => {
 			</Table>
 		</Paper>
 	);
-};
-
-HealthOneLabResultsTable.propTypes = {
-	document: PropTypes.object.isRequired,
 };
 
 export default HealthOneLabResultsTable;
