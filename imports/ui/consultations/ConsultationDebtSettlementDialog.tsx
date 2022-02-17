@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {useSnackbar} from 'notistack';
 
 import CheckIcon from '@mui/icons-material/Check';
@@ -45,8 +45,8 @@ const ConsultationDebtSettlementDialog = ({
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-	const clearDebtForThisConsultation = useMemo(() => {
-		return async (event) => {
+	const clearDebtForThisConsultation = useCallback(
+		async (event) => {
 			event.preventDefault();
 
 			const fields = {
@@ -68,8 +68,9 @@ const ConsultationDebtSettlementDialog = ({
 					error instanceof Error ? error.message : 'unknown error';
 				feedback(message, {variant: 'error'});
 			}
-		};
-	}, [onClose, consultation, enqueueSnackbar, closeSnackbar]);
+		},
+		[onClose, consultation, enqueueSnackbar, closeSnackbar],
+	);
 
 	const patientIdentifier = found
 		? `${patient.firstname} ${patient.lastname}`

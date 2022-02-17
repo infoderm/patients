@@ -9,9 +9,13 @@ import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 
 import Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
+import GenericQueryHook from './GenericQueryHook';
 
 const makeObservedQueryHook =
-	<T>(Collection: ObservedQueryCacheCollection, publication: Publication) =>
+	<R, T = R>(
+		Collection: ObservedQueryCacheCollection<R>,
+		publication: Publication,
+	): GenericQueryHook<R, T> =>
 	(
 		query: Mongo.Selector<T>,
 		options: Mongo.Options<T>,

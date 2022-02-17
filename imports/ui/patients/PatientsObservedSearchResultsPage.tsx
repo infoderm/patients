@@ -11,6 +11,7 @@ import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 
 import Refresh from '../navigation/Refresh';
+import {PatientCacheResult} from '../../api/collection/patients/search/cache';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
@@ -37,7 +38,7 @@ const PatientsObservedSearchResultsPage = ({
 	const [showDead, setShowDead] = useState(false);
 	const $search = normalizeSearch(query);
 
-	const selector = {
+	const selector: Mongo.Selector<PatientCacheResult> = {
 		$text: {$search},
 		deathdateModifiedAt: showDead ? undefined : {$not: {$type: 'date'}},
 	};

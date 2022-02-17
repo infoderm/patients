@@ -25,8 +25,9 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import Endpoint from '../../api/endpoint/Endpoint';
 import call from '../../api/endpoint/call';
-import TagDocument from '../../api/tags/TagDocument';
+import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import GenericQueryHook from '../../api/GenericQueryHook';
 
 const PREFIX = 'TagRenamingDialog';
 
@@ -44,23 +45,23 @@ const StyledDialog = styled(Dialog)({
 	},
 });
 
-interface Props {
+interface Props<T> {
 	open: boolean;
 	onClose: () => void;
 	onRename: (name: string) => void;
 	title: string;
-	useTagsFind?: () => void;
-	endpoint: Endpoint<void>;
-	tag: TagDocument;
+	useTagsFind?: GenericQueryHook<T>;
+	endpoint: Endpoint<any>;
+	tag: T;
 	nameKey?: string;
 	nameKeyTitle?: string;
-	nameFormat: (tag: TagDocument, name: string) => string;
+	nameFormat?: (tag: T, name: string) => string;
 }
 
 const defaultUseTagsFind = () => ({results: []});
-const defaultNameFormat = (_tag: TagDocument, name: string) => name;
+const defaultNameFormat = <T,>(_tag: T, name: string) => name;
 
-const TagRenamingDialog = ({
+const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 	open,
 	onClose,
 	onRename,
@@ -71,7 +72,7 @@ const TagRenamingDialog = ({
 	nameKey = 'name',
 	nameKeyTitle = 'name',
 	nameFormat = defaultNameFormat,
-}: Props) => {
+}: Props<T>) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
 	const [newnameError, setNewnameError] = useState('');

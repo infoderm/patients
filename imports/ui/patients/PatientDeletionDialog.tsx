@@ -23,15 +23,12 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import StaticPatientCard from './StaticPatientCard';
+import CardPatientProjection from './CardPatientProjection';
 
 interface Props {
 	open: boolean;
 	onClose: () => void;
-	patient: {
-		_id: string;
-		lastname: string;
-		firstname: string;
-	};
+	patient: CardPatientProjection<typeof StaticPatientCard>;
 }
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {

@@ -96,12 +96,12 @@ const unserializeTime = (time: string) =>
 
 const isEqual = (a, b) => a === b;
 
-interface Props {
+interface AppointmentDialogProps {
 	open: boolean;
 	onClose: () => void;
 	onSubmit: (args: SanitizeParams) => Promise<{_id: string}>;
 	initialDatetime: Date;
-	noInitialTime: boolean;
+	noInitialTime?: boolean;
 	initialAppointment?: AppointmentDocument;
 	initialPatient?: {};
 }
@@ -114,7 +114,7 @@ const AppointmentDialog = ({
 	open,
 	onClose,
 	onSubmit,
-}: Props) => {
+}: AppointmentDialogProps) => {
 	const navigate = useNavigate();
 
 	const {loading, value: appointmentDuration} = useSetting(

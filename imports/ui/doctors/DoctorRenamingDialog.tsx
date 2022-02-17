@@ -3,12 +3,13 @@ import React from 'react';
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameDoctor, useDoctorsFind} from '../../api/doctors';
+import TagDocument from '../../api/tags/TagDocument';
 
 interface Props {
 	open: boolean;
 	onClose: () => void;
 	onRename: () => void;
-	tag: {};
+	tag: TagDocument;
 }
 
 const DoctorRenamingDialog = ({open, onClose, onRename, tag}: Props) => {

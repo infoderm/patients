@@ -1,5 +1,9 @@
-import React, {DependencyList} from 'react';
-import TagDocument from '../../api/tags/TagDocument';
+import React from 'react';
+
+import {Mongo} from 'meteor/mongo';
+
+import GenericQueryHook from '../../api/GenericQueryHook';
+import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';
 
@@ -10,29 +14,25 @@ import Refresh from '../navigation/Refresh';
 
 import TagGrid from './TagGrid';
 
-interface Props {
+export interface TagListPageProps<T> {
 	Card: React.ElementType;
 	page?: number;
 	perpage?: number;
 
-	query?: {};
+	query?: Mongo.Selector<T>;
 	sort?: {};
 
-	useTags?: (
-		query: unknown,
-		options: unknown,
-		deps: DependencyList,
-	) => {loading: boolean; dirty?: boolean; results: TagDocument[]};
+	useTags?: GenericQueryHook<T>;
 }
 
-const TagList = ({
+const TagListPage = <T extends TagFields & TagMetadata>({
 	useTags,
 	query = {},
 	sort = {name: 1},
 	page = 1,
 	perpage = 10,
 	Card,
-}: Props) => {
+}: TagListPageProps<T>) => {
 	const [key, refresh] = useRandom();
 	const deps = [
 		JSON.stringify(query),
@@ -41,7 +41,11 @@ const TagList = ({
 		perpage,
 		key,
 	];
-	const options = {sort, skip: (page - 1) * perpage, limit: perpage};
+	const options: Mongo.Options<T> = {
+		sort,
+		skip: (page - 1) * perpage,
+		limit: perpage,
+	};
 	const {loading, dirty, results: tags} = useTags(query, options, deps);
 
 	const style = {
@@ -68,4 +72,4 @@ const TagList = ({
 	);
 };
 
-export default TagList;
+export default TagListPage;

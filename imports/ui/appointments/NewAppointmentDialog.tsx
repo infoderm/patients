@@ -9,14 +9,16 @@ import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
 const onSubmit = async (args) => call(schedule, args);
 
-export default function NewAppointmentDialog(
+const NewAppointmentDialog = (
 	props:
-		| PropsOf<typeof AppointmentDialog>
-		| PropsOf<typeof AppointmentFromPatientIdDialog>,
-) {
-	return props.patientId === undefined ? (
-		<AppointmentDialog onSubmit={onSubmit} {...props} />
-	) : (
+		| Omit<PropsOf<typeof AppointmentDialog>, 'onSubmit'>
+		| Omit<PropsOf<typeof AppointmentFromPatientIdDialog>, 'onSubmit'>,
+) => {
+	return 'patientId' in props ? (
 		<AppointmentFromPatientIdDialog onSubmit={onSubmit} {...props} />
+	) : (
+		<AppointmentDialog onSubmit={onSubmit} {...props} />
 	);
-}
+};
+
+export default NewAppointmentDialog;

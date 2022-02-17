@@ -4,14 +4,15 @@ import Grid from '@mui/material/Grid';
 
 import PropsOf from '../../util/PropsOf';
 
-interface PatientGridItemProps<C> {
-	Card: C;
+interface PatientGridItemProps<T> {
+	Card: React.ElementType;
+	patient?: T;
 }
 
-const PatientGridItem = <C extends React.ElementType>({
+const PatientGridItem = <T,>({
 	Card,
 	...rest
-}: PatientGridItemProps<C> & PropsOf<C>) => (
+}: PatientGridItemProps<T> & PropsOf<typeof Card>) => (
 	<Grid item xs={12} sm={12} md={12} lg={6} xl={4}>
 		<Card {...rest} />
 	</Grid>

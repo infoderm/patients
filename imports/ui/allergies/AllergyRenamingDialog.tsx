@@ -3,12 +3,13 @@ import React from 'react';
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameAllergy, useAllergiesFind} from '../../api/allergies';
+import TagDocument from '../../api/tags/TagDocument';
 
 interface Props {
 	open: boolean;
 	onClose: () => void;
 	onRename: () => void;
-	tag: {};
+	tag: TagDocument;
 }
 
 const AllergyRenamingDialog = ({open, onClose, onRename, tag}: Props) => {

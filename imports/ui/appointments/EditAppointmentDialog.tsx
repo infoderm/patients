@@ -3,16 +3,13 @@ import React from 'react';
 import withLazyOpening from '../modal/withLazyOpening';
 import call from '../../api/endpoint/call';
 import reschedule from '../../api/endpoint/appointments/reschedule';
+import {AppointmentDocument} from '../../api/collection/appointments';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
 interface Props {
 	open: boolean;
 	onClose: () => void;
-	appointment: {
-		_id: string;
-		patientId: string;
-		datetime: Date;
-	};
+	appointment: AppointmentDocument;
 }
 
 const EditAppointmentDialog = ({open, onClose, appointment}: Props) => {

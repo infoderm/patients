@@ -1,6 +1,4 @@
-interface CacheItem {
+export default interface CacheItem<T> {
 	key: string;
-	results: any[];
+	results: T[];
 }
-
-export default CacheItem;

@@ -2,22 +2,13 @@ import React from 'react';
 
 import TagDeletionDialog from '../tags/TagDeletionDialog';
 import {deleteDoctor} from '../../api/doctors';
+import PropsOf from '../../util/PropsOf';
 
-interface Props {
-	open: boolean;
-	onClose: () => void;
-	tag: {};
-}
+type Props = Omit<PropsOf<typeof TagDeletionDialog>, 'endpoint' | 'title'>;
 
-const DoctorDeletionDialog = ({open, onClose, tag}: Props) => {
+const DoctorDeletionDialog = (props: Props) => {
 	return (
-		<TagDeletionDialog
-			open={open}
-			title="doctor"
-			endpoint={deleteDoctor}
-			tag={tag}
-			onClose={onClose}
-		/>
+		<TagDeletionDialog title="doctor" endpoint={deleteDoctor} {...props} />
 	);
 };
 

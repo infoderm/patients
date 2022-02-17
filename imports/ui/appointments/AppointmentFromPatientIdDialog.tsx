@@ -2,13 +2,18 @@ import React from 'react';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
+import PropsOf from '../../util/PropsOf';
 import AppointmentDialog from './AppointmentDialog';
 
-interface Props {
+interface AppointmentFromPatientIdDialogProps
+	extends Omit<PropsOf<typeof AppointmentDialog>, 'initialPatient'> {
 	patientId: string;
 }
 
-const AppointmentFromPatientIdDialog = ({patientId, ...rest}: Props) => {
+const AppointmentFromPatientIdDialog = ({
+	patientId,
+	...rest
+}: AppointmentFromPatientIdDialogProps) => {
 	const options = {fields: {firstname: 1, lastname: 1, phone: 1}};
 
 	const deps = [patientId, JSON.stringify(options.fields)];

@@ -45,7 +45,7 @@ interface Props {
 	onClose: () => void;
 	itemId: string;
 	attachment: {_id: string; name: string};
-	endpoint: Endpoint<unknown>;
+	endpoint: Endpoint<any>;
 }
 
 const AttachmentDeletionDialog = ({

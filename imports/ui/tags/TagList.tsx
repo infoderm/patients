@@ -1,13 +1,13 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
 
+import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
 import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
-import PropsOf from '../../util/PropsOf';
-import TagListPage from './TagListPage';
+import TagListPage, {TagListPageProps} from './TagListPage';
 
-type Props = Omit<PropsOf<typeof TagListPage>, 'page'>;
+type TagListProps<T> = Omit<TagListPageProps<T>, 'page'>;
 
-const TagList = (props: Props) => {
+const TagList = <T extends TagFields & TagMetadata>(props: TagListProps<T>) => {
 	const params = useParams<{page?: string}>();
 	const page = parseNonNegativeIntegerStrictOrUndefined(params.page);
 	return <TagListPage page={page} {...props} />;

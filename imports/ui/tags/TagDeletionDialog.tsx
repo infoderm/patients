@@ -27,7 +27,7 @@ interface Props {
 	open: boolean;
 	onClose: () => void;
 	title: string;
-	endpoint: Endpoint<void>;
+	endpoint: Endpoint<any>;
 	tag: {
 		_id: string;
 		name: string;

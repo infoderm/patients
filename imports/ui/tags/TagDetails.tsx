@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Center from '../grid/Center';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
+import GenericQueryHook from '../../api/GenericQueryHook';
 
 const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
 	const {loading, item} = useItem(name, [name]);
@@ -30,7 +31,7 @@ const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
 	);
 };
 
-interface Props {
+interface Props<T> {
 	Card?: React.ElementType;
 
 	useItem?: (
@@ -42,11 +43,7 @@ interface Props {
 	List: React.ElementType;
 	listProps?: {};
 
-	useParents: (
-		selector: unknown,
-		options: unknown,
-		deps: DependencyList,
-	) => {loading: boolean; results: unknown[]; dirty?: boolean};
+	useParents: GenericQueryHook<T>;
 	selector: {};
 	sort: {};
 	fields?: {};
@@ -54,7 +51,7 @@ interface Props {
 	perpage: number;
 }
 
-const TagDetails = (props: Props) => {
+const TagDetails = <T,>(props: Props<T>) => {
 	const {
 		Card,
 		List,

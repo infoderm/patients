@@ -28,6 +28,7 @@ import EditAppointmentDialog from '../appointments/EditAppointmentDialog';
 
 import call from '../../api/endpoint/call';
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
+import {AppointmentDocument} from '../../api/collection/appointments';
 import ConsultationPaymentDialog from './ConsultationPaymentDialog';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
 import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';
@@ -227,7 +228,7 @@ const StaticConsultationCardActions = ({
 			{editAction && !isDone && !isCancelled && (
 				<EditAppointmentDialog
 					open={editing}
-					appointment={consultation}
+					appointment={consultation as AppointmentDocument}
 					onClose={() => {
 						setEditing(false);
 					}}

@@ -32,12 +32,12 @@ const computedFields = (name) => ({
 	containsNonAlphabetical: containsNonAlphabetical(name),
 });
 
-interface Options<T> {
+interface Options<T, P> {
 	Collection: Mongo.Collection<T>;
 	collection: string;
 	publication: string;
 	singlePublication: string;
-	Parent: Mongo.Collection<any>;
+	Parent: Mongo.Collection<P>;
 	parentPublication: Publication;
 	key: string;
 }
@@ -46,7 +46,12 @@ interface TagStats {
 	count: number;
 }
 
-const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
+const createTagCollection = <
+	T extends TagDocument,
+	P extends {[key: string]: any; owner: string},
+>(
+	options: Options<T, P>,
+) => {
 	const {
 		Collection,
 		collection,
@@ -65,7 +70,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 
 	const Stats = new Mongo.Collection<TagStats>(stats);
 
-	const TagsCache = new Mongo.Collection<CacheItem>(cacheCollection);
+	const TagsCache = new Mongo.Collection<CacheItem<T>>(cacheCollection);
 
 	const _publication = definePublication({
 		name: publication,
@@ -97,7 +102,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 
 	const useTaggedDocuments = (name: string, options) =>
 		useTracker(() => {
-			const selector = {[key]: name};
+			const selector = {[key]: name} as Mongo.Selector<P>;
 			const mergedOptions = mergeOptions(options, {
 				fields: {
 					[key]: 1,
@@ -117,7 +122,7 @@ const createTagCollection = <T extends TagDocument>(options: Options<T>) => {
 		handle(name: string) {
 			check(name, String);
 			const uid = JSON.stringify({name, owner: this.userId});
-			const query = {[key]: name, owner: this.userId};
+			const query = {[key]: name, owner: this.userId} as Mongo.Selector<P>;
 			// We only include relevant fields
 			const options = {fields: {_id: 1, [key]: 1}};
 

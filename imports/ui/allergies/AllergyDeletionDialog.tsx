@@ -2,22 +2,13 @@ import React from 'react';
 
 import TagDeletionDialog from '../tags/TagDeletionDialog';
 import {deleteAllergy} from '../../api/allergies';
+import PropsOf from '../../util/PropsOf';
 
-interface Props {
-	open: boolean;
-	onClose: () => void;
-	tag: {};
-}
+type Props = Omit<PropsOf<typeof TagDeletionDialog>, 'endpoint' | 'title'>;
 
-const AllergyDeletionDialog = ({open, onClose, tag}: Props) => {
+const AllergyDeletionDialog = (props: Props) => {
 	return (
-		<TagDeletionDialog
-			open={open}
-			title="allergy"
-			endpoint={deleteAllergy}
-			tag={tag}
-			onClose={onClose}
-		/>
+		<TagDeletionDialog title="allergy" endpoint={deleteAllergy} {...props} />
 	);
 };
 

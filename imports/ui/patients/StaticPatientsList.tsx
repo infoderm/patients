@@ -2,8 +2,6 @@ import React from 'react';
 
 import Grid from '@mui/material/Grid';
 
-import {PatientDocument} from '../../api/collection/patients';
-
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 import Paginator from '../navigation/Paginator';
@@ -11,13 +9,17 @@ import Paginator from '../navigation/Paginator';
 import PatientGridItem from './PatientGridItem';
 import PatientsPage from './PatientsPage';
 import NewPatientCard from './NewPatientCard';
+import CardPatientProjection from './CardPatientProjection';
 
-interface Props {
+interface StaticPatientsListProps<
+	C,
+	T = CardPatientProjection<C> & {_id: string},
+> {
 	className?: string;
 	page: number;
 	perpage: number;
 	loading?: boolean;
-	patients: PatientDocument[];
+	patients: T[];
 	Card?: React.ElementType;
 }
 
@@ -28,7 +30,7 @@ const StaticPatientsList = ({
 	patients,
 	Card,
 	...rest
-}: Props) => {
+}: StaticPatientsListProps<typeof Card>) => {
 	const style = {
 		transition: 'opacity 200ms ease-out',
 		opacity: loading ? 0.4 : undefined,

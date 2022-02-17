@@ -2,13 +2,12 @@ import React from 'react';
 
 import Grid from '@mui/material/Grid';
 
-import {PatientDocument} from '../../api/collection/patients';
-
 import PatientGridItem from './PatientGridItem';
 import StaticPatientCard from './StaticPatientCard';
+import CardPatientProjection from './CardPatientProjection';
 
-interface Props {
-	patients: PatientDocument[];
+interface PatientPageProps<C, T = CardPatientProjection<C> & {_id: string}> {
+	patients: T[];
 	Card?: React.ElementType;
 	NewCard?: React.ElementType;
 }
@@ -17,7 +16,7 @@ const PatientsPage = ({
 	patients,
 	Card = StaticPatientCard,
 	NewCard = undefined,
-}: Props) => {
+}: PatientPageProps<typeof Card>) => {
 	return (
 		<div>
 			<Grid container spacing={3}>

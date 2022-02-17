@@ -3,14 +3,13 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 
 import StaticPatientCard from './StaticPatientCard';
+import CardPatientProjection from './CardPatientProjection';
 
-type Patient = {_id: string};
-
-interface Props {
-	patients: Patient[];
+interface PatientsGridProps<C, T = CardPatientProjection<C> & {_id: string}> {
+	patients: T[];
 	Card?: React.ElementType;
 	CardProps?: {};
-	getCardProps?: (patient: Patient) => {};
+	getCardProps?: (patient: T) => {};
 	selected?: Set<string>;
 }
 
@@ -20,7 +19,7 @@ const PatientsGrid = ({
 	CardProps = undefined,
 	getCardProps = undefined,
 	selected = undefined,
-}: Props) => (
+}: PatientsGridProps<typeof Card>) => (
 	<Grid container spacing={3}>
 		{patients.map((patient) => (
 			<Grid key={patient._id} item xs={12}>
