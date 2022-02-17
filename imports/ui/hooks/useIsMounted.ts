@@ -1,6 +1,9 @@
 import {useRef, useEffect} from 'react';
 
-// See https://gist.github.com/jaydenseric/a67cfb1b809b1b789daa17dfe6f83daa
+/**
+ * See https://gist.github.com/jaydenseric/a67cfb1b809b1b789daa17dfe6f83daa
+ * @deprecated see https://github.com/facebook/react/pull/22114
+ */
 const useIsMounted = () => {
 	// Component is certainly mounted from the beginning
 	const componentIsMounted = useRef(true);
