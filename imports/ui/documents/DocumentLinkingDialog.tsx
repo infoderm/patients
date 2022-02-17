@@ -1,15 +1,13 @@
 import React, {useState} from 'react';
 
-import {styled} from '@mui/material/styles';
-
 import Button from '@mui/material/Button';
-import MuiDialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import MuiDialogContent from '@mui/material/DialogContent';
+import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import LinkIcon from '@mui/icons-material/Link';
+import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -17,16 +15,6 @@ import PatientPicker from '../patients/PatientPicker';
 import call from '../../api/endpoint/call';
 import link from '../../api/endpoint/documents/link';
 import CancelButton from '../button/CancelButton';
-
-const Dialog = styled(MuiDialog)({
-	'& .MuiDialog-paper': {
-		overflow: 'visible',
-	},
-});
-
-const DialogContent = styled(MuiDialogContent)({
-	overflow: 'visible',
-});
 
 interface Props {
 	open: boolean;
@@ -59,7 +47,7 @@ const DocumentLinkingDialog = ({
 	};
 
 	return (
-		<Dialog open={open} onClose={onClose}>
+		<DialogWithVisibleOverflow open={open} onClose={onClose}>
 			<DialogTitle>Link document {document._id.toString()}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
@@ -90,7 +78,7 @@ const DocumentLinkingDialog = ({
 					Link
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</DialogWithVisibleOverflow>
 	);
 };
 

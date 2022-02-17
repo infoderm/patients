@@ -9,27 +9,25 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import MuiDialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import MuiDialogContent from '@mui/material/DialogContent';
+import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import DatePicker from '@mui/lab/DatePicker';
 import TimePicker from '@mui/lab/DesktopTimePicker';
-
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
 import dateFormat from 'date-fns/format';
 import isValid from 'date-fns/isValid';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
+import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
+
 import TextField from '../input/TextField';
 
 import CancelButton from '../button/CancelButton';
@@ -56,16 +54,6 @@ import {weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
-
-const Dialog = styled(MuiDialog)({
-	'& .MuiDialog-paper': {
-		overflow: 'visible',
-	},
-});
-
-const DialogContent = styled(MuiDialogContent)({
-	overflow: 'visible',
-});
 
 const Multiline = styled(TextField)({
 	overflow: 'auto',
@@ -256,7 +244,7 @@ const AppointmentDialog = ({
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
 
 	return (
-		<Dialog open={open}>
+		<DialogWithVisibleOverflow open={open}>
 			{loading && <LinearProgress />}
 			<DialogTitle>Schedule an appointment</DialogTitle>
 			<DialogContent>
@@ -403,7 +391,7 @@ const AppointmentDialog = ({
 					Schedule
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</DialogWithVisibleOverflow>
 	);
 };
 

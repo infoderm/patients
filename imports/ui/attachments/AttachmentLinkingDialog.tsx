@@ -1,15 +1,12 @@
 import React, {useState} from 'react';
 
-import {styled} from '@mui/material/styles';
-
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
 import LinkIcon from '@mui/icons-material/Link';
+import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import call from '../../api/endpoint/call';
 import patientsAttach from '../../api/endpoint/patients/attach';
@@ -18,18 +15,6 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
 import CancelButton from '../button/CancelButton';
-
-const PREFIX = 'AttachmentLinkingDialog';
-
-const classes = {
-	dialogPaper: `${PREFIX}-dialogPaper`,
-};
-
-const StyledDialog = styled(Dialog)({
-	[`& .${classes.dialogPaper}`]: {
-		overflow: 'visible',
-	},
-});
 
 interface Props {
 	open: boolean;
@@ -64,13 +49,9 @@ const AttachmentLinkingDialog = ({
 	};
 
 	return (
-		<StyledDialog
-			classes={{paper: classes.dialogPaper}}
-			open={open}
-			onClose={onClose}
-		>
+		<DialogWithVisibleOverflow open={open} onClose={onClose}>
 			<DialogTitle>Link attachment {attachment._id}</DialogTitle>
-			<DialogContent className={classes.dialogPaper}>
+			<DialogContent>
 				<DialogContentText>
 					If you do not want to link this attachment, click cancel. If you
 					really want to link this attachment, enter the name of the patient to
@@ -99,7 +80,7 @@ const AttachmentLinkingDialog = ({
 					Link
 				</Button>
 			</DialogActions>
-		</StyledDialog>
+		</DialogWithVisibleOverflow>
 	);
 };
 

@@ -1,19 +1,14 @@
 import React, {useState} from 'react';
 
-import {styled} from '@mui/material/styles';
-
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
 import LinearProgress from '@mui/material/LinearProgress';
-
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-
 import call from '../../api/endpoint/call';
+import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -33,18 +28,6 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import transfer from '../../api/endpoint/consultations/transfer';
 import CancelButton from '../button/CancelButton';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
-
-const PREFIX = 'ConsultationTransferDialog';
-
-const classes = {
-	dialogPaper: `${PREFIX}-dialogPaper`,
-};
-
-const StyledDialog = styled(Dialog)({
-	[`& .${classes.dialogPaper}`]: {
-		overflow: 'visible',
-	},
-});
 
 interface Props {
 	open: boolean;
@@ -101,16 +84,12 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 	};
 
 	return (
-		<StyledDialog
-			classes={{paper: classes.dialogPaper}}
-			open={open}
-			onClose={onClose}
-		>
+		<DialogWithVisibleOverflow open={open} onClose={onClose}>
 			{loadingPatient && <LinearProgress />}
 			<DialogTitle>
 				Transfer {itemKind} {consultation._id.toString()}
 			</DialogTitle>
-			<DialogContent className={classes.dialogPaper}>
+			<DialogContent>
 				<DialogContentText>
 					If you do not want to transfer this {itemKind}, click cancel. If you
 					really want to transfer this {itemKind}, confirm the current
@@ -162,7 +141,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 					Transfer
 				</Button>
 			</DialogActions>
-		</StyledDialog>
+		</DialogWithVisibleOverflow>
 	);
 };
 
