@@ -4,9 +4,10 @@ import {styled} from '@mui/material/styles';
 import MuiButton from '@mui/material/Button';
 
 import PropsOf from '../../util/PropsOf';
+import useUniqueId from '../hooks/useUniqueId';
 
-const Root = styled('div')({
-	display: 'inline',
+const Input = styled('input')({
+	display: 'none',
 });
 
 type ComponentWithoutCollidingProps<C> = PropsOf<C> extends
@@ -29,9 +30,11 @@ const InputFileButton = React.forwardRef(
 		ref,
 	) => {
 		const inputRef = useRef<HTMLInputElement>(null);
+		const id = useUniqueId('input-file-button');
+		const inputId = `${id}-input`;
 
 		return (
-			<Root>
+			<label htmlFor={inputId}>
 				<Button
 					ref={ref}
 					{...rest}
@@ -39,14 +42,14 @@ const InputFileButton = React.forwardRef(
 						inputRef.current.click();
 					}}
 				/>
-				<input
+				<Input
 					ref={inputRef}
 					multiple
-					style={{display: 'none'}}
+					id={inputId}
 					type="file"
 					onChange={onChange}
 				/>
-			</Root>
+			</label>
 		);
 	},
 );
