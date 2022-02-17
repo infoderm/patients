@@ -32,7 +32,9 @@ const DEBOUNCE_HISTORY_UPDATE = TIMEOUT_INPUT_DEBOUNCE;
 const FullTextSearchInput = ({sx}) => {
 	const navigate = useNavigate();
 
-	const [lastHistoryUpdate, setLastHistoryUpdate] = useState(0);
+	const [lastHistoryUpdate, setLastHistoryUpdate] = useState(
+		Number.NEGATIVE_INFINITY,
+	);
 	const [value, setValue] = useState('');
 	const [pending, setPending] = useState(undefined);
 
