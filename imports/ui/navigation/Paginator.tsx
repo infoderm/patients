@@ -32,14 +32,15 @@ const PaginatorBase = ({
 		}
 	}, [loading, isOnlyPage]);
 
-	if (hide) {
-		return null;
-	}
-
 	return (
 		<>
-			<Prev to={`${root}${page - 1}`} disabled={disabled || isFirstPage} />
+			<Prev
+				visible={!hide}
+				to={`${root}${page - 1}`}
+				disabled={disabled || isFirstPage}
+			/>
 			<Next
+				visible={!hide}
 				to={`${root}${page + 1}`}
 				disabled={disabled || (!loading && end)}
 			/>

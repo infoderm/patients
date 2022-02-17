@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {CSSProperties} from 'react';
 
-import {Theme, useTheme} from '@mui/material/styles';
-import {CSSProperties} from '@mui/styles';
+import {styled, Theme, useTheme} from '@mui/material/styles';
 import Fab, {FabProps} from '@mui/material/Fab';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import addTooltip from '../accessibility/addTooltip';
+import FixedFabAnimation from './FixedFabAnimation';
 
 interface Options {
 	theme?: Theme;
@@ -31,13 +32,25 @@ export const computeFixedFabStyle = ({
 interface FixedFabExtraProps {
 	col?: number;
 	row?: number;
+	visible?: boolean;
+	pending?: boolean;
 }
+
+const Progress = styled(CircularProgress)({
+	position: 'absolute',
+	top: -6,
+	left: -6,
+	zIndex: 1,
+});
 
 const FixedFab = React.forwardRef(
 	(
 		{
 			col = DEFAULT_COL,
 			row = DEFAULT_ROW,
+			visible = true,
+			pending = false,
+			disabled,
 			style = undefined,
 			component = undefined,
 			...rest
@@ -49,7 +62,17 @@ const FixedFab = React.forwardRef(
 		const computedStyle = computeFixedFabStyle({theme, col, row, style});
 
 		return (
-			<Fab style={computedStyle} component={component} {...rest} ref={ref} />
+			<FixedFabAnimation in={visible}>
+				<div style={computedStyle}>
+					<Fab
+						ref={ref}
+						component={component}
+						disabled={disabled || pending}
+						{...rest}
+					/>
+					{pending && <Progress size={68} />}
+				</div>
+			</FixedFabAnimation>
 		);
 	},
 );

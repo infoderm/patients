@@ -5,17 +5,9 @@ import MuiButton from '@mui/material/Button';
 
 import PropsOf from '../../util/PropsOf';
 
-const PREFIX = 'InputFileButton';
-
-const classes = {
-	container: `${PREFIX}-container`,
-};
-
-const Root = styled('div')(() => ({
-	[`&.${classes.container}`]: {
-		display: 'inline',
-	},
-}));
+const Root = styled('div')({
+	display: 'inline',
+});
 
 type ComponentWithoutCollidingProps<C> = PropsOf<C> extends
 	| {onChange?: unknown}
@@ -31,30 +23,32 @@ interface OwnProps<C> {
 
 type Props<C> = PropsOf<C> & OwnProps<C>;
 
-const InputFileButton = <C extends React.ElementType>({
-	onChange,
-	Button = MuiButton,
-	...rest
-}: Props<C>) => {
-	const ref = useRef<HTMLInputElement>(null);
+const InputFileButton = React.forwardRef(
+	<C extends React.ElementType>(
+		{onChange, Button = MuiButton, ...rest}: Props<C>,
+		ref,
+	) => {
+		const inputRef = useRef<HTMLInputElement>(null);
 
-	return (
-		<Root className={classes.container}>
-			<Button
-				{...rest}
-				onClick={() => {
-					ref.current.click();
-				}}
-			/>
-			<input
-				ref={ref}
-				multiple
-				style={{display: 'none'}}
-				type="file"
-				onChange={onChange}
-			/>
-		</Root>
-	);
-};
+		return (
+			<Root>
+				<Button
+					ref={ref}
+					{...rest}
+					onClick={() => {
+						inputRef.current.click();
+					}}
+				/>
+				<input
+					ref={inputRef}
+					multiple
+					style={{display: 'none'}}
+					type="file"
+					onChange={onChange}
+				/>
+			</Root>
+		);
+	},
+);
 
 export default InputFileButton;

@@ -8,21 +8,20 @@ type ComponentWithoutTooltip<C> = PropsOf<C> extends {tooltip?: any}
 type Transform<C> = (props: PropsOf<C>, x: string) => string;
 type Props<C> = PropsOf<C> & {tooltip?: string};
 
-const addTooltip =
-	<C extends React.ElementType>(
-		Component: ComponentWithoutTooltip<C>,
-		transform: Transform<C> = (_props, x) => x,
-	) =>
-	({tooltip, ...rest}: Props<C>) => {
+const addTooltip = <C extends React.ElementType>(
+	Component: ComponentWithoutTooltip<C>,
+	transform: Transform<C> = (_props, x) => x,
+) =>
+	React.forwardRef(({tooltip, ...rest}: Props<C>, ref) => {
 		const title = transform(rest as PropsOf<C>, tooltip);
 
 		return title ? (
 			<Tooltip title={title} aria-label={title}>
-				<Component {...(rest as PropsOf<C>)} />
+				<Component ref={ref} {...(rest as PropsOf<C>)} />
 			</Tooltip>
 		) : (
-			<Component {...(rest as PropsOf<C>)} />
+			<Component ref={ref} {...(rest as PropsOf<C>)} />
 		);
-	};
+	});
 
 export default addTooltip;

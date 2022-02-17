@@ -1,10 +1,9 @@
-import React, {useReducer, useEffect} from 'react';
+import React, {useEffect} from 'react';
 
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
 import {makeStyles, createStyles} from '@mui/styles';
-import {useSnackbar} from 'notistack';
 
 import Grid from '@mui/material/Grid';
 
@@ -12,11 +11,6 @@ import Typography from '@mui/material/Typography';
 
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import UndoIcon from '@mui/icons-material/Undo';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
@@ -31,7 +25,6 @@ import Button from '@mui/material/Button';
 import {parseOneAddress, ParsedMailbox} from 'email-addresses';
 
 import TextField from '../input/TextField';
-import FixedFab from '../button/FixedFab';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
@@ -41,10 +34,6 @@ import {useAllergiesFind} from '../../api/allergies';
 
 import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
-
-import call from '../../api/endpoint/call';
-import patientsUpdate from '../../api/endpoint/patients/update';
-import patientsAttach from '../../api/endpoint/patients/attach';
 
 import {PatientDocument, Email} from '../../api/collection/patients';
 
@@ -63,13 +52,11 @@ import ReactiveAllergyChip from '../allergies/ReactiveAllergyChip';
 import ReactiveDoctorChip from '../doctors/ReactiveDoctorChip';
 import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 
-import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
-import AttachFileButton from '../attachments/AttachFileButton';
-
 import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
-import debounceSnackbar from '../../util/debounceSnackbar';
 import PatientDeletionDialog from './PatientDeletionDialog';
+import usePatientPersonalInformationReducer from './usePatientPersonalInformationReducer';
+import PatientPersonalInformationButtonsStatic from './PatientPersonalInformationButtonsStatic';
 
 const allergyChipProps = {
 	avatar: <Avatar>Al</Avatar>,
@@ -140,66 +127,6 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-interface State {
-	patient: PatientDocument;
-	editing: boolean;
-	dirty: boolean;
-	deleting: boolean;
-}
-
-const initialState = (patient: PatientDocument): State => ({
-	patient,
-	editing: false,
-	dirty: false,
-	deleting: false,
-});
-
-const reducer = (
-	state: State,
-	action: {type: string; key?: string; value?: any; payload?: any},
-) => {
-	switch (action.type) {
-		case 'update':
-			switch (action.key) {
-				case 'deathdateModifiedAt':
-					return {
-						...state,
-						patient: {
-							...state.patient,
-							[action.key]: action.value,
-							deathdate: null,
-						},
-						dirty: true,
-					};
-				default:
-					return {
-						...state,
-						patient: {...state.patient, [action.key]: action.value},
-						dirty: true,
-					};
-			}
-
-		case 'editing':
-			return {...state, editing: true};
-		case 'not-editing':
-			return {...state, editing: false, dirty: false};
-		case 'deleting':
-			return {...state, deleting: true};
-		case 'not-deleting':
-			return {...state, deleting: false};
-		case 'init':
-			return {
-				...state,
-				editing: false,
-				dirty: false,
-				deleting: false,
-				patient: action.payload,
-			};
-		default:
-			throw new Error(`Unknown action type ${action.type}.`);
-	}
-};
-
 interface PatientPersonalInformationStaticProps {
 	patient: PatientDocument;
 	loading?: boolean;
@@ -212,7 +139,7 @@ const PatientPersonalInformationStatic = (
 ) => {
 	const importantStringsDict = useImportantStringsDict();
 
-	const [state, dispatch] = useReducer(reducer, initialState(props.patient));
+	const [state, dispatch] = usePatientPersonalInformationReducer(props.patient);
 
 	const {editing, dirty, deleting, patient} = state;
 	const {loading = false} = props;
@@ -228,29 +155,7 @@ const PatientPersonalInformationStatic = (
 		dirty,
 	);
 
-	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-
 	const classes = useStyles();
-
-	const saveDetails = async (_event) => {
-		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
-		feedback('Processing...', {
-			variant: 'info',
-			persist: true,
-		});
-
-		try {
-			await call(patientsUpdate, patient._id, patient);
-			const message = `Patient #${patient._id} updated.`;
-			console.log(message);
-			feedback(message, {variant: 'success'});
-			dispatch({type: 'not-editing'});
-		} catch (error: unknown) {
-			const message = error instanceof Error ? error.message : 'unknown error';
-			feedback(message, {variant: 'error'});
-			console.error({error});
-		}
-	};
 
 	const {value: reifiedNoShows} = useNoShowsForPatient(props.patient._id);
 
@@ -766,65 +671,13 @@ const PatientPersonalInformationStatic = (
 					</form>
 				</Grid>
 			</Grid>
-			{editing ? (
-				<>
-					<FixedFab
-						col={2}
-						color="primary"
-						disabled={!dirty}
-						aria-label="Save"
-						onClick={saveDetails}
-					>
-						<SaveIcon />
-					</FixedFab>
-					<FixedFab
-						col={3}
-						color={dirty ? 'secondary' : 'default'}
-						aria-label="Undo"
-						onClick={() => {
-							dispatch({type: 'init', payload: props.patient});
-						}}
-					>
-						<UndoIcon />
-					</FixedFab>
-				</>
-			) : (
-				<>
-					<FixedFab
-						col={2}
-						tooltip="Edit info"
-						onClick={() => {
-							dispatch({type: 'editing'});
-						}}
-					>
-						<EditIcon />
-					</FixedFab>
-					<AttachFileButton
-						Button={FixedFab}
-						col={3}
-						endpoint={patientsAttach}
-						item={patient._id}
-					>
-						<AttachFileIcon />
-					</AttachFileButton>
-					<ManageConsultationsForPatientButton
-						Button={FixedFab}
-						col={4}
-						color="primary"
-						patientId={patient._id}
-						tooltip="More actions!"
-					/>
-					<FixedFab
-						col={5}
-						color="secondary"
-						onClick={() => {
-							dispatch({type: 'deleting'});
-						}}
-					>
-						<DeleteIcon />
-					</FixedFab>
-				</>
-			)}
+			<PatientPersonalInformationButtonsStatic
+				editing={editing}
+				dirty={dirty}
+				dispatch={dispatch}
+				patient={patient}
+				patientInit={props.patient}
+			/>
 			<PatientDeletionDialog
 				open={deleting}
 				patient={props.patient}

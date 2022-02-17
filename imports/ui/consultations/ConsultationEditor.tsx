@@ -1,15 +1,12 @@
 import React, {useState, useReducer, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 
 import Grid from '@mui/material/Grid';
-import Fab from '@mui/material/Fab';
-import CircularProgress from '@mui/material/CircularProgress';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
-import {blue} from '@mui/material/colors';
 
 import call from '../../api/endpoint/call';
 import {ConsultationDocument} from '../../api/collection/consultations';
@@ -20,7 +17,7 @@ import NoContent from '../navigation/NoContent';
 import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 
-import {computeFixedFabStyle} from '../button/FixedFab';
+import FixedFab from '../button/FixedFab';
 
 import insertConsultation from '../../api/endpoint/consultations/insert';
 import updateConsultation from '../../api/endpoint/consultations/update';
@@ -29,24 +26,10 @@ import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm, {defaultState, State} from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
 
-const styles = (theme) =>
-	createStyles({
-		main: {
-			marginTop: 64,
-			paddingTop: theme.spacing(3),
-		},
-		compareButton: computeFixedFabStyle({theme, col: 2}),
-		saveButtonWrapper: computeFixedFabStyle({theme, col: 1}),
-		saveButtonProgress: {
-			color: blue[500],
-			position: 'absolute',
-			top: -6,
-			left: -6,
-			zIndex: 1,
-		},
-	});
-
-const useStyles = makeStyles(styles);
+const Main = styled(Grid)(({theme}) => ({
+	marginTop: 64,
+	paddingTop: theme.spacing(3),
+}));
 
 const removeUndefined = <T,>(object: T) =>
 	Object.fromEntries(
@@ -201,7 +184,6 @@ const Loader = ({loading, found, consultation}) => {
 };
 
 const ConsultationEditor = ({consultation}) => {
-	const classes = useStyles();
 	const navigate = useNavigate();
 	const dialog = useDialog();
 
@@ -320,7 +302,7 @@ const ConsultationEditor = ({consultation}) => {
 				state={state}
 				update={update}
 			/>
-			<Grid container className={classes.main} spacing={3}>
+			<Main container spacing={3}>
 				{compare && (
 					<Grid item xs={6}>
 						<PrecedingConsultationsList consultation={consultation} />
@@ -329,9 +311,9 @@ const ConsultationEditor = ({consultation}) => {
 				<Grid item xs={compare ? 6 : 12}>
 					<ConsultationForm consultation={state} update={update} />
 				</Grid>
-			</Grid>
-			<Fab
-				className={classes.compareButton}
+			</Main>
+			<FixedFab
+				col={2}
 				color={compare ? 'primary' : 'default'}
 				aria-label="compare"
 				onClick={() => {
@@ -339,20 +321,17 @@ const ConsultationEditor = ({consultation}) => {
 				}}
 			>
 				<VerticalSplitIcon />
-			</Fab>
-			<div className={classes.saveButtonWrapper}>
-				<Fab
-					color="primary"
-					aria-label="save"
-					disabled={!dirty || saving}
-					onClick={handleSave}
-				>
-					{showSuccess ? <CheckIcon /> : <SaveIcon />}
-				</Fab>
-				{saving && (
-					<CircularProgress size={68} className={classes.saveButtonProgress} />
-				)}
-			</div>
+			</FixedFab>
+			<FixedFab
+				col={1}
+				color="primary"
+				aria-label="save"
+				disabled={!dirty}
+				pending={saving}
+				onClick={handleSave}
+			>
+				{showSuccess ? <CheckIcon /> : <SaveIcon />}
+			</FixedFab>
 		</div>
 	);
 };
