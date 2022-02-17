@@ -7,12 +7,12 @@ import {useSnackbar} from 'notistack';
 import MergeTypeIcon from '@mui/icons-material/MergeType';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import call from '../../api/endpoint/call';
 import patientsMerge from '../../api/endpoint/patients/merge';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -35,11 +35,11 @@ const MergePatientsConfirmationDialog = ({
 }: Props) => {
 	const navigate = useNavigate();
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [pending, setPending] = useState(false);
+	const [call, {pending}] = useCall();
+	const [merged, setMerged] = useState(false);
 
 	const mergePatients = async (event) => {
 		event.preventDefault();
-		setPending(true);
 		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 		feedback('Processing...', {variant: 'info', persist: true});
 		try {
@@ -51,12 +51,12 @@ const MergePatientsConfirmationDialog = ({
 				documentsToAttach,
 				toCreate,
 			);
+			setMerged(true);
 			const message = `Merged. Patient #${_id} created.`;
 			console.log(message);
 			feedback(message, {variant: 'success'});
 			navigate({pathname: `/patient/${_id}`});
 		} catch (error: unknown) {
-			setPending(false);
 			console.error({error});
 			const message = error instanceof Error ? error.message : 'unknown error';
 			feedback(message, {variant: 'error'});
@@ -66,7 +66,7 @@ const MergePatientsConfirmationDialog = ({
 	return (
 		<ConfirmationDialog
 			open={open}
-			pending={pending}
+			pending={pending || merged}
 			title={`Merge ${toDelete.length} patients`}
 			text={
 				<>

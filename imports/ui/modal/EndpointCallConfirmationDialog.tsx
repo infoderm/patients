@@ -1,7 +1,7 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 
 import Endpoint from '../../api/endpoint/Endpoint';
-import apply from '../../api/endpoint/apply';
+import useApply from '../action/useApply';
 import useIsMounted from '../hooks/useIsMounted';
 import ConfirmationDialog, {
 	ConfirmationDialogProps,
@@ -20,29 +20,23 @@ const EndpointCallConfirmationDialog = <T,>({
 	onClose,
 	...rest
 }: EndpointCallConfirmationDialogProps<T>) => {
-	const [pending, setPending] = useState(false);
+	const [apply, {pending}] = useApply();
 
 	const isMounted = useIsMounted();
 
 	const onConfirm = useMemo(() => {
 		return async (event) => {
 			event.preventDefault();
-			setPending(true);
 			try {
 				await apply(endpoint, args);
 				if (isMounted()) {
-					setPending(false);
 					onClose();
 				}
 			} catch (error: unknown) {
-				if (isMounted()) {
-					setPending(false);
-				}
-
 				console.error(error);
 			}
 		};
-	}, [endpoint, JSON.stringify(args), onClose]);
+	}, [apply, endpoint, JSON.stringify(args), onClose]);
 
 	return (
 		<ConfirmationDialog

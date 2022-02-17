@@ -10,6 +10,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import DefaultConfirmIcon from '@mui/icons-material/Done';
 import DefaultCancelIcon from '@mui/icons-material/Cancel';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
@@ -52,21 +53,23 @@ const ConfirmationDialog = ({
 		</DialogContent>
 		<DialogActions>
 			<Button
-				disabled={pending}
+				disabled={loading || pending}
 				color={cancelColor}
 				endIcon={<CancelIcon />}
 				onClick={onCancel}
 			>
 				{cancel}
 			</Button>
-			<Button
-				disabled={pending}
+			<LoadingButton
+				disabled={loading}
 				color={confirmColor}
 				endIcon={<ConfirmIcon />}
+				loading={pending}
+				loadingPosition="end"
 				onClick={onConfirm}
 			>
 				{confirm}
-			</Button>
+			</LoadingButton>
 		</DialogActions>
 	</Dialog>
 );

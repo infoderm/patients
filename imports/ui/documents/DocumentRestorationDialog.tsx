@@ -5,12 +5,11 @@ import {useSnackbar} from 'notistack';
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import call from '../../api/endpoint/call';
-
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import restore from '../../api/endpoint/documents/restore';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -20,6 +19,7 @@ interface Props {
 
 const DocumentRestorationDialog = ({open, onClose, document}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 
 	const restoreThisDocument = async (event) => {
 		event.preventDefault();
@@ -41,6 +41,7 @@ const DocumentRestorationDialog = ({open, onClose, document}: Props) => {
 	return (
 		<ConfirmationDialog
 			open={open}
+			pending={pending}
 			title={`Restore document ${document._id.toString()}`}
 			text="If you do not want to restore this document, click cancel. If you really want to restore this document from the system, click the restore button."
 			cancel="Cancel"

@@ -3,14 +3,11 @@ import React, {useState} from 'react';
 import {styled} from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
 
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
-import EditIcon from '@mui/icons-material/Edit';
 
 import CancelButton from '../button/CancelButton';
 
@@ -24,10 +21,11 @@ import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import Endpoint from '../../api/endpoint/Endpoint';
-import call from '../../api/endpoint/call';
 import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 import GenericQueryHook from '../../api/GenericQueryHook';
+import RenameButton from '../button/RenameButton';
 
 const PREFIX = 'TagRenamingDialog';
 
@@ -76,7 +74,8 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
 	const [newnameError, setNewnameError] = useState('');
-	const [pending, setPending] = useState(false);
+	const [call, {pending}] = useCall();
+	const [renamed, setRenamed] = useState(false);
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
@@ -97,7 +96,6 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 		}
 
 		if (!error) {
-			setPending(true);
 			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 			feedback('Processing...', {
 				variant: 'info',
@@ -105,6 +103,7 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 			});
 			try {
 				await call(endpoint, tag._id, name);
+				setRenamed(true);
 				const message = `${Title} #${tag._id} renamed from ${nameFormat(
 					tag,
 					tag[nameKey],
@@ -113,7 +112,6 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 				feedback(message, {variant: 'success'});
 				onRename(name);
 			} catch (error: unknown) {
-				setPending(false);
 				console.error(error);
 				const message = error instanceof Error ? error.message : 'unknown err';
 				feedback(message, {variant: 'error'});
@@ -164,15 +162,13 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton disabled={pending} onClick={onClose} />
-				<Button
-					disabled={pending}
+				<CancelButton disabled={pending || renamed} onClick={onClose} />
+				<RenameButton
+					disabled={renamed}
+					loading={pending}
 					color="secondary"
-					endIcon={<EditIcon />}
 					onClick={renameThisTagIfNameMatchesAndNewNameNotEmpty}
-				>
-					Rename
-				</Button>
+				/>
 			</DialogActions>
 		</StyledDialog>
 	);

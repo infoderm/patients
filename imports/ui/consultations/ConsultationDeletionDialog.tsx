@@ -19,11 +19,11 @@ import useIsMounted from '../hooks/useIsMounted';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
-import call from '../../api/endpoint/call';
 import remove from '../../api/endpoint/consultations/remove';
 import CancelButton from '../button/CancelButton';
 import DeleteButton from '../button/DeleteButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -44,6 +44,7 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
 
@@ -96,15 +97,16 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 				<ConfirmationTextField
 					autoFocus
 					fullWidth
-					disabled={!found}
+					disabled={!found || pending}
 					margin="dense"
 					label={label}
 					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
+				<CancelButton disabled={pending} onClick={onClose} />
 				<DeleteButton
+					loading={pending}
 					disabled={!found || ConfirmationTextFieldProps.error}
 					onClick={deleteThisConsultationIfPatientsLastNameMatches}
 				/>

@@ -5,13 +5,13 @@ import {useSnackbar} from 'notistack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import call from '../../api/endpoint/call';
 import deleteDocument from '../../api/endpoint/documents/delete';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -21,7 +21,7 @@ interface Props {
 
 const DocumentDeletionDialog = ({open, onClose, document}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-
+	const [call, {pending}] = useCall();
 	const isMounted = useIsMounted();
 
 	const deleteThisDocument = async (event) => {
@@ -44,6 +44,7 @@ const DocumentDeletionDialog = ({open, onClose, document}: Props) => {
 	return (
 		<ConfirmationDialog
 			open={open}
+			pending={pending}
 			title={`Delete document ${document._id.toString()}`}
 			text="If you do not want to delete this document, click cancel. If you really want to delete this document from the system, click the delete button."
 			cancel="Cancel"

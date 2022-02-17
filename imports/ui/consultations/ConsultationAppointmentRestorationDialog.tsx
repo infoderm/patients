@@ -2,7 +2,6 @@ import React from 'react';
 
 import {useSnackbar} from 'notistack';
 
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -12,6 +11,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import RestoreIcon from '@mui/icons-material/Restore';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import {normalized} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -22,11 +22,11 @@ import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 
-import call from '../../api/endpoint/call';
 import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
 import {ConsultationDocument} from '../../api/collection/consultations';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -51,6 +51,7 @@ const ConsultationAppointmentRestorationDialog = ({
 	} = usePatient({}, consultation.patientId, options, deps);
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
 
@@ -104,22 +105,24 @@ const ConsultationAppointmentRestorationDialog = ({
 				<ConfirmationTextField
 					autoFocus
 					fullWidth
-					disabled={!found}
+					disabled={!found || pending}
 					margin="dense"
 					label={label}
 					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
-				<Button
+				<CancelButton disabled={pending} onClick={onClose} />
+				<LoadingButton
 					disabled={!found || ConfirmationTextFieldProps.error}
+					loading={pending}
 					color="secondary"
 					endIcon={<RestoreIcon />}
+					loadingPosition="end"
 					onClick={restoreThisConsultationsAppointmentIfPatientsLastNameMatches}
 				>
 					Restore
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</Dialog>
 	);

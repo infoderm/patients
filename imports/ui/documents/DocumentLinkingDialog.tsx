@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
 
-import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import LinkIcon from '@mui/icons-material/Link';
 import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
-import call from '../../api/endpoint/call';
 import link from '../../api/endpoint/documents/link';
 import CancelButton from '../button/CancelButton';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -30,6 +30,7 @@ const DocumentLinkingDialog = ({
 	existingLink = undefined,
 }: Props) => {
 	const [patients, setPatients] = useState(existingLink ? [existingLink] : []);
+	const [call, {pending}] = useCall();
 
 	const isMounted = useIsMounted();
 
@@ -61,6 +62,7 @@ const DocumentLinkingDialog = ({
 						label: 'Patient to link document to',
 						margin: 'normal',
 					}}
+					readOnly={pending}
 					value={patients}
 					onChange={(e) => {
 						setPatients(e.target.value);
@@ -69,14 +71,16 @@ const DocumentLinkingDialog = ({
 			</DialogContent>
 			<DialogActions>
 				<CancelButton onClick={onClose} />
-				<Button
+				<LoadingButton
 					disabled={patients.length === 0}
+					loading={pending}
 					color="secondary"
 					endIcon={<LinkIcon />}
+					loadingPosition="end"
 					onClick={linkThisDocument}
 				>
 					Link
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</DialogWithVisibleOverflow>
 	);

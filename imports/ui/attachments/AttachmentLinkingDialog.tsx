@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
 
-import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import LinkIcon from '@mui/icons-material/Link';
+import LoadingButton from '@mui/lab/LoadingButton';
 import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
-import call from '../../api/endpoint/call';
 import patientsAttach from '../../api/endpoint/patients/attach';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
 import CancelButton from '../button/CancelButton';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -30,6 +30,7 @@ const AttachmentLinkingDialog = ({
 	existingLink,
 }: Props) => {
 	const [patient, setPatient] = useState(existingLink ? [existingLink] : []);
+	const [call, {pending}] = useCall();
 
 	const isMounted = useIsMounted();
 
@@ -58,6 +59,7 @@ const AttachmentLinkingDialog = ({
 					link it to and click the link button.
 				</DialogContentText>
 				<PatientPicker
+					readOnly={pending}
 					TextFieldProps={{
 						autoFocus: true,
 						label: 'Patient to link attachment to',
@@ -70,15 +72,17 @@ const AttachmentLinkingDialog = ({
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
-				<Button
+				<CancelButton disabled={pending} onClick={onClose} />
+				<LoadingButton
 					disabled={patient.length === 0}
+					loading={pending}
 					color="secondary"
 					endIcon={<LinkIcon />}
+					loadingPosition="end"
 					onClick={linkThisAttachment}
 				>
 					Link
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</DialogWithVisibleOverflow>
 	);

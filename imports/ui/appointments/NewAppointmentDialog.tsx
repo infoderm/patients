@@ -1,23 +1,30 @@
 import React from 'react';
 import schedule from '../../api/endpoint/appointments/schedule';
-import call from '../../api/endpoint/call';
 
 import PropsOf from '../../util/PropsOf';
+import useCall from '../action/useCall';
 
 import AppointmentDialog from './AppointmentDialog';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
-const onSubmit = async (args) => call(schedule, args);
-
 const NewAppointmentDialog = (
 	props:
-		| Omit<PropsOf<typeof AppointmentDialog>, 'onSubmit'>
-		| Omit<PropsOf<typeof AppointmentFromPatientIdDialog>, 'onSubmit'>,
+		| Omit<PropsOf<typeof AppointmentDialog>, 'onSubmit' | 'pending'>
+		| Omit<
+				PropsOf<typeof AppointmentFromPatientIdDialog>,
+				'onSubmit' | 'pending'
+		  >,
 ) => {
+	const [call, {pending}] = useCall();
+	const onSubmit = async (args) => call(schedule, args);
 	return 'patientId' in props ? (
-		<AppointmentFromPatientIdDialog onSubmit={onSubmit} {...props} />
+		<AppointmentFromPatientIdDialog
+			pending={pending}
+			onSubmit={onSubmit}
+			{...props}
+		/>
 	) : (
-		<AppointmentDialog onSubmit={onSubmit} {...props} />
+		<AppointmentDialog pending={pending} onSubmit={onSubmit} {...props} />
 	);
 };
 

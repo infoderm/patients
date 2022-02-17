@@ -18,17 +18,18 @@ import DatePicker from '@mui/lab/DatePicker';
 import SaveIcon from '@mui/icons-material/Save';
 import TuneIcon from '@mui/icons-material/Tune';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import CancelButton from '../button/CancelButton';
 
 import GridContainerInsideDialogContent from '../grid/GridContainerInsideDialogContent';
 
 import saveTextAs from '../output/saveTextAs';
 
-import call from '../../api/endpoint/call';
 import {books} from '../../api/books';
 import withLazyOpening from '../modal/withLazyOpening';
 import csv from '../../api/endpoint/books/csv';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -46,6 +47,7 @@ const BooksDownloadDialog = ({
 	initialAdvancedFunctionality = false,
 }: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 
 	const [advancedFunctionality, setAdvancedFunctionality] = useState(
 		initialAdvancedFunctionality,
@@ -178,9 +180,9 @@ const BooksDownloadDialog = ({
 				</GridContainerInsideDialogContent>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
+				<CancelButton disabled={pending} onClick={onClose} />
 				<Button
-					disabled={advancedFunctionality}
+					disabled={advancedFunctionality || pending}
 					endIcon={<TuneIcon />}
 					onClick={() => {
 						setAdvancedFunctionality(true);
@@ -188,9 +190,15 @@ const BooksDownloadDialog = ({
 				>
 					Advanced
 				</Button>
-				<Button color="primary" endIcon={<SaveIcon />} onClick={downloadData}>
+				<LoadingButton
+					loading={pending}
+					color="primary"
+					endIcon={<SaveIcon />}
+					loadingPosition="end"
+					onClick={downloadData}
+				>
 					Download
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</Dialog>
 	);

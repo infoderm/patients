@@ -10,12 +10,9 @@ import MuiCardContent from '@mui/material/CardContent';
 import MuiCardActions from '@mui/material/CardActions';
 import MuiCardMedia from '@mui/material/CardMedia';
 
-import Button from '@mui/material/Button';
-
-import EditIcon from '@mui/icons-material/Edit';
-
 import useIsMounted from '../hooks/useIsMounted';
 import DeleteButton from '../button/DeleteButton';
+import RenameButton from '../button/RenameButton';
 
 const Card = styled(MuiCard, {
 	shouldForwardProp: (prop) => prop !== 'deleted',
@@ -164,12 +161,15 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 					{!deleted && (
 						<CardActions disableSpacing>
 							{RenamingDialog && (
-								<Button color="primary" onClick={openRenamingDialog}>
-									Rename
-									<EditIcon />
-								</Button>
+								<RenameButton
+									loading={renaming}
+									color="primary"
+									onClick={openRenamingDialog}
+								/>
 							)}
-							{DeletionDialog && <DeleteButton onClick={openDeletionDialog} />}
+							{DeletionDialog && (
+								<DeleteButton loading={deleting} onClick={openDeletionDialog} />
+							)}
 							{RenamingDialog && (
 								<RenamingDialog
 									open={renaming}

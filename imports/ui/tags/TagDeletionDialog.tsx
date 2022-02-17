@@ -19,9 +19,9 @@ import ConfirmationTextField, {
 import DeleteButton from '../button/DeleteButton';
 import CancelButton from '../button/CancelButton';
 
-import call from '../../api/endpoint/call';
 import Endpoint from '../../api/endpoint/Endpoint';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -36,6 +36,7 @@ interface Props {
 
 const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Names do not match';
@@ -93,6 +94,7 @@ const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 			<DialogActions>
 				<CancelButton onClick={onClose} />
 				<DeleteButton
+					loading={pending}
 					disabled={ConfirmationTextFieldProps.error}
 					onClick={deleteThisTagIfNameMatches}
 				/>

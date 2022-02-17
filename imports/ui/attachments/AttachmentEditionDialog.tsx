@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 
 import {useSnackbar} from 'notistack';
 
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,13 +9,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 
 import withLazyOpening from '../modal/withLazyOpening';
-import call from '../../api/endpoint/call';
 import rename from '../../api/endpoint/uploads/rename';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -28,6 +28,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [filename, setFilename] = useState(attachment.name || '');
 	const [filenameError, setFilenameError] = useState('');
+	const [call, {pending}] = useCall();
 
 	const editThisAttachment = async (event) => {
 		event.preventDefault();
@@ -65,6 +66,7 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 				<TextField
 					autoFocus
 					fullWidth
+					disabled={pending}
 					margin="dense"
 					label="Filename"
 					value={filename}
@@ -76,14 +78,16 @@ const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
-				<Button
+				<CancelButton disabled={pending} onClick={onClose} />
+				<LoadingButton
 					color="primary"
+					loading={pending}
 					endIcon={<SaveIcon />}
+					loadingPosition="end"
 					onClick={editThisAttachment}
 				>
 					Save Changes
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</Dialog>
 	);

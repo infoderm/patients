@@ -8,7 +8,6 @@ import {styled} from '@mui/material/styles';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -26,6 +25,7 @@ import isValid from 'date-fns/isValid';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
+import LoadingButton from '@mui/lab/LoadingButton';
 import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import TextField from '../input/TextField';
@@ -86,6 +86,7 @@ const isEqual = (a, b) => a === b;
 
 interface AppointmentDialogProps {
 	open: boolean;
+	pending: boolean;
 	onClose: () => void;
 	onSubmit: (args: SanitizeParams) => Promise<{_id: string}>;
 	initialDatetime: Date;
@@ -100,6 +101,7 @@ const AppointmentDialog = ({
 	initialAppointment,
 	initialPatient,
 	open,
+	pending,
 	onClose,
 	onSubmit,
 }: AppointmentDialogProps) => {
@@ -382,14 +384,16 @@ const AppointmentDialog = ({
 			</DialogContent>
 			<DialogActions>
 				<CancelButton onClick={onClose} />
-				<Button
+				<LoadingButton
+					loading={pending}
 					disabled={patientList.length !== 1 || !validDate || !validTime}
 					color="primary"
 					endIcon={<AccessTimeIcon />}
+					loadingPosition="end"
 					onClick={createAppointment}
 				>
 					Schedule
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</DialogWithVisibleOverflow>
 	);

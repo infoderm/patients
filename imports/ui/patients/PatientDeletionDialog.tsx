@@ -8,7 +8,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import call from '../../api/endpoint/call';
 import patientsRemove from '../../api/endpoint/patients/remove';
 
 import {normalized} from '../../api/string';
@@ -22,6 +21,7 @@ import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 import StaticPatientCard from './StaticPatientCard';
 import CardPatientProjection from './CardPatientProjection';
 
@@ -33,6 +33,7 @@ interface Props {
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
 
@@ -79,14 +80,16 @@ const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 				<ConfirmationTextField
 					autoFocus
 					fullWidth
+					disabled={pending}
 					margin="dense"
 					label="Patient's last name"
 					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
+				<CancelButton disabled={pending} onClick={onClose} />
 				<DeleteButton
+					loading={pending}
 					disabled={ConfirmationTextFieldProps.error}
 					onClick={deleteThisPatientIfLastNameMatches}
 				/>

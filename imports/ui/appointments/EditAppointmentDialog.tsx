@@ -1,8 +1,8 @@
 import React from 'react';
 
 import withLazyOpening from '../modal/withLazyOpening';
-import call from '../../api/endpoint/call';
 import reschedule from '../../api/endpoint/appointments/reschedule';
+import useCall from '../action/useCall';
 import {AppointmentDocument} from '../../api/collection/appointments';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
@@ -13,14 +13,15 @@ interface Props {
 }
 
 const EditAppointmentDialog = ({open, onClose, appointment}: Props) => {
+	const [call, {pending}] = useCall();
 	const onSubmit = async (args) => call(reschedule, appointment._id, args);
-
 	return (
 		<AppointmentFromPatientIdDialog
 			patientId={appointment.patientId}
 			open={open}
 			initialDatetime={appointment.datetime}
 			initialAppointment={appointment}
+			pending={pending}
 			onClose={onClose}
 			onSubmit={onSubmit}
 		/>

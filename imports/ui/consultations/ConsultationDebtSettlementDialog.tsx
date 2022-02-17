@@ -5,7 +5,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import {ConsultationDocument} from '../../api/collection/consultations';
-import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/consultations/update';
 
 import {useCurrencyFormat} from '../../i18n/currency';
@@ -14,6 +13,7 @@ import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 
 interface Props {
 	open: boolean;
@@ -44,6 +44,7 @@ const ConsultationDebtSettlementDialog = ({
 	const currencyFormat = useCurrencyFormat(currency);
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 
 	const clearDebtForThisConsultation = useCallback(
 		async (event) => {
@@ -69,7 +70,7 @@ const ConsultationDebtSettlementDialog = ({
 				feedback(message, {variant: 'error'});
 			}
 		},
-		[onClose, consultation, enqueueSnackbar, closeSnackbar],
+		[call, onClose, consultation, enqueueSnackbar, closeSnackbar],
 	);
 
 	const patientIdentifier = found
@@ -80,6 +81,7 @@ const ConsultationDebtSettlementDialog = ({
 		<ConfirmationDialog
 			open={open}
 			loading={loading}
+			pending={pending}
 			title={`Clear debt of consultation for patient ${patientIdentifier}`}
 			text={
 				<>

@@ -9,13 +9,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import Button from '@mui/material/Button';
-
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import {normalized} from '../../api/string';
 
-import call from '../../api/endpoint/call';
 import Endpoint from '../../api/endpoint/Endpoint';
 
 import ConfirmationTextField, {
@@ -26,6 +24,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
+import useCall from '../action/useCall';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const PREFIX = 'AttachmentDeletionDialog';
@@ -56,6 +55,7 @@ const AttachmentDeletionDialog = ({
 	endpoint,
 }: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [call, {pending}] = useCall();
 
 	const getError = (expected: string, value: string) =>
 		normalized(expected) === normalized(value)
@@ -111,14 +111,16 @@ const AttachmentDeletionDialog = ({
 			</DialogContent>
 			<DialogActions>
 				<CancelButton onClick={onClose} />
-				<Button
+				<LoadingButton
 					color="secondary"
 					disabled={ConfirmationTextFieldProps.error}
+					loading={pending}
 					endIcon={<LinkOffIcon />}
+					loadingPosition="end"
 					onClick={detachThisAttachmentIfAttachmentNameMatches}
 				>
 					Detach
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</StyledDialog>
 	);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {styled} from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
@@ -9,10 +9,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import Button from '@mui/material/Button';
-
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import {Uploads} from '../../api/uploads';
 import {normalized} from '../../api/string';
 
@@ -39,6 +38,7 @@ interface Props {
 
 const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [pending, setPending] = useState(false);
 
 	const getError = (expected: string, value: string) =>
 		normalized(expected) === normalized(value)
@@ -55,12 +55,15 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 		if (validate()) {
 			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 			feedback('Processing...', {variant: 'info', persist: true});
+			setPending(true);
 			Uploads.remove({_id: attachment._id}, (err) => {
 				if (err) {
+					setPending(false);
 					const message = `[Trash] Error during removal: ${err.message}`;
 					console.error(message, {err});
 					feedback(message, {variant: 'error'});
 				} else {
+					setPending(false);
 					const message = '[Trash] File removed from DB and FS';
 					console.log(message);
 					feedback(message, {variant: 'success'});
@@ -83,21 +86,24 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 				<ConfirmationTextField
 					fullWidth
 					autoFocus
+					disabled={pending}
 					margin="dense"
 					label="Attachment's filename"
 					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
-				<Button
+				<CancelButton disabled={pending} onClick={onClose} />
+				<LoadingButton
 					color="secondary"
 					disabled={ConfirmationTextFieldProps.error}
+					loading={pending}
 					endIcon={<DeleteForeverIcon />}
+					loadingPosition="end"
 					onClick={trashThisAttachmentIfAttachmentNameMatches}
 				>
 					Delete forever
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</Dialog>
 	);

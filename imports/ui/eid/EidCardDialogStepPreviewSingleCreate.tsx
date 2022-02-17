@@ -7,12 +7,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import {patients} from '../../api/patients';
 
@@ -20,6 +20,7 @@ import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
+import useCall from '../action/useCall';
 import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const EidCardDialogStepPreviewSingleCreate = ({
@@ -32,6 +33,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 }: EidCardDialogStepPreviewSingleProps) => {
 	assert(patientId === '?');
 	const dialog = useDialog();
+	const [call, {pending}] = useCall();
 	const onNext = async () => {
 		if (
 			await dialog((resolve) => (
@@ -72,12 +74,22 @@ const EidCardDialogStepPreviewSingleCreate = ({
 				<GenericStaticPatientCard patient={eidPatient} />
 			</DialogContent>
 			<DialogActions>
-				<Button startIcon={<SkipPreviousIcon />} onClick={onPrevStep}>
+				<Button
+					disabled={pending}
+					startIcon={<SkipPreviousIcon />}
+					onClick={onPrevStep}
+				>
 					Prev
 				</Button>
-				<Button color="primary" endIcon={<SkipNextIcon />} onClick={onNext}>
+				<LoadingButton
+					loading={pending}
+					color="primary"
+					endIcon={<SkipNextIcon />}
+					loadingPosition="end"
+					onClick={onNext}
+				>
 					Next
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</>
 	);

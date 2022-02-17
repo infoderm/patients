@@ -29,10 +29,10 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 import {red, green} from '@mui/material/colors';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import diff from '../../util/diff';
 import {dataURL as pngDataURL} from '../../util/png';
 
-import call from '../../api/endpoint/call';
 import patientsUpdate from '../../api/endpoint/patients/update';
 import {patients} from '../../api/patients';
 
@@ -44,6 +44,7 @@ import ReactivePatientCard from '../patients/ReactivePatientCard';
 import PatientsGrid from '../patients/PatientsGrid';
 import usePatient from '../patients/usePatient';
 
+import useCall from '../action/useCall';
 import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const computeDifferences = function* (state, changes) {
@@ -140,6 +141,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	onClose,
 }: EidCardDialogStepPreviewSingleProps) => {
 	const dialog = useDialog();
+	const [call, {pending}] = useCall();
 	const onOpen = () => {
 		navigate(`/patient/${patientId}`);
 		onClose();
@@ -286,14 +288,16 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 					Prev
 				</Button>
 				{differences.length > 0 && (
-					<Button
+					<LoadingButton
 						disabled={loading || !found}
+						loading={pending}
 						color="primary"
 						endIcon={<SkipNextIcon />}
+						loadingPosition="end"
 						onClick={onNext}
 					>
 						Next
-					</Button>
+					</LoadingButton>
 				)}
 				{differences.length === 0 && (
 					<Button

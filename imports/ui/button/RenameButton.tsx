@@ -1,19 +1,19 @@
 import React from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import PropsOf from '../../util/PropsOf';
 
-const DeleteButton = (props: PropsOf<typeof LoadingButton>) => (
+const RenameButton = (props: PropsOf<typeof LoadingButton>) => (
 	<LoadingButton
 		color="secondary"
-		endIcon={<DeleteIcon />}
+		endIcon={<EditIcon />}
 		loadingPosition="end"
 		{...props}
 	>
-		Delete
+		Rename
 	</LoadingButton>
 );
 
-export default DeleteButton;
+export default RenameButton;

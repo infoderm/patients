@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 
-import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import LinearProgress from '@mui/material/LinearProgress';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import call from '../../api/endpoint/call';
+import LoadingButton from '@mui/lab/LoadingButton';
 import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import withLazyOpening from '../modal/withLazyOpening';
@@ -27,6 +26,7 @@ import makePatientsSuggestions from '../patients/makePatientsSuggestions';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 import transfer from '../../api/endpoint/consultations/transfer';
 import CancelButton from '../button/CancelButton';
+import useCall from '../action/useCall';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 interface Props {
@@ -57,6 +57,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 	);
 
 	const [patients, setPatients] = useState([]);
+	const [call, {pending}] = useCall();
 
 	const getError = (expected, value) =>
 		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
@@ -127,8 +128,9 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<CancelButton onClick={onClose} />
-				<Button
+				<CancelButton disabled={pending} onClick={onClose} />
+				<LoadingButton
+					loading={pending}
 					disabled={
 						patients.length !== 1 ||
 						!foundPatient ||
@@ -136,10 +138,11 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 					}
 					color="secondary"
 					endIcon={<LocalShippingIcon />}
+					loadingPosition="end"
 					onClick={transferThisConsultation}
 				>
 					Transfer
-				</Button>
+				</LoadingButton>
 			</DialogActions>
 		</DialogWithVisibleOverflow>
 	);
