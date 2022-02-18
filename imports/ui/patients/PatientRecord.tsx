@@ -11,22 +11,9 @@ import {myEncodeURIComponent} from '../../util/uri';
 import PatientHeader from './PatientHeader';
 import PatientPersonalInformation from './PatientPersonalInformation';
 
-const PREFIX = 'PatientRecord';
-
-const classes = {
-	root: `${PREFIX}-root`,
-	container: `${PREFIX}-container`,
-};
-
-const Root = styled('div')(({theme}) => ({
-	[`&.${classes.root}`]: {
-		paddingTop: 80,
-	},
-
-	[`& .${classes.container}`]: {
-		padding: theme.spacing(3),
-	},
-}));
+const Root = styled('div')({
+	paddingTop: 80,
+});
 
 const ConsultationsForPatient = lazy(
 	async () => import('../consultations/ConsultationsForPatient'),
@@ -68,7 +55,7 @@ interface Props {
 
 const PatientRecord = ({patientId}: Props) => {
 	return (
-		<Root className={classes.root}>
+		<Root>
 			<PatientHeader patientId={patientId} />
 			<Routes>
 				<Route index element={<PatientRecordTabs />} />
