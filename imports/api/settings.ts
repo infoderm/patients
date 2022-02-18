@@ -14,6 +14,7 @@ export const defaults: Record<string, any> = {
 	'appointment-duration': [15 * 60 * 1000, 30 * 60 * 1000],
 	'appointment-cancellation-reason': ['patient-cancelled', 'doctor-cancelled'],
 	'work-schedule': [],
+	'agenda-slot-click-sets-initial-time': 'begin',
 	'important-strings': [],
 	'week-starts-on': 'locale',
 	'first-week-contains-date': 'locale',

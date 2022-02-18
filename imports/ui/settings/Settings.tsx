@@ -23,6 +23,7 @@ import WorkScheduleSetting from './WorkScheduleSetting';
 import ThemePaletteModeSetting from './ThemePaletteModeSetting';
 import ThemePalettePrimarySetting from './ThemePalettePrimarySetting';
 import ThemePaletteSecondarySetting from './ThemePaletteSecondarySetting';
+import AgendaSlotClickSetsInitialTime from './AgendaSlotClickSetsInitialTime';
 
 const PREFIX = 'Settings';
 
@@ -117,6 +118,7 @@ export default function Settings() {
 							<AppointmentCancellationReasonSetting
 								className={classes.setting}
 							/>
+							<AgendaSlotClickSetsInitialTime className={classes.setting} />
 						</>
 					}
 				/>
