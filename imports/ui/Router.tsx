@@ -172,7 +172,7 @@ export default function Router() {
 				<Route element={<DrugsSearch />} path="drugs" />
 				<Route element={<DrugDetails />} path="drug/:id" />
 
-				<Route element={<Settings />} path="settings" />
+				<Route element={<Settings />} path="settings/*" />
 				<Route element={<Authentication />} path="auth" />
 
 				<Route element={<NoMatch />} path="*" />
