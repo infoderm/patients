@@ -93,7 +93,7 @@ const DocumentCard = ({
 							</ListItemAvatar>
 							<ListItemText
 								disableTypography
-								primary={<Typography variant="subtitle1">Results</Typography>}
+								primary={<Typography variant="subtitle1">Table</Typography>}
 								secondary={<HealthOneLabResultsTable document={document} />}
 							/>
 						</ListItem>

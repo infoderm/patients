@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles, createStyles} from '@mui/styles';
 
 import Typography from '@mui/material/Typography';
@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {DocumentDocument, DocumentResult} from '../../api/collection/documents';
+import DocumentToolbar from './DocumentToolbar';
 
 const styles = (theme) =>
 	createStyles({
@@ -65,6 +66,7 @@ const HealthOneLabResultsTable = ({
 	document,
 }: HealthOneLabResultsTableProps) => {
 	const classes = useStyles();
+	const [printSource, setPrintSource] = useState<HTMLTableElement>(null);
 
 	if (!document.results || document.results.length === 0) {
 		return <Typography>No results</Typography>;
@@ -154,7 +156,13 @@ const HealthOneLabResultsTable = ({
 
 	return (
 		<Paper className={classes.root}>
-			<Table className={classes.table}>
+			<DocumentToolbar printSource={printSource} />
+			<Table
+				ref={(el) => {
+					setPrintSource(el);
+				}}
+				className={classes.table}
+			>
 				<TableHead>
 					<TableRow>
 						<TableCell align="left">Code</TableCell>
