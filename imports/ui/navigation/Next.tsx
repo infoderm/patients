@@ -8,12 +8,8 @@ import PropsOf from '../../util/PropsOf';
 
 import FixedFab from '../button/FixedFab';
 
-interface Props extends PropsOf<typeof FixedFab> {
-	to: string;
-}
-
-const Next = ({to, ...rest}: Props) => (
-	<FixedFab col={2} color="primary" component={Link} to={to} {...rest}>
+const Next = (props: PropsOf<typeof FixedFab>) => (
+	<FixedFab col={2} color="primary" component={Link} {...props}>
 		<NavigateNextIcon />
 	</FixedFab>
 );

@@ -1,12 +1,23 @@
 import React from 'react';
 
-import IconButton from '@mui/material/IconButton';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
+import LoadingIconButton from '../../button/LoadingIconButton';
+import PropsOf from '../../../util/PropsOf';
+import {DocumentDocument} from '../../../api/collection/documents';
 import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 
-const DocumentDownloadIconButton = (props) => (
-	<DocumentDownloadGenericButton component={IconButton} size="large" {...props}>
+type DocumentDownloadIconButtonProps = Omit<
+	PropsOf<typeof LoadingIconButton>,
+	'loading' | 'onClick' | 'children'
+> & {document: DocumentDocument};
+
+const DocumentDownloadIconButton = (props: DocumentDownloadIconButtonProps) => (
+	<DocumentDownloadGenericButton
+		component={LoadingIconButton}
+		size="large"
+		{...props}
+	>
 		<CloudDownloadIcon />
 	</DocumentDownloadGenericButton>
 );

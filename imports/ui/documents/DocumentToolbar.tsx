@@ -71,7 +71,7 @@ const DocumentToolbar = ({printSource}: DocumentToolbarProps) => {
 			<div className={classes.actions}>
 				<LoadingIconButton
 					tooltip="Print"
-					pending={pending}
+					loading={pending}
 					disabled={!printSource}
 					onClick={printResults}
 				>
