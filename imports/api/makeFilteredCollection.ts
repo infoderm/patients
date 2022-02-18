@@ -21,6 +21,8 @@ const makeFilteredCollection = (
 			const options = {
 				...filterOptions,
 				...publicationOptions,
+				skip: 0,
+				limit: 0,
 			};
 
 			const handle = Collection.find(selector, options).observeChanges({
