@@ -31,6 +31,8 @@ import {
 
 import TransactionDriver from './transaction/TransactionDriver';
 
+const maybe = Match.Maybe;
+
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
 	const firstnameWords = words(firstname ?? '');
@@ -168,8 +170,9 @@ function sanitize({
 		check(email, [
 			{
 				address: String,
-				// eslint-disable-next-line new-cap
-				comment: Match.Maybe(String),
+				local: String,
+				domain: String,
+				name: maybe(String),
 			},
 		]);
 

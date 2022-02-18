@@ -18,8 +18,10 @@ export interface PatientIdFields {
 }
 
 export interface Email {
+	name?: string;
 	address: string;
-	comment?: string;
+	local: string;
+	domain: string;
 }
 
 export interface PatientFields extends PatientIdFields {

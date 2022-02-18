@@ -632,21 +632,27 @@ const PatientPersonalInformationStatic = (
 									useSuggestions={noSuggestions}
 									itemToKey={(email) => email.address}
 									itemToString={(email) => email.address}
-									inputValidation={(inputString) =>
-										parseOneAddress(inputString) === null
-											? {state: 0}
-											: {state: 1}
-									}
+									inputValidation={(inputString) => {
+										const parsed = parseOneAddress(
+											inputString,
+										) as ParsedMailbox | null;
+										if (parsed === null) return {state: 0};
+										const {domain} = parsed;
+										return domain.includes('.') ? {state: 1} : {state: 0};
+									}}
 									createNewItem={(inputString) => {
 										const parsed = parseOneAddress(
 											inputString,
 										) as ParsedMailbox | null;
 										if (parsed === null) return undefined;
-										const {name, address} = parsed;
-										if (name === null) return {address};
+										const {name, address, local, domain} = parsed;
+										if (!domain.includes('.')) return undefined;
+										if (name === null) return {address, local, domain};
 										return {
 											address,
-											comment: name,
+											local,
+											domain,
+											name,
 										};
 									}}
 									TextFieldProps={{
