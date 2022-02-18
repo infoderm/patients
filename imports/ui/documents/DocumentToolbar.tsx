@@ -5,9 +5,9 @@ import Toolbar from '@mui/material/Toolbar';
 
 import PrintIcon from '@mui/icons-material/Print';
 
-import PDF from 'jspdf';
 import {styled} from '@mui/material/styles';
 import LoadingIconButton from '../button/LoadingIconButton';
+import {saveHTMLElementAsPDF} from '../../lib/pdf/pdf';
 
 const PREFIX = 'DocumentToolbar';
 
@@ -41,20 +41,8 @@ const DocumentToolbar = ({printSource}: DocumentToolbarProps) => {
 	const [pending, setPending] = useState(false);
 	const printResults = useCallback(async () => {
 		setPending(true);
-		const pdf = new PDF({
-			orientation: 'portrait',
-			unit: 'mm',
-			format: 'a4',
-			compress: true,
-		});
 		try {
-			await pdf.html(printSource, {
-				width: 210, // Width of A4 paper
-				windowWidth: printSource.getBoundingClientRect().width,
-				async callback(doc) {
-					await doc.save('results.pdf', {returnPromise: true});
-				},
-			});
+			await saveHTMLElementAsPDF(printSource, {filename: 'results.pdf'});
 		} finally {
 			setPending(false);
 		}
