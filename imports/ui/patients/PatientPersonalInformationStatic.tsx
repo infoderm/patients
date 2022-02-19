@@ -201,18 +201,20 @@ const PatientPersonalInformationStatic = (
 		<Paper className={classes.root}>
 			<Grid container spacing={3}>
 				<Grid item sm={4} md={2} className={classes.left}>
-					{patient.photo ? (
-						<img
-							className={classes.photo}
-							src={pngDataURL(patient.photo)}
-							title={`${patient.firstname} ${patient.lastname}`}
-						/>
-					) : (
-						<div className={classes.photoPlaceHolder}>
-							{patient.firstname ? patient.firstname[0] : '?'}
-							{patient.lastname ? patient.lastname[0] : '?'}
-						</div>
-					)}
+					<div>
+						{patient.photo ? (
+							<img
+								className={classes.photo}
+								src={pngDataURL(patient.photo)}
+								title={`${patient.firstname} ${patient.lastname}`}
+							/>
+						) : (
+							<div className={classes.photoPlaceHolder}>
+								{patient.firstname ? patient.firstname[0] : '?'}
+								{patient.lastname ? patient.lastname[0] : '?'}
+							</div>
+						)}
+					</div>
 					{!patient.birthdate ? null : (
 						<Typography variant="h5">
 							{localizeBirthdate(_birthdate)}
