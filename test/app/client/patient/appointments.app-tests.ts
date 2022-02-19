@@ -25,7 +25,7 @@ const scheduleAppointmentForPatient = async (
 		id: patientId,
 	});
 
-	const {user, findByRole, findAllByRole} = app;
+	const {user, findByRole, queryByRole, findAllByRole} = app;
 	await user.click(await findByRole('button', {name: /^more actions/i}));
 
 	await user.click(
@@ -53,7 +53,8 @@ const scheduleAppointmentForPatient = async (
 	console.debug('Check button');
 	await findByRole('button', {name: 'Cancel'});
 	await historyBack();
-	await user.click(await findByRole('button', {name: 'Show no-shows'}));
+	const toggle = queryByRole('button', {name: 'Show no-shows'});
+	if (toggle !== null) await user.click(toggle);
 	await findByRole('link', {
 		name: `13:05-13:35 ${lastname} ${firstname}`,
 		exact: false,
@@ -76,7 +77,7 @@ client(__filename, () => {
 		});
 
 		await scheduleAppointmentForPatient(app, {patientId, firstname, lastname});
-	}).timeout(10_000);
+	}).timeout(15_000);
 
 	it('should allow to cancel an appointment for a patient', async () => {
 		const username = randomUserId();
@@ -158,7 +159,7 @@ client(__filename, () => {
 				});
 			});
 		}
-	}).timeout(15_000);
+	}).timeout(20_000);
 
 	it('should allow to begin a consultation for a patient', async () => {
 		const username = randomUserId();
