@@ -175,8 +175,11 @@ export const createNewPatient = async (app, {firstname, lastname}) => {
 };
 
 export const searchResultsForQuery = async (app, query) => {
-	const {findByRole, getByRole} = app;
-	await fillIn(app, getByRole('searchbox', {name: 'Patient search'}), query);
+	const {userWithoutPointerEventsCheck, findByRole, getByRole} = app;
+	await userWithoutPointerEventsCheck.type(
+		getByRole('searchbox', {name: 'Patient search'}),
+		query,
+	);
 	await findByRole('heading', {name: /^Results for query/});
 };
 
@@ -283,7 +286,7 @@ export const editConsultation = async (
 };
 
 export const uploadFile = (button, file) => {
-	const input = button.parentElement.querySelector('input[type="file"]');
+	const input = button.closest('label').querySelector('input[type="file"]');
 	// await user.upload(input, file) does not work:
 	// Error: Unable to perform pointer interaction as the element has or
 	// inherits pointer-events set to "none".

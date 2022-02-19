@@ -188,6 +188,7 @@ const editPatient = async (
 	}
 
 	if (typeof action === 'string') {
+		console.debug('editPatient', {action});
 		await user.click(await findByRole('button', {name: action}));
 	}
 };
@@ -231,6 +232,7 @@ client(__filename, () => {
 			action: 'Save',
 		});
 
+		console.debug('Check that patient has been correctly updated');
 		await findByDisplayValue('my-test-nn');
 		await findByDisplayValue('Doe');
 		await findByDisplayValue('Jane');
@@ -250,11 +252,15 @@ client(__filename, () => {
 		await findByText('my test antecedents');
 		await findByText('my test ongoing');
 
+		console.debug('Searching for Jane');
 		await searchResultsForQuery(app, 'Jane');
 
+		console.debug('Check that gender is female');
 		await findByText('F');
 
+		console.debug('Click on Jane Doe link');
 		await user.click(await findByRole('link', {name: 'Jane Doe'}));
+		console.debug("Check that we are on the patient's record page");
 		await findByRole('heading', {name: `/patient/${patientId}`});
 
 		await editPatient(app, {
