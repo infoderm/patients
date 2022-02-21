@@ -6,7 +6,7 @@ import {
 } from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 
-import {consultations, computedFields} from '../../consultations';
+import {consultations, computeUpdate} from '../../consultations';
 
 import {books} from '../../books';
 
@@ -36,10 +36,16 @@ export default define({
 			throw new Meteor.Error('not-found');
 		}
 
-		const fields = sanitize(newfields);
-		if (fields.patientId) {
+		const changes = sanitize(newfields);
+		const {$set, $unset, newState} = await computeUpdate(
+			db,
+			owner,
+			existing,
+			changes,
+		);
+		if ($set.patientId) {
 			const patient = await db.findOne(Patients, {
-				_id: fields.patientId,
+				_id: $set.patientId,
 				owner,
 			});
 			if (patient === null) {
@@ -47,45 +53,16 @@ export default define({
 			}
 		}
 
-		if (fields.datetime && fields.book) {
-			await books.add(db, owner, books.name(fields.datetime, fields.book));
+		if (newState.datetime && newState.book) {
+			await books.add(db, owner, books.name(newState.datetime, newState.book));
 		}
-
-		let $unset;
-
-		if (
-			Object.prototype.hasOwnProperty.call(newfields, 'price') &&
-			fields.price === undefined
-		) {
-			$unset = {
-				...$unset,
-				price: true,
-			};
-		}
-
-		if (
-			Object.prototype.hasOwnProperty.call(newfields, 'paid') &&
-			fields.paid === undefined
-		) {
-			$unset = {
-				...$unset,
-				paid: true,
-			};
-		}
-
-		const computed = await computedFields(db, owner, existing, fields);
-
-		const $set = {
-			...fields,
-			...computed,
-		};
 
 		const modifier: Mongo.Modifier<ConsultationDocument> = {
-			$set,
 			$currentDate: {lastModifiedAt: true},
 		};
 
-		if ($unset !== undefined) modifier.$unset = $unset;
+		if (Object.keys($set).length > 0) modifier.$set = $set;
+		if (Object.keys($unset).length > 0) modifier.$unset = $unset;
 
 		const {
 			begin: oldBegin,

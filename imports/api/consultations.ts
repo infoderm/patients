@@ -2,6 +2,7 @@ import {check} from 'meteor/check';
 
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
 import {increasing, decreasing} from '@total-order/date';
+import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
@@ -52,7 +53,7 @@ export const findLastConsultationInInterval = (
 
 export const filterBookPrefill = () => ({
 	book: {
-		$regex: /^[1-9]\d*$/,
+		$regex: books.isRealBookNumberStringRegex,
 	},
 });
 
@@ -134,110 +135,165 @@ export function setupConsultationsStatsPublication(collection, query) {
 	return handle;
 }
 
-function sanitize({
-	patientId,
-	datetime,
-	reason,
-	done,
-	todo,
-	treatment,
-	next,
-	more,
+const yieldKey = function* (fields, key, type) {
+	if (Object.prototype.hasOwnProperty.call(fields, key)) {
+		check(fields[key], type);
+		yield [key, fields[key]];
+	}
+};
 
-	currency,
-	price,
-	paid,
-	book,
-	inBookNumber,
-	payment_method,
-}) {
-	check(patientId, String);
-	check(datetime, Date);
+const yieldResettableKey = function* (fields, key, type, transform) {
+	if (Object.prototype.hasOwnProperty.call(fields, key)) {
+		if (fields[key] !== undefined) check(fields[key], type);
+		yield [key, transform(fields[key])];
+	}
+};
 
-	if (reason !== undefined) check(reason, String);
-	if (done !== undefined) check(done, String);
-	if (todo !== undefined) check(todo, String);
-	if (treatment !== undefined) check(treatment, String);
-	if (next !== undefined) check(next, String);
-	if (more !== undefined) check(more, String);
+const trimString = (value: string | undefined) => value?.trim();
 
-	if (currency !== undefined) check(currency, String);
-	if (price !== undefined) check(price, Number);
-	if (paid !== undefined) check(paid, Number);
-	if (book !== undefined) check(book, String);
-	if (inBookNumber !== undefined) check(inBookNumber, Number);
-	if (payment_method !== undefined) check(payment_method, String);
+const sanitizeUpdate = function* (fields) {
+	yield* yieldKey(fields, 'patientId', String);
 
-	price = Number.isFinite(price) ? price : undefined;
-	paid = Number.isFinite(paid) ? paid : undefined;
-	inBookNumber =
-		Number.isInteger(inBookNumber) && inBookNumber >= 1
-			? inBookNumber
-			: undefined;
+	if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
+		const {datetime} = fields;
+		check(datetime, Date);
+		yield ['datetime', datetime];
+		yield ['realDatetime', datetime];
+		yield ['begin', datetime];
+	}
 
-	reason = reason?.trim();
-	done = done?.trim();
-	todo = todo?.trim();
-	treatment = treatment?.trim();
-	next = next?.trim();
-	more = more?.trim();
+	yield* yieldResettableKey(fields, 'reason', String, trimString);
+	yield* yieldResettableKey(fields, 'done', String, trimString);
+	yield* yieldResettableKey(fields, 'todo', String, trimString);
+	yield* yieldResettableKey(fields, 'treatment', String, trimString);
+	yield* yieldResettableKey(fields, 'next', String, trimString);
+	yield* yieldResettableKey(fields, 'more', String, trimString);
 
-	currency = currency?.trim().toUpperCase();
-	book = books.sanitize(book || '');
+	yield* yieldResettableKey(
+		fields,
+		'currency',
+		String,
+		(currency: string | undefined) => currency?.trim().toUpperCase(),
+	);
+	yield* yieldResettableKey(
+		fields,
+		'book',
+		String,
+		(book: string | undefined) => books.sanitize(book || ''),
+	);
+	yield* yieldResettableKey(fields, 'payment_method', String, (x) => x);
 
+	yield* yieldResettableKey(
+		fields,
+		'price',
+		Number,
+		(price: number | undefined) => (Number.isFinite(price) ? price : undefined),
+	);
+	yield* yieldResettableKey(
+		fields,
+		'paid',
+		Number,
+		(paid: number | undefined) => (Number.isFinite(paid) ? paid : undefined),
+	);
+	yield* yieldResettableKey(
+		fields,
+		'inBookNumber',
+		Number,
+		(inBookNumber: number | undefined) =>
+			Number.isInteger(inBookNumber) && inBookNumber >= 1
+				? inBookNumber
+				: undefined,
+	);
+
+	yield ['isDone', true];
+};
+
+const sanitize = (fields) => {
+	const update = Array.from(sanitizeUpdate(fields));
 	return {
-		patientId,
-		datetime,
-		realDatetime: datetime,
-		begin: datetime,
-		reason,
-		done,
-		todo,
-		treatment,
-		next,
-		more,
-
-		currency,
-		price,
-		paid,
-		unpaid: isUnpaid({price, paid}),
-		book,
-		inBookNumber,
-		payment_method,
-		isDone: true,
+		$set: Object.fromEntries(update.filter(([, value]) => value !== undefined)),
+		$unset: Object.fromEntries(
+			update
+				.filter(([, value]) => value === undefined)
+				.map(([key]) => [key, true]),
+		),
 	};
-}
+};
 
-export const computedFields = async (
+const computedFieldsGenerator = async function* (
 	db: TransactionDriver,
 	owner: string,
-	state,
-	changes,
-) => {
+	state: Partial<ConsultationDocument>,
+) {
+	// Update done datetime
 	const laterConsultation = await db.findOne(Consultations, {
 		owner,
 		isDone: true,
-		datetime: {$gt: changes.datetime ?? state?.datetime},
+		datetime: {$gt: state.datetime},
 	});
 	const isLastConsultation = laterConsultation === null;
 
-	if (!isLastConsultation) return undefined;
+	if (isLastConsultation) {
+		const now = new Date();
+		const tolerance = state.duration ?? DEFAULT_DURATION_IN_MILLISECONDS;
 
-	const now = new Date();
-
-	const tolerance = state?.duration ?? DEFAULT_DURATION_IN_MILLISECONDS;
-
-	if (
-		state?.doneDatetime !== undefined &&
-		differenceInMilliseconds(now, state.doneDatetime) >= tolerance
-	) {
-		return undefined;
+		if (
+			state.doneDatetime === undefined ||
+			differenceInMilliseconds(now, state.doneDatetime) < tolerance
+		) {
+			yield ['doneDatetime', now];
+			yield ['end', now];
+		}
 	}
 
+	// Update unpaid
+	yield [
+		'unpaid',
+		isUnpaid({
+			price: state.price,
+			paid: state.paid,
+		}),
+	];
+};
+
+const computedFields = async (
+	db: TransactionDriver,
+	owner: string,
+	state: Partial<ConsultationDocument>,
+) => {
+	const entries = await asyncIterableToArray(
+		computedFieldsGenerator(db, owner, state),
+	);
+	return Object.fromEntries(entries);
+};
+
+export const computeUpdate = async (
+	db: TransactionDriver,
+	owner: string,
+	state: undefined | ConsultationDocument,
+	{$set, $unset},
+) => {
+	const newState = simulateUpdate(state, {$set, $unset});
 	return {
-		doneDatetime: now,
-		end: now,
+		newState,
+		$set: {
+			...$set,
+			...(await computedFields(db, owner, newState)),
+		},
+		$unset,
 	};
+};
+
+const simulateUpdate = (
+	state: undefined | ConsultationDocument,
+	{$set, $unset},
+) => {
+	const removedKeys = new Set(Object.keys($unset));
+	return Object.fromEntries(
+		Object.entries(state ?? {})
+			.filter(([key]) => !removedKeys.has(key))
+			.concat(Object.entries($set)),
+	);
 };
 
 export const consultations = {

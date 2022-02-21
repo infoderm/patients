@@ -234,7 +234,7 @@ client(__filename, () => {
 		await findByText('my test treatment');
 		await findByText('my test next');
 		await findByText('my test more');
-		await findByText('test-book-id - 1');
+		await findByText('test-book-id');
 
 		await findByText('À payé €55.00 de €55.00.');
 	}).timeout(30_000);

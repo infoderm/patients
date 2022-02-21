@@ -56,7 +56,6 @@ client(__filename, () => {
 			price: '45',
 			paid: '0',
 			book: 'test-book-id',
-			inBookNumber: '',
 			save: true,
 		});
 

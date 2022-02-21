@@ -26,20 +26,20 @@ const ConsultationDebtSettlementDialog = ({
 	onClose,
 	consultation,
 }: Props) => {
-	const {currency, price, paid} = consultation;
+	const {_id, patientId, currency, price, paid} = consultation;
 
 	const owed = price - paid;
 
 	const options = {fields: ConsultationDebtSettlementDialog.projection};
 	const deps = [
-		consultation.patientId,
+		patientId,
 		JSON.stringify(ConsultationDebtSettlementDialog.projection),
 	];
 	const {
 		loading,
 		found,
 		fields: patient,
-	} = usePatient({}, consultation.patientId, options, deps);
+	} = usePatient({}, patientId, options, deps);
 
 	const currencyFormat = useCurrencyFormat(currency);
 
@@ -50,16 +50,15 @@ const ConsultationDebtSettlementDialog = ({
 		async (event) => {
 			event.preventDefault();
 
-			const fields = {
-				...consultation,
-				paid: consultation.price,
+			const $set = {
+				paid: price,
 			};
 
 			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 			feedback('Processing...', {variant: 'info', persist: true});
 			try {
-				await call(update, consultation._id, fields);
-				const message = `Consultation #${consultation._id} updated.`;
+				await call(update, _id, $set);
+				const message = `Consultation #${_id} updated.`;
 				console.log(message);
 				feedback(message, {variant: 'success'});
 				onClose();
@@ -70,7 +69,7 @@ const ConsultationDebtSettlementDialog = ({
 				feedback(message, {variant: 'error'});
 			}
 		},
-		[call, onClose, consultation, enqueueSnackbar, closeSnackbar],
+		[call, onClose, _id, price, enqueueSnackbar, closeSnackbar],
 	);
 
 	const patientIdentifier = found

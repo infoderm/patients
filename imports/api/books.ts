@@ -57,7 +57,7 @@ export const books = {
 		return db.updateOne(Books, key, {$set: fields}, {upsert: true});
 	},
 
-	async remove(db: TransactionDriver, owner, name) {
+	async remove(db: TransactionDriver, owner: string, name: string) {
 		check(owner, String);
 		check(name, String);
 
@@ -73,7 +73,7 @@ export const books = {
 
 	format: (year, book) => `${year}/${book}`,
 
-	name: (datetime, book) => books.format(datetime.getFullYear(), book),
+	name: (datetime: Date, book) => books.format(datetime.getFullYear(), book),
 
 	split(name: string): [string, string] {
 		const pivot = name.indexOf('/');
@@ -116,6 +116,9 @@ export const books = {
 		if (typeof bookNumber !== 'number') return false;
 		return Number.isInteger(bookNumber) && bookNumber > 0;
 	},
+
+	isRealBookNumberStringRegex: /^[1-9]\d*$/,
+	isValidInBookNumberStringRegex: /^[1-9]\d*$/,
 
 	MAX_CONSULTATIONS: 50,
 	DOWNLOAD_FIRST_BOOK: 1,

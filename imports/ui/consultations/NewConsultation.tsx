@@ -16,7 +16,7 @@ type Params = {
 const NewConsultation = () => {
 	const params = useParams<Params>();
 	const patientId = myDecodeURIComponent(params.id);
-	const {loading, bookNumber, inBookNumber} = useBookPrefill();
+	const {loading, bookNumber} = useBookPrefill();
 
 	if (loading) return <Loading />;
 
@@ -33,7 +33,6 @@ const NewConsultation = () => {
 		currency: 'EUR',
 		payment_method: 'cash',
 		book: bookNumber,
-		inBookNumber,
 	};
 
 	return (

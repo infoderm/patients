@@ -13,7 +13,9 @@ import MenuItem from '@mui/material/MenuItem';
 import WarningIcon from '@mui/icons-material/Warning';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
+import BlockIcon from '@mui/icons-material/Block';
 
+import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '../input/TextField';
 
 import useBookStats from '../books/useBookStats';
@@ -70,10 +72,13 @@ export const defaultState = {
 	inBookNumberString: '',
 
 	syncPaid: true,
+	syncInBookNumber: false,
+	loadingInBookNumber: false,
 	priceWarning: false,
 	priceError: true,
 	paidError: true,
 	inBookNumberError: true,
+	inBookNumberDisabled: false,
 	dirty: false,
 	saving: false,
 	lastSaveWasSuccessful: false,
@@ -109,8 +114,11 @@ const ConsultationForm = ({consultation, update}: Props) => {
 		paidString,
 		book,
 
+		syncInBookNumber,
+		loadingInBookNumber,
 		syncPaid,
 		inBookNumberError,
+		inBookNumberDisabled,
 		priceWarning,
 		priceError,
 		paidError,
@@ -129,12 +137,14 @@ const ConsultationForm = ({consultation, update}: Props) => {
 			books.MAX_CONSULTATIONS + (_id && initialBookName === bookName ? 1 : 0) &&
 		books.isReal(bookName);
 
+	const inBookNumber = Number.parseInt(inBookNumberString, 10) ?? undefined;
+
 	const {
 		loading: loadingInBookNumberCollisions,
 		result: inBookNumberCollisions,
 	} = useBookStats(bookName, {
 		_id: {$nin: [_id]},
-		inBookNumber: Number.parseInt(inBookNumberString, 10) ?? undefined,
+		inBookNumber,
 	});
 
 	const inBookNumberCollides =
@@ -336,12 +346,33 @@ const ConsultationForm = ({consultation, update}: Props) => {
 				<Grid item xs={1}>
 					<TextField
 						fullWidth
+						disabled={inBookNumberDisabled}
 						readOnly={!update}
 						label="N°"
 						value={inBookNumberString}
 						margin="normal"
-						error={inBookNumberError || inBookNumberCollides}
+						error={
+							!inBookNumberDisabled &&
+							(inBookNumberError || inBookNumberCollides)
+						}
 						helperText={inBookNumberCollides && 'Collision'}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton size="large">
+										{loadingInBookNumber ? (
+											<CircularProgress color="inherit" size={20} />
+										) : inBookNumberDisabled ? (
+											<BlockIcon />
+										) : syncInBookNumber ? (
+											<LinkIcon />
+										) : (
+											<LinkOffIcon />
+										)}
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
 						onChange={update?.('inBookNumberString')}
 					/>
 				</Grid>

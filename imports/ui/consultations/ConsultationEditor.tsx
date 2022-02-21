@@ -1,4 +1,10 @@
-import React, {useState, useReducer, useEffect} from 'react';
+import React, {
+	useState,
+	useReducer,
+	useEffect,
+	Dispatch,
+	ReducerAction,
+} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import {styled} from '@mui/material/styles';
@@ -9,7 +15,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
 
 import call from '../../api/endpoint/call';
-import {ConsultationDocument} from '../../api/collection/consultations';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -22,9 +27,30 @@ import FixedFab from '../button/FixedFab';
 import insertConsultation from '../../api/endpoint/consultations/insert';
 import updateConsultation from '../../api/endpoint/consultations/update';
 import usePrompt from '../navigation/usePrompt';
+import {books} from '../../api/books';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm, {defaultState, State} from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
+import useNextInBookNumber from './useNextInBookNumber';
+
+interface ConsultationEditorFields {
+	_id: string | undefined;
+	patientId: string;
+	datetime: Date;
+	doneDatetime?: Date;
+	reason: string;
+	done?: string;
+	todo?: string;
+	treatment?: string;
+	next?: string;
+	more?: string;
+	currency?: string;
+	payment_method?: string;
+	price?: number;
+	paid?: number;
+	book?: string;
+	inBookNumber?: number;
+}
 
 const Main = styled(Grid)(({theme}) => ({
 	marginTop: 64,
@@ -38,10 +64,11 @@ const removeUndefined = <T,>(object: T) =>
 
 const isZero = (x: string) => Number.parseInt(x, 10) === 0;
 const isValidAmount = (amount: string) => /^\d+$/.test(amount);
-
+const isRealBookNumber = (numberString: string) =>
+	books.isRealBookNumberStringRegex.test(numberString);
 const isValidInBookNumber = (numberString: string) =>
-	/^[1-9]\d*$/.test(numberString);
-const init = (consultation: ConsultationDocument): State => {
+	books.isValidInBookNumberStringRegex.test(numberString);
+const init = (consultation: ConsultationEditorFields): State => {
 	const priceString = Number.isFinite(consultation.price)
 		? String(consultation.price)
 		: '';
@@ -75,10 +102,13 @@ const init = (consultation: ConsultationDocument): State => {
 			inBookNumberString,
 
 			syncPaid: priceString === paidString,
+			syncInBookNumber:
+				consultation._id === undefined && inBookNumberString === '',
 			priceWarning: isZero(priceString),
 			priceError: !isValidAmount(priceString),
 			paidError: !isValidAmount(paidString),
 			inBookNumberError: !isValidInBookNumber(inBookNumberString),
+			inBookNumberDisabled: !isRealBookNumber(consultation.book),
 		}),
 	};
 };
@@ -88,6 +118,7 @@ interface Action {
 	key?: string;
 	value?: any;
 	insertedId?: string;
+	inBookNumber?: number;
 }
 
 const reducer = (state: State, action: Action) => {
@@ -132,7 +163,10 @@ const reducer = (state: State, action: Action) => {
 						...state,
 						inBookNumberString,
 						inBookNumberError: !isValidInBookNumber(inBookNumberString),
-						dirty: true,
+						inBookNumberDisabled: !isRealBookNumber(state.book),
+						syncInBookNumber: false,
+						dirty:
+							state.dirty || inBookNumberString !== state.inBookNumberString,
 					};
 				}
 
@@ -143,6 +177,33 @@ const reducer = (state: State, action: Action) => {
 
 					return {...state, [action.key]: action.value, dirty: true};
 			}
+
+		case 'loading-next-in-book-number':
+			return {
+				...state,
+				loadingInBookNumber: true,
+				inBookNumberDisabled: false,
+				syncInBookNumber: true,
+			};
+
+		case 'disable-in-book-number':
+			return {
+				...state,
+				inBookNumberString: '',
+				inBookNumberError: false,
+				inBookNumberDisabled: true,
+				syncInBookNumber: false,
+				dirty: true,
+			};
+
+		case 'sync-in-book-number':
+			return {
+				...state,
+				inBookNumberString: String(action.inBookNumber),
+				inBookNumberError: false,
+				loadingInBookNumber: false,
+				syncInBookNumber: true,
+			};
 
 		case 'save':
 			return {...state, saving: true};
@@ -173,7 +234,13 @@ const reducer = (state: State, action: Action) => {
 	}
 };
 
-const Loader = ({loading, found, consultation}) => {
+interface LoaderProps {
+	loading: boolean;
+	found: boolean;
+	consultation: ConsultationEditorFields;
+}
+
+const Loader = ({loading, found, consultation}: LoaderProps) => {
 	if (loading) return <Loading />;
 
 	if (!found) {
@@ -183,7 +250,43 @@ const Loader = ({loading, found, consultation}) => {
 	return <ConsultationEditor consultation={consultation} />;
 };
 
-const ConsultationEditor = ({consultation}) => {
+const useConsultationEditorState = (consultation: ConsultationEditorFields) =>
+	useReducer(reducer, consultation, init);
+
+const useInBookNumberEffect = (
+	{
+		_id: consultationId,
+		book: initBook,
+		inBookNumber: initInBookNumber,
+	}: ConsultationEditorFields,
+	{book, syncInBookNumber}: State,
+	dispatch: Dispatch<ReducerAction<typeof reducer>>,
+) => {
+	const {loading, inBookNumber} = useNextInBookNumber(book);
+
+	useEffect(() => {
+		if (book === initBook && consultationId !== undefined) {
+			const value = String(initInBookNumber ?? '');
+			dispatch({type: 'update', key: 'inBookNumberString', value});
+		} else if (books.isRealBookNumberStringRegex.test(book)) {
+			dispatch({type: 'loading-next-in-book-number'});
+		} else {
+			dispatch({type: 'disable-in-book-number'});
+		}
+	}, [consultationId, book, initBook, initInBookNumber]);
+
+	useEffect(() => {
+		if (!loading && syncInBookNumber) {
+			dispatch({type: 'sync-in-book-number', inBookNumber});
+		}
+	}, [loading, syncInBookNumber, inBookNumber]);
+};
+
+interface ConsultationEditorProps {
+	consultation: ConsultationEditorFields;
+}
+
+const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 	const navigate = useNavigate();
 	const dialog = useDialog();
 
@@ -191,7 +294,7 @@ const ConsultationEditor = ({consultation}) => {
 
 	const {_id: consultationId, patientId} = consultation;
 
-	const [state, dispatch] = useReducer(reducer, consultation, init);
+	const [state, dispatch] = useConsultationEditorState(consultation);
 
 	const {
 		datetime,
@@ -226,6 +329,8 @@ const ConsultationEditor = ({consultation}) => {
 			navigate(`/edit/consultation/${lastInsertedId}`);
 		}
 	}, [navigate, lastSaveWasSuccessful, lastInsertedId]);
+
+	useInBookNumberEffect(consultation, state, dispatch);
 
 	const showSuccess = !dirty && lastSaveWasSuccessful;
 

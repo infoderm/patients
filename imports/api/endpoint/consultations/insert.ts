@@ -1,8 +1,9 @@
+import assert from 'assert';
 import {check} from 'meteor/check';
 
 import {Consultations} from '../../collection/consultations';
 
-import {computedFields, consultations} from '../../consultations';
+import {computeUpdate, consultations} from '../../consultations';
 
 import {books} from '../../books';
 
@@ -19,27 +20,36 @@ export default define({
 		check(consultation, Object);
 	},
 	async transaction(db: TransactionDriver, consultation: any) {
-		const fields = sanitize(consultation);
 		const owner = this.userId;
+		const changes = sanitize(consultation);
+		const {$set, $unset, newState} = await computeUpdate(
+			db,
+			owner,
+			undefined,
+			changes,
+		);
 
-		const patient = await db.findOne(Patients, {_id: fields.patientId, owner});
+		assert(
+			!Object.keys($unset).some((key) =>
+				Object.prototype.hasOwnProperty.call(newState, key),
+			),
+		);
+
+		const patient = await db.findOne(Patients, {_id: $set.patientId, owner});
 
 		if (patient === null) {
 			throw new Meteor.Error('not-found');
 		}
 
-		if (fields.datetime && fields.book) {
-			await books.add(db, owner, books.name(fields.datetime, fields.book));
+		if (newState.datetime && newState.book) {
+			await books.add(db, owner, books.name(newState.datetime, newState.book));
 		}
 
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
-		const computed = await computedFields(db, owner, undefined, fields);
-
 		const document = {
-			...fields,
-			...computed,
+			...$set,
 			createdAt,
 			lastModifiedAt,
 			owner,
