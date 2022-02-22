@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Mongo} from 'meteor/mongo';
 
 import {styled} from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
@@ -49,6 +50,7 @@ interface Props<T> {
 	onRename: (name: string) => void;
 	title: string;
 	useTagsFind?: GenericQueryHook<T>;
+	suggestionFilter?: Mongo.Selector<T>;
 	endpoint: Endpoint<any>;
 	tag: T;
 	nameKey?: string;
@@ -65,6 +67,7 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 	onRename,
 	title,
 	useTagsFind = defaultUseTagsFind,
+	suggestionFilter = undefined,
 	endpoint,
 	tag,
 	nameKey = 'name',
@@ -147,6 +150,7 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 						useTagsFind,
 						[tag[nameKey]],
 						nameKey,
+						suggestionFilter,
 					)}
 					TextFieldProps={{
 						label: `${Title}'s new ${nameKeyTitle}`,

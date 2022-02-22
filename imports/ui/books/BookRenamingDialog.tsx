@@ -20,6 +20,7 @@ const BookRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 			open={open}
 			title="book"
 			useTagsFind={useBooksFind}
+			suggestionFilter={{fiscalYear: tag.fiscalYear}}
 			endpoint={rename}
 			tag={tag}
 			nameKey="bookNumber"
