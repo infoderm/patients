@@ -54,9 +54,7 @@ const ToggleButton = ({
 			<IconButton
 				size="large"
 				{...getToggleButtonProps({
-					className: classNames({
-						[classes.hidden]: readOnly || !hasSuggestions,
-					}),
+					className: readOnly || !hasSuggestions ? classes.hidden : undefined,
 				})}
 			>
 				{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -297,6 +295,17 @@ const SetPicker = <ItemType, ChipProps>(
 		},
 	});
 
+	const maybeCreateNewItem = async () => {
+		// TODO avoid creating new item before multiset check,
+		// handle async item creation, use try/catch for error
+		// handling
+		const item = createNewItem(inputValue.trim());
+		if (item !== undefined && (multiset || !isSelected(item))) {
+			await addSelectedItem(item);
+			resetInputValue();
+		}
+	};
+
 	/**
 	 * This is an event handler for the keyDown event on the input component.
 	 * We capture enter key pressing for item creation without the need for a
@@ -313,14 +322,7 @@ const SetPicker = <ItemType, ChipProps>(
 			createNewItem &&
 			event.key === 'Enter'
 		) {
-			// TODO avoid creating new item before multiset check,
-			// handle async item creation, use try/catch for error
-			// handling
-			const item = createNewItem(inputValue.trim());
-			if (item !== undefined && (multiset || !isSelected(item))) {
-				await addSelectedItem(item);
-				resetInputValue();
-			}
+			await maybeCreateNewItem();
 		}
 	};
 
@@ -381,10 +383,13 @@ const SetPicker = <ItemType, ChipProps>(
 			/>
 			<Suggestions
 				{...getMenuProps()}
-				hide={readOnly || !isOpen || full}
+				hide={inputDisabled || !isOpen}
 				loading={loading}
 				suggestions={suggestions}
 				getItemProps={getItemProps}
+				createNewItem={createNewItem && maybeCreateNewItem}
+				inputValue={inputValue.trim()}
+				error={error}
 				highlightedIndex={highlightedIndex}
 				selectedItems={selectedItems}
 				itemToKey={itemToKey}

@@ -1,59 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import {makeStyles, createStyles} from '@mui/styles';
+import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import MenuItem, {MenuItemProps} from '@mui/material/MenuItem';
+
 import {UseComboboxGetItemPropsOptions} from 'downshift';
-
-interface SuggestionProps<Item> extends Omit<MenuItemProps<'div'>, 'ref'> {
-	highlightedIndex: number;
-	index: number;
-	item: Item;
-	selectedItems: Item[];
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => string;
-	Item?: React.ElementType;
-}
-
-const Suggestion = React.forwardRef(
-	<ItemType,>(
-		{
-			item,
-			index,
-			highlightedIndex,
-			selectedItems,
-			itemToKey,
-			itemToString,
-			Item,
-			...rest
-		}: SuggestionProps<ItemType>,
-		ref: React.Ref<HTMLDivElement>,
-	) => {
-		const isHighlighted = highlightedIndex === index;
-		const isSelected = selectedItems.map(itemToKey).includes(itemToKey(item));
-
-		return (
-			<MenuItem
-				ref={ref}
-				{...rest}
-				selected={isHighlighted}
-				component="div"
-				style={{
-					fontWeight: isSelected ? 500 : 400,
-				}}
-			>
-				{Item ? <Item item={item} /> : itemToString(item)}
-			</MenuItem>
-		);
-	},
-);
+import Suggestion from './Suggestion';
+import CreateItemSuggestion from './CreateItemSuggestion';
 
 interface SuggestionsProps<Item> {
+	className?: string;
 	hide?: boolean;
 	loading?: boolean;
 	suggestions: Item[];
 	highlightedIndex?: number;
+	createNewItem?: () => void;
+	inputValue: string;
+	error?: boolean;
 	selectedItems: Item[];
 	itemToKey: (item: Item) => React.Key;
 	itemToString: (item: Item) => string;
@@ -61,29 +24,42 @@ interface SuggestionsProps<Item> {
 	Item?: React.ElementType;
 }
 
-const styles = (theme) =>
-	createStyles({
-		root: {
-			position: 'absolute',
-			zIndex: 1,
-			marginTop: theme.spacing(1),
-			left: 0,
-			right: 0,
-		},
-		hidden: {
-			display: 'none',
-		},
-	});
+const PREFIX = 'Suggestions';
 
-const useStyles = makeStyles(styles);
+const classes = {
+	root: `${PREFIX}-root`,
+	hidden: `${PREFIX}-hidden`,
+	list: `${PREFIX}-list`,
+};
+
+const StyledPaper = styled(Paper)(({theme}) => ({
+	[`&.${classes.root}`]: {
+		position: 'absolute',
+		zIndex: 1,
+		marginTop: theme.spacing(1),
+		left: 0,
+		right: 0,
+	},
+	[`&.${classes.hidden}`]: {
+		display: 'none',
+	},
+	[`& .${classes.list}`]: {
+		padding: 0,
+		margin: 0,
+	},
+}));
 
 const Suggestions = React.forwardRef(
 	<ItemType,>(
 		{
+			className,
 			hide = false,
 			loading = false,
 			suggestions,
 			getItemProps,
+			createNewItem = undefined,
+			inputValue,
+			error = false,
 			highlightedIndex,
 			selectedItems,
 			itemToKey,
@@ -93,33 +69,43 @@ const Suggestions = React.forwardRef(
 		}: SuggestionsProps<ItemType>,
 		ref: React.Ref<HTMLDivElement>,
 	) => {
-		const classes = useStyles();
-
+		const createItemSuggestion = createNewItem && !error && inputValue;
 		return (
-			<Paper
+			<StyledPaper
 				ref={ref}
 				square
 				className={classNames(classes.root, {
-					[classes.hidden]: hide || !suggestions?.length,
+					[classes.hidden]:
+						hide || (!suggestions?.length && !createItemSuggestion),
 				})}
 			>
-				<div {...rest}>
-					{!hide &&
-						suggestions?.map((item, index) => (
-							<Suggestion
-								key={itemToKey(item)}
-								{...getItemProps({item, index, disabled: loading})}
-								item={item}
-								index={index}
-								highlightedIndex={highlightedIndex}
-								selectedItems={selectedItems}
-								itemToKey={itemToKey}
-								itemToString={itemToString}
-								Item={Item}
-							/>
-						))}
-				</div>
-			</Paper>
+				<ul className={classNames(className, classes.list)} {...rest}>
+					{!hide && (
+						<>
+							{createItemSuggestion && (
+								<CreateItemSuggestion
+									inputValue={inputValue}
+									highlightedIndex={highlightedIndex}
+									onClick={createNewItem}
+								/>
+							)}
+							{suggestions?.map((item, index) => (
+								<Suggestion
+									key={itemToKey(item)}
+									{...getItemProps({item, index, disabled: loading})}
+									item={item}
+									index={index}
+									highlightedIndex={highlightedIndex}
+									selectedItems={selectedItems}
+									itemToKey={itemToKey}
+									itemToString={itemToString}
+									Item={Item}
+								/>
+							))}
+						</>
+					)}
+				</ul>
+			</StyledPaper>
 		);
 	},
 );
