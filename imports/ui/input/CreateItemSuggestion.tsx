@@ -5,6 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Keyboard from '../accessibility/Keyboard';
 
 const PREFIX = 'NewItemSuggestion';
 
@@ -12,7 +13,6 @@ const classes = {
 	root: `${PREFIX}-root`,
 	value: `${PREFIX}-value`,
 	text: `${PREFIX}-text`,
-	kbd: `${PREFIX}-kbd`,
 };
 
 const StyledMenuItem = styled(MenuItem)(({theme}) => ({
@@ -28,20 +28,6 @@ const StyledMenuItem = styled(MenuItem)(({theme}) => ({
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 		marginRight: theme.spacing(1),
-	},
-	[`& .${classes.kbd}`]: {
-		backgroundColor: '#eee',
-		borderRadius: '3px',
-		border: '1px solid #b4b4b4',
-		boxShadow:
-			'0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset',
-		color: '#333',
-		display: 'inline-block',
-		fontSize: '.85em',
-		fontWeight: 700,
-		lineHeight: 1,
-		padding: '2px 4px',
-		whiteSpace: 'nowrap',
 	},
 }));
 
@@ -64,9 +50,7 @@ const CreateItemSuggestion = React.forwardRef(
 				<ListItemText className={classes.text}>
 					Create <span className={classes.value}>{inputValue}</span>
 				</ListItemText>
-				{highlightedIndex === -1 ? (
-					<kbd className={classes.kbd}>Enter</kbd>
-				) : null}
+				{highlightedIndex === -1 ? <Keyboard>Enter</Keyboard> : null}
 			</StyledMenuItem>
 		);
 	},
