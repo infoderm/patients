@@ -4,6 +4,7 @@ import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameInsurance, useInsurancesFind} from '../../api/insurances';
 import TagDocument from '../../api/tags/TagDocument';
+import {inputFormat} from '../../api/string';
 
 interface Props {
 	open: boolean;
@@ -20,6 +21,7 @@ const InsuranceRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 			useTagsFind={useInsurancesFind}
 			endpoint={renameInsurance}
 			tag={tag}
+			inputFormat={inputFormat}
 			onClose={onClose}
 			onRename={onRename}
 		/>

@@ -173,8 +173,8 @@ const PatientSheet = ({
 								<SetPicker
 									readOnly
 									useSuggestions={() => ({results: []})}
-									itemToKey={(x) => x}
-									itemToString={(x) => x}
+									itemToKey={(x) => x.name}
+									itemToString={(x) => x.name}
 									TextFieldProps={{
 										label: 'Allergies',
 										margin: 'normal',
@@ -215,8 +215,8 @@ const PatientSheet = ({
 								<SetPicker
 									readOnly
 									useSuggestions={() => ({results: []})}
-									itemToKey={(x) => x}
-									itemToString={(x) => x}
+									itemToKey={(x) => x.name}
+									itemToString={(x) => x.name}
 									TextFieldProps={{
 										label: 'Médecin Traitant',
 										margin: 'normal',
@@ -231,8 +231,8 @@ const PatientSheet = ({
 								<SetPicker
 									readOnly
 									useSuggestions={() => ({results: []})}
-									itemToKey={(x) => x}
-									itemToString={(x) => x}
+									itemToKey={(x) => x.name}
+									itemToString={(x) => x.name}
 									TextFieldProps={{
 										label: 'Mutuelle',
 										margin: 'normal',

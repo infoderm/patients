@@ -56,6 +56,7 @@ interface Props<T> {
 	nameKey?: string;
 	nameKeyTitle?: string;
 	nameFormat?: (tag: T, name: string) => string;
+	inputFormat?: (input: string) => string;
 }
 
 const defaultUseTagsFind = () => ({results: []});
@@ -73,9 +74,10 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 	nameKey = 'name',
 	nameKeyTitle = 'name',
 	nameFormat = defaultNameFormat,
+	inputFormat = normalizeInput,
 }: Props<T>) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [newname, setNewname] = useStateWithInitOverride(normalizeInput(''));
+	const [newname, setNewname] = useStateWithInitOverride(inputFormat(''));
 	const [newnameError, setNewnameError] = useState('');
 	const [call, {pending}] = useCall();
 	const [renamed, setRenamed] = useState(false);
@@ -161,7 +163,7 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 					}}
 					inputValue={newname}
 					onInputChange={(_event, newInputValue) =>
-						setNewname(normalizeInput(newInputValue))
+						setNewname(inputFormat(newInputValue))
 					}
 				/>
 			</DialogContent>

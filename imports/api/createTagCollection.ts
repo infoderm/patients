@@ -28,9 +28,13 @@ export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
 export const FIND_OBSERVE_SUFFIX = '.find.observe';
 
-const computedFields = (name) => ({
-	containsNonAlphabetical: containsNonAlphabetical(name),
-});
+const computedFields = (displayName: string) => {
+	const name = displayName; // TODO normalize
+	return {
+		name,
+		containsNonAlphabetical: containsNonAlphabetical(displayName),
+	};
+};
 
 interface Options<T, P> {
 	Collection: Mongo.Collection<T>;
@@ -102,7 +106,7 @@ const createTagCollection = <
 
 	const useTaggedDocuments = (name: string, options) =>
 		useTracker(() => {
-			const selector = {[key]: name} as Mongo.Selector<P>;
+			const selector = {[key]: {$elemMatch: {name}}} as Mongo.Selector<P>;
 			const mergedOptions = mergeOptions(options, {
 				fields: {
 					[key]: 1,
@@ -122,7 +126,10 @@ const createTagCollection = <
 		handle(name: string) {
 			check(name, String);
 			const uid = JSON.stringify({name, owner: this.userId});
-			const query = {[key]: name, owner: this.userId} as Mongo.Selector<P>;
+			const query = {
+				[key]: {$elemMatch: {name}},
+				owner: this.userId,
+			} as Mongo.Selector<P>;
 			// We only include relevant fields
 			const options = {fields: {_id: 1, [key]: 1}};
 
@@ -180,7 +187,11 @@ const createTagCollection = <
 			check(tagId, String);
 			check(newname, String);
 		},
-		async transaction(db: TransactionDriver, tagId: string, newname: string) {
+		async transaction(
+			db: TransactionDriver,
+			tagId: string,
+			newDisplayName: string,
+		) {
 			const owner = this.userId;
 			const tag = await db.findOne(Collection, {
 				_id: tagId,
@@ -191,30 +202,29 @@ const createTagCollection = <
 				throw new Meteor.Error('not-found');
 			}
 
-			const oldname = tag.name;
-			newname = newname.trim();
+			const {_id, ...oldFields} = tag;
 
-			if (oldname === newname) {
-				throw new Meteor.Error(
-					'value-error',
-					'Cannot rename tag if the new name is the same as the old name.',
-				);
-			}
+			newDisplayName = newDisplayName.trim();
 
-			await db.updateMany(
-				Parent,
-				{[key]: oldname, owner},
-				{
-					$addToSet: {[key]: newname},
-				},
-			);
+			const newFields = {
+				...oldFields,
+				displayName: newDisplayName,
+				...computedFields(newDisplayName),
+			};
+
+			const oldname = oldFields.name;
+			const newname = newFields.name;
 
 			await db.updateMany(
 				Parent,
-				{[key]: newname, owner},
+				{[key]: {$elemMatch: {name: oldname}}, owner},
 				{
-					$pull: {[key]: oldname},
+					$set: {
+						[`${key}.$[old].name`]: newname,
+						[`${key}.$[old].displayName`]: newDisplayName,
+					},
 				},
+				{arrayFilters: [{'old.name': oldname}]},
 			);
 
 			const selector = {
@@ -222,19 +232,11 @@ const createTagCollection = <
 				name: newname,
 			};
 
-			const newfields = {
-				...tag,
-				...computedFields(newname),
-				...selector,
-			};
-
-			delete newfields._id;
-
-			await db.deleteOne(Collection, {_id: tagId} as Filter<T>);
+			await db.deleteOne(Collection, {_id} as Filter<T>);
 			return db.updateOne(
 				Collection,
 				selector as Filter<T>,
-				{$set: newfields} as Mongo.Modifier<T>,
+				{$set: newFields} as unknown as Mongo.Modifier<T>,
 				{upsert: true},
 			);
 		},
@@ -261,8 +263,8 @@ const createTagCollection = <
 
 			await db.updateMany(
 				Parent,
-				{[key]: tag.name, owner},
-				{$pull: {[key]: tag.name}},
+				{[key]: {$elemMatch: {name: tag.name}}, owner},
+				{$pull: {[key]: {name: tag.name}}},
 			);
 
 			return db.deleteOne(Collection, {_id: tagId} as Filter<T>);

@@ -1,8 +1,23 @@
 import {Mongo} from 'meteor/mongo';
+import {Match} from 'meteor/check';
+
+const maybe = Match.Maybe;
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
 export type SexAllowed = typeof SEX_ALLOWED[number];
+
+export const PatientTagShape = {
+	displayName: String,
+	name: String,
+	comment: maybe(String),
+};
+
+interface PatientTag {
+	displayName: string;
+	name: string;
+	comment?: string;
+}
 
 export interface PatientIdFields {
 	niss: string;
@@ -16,6 +31,13 @@ export interface PatientIdFields {
 	streetandnumber: string;
 	zip: string;
 }
+
+export const PatientEmailShape = {
+	address: String,
+	local: String,
+	domain: String,
+	name: maybe(String),
+};
 
 export interface Email {
 	name?: string;
@@ -33,9 +55,9 @@ export interface PatientFields extends PatientIdFields {
 	ongoing: string;
 	about: string;
 
-	allergies: string[];
-	doctors: string[];
-	insurances: string[];
+	allergies: PatientTag[];
+	doctors: PatientTag[];
+	insurances: PatientTag[];
 
 	email?: Email[];
 

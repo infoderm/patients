@@ -1,4 +1,4 @@
-import {check, Match} from 'meteor/check';
+import {check} from 'meteor/check';
 
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
@@ -11,6 +11,8 @@ import {
 	PatientFields,
 	PatientComputedFields,
 	SEX_ALLOWED,
+	PatientEmailShape,
+	PatientTagShape,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -30,8 +32,6 @@ import {
 } from './string';
 
 import TransactionDriver from './transaction/TransactionDriver';
-
-const maybe = Match.Maybe;
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -94,20 +94,26 @@ const updateIndex = async (
 	);
 };
 
-const updateTags = async (db: TransactionDriver, userId, fields) => {
+const updateTags = async (db: TransactionDriver, userId: string, fields) => {
 	for (const [tagCollection, tagList] of [
 		[insurances, fields.insurances],
 		[doctors, fields.doctors],
 		[allergies, fields.allergies],
 	]) {
 		if (tagList) {
-			for (const tag of tagList) {
+			for (const {name} of tagList) {
 				// eslint-disable-next-line no-await-in-loop
-				await tagCollection.add(db, userId, tag);
+				await tagCollection.add(db, userId, name);
 			}
 		}
 	}
 };
+
+const sanitizePatientTag = ({name, displayName, ...rest}) => ({
+	name: name.trim(),
+	displayName: displayName.trim(),
+	...rest,
+});
 
 function sanitize({
 	niss,
@@ -166,19 +172,11 @@ function sanitize({
 	if (streetandnumber !== undefined) check(streetandnumber, String);
 	if (zip !== undefined) check(zip, String);
 	if (phone !== undefined) check(phone, String);
-	if (email !== undefined)
-		check(email, [
-			{
-				address: String,
-				local: String,
-				domain: String,
-				name: maybe(String),
-			},
-		]);
+	if (email !== undefined) check(email, [PatientEmailShape]);
 
-	if (insurances !== undefined) check(insurances, [String]);
-	if (doctors !== undefined) check(doctors, [String]);
-	if (allergies !== undefined) check(allergies, [String]);
+	if (insurances !== undefined) check(insurances, [PatientTagShape]);
+	if (doctors !== undefined) check(doctors, [PatientTagShape]);
+	if (allergies !== undefined) check(allergies, [PatientTagShape]);
 
 	if (noshow !== undefined) check(noshow, Number);
 	if (createdForAppointment !== undefined)
@@ -207,15 +205,15 @@ function sanitize({
 	phone = phone?.trim();
 
 	if (insurances) {
-		insurances = list(map((x) => x.trim(), insurances));
+		insurances = list(map(sanitizePatientTag, insurances));
 	}
 
 	if (doctors) {
-		doctors = list(map((x) => x.trim(), doctors));
+		doctors = list(map(sanitizePatientTag, doctors));
 	}
 
 	if (allergies) {
-		allergies = list(map((x) => x.trim(), allergies));
+		allergies = list(map(sanitizePatientTag, allergies));
 	}
 
 	return {

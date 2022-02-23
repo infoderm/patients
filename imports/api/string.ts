@@ -19,6 +19,9 @@ export {default as escapeStringRegexp} from 'escape-string-regexp';
 export const normalizeWhiteSpace = (string: string) =>
 	string.replace(/\s+/g, ' ');
 
+export const inputFormat = (string: string) =>
+	normalizeWhiteSpace(string).trimStart();
+
 export const normalizeInput = (string: string) =>
 	normalizeWhiteSpace(onlyLowerCaseASCII(string));
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 
-import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
+import {map} from '@iterable-iterator/map';
 
 import {makeStyles, createStyles} from '@mui/styles';
 
@@ -177,12 +177,15 @@ const PatientPersonalInformationStatic = (
 	const maxRows = 100;
 
 	const update =
-		(key, f = (v) => v) =>
+		(key: string, f = (v) => v) =>
 		(e) => {
 			dispatch({type: 'update', key, value: f(e.target.value)});
 		};
 
-	const updateList = (key) => update(key, (v) => list(map((x) => x.name, v)));
+	const updateList = (key: string) =>
+		update(key, (v) =>
+			list(map(({name, displayName}) => ({name, displayName}), v)),
+		);
 
 	const {
 		birthdate: _birthdate,
@@ -407,10 +410,13 @@ const PatientPersonalInformationStatic = (
 									withoutToggle
 									itemToKey={(x) => x.name}
 									itemToString={(x) => x.name}
-									createNewItem={(name) => ({name})}
+									createNewItem={(name) => ({name, displayName: name})}
 									useSuggestions={makeSubstringSuggestions(
 										useAllergiesFind,
-										patient.allergies,
+										patient.allergies?.map((x) => x.name),
+										'name',
+										undefined,
+										{displayName: 1},
 									)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -419,11 +425,7 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveAllergyChip}
 									chipProps={allergyChipProps}
-									value={
-										list(
-											map((x) => ({name: x}), patient.allergies || []),
-										) as Array<{name: string}>
-									}
+									value={(patient.allergies || []) as Array<{name: string}>}
 									placeholder={placeholder}
 									onChange={updateList('allergies')}
 								/>
@@ -510,10 +512,13 @@ const PatientPersonalInformationStatic = (
 									className={classes.setPicker}
 									itemToKey={(x) => x.name}
 									itemToString={(x) => x.name}
-									createNewItem={(name) => ({name})}
+									createNewItem={(name) => ({name, displayName: name})}
 									useSuggestions={makeSubstringSuggestions(
 										useDoctorsFind,
-										patient.doctors,
+										patient.doctors?.map((x) => x.name),
+										'name',
+										undefined,
+										{displayName: 1},
 									)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -531,11 +536,7 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveDoctorChip}
 									chipProps={doctorChipProps}
-									value={
-										list(
-											map((x) => ({name: x}), patient.doctors || []),
-										) as Array<{name: string}>
-									}
+									value={(patient.doctors || []) as Array<{name: string}>}
 									placeholder={placeholder}
 									onChange={updateList('doctors')}
 								/>
@@ -546,10 +547,13 @@ const PatientPersonalInformationStatic = (
 									className={classes.setPicker}
 									itemToKey={(x) => x.name}
 									itemToString={(x) => x.name}
-									createNewItem={(name) => ({name})}
+									createNewItem={(name) => ({name, displayName: name})}
 									useSuggestions={makeSubstringSuggestions(
 										useInsurancesFind,
-										patient.insurances,
+										patient.insurances?.map((x) => x.name),
+										'name',
+										undefined,
+										{displayName: 1},
 									)}
 									readOnly={!editing}
 									TextFieldProps={{
@@ -567,11 +571,7 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveInsuranceChip}
 									chipProps={insuranceChipProps}
-									value={
-										list(
-											map((x) => ({name: x}), patient.insurances || []),
-										) as Array<{name: string}>
-									}
+									value={(patient.insurances || []) as Array<{name: string}>}
 									placeholder={placeholder}
 									onChange={updateList('insurances')}
 								/>

@@ -120,6 +120,31 @@ Meteor.startup(async () => {
 		}
 	});
 
+	// Change schema
+	const makePatientTagsObjects = async (key: string) =>
+		forEachAsync(Patients, {}, async (db, patient) => {
+			const tags = patient[key];
+			if (
+				Array.isArray(tags) &&
+				tags.length > 0 &&
+				typeof tags[0] === 'string'
+			) {
+				const value = tags.map((name) => ({
+					displayName: name,
+					name,
+				}));
+				await db.updateOne(
+					Patients,
+					{_id: patient._id},
+					{$set: {[key]: value}},
+				);
+			}
+		});
+
+	await makePatientTagsObjects('allergies');
+	await makePatientTagsObjects('doctors');
+	await makePatientTagsObjects('insurances');
+
 	// Change schema for uploads attached to consultations
 	await forEachAsync(
 		Consultations,
@@ -246,9 +271,9 @@ Meteor.startup(async () => {
 	await createSimpleIndex(Patients, 'normalizedName');
 	await createSimpleIndex(Patients, 'sex');
 	await createSimpleIndex(Patients, 'birthdate');
-	await createSimpleIndex(Patients, 'doctors');
-	await createSimpleIndex(Patients, 'insurances');
-	await createSimpleIndex(Patients, 'allergies');
+	await createSimpleIndex(Patients, 'doctors.name');
+	await createSimpleIndex(Patients, 'insurances.name');
+	await createSimpleIndex(Patients, 'allergies.name');
 	await createSimpleIndex(Documents, 'createdAt');
 
 	await createSimpleIndex(Insurances, 'containsNonAlphabetical');
@@ -671,9 +696,9 @@ Meteor.startup(async () => {
 			async (db, item) => {
 				const {owner, [key]: tags} = item;
 				if (tags) {
-					for (const tag of tags) {
+					for (const {name} of tags) {
 						// eslint-disable-next-line no-await-in-loop
-						await child.add(db, owner, tag);
+						await child.add(db, owner, name);
 					}
 				}
 			},
@@ -682,6 +707,20 @@ Meteor.startup(async () => {
 	await generateTags(Patients, insurances, 'insurances');
 	await generateTags(Patients, doctors, 'doctors');
 	await generateTags(Patients, allergies, 'allergies');
+
+	// Add displayName field to tags
+	const addDisplayName = async (Collection) =>
+		forEachAsync<any>(
+			Collection,
+			{displayName: {$exists: false}},
+			async (db, {_id, name}) => {
+				await db.updateOne(Collection, {_id}, {$set: {displayName: name}});
+			},
+		);
+
+	await addDisplayName(Insurances);
+	await addDisplayName(Doctors);
+	await addDisplayName(Allergies);
 
 	// Compute tag fields
 	const computeTagFields = async (Collection, tags) =>

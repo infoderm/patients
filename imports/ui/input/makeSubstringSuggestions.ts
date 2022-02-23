@@ -4,6 +4,7 @@ import {useDebounce} from 'use-debounce';
 
 import GenericQueryHook from '../../api/GenericQueryHook';
 import {escapeStringRegexp} from '../../api/string';
+import mergeFields from '../../util/mergeFields';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 
@@ -15,7 +16,8 @@ const makeSubstringSuggestions =
 		useCollectionFind: GenericQueryHook<T>,
 		$nin: string[] = [],
 		key = 'name',
-		filter?: Mongo.Selector<T>,
+		filter?: Mongo.Selector<T> | undefined,
+		projection?: Mongo.FieldSpecifier | undefined,
 	) =>
 	(searchString: string) => {
 		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(
@@ -26,7 +28,6 @@ const makeSubstringSuggestions =
 
 		const $regex = escapeStringRegexp(debouncedSearchString);
 		const limit = 5;
-
 		const query = {
 			[key]: {$regex, $options: 'i', $nin},
 			...filter,
@@ -35,11 +36,7 @@ const makeSubstringSuggestions =
 		const sort = {
 			[key]: 1,
 		};
-		const fields = {
-			...sort,
-			_id: 1,
-			[key]: 1,
-		};
+		const fields = mergeFields(sort, projection);
 
 		const options = {
 			fields,
@@ -49,7 +46,8 @@ const makeSubstringSuggestions =
 		};
 
 		const {loading, ...rest} = useCollectionFind(query, options, [
-			$regex,
+			JSON.stringify(query),
+			JSON.stringify(options),
 			// refreshKey,
 		]);
 
