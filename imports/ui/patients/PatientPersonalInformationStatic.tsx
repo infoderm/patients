@@ -497,7 +497,7 @@ const PatientPersonalInformationStatic = (
 									}}
 									label="Numéro de téléphone"
 									placeholder={placeholder}
-									rows={1}
+									rows={3}
 									className={classes.multiline}
 									value={patient.phone}
 									margin="normal"
