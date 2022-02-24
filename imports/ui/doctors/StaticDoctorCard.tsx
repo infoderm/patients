@@ -54,7 +54,13 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 					<GreyPatientChip key={patient._id} patient={patient} />
 				))}
 				{count > patients.length && (
-					<Chip label={`+ ${count - patients.length}`} />
+					<Chip
+						label={
+							patients.length === 0
+								? `${count}`
+								: `+ ${count - patients.length}`
+						}
+					/>
 				)}
 			</div>
 		);

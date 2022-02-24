@@ -89,7 +89,13 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 						<GreyPatientChip key={patient._id} patient={patient} />
 					))}
 					{count !== undefined && count > patients.length && (
-						<Chip label={`+ ${count - patients.length}`} />
+						<Chip
+							label={
+								patients.length === 0
+									? `${count}`
+									: `+ ${count - patients.length}`
+							}
+						/>
 					)}
 				</div>
 			);
