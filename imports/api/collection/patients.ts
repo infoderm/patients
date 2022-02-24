@@ -13,7 +13,7 @@ export const PatientTagShape = {
 	comment: maybe(String),
 };
 
-interface PatientTag {
+export interface PatientTag {
 	displayName: string;
 	name: string;
 	comment?: string;

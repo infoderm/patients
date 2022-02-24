@@ -215,6 +215,24 @@ const createTagCollection = <
 			const oldname = oldFields.name;
 			const newname = newFields.name;
 
+			if (newname !== oldname) {
+				const problem = await db.findOne(Parent, {
+					[key]: {
+						$all: [
+							{$elemMatch: {name: oldname}},
+							{$elemMatch: {name: newname}},
+						],
+					},
+					owner,
+				});
+
+				if (problem !== null) {
+					throw new Error(
+						`Cannot rename ${key} from ${oldname} to ${newname} because parent ${problem._id} already has both.`,
+					);
+				}
+			}
+
 			await db.updateMany(
 				Parent,
 				{[key]: {$elemMatch: {name: oldname}}, owner},

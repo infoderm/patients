@@ -13,6 +13,7 @@ import {
 	SEX_ALLOWED,
 	PatientEmailShape,
 	PatientTagShape,
+	PatientTag,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -314,9 +315,25 @@ function mergePatients(oldPatients: PatientFields[]): PatientFields {
 		}
 	}
 
-	newPatient.allergies = list(new Set(newPatient.allergies));
-	newPatient.doctors = list(new Set(newPatient.doctors));
-	newPatient.insurances = list(new Set(newPatient.insurances));
+	const mergeTags = <T extends PatientTag>(tags: T[]) => {
+		const result = new Map<string, T>();
+		for (const tag of tags) {
+			if (result.has(tag.name)) {
+				if (tag.comment) {
+					result.get(tag.name).comment += '\n';
+					result.get(tag.name).comment += tag.comment;
+				}
+			} else {
+				result.set(tag.name, {...tag});
+			}
+		}
+
+		return list(result.values());
+	};
+
+	newPatient.allergies = mergeTags(newPatient.allergies);
+	newPatient.doctors = mergeTags(newPatient.doctors);
+	newPatient.insurances = mergeTags(newPatient.insurances);
 
 	return newPatient as PatientFields;
 }
