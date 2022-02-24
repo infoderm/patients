@@ -22,7 +22,7 @@ interface AddedProps {
 type StaticAllergyChipProps = ChipProps & AddedProps;
 
 const styles = {
-	chip({loading, color, clickable}) {
+	chip({loading, color}) {
 		const backgroundColor = loading ? '#999' : color;
 		const computedColor = loading
 			? '#eee'
@@ -31,11 +31,9 @@ const styles = {
 				? '#111'
 				: '#ddd'
 			: undefined;
-		const cursor = clickable ? 'pointer' : undefined;
 		return {
 			backgroundColor,
 			color: computedColor,
-			cursor,
 			'&:hover, &:focus': {
 				backgroundColor: backgroundColor && darken(backgroundColor, 0.1),
 			},
@@ -51,7 +49,7 @@ const StaticAllergyChip = React.forwardRef<any, StaticAllergyChipProps>(
 		let to: string;
 
 		const clickable = Boolean(item && !rest.onDelete);
-		const classes = useStyles({loading, color: item?.color, clickable});
+		const classes = useStyles({loading, color: item?.color});
 
 		if (clickable) {
 			component = Link;
@@ -65,6 +63,7 @@ const StaticAllergyChip = React.forwardRef<any, StaticAllergyChipProps>(
 				{...rest}
 				component={component}
 				to={to}
+				clickable={clickable ? true : undefined}
 			/>
 		);
 	},
