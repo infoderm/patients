@@ -13,7 +13,7 @@ const addTooltip = (
 		const title = transform(rest, tooltip);
 
 		return title ? (
-			<Tooltip title={title} aria-label={title}>
+			<Tooltip title={title}>
 				<Component ref={ref} {...rest} />
 			</Tooltip>
 		) : (
