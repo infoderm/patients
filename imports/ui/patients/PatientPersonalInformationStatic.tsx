@@ -35,7 +35,11 @@ import {useAllergiesFind} from '../../api/allergies';
 import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
-import {PatientDocument, Email} from '../../api/collection/patients';
+import {
+	PatientDocument,
+	Email,
+	PatientTag,
+} from '../../api/collection/patients';
 
 import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
 
@@ -54,21 +58,11 @@ import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 
 import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
+import useDialog from '../modal/useDialog';
 import PatientDeletionDialog from './PatientDeletionDialog';
 import usePatientPersonalInformationReducer from './usePatientPersonalInformationReducer';
 import PatientPersonalInformationButtonsStatic from './PatientPersonalInformationButtonsStatic';
-
-const allergyChipProps = {
-	avatar: <Avatar>Al</Avatar>,
-};
-
-const doctorChipProps = {
-	avatar: <Avatar>Dr</Avatar>,
-};
-
-const insuranceChipProps = {
-	avatar: <Avatar>In</Avatar>,
-};
+import PatientTagCommentEditionDialog from './PatientTagCommentEditionDialog';
 
 const styles = (theme) =>
 	createStyles({
@@ -127,6 +121,48 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
+const tagToKey = (x) => x.name;
+const tagCreate = (name) => ({name, displayName: name});
+const tagToNode = (x) => (
+	<span>
+		{x.displayName} {x.comment ? <b>({x.comment})</b> : null}
+	</span>
+);
+const openUpdateTagCommentDialog = ({
+	state,
+	kind,
+	item,
+	dialog,
+	editing,
+	onSave,
+}) =>
+	editing
+		? async () => {
+				const result = await dialog((resolve) => (
+					<PatientTagCommentEditionDialog
+						initialValue={item.comment ?? ''}
+						text={`Edit the comment for ${kind} ${item.displayName}.`}
+						onCancel={() => {
+							resolve(undefined);
+						}}
+						onConfirm={(comment) => {
+							resolve(comment);
+						}}
+					/>
+				));
+
+				if (result !== undefined) {
+					onSave({
+						target: {
+							value: state.map((x) =>
+								x === item ? {...x, comment: result} : x,
+							),
+						},
+					});
+				}
+		  }
+		: undefined;
+
 interface PatientPersonalInformationStaticProps {
 	patient: PatientDocument;
 	loading?: boolean;
@@ -137,6 +173,7 @@ const noSuggestions = () => ({results: []});
 const PatientPersonalInformationStatic = (
 	props: PatientPersonalInformationStaticProps,
 ) => {
+	const dialog = useDialog();
 	const importantStringsDict = useImportantStringsDict();
 
 	const [state, dispatch] = usePatientPersonalInformationReducer(props.patient);
@@ -184,7 +221,13 @@ const PatientPersonalInformationStatic = (
 
 	const updateList = (key: string) =>
 		update(key, (v) =>
-			list(map(({name, displayName}) => ({name, displayName}), v)),
+			list(
+				map(({name, displayName, comment}) => {
+					return comment === undefined
+						? {name, displayName}
+						: {name, displayName, comment};
+				}, v),
+			),
 		);
 
 	const {
@@ -199,6 +242,46 @@ const PatientPersonalInformationStatic = (
 	const totalNoShow =
 		hardCodedNoShows +
 		(typeof reifiedNoShows === 'number' ? reifiedNoShows : 0);
+
+	const updateInsurances = updateList('insurances');
+	const updateAllergies = updateList('allergies');
+	const updateDoctors = updateList('doctors');
+
+	const allergyChipProps = (item) => ({
+		avatar: <Avatar>Al</Avatar>,
+		onClick: openUpdateTagCommentDialog({
+			state: patient.allergies,
+			kind: 'allergy',
+			editing,
+			item,
+			dialog,
+			onSave: updateAllergies,
+		}),
+	});
+
+	const doctorChipProps = (item) => ({
+		avatar: <Avatar>Dr</Avatar>,
+		onClick: openUpdateTagCommentDialog({
+			state: patient.doctors,
+			kind: 'doctor',
+			editing,
+			item,
+			dialog,
+			onSave: updateDoctors,
+		}),
+	});
+
+	const insuranceChipProps = (item) => ({
+		avatar: <Avatar>In</Avatar>,
+		onClick: openUpdateTagCommentDialog({
+			state: patient.insurances,
+			kind: 'insurance',
+			editing,
+			item,
+			dialog,
+			onSave: updateInsurances,
+		}),
+	});
 
 	return (
 		<Paper className={classes.root}>
@@ -408,9 +491,9 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={12} md={12}>
 								<SetPicker
 									withoutToggle
-									itemToKey={(x) => x.name}
-									itemToString={(x) => x.name}
-									createNewItem={(name) => ({name, displayName: name})}
+									itemToKey={tagToKey}
+									itemToString={tagToNode}
+									createNewItem={tagCreate}
 									useSuggestions={makeSubstringSuggestions(
 										useAllergiesFind,
 										patient.allergies?.map((x) => x.name),
@@ -425,9 +508,9 @@ const PatientPersonalInformationStatic = (
 									}}
 									Chip={ReactiveAllergyChip}
 									chipProps={allergyChipProps}
-									value={(patient.allergies || []) as Array<{name: string}>}
+									value={(patient.allergies || []) as PatientTag[]}
 									placeholder={placeholder}
-									onChange={updateList('allergies')}
+									onChange={updateAllergies}
 								/>
 							</Grid>
 
@@ -510,9 +593,9 @@ const PatientPersonalInformationStatic = (
 								<SetPicker
 									withoutToggle
 									className={classes.setPicker}
-									itemToKey={(x) => x.name}
-									itemToString={(x) => x.name}
-									createNewItem={(name) => ({name, displayName: name})}
+									itemToKey={tagToKey}
+									itemToString={tagToNode}
+									createNewItem={tagCreate}
 									useSuggestions={makeSubstringSuggestions(
 										useDoctorsFind,
 										patient.doctors?.map((x) => x.name),
@@ -532,22 +615,23 @@ const PatientPersonalInformationStatic = (
 									InputProps={{
 										style: {
 											height: '100%',
+											alignItems: 'start',
 										},
 									}}
 									Chip={ReactiveDoctorChip}
 									chipProps={doctorChipProps}
-									value={(patient.doctors || []) as Array<{name: string}>}
+									value={(patient.doctors || []) as PatientTag[]}
 									placeholder={placeholder}
-									onChange={updateList('doctors')}
+									onChange={updateDoctors}
 								/>
 							</Grid>
 							<Grid item xs={12} md={4}>
 								<SetPicker
 									withoutToggle
 									className={classes.setPicker}
-									itemToKey={(x) => x.name}
-									itemToString={(x) => x.name}
-									createNewItem={(name) => ({name, displayName: name})}
+									itemToKey={tagToKey}
+									itemToString={tagToNode}
+									createNewItem={tagCreate}
 									useSuggestions={makeSubstringSuggestions(
 										useInsurancesFind,
 										patient.insurances?.map((x) => x.name),
@@ -567,13 +651,14 @@ const PatientPersonalInformationStatic = (
 									InputProps={{
 										style: {
 											height: '100%',
+											alignItems: 'start',
 										},
 									}}
 									Chip={ReactiveInsuranceChip}
 									chipProps={insuranceChipProps}
-									value={(patient.insurances || []) as Array<{name: string}>}
+									value={(patient.insurances || []) as PatientTag[]}
 									placeholder={placeholder}
-									onChange={updateList('insurances')}
+									onChange={updateInsurances}
 								/>
 							</Grid>
 
