@@ -25,7 +25,7 @@ interface SuggestionProps<Item> extends Omit<MenuItemProps<'li'>, 'ref'> {
 	item: Item;
 	selectedItems: Item[];
 	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => string;
+	itemToString: (item: Item) => React.ReactNode;
 	Item?: React.ElementType;
 }
 

@@ -19,7 +19,7 @@ interface SuggestionsProps<Item> {
 	error?: boolean;
 	selectedItems: Item[];
 	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => string;
+	itemToString: (item: Item) => React.ReactNode;
 	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
 	Item?: React.ElementType;
 }

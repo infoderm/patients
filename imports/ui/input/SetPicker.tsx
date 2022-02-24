@@ -90,7 +90,7 @@ interface SetPickerProps<Item, ChipProps> {
 	readOnly?: boolean;
 	useSuggestions: (inputValue: string) => {loading?: boolean; results: any[]};
 	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => string;
+	itemToString: (item: Item) => React.ReactNode;
 	Item?: React.ElementType;
 	inputTransform?: (inputValue: string) => string;
 	inputValidation?: InputValidation;
@@ -165,32 +165,28 @@ type InputValidation = (inputValue: string) => {
 const DEFAULT_INPUT_TRANSFORM = (x: string): string => x;
 const DEFAULT_INPUT_VALIDATION: InputValidation = () => ({state: 1});
 
-const SetPicker = <ItemType, ChipProps>(
-	props: SetPickerProps<ItemType, ChipProps>,
-) => {
-	const {
-		className,
-		useSuggestions,
-		itemToKey,
-		itemToString,
-		Item,
-		Chip = DefaultChip,
-		chipProps,
-		withoutToggle = false,
-		TextFieldProps,
-		inputProps,
-		InputProps,
-		placeholder,
-		readOnly,
-		value,
-		onChange,
-		maxCount = Number.POSITIVE_INFINITY,
-		createNewItem,
-		multiset = false,
-		inputTransform = DEFAULT_INPUT_TRANSFORM,
-		inputValidation = DEFAULT_INPUT_VALIDATION,
-	} = props;
-
+const SetPicker = <ItemType, ChipProps>({
+	className,
+	useSuggestions,
+	itemToKey,
+	itemToString,
+	Item,
+	Chip = DefaultChip,
+	chipProps,
+	withoutToggle = false,
+	TextFieldProps,
+	inputProps,
+	InputProps,
+	placeholder,
+	readOnly,
+	value,
+	onChange,
+	maxCount = Number.POSITIVE_INFINITY,
+	createNewItem,
+	multiset = false,
+	inputTransform = DEFAULT_INPUT_TRANSFORM,
+	inputValidation = DEFAULT_INPUT_VALIDATION,
+}: SetPickerProps<ItemType, ChipProps>) => {
 	const classes = useStyles();
 
 	const emptyInput = inputTransform('');
@@ -232,8 +228,8 @@ const SetPicker = <ItemType, ChipProps>(
 	});
 
 	const isSelected = (item) => {
-		const itemString = itemToString(item);
-		return any(map((x) => x === itemString, map(itemToString, selectedItems)));
+		const itemKey = itemToKey(item);
+		return any(map((x) => x === itemKey, map(itemToKey, selectedItems)));
 	};
 
 	const {
@@ -358,6 +354,7 @@ const SetPicker = <ItemType, ChipProps>(
 							Chip={Chip}
 							chipProps={chipProps}
 							selectedItems={selectedItems}
+							itemToKey={itemToKey}
 							itemToString={itemToString}
 							getSelectedItemProps={getSelectedItemProps}
 							removeSelectedItem={removeSelectedItem}

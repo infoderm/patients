@@ -21,7 +21,8 @@ interface SelectionProps<Item, ChipProps> {
 	Chip: React.ElementType;
 	chipProps: ((item: Item, index: number) => ChipProps) | ChipProps;
 	selectedItems: Item[];
-	itemToString: (item: Item) => string;
+	itemToKey: (item: Item) => React.Key;
+	itemToString: (item: Item) => React.ReactNode;
 	getSelectedItemProps: (
 		options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
 	) => any;
@@ -34,6 +35,7 @@ const Selection = React.memo(
 		Chip,
 		chipProps,
 		selectedItems,
+		itemToKey,
 		itemToString,
 		getSelectedItemProps,
 		readOnly,
@@ -43,23 +45,23 @@ const Selection = React.memo(
 			await removeSelectedItem(item);
 		};
 
-		const onClick = (e) => {
-			e.stopPropagation();
-		};
-
 		return (
 			<Root>
 				{selectedItems.map((item, index) => (
 					<Chip
-						key={itemToString(item)}
-						{...(chipProps instanceof Function
-							? chipProps(item, index)
-							: chipProps)}
+						key={itemToKey(item)}
 						tabIndex={-1}
+						item={item}
 						label={itemToString(item)}
 						className={classes.chip}
 						onDelete={readOnly ? undefined : handleDelete(item)}
-						{...getSelectedItemProps({selectedItem: item, index, onClick})}
+						{...getSelectedItemProps({
+							selectedItem: item,
+							index,
+							...(chipProps instanceof Function
+								? chipProps(item, index)
+								: chipProps),
+						})}
 					/>
 				))}
 			</Root>
