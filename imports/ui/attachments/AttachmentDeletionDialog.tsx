@@ -12,7 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import {normalized} from '../../api/string';
+import {normalizedLine} from '../../api/string';
 
 import Endpoint from '../../api/endpoint/Endpoint';
 
@@ -58,7 +58,7 @@ const AttachmentDeletionDialog = ({
 	const [call, {pending}] = useCall();
 
 	const getError = (expected: string, value: string) =>
-		normalized(expected) === normalized(value)
+		normalizedLine(expected) === normalizedLine(value)
 			? ''
 			: 'Attachment names do not match';
 

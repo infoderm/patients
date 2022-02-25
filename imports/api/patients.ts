@@ -34,6 +34,8 @@ import {
 
 import TransactionDriver from './transaction/TransactionDriver';
 
+import {names as tagNames} from './createTagCollection';
+
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
 	const firstnameWords = words(firstname ?? '');
@@ -95,24 +97,31 @@ const updateIndex = async (
 	);
 };
 
-const updateTags = async (db: TransactionDriver, userId: string, fields) => {
-	for (const [tagCollection, tagList] of [
-		[insurances, fields.insurances],
-		[doctors, fields.doctors],
-		[allergies, fields.allergies],
+const updateTags = async (
+	db: TransactionDriver,
+	userId: string,
+	fields: PatientFields & PatientComputedFields,
+) => {
+	for (const {tagCollection, tagList} of [
+		{tagCollection: insurances, tagList: fields.insurances},
+		{tagCollection: doctors, tagList: fields.doctors},
+		{tagCollection: allergies, tagList: fields.allergies},
 	]) {
 		if (tagList) {
-			for (const {name} of tagList) {
+			for (const {displayName} of tagList) {
 				// eslint-disable-next-line no-await-in-loop
-				await tagCollection.add(db, userId, name);
+				await tagCollection.add(db, userId, displayName);
 			}
 		}
 	}
 };
 
-const sanitizePatientTag = ({name, displayName, ...rest}) => ({
-	name: name.trim(),
-	displayName: displayName.trim(),
+const sanitizePatientTag = ({
+	name, // We extract the name key
+	displayName,
+	...rest
+}) => ({
+	...tagNames(displayName), // We keep key ordering correct
 	...rest,
 });
 

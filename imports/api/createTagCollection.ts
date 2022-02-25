@@ -14,10 +14,18 @@ import pageQuery from './pageQuery';
 import defineEndpoint from './endpoint/define';
 import definePublication from './publication/define';
 
-import {containsNonAlphabetical} from './string';
+import {
+	containsNonAlphabetical,
+	formattedLine,
+	NormalizedLine,
+	normalizedLine,
+} from './string';
 
 import CacheItem from './CacheItem';
-import TagDocument from './tags/TagDocument';
+import TagDocument, {
+	TagComputedFields,
+	TagNameFields,
+} from './tags/TagDocument';
 import makeItem from './tags/makeItem';
 import subscribe from './publication/subscribe';
 import Publication from './publication/Publication';
@@ -28,10 +36,28 @@ export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
 export const FIND_OBSERVE_SUFFIX = '.find.observe';
 
-const computedFields = (displayName: string) => {
-	const name = displayName; // TODO normalize
+const sanitize = (
+	rawDisplayName: string,
+): TagNameFields & TagComputedFields => {
+	const {displayName, name} = names(rawDisplayName);
 	return {
+		displayName,
 		name,
+		...computedFields(displayName),
+	};
+};
+
+export const names = (rawDisplayName: string): TagNameFields => {
+	const displayName = formattedLine(rawDisplayName);
+	const name = normalizedLine(displayName);
+	return {
+		displayName,
+		name,
+	};
+};
+
+const computedFields = (displayName: string): TagComputedFields => {
+	return {
 		containsNonAlphabetical: containsNonAlphabetical(displayName),
 	};
 };
@@ -190,7 +216,7 @@ const createTagCollection = <
 		async transaction(
 			db: TransactionDriver,
 			tagId: string,
-			newDisplayName: string,
+			rawDisplayName: string,
 		) {
 			const owner = this.userId;
 			const tag = await db.findOne(Collection, {
@@ -204,16 +230,14 @@ const createTagCollection = <
 
 			const {_id, ...oldFields} = tag;
 
-			newDisplayName = newDisplayName.trim();
-
 			const newFields = {
 				...oldFields,
-				displayName: newDisplayName,
-				...computedFields(newDisplayName),
+				...sanitize(rawDisplayName),
 			};
 
 			const oldname = oldFields.name;
-			const newname = newFields.name;
+
+			const {displayName: newDisplayName, name: newname} = newFields;
 
 			if (newname !== oldname) {
 				const problem = await db.findOne(Parent, {
@@ -228,6 +252,7 @@ const createTagCollection = <
 
 				if (problem !== null) {
 					throw new Error(
+						// eslint-disable-next-line @typescript-eslint/no-base-to-string
 						`Cannot rename ${key} from ${oldname} to ${newname} because parent ${problem._id} already has both.`,
 					);
 				}
@@ -299,20 +324,18 @@ const createTagCollection = <
 			parentPublicationStats: statsPublication,
 		},
 
-		async add(db: TransactionDriver, owner: string, name: string) {
+		async add(db: TransactionDriver, owner: string, rawDisplayName: string) {
 			check(owner, String);
-			check(name, String);
+			check(rawDisplayName, String);
 
-			name = name.trim();
+			const fields = {
+				...sanitize(rawDisplayName),
+				owner,
+			};
 
 			const selector = {
 				owner,
-				name,
-			};
-
-			const fields = {
-				...computedFields(name),
-				...selector,
+				name: fields.name,
 			};
 
 			return db.updateOne(
@@ -323,11 +346,9 @@ const createTagCollection = <
 			);
 		},
 
-		async remove(db: TransactionDriver, owner: string, name: string) {
+		async remove(db: TransactionDriver, owner: string, name: NormalizedLine) {
 			check(owner, String);
 			check(name, String);
-
-			name = name.trim();
 
 			const selector = {
 				owner,

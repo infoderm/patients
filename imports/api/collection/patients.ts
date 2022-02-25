@@ -1,5 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 import {Match} from 'meteor/check';
+import {FormattedLine, NormalizedLine} from '../string';
 
 const maybe = Match.Maybe;
 
@@ -14,8 +15,8 @@ export const PatientTagShape = {
 };
 
 export interface PatientTag {
-	displayName: string;
-	name: string;
+	displayName: FormattedLine;
+	name: NormalizedLine;
 	comment?: string;
 }
 

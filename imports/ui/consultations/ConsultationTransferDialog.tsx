@@ -13,7 +13,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import PatientPicker from '../patients/PatientPicker';
 
-import {capitalized, normalized} from '../../api/string';
+import {capitalized, normalizedLine} from '../../api/string';
 import virtualFields from '../../api/consultations/virtualFields';
 
 import usePatient from '../patients/usePatient';
@@ -60,7 +60,9 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 	const [call, {pending}] = useCall();
 
 	const getError = (expected, value) =>
-		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
+		normalizedLine(expected) === normalizedLine(value)
+			? ''
+			: 'Last names do not match';
 
 	const {validate, props: ConfirmationTextFieldProps} =
 		useConfirmationTextFieldState(currentPatient.lastname || '', getError);

@@ -11,6 +11,8 @@ const InsuranceDeletionDialog = (props: Props) => {
 		<TagDeletionDialog
 			title="insurance"
 			endpoint={deleteInsurance}
+			nameKey="displayName"
+			nameKeyTitle="display name"
 			{...props}
 		/>
 	);

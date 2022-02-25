@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import {capitalized, normalized} from '../../api/string';
+import {capitalized, normalizedLine} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
@@ -22,27 +22,37 @@ import CancelButton from '../button/CancelButton';
 import Endpoint from '../../api/endpoint/Endpoint';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
+import {TagMetadata, TagNameFields} from '../../api/tags/TagDocument';
 
-interface Props {
+interface Props<T> {
 	open: boolean;
 	onClose: () => void;
 	title: string;
 	endpoint: Endpoint<any>;
-	tag: {
-		_id: string;
-		name: string;
-	};
+	tag: T;
+	nameKey?: string;
+	nameKeyTitle?: string;
 }
 
-const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
+const TagDeletionDialog = <T extends TagMetadata & TagNameFields>({
+	open,
+	onClose,
+	title,
+	endpoint,
+	tag,
+	nameKey = 'name',
+	nameKeyTitle = 'name',
+}: Props<T>) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [call, {pending}] = useCall();
 
 	const getError = (expected, value) =>
-		normalized(expected) === normalized(value) ? '' : 'Names do not match';
+		normalizedLine(expected) === normalizedLine(value)
+			? ''
+			: 'Names do not match';
 
 	const {validate, props: ConfirmationTextFieldProps} =
-		useConfirmationTextFieldState(tag.name, getError);
+		useConfirmationTextFieldState(tag[nameKey], getError);
 
 	const Title = capitalized(title);
 
@@ -75,7 +85,7 @@ const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 	return (
 		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>
-				Delete {title} {tag.name}
+				Delete {title} {tag[nameKey]}
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
@@ -87,7 +97,7 @@ const TagDeletionDialog = ({open, onClose, title, endpoint, tag}: Props) => {
 					autoFocus
 					fullWidth
 					margin="dense"
-					label={`${Title}'s name`}
+					label={`${Title}'s ${nameKeyTitle}`}
 					{...ConfirmationTextFieldProps}
 				/>
 			</DialogContent>

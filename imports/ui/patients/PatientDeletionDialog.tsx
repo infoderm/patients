@@ -10,7 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import patientsRemove from '../../api/endpoint/patients/remove';
 
-import {normalized} from '../../api/string';
+import {normalizedLine} from '../../api/string';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 
@@ -35,7 +35,9 @@ const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [call, {pending}] = useCall();
 	const getError = (expected, value) =>
-		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
+		normalizedLine(expected) === normalizedLine(value)
+			? ''
+			: 'Last names do not match';
 
 	const {validate, props: ConfirmationTextFieldProps} =
 		useConfirmationTextFieldState(patient.lastname || '', getError);

@@ -1,5 +1,8 @@
-export interface TagFields {
-	name: string;
+import {FormattedLine, NormalizedLine} from '../string';
+
+export interface TagNameFields {
+	displayName: FormattedLine;
+	name: NormalizedLine;
 }
 
 export interface TagComputedFields {
@@ -11,6 +14,6 @@ export interface TagMetadata {
 	owner: string;
 }
 
-type TagDocument = TagFields & TagComputedFields & TagMetadata;
+type TagDocument = TagNameFields & TagComputedFields & TagMetadata;
 
 export default TagDocument;

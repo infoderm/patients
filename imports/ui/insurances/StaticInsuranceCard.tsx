@@ -14,6 +14,7 @@ import StaticPatientChip, {
 
 import {useInsuranceStats, usePatientsInsuredBy} from '../../api/insurances';
 import {myEncodeURIComponent} from '../../util/uri';
+import TagDocument from '../../api/tags/TagDocument';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';
 
@@ -32,7 +33,7 @@ const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
 interface LoadedTagCardProps {
 	loading: boolean;
 	found: boolean;
-	item: {name: string};
+	item: TagDocument;
 }
 
 const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
@@ -78,7 +79,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 };
 
 interface StaticInsuranceCardProps {
-	item?: {name: string};
+	item?: TagDocument;
 	loading?: boolean;
 	found?: boolean;
 }

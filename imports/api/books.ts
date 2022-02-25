@@ -5,7 +5,11 @@ import addYears from 'date-fns/addYears';
 
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
-import {normalized, normalizeInput, parseUint32StrictOrString} from './string';
+import {
+	normalizedLine,
+	normalizedLineInput,
+	parseUint32StrictOrString,
+} from './string';
 
 import {Books, collection} from './collection/books';
 import {BooksCache} from './collection/books/cache';
@@ -19,8 +23,8 @@ export const useBooks = makeQuery(Books, publication);
 // TODO rename to useObservedBooks
 export const useBooksFind = makeObservedQueryHook(BooksCache, cachePublication);
 
-const sanitizeInput = normalizeInput;
-const sanitize = normalized;
+const sanitizeInput = normalizedLineInput;
+const sanitize = normalizedLine;
 
 export const books = {
 	options: {

@@ -8,7 +8,13 @@ type Props = Omit<PropsOf<typeof TagDeletionDialog>, 'endpoint' | 'title'>;
 
 const AllergyDeletionDialog = (props: Props) => {
 	return (
-		<TagDeletionDialog title="allergy" endpoint={deleteAllergy} {...props} />
+		<TagDeletionDialog
+			title="allergy"
+			endpoint={deleteAllergy}
+			nameKey="displayName"
+			nameKeyTitle="display name"
+			{...props}
+		/>
 	);
 };
 

@@ -1,11 +1,12 @@
 import React from 'react';
 
 import {useCachedInsurance} from '../../api/insurances';
+import {TagNameFields} from '../../api/tags/TagDocument';
 
 import StaticInsuranceCard from './StaticInsuranceCard';
 
 interface Props {
-	item: {name: string};
+	item: TagNameFields;
 }
 
 const ReactiveInsuranceCard = ({item}: Props) => {

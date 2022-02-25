@@ -12,7 +12,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import CancelButton from '../button/CancelButton';
 
-import {capitalized, normalized, normalizeInput} from '../../api/string';
+import {
+	capitalized,
+	normalizedLine,
+	normalizedLineInput,
+} from '../../api/string';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
@@ -22,7 +26,7 @@ import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import Endpoint from '../../api/endpoint/Endpoint';
-import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
+import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 import GenericQueryHook from '../../api/GenericQueryHook';
@@ -62,7 +66,7 @@ interface Props<T> {
 const defaultUseTagsFind = () => ({results: []});
 const defaultNameFormat = <T,>(_tag: T, name: string) => name;
 
-const TagRenamingDialog = <T extends TagMetadata & TagFields>({
+const TagRenamingDialog = <T extends TagMetadata & TagNameFields>({
 	open,
 	onClose,
 	onRename,
@@ -74,7 +78,7 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 	nameKey = 'name',
 	nameKeyTitle = 'name',
 	nameFormat = defaultNameFormat,
-	inputFormat = normalizeInput,
+	inputFormat = normalizedLineInput,
 }: Props<T>) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [newname, setNewname] = useStateWithInitOverride(inputFormat(''));
@@ -83,7 +87,9 @@ const TagRenamingDialog = <T extends TagMetadata & TagFields>({
 	const [renamed, setRenamed] = useState(false);
 
 	const getError = (expected, value) =>
-		normalized(expected) === normalized(value) ? '' : 'Names do not match';
+		normalizedLine(expected) === normalizedLine(value)
+			? ''
+			: 'Names do not match';
 	const {validate: validateOldName, props: ConfirmationTextFieldProps} =
 		useConfirmationTextFieldState(tag[nameKey].toString(), getError);
 

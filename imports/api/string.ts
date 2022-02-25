@@ -16,16 +16,39 @@ import escapeStringRegexp from 'escape-string-regexp';
 
 export {default as escapeStringRegexp} from 'escape-string-regexp';
 
+export type FormattedLineInput = string & {__brand: 'FORMATTED-LINE-INPUT'};
+export type FormattedLine = string & {__brand: 'FORMATTED-LINE'};
+export type TransliteratedLineInput = string & {
+	__brand: 'TRANSLITERATED-LINE-INPUT';
+};
+export type TransliteratedLine = string & {__brand: 'TRANSLITERATED-LINE'};
+export type NormalizedLineInput = string & {__brand: 'NORMALIZED-LINE-INPUT'};
+export type NormalizedLine = string & {__brand: 'NORMALIZED-LINE'};
+
 export const normalizeWhiteSpace = (string: string) =>
 	string.replace(/\s+/g, ' ');
 
-export const inputFormat = (string: string) =>
-	normalizeWhiteSpace(string).trimStart();
+export const formattedLineInput = (string: string): FormattedLineInput =>
+	normalizeWhiteSpace(string).trimStart() as FormattedLineInput;
 
-export const normalizeInput = (string: string) =>
-	normalizeWhiteSpace(onlyLowerCaseASCII(string));
+export const formattedLine = (string: string): FormattedLine =>
+	normalizeWhiteSpace(string).trim() as FormattedLine;
 
-export const normalized = (string: string) => normalizeInput(string).trim();
+export const transliteratedLineInput = (
+	string: string,
+): TransliteratedLineInput =>
+	normalizeWhiteSpace(onlyASCII(string)).trimStart() as TransliteratedLineInput;
+
+export const transliteratedLine = (string: string): TransliteratedLine =>
+	normalizeWhiteSpace(onlyASCII(string)).trim() as TransliteratedLine;
+
+export const normalizedLineInput = (string: string): NormalizedLineInput =>
+	normalizeWhiteSpace(
+		onlyLowerCaseASCII(string),
+	).trimStart() as NormalizedLineInput;
+
+export const normalizedLine = (string: string): NormalizedLine =>
+	normalizeWhiteSpace(onlyLowerCaseASCII(string)).trim() as NormalizedLine;
 
 export const capitalized = (string: string) =>
 	string[0].toUpperCase() + string.slice(1);

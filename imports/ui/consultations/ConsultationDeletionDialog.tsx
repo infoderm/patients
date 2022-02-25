@@ -11,7 +11,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import {ConsultationDocument} from '../../api/collection/consultations';
 
-import {normalized} from '../../api/string';
+import {normalizedLine} from '../../api/string';
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
@@ -46,7 +46,9 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [call, {pending}] = useCall();
 	const getError = (expected, value) =>
-		normalized(expected) === normalized(value) ? '' : 'Last names do not match';
+		normalizedLine(expected) === normalizedLine(value)
+			? ''
+			: 'Last names do not match';
 
 	const {validate, props: ConfirmationTextFieldProps} =
 		useConfirmationTextFieldState(patient.lastname, getError);

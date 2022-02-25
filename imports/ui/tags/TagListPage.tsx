@@ -3,7 +3,7 @@ import React from 'react';
 import {Mongo} from 'meteor/mongo';
 
 import GenericQueryHook from '../../api/GenericQueryHook';
-import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
+import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';
 
@@ -25,7 +25,7 @@ export interface TagListPageProps<T> {
 	useTags?: GenericQueryHook<T>;
 }
 
-const TagListPage = <T extends TagFields & TagMetadata>({
+const TagListPage = <T extends TagNameFields & TagMetadata>({
 	useTags,
 	query = {},
 	sort = {name: 1},

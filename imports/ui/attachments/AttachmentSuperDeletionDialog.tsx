@@ -13,7 +13,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import {Uploads} from '../../api/uploads';
-import {normalized} from '../../api/string';
+import {normalizedLine} from '../../api/string';
 
 import CancelButton from '../button/CancelButton';
 
@@ -41,7 +41,7 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 	const [pending, setPending] = useState(false);
 
 	const getError = (expected: string, value: string) =>
-		normalized(expected) === normalized(value)
+		normalizedLine(expected) === normalizedLine(value)
 			? ''
 			: 'Attachment names do not match';
 

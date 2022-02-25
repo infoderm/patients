@@ -13,6 +13,7 @@ import MuiCardMedia from '@mui/material/CardMedia';
 import useIsMounted from '../hooks/useIsMounted';
 import DeleteButton from '../button/DeleteButton';
 import RenameButton from '../button/RenameButton';
+import {normalizedLine} from '../../api/string';
 
 const Card = styled(MuiCard, {
 	shouldForwardProp: (prop) => prop !== 'deleted',
@@ -82,7 +83,7 @@ const Veil = styled('div')({
 export interface StaticTagCardProps {
 	loading: boolean;
 	found: boolean;
-	tag: {name: string};
+	tag: {name: string; displayName?: string};
 	url: (name: string) => string;
 	avatar: {};
 
@@ -138,7 +139,7 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 
 		const onRename = (newName) => {
 			if (params.name !== undefined) {
-				const newURL = url(newName);
+				const newURL = url(normalizedLine(newName));
 				navigate(newURL);
 			} else if (isMounted()) {
 				closeRenamingDialog();
@@ -146,6 +147,7 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 		};
 
 		const deleted = !loading && !found;
+		const {name, displayName = name} = tag;
 
 		return (
 			<Card ref={ref} deleted={deleted}>
@@ -153,9 +155,9 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 				<CardDetails>
 					<LinkedCardHeader
 						avatar={avatar}
-						title={tag.name}
+						title={displayName}
 						subheader={subheader}
-						to={url(tag.name)}
+						to={url(name)}
 					/>
 					<CardContent>{content}</CardContent>
 					{!deleted && (
@@ -189,7 +191,7 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 						</CardActions>
 					)}
 				</CardDetails>
-				<CardMedia>{abbr || tag.name[0]}</CardMedia>
+				<CardMedia>{abbr || displayName.slice(0, 1)}</CardMedia>
 			</Card>
 		);
 	},

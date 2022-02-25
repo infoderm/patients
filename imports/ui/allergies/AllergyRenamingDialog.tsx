@@ -4,7 +4,7 @@ import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameAllergy, useAllergiesFind} from '../../api/allergies';
 import TagDocument from '../../api/tags/TagDocument';
-import {inputFormat} from '../../api/string';
+import {formattedLineInput} from '../../api/string';
 
 interface Props {
 	open: boolean;
@@ -21,7 +21,9 @@ const AllergyRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 			useTagsFind={useAllergiesFind}
 			endpoint={renameAllergy}
 			tag={tag}
-			inputFormat={inputFormat}
+			inputFormat={formattedLineInput}
+			nameKey="displayName"
+			nameKeyTitle="display name"
 			onClose={onClose}
 			onRename={onRename}
 		/>

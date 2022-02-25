@@ -3,11 +3,11 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import PropsOf from '../../util/PropsOf';
 
-import {TagFields, TagMetadata} from '../../api/tags/TagDocument';
+import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
 
 interface TagGridProps extends PropsOf<typeof Grid> {
 	Card: React.ElementType;
-	tags: Array<TagFields & TagMetadata>;
+	tags: Array<TagNameFields & TagMetadata>;
 }
 
 const TagGrid = ({Card, tags, ...rest}: TagGridProps) => (

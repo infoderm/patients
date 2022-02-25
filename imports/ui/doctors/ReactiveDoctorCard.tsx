@@ -1,11 +1,12 @@
 import React from 'react';
 
 import {useCachedDoctor} from '../../api/doctors';
+import {TagNameFields} from '../../api/tags/TagDocument';
 
 import StaticDoctorCard from './StaticDoctorCard';
 
 interface Props {
-	item: {name: string};
+	item: TagNameFields;
 }
 
 const ReactiveDoctorCard = ({item}: Props) => {

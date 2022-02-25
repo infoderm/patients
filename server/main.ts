@@ -42,6 +42,8 @@ import './publication/_register/enabled';
 import '../imports/api/endpoint/_register/enabled';
 
 // DECLARE ALL ENABLED ICS ENDPOINTS
+import {names} from '../imports/api/createTagCollection';
+import TagDocument from '../imports/api/tags/TagDocument';
 import ics from './api/ics/index';
 
 if (Meteor.isTest || Meteor.isAppTest) {
@@ -120,26 +122,27 @@ Meteor.startup(async () => {
 		}
 	});
 
-	// Change schema
+	// Change schema for patient tags
 	const makePatientTagsObjects = async (key: string) =>
-		forEachAsync(Patients, {}, async (db, patient) => {
-			const tags = patient[key];
-			if (
-				Array.isArray(tags) &&
-				tags.length > 0 &&
-				typeof tags[0] === 'string'
-			) {
-				const value = tags.map((name) => ({
-					displayName: name,
-					name,
-				}));
-				await db.updateOne(
-					Patients,
-					{_id: patient._id},
-					{$set: {[key]: value}},
-				);
-			}
-		});
+		forEachAsync(
+			Patients,
+			{
+				[key]: {$type: 'array', $ne: []},
+			},
+			async (db, patient) => {
+				const tags = patient[key];
+				if (typeof tags[0] === 'string') {
+					// NOTE we do not normalize because we let the user rename and
+					// merge existing tags himself
+					const value = tags.map((name: string) => names(name));
+					await db.updateOne(
+						Patients,
+						{_id: patient._id},
+						{$set: {[key]: value}},
+					);
+				}
+			},
+		);
 
 	await makePatientTagsObjects('allergies');
 	await makePatientTagsObjects('doctors');
@@ -688,6 +691,31 @@ Meteor.startup(async () => {
 		},
 	);
 
+	// Add displayName field to tags
+	const addDisplayName = async (Collection) =>
+		forEachAsync<TagDocument>(
+			Collection,
+			{displayName: {$exists: false}},
+			async (db, {_id, owner, name, ...rest}) => {
+				const $set = names(name);
+				const match: TagDocument | null = await db.findOne(Collection, {
+					_id: {$nin: [_id]},
+					owner,
+					name: $set.name,
+				});
+				if (match === null) {
+					await db.updateOne(Collection, {_id}, {$set});
+				} else {
+					await db.deleteOne(Collection, {_id});
+					await db.updateOne(Collection, {_id: match._id}, {$set: rest});
+				}
+			},
+		);
+
+	await addDisplayName(Insurances);
+	await addDisplayName(Doctors);
+	await addDisplayName(Allergies);
+
 	// Recreate all generated entries
 	const generateTags = async (parent: any, child: any, key: string) =>
 		forEachAsync<any>(
@@ -696,9 +724,9 @@ Meteor.startup(async () => {
 			async (db, item) => {
 				const {owner, [key]: tags} = item;
 				if (tags) {
-					for (const {name} of tags) {
+					for (const {displayName} of tags) {
 						// eslint-disable-next-line no-await-in-loop
-						await child.add(db, owner, name);
+						await child.add(db, owner, displayName);
 					}
 				}
 			},
@@ -708,24 +736,10 @@ Meteor.startup(async () => {
 	await generateTags(Patients, doctors, 'doctors');
 	await generateTags(Patients, allergies, 'allergies');
 
-	// Add displayName field to tags
-	const addDisplayName = async (Collection) =>
-		forEachAsync<any>(
-			Collection,
-			{displayName: {$exists: false}},
-			async (db, {_id, name}) => {
-				await db.updateOne(Collection, {_id}, {$set: {displayName: name}});
-			},
-		);
-
-	await addDisplayName(Insurances);
-	await addDisplayName(Doctors);
-	await addDisplayName(Allergies);
-
 	// Compute tag fields
 	const computeTagFields = async (Collection, tags) =>
-		forEachAsync<any>(Collection, {}, async (db, {owner, name}) => {
-			await tags.add(db, owner, name);
+		forEachAsync<any>(Collection, {}, async (db, {owner, displayName}) => {
+			await tags.add(db, owner, displayName);
 		});
 
 	await computeTagFields(Insurances, insurances);
