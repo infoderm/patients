@@ -329,8 +329,13 @@ function mergePatients(oldPatients: PatientFields[]): PatientFields {
 		for (const tag of tags) {
 			if (result.has(tag.name)) {
 				if (tag.comment) {
-					result.get(tag.name).comment += '\n';
-					result.get(tag.name).comment += tag.comment;
+					const newTag = result.get(tag.name);
+					if (newTag.comment === undefined) {
+						newTag.comment = tag.comment;
+					} else {
+						newTag.comment += ', ';
+						newTag.comment += tag.comment;
+					}
 				}
 			} else {
 				result.set(tag.name, {...tag});

@@ -12,6 +12,8 @@ import DefaultCancelIcon from '@mui/icons-material/Cancel';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
 
+import {formattedLineInput} from '../../api/string';
+
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
 export interface ConfirmationDialogProps {
@@ -53,7 +55,7 @@ const ConfirmationDialog = ({
 					label="Comment"
 					value={value}
 					onChange={({target}: React.ChangeEvent<HTMLInputElement>) => {
-						setValue(target.value);
+						setValue(formattedLineInput(target.value));
 					}}
 				/>
 			</DialogContent>
@@ -67,13 +69,13 @@ const ConfirmationDialog = ({
 					Cancel
 				</Button>
 				<LoadingButton
-					disabled={value === initialValue}
+					disabled={value.trimEnd() === initialValue}
 					color={confirmColor}
 					endIcon={<ConfirmIcon />}
 					loading={pending}
 					loadingPosition="end"
 					onClick={() => {
-						onConfirm(value);
+						onConfirm(value.trimEnd());
 					}}
 				>
 					Save
