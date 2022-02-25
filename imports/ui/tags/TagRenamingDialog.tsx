@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import {Mongo} from 'meteor/mongo';
 
-import {styled} from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
 
-import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import CancelButton from '../button/CancelButton';
 
@@ -31,22 +30,6 @@ import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 import GenericQueryHook from '../../api/GenericQueryHook';
 import RenameButton from '../button/RenameButton';
-
-const PREFIX = 'TagRenamingDialog';
-
-const classes = {
-	root: `${PREFIX}-root`,
-	content: `${PREFIX}-content`,
-};
-
-const StyledDialog = styled(Dialog)({
-	[`& .${classes.root}`]: {
-		overflowY: 'visible',
-	},
-	[`& .${classes.content}`]: {
-		overflowY: 'visible',
-	},
-});
 
 interface Props<T> {
 	open: boolean;
@@ -131,15 +114,11 @@ const TagRenamingDialog = <T extends TagMetadata & TagNameFields>({
 	};
 
 	return (
-		<StyledDialog
-			open={open}
-			PaperProps={{className: classes.root}}
-			onClose={onClose}
-		>
+		<DialogWithVisibleOverflow open={open} onClose={onClose}>
 			<DialogTitle>
 				Rename {title} {nameFormat(tag, tag[nameKey])}
 			</DialogTitle>
-			<DialogContent className={classes.content}>
+			<DialogContent>
 				<DialogContentText>
 					If you do not want to rename this {title}, click cancel. If you really
 					want to rename this {title} from the system, enter the {title}&apos;s
@@ -182,7 +161,7 @@ const TagRenamingDialog = <T extends TagMetadata & TagNameFields>({
 					onClick={renameThisTagIfNameMatchesAndNewNameNotEmpty}
 				/>
 			</DialogActions>
-		</StyledDialog>
+		</DialogWithVisibleOverflow>
 	);
 };
 
