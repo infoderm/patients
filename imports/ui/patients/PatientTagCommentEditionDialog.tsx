@@ -11,6 +11,9 @@ import DefaultConfirmIcon from '@mui/icons-material/Done';
 import DefaultCancelIcon from '@mui/icons-material/Cancel';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import {formattedLineInput} from '../../api/string';
 
@@ -30,6 +33,8 @@ export interface ConfirmationDialogProps {
 	initialValue: string;
 }
 
+const emptyInput = formattedLineInput('');
+
 const ConfirmationDialog = ({
 	open = false,
 	pending = false,
@@ -43,6 +48,10 @@ const ConfirmationDialog = ({
 	initialValue,
 }: ConfirmationDialogProps) => {
 	const [value, setValue] = useState(initialValue);
+	const onClear = () => {
+		setValue(emptyInput);
+	};
+
 	return (
 		<Dialog open={open} onClose={onCancel}>
 			<DialogTitle>Edit</DialogTitle>
@@ -54,6 +63,24 @@ const ConfirmationDialog = ({
 					margin="dense"
 					label="Comment"
 					value={value}
+					InputProps={{
+						endAdornment: (
+							<InputAdornment position="end">
+								{value === emptyInput ? null : (
+									<IconButton
+										size="small"
+										aria-label="clear"
+										onClick={onClear}
+										onMouseDown={(e) => {
+											e.preventDefault();
+										}}
+									>
+										<ClearIcon />
+									</IconButton>
+								)}
+							</InputAdornment>
+						),
+					}}
 					onChange={({target}: React.ChangeEvent<HTMLInputElement>) => {
 						setValue(formattedLineInput(target.value));
 					}}
