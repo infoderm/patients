@@ -21,6 +21,7 @@ const useStatusNotifications = () => {
 		(key) => (
 			<>
 				<Button
+					color="inherit"
 					onClick={() => {
 						closeSnackbar(key);
 					}}
@@ -28,6 +29,7 @@ const useStatusNotifications = () => {
 					Dismiss
 				</Button>
 				<Button
+					color="inherit"
 					onClick={() => {
 						reconnect();
 					}}
