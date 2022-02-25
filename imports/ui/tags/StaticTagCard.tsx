@@ -138,11 +138,13 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 		const isMounted = useIsMounted();
 
 		const onRename = (newName) => {
+			if (isMounted()) {
+				closeRenamingDialog();
+			}
+
 			if (params.name !== undefined) {
 				const newURL = url(normalizedLine(newName));
 				navigate(newURL);
-			} else if (isMounted()) {
-				closeRenamingDialog();
 			}
 		};
 
