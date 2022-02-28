@@ -1,6 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 
-interface ConsultationFields {
+export interface ConsultationFields {
 	patientId: string;
 	datetime: Date;
 	scheduledDatetime?: Date;
@@ -30,7 +30,7 @@ interface ConsultationFields {
 	attachments?: string[];
 }
 
-interface ConsultationComputedFields {
+export interface ConsultationComputedFields {
 	doneDatetime?: Date;
 	end: Date;
 }

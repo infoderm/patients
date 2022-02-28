@@ -2,16 +2,28 @@ import {check} from 'meteor/check';
 
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
 import {increasing, decreasing} from '@total-order/date';
-import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
 import {books} from './books';
 
-import {ConsultationDocument, Consultations} from './collection/consultations';
+import {
+	ConsultationComputedFields,
+	ConsultationDocument,
+	ConsultationFields,
+	Consultations,
+} from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
 import TransactionDriver from './transaction/TransactionDriver';
 import Filter from './transaction/Filter';
+import {
+	Entry,
+	makeSanitize,
+	makeComputedFields,
+	makeComputeUpdate,
+	yieldKey,
+	yieldResettableKey,
+} from './update';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -135,23 +147,11 @@ export function setupConsultationsStatsPublication(collection, query) {
 	return handle;
 }
 
-const yieldKey = function* (fields, key, type) {
-	if (Object.prototype.hasOwnProperty.call(fields, key)) {
-		check(fields[key], type);
-		yield [key, fields[key]];
-	}
-};
-
-const yieldResettableKey = function* (fields, key, type, transform) {
-	if (Object.prototype.hasOwnProperty.call(fields, key)) {
-		if (fields[key] !== undefined) check(fields[key], type);
-		yield [key, transform(fields[key])];
-	}
-};
-
 const trimString = (value: string | undefined) => value?.trim();
 
-const sanitizeUpdate = function* (fields) {
+const sanitizeUpdate = function* (
+	fields: Partial<ConsultationFields>,
+): IterableIterator<Entry<ConsultationFields & ConsultationComputedFields>> {
 	yield* yieldKey(fields, 'patientId', String);
 
 	if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
@@ -208,23 +208,13 @@ const sanitizeUpdate = function* (fields) {
 	yield ['isDone', true];
 };
 
-const sanitize = (fields) => {
-	const update = Array.from(sanitizeUpdate(fields));
-	return {
-		$set: Object.fromEntries(update.filter(([, value]) => value !== undefined)),
-		$unset: Object.fromEntries(
-			update
-				.filter(([, value]) => value === undefined)
-				.map(([key]) => [key, true]),
-		),
-	};
-};
+const sanitize = makeSanitize(sanitizeUpdate);
 
 const computedFieldsGenerator = async function* (
 	db: TransactionDriver,
 	owner: string,
 	state: Partial<ConsultationDocument>,
-) {
+): AsyncIterableIterator<Entry<ConsultationDocument>> {
 	// Update done datetime
 	const laterConsultation = await db.findOne(Consultations, {
 		owner,
@@ -256,45 +246,9 @@ const computedFieldsGenerator = async function* (
 	];
 };
 
-const computedFields = async (
-	db: TransactionDriver,
-	owner: string,
-	state: Partial<ConsultationDocument>,
-) => {
-	const entries = await asyncIterableToArray(
-		computedFieldsGenerator(db, owner, state),
-	);
-	return Object.fromEntries(entries);
-};
+const computedFields = makeComputedFields(computedFieldsGenerator);
 
-export const computeUpdate = async (
-	db: TransactionDriver,
-	owner: string,
-	state: undefined | ConsultationDocument,
-	{$set, $unset},
-) => {
-	const newState = simulateUpdate(state, {$set, $unset});
-	return {
-		newState,
-		$set: {
-			...$set,
-			...(await computedFields(db, owner, newState)),
-		},
-		$unset,
-	};
-};
-
-const simulateUpdate = (
-	state: undefined | ConsultationDocument,
-	{$set, $unset},
-) => {
-	const removedKeys = new Set(Object.keys($unset));
-	return Object.fromEntries(
-		Object.entries(state ?? {})
-			.filter(([key]) => !removedKeys.has(key))
-			.concat(Object.entries($set)),
-	);
-};
+export const computeUpdate = makeComputeUpdate(computedFields);
 
 export const consultations = {
 	sanitize,
