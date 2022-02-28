@@ -89,7 +89,7 @@ export default define({
 
 		return db.updateOne(Consultations, {_id: consultationId}, modifier);
 	},
-	simulate(_consultationId: string, _newfields: any) {
+	simulate(_consultationId: string, _newfields: any): void {
 		return undefined;
 	},
 });
