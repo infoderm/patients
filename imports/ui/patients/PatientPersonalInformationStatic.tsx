@@ -309,7 +309,7 @@ const PatientPersonalInformationStatic = (
 					{!patient.birthdate ? null : (
 						<Typography variant="h5">{displayedAge}</Typography>
 					)}
-					{(editing || isDead) && (
+					{isDead && (
 						<Button
 							disabled={!editing}
 							color={isDead ? 'secondary' : 'primary'}

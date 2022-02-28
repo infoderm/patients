@@ -1,102 +1,101 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import {useSnackbar} from 'notistack';
+import {styled} from '@mui/material/styles';
 
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import patientsRemove from '../../api/endpoint/patients/remove';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 
-import {normalizedLine} from '../../api/string';
+import {blue, red} from '@mui/material/colors';
+import Avatar from '@mui/material/Avatar';
+import ListItemText from '@mui/material/ListItemText';
+
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import withLazyOpening from '../modal/withLazyOpening';
-import useIsMounted from '../hooks/useIsMounted';
-
-import DeleteButton from '../button/DeleteButton';
-import CancelButton from '../button/CancelButton';
-
-import ConfirmationTextField, {
-	useConfirmationTextFieldState,
-} from '../input/ConfirmationTextField';
-import debounceSnackbar from '../../util/debounceSnackbar';
-import useCall from '../action/useCall';
+import {PatientDocument} from '../../api/collection/patients';
+import PatientSuperDeletionDialog from './PatientSuperDeletionDialog';
 import StaticPatientCard from './StaticPatientCard';
-import CardPatientProjection from './CardPatientProjection';
+import PatientDeathDateEditionDialog from './PatientDeathDateEditionDialog';
+
+const PrimaryAvatar = styled(Avatar)({
+	backgroundColor: blue[100],
+	color: blue[600],
+});
+
+const SecondaryAvatar = styled(Avatar)({
+	backgroundColor: red[100],
+	color: red[600],
+});
 
 interface Props {
 	open: boolean;
 	onClose: () => void;
-	patient: CardPatientProjection<typeof StaticPatientCard>;
+	patient: PatientDocument;
 }
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
-	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-	const [call, {pending}] = useCall();
-	const getError = (expected, value) =>
-		normalizedLine(expected) === normalizedLine(value)
-			? ''
-			: 'Last names do not match';
-
-	const {validate, props: ConfirmationTextFieldProps} =
-		useConfirmationTextFieldState(patient.lastname || '', getError);
-
-	const isMounted = useIsMounted();
-
-	const deleteThisPatientIfLastNameMatches = async (event) => {
-		event.preventDefault();
-		if (validate()) {
-			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
-			feedback('Processing...', {
-				variant: 'info',
-				persist: true,
-			});
-			try {
-				await call(patientsRemove, patient._id);
-				const message = `Patient #${patient._id} deleted.`;
-				console.log(message);
-				feedback(message, {variant: 'success'});
-				if (isMounted()) onClose();
-			} catch (error: unknown) {
-				console.error({error});
-				const message =
-					error instanceof Error ? error.message : 'unknown error';
-				feedback(message, {variant: 'error'});
-			}
-		}
-	};
-
+	const [settingDeathDate, setSettingDeathDate] = useState(false);
+	const [deleting, setDeleting] = useState(false);
 	return (
-		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>
-				Delete patient {patient.firstname} {patient.lastname}
-			</DialogTitle>
-			<DialogContent>
-				<DialogContentText>
-					If you do not want to delete this patient, click cancel. If you really
-					want to delete this patient from the system, enter its last name below
-					and click the delete button.
-				</DialogContentText>
-				<StaticPatientCard patient={patient} />
-				<ConfirmationTextField
-					autoFocus
-					fullWidth
-					disabled={pending}
-					margin="dense"
-					label="Patient's last name"
-					{...ConfirmationTextFieldProps}
-				/>
-			</DialogContent>
-			<DialogActions>
-				<CancelButton disabled={pending} onClick={onClose} />
-				<DeleteButton
-					loading={pending}
-					disabled={ConfirmationTextFieldProps.error}
-					onClick={deleteThisPatientIfLastNameMatches}
-				/>
-			</DialogActions>
-		</Dialog>
+		<>
+			<Dialog open={open} onClose={onClose}>
+				<DialogTitle>
+					What is wrong with patient {patient.firstname} {patient.lastname}?
+				</DialogTitle>
+				<DialogContent>
+					<StaticPatientCard patient={patient} />
+				</DialogContent>
+				<List>
+					<ListItem
+						button
+						onClick={() => {
+							setSettingDeathDate(true);
+							onClose();
+						}}
+					>
+						<ListItemAvatar>
+							<PrimaryAvatar>
+								<HeartBrokenIcon />
+							</PrimaryAvatar>
+						</ListItemAvatar>
+						<ListItemText primary="This patient is dead" />
+					</ListItem>
+					<ListItem
+						button
+						onClick={() => {
+							setDeleting(true);
+							onClose();
+						}}
+					>
+						<ListItemAvatar>
+							<SecondaryAvatar>
+								<DeleteForeverIcon />
+							</SecondaryAvatar>
+						</ListItemAvatar>
+						<ListItemText primary="This patient should not be in the database" />
+					</ListItem>
+				</List>
+			</Dialog>
+			<PatientDeathDateEditionDialog
+				open={settingDeathDate}
+				patient={patient}
+				onClose={() => {
+					setSettingDeathDate(false);
+				}}
+			/>
+			<PatientSuperDeletionDialog
+				open={deleting}
+				patient={patient}
+				onClose={() => {
+					setDeleting(false);
+				}}
+			/>
+		</>
 	);
 };
 
