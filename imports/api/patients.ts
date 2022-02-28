@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import {check, Match} from 'meteor/check';
 
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
@@ -14,6 +14,7 @@ import {
 	PatientEmailShape,
 	PatientTagShape,
 	PatientTag,
+	PatientDocument,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -35,6 +36,14 @@ import {
 import TransactionDriver from './transaction/TransactionDriver';
 
 import {names as tagNames} from './createTagCollection';
+import {
+	Entry,
+	makeComputedFields,
+	makeComputeUpdate,
+	makeSanitize,
+	yieldKey,
+	yieldResettableKey,
+} from './update';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -125,137 +134,98 @@ const sanitizePatientTag = ({
 	...rest,
 });
 
-function sanitize({
-	niss,
-	firstname,
-	lastname,
-	birthdate,
-	sex,
-	photo,
+const trimString = (value: string | undefined) => value?.trim();
+const sanitizePatientTags = (tags) => list(map(sanitizePatientTag, tags));
+const where = Match.Where;
 
-	deathdateModifiedAt,
-	deathdate,
+const sanitizeUpdate = function* (
+	fields: Partial<PatientFields>,
+): IterableIterator<Entry<PatientFields & PatientComputedFields>> {
+	yield* yieldKey(fields, 'niss', String, trimString);
+	yield* yieldKey(fields, 'firstname', String, trimString);
+	yield* yieldKey(fields, 'lastname', String, trimString);
+	yield* yieldKey(fields, 'birthdate', String, trimString);
+	yield* yieldKey(
+		fields,
+		'sex',
+		where((sex) => {
+			if (!SEX_ALLOWED.includes(sex))
+				throw new Error(
+					`Wrong sex for patient (${sex}). Must be one of ${JSON.stringify(
+						SEX_ALLOWED,
+					)}`,
+				);
+			return true;
+		}),
+	);
+	yield* yieldKey(fields, 'photo', String, (photo) =>
+		photo?.replace(/\n/g, ''),
+	);
 
-	antecedents,
-	ongoing,
-	about,
+	yield* yieldResettableKey(
+		fields,
+		'deathdateModifiedAt',
+		where((deathdateModifiedAt) => {
+			if (deathdateModifiedAt !== null) {
+				check(deathdateModifiedAt, Date);
+				if (!isValid(deathdateModifiedAt)) {
+					throw new Error('Invalid date given for field `deathdateModifiedAt`');
+				}
+			}
 
-	municipality,
-	streetandnumber,
-	zip,
-	phone,
-	email,
+			return true;
+		}),
+		(deathdateModifiedAt: Date | null) => deathdateModifiedAt ?? undefined,
+	);
 
-	insurances,
-	doctors,
-	allergies,
+	yield* yieldResettableKey(
+		fields,
+		'deathdate',
+		where((deathdate) => {
+			if (deathdate !== null) {
+				check(deathdate, Date);
+				if (!isValid(deathdate)) {
+					throw new Error('Invalid date given for field `deathdate`');
+				}
+			}
 
-	noshow,
-	createdForAppointment,
-}: Partial<PatientFields>): PatientFields & PatientComputedFields {
-	if (niss !== undefined) check(niss, String);
-	if (firstname !== undefined) check(firstname, String);
-	if (lastname !== undefined) check(lastname, String);
-	if (birthdate !== undefined) check(birthdate, String);
-	if (sex !== undefined) check(sex, String);
-	if (photo !== undefined) check(photo, String);
+			return true;
+		}),
+		(deathdate: Date | null) => deathdate ?? undefined,
+	);
 
-	if (deathdateModifiedAt !== undefined && deathdateModifiedAt !== null) {
-		check(deathdateModifiedAt, Date);
-		if (!isValid(deathdateModifiedAt)) {
-			throw new Error('Invalid date given for field `deathdateModifiedAt`');
-		}
-	}
+	yield* yieldKey(fields, 'antecedents', String, trimString);
+	yield* yieldKey(fields, 'ongoing', String, trimString);
+	yield* yieldKey(fields, 'about', String, trimString);
 
-	if (deathdate !== undefined && deathdate !== null) {
-		check(deathdate, Date);
-		if (!isValid(deathdate)) {
-			throw new Error('Invalid date given for field `deathdateModifiedAt`');
-		}
-	}
+	yield* yieldKey(fields, 'municipality', String, trimString);
+	yield* yieldKey(fields, 'streetandnumber', String, trimString);
+	yield* yieldKey(fields, 'zip', String, trimString);
+	yield* yieldKey(fields, 'phone', String, trimString);
+	yield* yieldKey(fields, 'email', [PatientEmailShape]);
 
-	if (antecedents !== undefined) check(antecedents, String);
-	if (ongoing !== undefined) check(ongoing, String);
-	if (about !== undefined) check(about, String);
+	yield* yieldKey(fields, 'insurances', [PatientTagShape], sanitizePatientTags);
+	yield* yieldKey(fields, 'doctors', [PatientTagShape], sanitizePatientTags);
+	yield* yieldKey(fields, 'allergies', [PatientTagShape], sanitizePatientTags);
 
-	if (municipality !== undefined) check(municipality, String);
-	if (streetandnumber !== undefined) check(streetandnumber, String);
-	if (zip !== undefined) check(zip, String);
-	if (phone !== undefined) check(phone, String);
-	if (email !== undefined) check(email, [PatientEmailShape]);
+	yield* yieldKey(fields, 'noshow', Match.Integer);
+	yield* yieldKey(fields, 'createdForAppointment', Boolean);
+};
 
-	if (insurances !== undefined) check(insurances, [PatientTagShape]);
-	if (doctors !== undefined) check(doctors, [PatientTagShape]);
-	if (allergies !== undefined) check(allergies, [PatientTagShape]);
+const sanitize = makeSanitize(sanitizeUpdate);
 
-	if (noshow !== undefined) check(noshow, Number);
-	if (createdForAppointment !== undefined)
-		check(createdForAppointment, Boolean);
+const computedFieldsGenerator = async function* (
+	_db: TransactionDriver,
+	_owner: string,
+	state: Partial<PatientDocument>,
+): AsyncIterableIterator<Entry<PatientDocument>> {
+	const {firstname, lastname} = state;
+	yield ['normalizedName', normalizedName(firstname, lastname)];
+};
 
-	niss = niss?.trim();
-	firstname = firstname?.trim();
-	lastname = lastname?.trim();
-	birthdate = birthdate?.trim();
-	sex = sex?.trim();
-	if (!SEX_ALLOWED.includes(sex))
-		throw new Error(
-			`Wrong sex for patient (${sex}). Must be one of ${JSON.stringify(
-				SEX_ALLOWED,
-			)}`,
-		);
-	photo = photo?.replace(/\n/g, '');
+const computedFields = makeComputedFields(computedFieldsGenerator);
 
-	antecedents = antecedents?.trim();
-	ongoing = ongoing?.trim();
-	about = about?.trim();
-
-	municipality = municipality?.trim();
-	streetandnumber = streetandnumber?.trim();
-	zip = zip?.trim();
-	phone = phone?.trim();
-
-	if (insurances) {
-		insurances = list(map(sanitizePatientTag, insurances));
-	}
-
-	if (doctors) {
-		doctors = list(map(sanitizePatientTag, doctors));
-	}
-
-	if (allergies) {
-		allergies = list(map(sanitizePatientTag, allergies));
-	}
-
-	return {
-		niss,
-		firstname,
-		lastname,
-		birthdate,
-		sex,
-		photo,
-		normalizedName: normalizedName(firstname, lastname),
-
-		deathdateModifiedAt,
-		deathdate,
-
-		antecedents,
-		ongoing,
-		about,
-
-		municipality,
-		streetandnumber,
-		zip,
-		phone,
-		email,
-
-		allergies,
-		doctors,
-		insurances,
-
-		noshow,
-		createdForAppointment,
-	};
-}
+export const computeUpdate = makeComputeUpdate(computedFields);
 
 function mergePatients(oldPatients: PatientFields[]): PatientFields {
 	const newPatient = {

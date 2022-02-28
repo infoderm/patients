@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
 import {Patients} from '../../collection/patients';
-import {patients} from '../../patients';
+import {computeUpdate, patients} from '../../patients';
 import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
@@ -14,26 +14,28 @@ export default define({
 		check(patient, Object);
 	},
 	async transaction(db: TransactionDriver, patient: any) {
-		const fields = sanitize(patient);
+		const owner = this.userId;
+		const changes = sanitize(patient);
+		const {newState: fields} = await computeUpdate(
+			db,
+			owner,
+			undefined,
+			changes,
+		);
 
-		await updateTags(db, this.userId, fields);
+		await updateTags(db, owner, fields);
 
 		const {insertedId: patientId} = await db.insertOne(Patients, {
 			...fields,
 			createdAt: new Date(),
-			owner: this.userId,
+			owner,
 		});
 
-		await updateIndex(db, this.userId, patientId, fields);
+		await updateIndex(db, owner, patientId, fields);
 
 		return patientId;
 	},
-	simulate(patient: any) {
-		const fields = sanitize(patient);
-		return Patients.insert({
-			...fields,
-			createdAt: new Date(),
-			owner: this.userId,
-		});
+	simulate(_patient: any): void {
+		return undefined;
 	},
 });

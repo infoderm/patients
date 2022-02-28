@@ -62,7 +62,17 @@ const EidCardDialogStepPreviewSingleCreate = ({
 		}
 	};
 
-	const eidPatient = patients.sanitize(eidInfo);
+	const {$set} = patients.sanitize(eidInfo);
+
+	const eidPatient = {
+		firstname: '',
+		lastname: '',
+		niss: '',
+		birthdate: '',
+		sex: '',
+		photo: '',
+		...$set,
+	};
 
 	return (
 		<>

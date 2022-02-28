@@ -6,7 +6,7 @@ import {Consultations} from '../../collection/consultations';
 import {Documents} from '../../collection/documents';
 import {Attachments} from '../../collection/attachments';
 
-import {patients} from '../../patients';
+import {computeUpdate, patients} from '../../patients';
 
 import define from '../define';
 import TransactionDriver from '../../transaction/TransactionDriver';
@@ -46,13 +46,14 @@ export default define({
 		// (8) Attach documents in `documentIds` to newly created patient
 		// (9) Remove documents that have not been attached
 		// (10) Remove patients in `oldPatientIds`
+		const owner = this.userId;
 
 		// (2)
 		for (const oldPatientId of oldPatientIds) {
 			// eslint-disable-next-line no-await-in-loop
 			const oldPatient = await db.findOne(Patients, {
 				_id: oldPatientId,
-				owner: this.userId,
+				owner,
 			});
 			if (oldPatient === null) {
 				throw new Meteor.Error('not-found', 'no such patient');
@@ -60,12 +61,18 @@ export default define({
 		}
 
 		// (3)
-		const fields = sanitize(newPatient);
+		const changes = sanitize(newPatient);
+		const {newState: fields} = await computeUpdate(
+			db,
+			owner,
+			undefined,
+			changes,
+		);
 
 		const {insertedId: newPatientId} = await db.insertOne(Patients, {
 			...fields,
 			createdAt: new Date(),
-			owner: this.userId,
+			owner,
 		});
 
 		await updateIndex(db, this.userId, newPatientId, fields);
@@ -78,7 +85,7 @@ export default define({
 		await db.updateMany(
 			Consultations,
 			{
-				owner: this.userId, // This selector automatically filters out bad consultation ids
+				owner, // This selector automatically filters out bad consultation ids
 				patientId: {$in: oldPatientIds},
 				_id: {$in: consultationIds},
 			},
@@ -89,7 +96,7 @@ export default define({
 
 		// (5)
 		await db.deleteMany(Consultations, {
-			owner: this.userId,
+			owner,
 			patientId: {$in: oldPatientIds},
 		});
 
@@ -122,7 +129,7 @@ export default define({
 		await db.updateMany(
 			Documents,
 			{
-				owner: this.userId, // This selector automatically filters out bad document ids
+				owner, // This selector automatically filters out bad document ids
 				patientId: {$in: oldPatientIds},
 				_id: {$in: documentIds},
 			},
@@ -135,7 +142,7 @@ export default define({
 		await db.updateMany(
 			Documents,
 			{
-				owner: this.userId,
+				owner,
 				patientId: {$in: oldPatientIds},
 			},
 			{

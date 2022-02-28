@@ -53,7 +53,7 @@ const DEFAULT_FIELDS = {
 	photo: 0,
 };
 
-const usePatientsNnSearch = ({niss: nn}) => {
+const usePatientsNnSearch = ({niss: nn = ''}) => {
 	const query = {niss: nn};
 	const limit = DEFAULT_LIMIT;
 	const sort = {}; // TODO sort by something !== niss
@@ -134,11 +134,14 @@ const EidCardDialogStepSelection = ({
 	const classes = useStyles();
 	const dialog = useDialog();
 
-	const eidPatient = {_id: '?', ...patients.sanitize(eidInfo)};
-
-	const [patientSearchInput, setPatientSearchinput] = useState(
-		eidPatient.normalizedName,
+	const {$set} = patients.sanitize(eidInfo);
+	const eidPatient = {_id: '?', ...$set};
+	const normalizedName = patients.normalizedName(
+		eidPatient.firstname,
+		eidPatient.lastname,
 	);
+
+	const [patientSearchInput, setPatientSearchinput] = useState(normalizedName);
 
 	const {loading: loadingNnMatches, results: nnMatches} =
 		usePatientsNnSearch(eidPatient);
@@ -146,7 +149,7 @@ const EidCardDialogStepSelection = ({
 	const {
 		loading: loadingNormalizedNameMatches,
 		results: normalizedNameMatches,
-	} = usePatientsNormalizedNameSearch(eidPatient);
+	} = usePatientsNormalizedNameSearch({normalizedName});
 
 	const usePatientsNameSearch = makePatientsSuggestions(nnMatches, {
 		fields: DEFAULT_FIELDS,

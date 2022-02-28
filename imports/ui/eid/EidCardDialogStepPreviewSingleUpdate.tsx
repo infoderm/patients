@@ -175,8 +175,8 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 		}
 	};
 
-	const eidPatient = patients.sanitize(eidInfo);
-	const eidPatients = [{_id: '?', ...eidPatient}];
+	const {$set} = patients.sanitize(eidInfo);
+	const eidPatients = [{_id: '?', ...$set}];
 	const selectedPatient = {_id: patientId};
 	const selectedPatients = [selectedPatient];
 
@@ -187,9 +187,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	} = usePatient({}, patientId, {}, [patientId]);
 
 	const differences =
-		loading || !found
-			? []
-			: Array.from(computeDifferences(patientState, eidPatient));
+		loading || !found ? [] : Array.from(computeDifferences(patientState, $set));
 	const notFound = !loading && !found;
 
 	return (
@@ -263,7 +261,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 												key={key}
 												field={key}
 												oldValue={patientState[key]}
-												newValue={eidPatient[key]}
+												newValue={$set[key]}
 											/>
 										))}
 									</TableBody>

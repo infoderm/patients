@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
-import {Patients} from '../../collection/patients';
-import {patients} from '../../patients';
+import {PatientDocument, Patients} from '../../collection/patients';
+import {computeUpdate, patients} from '../../patients';
 import TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
@@ -26,13 +26,24 @@ export default define({
 			throw new Meteor.Error('not-found');
 		}
 
-		const fields = sanitize(newfields);
+		const changes = sanitize(newfields);
+		const {$set, $unset, newState} = await computeUpdate(
+			db,
+			owner,
+			patient,
+			changes,
+		);
 
-		await updateTags(db, owner, fields);
+		await updateTags(db, owner, $set);
 
-		await updateIndex(db, owner, patientId, fields);
+		await updateIndex(db, owner, patientId, newState);
 
-		return db.updateOne(Patients, {_id: patientId, owner}, {$set: fields});
+		const modifier: Mongo.Modifier<PatientDocument> = {};
+
+		if (Object.keys($set).length > 0) modifier.$set = $set;
+		if (Object.keys($unset).length > 0) modifier.$unset = $unset;
+
+		return db.updateOne(Patients, {_id: patientId, owner}, modifier);
 	},
 	simulate(_patientId: string, _newfields: any) {
 		return undefined;
