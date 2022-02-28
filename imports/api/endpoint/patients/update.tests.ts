@@ -44,9 +44,9 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		const allergies = ['a', 'b', 'c'];
-		const doctors = ['d', 'e', 'f'];
-		const insurances = ['g', 'h'];
+		const allergies = ['a', 'b', 'c'].map((x) => ({displayName: x, name: x}));
+		const doctors = ['d', 'e', 'f'].map((x) => ({displayName: x, name: x}));
+		const insurances = ['g', 'h'].map((x) => ({displayName: x, name: x}));
 
 		await invoke(update, {userId}, [
 			patientId,
@@ -55,22 +55,22 @@ server(__filename, () => {
 
 		assert.equal(Patients.find({owner: userId}).count(), 1);
 
-		assert.includeMembers(
+		assert.includeDeepMembers(
 			Allergies.find()
 				.fetch()
-				.map(({name}) => name),
+				.map(({displayName, name}) => ({displayName, name})),
 			allergies,
 		);
-		assert.includeMembers(
+		assert.includeDeepMembers(
 			Doctors.find()
 				.fetch()
-				.map(({name}) => name),
+				.map(({displayName, name}) => ({displayName, name})),
 			doctors,
 		);
-		assert.includeMembers(
+		assert.includeDeepMembers(
 			Insurances.find()
 				.fetch()
-				.map(({name}) => name),
+				.map(({displayName, name}) => ({displayName, name})),
 			insurances,
 		);
 	});

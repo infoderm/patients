@@ -36,17 +36,34 @@ export const newPatientFormData = makeTemplate({
 
 	insurances: () =>
 		list(
-			map(() => faker.company.companyName(), range(faker.datatype.number(2))),
+			map(
+				() => ({
+					displayName: faker.company.companyName(),
+					name: '',
+				}),
+				range(faker.datatype.number(2)),
+			),
 		),
 	doctors: () =>
 		list(
 			map(
-				() => `${faker.name.lastName()} ${faker.name.firstName()}`,
+				() => ({
+					displayName: `${faker.name.lastName()} ${faker.name.firstName()}`,
+					name: '',
+				}),
 				range(faker.datatype.number(2)),
 			),
 		),
 	allergies: () =>
-		list(map(() => faker.commerce.product(), range(faker.datatype.number(4)))),
+		list(
+			map(
+				() => ({
+					displayName: faker.commerce.product(),
+					name: '',
+				}),
+				range(faker.datatype.number(4)),
+			),
+		),
 
 	noshow: () => faker.datatype.number(3),
 });

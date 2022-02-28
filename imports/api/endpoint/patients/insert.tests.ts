@@ -23,30 +23,30 @@ server(__filename, () => {
 	it('creates associated tags', async () => {
 		const userId = randomUserId();
 
-		const allergies = ['a', 'b', 'c'];
-		const doctors = ['d', 'e', 'f'];
-		const insurances = ['g', 'h'];
+		const allergies = ['a', 'b', 'c'].map((x) => ({displayName: x, name: x}));
+		const doctors = ['d', 'e', 'f'].map((x) => ({displayName: x, name: x}));
+		const insurances = ['g', 'h'].map((x) => ({displayName: x, name: x}));
 
 		await newPatient({userId}, {allergies, doctors, insurances});
 
 		assert.equal(Patients.find({owner: userId}).count(), 1);
 
-		assert.sameMembers(
+		assert.sameDeepMembers(
 			Allergies.find()
 				.fetch()
-				.map(({name}) => name),
+				.map(({displayName, name}) => ({displayName, name})),
 			allergies,
 		);
-		assert.sameMembers(
+		assert.sameDeepMembers(
 			Doctors.find()
 				.fetch()
-				.map(({name}) => name),
+				.map(({displayName, name}) => ({displayName, name})),
 			doctors,
 		);
-		assert.sameMembers(
+		assert.sameDeepMembers(
 			Insurances.find()
 				.fetch()
-				.map(({name}) => name),
+				.map(({displayName, name}) => ({displayName, name})),
 			insurances,
 		);
 	});
