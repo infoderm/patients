@@ -35,6 +35,7 @@ import useNextInBookNumber from './useNextInBookNumber';
 
 interface ConsultationEditorFields {
 	_id: string | undefined;
+	isDone: boolean;
 	patientId: string;
 	datetime: Date;
 	doneDatetime?: Date;
@@ -246,6 +247,8 @@ const Loader = ({loading, found, consultation}: LoaderProps) => {
 	if (!found) {
 		return <NoContent>Consultation not found.</NoContent>;
 	}
+
+	if (!consultation.isDone) return <Loading />;
 
 	return <ConsultationEditor consultation={consultation} />;
 };

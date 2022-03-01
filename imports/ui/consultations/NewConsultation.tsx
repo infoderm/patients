@@ -23,6 +23,7 @@ const NewConsultation = () => {
 	const consultation = {
 		_id: undefined,
 		patientId,
+		isDone: true,
 		datetime: new Date(),
 		reason: '',
 		done: '',
