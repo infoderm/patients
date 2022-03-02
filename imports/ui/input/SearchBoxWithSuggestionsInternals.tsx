@@ -13,6 +13,7 @@ interface SearchBoxWithSuggestionsInternalsProps<Item>
 	expands?: boolean;
 	loading: boolean;
 	placeholder?: string;
+	icon?: React.ReactNode;
 	suggestions: Item[];
 	itemToKey: (item: Item) => React.Key;
 	itemToString: (item: Item) => string;
@@ -22,6 +23,7 @@ const SearchBoxWithSuggestionsInternals = <Item,>({
 	className,
 	expands = false,
 	placeholder,
+	icon,
 	getComboboxProps,
 	getInputProps,
 	...rest
@@ -32,7 +34,9 @@ const SearchBoxWithSuggestionsInternals = <Item,>({
 				className={className}
 				{...getComboboxProps()}
 			>
-				<SearchBoxInternalsAdornment />
+				{icon && (
+					<SearchBoxInternalsAdornment>{icon}</SearchBoxInternalsAdornment>
+				)}
 				<SearchBoxInternalsInput
 					expands={expands}
 					placeholder={placeholder}

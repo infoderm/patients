@@ -9,12 +9,13 @@ import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
 interface Props extends PropsOf<typeof SearchBoxInternalsInput> {
 	className?: string;
+	icon: React.ReactNode;
 }
 
-const SearchBox = ({className, ...rest}: Props) => (
+const SearchBox = ({className, icon, ...rest}: Props) => (
 	<SearchBoxInternalsContainer>
 		<SearchBoxInternalsInputContainer className={className}>
-			<SearchBoxInternalsAdornment />
+			<SearchBoxInternalsAdornment>{icon}</SearchBoxInternalsAdornment>
 			<SearchBoxInternalsInput {...rest} />
 		</SearchBoxInternalsInputContainer>
 	</SearchBoxInternalsContainer>

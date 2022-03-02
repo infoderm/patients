@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {styled, alpha} from '@mui/material/styles';
-
-import {useNavigate} from 'react-router-dom';
 import Box from '@mui/material/Box';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
@@ -71,6 +71,7 @@ const FullTextSearchInput = ({sx}) => {
 				expands
 				className={classes.searchBox}
 				placeholder="Search a patient…"
+				icon={<PersonSearchIcon />}
 				aria-label="Patient search"
 				value={value}
 				onChange={onChange}

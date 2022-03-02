@@ -1,5 +1,6 @@
 import React from 'react';
 import {styled, alpha} from '@mui/material/styles';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import {useNavigate} from 'react-router-dom';
 
 import {patients} from '../../api/patients';
@@ -39,6 +40,7 @@ const PatientsSearchBox = ({className}) => {
 				useSuggestions={usePatientsSuggestions}
 				itemToString={(item) => (item ? patients.toString(item) : '')}
 				itemToKey={patients.toKey}
+				icon={<PersonSearchIcon />}
 				placeholder="Search a patient…"
 				onSelectedItemChange={handleChange}
 			/>

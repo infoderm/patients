@@ -23,7 +23,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import {red, orange, green} from '@mui/material/colors';
+
 import SearchBox from '../input/SearchBox';
 
 import CancelButton from '../button/CancelButton';
@@ -339,6 +341,7 @@ const EidCardDialogStepSelection = ({
 										<Grid item xs={12}>
 											<SearchBox
 												className={classes.searchBox}
+												icon={<PersonSearchIcon />}
 												value={patientSearchInput}
 												onChange={(event) => {
 													setPatientSearchinput(event.target.value);

@@ -34,6 +34,7 @@ type SearchBoxWithSuggestionsProps<Item> = {
 	itemToKey: (x: Item) => React.Key;
 	expands?: boolean;
 	placeholder?: string;
+	icon?: React.ReactNode;
 	className?: string;
 } & Omit<
 	UseComboboxProps<Item>,
@@ -46,6 +47,7 @@ const SearchBoxWithSuggestions = <Item,>({
 	itemToString,
 	expands,
 	placeholder,
+	icon,
 	className,
 	...rest
 }: SearchBoxWithSuggestionsProps<Item>) => {
@@ -57,6 +59,7 @@ const SearchBoxWithSuggestions = <Item,>({
 		expands,
 		loading,
 		placeholder,
+		icon,
 		suggestions,
 		itemToKey,
 		itemToString,
