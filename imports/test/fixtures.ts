@@ -87,7 +87,7 @@ export const client = (title, fn) => {
 		};
 
 		describe(title, function () {
-			this.timeout(5000);
+			this.timeout(10_000);
 			beforeEach(prepare);
 			fn();
 			afterEach(restore);
