@@ -1,7 +1,16 @@
-import {DependencyList, useState, useEffect} from 'react';
+import {
+	DependencyList,
+	useState,
+	useEffect,
+	Dispatch,
+	SetStateAction,
+} from 'react';
 
-const useStateWithInitOverride = (init: any, deps: DependencyList = [init]) => {
-	const [value, setValue] = useState(init);
+const useStateWithInitOverride = <T>(
+	init: T,
+	deps: DependencyList = [init],
+): [T, Dispatch<SetStateAction<T>>] => {
+	const [value, setValue] = useState<T>(init);
 	useEffect(() => {
 		setValue(init);
 	}, deps);

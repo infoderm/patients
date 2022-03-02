@@ -92,7 +92,12 @@ interface AppointmentDialogProps {
 	initialDatetime: Date;
 	noInitialTime?: boolean;
 	initialAppointment?: AppointmentDocument;
-	initialPatient?: {};
+	initialPatient?: {
+		_id: string;
+		firstname: string;
+		lastname: string;
+		phone: string;
+	};
 }
 
 const AppointmentDialog = ({
@@ -123,7 +128,7 @@ const AppointmentDialog = ({
 	const [validTime, setValidTime] = useStateWithInitOverride(
 		!noInitialTime && isValid(initialDatetime),
 	);
-	const [duration, setDuration] = useStateWithInitOverride(
+	const [duration, setDuration] = useStateWithInitOverride<number>(
 		appointmentDuration.includes(initialAppointment?.duration)
 			? initialAppointment.duration
 			: appointmentDuration.length > 0
@@ -309,7 +314,9 @@ const AppointmentDialog = ({
 									name: 'duration',
 									id: 'duration',
 								}}
-								onChange={(e) => setDuration(e.target.value)}
+								onChange={(e) => {
+									setDuration(e.target.value as number);
+								}}
 							>
 								{appointmentDuration.map((x) => (
 									<MenuItem key={x} value={x}>
@@ -333,7 +340,9 @@ const AppointmentDialog = ({
 							maxCount={1}
 							placeholder="Patient's lastname then firstname(s)"
 							createNewItem={patients.create}
-							onChange={(e) => setPatientList(e.target.value)}
+							onChange={(e) => {
+								setPatientList(e.target.value);
+							}}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -349,7 +358,9 @@ const AppointmentDialog = ({
 							margin="normal"
 							readOnly={phoneIsReadOnly}
 							disabled={phoneIsDisabled}
-							onChange={(e) => setPhone(e.target.value)}
+							onChange={(e) => {
+								setPhone(e.target.value);
+							}}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -360,7 +371,9 @@ const AppointmentDialog = ({
 							rows={4}
 							value={reason}
 							margin="normal"
-							onChange={(e) => setReason(e.target.value)}
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
 						/>
 					</Grid>
 					{appointmentOverlapsWithAnotherEvent && (
