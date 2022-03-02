@@ -21,14 +21,19 @@ export default define({
 	validate(after: Date, duration: Duration, constraints: Constraint[]) {
 		check(after, Date);
 		check(duration, Number);
-		check(constraints, Array);
+		check(constraints, [[Number]]);
 	},
 	async transaction(
 		db: TransactionDriver,
 		after: Date,
 		duration: Duration,
-		constraints: Constraint[],
+		inputConstraints: Constraint[],
 	) {
+		const constraints = inputConstraints.filter(
+			([left, right]) => right - left >= duration,
+		);
+		if (constraints.length === 0) return null;
+
 		const owner = this.userId;
 
 		const properlyIntersecting = await db.fetch(
@@ -46,6 +51,13 @@ export default define({
 		if (properlyIntersecting.length === 0) {
 			// availability is empty
 			return initialSlot(owner);
+		}
+
+		if (
+			properlyIntersecting[0].weight === 0 &&
+			overlapsAfterDate(after, duration, constraints, properlyIntersecting[0])
+		) {
+			return properlyIntersecting[0];
 		}
 
 		const firstContainedAndOverlapping = await db.findOne(
@@ -92,9 +104,9 @@ export default define({
 			},
 		);
 
-		return properlyIntersecting[0].weight === 0 &&
-			overlapsAfterDate(after, duration, constraints, properlyIntersecting[0])
-			? properlyIntersecting[0]
-			: firstContainedAndOverlapping;
+		return firstContainedAndOverlapping;
+	},
+	simulate(_after: Date, _duration: Duration, _constraints: Constraint[]) {
+		return undefined;
 	},
 });
