@@ -307,10 +307,12 @@ const ReactiveWeeklyCalendar = ({
 			),
 			toProps(
 				displayedAvailability,
-				(begin, end) =>
-					end.getTime() - begin.getTime() >= duration
-						? 'availability'
-						: 'availability-hidden',
+				searching
+					? (begin, end) =>
+							end.getTime() - begin.getTime() >= duration
+								? 'availability'
+								: 'availability-hidden'
+					: (_begin, _end) => 'availability',
 				onSlotClick,
 			),
 			toProps(hiddenAvailability, () => 'availability-hidden', onSlotClick),
