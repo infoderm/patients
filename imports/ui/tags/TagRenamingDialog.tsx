@@ -147,9 +147,9 @@ const TagRenamingDialog = <T extends TagMetadata & TagNameFields>({
 						error: Boolean(newnameError),
 					}}
 					inputValue={newname}
-					onInputChange={(_event, newInputValue) =>
-						setNewname(inputFormat(newInputValue))
-					}
+					onInputChange={(_event, newInputValue) => {
+						setNewname(inputFormat(newInputValue));
+					}}
 				/>
 			</DialogContent>
 			<DialogActions>
