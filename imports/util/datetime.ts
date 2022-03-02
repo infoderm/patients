@@ -52,3 +52,13 @@ export const generateDays = function* (
 		current = addDays(current, 1);
 	}
 };
+
+export const someDateAtGivenDayOfWeek = (i: number): Date => {
+	// 0 is Sunday
+	const day = 4 + i;
+	return new Date(1970, 0, day);
+};
+
+export const someDateAtGivenPositionOfYear = (i: number): Date => {
+	return new Date(1970, 0, i - 1);
+};

@@ -1,8 +1,5 @@
 import {useState, useMemo, useEffect} from 'react';
 
-import {list} from '@iterable-iterator/list';
-import {range} from '@iterable-iterator/range';
-
 import dateFormat from 'date-fns/format';
 import dateFormatDistance from 'date-fns/formatDistance';
 import dateFormatDistanceStrict from 'date-fns/formatDistanceStrict';
@@ -16,6 +13,11 @@ import startOfToday from 'date-fns/startOfToday';
 import {get as getSetting} from '../api/settings';
 
 import {useSettingCached} from '../ui/settings/hooks';
+import {
+	ALL_WEEK_DAYS,
+	someDateAtGivenDayOfWeek,
+	someDateAtGivenPositionOfYear,
+} from '../util/datetime';
 import useLocaleKey from './useLocale';
 
 const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
@@ -244,27 +246,23 @@ export const useDateFormatAge = (hookOptions?) => {
 	);
 };
 
-const someDateAtGivenPositionOfYear = (i: number) => {
-	return new Date(1970, 0, i - 1);
-};
-
 export const useDaysPositions = (positions: number[]) => {
 	const format = useDateFormat('Do');
-	return positions.map((i) => format(someDateAtGivenPositionOfYear(i)));
-};
-
-const someDateAtGivenDayOfWeek = (i: number) => {
-	// 0 is Sunday
-	const day = 4 + i;
-	return new Date(1970, 0, day);
+	return useMemo(
+		() => positions.map((i) => format(someDateAtGivenPositionOfYear(i))),
+		[positions, format],
+	);
 };
 
 export const useDaysNames = (days: number[]) => {
 	const format = useDateFormat('cccc');
-	return days.map((i) => format(someDateAtGivenDayOfWeek(i)));
+	return useMemo(
+		() => days.map((i) => format(someDateAtGivenDayOfWeek(i))),
+		[days, format],
+	);
 };
 
-export const useDaysOfWeek = () => useDaysNames(list(range(7)));
+export const useDaysOfWeek = () => useDaysNames(ALL_WEEK_DAYS);
 
 export const useIntlDateTimeFormat = (options?) => {
 	const key = useLocaleKey();
