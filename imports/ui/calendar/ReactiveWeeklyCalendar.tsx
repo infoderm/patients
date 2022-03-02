@@ -1,6 +1,26 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {useNavigate} from 'react-router-dom';
+
+import {SnackbarOrigin, useSnackbar} from 'notistack';
+
+import {styled} from '@mui/material/styles';
+
+import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Grid';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Button from '@mui/material/Button';
+import SearchIcon from '@mui/icons-material/Search';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import NextPlanIcon from '@mui/icons-material/NextPlan';
+import TodayIcon from '@mui/icons-material/Today';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 import addWeeks from 'date-fns/addWeeks';
 import addDays from 'date-fns/addDays';
@@ -8,7 +28,12 @@ import subWeeks from 'date-fns/subWeeks';
 import addMilliseconds from 'date-fns/addMilliseconds';
 import startOfToday from 'date-fns/startOfToday';
 import getDay from 'date-fns/getDay';
+import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
+import setHours from 'date-fns/setHours';
+import startOfWeek from 'date-fns/startOfWeek';
+import isThisWeek from 'date-fns/isThisWeek';
 
+import {any} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 import {chain, _chain} from '@iterable-iterator/chain';
 import {range} from '@iterable-iterator/range';
@@ -18,8 +43,8 @@ import {filter} from '@iterable-iterator/filter';
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/date';
 
-import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
-import setHours from 'date-fns/setHours';
+import {msToString, units, units as durationUnits} from '../../api/duration';
+
 import {
 	useDateFormat,
 	useFirstWeekContainsDate,
@@ -31,26 +56,35 @@ import useEvents from '../events/useEvents';
 import useAvailability from '../availability/useAvailability';
 import {SlotDocument} from '../../api/collection/availability';
 import {generateDays, getDayOfWeekModulo} from '../../util/datetime';
-import {units as durationUnits} from '../../api/duration';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import {mod} from '../../util/artithmetic';
-import partitionEvents from '../../lib/interval/nonOverlappingIntersection';
 import PropsOf from '../../util/PropsOf';
-import {weekly} from './ranges';
-import StaticWeeklyCalendar from './StaticWeeklyCalendar';
+import useTimeSlotToString from '../settings/useTimeSlotToString';
+import useIsMounted from '../hooks/useIsMounted';
+import next from '../../api/endpoint/availability/next';
+import nonOverlappingIntersection from '../../lib/interval/nonOverlappingIntersection';
+import {weekSlotsCyclicOrder} from '../settings/useWorkScheduleSort';
+import intersection from '../../lib/interval/intersection';
+import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
+import {useSetting} from '../settings/hooks';
+import call from '../../api/endpoint/call';
+import ModuloWeekInterval from '../settings/ModuloWeekInterval';
+import ColorChip from '../chips/ColorChip';
+import Header from './Header';
 import DayHeader from './DayHeader';
+import StaticWeeklyCalendar from './StaticWeeklyCalendar';
+import {weekly} from './ranges';
 
-interface ScheduleSlot {
-	beginModuloWeek: number;
-	endModuloWeek: number;
-}
+const slotOrder = weekSlotsCyclicOrder(0);
+
+const measure = (a: number, b: number): number => b - a;
 
 const prepareAvailability = (
 	begin: Date,
 	end: Date,
-	workSchedule: ScheduleSlot[],
+	now: Date,
+	workSchedule: ModuloWeekInterval[],
 	availability: SlotDocument[],
-	onSlotClick: (slot: Date, noInitialTime?: boolean) => void,
 ) => {
 	const weekSlots = window(2, generateDays(begin, addDays(end, 1)));
 	const weekStartsOn = getDay(begin);
@@ -90,18 +124,32 @@ const prepareAvailability = (
 			range(spannedWeeks),
 		),
 	);
-	const slots = partitionEvents(weekSlots, weekAvailability);
+	const slots = nonOverlappingIntersection(weekSlots, weekAvailability);
 	const events = map((x) => [x.begin, x.end], availability);
 	return map(
+		(event) => (event[0] < now ? {...event, begin: now} : event),
+		filter(
+			(event) => event[1] > now,
+			nonOverlappingIntersection(slots, events),
+		),
+	);
+};
+
+const toProps = (
+	intervals: Array<[number, number]>,
+	calendar: (begin: Date, end: Date) => string,
+	onSlotClick: (slot: Date, noInitialTime?: boolean) => void,
+) => {
+	return map(
 		([begin, end]) => ({
-			calendar: 'availability',
+			calendar: calendar(begin, end),
 			begin,
 			end,
 			onClick() {
 				onSlotClick(begin, false);
 			},
 		}),
-		partitionEvents(slots, events),
+		intervals,
 	);
 };
 
@@ -116,6 +164,15 @@ interface Props
 	showNoShowEvents?: boolean;
 }
 
+const ListItem = styled('li')(({theme}) => ({
+	margin: theme.spacing(0.5),
+}));
+
+const anchorOrigin: SnackbarOrigin = {
+	horizontal: 'center',
+	vertical: 'top',
+};
+
 const ReactiveWeeklyCalendar = ({
 	year,
 	week,
@@ -124,6 +181,17 @@ const ReactiveWeeklyCalendar = ({
 	onSlotClick,
 	...rest
 }: Props) => {
+	const isMounted = useIsMounted();
+	const {enqueueSnackbar} = useSnackbar();
+	const [cancel, setCancel] = useState<null | (() => void)>(null);
+	const pending = cancel !== null;
+	const {loading: loadingAppointmentDuration, value: appointmentDuration} =
+		useSetting('appointment-duration');
+	const [duration, setDuration] = useStateWithInitOverride<number>(
+		appointmentDuration.length > 0 ? appointmentDuration[0] : 0,
+		[appointmentDuration],
+	);
+	const [searching, setSearching] = useState(false);
 	const weekStartsOn = useWeekStartsOn();
 	const firstWeekContainsDate = useFirstWeekContainsDate();
 
@@ -139,6 +207,9 @@ const ReactiveWeeklyCalendar = ({
 		0,
 		weekOptions.firstWeekContainsDate + (week - 1) * 7,
 	);
+	const isCurrentWeek = isThisWeek(someDayOfWeek, {
+		weekStartsOn,
+	});
 	const someDayOfPrevWeek = subWeeks(someDayOfWeek, 1);
 	const someDayOfNextWeek = addWeeks(someDayOfWeek, 1);
 	const localizedDateFormat = useDateFormat();
@@ -163,7 +234,7 @@ const ReactiveWeeklyCalendar = ({
 
 	const thisMorning = startOfToday();
 
-	const {results: _availability} = useAvailability(
+	const {results: availability} = useAvailability(
 		begin,
 		end,
 		{
@@ -176,13 +247,48 @@ const ReactiveWeeklyCalendar = ({
 
 	const workSchedule = useSortedWorkSchedule();
 
-	const now = Date.now();
+	const now = new Date();
 
-	const availability = map(
-		(event) => (event.begin < now ? {...event, begin: now} : event),
-		filter(
-			({end}) => end > now,
-			prepareAvailability(begin, end, workSchedule, _availability, onSlotClick),
+	const timeSlotToString = useTimeSlotToString();
+	const [selected, setSelected] = useState<Set<string>>(new Set<string>());
+
+	const displayedWorkSchedule = searching
+		? workSchedule.filter((x) => selected.has(timeSlotToString(x)))
+		: workSchedule;
+
+	const hiddenWorkSchedule = searching
+		? workSchedule.filter((x) => !selected.has(timeSlotToString(x)))
+		: [];
+
+	const displayedAvailability = prepareAvailability(
+		begin,
+		end,
+		now,
+		displayedWorkSchedule,
+		availability,
+	);
+
+	const hiddenAvailability = prepareAvailability(
+		begin,
+		end,
+		now,
+		hiddenWorkSchedule,
+		availability,
+	);
+
+	// NOTE Adding + duration to the default whole span makes it intersect all
+	// slots with measure >= duration, including those that span two calendar
+	// weeks. Another approach would be to handle the case where no constraints
+	// are given to next.
+	const weekConstraint: Array<[number, number]> = [[0, units.week + duration]];
+
+	const constraints = Array.from(
+		nonOverlappingIntersection(
+			weekConstraint,
+			map(
+				({beginModuloWeek, endModuloWeek}) => [beginModuloWeek, endModuloWeek],
+				sorted(slotOrder, displayedWorkSchedule),
+			),
 		),
 	);
 
@@ -197,31 +303,264 @@ const ReactiveWeeklyCalendar = ({
 					(showNoShowEvents || !x.isNoShow),
 				events,
 			),
-			availability,
+			toProps(
+				displayedAvailability,
+				(begin, end) =>
+					end.getTime() - begin.getTime() >= duration
+						? 'availability'
+						: 'availability-hidden',
+				onSlotClick,
+			),
+			toProps(hiddenAvailability, () => 'availability-hidden', onSlotClick),
 		),
 	);
 
+	useEffect(() => {
+		// NOTE If any of the query parameters changes (through user input) we
+		// cancel any pending query. Note that now does not need to be taken
+		// into account as it is not input by the user.
+		cancel?.();
+	}, [searching, JSON.stringify(end), duration, JSON.stringify(constraints)]);
+
+	const after = end < now ? now : end;
+
 	return (
-		<StaticWeeklyCalendar
-			title={title}
-			year={year}
-			week={week}
-			navigationRole="link"
-			prev={() => {
-				navigate(`../${prevWeek}`);
-			}}
-			next={() => {
-				navigate(`../${nextWeek}`);
-			}}
-			monthly={() => {
-				navigate(`../../month/${monthOfWeek}`);
-			}}
-			events={displayedEvents}
-			DayHeader={DayHeader}
-			weekOptions={weekOptions}
-			onSlotClick={onSlotClick}
-			{...rest}
-		/>
+		<>
+			<Collapse in={searching}>
+				<div>
+					<Header
+						title="Search"
+						actions={[
+							// eslint-disable-next-line react/jsx-key
+							<Button
+								disabled={isCurrentWeek}
+								endIcon={<TodayIcon />}
+								onClick={() => {
+									const currentWeek = localizedDateFormat(
+										new Date(),
+										'YYYY/ww',
+										{
+											useAdditionalWeekYearTokens: true,
+										},
+									);
+									navigate(`../${currentWeek}`);
+								}}
+							>
+								Back to current week
+							</Button>,
+							// eslint-disable-next-line react/jsx-key
+							<LoadingButton
+								variant="contained"
+								color="primary"
+								loading={pending}
+								disabled={selected.size === 0}
+								loadingPosition="end"
+								endIcon={<NextPlanIcon />}
+								onClick={() => {
+									cancel?.();
+									let cancelled = false;
+									setCancel(() => () => {
+										cancelled = true;
+										setCancel(null);
+									});
+									call(next, after, duration, constraints).then(
+										(result) => {
+											if (!isMounted() || cancelled) return;
+											setCancel(null);
+											if (result === null) {
+												enqueueSnackbar('No availability', {
+													variant: 'warning',
+													anchorOrigin,
+												});
+												return;
+											}
+
+											const jumpTo =
+												result.begin < end
+													? end
+													: any(
+															// NOTE Here we distinguish
+															// between first week hits
+															// and second week hits.
+															map(([left, right]) => {
+																const [i0, i1] = intersection(
+																	left,
+																	right,
+																	result.weekShiftedBegin,
+																	result.weekShiftedEnd,
+																);
+																return measure(i0, i1) >= duration;
+															}, constraints),
+													  )
+													? startOfWeek(result.begin, {weekStartsOn})
+													: addWeeks(
+															startOfWeek(result.begin, {weekStartsOn}),
+															1,
+													  );
+											const jumpToWeek = localizedDateFormat(
+												jumpTo,
+												'YYYY/ww',
+												{
+													useAdditionalWeekYearTokens: true,
+												},
+											);
+											navigate(`../${jumpToWeek}`);
+										},
+										(error: unknown) => {
+											if (!isMounted() || cancelled) return;
+											setCancel(null);
+											console.debug(error);
+											const message =
+												error instanceof Error
+													? error.message
+													: 'unknown error';
+											enqueueSnackbar(`Error: ${message}`, {
+												variant: 'error',
+												anchorOrigin,
+											});
+										},
+									);
+								}}
+							>
+								Next Available
+							</LoadingButton>,
+							// eslint-disable-next-line react/jsx-key
+							<Button
+								color="primary"
+								disabled={selected.size === workSchedule.length}
+								endIcon={<CheckCircleOutlineIcon />}
+								onClick={() => {
+									setSelected(
+										new Set<string>(workSchedule.map(timeSlotToString)),
+									);
+								}}
+							>
+								Select all
+							</Button>,
+							// eslint-disable-next-line react/jsx-key
+							<Button
+								color="primary"
+								disabled={selected.size === 0}
+								endIcon={<HighlightOffIcon />}
+								onClick={() => {
+									setSelected(new Set<string>());
+								}}
+							>
+								Clear Selection
+							</Button>,
+							// eslint-disable-next-line react/jsx-key
+							<Button
+								color="secondary"
+								endIcon={<SearchOffIcon />}
+								onClick={() => {
+									setSelected(new Set<string>());
+									setSearching(false);
+								}}
+							>
+								Close
+							</Button>,
+						]}
+					/>
+					<Grid container alignItems="center">
+						<Grid item xs={9} md={10} lg={11}>
+							<ul
+								style={{
+									display: 'flex',
+									justifyContent: 'center',
+									flexWrap: 'wrap',
+									listStyle: 'none',
+								}}
+							>
+								{workSchedule.map((timeSlot) => {
+									const label = timeSlotToString(timeSlot);
+									const isSelected = selected.has(label);
+									return (
+										<ListItem key={label}>
+											<ColorChip
+												label={label}
+												color={isSelected ? '#a5f8ad' : undefined}
+												icon={
+													isSelected ? (
+														<CheckCircleOutlineIcon />
+													) : (
+														<RadioButtonUncheckedIcon />
+													)
+												}
+												onClick={
+													isSelected
+														? () => {
+																const newSelected = new Set(selected);
+																newSelected.delete(label);
+																setSelected(newSelected);
+														  }
+														: () => {
+																const newSelected = new Set(selected);
+																newSelected.add(label);
+																setSelected(newSelected);
+														  }
+												}
+											/>
+										</ListItem>
+									);
+								})}
+							</ul>
+						</Grid>
+						<Grid item xs={3} md={2} lg={1}>
+							<FormControl fullWidth>
+								<InputLabel htmlFor="duration">Duration</InputLabel>
+								<Select
+									fullWidth
+									readOnly={loadingAppointmentDuration}
+									value={duration}
+									onChange={(e) => {
+										setDuration(e.target.value as number);
+									}}
+								>
+									{appointmentDuration.map((x) => (
+										<MenuItem key={x} value={x}>
+											{msToString(x)}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</Grid>
+					</Grid>
+				</div>
+			</Collapse>
+			<StaticWeeklyCalendar
+				title={title}
+				year={year}
+				week={week}
+				navigationRole="link"
+				prev={() => {
+					navigate(`../${prevWeek}`);
+				}}
+				next={() => {
+					navigate(`../${nextWeek}`);
+				}}
+				monthly={() => {
+					navigate(`../../month/${monthOfWeek}`);
+				}}
+				actions={[
+					// eslint-disable-next-line react/jsx-key
+					<Button
+						disabled={searching}
+						color="primary"
+						endIcon={<SearchIcon />}
+						onClick={() => {
+							setSearching(true);
+						}}
+					>
+						Search
+					</Button>,
+				]}
+				events={displayedEvents}
+				DayHeader={DayHeader}
+				weekOptions={weekOptions}
+				onSlotClick={onSlotClick}
+				{...rest}
+			/>
+		</>
 	);
 };
 
