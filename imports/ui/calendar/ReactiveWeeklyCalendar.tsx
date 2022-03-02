@@ -85,7 +85,7 @@ const prepareAvailability = (
 	now: Date,
 	workSchedule: ModuloWeekInterval[],
 	availability: SlotDocument[],
-) => {
+): IterableIterator<[number, number]> => {
 	const weekSlots = window(2, generateDays(begin, addDays(end, 1)));
 	const weekStartsOn = getDay(begin);
 	const spannedWeeks = Math.ceil(
@@ -127,7 +127,7 @@ const prepareAvailability = (
 	const slots = nonOverlappingIntersection(weekSlots, weekAvailability);
 	const events = map((x) => [x.begin, x.end], availability);
 	return map(
-		(event) => (event[0] < now ? {...event, begin: now} : event),
+		(event) => (event[0] < now ? [now, event[1]] : event),
 		filter(
 			(event) => event[1] > now,
 			nonOverlappingIntersection(slots, events),
@@ -136,7 +136,7 @@ const prepareAvailability = (
 };
 
 const toProps = (
-	intervals: Array<[number, number]>,
+	intervals: IterableIterator<[number, number]>,
 	calendar: (begin: Date, end: Date) => string,
 	onSlotClick: (slot: Date, noInitialTime?: boolean) => void,
 ) => {
