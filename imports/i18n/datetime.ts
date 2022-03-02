@@ -277,3 +277,18 @@ export const useDateFormatRange = (format, options?) => {
 		[formatPart],
 	);
 };
+
+export const useWeekYearFormat = () => {
+	const dateFormat = useDateFormat();
+	return useMemo(() => {
+		const yearFormat = (date: Date) =>
+			dateFormat(date, 'YYYY', {
+				useAdditionalWeekYearTokens: true,
+			});
+		const weekFormat = (date: Date) => dateFormat(date, 'ww');
+		return {
+			yearFormat,
+			weekFormat,
+		};
+	}, [dateFormat]);
+};
