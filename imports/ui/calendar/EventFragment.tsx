@@ -120,6 +120,8 @@ const EventFragment = (props: Props) => {
 			return <AppointmentFragment {...props} />;
 		case 'availability':
 			return <AvailabilityFragment {...props} />;
+		case 'availability-hidden':
+			return <AvailabilityFragment {...props} />;
 		default:
 			break;
 	}
