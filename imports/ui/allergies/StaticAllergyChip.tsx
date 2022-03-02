@@ -1,18 +1,13 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
-import {darken} from '@mui/material/styles';
-import classNames from 'classnames';
-
 import {Link} from 'react-router-dom';
 
-import Chip, {ChipProps} from '@mui/material/Chip';
-
-import {colord} from 'colord';
+import {ChipProps} from '@mui/material/Chip';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
 import {AllergyDocument} from '../../api/collection/allergies';
+import ColorChip from '../chips/ColorChip';
 
 interface AddedProps {
 	loading?: boolean;
@@ -21,35 +16,12 @@ interface AddedProps {
 
 type StaticAllergyChipProps = ChipProps & AddedProps;
 
-const styles = {
-	chip({loading, color}) {
-		const backgroundColor = loading ? '#999' : color;
-		const computedColor = loading
-			? '#eee'
-			: color
-			? colord(color).isLight()
-				? '#111'
-				: '#ddd'
-			: undefined;
-		return {
-			backgroundColor,
-			color: computedColor,
-			'&:hover, &:focus': {
-				backgroundColor: backgroundColor && darken(backgroundColor, 0.1),
-			},
-		};
-	},
-};
-
-const useStyles = makeStyles(styles);
-
 const StaticAllergyChip = React.forwardRef<any, StaticAllergyChipProps>(
-	({loading = false, item, className, ...rest}, ref) => {
+	({loading = false, item, ...rest}, ref) => {
 		let component: React.ElementType;
 		let to: string;
 
 		const clickable = Boolean(item && !rest.onDelete);
-		const classes = useStyles({loading, color: item?.color});
 
 		if (clickable) {
 			component = Link;
@@ -57,9 +29,9 @@ const StaticAllergyChip = React.forwardRef<any, StaticAllergyChipProps>(
 		}
 
 		return (
-			<Chip
+			<ColorChip
 				ref={ref}
-				className={classNames(classes.chip, className)}
+				color={loading ? undefined : item?.color}
 				{...rest}
 				component={component}
 				to={to}
