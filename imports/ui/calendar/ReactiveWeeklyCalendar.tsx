@@ -187,8 +187,10 @@ const ReactiveWeeklyCalendar = ({
 	const pending = cancel !== null;
 	const {loading: loadingAppointmentDuration, value: appointmentDuration} =
 		useSetting('appointment-duration');
+	const initDuration =
+		appointmentDuration.length > 0 ? appointmentDuration[0] : 0;
 	const [duration, setDuration] = useStateWithInitOverride<number>(
-		appointmentDuration.length > 0 ? appointmentDuration[0] : 0,
+		initDuration,
 		[appointmentDuration],
 	);
 	const [searching, setSearching] = useState(false);
@@ -454,6 +456,7 @@ const ReactiveWeeklyCalendar = ({
 								endIcon={<SearchOffIcon />}
 								onClick={() => {
 									setSelected(new Set<string>());
+									setDuration(initDuration);
 									setSearching(false);
 								}}
 							>
