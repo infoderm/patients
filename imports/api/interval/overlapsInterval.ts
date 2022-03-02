@@ -1,3 +1,5 @@
+const $false = {$expr: {$eq: [0, 1]}}; // NOTE Logical false
+
 const overlapsInterval = (
 	begin: number,
 	end: number,
@@ -7,7 +9,7 @@ const overlapsInterval = (
 	measureKey = 'measure',
 ) =>
 	end - begin < measure
-		? {}
+		? $false
 		: {
 				// TODO optimize with $lt/$gt to avoid items that pass multiple tests.
 				$or: [
