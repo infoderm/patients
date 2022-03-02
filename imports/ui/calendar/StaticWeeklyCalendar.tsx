@@ -10,6 +10,7 @@ interface Props extends PropsOf<typeof WeeklyCalendarData> {
 	next: () => void;
 	prev: () => void;
 	monthly: () => void;
+	actions?: React.ReactNode[];
 	navigationRole?: 'button' | 'link';
 }
 
@@ -21,6 +22,7 @@ const StaticWeeklyCalendar = ({
 	monthly,
 	year,
 	week,
+	actions,
 	...rest
 }: Props) => {
 	const title = rest.title ?? `/calendar/week/${year}/${week}`;
@@ -33,6 +35,7 @@ const StaticWeeklyCalendar = ({
 				prev={prev}
 				next={next}
 				monthly={monthly}
+				actions={actions}
 			/>
 			<WeeklyCalendarData year={year} week={week} {...rest} />
 		</div>
