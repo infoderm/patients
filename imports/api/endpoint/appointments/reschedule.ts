@@ -81,4 +81,7 @@ export default define({
 			patientId: args.consultationFields.patientId,
 		};
 	},
+	simulate(_appointmentId: string, _appointment: any): void {
+		return undefined;
+	},
 });
