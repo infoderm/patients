@@ -21,7 +21,6 @@ type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
 export interface ConfirmationDialogProps {
 	open?: boolean;
-	loading?: boolean;
 	pending?: boolean;
 	onCancel: EventHandler;
 	onConfirm: (value: string) => void;
@@ -35,7 +34,7 @@ export interface ConfirmationDialogProps {
 
 const emptyInput = formattedLineInput('');
 
-const ConfirmationDialog = ({
+const PatientTagCommentEditionDialog = ({
 	open = false,
 	pending = false,
 	onCancel,
@@ -112,4 +111,4 @@ const ConfirmationDialog = ({
 	);
 };
 
-export default ConfirmationDialog;
+export default PatientTagCommentEditionDialog;
