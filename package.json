@@ -89,6 +89,7 @@
     "iban": "^0.0.14",
     "ical-generator": "^3.2.1",
     "iconv-lite": "^0.6.3",
+    "idb": "^6.1.5",
     "jspdf": "^2.5.1",
     "lodash.deburr": "^4.1.0",
     "lodash.omit": "^4.5.0",
