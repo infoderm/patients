@@ -220,7 +220,14 @@
           "ignoreCase": false
         }
       ],
-      "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never", "propElementValues": "always" }],
+      "react/jsx-curly-brace-presence": [
+        "error",
+        {
+          "props": "never",
+          "children": "never",
+          "propElementValues": "always"
+        }
+      ],
       "@typescript-eslint/naming-convention": "off",
       "@typescript-eslint/consistent-type-assertions": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
