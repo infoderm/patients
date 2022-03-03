@@ -12,6 +12,8 @@ const RO = 'readonly';
 const RW = 'readwrite';
 const ASCENDING = 'next';
 
+const upTo = <T>(ub: T) => IDBKeyRange.upperBound(ub, true);
+
 type Key = string;
 type Value = string;
 type Expiry = Date;
@@ -27,7 +29,6 @@ interface Schema extends DBSchema {
 			[ACCESS]: Access;
 		};
 		indexes: {
-			[KEY]: Key;
 			[EXPIRY]: Expiry;
 			[ACCESS]: Access;
 		};
@@ -68,18 +69,17 @@ class Cache {
 	}
 
 	async getCursor(mode: IDBTransactionMode, key: Key) {
-		const keys = await this.index(mode, KEY);
-		return keys.openCursor(key);
+		const store = await this.store(mode);
+		return store.openCursor(key);
 	}
 
 	async count() {
-		return this.index(RO, KEY).then(async (keys) => keys.count());
+		return this.store(RO).then(async (store) => store.count());
 	}
 
 	async set(key: Key, value: Value, options: Metadata) {
 		const store = await this.store(RW);
-		const keys = store.index(KEY);
-		const cursor = await keys.openCursor(key);
+		const cursor = await store.openCursor(key);
 		const now = new Date();
 		const newDocument = {
 			[ACCESS]: now,
@@ -88,13 +88,23 @@ class Cache {
 			...options,
 		};
 		if (cursor === null) {
-			const count = await keys.count();
+			const count = await store.count();
 			assert(count <= this.#maxCount); // TODO handle resizing
 			if (count === this.#maxCount) {
 				// Count unchanged
-				const lru = await store.index(ACCESS).openCursor(undefined, ASCENDING);
-				assert(lru !== null);
-				await lru.update(newDocument);
+				let available;
+				const expired = await store
+					.index(EXPIRY)
+					.openCursor(upTo(now), ASCENDING);
+				if (expired === null) {
+					const lru = await store.index(ACCESS).openCursor(null, ASCENDING);
+					assert(lru !== null);
+					available = lru;
+				} else {
+					available = expired;
+				}
+
+				await available.update(newDocument);
 			} else {
 				// Count incremented
 				await store.add(newDocument);
@@ -144,9 +154,8 @@ class Cache {
 	async evict(count: number) {
 		const now = new Date();
 		const index = await this.index(RW, ACCESS);
-		const range = IDBKeyRange.upperBound(now, true);
 		if (count > 0) {
-			for await (const cursor of index.iterate(range, ASCENDING)) {
+			for await (const cursor of index.iterate(upTo(now), ASCENDING)) {
 				await cursor.delete();
 				if (--count === 0) break;
 			}
@@ -156,8 +165,7 @@ class Cache {
 	async gc() {
 		const now = new Date();
 		const index = await this.index(RW, EXPIRY);
-		const range = IDBKeyRange.upperBound(now, true);
-		for await (const cursor of index.iterate(range)) {
+		for await (const cursor of index.iterate(upTo(now))) {
 			// see https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#using_an_index
 			await cursor.delete();
 		}
@@ -170,7 +178,7 @@ interface CacheOptions {
 	maxCount: number;
 }
 
-const cache = async ({
+const cache = ({
 	dbName = DEFAULT_DB_NAME,
 	dbVersion = DB_VERSION,
 	maxCount,
