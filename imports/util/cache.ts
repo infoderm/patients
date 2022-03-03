@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {openDB, DBSchema, IDBPDatabase} from 'idb/with-async-ittr';
 
 const DEFAULT_DB_NAME = 'cache-lru';
@@ -39,14 +40,17 @@ type DB = IDBPDatabase<Schema>;
 
 interface Metadata {
 	[EXPIRY]: Expiry;
-	[ACCESS]: Access;
+	[ACCESS]?: Access;
 }
 
 class Cache {
-	#dbPromise: Promise<DB>;
+	readonly #dbPromise: Promise<DB>;
+	readonly #maxCount: number;
 
-	constructor(dbPromise: Promise<DB>) {
+	constructor(dbPromise: Promise<DB>, maxCount: number) {
+		assert(maxCount > 0);
 		this.#dbPromise = dbPromise;
+		this.#maxCount = maxCount;
 	}
 
 	async db() {
@@ -63,43 +67,70 @@ class Cache {
 		return this.store(mode).then((store) => store.index(field));
 	}
 
+	async getCursor(mode: IDBTransactionMode, key: Key) {
+		const keys = await this.index(mode, KEY);
+		return keys.openCursor(key);
+	}
+
 	async count() {
 		return this.index(RO, KEY).then(async (keys) => keys.count());
 	}
 
 	async set(key: Key, value: Value, options: Metadata) {
-		return this.db().then(async (db) => {
-			// TODO check and maybe evict based on ACCESS
-			await db.put(
-				STORE,
-				{
-					key,
-					value,
-					...options,
-				},
-				key,
-			);
+		const store = await this.store(RW);
+		const keys = store.index(KEY);
+		const cursor = await keys.openCursor(key);
+		const now = new Date();
+		const newDocument = {
+			[ACCESS]: now,
+			key,
+			value,
+			...options,
+		};
+		if (cursor === null) {
+			const count = await keys.count();
+			assert(count <= this.#maxCount); // TODO handle resizing
+			if (count === this.#maxCount) {
+				// Count unchanged
+				const lru = await store.index(ACCESS).openCursor(undefined, ASCENDING);
+				assert(lru !== null);
+				await lru.update(newDocument);
+			} else {
+				// Count incremented
+				await store.add(newDocument);
+			}
+		} else {
+			// Count unchanged
+			await cursor.update(newDocument);
+		}
+	}
+
+	async find(key: Key) {
+		const now = new Date();
+		const cursor = await this.getCursor(RW, key);
+		if (cursor === null) return undefined;
+		const result = cursor.value;
+		if (result[EXPIRY] < now) {
+			await cursor.delete();
+			return undefined;
+		}
+
+		await cursor.update({
+			...result,
+			[ACCESS]: now,
 		});
+		return result;
 	}
 
 	async get(key: Key) {
-		return this.index(RW, KEY).then(async (keys) => {
-			const result = await keys.get(key);
-			if (result === undefined) throw new Error(`not found`);
-			// TODO check EXPIRY
-			// TODO update ACCESS
-			return result;
-		});
+		const result = this.find(key);
+		if (result === undefined) throw new Error(`not found`);
+		return result;
 	}
 
 	async has(key: Key) {
-		return this.index(RO, KEY).then(async (keys) => {
-			const result = await keys.get(key);
-			if (result === undefined) return false;
-			// TODO check EXPIRY
-			// TODO update ACCESS
-			return true;
-		});
+		const result = this.find(key);
+		return result !== undefined;
 	}
 
 	async delete(key: Key) {
@@ -110,14 +141,14 @@ class Cache {
 		return this.db().then(async (db) => db.clear(STORE));
 	}
 
-	async evict(n: number) {
+	async evict(count: number) {
 		const now = new Date();
 		const index = await this.index(RW, ACCESS);
 		const range = IDBKeyRange.upperBound(now, true);
-		if (n > 0) {
+		if (count > 0) {
 			for await (const cursor of index.iterate(range, ASCENDING)) {
 				await cursor.delete();
-				if (--n === 0) break;
+				if (--count === 0) break;
 			}
 		}
 	}
@@ -136,12 +167,14 @@ class Cache {
 interface CacheOptions {
 	dbName?: string;
 	dbVersion?: number;
+	maxCount: number;
 }
 
-const cache = async ({dbName, dbVersion}: CacheOptions) => {
-	dbName = dbName ?? DEFAULT_DB_NAME;
-	dbVersion = dbVersion ?? DB_VERSION;
-
+const cache = async ({
+	dbName = DEFAULT_DB_NAME,
+	dbVersion = DB_VERSION,
+	maxCount,
+}: CacheOptions) => {
 	const dbPromise = openDB<Schema>(dbName, dbVersion, {
 		upgrade(db, oldVersion, newVersion) {
 			console.debug(`upgrade ${db.name} from v${oldVersion} to v${newVersion}`);
@@ -164,7 +197,7 @@ const cache = async ({dbName, dbVersion}: CacheOptions) => {
 		},
 	});
 
-	return new Cache(dbPromise);
+	return new Cache(dbPromise, maxCount);
 };
 
 export default cache;
