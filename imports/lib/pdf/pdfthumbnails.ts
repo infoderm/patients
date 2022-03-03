@@ -1,4 +1,12 @@
+import addDays from 'date-fns/addDays';
+
+import lru from '../cache/lru';
 import {fetchPDF} from './pdf';
+
+const cache = lru({
+	dbName: 'pdf-thumbnails-cache',
+	maxCount: 200,
+});
 
 function createContext(
 	page: any,
@@ -41,18 +49,30 @@ export const thumbnail = async (
 	url: string,
 	{page = 1, width, height, type, encoderOptions}: Options,
 ) => {
-	const dataURL = await fetchPDF({url})
-		.then(async (doc) => doc.getPage(page))
-		.then(async (thepage) => {
-			const renderContext = createContext(thepage, width, height);
-			return thepage.render(renderContext).promise.then(() => renderContext);
-		})
-		.then((renderContext) => {
-			const canvas = renderContext.canvasContext.canvas;
-			const dataURL = canvas.toDataURL(type, encoderOptions);
-			canvas.remove();
-			return dataURL;
-		});
+	const cached = await cache.find(url);
 
-	return dataURL;
+	if (cached === undefined) {
+		const dataURL = await fetchPDF({
+			url,
+			disableAutoFetch: true,
+		})
+			.then(async (doc) => {
+				// "pages": doc.numPages
+				return doc.getPage(page);
+			})
+			.then(async (thepage) => {
+				const renderContext = createContext(thepage, width, height);
+				return thepage.render(renderContext).promise.then(() => renderContext);
+			})
+			.then((renderContext) => {
+				const canvas = renderContext.canvasContext.canvas;
+				const dataURL = canvas.toDataURL(type, encoderOptions);
+				canvas.remove();
+				return dataURL;
+			});
+		await cache.set(url, dataURL, {expiry: addDays(new Date(), 1)});
+		return dataURL;
+	}
+
+	return cached.value;
 };
