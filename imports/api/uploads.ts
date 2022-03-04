@@ -1,7 +1,10 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
+// @ts-expect-error Needs more recent @types/node
+import {Buffer} from 'buffer';
 import {Readable} from 'stream';
 import {Meteor} from 'meteor/meteor';
 import {FileObj, FilesCollection} from 'meteor/ostrio:files';
+import MemoryLRU from 'lru-cache';
 
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
@@ -13,8 +16,21 @@ import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
-const _100MB = 128 * 1024 * 1024;
-const MAXIMUM_UPLOAD_SIZE = _100MB; // TODO allow user configuration
+const _1MB = 1024 * 1024;
+const _64MB = 64 * _1MB;
+const _128MB = 128 * _1MB;
+const MAXIMUM_UPLOAD_SIZE = _128MB; // TODO allow user configuration
+const THUMBNAIL_CACHE_SIZE = _64MB;
+
+const thumbnailCache = new MemoryLRU<string, Buffer>({
+	max: 1000,
+	maxSize: THUMBNAIL_CACHE_SIZE,
+	sizeCalculation: (buffer: Buffer) => buffer.length,
+	// NOTE disable ttl
+	ttl: 0,
+	allowStale: false,
+	updateAgeOnGet: false,
+});
 
 export interface ThumbSizeOptions {
 	minWidth?: number;
@@ -31,24 +47,59 @@ const imageThumb = async ({minWidth, minHeight}: ThumbSizeOptions) => {
 	});
 };
 
+const thumbifyImage = async (
+	source: () => Readable,
+	size: ThumbSizeOptions,
+): Promise<Readable> => {
+	const resizer = await imageThumb(size);
+	return source().pipe(resizer);
+};
+
+const thumbifyPDF = async (
+	source: () => Readable,
+	size: ThumbSizeOptions,
+): Promise<Readable> => {
+	const data = await streamToBuffer(source());
+	return thumbnailStream({data}, size, {type: 'image/png'});
+};
+
+type StreamTransform = (
+	source: () => Readable,
+	size: ThumbSizeOptions,
+) => Promise<Readable>;
+
+const cacheResult = async <T>(
+	upload: FileObj<T>,
+	transform: StreamTransform,
+	source: () => Readable,
+	size: ThumbSizeOptions,
+): Promise<Readable> => {
+	const key = `${upload._id}-${size.minWidth ?? '?'}x${size.minHeight ?? '?'}`;
+	const cached = thumbnailCache.get(key);
+	if (cached === undefined) {
+		const stream = await transform(source, size);
+		const buffer = await streamToBuffer(stream);
+		thumbnailCache.set(key, buffer);
+		return Readable.from(buffer);
+	}
+
+	return Readable.from(cached);
+};
+
+const getTransform = <T>(upload: FileObj<T>): StreamTransform => {
+	if (upload.isImage) return thumbifyImage;
+	if (upload.isPDF) return thumbifyPDF;
+	return null;
+};
+
 const thumbify = async <T>(
 	upload: FileObj<T>,
 	source: () => Readable,
 	size: ThumbSizeOptions,
 ): Promise<Readable> => {
-	if (upload.isImage) {
-		// TODO cache
-		const resizer = await imageThumb(size);
-		return source().pipe(resizer);
-	}
-
-	if (upload.isPDF) {
-		// TODO cache
-		const data = await streamToBuffer(source());
-		return thumbnailStream({data}, size, {type: 'image/png'});
-	}
-
-	return source();
+	const transform = getTransform(upload);
+	if (transform === null) return source();
+	return cacheResult(upload, transform, source, size);
 };
 
 export interface MetadataType {
