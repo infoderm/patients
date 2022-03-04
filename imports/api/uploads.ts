@@ -24,6 +24,7 @@ export interface MetadataType {
 
 export const Uploads = new FilesCollection<MetadataType>({
 	collectionName: 'uploads',
+	downloadRoute: '/cdn/storage',
 	allowClientCode: true,
 	onBeforeUpload(file) {
 		console.debug({file});
@@ -97,6 +98,10 @@ export const Uploads = new FilesCollection<MetadataType>({
 					}),
 				);
 		});
+	},
+	protected(fileObj) {
+		// Check if current user is owner of the file
+		return fileObj.userId === this.userId;
 	},
 	interceptDownload(http, upload, versionName) {
 		const {gridFsFileId} = upload.versions[versionName].meta ?? {};
