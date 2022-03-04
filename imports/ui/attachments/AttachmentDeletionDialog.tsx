@@ -98,7 +98,8 @@ const AttachmentDeletionDialog = ({
 				</DialogContentText>
 				<AttachmentThumbnail
 					className={classes.thumbnail}
-					height={600}
+					width={450}
+					height={300}
 					attachmentId={attachment._id}
 				/>
 				<ConfirmationTextField

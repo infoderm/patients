@@ -27,7 +27,11 @@ const AttachmentThumbnail = ({
 		[attachmentId],
 	);
 	const attachmentURL = loading ? undefined : link(attachment);
-	const src = useThumbnail(attachmentURL, {...attachment, width, height});
+	const src = useThumbnail(attachmentURL, {
+		...attachment,
+		minWidth: width,
+		minHeight: height,
+	});
 
 	if (loading) {
 		return <CardMedia {...rest} image={src} />;

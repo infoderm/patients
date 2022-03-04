@@ -73,6 +73,7 @@
     "@visx/shape": "^2.4.0",
     "@visx/tooltip": "^2.8.0",
     "bcrypt": "^5.0.1",
+    "canvas": "^2.9.0",
     "chardet": "^1.4.0",
     "classnames": "^2.3.1",
     "colord": "^2.9.2",

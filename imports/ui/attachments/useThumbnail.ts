@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
-import {thumbnail} from '../../lib/pdf/pdfthumbnails';
+import {thumbnailDataURL} from '../../lib/pdf/pdfthumbnails';
 
 const eee = pngDataURL(
 	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII=',
@@ -11,13 +11,13 @@ const eee = pngDataURL(
 interface Options {
 	isImage?: boolean;
 	isPDF?: boolean;
-	width?: number;
-	height?: number;
+	minWidth?: number;
+	minHeight?: number;
 }
 
 const useThumbnail = (
 	url: string,
-	{isImage, isPDF, width, height}: Options,
+	{isImage, isPDF, minWidth, minHeight}: Options,
 ) => {
 	const [src, setSrc] = useState(eee);
 
@@ -31,8 +31,7 @@ const useThumbnail = (
 
 		if (isPDF) {
 			let mounted = true;
-			console.debug('generating thumbnail for', url);
-			thumbnail(url, {width, height})
+			thumbnailDataURL(url, {minWidth, minHeight}, {type: 'image/png'})
 				.then((dataUrl) => {
 					if (mounted) setSrc(dataUrl);
 				})
@@ -46,7 +45,7 @@ const useThumbnail = (
 				mounted = false;
 			};
 		}
-	}, [url, width, height, isImage, isPDF]);
+	}, [url, minWidth, minHeight, isImage, isPDF]);
 
 	return src;
 };
