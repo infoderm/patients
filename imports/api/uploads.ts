@@ -22,15 +22,18 @@ const _128MB = 128 * _1MB;
 const MAXIMUM_UPLOAD_SIZE = _128MB; // TODO allow user configuration
 const THUMBNAIL_CACHE_SIZE = _64MB;
 
-const thumbnailCache = new MemoryLRU<string, Buffer>({
-	max: 1000,
-	maxSize: THUMBNAIL_CACHE_SIZE,
-	sizeCalculation: (buffer: Buffer) => buffer.length,
-	// NOTE disable ttl
-	ttl: 0,
-	allowStale: false,
-	updateAgeOnGet: false,
-});
+let thumbnailCache: MemoryLRU<string, Buffer>;
+if (Meteor.isServer) {
+	thumbnailCache = new MemoryLRU<string, Buffer>({
+		max: 1000,
+		maxSize: THUMBNAIL_CACHE_SIZE,
+		sizeCalculation: (buffer: Buffer) => buffer.length,
+		// NOTE disable ttl
+		ttl: 0,
+		allowStale: false,
+		updateAgeOnGet: false,
+	});
+}
 
 export interface ThumbSizeOptions {
 	minWidth?: number;
