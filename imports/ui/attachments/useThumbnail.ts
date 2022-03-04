@@ -1,12 +1,8 @@
 import {useState, useEffect} from 'react';
 
-import {dataURL as pngDataURL} from '../../util/png';
+import eee from '../../util/eee';
 
 import {thumbnailDataURL} from '../../lib/pdf/pdfthumbnails';
-
-const eee = pngDataURL(
-	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII=',
-);
 
 interface Options {
 	isImage?: boolean;
