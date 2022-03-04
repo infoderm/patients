@@ -4,9 +4,8 @@ import CardMedia from '@mui/material/CardMedia';
 
 import PropsOf from '../../util/PropsOf';
 
-import {link} from '../../api/attachments';
+import {thumb} from '../../api/attachments';
 import useAttachment from './useAttachment';
-import useThumbnail from './useThumbnail';
 
 interface AttachmentThumbnailProps extends PropsOf<typeof CardMedia> {
 	attachmentId: string;
@@ -26,12 +25,12 @@ const AttachmentThumbnail = ({
 		undefined,
 		[attachmentId],
 	);
-	const attachmentURL = loading ? undefined : link(attachment);
-	const src = useThumbnail(attachmentURL, {
-		...attachment,
-		minWidth: width,
-		minHeight: height,
-	});
+	const src = loading
+		? undefined
+		: thumb(attachment, {
+				minWidth: width,
+				minHeight: height,
+		  });
 
 	if (loading) {
 		return <CardMedia {...rest} image={src} />;

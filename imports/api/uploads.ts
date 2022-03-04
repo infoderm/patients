@@ -1,17 +1,55 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
+import {Readable} from 'stream';
 import {Meteor} from 'meteor/meteor';
-import {FilesCollection} from 'meteor/ostrio:files';
+import {FileObj, FilesCollection} from 'meteor/ostrio:files';
 
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
 import createBucket from '../backend/gridfs/createBucket';
 import createObjectId from '../backend/gridfs/createObjectId';
+import streamToBuffer from '../lib/stream/streamToBuffer';
+import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
 const _100MB = 128 * 1024 * 1024;
 const MAXIMUM_UPLOAD_SIZE = _100MB; // TODO allow user configuration
+
+export interface ThumbSizeOptions {
+	minWidth?: number;
+	minHeight?: number;
+}
+
+const imageThumb = async ({minWidth, minHeight}: ThumbSizeOptions) => {
+	const {default: sharp} = await import('sharp');
+	return sharp().resize({
+		width: minWidth,
+		height: minHeight,
+		fit: 'outside',
+		withoutEnlargement: true,
+	});
+};
+
+const thumbify = async <T>(
+	upload: FileObj<T>,
+	source: () => Readable,
+	size: ThumbSizeOptions,
+): Promise<Readable> => {
+	if (upload.isImage) {
+		// TODO cache
+		const resizer = await imageThumb(size);
+		return source().pipe(resizer);
+	}
+
+	if (upload.isPDF) {
+		// TODO cache
+		const data = await streamToBuffer(source());
+		return thumbnailStream({data}, size, {type: 'image/png'});
+	}
+
+	return source();
+};
 
 export interface MetadataType {
 	createdAt?: Date;
@@ -21,6 +59,29 @@ export interface MetadataType {
 	attachedToPatients?: string[];
 	attachedToConsultations?: string[];
 }
+
+const getId = (upload: FileObj<MetadataType>, version: string) => {
+	const {gridFsFileId} = upload.versions[version]?.meta ?? {};
+	return gridFsFileId ? createObjectId(gridFsFileId) : null;
+};
+
+const getReadStreamPromise = async (
+	upload: FileObj<MetadataType>,
+	version: string,
+) => {
+	const isThumbnail = /\d+x\d+/.test(version);
+	const sourceVersionName = isThumbnail ? 'original' : version;
+	const gfsId = getId(upload, sourceVersionName);
+
+	if (gfsId === null) return null;
+
+	return isThumbnail
+		? thumbify(upload, () => bucket.openDownloadStream(gfsId), {
+				minWidth: Number.parseInt(version.split('x')[0], 10), // TODO do not allow all sizes
+				minHeight: Number.parseInt(version.split('x')[1], 10), // TODO do not allow all sizes
+		  })
+		: Promise.resolve(bucket.openDownloadStream(gfsId));
+};
 
 export const Uploads = new FilesCollection<MetadataType>({
 	collectionName: 'uploads',
@@ -104,27 +165,29 @@ export const Uploads = new FilesCollection<MetadataType>({
 		return fileObj.userId === this.userId;
 	},
 	interceptDownload(http, upload, versionName) {
-		const {gridFsFileId} = upload.versions[versionName].meta ?? {};
-		if (gridFsFileId) {
-			const gfsId = createObjectId(gridFsFileId);
-			const readStream = bucket.openDownloadStream(gfsId);
-			readStream.on('error', (error) => {
-				// File not found Error handling without Server Crash
-				http.response.statusCode = 404;
-				http.response.end('file not found');
-				console.error(
-					`chunk of file ${upload._id}/${upload.name} was not found`,
-				);
-				console.debug({error});
-			});
+		const getReadStream = getReadStreamPromise(upload, versionName);
+
+		// Serve file from either GridFS or FS if it wasn't uploaded yet
+		if (getReadStream === null) return false;
+
+		const onError = (error: unknown) => {
+			// File not found Error handling without Server Crash
+			http.response.statusCode = 404;
+			http.response.end('file not found');
+			console.error(`chunk of file ${upload._id}/${upload.name} was not found`);
+			console.debug({error});
+		};
+
+		getReadStream.then((readStream: Readable) => {
+			readStream.on('error', onError);
 			const cacheControl = upload.public
 				? this.cacheControl
 				: this.cacheControl.replace(/public/, 'private');
 			http.response.setHeader('Cache-Control', cacheControl);
 			readStream.pipe(http.response);
-		}
+		}, onError);
 
-		return Boolean(gridFsFileId); // Serve file from either GridFS or FS if it wasn't uploaded yet
+		return true;
 	},
 	onBeforeRemove(cursor) {
 		return all(map((x) => x.userId === this.userId, cursor.fetch()));
@@ -132,9 +195,8 @@ export const Uploads = new FilesCollection<MetadataType>({
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {
 			Object.keys(upload.versions).forEach((versionName) => {
-				const {gridFsFileId} = upload.versions[versionName].meta ?? {};
-				if (gridFsFileId) {
-					const gfsId = createObjectId(gridFsFileId);
+				const gfsId = getId(upload, versionName);
+				if (gfsId !== null) {
 					bucket.delete(gfsId, (error: unknown) => {
 						if (error) {
 							if (error instanceof Error) {
