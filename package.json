@@ -110,6 +110,7 @@
     "react-spring": "^9.4.3",
     "regenerator-runtime": "^0.13.9",
     "sepa-payment-qr-code": "^1.0.0",
+    "sharp": "^0.30.2",
     "use-debounce": "^7.0.1",
     "xml-js": "^1.6.11"
   },
@@ -129,6 +130,7 @@
     "@types/node": "14.18.3",
     "@types/react-color": "3.0.6",
     "@types/react-router-dom": "5.3.3",
+    "@types/sharp": "0.29.5",
     "babel-plugin-istanbul": "6.1.1",
     "babel-plugin-transform-remove-console": "6.9.4",
     "chai": "4.3.6",
