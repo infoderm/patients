@@ -17,6 +17,7 @@
         "@types/node",
         "faker",
         "healthone",
+        "idb",
         "medidoc",
         "mup",
         "total-order",
