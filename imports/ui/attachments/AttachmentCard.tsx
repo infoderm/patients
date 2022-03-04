@@ -291,7 +291,8 @@ const AttachmentCard = ({attachment, info}: Props) => {
 			/>
 			<AttachmentThumbnail
 				className={classes.thumbnail}
-				height={600}
+				width={450}
+				height={300}
 				attachmentId={attachment._id}
 				{...anchorProps}
 			/>
