@@ -2,6 +2,7 @@ import React from 'react';
 
 import CardMedia from '@mui/material/CardMedia';
 
+import Skeleton from '@mui/material/Skeleton';
 import PropsOf from '../../util/PropsOf';
 
 import eee from '../../util/eee';
@@ -34,7 +35,11 @@ const AttachmentThumbnail = ({
 		  });
 
 	if (loading) {
-		return <CardMedia {...rest} image={src} />;
+		return (
+			<Skeleton variant="rectangular" width="100%">
+				<CardMedia {...rest} image={src} />
+			</Skeleton>
+		);
 	}
 
 	return <CardMedia {...rest} image={src} />;
