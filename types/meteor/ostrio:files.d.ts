@@ -300,7 +300,11 @@ declare module 'meteor/ostrio:files' {
 			},
 			callback?: (error: Meteor.Error, insertedCount: number) => void,
 		): FilesCollection<MetadataType>;
-		link(fileRef: FileRef<MetadataType>, version?: string): string;
+		link(
+			fileObj: FileObj<MetadataType>,
+			version?: string,
+			URIBase?: string,
+		): string;
 		allow(options: Mongo.AllowDenyOptions): void;
 		deny(options: Mongo.AllowDenyOptions): void;
 		denyClient(): void;
