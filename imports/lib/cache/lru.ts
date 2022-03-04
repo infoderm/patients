@@ -44,7 +44,7 @@ interface Metadata {
 	[ACCESS]?: Access;
 }
 
-class Cache {
+export class IndexedDBPersistedLRUCache {
 	readonly #dbPromise: Promise<DB>;
 	readonly #maxCount: number;
 
@@ -205,7 +205,7 @@ const cache = ({
 		},
 	});
 
-	return new Cache(dbPromise, maxCount);
+	return new IndexedDBPersistedLRUCache(dbPromise, maxCount);
 };
 
 export default cache;
