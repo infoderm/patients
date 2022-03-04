@@ -4,6 +4,7 @@ import CardMedia from '@mui/material/CardMedia';
 
 import PropsOf from '../../util/PropsOf';
 
+import eee from '../../util/eee';
 import {thumb} from '../../api/attachments';
 import useAttachment from './useAttachment';
 
@@ -26,7 +27,7 @@ const AttachmentThumbnail = ({
 		[attachmentId],
 	);
 	const src = loading
-		? undefined
+		? eee
 		: thumb(attachment, {
 				minWidth: width,
 				minHeight: height,
