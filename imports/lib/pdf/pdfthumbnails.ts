@@ -6,10 +6,10 @@ import addDays from 'date-fns/addDays';
 import {DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
 import {PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
-import lru from '../cache/lru';
+import lru, {IndexedDBPersistedLRUCache} from '../cache/lru';
 import {fetchPDF} from './pdf';
 
-let cache;
+let cache: IndexedDBPersistedLRUCache;
 if (Meteor.isClient) {
 	cache = lru({
 		dbName: 'pdf-thumbnails-cache',
