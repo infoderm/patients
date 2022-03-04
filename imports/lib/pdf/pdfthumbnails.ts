@@ -26,7 +26,6 @@ const createCanvasIso = async ({
 	width,
 	height,
 }: CreateCanvasOptions): Promise<HTMLCanvasElement | Canvas> => {
-	console.debug('createCanvasIso', {width, height});
 	if (Meteor.isServer) {
 		const {createCanvas} = await import('canvas');
 		return createCanvas(width, height);
@@ -39,7 +38,6 @@ const createCanvasIso = async ({
 };
 
 const destroyCanvasIso = (canvas: HTMLCanvasElement | Canvas) => {
-	console.debug('destroyCanvasIso');
 	canvas.width = 0;
 	canvas.height = 0;
 	if (Meteor.isClient) {
@@ -88,7 +86,6 @@ const createRenderContextIso = async (
 };
 
 const destroyRenderContextIso = (renderContext: RenderContext) => {
-	console.debug('destroyRenderContextIso');
 	destroyCanvasIso(renderContext.canvasContext.canvas);
 	renderContext.canvasContext = null;
 };
@@ -105,22 +102,17 @@ const thumbnailRender = async (
 ) =>
 	fetchPDF(document)
 		.then(async (doc) => {
-			console.debug('getting page', page);
 			// "pages": doc.numPages
 			return doc.getPage(page);
 		})
 		.then(async (thepage) => {
-			console.debug('creating context');
 			const renderContext = await createRenderContextIso(
 				thepage,
 				minWidth,
 				minHeight,
 			);
-			console.debug('rendering');
 			return thepage.render(renderContext).promise.then(() => {
-				console.debug('cleaning up');
 				thepage.cleanup();
-				console.debug('done rendering');
 				return renderContext;
 			});
 		});
