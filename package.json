@@ -162,9 +162,10 @@
     "@fontsource/roboto/700.css": "copy public/@fontsource/roboto/",
     "@fontsource/roboto/files/*.woff": "copy public/@fontsource/roboto/files/",
     "@fontsource/roboto/files/*.woff2": "copy public/@fontsource/roboto/files/",
-    "pdfjs-dist/build/pdf.worker.js": "copy public/pdfjs-dist/build/",
+    "pdfjs-dist/build/pdf.worker.min.js": "copy public/pdfjs-dist/build/",
     "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/",
-    "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps"
+    "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps",
+    "pdfjs-dist/standard_fonts/": "copy public/pdfjs-dist/standard_fonts"
   },
   "private": true,
   "scripts": {
