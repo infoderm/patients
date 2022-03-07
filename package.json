@@ -179,7 +179,7 @@
     "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
     "tsc": "tsc",
     "tsc:watch": "npm run tsc -- --noErrorTruncation --watch",
-    "test": "meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
+    "test": "TZ=Europe/Brussels meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
     "test:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer npm run test --",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage",
     "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
