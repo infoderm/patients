@@ -39,6 +39,7 @@ export default define({
 
 		const consultations = Consultations.find(
 			{
+				isDone: true,
 				datetime: {
 					$gte: begin,
 					$lt: end,
