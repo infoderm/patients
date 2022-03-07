@@ -4,13 +4,20 @@ import {window} from '@iterable-iterator/window';
 
 import isSameDatetime from 'date-fns/isEqual';
 
+import dateFormat from 'date-fns/format';
 import getDay from 'date-fns/getDay';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
 import getSeconds from 'date-fns/getSeconds';
 import getMilliseconds from 'date-fns/getMilliseconds';
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
-import {beginningOfTime, endOfTime, WEEK_MODULO} from '../util/datetime';
+import {
+	ALL_WEEK_DAYS,
+	beginningOfTime,
+	endOfTime,
+	someDateAtGivenDayOfWeek,
+	WEEK_MODULO,
+} from '../util/datetime';
 import add from '../lib/interval/add';
 import isEmpty from '../lib/interval/isEmpty';
 import isContiguous from '../lib/interval/isContiguous';
@@ -84,28 +91,205 @@ export const overlapsAfterDate = (
 	return false;
 };
 
-const getWeekMilliseconds = (datetime: Date) => {
+const WEEKDAYS_MAP = Object.fromEntries(
+	ALL_WEEK_DAYS.map((i) => [
+		dateFormat(someDateAtGivenDayOfWeek(i), 'cccc'),
+		i,
+	]),
+);
+const dtf_week_cache = {};
+const dtfWeek = (timeZone: string) => {
+	if (dtf_week_cache[timeZone] === undefined) {
+		dtf_week_cache[timeZone] = new Intl.DateTimeFormat('en-US', {
+			timeZone,
+			hourCycle: 'h23',
+			weekday: 'long',
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric',
+			fractionalSecondDigits: 3,
+		});
+	}
+
+	return dtf_week_cache[timeZone];
+};
+
+const getDatetimePartsInTimeZone = (timeZone: string, datetime: Date) => {
+	const parts = dtfWeek(timeZone)
+		.formatToParts(datetime)
+		.filter(({type}) => type !== 'literal');
+	let day: number;
+	let hours: number;
+	let minutes: number;
+	let seconds: number;
+	let milliseconds: number;
+	for (const {type, value} of parts) {
+		switch (type) {
+			case 'weekday':
+				day = WEEKDAYS_MAP[value];
+				break;
+			case 'hour':
+				hours = Number.parseInt(value, 10);
+				break;
+			case 'minute':
+				minutes = Number.parseInt(value, 10);
+				break;
+			case 'second':
+				seconds = Number.parseInt(value, 10);
+				break;
+			case 'fractionalSecond':
+				milliseconds = Number.parseInt(value, 10);
+				break;
+			default:
+				throw new Error(`Invalid part type ${type} with value ${value}.`);
+		}
+	}
+
+	return {
+		day,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+	};
+};
+
+const getDatetimeParts = (datetime: Date) => {
 	const day = getDay(datetime);
 	const hours = getHours(datetime);
 	const minutes = getMinutes(datetime);
 	const seconds = getSeconds(datetime);
 	const milliseconds = getMilliseconds(datetime);
-	return (
-		milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * day)))
+	return {
+		day,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+	};
+};
+
+const datetimePartsToWeekMilliseconds = ({
+	day,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+}: {
+	day: number;
+	hours: number;
+	minutes: number;
+	seconds: number;
+	milliseconds: number;
+}) =>
+	milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * day)));
+
+export const getWeekMilliseconds = (datetime: Date) => {
+	return datetimePartsToWeekMilliseconds(getDatetimeParts(datetime));
+};
+
+const getWeekMillisecondsInTimeZone = (timezone: string, datetime: Date) => {
+	return datetimePartsToWeekMilliseconds(
+		getDatetimePartsInTimeZone(timezone, datetime),
 	);
 };
 
-export const weekShifted = (begin: Date, end: Date) => {
+const dtf_date_cache = {};
+const dtfDate = (timeZone: string) => {
+	if (dtf_date_cache[timeZone] === undefined) {
+		dtf_date_cache[timeZone] = new Intl.DateTimeFormat('en-US', {
+			timeZone,
+			hourCycle: 'h23',
+			era: 'narrow',
+			year: 'numeric',
+			month: 'numeric',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric',
+			fractionalSecondDigits: 3,
+		});
+	}
+
+	return dtf_date_cache[timeZone];
+};
+
+/**
+ * Creates a date that has the same year, month, day, hour, minutes, seconds,
+ * and milliseconds in the system's timezone as the given date in the given
+ * timezone.
+ */
+const dateToZoned = (timeZone: string, datetime: Date): Date => {
+	const props = Object.fromEntries(
+		dtfDate(timeZone)
+			.formatToParts(datetime)
+			.filter(({type}) => type !== 'literal')
+			.map(({type, value}) => {
+				switch (type) {
+					case 'era':
+						return [
+							'yearTransform',
+							value === 'B'
+								? (year: number) => 1 - year
+								: (year: number) => year,
+						];
+					default:
+						return [type, Number.parseInt(value, 10)];
+				}
+			}),
+	);
+
+	const zoned = new Date(0);
+	zoned.setFullYear(
+		props.yearTransform(props.year),
+		props.month - 1,
+		props.day,
+	);
+	zoned.setHours(
+		props.hour,
+		props.minute,
+		props.second,
+		props.fractionalSecond,
+	);
+	return zoned;
+};
+
+/**
+ * Returns the number of Sundays that start between begin and end in the
+ * given timezone.
+ */
+const differenceInCalendarWeeksInTimezone = (
+	timeZone: string,
+	end: Date,
+	begin: Date,
+) => {
+	return differenceInCalendarWeeks(
+		dateToZoned(timeZone, end),
+		dateToZoned(timeZone, begin),
+	);
+};
+
+export const weekShifted = (
+	timezone: string,
+	begin: Date,
+	end: Date,
+): [number, number] => {
 	assert(!isEmpty(begin, end));
-	const weekShiftedBegin = getWeekMilliseconds(begin);
-	const diffInWeeks = differenceInCalendarWeeks(end, begin);
+	const weekShiftedBegin = getWeekMillisecondsInTimeZone(timezone, begin);
+	const diffInWeeks = differenceInCalendarWeeksInTimezone(timezone, end, begin);
 	const fill = diffInWeeks * units.week;
-	const weekShiftedEnd = fill + getWeekMilliseconds(end);
+	const weekShiftedEnd = fill + getWeekMillisecondsInTimeZone(timezone, end);
 	return [weekShiftedBegin, weekShiftedEnd];
 };
 
+// TODO allow to configure timeZone
+export const AVAILABILITY_TIMEZONE = 'Europe/Brussels';
 export const slot = (begin: Date, end: Date, weight: number): SlotFields => {
-	const [weekShiftedBegin, weekShiftedEnd] = weekShifted(begin, end);
+	const [weekShiftedBegin, weekShiftedEnd] = weekShifted(
+		AVAILABILITY_TIMEZONE,
+		begin,
+		end,
+	);
 	const measure = Number(end) - Number(begin);
 	return {
 		begin,

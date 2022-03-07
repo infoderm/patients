@@ -50,7 +50,7 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import PatientPicker from '../patients/PatientPicker';
-import {weekShifted} from '../../api/availability';
+import {AVAILABILITY_TIMEZONE, weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
@@ -183,12 +183,9 @@ const AppointmentDialog = ({
 			beginModuloWeek,
 			endModuloWeek,
 		]) as Array<[number, number]>;
-		const [weekShiftedBegin, weekShiftedEnd] = weekShifted(begin, end);
+		const weekShiftedInterval = weekShifted(AVAILABILITY_TIMEZONE, begin, end);
 		const intersectionWithWorkSchedule = Array.from(
-			nonOverlappingIntersectionQuery(intervals, [
-				weekShiftedBegin,
-				weekShiftedEnd,
-			]),
+			nonOverlappingIntersectionQuery(intervals, weekShiftedInterval),
 		);
 		const span =
 			intersectionWithWorkSchedule.length === 0
