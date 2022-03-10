@@ -63,17 +63,16 @@ const updateIndex = async (
 	db: TransactionDriver,
 	userId: string,
 	_id: string,
-	fields,
-	$unset = undefined,
-) => {
-	const {
+	{
 		niss,
 		firstname = '',
 		lastname = '',
 		birthdate,
 		deathdateModifiedAt,
 		sex,
-	} = fields;
+	}: PatientDocument,
+	$unset = undefined,
+) => {
 	const [firstnameWords, middlenameWords] = splitNames(firstname);
 	const lastnameWords = keepUnique(words(lastname));
 

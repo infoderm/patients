@@ -30,6 +30,17 @@ interface PatientPersonalInformationButtonsStaticProps {
 	patientInit: PatientDocument;
 }
 
+const diffGen = function* (prevState, newState) {
+	for (const [key, newValue] of Object.entries(newState)) {
+		if (JSON.stringify(newValue) !== JSON.stringify(prevState[key])) {
+			yield [key, newValue];
+		}
+	}
+};
+
+const diff = (prevState, newState) =>
+	Object.fromEntries(diffGen(prevState, newState));
+
 const PatientPersonalInformationButtonsStatic = ({
 	dispatch,
 	dirty,
@@ -49,7 +60,7 @@ const PatientPersonalInformationButtonsStatic = ({
 		setSaving(true);
 
 		try {
-			await call(patientsUpdate, patient._id, patient);
+			await call(patientsUpdate, patient._id, diff(patientInit, patient));
 			setSaving(false);
 			const message = `Patient #${patient._id} updated.`;
 			console.log(message);
