@@ -47,7 +47,13 @@ export interface Email {
 	domain: string;
 }
 
-export interface PatientFields extends PatientIdFields {
+export interface PatientTagFields {
+	allergies: PatientTag[];
+	doctors: PatientTag[];
+	insurances: PatientTag[];
+}
+
+interface PatientPersonalInformationFields {
 	deathdateModifiedAt?: Date;
 	deathdate?: Date;
 	phone: string;
@@ -56,15 +62,15 @@ export interface PatientFields extends PatientIdFields {
 	ongoing: string;
 	about: string;
 
-	allergies: PatientTag[];
-	doctors: PatientTag[];
-	insurances: PatientTag[];
-
 	email?: Email[];
 
 	noshow?: number;
 	createdForAppointment?: boolean;
 }
+
+export type PatientFields = PatientIdFields &
+	PatientPersonalInformationFields &
+	PatientTagFields;
 
 export interface PatientComputedFields {
 	normalizedName: string;

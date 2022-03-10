@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {PatientDocument, Patients} from '../../collection/patients';
+import {Patients} from '../../collection/patients';
 import {computeUpdate, patients} from '../../patients';
 import TransactionDriver from '../../transaction/TransactionDriver';
 
@@ -34,16 +34,11 @@ export default define({
 			changes,
 		);
 
-		await updateTags(db, owner, $set);
+		if ($set !== undefined) await updateTags(db, owner, $set);
 
-		await updateIndex(db, owner, patientId, newState);
+		await updateIndex(db, owner, patientId, newState, $unset);
 
-		const modifier: Mongo.Modifier<PatientDocument> = {};
-
-		if (Object.keys($set).length > 0) modifier.$set = $set;
-		if (Object.keys($unset).length > 0) modifier.$unset = $unset;
-
-		return db.updateOne(Patients, {_id: patientId, owner}, modifier);
+		return db.updateOne(Patients, {_id: patientId, owner}, {$set, $unset});
 	},
 	simulate(_patientId: string, _newfields: any) {
 		return undefined;

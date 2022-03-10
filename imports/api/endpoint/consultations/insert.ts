@@ -30,9 +30,10 @@ export default define({
 		);
 
 		assert(
-			!Object.keys($unset).some((key) =>
-				Object.prototype.hasOwnProperty.call(newState, key),
-			),
+			$unset === undefined ||
+				!Object.keys($unset).some((key) =>
+					Object.prototype.hasOwnProperty.call(newState, key),
+				),
 		);
 
 		const patient = await db.findOne(Patients, {_id: $set.patientId, owner});

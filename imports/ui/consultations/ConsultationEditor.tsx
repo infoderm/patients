@@ -14,6 +14,7 @@ import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
 
+import removeUndefined from '../../util/removeUndefined';
 import call from '../../api/endpoint/call';
 
 import Loading from '../navigation/Loading';
@@ -57,11 +58,6 @@ const Main = styled(Grid)(({theme}) => ({
 	marginTop: 64,
 	paddingTop: theme.spacing(3),
 }));
-
-const removeUndefined = <T,>(object: T) =>
-	Object.fromEntries(
-		Object.entries(object).filter(([_key, value]) => value !== undefined),
-	) as Partial<T>;
 
 const isZero = (x: string) => Number.parseInt(x, 10) === 0;
 const isValidAmount = (amount: string) => /^\d+$/.test(amount);

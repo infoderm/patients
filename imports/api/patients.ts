@@ -15,6 +15,7 @@ import {
 	PatientTagShape,
 	PatientTag,
 	PatientDocument,
+	PatientTagFields,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -63,16 +64,23 @@ const updateIndex = async (
 	userId: string,
 	_id: string,
 	fields,
+	$unset = undefined,
 ) => {
-	const {niss, firstname, lastname, birthdate, deathdateModifiedAt, sex} =
-		fields;
-	const [firstnameWords, middlenameWords] = splitNames(firstname ?? '');
-	const lastnameWords = keepUnique(words(lastname ?? ''));
+	const {
+		niss,
+		firstname = '',
+		lastname = '',
+		birthdate,
+		deathdateModifiedAt,
+		sex,
+	} = fields;
+	const [firstnameWords, middlenameWords] = splitNames(firstname);
+	const lastnameWords = keepUnique(words(lastname));
 
 	const innerTrigrams = keepUnique(
 		stringTrigrams(firstnameWords.join('')),
 		_chain(map(stringTrigrams, middlenameWords)),
-		stringTrigrams(lastname ?? ''),
+		stringTrigrams(lastname),
 	);
 
 	const outerTrigrams = keepUnique(
@@ -100,6 +108,7 @@ const updateIndex = async (
 		{_id},
 		{
 			$set: upsertFields,
+			$unset,
 			$currentDate: {lastModifiedAt: true},
 		},
 		{upsert: true},
@@ -109,7 +118,7 @@ const updateIndex = async (
 const updateTags = async (
 	db: TransactionDriver,
 	userId: string,
-	fields: PatientFields & PatientComputedFields,
+	fields: Partial<PatientTagFields>,
 ) => {
 	for (const {tagCollection, tagList} of [
 		{tagCollection: insurances, tagList: fields.insurances},

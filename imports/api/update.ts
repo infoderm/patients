@@ -32,13 +32,30 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 	}
 };
 
-export const simulateUpdate = <T>(state: undefined | T, {$set, $unset}): T => {
-	const removedKeys = new Set(Object.keys($unset));
-	return Object.fromEntries(
-		Object.entries(state ?? {})
-			.filter(([key]) => !removedKeys.has(key))
-			.concat(Object.entries($set)),
-	) as unknown as T;
+interface Changes<T> {
+	$set?: Partial<T> | undefined;
+	$unset?:
+		| {
+				[K in keyof T]?: boolean;
+		  }
+		| undefined;
+}
+
+export const simulateUpdate = <T>(
+	state: undefined | T,
+	{$set, $unset}: Changes<T>,
+): T => {
+	let entries = state === undefined ? [] : Object.entries(state);
+	if ($unset !== undefined) {
+		const removedKeys = new Set(Object.keys($unset));
+		entries = entries.filter(([key]) => !removedKeys.has(key));
+	}
+
+	if ($set !== undefined) {
+		entries = entries.concat(Object.entries($set));
+	}
+
+	return Object.fromEntries(entries) as unknown as T;
 };
 
 type ComputedFieldsGenerator<T> = (
@@ -68,13 +85,12 @@ export const makeComputeUpdate =
 		db: TransactionDriver,
 		owner: string,
 		state: undefined | T,
-		{$set: $setGiven, $unset},
+		{$set: $setGiven, $unset}: Changes<T>,
 	) => {
 		const intermediateState = simulateUpdate(state, {$set: $setGiven, $unset});
 		const computed = await computedFields(db, owner, intermediateState);
 		const newState = simulateUpdate(intermediateState, {
 			$set: computed,
-			$unset: {},
 		});
 		const $set = {
 			...$setGiven,
@@ -89,23 +105,25 @@ export const makeComputeUpdate =
 
 type SanitizeUpdate<T, U> = (fields: Partial<T>) => IterableIterator<Entry<U>>;
 
-interface SanitizeReturnValue<U> {
-	$set: Partial<U>;
-	$unset: Record<keyof U, boolean>;
-}
+const fromEntries = <K extends string | number | symbol, V>(
+	entries: Array<[K, V]>,
+): undefined | Record<K, V> =>
+	entries.length === 0
+		? undefined
+		: (Object.fromEntries(entries) as Record<K, V>);
 
 export const makeSanitize =
 	<T, U>(sanitizeUpdate: SanitizeUpdate<T, U>) =>
-	(fields: Partial<T>): SanitizeReturnValue<U> => {
+	(fields: Partial<T>): Changes<U> => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
-			$set: Object.fromEntries(
+			$set: fromEntries(
 				update.filter(([, value]) => value !== undefined),
 			) as Partial<U>,
-			$unset: Object.fromEntries(
+			$unset: fromEntries(
 				update
 					.filter(([, value]) => value === undefined)
 					.map(([key]) => [key, true]),
-			) as Record<keyof U, boolean>,
+			),
 		};
 	};

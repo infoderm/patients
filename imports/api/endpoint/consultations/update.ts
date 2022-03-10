@@ -43,7 +43,7 @@ export default define({
 			existing,
 			changes,
 		);
-		if ($set.patientId) {
+		if ($set?.patientId) {
 			const patient = await db.findOne(Patients, {
 				_id: $set.patientId,
 				owner,
@@ -59,10 +59,9 @@ export default define({
 
 		const modifier: Mongo.Modifier<ConsultationDocument> = {
 			$currentDate: {lastModifiedAt: true},
+			$set,
+			$unset,
 		};
-
-		if (Object.keys($set).length > 0) modifier.$set = $set;
-		if (Object.keys($unset).length > 0) modifier.$unset = $unset;
 
 		const {
 			begin: oldBegin,
