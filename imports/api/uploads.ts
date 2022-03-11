@@ -89,7 +89,7 @@ const cacheResult = async <T>(
 	return Readable.from(cached);
 };
 
-const getTransform = <T>(upload: FileObj<T>): StreamTransform => {
+const getTransform = <T>(upload: FileObj<T>): StreamTransform | null => {
 	if (upload.isImage) return thumbifyImage;
 	if (upload.isPDF) return thumbifyPDF;
 	return null;
@@ -119,10 +119,12 @@ const getId = (upload: FileObj<MetadataType>, version: string) => {
 	return gridFsFileId ? createObjectId(gridFsFileId) : null;
 };
 
-const getReadStreamPromise = async (
+// NOTE we need this function to be able to return null synchronously
+// eslint-disable-next-line @typescript-eslint/promise-function-async
+const getReadStreamPromise = (
 	upload: FileObj<MetadataType>,
 	version: string,
-) => {
+): null | Promise<Readable> => {
 	const isThumbnail = /\d+x\d+/.test(version);
 	const sourceVersionName = isThumbnail ? 'original' : version;
 	const gfsId = getId(upload, sourceVersionName);
