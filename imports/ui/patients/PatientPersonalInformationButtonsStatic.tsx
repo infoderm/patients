@@ -20,6 +20,7 @@ import AttachFileButton from '../attachments/AttachFileButton';
 
 import debounceSnackbar from '../../util/debounceSnackbar';
 
+import {documentDiff} from '../../api/update';
 import {reducer} from './usePatientPersonalInformationReducer';
 
 interface PatientPersonalInformationButtonsStaticProps {
@@ -29,17 +30,6 @@ interface PatientPersonalInformationButtonsStaticProps {
 	patient: PatientDocument;
 	patientInit: PatientDocument;
 }
-
-const diffGen = function* (prevState, newState) {
-	for (const [key, newValue] of Object.entries(newState)) {
-		if (JSON.stringify(newValue) !== JSON.stringify(prevState[key])) {
-			yield [key, newValue];
-		}
-	}
-};
-
-const diff = (prevState, newState) =>
-	Object.fromEntries(diffGen(prevState, newState));
 
 const PatientPersonalInformationButtonsStatic = ({
 	dispatch,
@@ -60,7 +50,11 @@ const PatientPersonalInformationButtonsStatic = ({
 		setSaving(true);
 
 		try {
-			await call(patientsUpdate, patient._id, diff(patientInit, patient));
+			await call(
+				patientsUpdate,
+				patient._id,
+				documentDiff(patientInit, patient),
+			);
 			setSaving(false);
 			const message = `Patient #${patient._id} updated.`;
 			console.log(message);
