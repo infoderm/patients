@@ -1,12 +1,9 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
 
-import {useTransition, animated} from 'react-spring';
-
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 
 import Avatar from '@mui/material/Avatar';
@@ -15,6 +12,7 @@ import Chip from '@mui/material/Chip';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
 import {blue, pink, red, yellow} from '@mui/material/colors';
+import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
@@ -31,7 +29,6 @@ const classes = {
 	details: `${PREFIX}-details`,
 	header: `${PREFIX}-header`,
 	content: `${PREFIX}-content`,
-	photoContainer: `${PREFIX}-photoContainer`,
 	photoPlaceHolder: `${PREFIX}-photoPlaceHolder`,
 	photo: `${PREFIX}-photo`,
 	actions: `${PREFIX}-actions`,
@@ -78,20 +75,9 @@ const StyledCard = styled(Card)(({theme}) => ({
 		flex: '1 0 auto',
 	},
 
-	[`& .${classes.photoContainer}`]: {
-		position: 'relative',
-		display: 'flex',
-		margin: 0,
-		width: 140,
-	},
-
 	[`& .${classes.photoPlaceHolder}`]: {
-		position: 'absolute',
+		height: '100%',
 		display: 'flex',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
 		fontSize: '4rem',
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -100,11 +86,9 @@ const StyledCard = styled(Card)(({theme}) => ({
 	},
 
 	[`& .${classes.photo}`]: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
+		display: 'flex',
+		margin: 0,
+		width: 140,
 	},
 
 	[`& .${classes.actions}`]: {
@@ -175,12 +159,6 @@ const GenericStaticPatientCard = ({
 
 	const isDead = patient.deathdateModifiedAt instanceof Date;
 
-	const photoTransition = useTransition([photo], {
-		from: {opacity: 0},
-		enter: {opacity: 1},
-		leave: {opacity: 0},
-	});
-
 	const deleted = !loading && !found;
 
 	const nnStyle = highlightNn
@@ -224,24 +202,18 @@ const GenericStaticPatientCard = ({
 					)}
 				</CardActions>
 			</div>
-			<div className={classes.photoContainer}>
-				{photoTransition((style, item) =>
-					item ? (
-						<CardMedia
-							component={animated.div}
-							className={classes.photo}
-							image={pngDataURL(item)}
-							title={`${firstname} ${lastname}`}
-							style={style as unknown as React.CSSProperties}
-						/>
-					) : (
-						<animated.div className={classes.photoPlaceHolder} style={style}>
-							{firstname[0]}
-							{lastname[0]}
-						</animated.div>
-					),
-				)}
-			</div>
+			<AnimatedCardMedia
+				className={classes.photo}
+				loading={false}
+				image={photo ? pngDataURL(photo) : ''}
+				placeholder={
+					<div className={classes.photoPlaceHolder}>
+						{firstname[0]}
+						{lastname[0]}
+					</div>
+				}
+				title={`${firstname} ${lastname}`}
+			/>
 		</StyledCard>
 	);
 };

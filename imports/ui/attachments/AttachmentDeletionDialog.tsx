@@ -27,16 +27,8 @@ import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
-const PREFIX = 'AttachmentDeletionDialog';
-
-const classes = {
-	thumbnail: `${PREFIX}-thumbnail`,
-};
-
-const StyledDialog = styled(Dialog)({
-	[`& .${classes.thumbnail}`]: {
-		height: 300,
-	},
+const Thumbnail = styled(AttachmentThumbnail)({
+	height: 300,
 });
 
 interface Props {
@@ -88,7 +80,7 @@ const AttachmentDeletionDialog = ({
 	};
 
 	return (
-		<StyledDialog open={open} onClose={onClose}>
+		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>Detach attachment {attachment.name}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
@@ -96,12 +88,7 @@ const AttachmentDeletionDialog = ({
 					really want to detach this attachment from the system, enter its
 					filename below and click the detach button.
 				</DialogContentText>
-				<AttachmentThumbnail
-					className={classes.thumbnail}
-					width={450}
-					height={300}
-					attachmentId={attachment._id}
-				/>
+				<Thumbnail width={550} height={300} attachmentId={attachment._id} />
 				<ConfirmationTextField
 					fullWidth
 					autoFocus
@@ -123,7 +110,7 @@ const AttachmentDeletionDialog = ({
 					Detach
 				</LoadingButton>
 			</DialogActions>
-		</StyledDialog>
+		</Dialog>
 	);
 };
 

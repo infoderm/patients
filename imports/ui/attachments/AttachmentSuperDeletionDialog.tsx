@@ -82,7 +82,7 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 					really want to delete this attachment from the system, enter its
 					filename below and click the delete button.
 				</DialogContentText>
-				<Thumbnail height={600} attachmentId={attachment._id} />
+				<Thumbnail width={550} height={300} attachmentId={attachment._id} />
 				<ConfirmationTextField
 					fullWidth
 					autoFocus

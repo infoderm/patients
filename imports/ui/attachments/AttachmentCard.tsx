@@ -23,6 +23,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 
+import CardActionArea from '@mui/material/CardActionArea';
 import {AttachmentDocument} from '../../api/collection/attachments';
 
 import {link} from '../../api/attachments';
@@ -289,13 +290,14 @@ const AttachmentCard = ({attachment, info}: Props) => {
 					</>
 				}
 			/>
-			<AttachmentThumbnail
-				className={classes.thumbnail}
-				width={450}
-				height={300}
-				attachmentId={attachment._id}
-				{...anchorProps}
-			/>
+			<CardActionArea {...anchorProps}>
+				<AttachmentThumbnail
+					className={classes.thumbnail}
+					width={450}
+					height={300}
+					attachmentId={attachment._id}
+				/>
+			</CardActionArea>
 		</StyledCard>
 	);
 };
