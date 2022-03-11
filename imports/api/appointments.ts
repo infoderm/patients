@@ -1,54 +1,89 @@
-import {check} from 'meteor/check';
-
 import addMilliseconds from 'date-fns/addMilliseconds';
+import {optional, validate, where} from '../util/schema';
+import removeUndefined from '../util/removeUndefined';
+import {Entry, makeSanitize, yieldKey} from './update';
+import {
+	AppointmentComputedFields,
+	AppointmentFields,
+} from './collection/appointments';
 
-export interface SanitizeParams {
-	datetime: Date;
-	duration: number;
+const sanitizeAppointmentGen = function* (
+	fields: Partial<AppointmentFields>,
+): IterableIterator<Entry<AppointmentFields & AppointmentComputedFields>> {
+	yield* yieldKey(fields, 'patientId', String);
+	if (
+		Object.prototype.hasOwnProperty.call(fields, 'datetime') ||
+		Object.prototype.hasOwnProperty.call(fields, 'duration')
+	) {
+		const {datetime, duration} = fields;
+		validate(datetime, Date);
+		validate(duration, Number);
+		yield ['datetime', datetime];
+		yield ['duration', duration];
+		yield ['scheduledDatetime', datetime];
+		yield ['begin', datetime];
+		yield ['end', addMilliseconds(datetime, duration)];
+		yield ['isDone', false];
+	}
+
+	yield* yieldKey(fields, 'reason', String);
+};
+
+const sanitizeAppointment = makeSanitize(sanitizeAppointmentGen);
+
+export interface AppointmentUpdate {
 	patient: {
 		_id: string;
-		firstname: string;
-		lastname: string;
+		firstname?: string;
+		lastname?: string;
 	};
-	phone?: string;
+	phone: string;
+	datetime: Date;
+	duration: number;
 	reason: string;
 }
 
-function sanitize({
-	datetime,
-	duration,
+export const sanitizeAppointmentUpdate = ({
 	patient,
 	phone,
+	datetime,
+	duration,
 	reason,
-}: SanitizeParams) {
-	check(patient.firstname, String);
-	check(patient.lastname, String);
-	check(patient._id, String);
-	if (phone !== undefined) check(phone, String);
-	check(datetime, Date);
-	check(duration, Number);
-	check(reason, String);
+}: Partial<AppointmentUpdate>) => {
+	validate(
+		patient,
+		where((patient: any) => {
+			if (patient === undefined) return phone === undefined;
+			validate(patient._id, String);
+			if (patient._id === '?') {
+				validate(patient.firstname, String);
+				validate(patient.lastname, String);
+				validate(phone, String);
+			}
+
+			return true;
+		}),
+	);
+	validate(datetime, optional(Date));
+	validate(duration, optional(Number));
+	validate(reason, optional(String));
 
 	return {
-		createPatient: patient._id === '?',
-		patientFields: {
-			firstname: patient.firstname,
-			lastname: patient.lastname,
-			phone,
-		},
-		consultationFields: {
-			patientId: patient._id,
-			datetime,
-			scheduledDatetime: datetime,
-			duration,
-			begin: datetime,
-			end: addMilliseconds(datetime, duration),
-			reason,
-			isDone: false,
-		},
+		createPatient:
+			patient?._id === '?'
+				? {
+						firstname: patient.firstname,
+						lastname: patient.lastname,
+						phone,
+				  }
+				: undefined,
+		consultationUpdate: sanitizeAppointment(
+			removeUndefined({
+				patientId: patient?._id,
+				datetime,
+				duration,
+				reason,
+			}),
+		),
 	};
-}
-
-export const appointments = {
-	sanitize,
 };

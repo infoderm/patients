@@ -16,7 +16,11 @@ const NewAppointmentDialog = (
 		  >,
 ) => {
 	const [call, {pending}] = useCall();
-	const onSubmit = async (args) => call(schedule, args);
+	const onSubmit = async (args) => {
+		console.debug('onSubmit', args);
+		return call(schedule, args);
+	};
+
 	return 'patientId' in props && props.patientId !== undefined ? (
 		<AppointmentFromPatientIdDialog
 			pending={pending}

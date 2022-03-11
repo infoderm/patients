@@ -130,7 +130,7 @@ export const makeSanitize =
 
 const documentDiffGen = function* <T, U>(
 	prevState: T,
-	newState: T extends U ? U : never,
+	newState: Required<T> extends U ? U : never,
 ): IterableIterator<Entry<U>> {
 	for (const [key, newValue] of Object.entries(newState)) {
 		if (JSON.stringify(newValue) !== JSON.stringify(prevState[key])) {
@@ -141,6 +141,6 @@ const documentDiffGen = function* <T, U>(
 
 export const documentDiff = <T, U>(
 	prevState: T,
-	newState: T extends U ? U : never,
+	newState: Required<T> extends U ? U : never,
 ): Partial<U> =>
 	Object.fromEntries(documentDiffGen(prevState, newState)) as Partial<U>;

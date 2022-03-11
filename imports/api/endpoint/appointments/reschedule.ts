@@ -1,8 +1,8 @@
-import {check} from 'meteor/check';
+import assert from 'assert';
 import {Mongo} from 'meteor/mongo';
 
 import {Appointments} from '../../collection/appointments';
-import {appointments} from '../../appointments';
+import {sanitizeAppointmentUpdate} from '../../appointments';
 
 import define from '../define';
 
@@ -10,15 +10,15 @@ import {availability} from '../../availability';
 import {ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
 import TransactionDriver from '../../transaction/TransactionDriver';
+import {Patients} from '../../collection/patients';
+import {validate} from '../../../util/schema';
 import createPatientForAppointment from './createPatient';
-
-const {sanitize} = appointments;
 
 export default define({
 	name: 'appointments.reschedule',
 	validate(appointmentId: string, appointment: any) {
-		check(appointmentId, String);
-		check(appointment, Object);
+		validate(appointmentId, String);
+		validate(appointment, Object);
 	},
 	async transaction(
 		db: TransactionDriver,
@@ -26,51 +26,65 @@ export default define({
 		appointment: any,
 	) {
 		const owner = this.userId;
-		const item = await db.findOne(Appointments, {_id: appointmentId, owner});
-		if (item === null) {
+		const existing = await db.findOne(Appointments, {
+			_id: appointmentId,
+			owner,
+		});
+		if (existing === null) {
 			throw new Meteor.Error('not-found');
 		}
 
-		const args = sanitize(appointment);
+		const {
+			createPatient,
+			consultationUpdate: {$set, $unset},
+		} = sanitizeAppointmentUpdate(appointment);
 
-		if (args.createPatient) {
-			args.consultationFields.patientId = await compose(
+		assert($unset === undefined || Object.keys($unset).length === 0);
+
+		if (createPatient) {
+			$set.patientId = await compose(db, createPatientForAppointment, this, [
+				createPatient,
+			]);
+		} else if ($set.patientId !== undefined) {
+			const patient = await db.findOne(Patients, {
+				_id: $set.patientId,
+				owner,
+			});
+			if (patient === null) {
+				throw new Meteor.Error('not-found');
+			}
+		}
+
+		if ($set.datetime !== undefined || $set.duration !== undefined) {
+			validate($set.begin, Date);
+			validate($set.end, Date);
+			validate($set.isDone, Boolean);
+			const {
+				begin: oldBegin,
+				end: oldEnd,
+				isDone: oldIsDone,
+				isCancelled: oldIsCancelled,
+			} = existing;
+			const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
+			const newBegin = $set.begin ?? oldBegin;
+			const newEnd = $set.end ?? oldEnd;
+			const newIsDone = $set.isDone ?? oldIsDone;
+			const newIsCancelled = oldIsCancelled;
+			const newWeight = newIsDone || newIsCancelled ? 0 : 1;
+			await availability.updateHook(
 				db,
-				createPatientForAppointment,
-				this,
-				[args.patientFields],
+				owner,
+				oldBegin,
+				oldEnd,
+				oldWeight,
+				newBegin,
+				newEnd,
+				newWeight,
 			);
 		}
 
-		const fields = {
-			...args.consultationFields,
-		};
-
-		const {
-			begin: oldBegin,
-			end: oldEnd,
-			isDone: oldIsDone,
-			isCancelled: oldIsCancelled,
-		} = item;
-		const oldWeight = oldIsDone || oldIsCancelled ? 0 : 1;
-		const newBegin = fields.begin ?? oldBegin;
-		const newEnd = fields.end ?? oldEnd;
-		const newIsDone = fields.isDone ?? oldIsDone;
-		const newIsCancelled = oldIsCancelled;
-		const newWeight = newIsDone || newIsCancelled ? 0 : 1;
-		await availability.updateHook(
-			db,
-			owner,
-			oldBegin,
-			oldEnd,
-			oldWeight,
-			newBegin,
-			newEnd,
-			newWeight,
-		);
-
 		const modifier: Mongo.Modifier<ConsultationDocument> = {
-			$set: fields,
+			$set,
 			$currentDate: {lastModifiedAt: true},
 		};
 
@@ -78,7 +92,7 @@ export default define({
 
 		return {
 			_id: appointmentId,
-			patientId: args.consultationFields.patientId,
+			patientId: $set.patientId ?? existing.patientId,
 		};
 	},
 	simulate(_appointmentId: string, _appointment: any): void {

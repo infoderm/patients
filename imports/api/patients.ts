@@ -220,7 +220,7 @@ const sanitizeUpdate = function* (
 	yield* yieldKey(fields, 'createdForAppointment', Boolean);
 };
 
-const sanitize = makeSanitize(sanitizeUpdate);
+export const sanitize = makeSanitize(sanitizeUpdate);
 
 const computedFieldsGenerator = async function* (
 	_db: TransactionDriver,

@@ -29,6 +29,7 @@ import insertConsultation from '../../api/endpoint/consultations/insert';
 import updateConsultation from '../../api/endpoint/consultations/update';
 import usePrompt from '../navigation/usePrompt';
 import {books} from '../../api/books';
+import {documentDiff} from '../../api/update';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm, {defaultState, State} from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
@@ -342,7 +343,7 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 	const handleSave = async (event) => {
 		event.preventDefault();
 
-		const consultation = {
+		const updatedConsultationDocument = {
 			patientId,
 			datetime,
 			reason,
@@ -387,10 +388,17 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 
 		try {
 			if (consultationId === undefined) {
-				const {insertedId} = await call(insertConsultation, consultation);
+				const {insertedId} = await call(
+					insertConsultation,
+					updatedConsultationDocument,
+				);
 				dispatch({type: 'save-success', insertedId});
 			} else {
-				await call(updateConsultation, consultationId, consultation);
+				const consultationUpdate = documentDiff(
+					consultation,
+					updatedConsultationDocument,
+				);
+				await call(updateConsultation, consultationId, consultationUpdate);
 				dispatch({type: 'save-success'});
 			}
 		} catch (error: unknown) {

@@ -1,39 +1,43 @@
-import {check} from 'meteor/check';
-
+import assert from 'assert';
 import {Appointments} from '../../collection/appointments';
 import {Patients} from '../../collection/patients';
-import {appointments} from '../../appointments';
+import {AppointmentUpdate, sanitizeAppointmentUpdate} from '../../appointments';
 import {availability} from '../../availability';
 
 import TransactionDriver from '../../transaction/TransactionDriver';
+import {validate} from '../../../util/schema';
 
 import define from '../define';
 import compose from '../compose';
 
 import createPatientForAppointment from './createPatient';
 
-const {sanitize} = appointments;
-
 export default define({
 	name: 'appointments.schedule',
 	validate(appointment: any) {
-		check(appointment, Object);
+		validate(appointment, Object);
 	},
-	async transaction(db: TransactionDriver, appointment: any) {
-		const args = sanitize(appointment);
+	async transaction(db: TransactionDriver, appointment: AppointmentUpdate) {
+		const {
+			createPatient,
+			consultationUpdate: {$set, $unset},
+		} = sanitizeAppointmentUpdate(appointment);
+
+		assert($unset === undefined || Object.keys($unset).length === 0);
+		validate($set.begin, Date);
+		validate($set.end, Date);
+		validate($set.reason, String);
 
 		const owner = this.userId;
 
-		if (args.createPatient) {
-			args.consultationFields.patientId = await compose(
-				db,
-				createPatientForAppointment,
-				this,
-				[args.patientFields],
-			);
+		if (createPatient) {
+			$set.patientId = await compose(db, createPatientForAppointment, this, [
+				createPatient,
+			]);
 		} else {
+			validate($set.patientId, String);
 			const patient = await db.findOne(Patients, {
-				_id: args.consultationFields.patientId,
+				_id: $set.patientId,
 				owner,
 			});
 			if (patient === null) {
@@ -41,15 +45,13 @@ export default define({
 			}
 		}
 
-		const {begin, end} = args.consultationFields;
-
-		await availability.insertHook(db, owner, begin, end, 1);
+		await availability.insertHook(db, owner, $set.begin, $set.end, 1);
 
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
 		const {insertedId: appointmentId} = await db.insertOne(Appointments, {
-			...args.consultationFields,
+			...$set,
 			createdAt,
 			lastModifiedAt,
 			owner,
@@ -57,7 +59,7 @@ export default define({
 
 		return {
 			_id: appointmentId,
-			patientId: args.consultationFields.patientId,
+			patientId: $set.patientId,
 		};
 	},
 	simulate(_appointment: any): void {

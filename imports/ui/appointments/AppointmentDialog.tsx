@@ -37,7 +37,6 @@ import {useDateMask} from '../../i18n/datetime';
 import {msToString} from '../../api/duration';
 
 import {AppointmentDocument} from '../../api/collection/appointments';
-import {SanitizeParams} from '../../api/appointments';
 
 import {patients} from '../../api/patients';
 import {useSetting} from '../settings/hooks';
@@ -54,6 +53,7 @@ import {AVAILABILITY_TIMEZONE, weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
+import {AppointmentUpdate} from '../../api/appointments';
 
 const Multiline = styled(TextField)({
 	overflow: 'auto',
@@ -88,7 +88,7 @@ interface AppointmentDialogProps {
 	open: boolean;
 	pending: boolean;
 	onClose: () => void;
-	onSubmit: (args: SanitizeParams) => Promise<{_id: string}>;
+	onSubmit: (args: AppointmentUpdate) => Promise<{_id: string}>;
 	initialDatetime: Date;
 	noInitialTime?: boolean;
 	initialAppointment?: AppointmentDocument;
@@ -200,23 +200,22 @@ const AppointmentDialog = ({
 		);
 	}, [workSchedule, Number(begin), Number(end)]);
 
-	const createAppointment = async (event) => {
+	const createOrUpdateAppointment = async (event) => {
 		event.preventDefault();
 
 		if (patientList.length === 1) {
 			setPatientError('');
-			const args = {
+			const args: AppointmentUpdate = {
 				datetime,
 				duration,
 				patient: patientList[0],
 				phone,
 				reason,
 			};
-			console.debug(args);
 			try {
 				const res = await onSubmit(args);
 				console.log(
-					`Consultation #${res._id} ${
+					`Appointment #${res._id} ${
 						initialAppointment ? 'updated' : 'created'
 					}.`,
 				);
@@ -400,7 +399,7 @@ const AppointmentDialog = ({
 					color="primary"
 					endIcon={<AccessTimeIcon />}
 					loadingPosition="end"
-					onClick={createAppointment}
+					onClick={createOrUpdateAppointment}
 				>
 					Schedule
 				</LoadingButton>
