@@ -111,7 +111,7 @@
     "react-spring": "^9.4.3",
     "regenerator-runtime": "^0.13.9",
     "sepa-payment-qr-code": "^1.0.0",
-    "sharp": "^0.30.2",
+    "sharp": "^0.30.5",
     "use-debounce": "^7.0.1",
     "xml-js": "^1.6.11"
   },
