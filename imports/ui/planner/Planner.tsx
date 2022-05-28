@@ -15,7 +15,7 @@ import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialo
 
 interface Props<C> {
 	Calendar: C extends React.ElementType ? C : never;
-	CalendarProps?: PropsOf<C>;
+	CalendarProps?: PropsOf<C extends React.ElementType ? C : never>;
 }
 
 const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
