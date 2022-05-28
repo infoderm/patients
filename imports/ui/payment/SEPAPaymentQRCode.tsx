@@ -1,5 +1,5 @@
 import React from 'react';
-import QRCode from 'qrcode.react';
+import {QRCodeCanvas} from 'qrcode.react';
 
 import generateSEPAPaymentPayload from 'sepa-payment-qr-code';
 
@@ -13,7 +13,7 @@ export default function SEPAPaymentQRCode({data, codeProps, ...rest}) {
 		// };
 
 		return (
-			<QRCode {...rest} value={payload} {...codeProps} />
+			<QRCodeCanvas {...rest} value={payload} {...codeProps} />
 			// CANNOT ACCESS CANVAS...
 			// https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
 			// type = 'image/png' ;

@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
@@ -21,7 +21,7 @@ export const newPatientFormData = makeTemplate({
 	lastname: () => faker.name.lastName(),
 
 	birthdate: () => format(faker.date.past(AGE_MAX), BIRTHDATE_FORMAT),
-	sex: () => faker.random.arrayElement(SEX_ALLOWED),
+	sex: () => faker.helpers.arrayElement(SEX_ALLOWED),
 	photo: () => '', // Could use faker.image.dataUri but this would need to put the format in the database
 	// because current database uses PNG by default and dataUri spits out SVG
 
