@@ -26,7 +26,7 @@ jobs:
         run: meteor npm run ci:test
 
       - name: Publish coverage report 📰
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           flags: test
           directory: ./.coverage/
@@ -52,7 +52,7 @@ jobs:
         run: meteor npm run ci:test -- --full-app
 
       - name: Publish coverage report 📰
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           flags: test-app
           directory: ./.coverage/
