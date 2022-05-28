@@ -43,10 +43,9 @@ async function* sanitize({
 
 	console.debug('Starting to sanitize', {length: array.length});
 
-	const mangled = new TextDecoder('utf-8', {fatal: false}).decode(
-		array.buffer,
-		{stream: false},
-	);
+	const mangled = new TextDecoder('utf8', {fatal: false}).decode(array.buffer, {
+		stream: false,
+	});
 
 	try {
 		console.debug('trying to detect encoding...');

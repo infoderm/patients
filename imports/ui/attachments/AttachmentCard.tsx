@@ -153,7 +153,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 		attachment.meta.lastModified &&
 			`M ${format(attachment.meta.lastModified, 'yyyy-MM-dd')}`,
 	]
-		.filter((x) => Boolean(x))
+		.filter(Boolean)
 		.join('/');
 
 	const detach =

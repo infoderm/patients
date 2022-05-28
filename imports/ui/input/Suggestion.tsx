@@ -19,7 +19,7 @@ const StyledMenuItem = styled(MenuItem)(({theme}) => ({
 	},
 }));
 
-interface SuggestionProps<Item> extends Omit<MenuItemProps<'li'>, 'ref'> {
+interface SuggestionProps<Item> extends Omit<MenuItemProps, 'ref'> {
 	highlightedIndex: number;
 	index: number;
 	item: Item;

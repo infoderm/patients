@@ -103,7 +103,7 @@ const StaticPatientChip = React.forwardRef(
 						: !found
 						? willBeCreated
 							? [patient.lastname, patient.firstname, '(new)']
-									.filter((x) => Boolean(x))
+									.filter(Boolean)
 									.join(' ')
 							: `Not found`
 						: `${patient.lastname} ${patient.firstname}`

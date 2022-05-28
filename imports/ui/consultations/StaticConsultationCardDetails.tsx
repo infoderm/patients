@@ -78,6 +78,7 @@ function paymentMethodString(payment_method) {
 			return 'Virement';
 		case 'third-party':
 			return 'Tiers Payant';
+		// eslint-disable-next-line unicorn/no-useless-switch-case
 		case 'cash':
 		default:
 			return 'Cash';

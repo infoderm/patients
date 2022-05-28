@@ -143,7 +143,7 @@ const EidCardDialogStepSelection = ({
 		eidPatient.lastname,
 	);
 
-	const [patientSearchInput, setPatientSearchinput] = useState(normalizedName);
+	const [patientSearchInput, setPatientSearchInput] = useState(normalizedName);
 
 	const {loading: loadingNnMatches, results: nnMatches} =
 		usePatientsNnSearch(eidPatient);
@@ -344,7 +344,7 @@ const EidCardDialogStepSelection = ({
 												icon={<PersonSearchIcon />}
 												value={patientSearchInput}
 												onChange={(event) => {
-													setPatientSearchinput(event.target.value);
+													setPatientSearchInput(event.target.value);
 												}}
 											/>
 										</Grid>

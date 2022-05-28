@@ -78,6 +78,7 @@ function paymentMethodIcon(payment_method) {
 			return <PaymentIcon />;
 		case 'third-party':
 			return <AccountBalanceWalletIcon />;
+		// eslint-disable-next-line unicorn/no-useless-switch-case
 		case 'cash':
 		default:
 			return <MoneyIcon />;

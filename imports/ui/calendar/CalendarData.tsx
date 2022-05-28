@@ -383,7 +383,7 @@ const makeGridStyles = ({
 		displayWeekNumbers && '25px',
 		`repeat(${rowSize}, 1fr)`,
 	]
-		.filter((x) => Boolean(x))
+		.filter(Boolean)
 		.join(' ');
 
 	const gridStyles: CalendarDataGridStyles = {

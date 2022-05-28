@@ -7,7 +7,7 @@ import {DocumentDocument} from '../../../api/collection/documents';
 import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 
 type DocumentDownloadButtonProps = Omit<
-	LoadingButtonProps<'button'>,
+	LoadingButtonProps,
 	'loading' | 'onClick' | 'children'
 > & {document: DocumentDocument};
 

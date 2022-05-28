@@ -16,7 +16,8 @@ const DocumentDownloadGenericButton = ({
 	document,
 	component: Component,
 	...rest
-}: PropsOf<typeof Component> & ExtraProps) => {
+}: // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+PropsOf<typeof Component> & ExtraProps) => {
 	const {enqueueSnackbar} = useSnackbar();
 	const [downloading, setDownloading] = useState(false);
 

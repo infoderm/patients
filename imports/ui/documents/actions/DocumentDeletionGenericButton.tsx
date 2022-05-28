@@ -14,8 +14,8 @@ const DocumentDownloadGenericButton = ({
 	document,
 	component: Component,
 	...rest
-}: DocumentDownloadGenericButtonAdditionalProps &
-	PropsOf<typeof Component>) => {
+}: // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+DocumentDownloadGenericButtonAdditionalProps & PropsOf<typeof Component>) => {
 	const [deleting, setDeleting] = useState(false);
 
 	if (document.deleted) return null;
