@@ -124,7 +124,9 @@ const ConsultationForm = ({consultation, update}: Props) => {
 		paidError,
 	} = consultation;
 
+	// eslint-disable-next-line react/hook-use-state
 	const [initialDatetime] = useState(datetime);
+	// eslint-disable-next-line react/hook-use-state
 	const [initialBook] = useState(book);
 	const initialBookName = books.name(initialDatetime, initialBook);
 
