@@ -275,7 +275,7 @@ export const editConsultation = async (
 	}
 
 	if (book !== undefined) {
-		await fillIn(app, await findByRole('textbox', {name: 'Carnet'}), book);
+		await fillIn(app, await findByRole('combobox', {name: 'Carnet'}), book);
 	}
 
 	if (inBookNumber !== undefined) {
