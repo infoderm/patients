@@ -190,7 +190,7 @@ client(__filename, () => {
 			filename: 'test.xyz',
 			method: dropFiles,
 			expected: [
-				{text: '48486755'},
+				{text: '4848-06755'},
 				{text: 'Mann and Sons'},
 				{text: 'CELLULES NAEVIQUES', exact: false},
 			],
@@ -205,7 +205,7 @@ client(__filename, () => {
 			filename: 'test.txt',
 			method: selectFiles,
 			expected: [
-				{text: '48486755'},
+				{text: '4848-06755'},
 				{text: 'Mann and Sons'},
 				{text: 'CELLULES NAEVIQUES', exact: false},
 			],
@@ -220,7 +220,7 @@ client(__filename, () => {
 			filename: 'test.abc',
 			method: dropFiles,
 			expected: [
-				{text: '53636930'},
+				{text: '0536-36930'},
 				{text: 'Harris, Gulgowski and Donnelly'},
 				{text: 'Validation biologique informatique', exact: false},
 			],
@@ -235,7 +235,7 @@ client(__filename, () => {
 			filename: 'test.bsv',
 			method: selectFiles,
 			expected: [
-				{text: '53636930'},
+				{text: '0536-36930'},
 				{text: 'Harris, Gulgowski and Donnelly'},
 				{text: 'Validation biologique informatique', exact: false},
 			],

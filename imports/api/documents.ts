@@ -8,7 +8,7 @@ import parseHealthOne from './documents/parseHealthOne';
 import parseMedidoc from './documents/parseMedidoc';
 import TransactionDriver from './transaction/TransactionDriver';
 
-const DETECT_REGEX_HEALTHONE = /^A1\\[A-Za-z\d]+\\/;
+const DETECT_REGEX_HEALTHONE = /^A1\\[A-Za-z\d-]+\\/;
 const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/;
 const DETECT_REGEX_MEDIDOC_LAB = /^[A-Z]\d{3}[\r\n]/;
 
