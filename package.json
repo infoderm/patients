@@ -146,7 +146,7 @@
     "moment": "2.29.1",
     "moment-timezone": "0.5.34",
     "mup": "1.5.5",
-    "npm-check-updates": "12.5.2",
+    "npm-check-updates": "12.5.12",
     "postinstall": "0.7.4",
     "puppeteer": "13.4.1",
     "rrule": "2.6.9",
