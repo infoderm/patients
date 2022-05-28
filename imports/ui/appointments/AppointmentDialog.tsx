@@ -26,7 +26,7 @@ import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
 import LoadingButton from '@mui/lab/LoadingButton';
-import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
+import Dialog from '@mui/material/Dialog';
 
 import TextField from '../input/TextField';
 
@@ -247,7 +247,7 @@ const AppointmentDialog = ({
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
 
 	return (
-		<DialogWithVisibleOverflow open={open}>
+		<Dialog open={open}>
 			{loading && <LinearProgress />}
 			<DialogTitle>Schedule an appointment</DialogTitle>
 			<DialogContent>
@@ -322,6 +322,23 @@ const AppointmentDialog = ({
 							</Select>
 						</FormControl>
 					</Grid>
+					{appointmentOverlapsWithAnotherEvent && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Ce rendez-vous <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
+					{appointmentReachesOutsideWorkSchedule && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Ce rendez-vous{' '}
+								<strong>est en dehors de l&apos;horaire programmé</strong>!
+							</Alert>
+						</Grid>
+					)}
 					<Grid item xs={12}>
 						<PatientPicker
 							readOnly={patientIsReadOnly}
@@ -372,23 +389,6 @@ const AppointmentDialog = ({
 							}}
 						/>
 					</Grid>
-					{appointmentOverlapsWithAnotherEvent && (
-						<Grid item xs={12}>
-							<Alert severity="warning">
-								<AlertTitle>Attention</AlertTitle>
-								Ce rendez-vous <strong>chevauche un autre évènement</strong>!
-							</Alert>
-						</Grid>
-					)}
-					{appointmentReachesOutsideWorkSchedule && (
-						<Grid item xs={12}>
-							<Alert severity="warning">
-								<AlertTitle>Attention</AlertTitle>
-								Ce rendez-vous{' '}
-								<strong>est en dehors de l&apos;horaire programmé</strong>!
-							</Alert>
-						</Grid>
-					)}
 				</Grid>
 			</DialogContent>
 			<DialogActions>
@@ -404,7 +404,7 @@ const AppointmentDialog = ({
 					Schedule
 				</LoadingButton>
 			</DialogActions>
-		</DialogWithVisibleOverflow>
+		</Dialog>
 	);
 };
 
