@@ -150,7 +150,7 @@
     "mup": "1.5.5",
     "npm-check-updates": "13.0.3",
     "postinstall": "0.7.4",
-    "puppeteer": "14.1.1",
+    "puppeteer": "14.4.1",
     "rrule": "2.6.9",
     "simpl-schema": "1.12.1",
     "total-order": "3.0.1",
