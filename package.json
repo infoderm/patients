@@ -152,7 +152,7 @@
     "postinstall": "0.7.4",
     "puppeteer": "14.1.1",
     "rrule": "2.6.9",
-    "simpl-schema": "1.12.1",
+    "simpl-schema": "1.13.1",
     "total-order": "3.0.1",
     "typescript": "^4.3.5",
     "xo": "0.49.0"
