@@ -3,7 +3,7 @@ import omit from 'lodash.omit';
 import {zip} from '@iterable-iterator/zip';
 
 const parseHealthOne = async function* (decoded: string, mangled: string) {
-	const {default: parse} = await import('healthone/dist/default/parse.js');
+	const {default: parse} = await import('healthone/dist/default/parse.cjs');
 
 	const mangledDocuments = parse(mangled);
 	const documents = parse(decoded);

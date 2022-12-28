@@ -86,7 +86,7 @@
     "express": "^4.18.1",
     "fast-diff": "^1.2.0",
     "file-saver": "^2.0.5",
-    "healthone": "^5.0.2",
+    "healthone": "^6.1.0",
     "iban": "^0.0.14",
     "ical-generator": "^3.4.3",
     "iconv-lite": "^0.6.3",
