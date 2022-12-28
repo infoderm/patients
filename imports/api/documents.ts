@@ -9,8 +9,8 @@ import parseMedidoc from './documents/parseMedidoc';
 import TransactionDriver from './transaction/TransactionDriver';
 
 const DETECT_REGEX_HEALTHONE = /^A1\\[A-Za-z\d-]+\\/;
-const DETECT_REGEX_MEDIDOC_DOCTOR = /^\d\/\d{5}\/\d{2}\/\d{3}[\r\n]/;
-const DETECT_REGEX_MEDIDOC_LAB = /^[A-Z]\d{3}[\r\n]/;
+const DETECT_REGEX_MEDIDOC_DOCTOR = /^(\d\/\d{5}\/\d{2}\/\d{3}|\d{11})[\r\n]/;
+const DETECT_REGEX_MEDIDOC_LAB = /^[A-Z]\d{2}[\dA-Z][\r\n]/;
 
 const detectFormats = (string: string): Record<string, number> => ({
 	healthone: DETECT_REGEX_HEALTHONE.test(string) ? 1 : 0,
