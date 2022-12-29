@@ -17,7 +17,7 @@ import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 
-import DatePicker from '@mui/lab/DatePicker';
+import {DatePicker} from '@mui/x-date-pickers';
 
 import isValid from 'date-fns/isValid';
 import Button from '@mui/material/Button';

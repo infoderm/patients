@@ -1,45 +1,45 @@
 declare module 'meteor/ostrio:files' {
-	import {Buffer} from 'buffer';
-	import * as http from 'http';
-	import {Meteor} from 'meteor/meteor';
+	import {type Buffer} from 'buffer';
+	import type * as http from 'http';
+	import {type Meteor} from 'meteor/meteor';
 	import {Mongo} from 'meteor/mongo';
-	import {ReactiveVar} from 'meteor/reactive-var';
-	import {SimpleSchemaDefinition} from 'simpl-schema';
-	import {IncomingMessage} from 'connect';
+	import {type ReactiveVar} from 'meteor/reactive-var';
+	import type SimpleSchema from 'simpl-schema';
+	import {type IncomingMessage} from 'connect';
 
-	interface Params {
+	type Params = {
 		_id: string;
 		query: Record<string, string>;
 		name: string;
 		version: string;
-	}
+	};
 
-	interface ContextHTTP {
+	type ContextHTTP = {
 		request: IncomingMessage;
 		response: http.ServerResponse;
 		params: Params;
-	}
+	};
 
-	interface ContextUser {
+	type ContextUser = {
 		userId: string;
 		user: () => Meteor.User;
-	}
+	};
 
-	interface ContextUpload {
+	type ContextUpload = {
 		file: object;
 		/** On server only. */
 		chunkId?: number;
 		/** On server only. */
 		eof?: boolean;
-	}
+	};
 
-	interface Version<MetadataType> {
+	type Version<MetadataType> = {
 		extension: string;
 		meta: MetadataType;
 		path: string;
 		size: number;
 		type: string;
-	}
+	};
 
 	class FileObj<MetadataType> {
 		_id: string;
@@ -77,7 +77,7 @@ declare module 'meteor/ostrio:files' {
 		with: () => FileCursor<MetadataType>;
 	}
 
-	interface FileData<MetadataType> {
+	type FileData<MetadataType> = {
 		size: number;
 		type: string;
 		mime: string;
@@ -86,9 +86,9 @@ declare module 'meteor/ostrio:files' {
 		extension: string;
 		name: string;
 		meta: MetadataType;
-	}
+	};
 
-	interface FilesCollectionConfig<MetadataType> {
+	type FilesCollectionConfig<MetadataType> = {
 		storagePath?: string | ((fileObj: FileObj<MetadataType>) => string);
 		collection?: Mongo.Collection<FileObj<MetadataType>>;
 		collectionName?: string;
@@ -105,7 +105,7 @@ declare module 'meteor/ostrio:files' {
 			  ) => Record<string, string>);
 		throttle?: number | boolean;
 		downloadRoute?: string;
-		schema?: SimpleSchemaDefinition;
+		schema?: SimpleSchema;
 		chunkSize?: number;
 		namingFunction?: (fileObj: FileObj<MetadataType>) => string;
 		permissions?: number;
@@ -148,9 +148,9 @@ declare module 'meteor/ostrio:files' {
 			fileRef: FileRef<MetadataType>,
 			version: string,
 		) => boolean;
-	}
+	};
 
-	interface SearchOptions<MetadataType, TransformAdditions> {
+	type SearchOptions<MetadataType, TransformAdditions> = {
 		sort?: Mongo.SortSpecifier;
 		skip?: number;
 		limit?: number;
@@ -159,9 +159,9 @@ declare module 'meteor/ostrio:files' {
 		transform?: (
 			fileObj: FileObj<MetadataType>,
 		) => FileObj<MetadataType> & TransformAdditions;
-	}
+	};
 
-	interface InsertOptions<MetadataType> {
+	type InsertOptions<MetadataType> = {
 		file: File | object | string;
 		fileId?: string;
 		fileName?: string;
@@ -178,16 +178,16 @@ declare module 'meteor/ostrio:files' {
 		chunkSize?: number | 'dynamic';
 		allowWebWorkers?: boolean;
 		type?: string;
-	}
+	};
 
-	interface LoadOptions<MetadataType> {
+	type LoadOptions<MetadataType> = {
 		fileName: string;
 		meta?: MetadataType;
 		type?: string;
 		size?: number;
 		userId?: string;
 		fileId?: string;
-	}
+	};
 
 	class FileUpload<MetadataType> {
 		file: File;
@@ -248,7 +248,7 @@ declare module 'meteor/ostrio:files' {
 
 	class FilesCollection<MetadataType = Record<string, any>> {
 		collection: Mongo.Collection<FileObj<MetadataType>>;
-		schema: SimpleSchemaDefinition;
+		schema: SimpleSchema;
 
 		constructor(config: FilesCollectionConfig<MetadataType>);
 

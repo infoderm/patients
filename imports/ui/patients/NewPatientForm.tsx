@@ -16,7 +16,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
-import DatePicker from '@mui/lab/DatePicker';
+import {DatePicker} from '@mui/x-date-pickers';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';

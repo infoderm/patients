@@ -8,8 +8,8 @@ import {SnackbarProvider} from 'notistack';
 
 import CssBaseline from '@mui/material/CssBaseline';
 
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 
 import {useLocale} from '../i18n/datetime';
 

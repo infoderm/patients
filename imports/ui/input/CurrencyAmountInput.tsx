@@ -1,24 +1,24 @@
 import React from 'react';
 
-import NumberFormat from 'react-number-format';
+import {NumericFormat} from 'react-number-format';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import {useReactNumberFormatOptionsForCurrency} from '../../i18n/currency';
 
-interface Props extends PropsOf<typeof NumberFormat> {
+type Props = {
 	currency: string;
 	onChange: (e: any) => void;
-}
+} & PropsOf<typeof NumericFormat>;
 
 const CurrencyAmountInput = React.forwardRef<any, Props>(
 	({onChange, currency, ...rest}, ref) => {
 		const currencyOptions = useReactNumberFormatOptionsForCurrency(currency);
 
 		return (
-			<NumberFormat
+			<NumericFormat
 				{...rest}
-				isNumericString
+				valueIsNumericString
 				getInputRef={ref}
 				onValueChange={({value}) => {
 					if (rest.value === value) return;
