@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import {
 	useCombobox,
 	useMultipleSelection,
-	UseComboboxGetToggleButtonPropsOptions,
+	type UseComboboxGetToggleButtonPropsOptions,
 } from 'downshift';
 
 import {any} from '@iterable-iterator/reduce';
@@ -32,14 +32,14 @@ const toggleButtonStyles = {
 
 const useToggleButtonStyles = makeStyles(toggleButtonStyles);
 
-interface ToggleButtonProps {
+type ToggleButtonProps = {
 	isOpen: boolean;
 	readOnly: boolean;
 	hasSuggestions: boolean;
 	getToggleButtonProps: (
 		options?: UseComboboxGetToggleButtonPropsOptions,
 	) => any;
-}
+};
 
 const ToggleButton = ({
 	isOpen,
@@ -81,7 +81,7 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-interface SetPickerProps<Item, ChipProps> {
+type SetPickerProps<Item, ChipProps> = {
 	className?: string;
 	Chip?: React.ElementType;
 	chipProps?: ((item: Item, index: number) => ChipProps) | ChipProps;
@@ -102,31 +102,38 @@ interface SetPickerProps<Item, ChipProps> {
 	InputProps?: any;
 	inputProps?: any;
 	placeholder?: string;
-}
+};
 
 const comboboxStateReducer = (state, {type, changes}) => {
 	switch (type) {
-		case useCombobox.stateChangeTypes.InputChange:
+		case useCombobox.stateChangeTypes.InputChange: {
 			return {
 				...changes,
 				highlightedIndex: -1,
 			};
-		case useCombobox.stateChangeTypes.InputBlur:
+		}
+
+		case useCombobox.stateChangeTypes.InputBlur: {
 			return {
 				...changes,
 				highlightedIndex: state.highlightedIndex,
 				inputValue: state.inputValue,
 			};
+		}
+
 		case useCombobox.stateChangeTypes.InputKeyDownEnter:
-		case useCombobox.stateChangeTypes.ItemClick:
+		case useCombobox.stateChangeTypes.ItemClick: {
 			return {
 				...changes,
 				highlightedIndex: state.highlightedIndex,
 				isOpen: true,
 				inputValue: '',
 			};
-		default:
+		}
+
+		default: {
 			return changes;
+		}
 	}
 };
 
@@ -238,7 +245,6 @@ const SetPicker = <ItemType, ChipProps>({
 		getLabelProps,
 		getMenuProps,
 		getInputProps,
-		getComboboxProps,
 		highlightedIndex,
 		getItemProps,
 		openMenu,
@@ -271,7 +277,7 @@ const SetPicker = <ItemType, ChipProps>({
 
 			switch (type) {
 				case useCombobox.stateChangeTypes.InputKeyDownEnter:
-				case useCombobox.stateChangeTypes.ItemClick:
+				case useCombobox.stateChangeTypes.ItemClick: {
 					// This is called when an item in the suggestion list is
 					// clicked or highlighted then the enter key is pressed.
 					if (selectedItem !== undefined) {
@@ -285,8 +291,11 @@ const SetPicker = <ItemType, ChipProps>({
 					}
 
 					break;
-				default:
+				}
+
+				default: {
 					break;
+				}
 			}
 		},
 	});
@@ -329,7 +338,6 @@ const SetPicker = <ItemType, ChipProps>({
 				readOnly={readOnly}
 				error={error}
 				helperText={helperText}
-				{...getComboboxProps()}
 				{...TextFieldProps}
 				InputLabelProps={getLabelProps()}
 				inputProps={{

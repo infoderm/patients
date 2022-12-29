@@ -1,5 +1,5 @@
 import React from 'react';
-import {UseComboboxReturnValue} from 'downshift';
+import {type UseComboboxReturnValue} from 'downshift';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
 import SearchBoxInternalsInputContainer from './SearchBoxInternalsInputContainer';
@@ -7,8 +7,7 @@ import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions';
 
-interface SearchBoxWithSuggestionsInternalsProps<Item>
-	extends UseComboboxReturnValue<Item> {
+type SearchBoxWithSuggestionsInternalsProps<Item> = {
 	className?: string;
 	expands?: boolean;
 	loading: boolean;
@@ -17,23 +16,19 @@ interface SearchBoxWithSuggestionsInternalsProps<Item>
 	suggestions: Item[];
 	itemToKey: (item: Item) => React.Key;
 	itemToString: (item: Item) => string;
-}
+} & UseComboboxReturnValue<Item>;
 
 const SearchBoxWithSuggestionsInternals = <Item,>({
 	className,
 	expands = false,
 	placeholder,
 	icon,
-	getComboboxProps,
 	getInputProps,
 	...rest
 }: SearchBoxWithSuggestionsInternalsProps<Item>) => {
 	return (
 		<SearchBoxInternalsContainer>
-			<SearchBoxInternalsInputContainer
-				className={className}
-				{...getComboboxProps()}
-			>
+			<SearchBoxInternalsInputContainer className={className}>
 				{icon && (
 					<SearchBoxInternalsAdornment>{icon}</SearchBoxInternalsAdornment>
 				)}
