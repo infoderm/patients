@@ -132,7 +132,7 @@
     "@types/node": "14.18.36",
     "@types/react": "17.0.45",
     "@types/react-color": "3.0.6",
-    "@types/react-dom": "17.0.17",
+    "@types/react-dom": "18.0.10",
     "@types/react-router-dom": "5.3.3",
     "@types/sharp": "0.30.2",
     "babel-plugin-istanbul": "6.1.1",
