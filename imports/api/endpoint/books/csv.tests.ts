@@ -101,7 +101,8 @@ const prepare = async (userId) => {
 	const begin = startOfYear(datetime);
 	const end = addYears(begin, 1);
 
-	const expected = `2022/1,2022/2,2022/3,2022/4,2022/5
+	const currentYear = new Date().getFullYear();
+	const expected = `${currentYear}/1,${currentYear}/2,${currentYear}/3,${currentYear}/4,${currentYear}/5
 123,,,,456
 7,,,,
 ,,,,
