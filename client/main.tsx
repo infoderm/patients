@@ -3,11 +3,12 @@ import 'regenerator-runtime/runtime.js';
 import React from 'react';
 
 import {Meteor} from 'meteor/meteor';
-import {render} from 'react-dom';
+import {createRoot} from 'react-dom/client.js';
 
 import App from '../imports/ui/App';
 import rootNode from '../imports/ui/rootNode';
 
 Meteor.startup(() => {
-	render(<App />, rootNode());
+	const root = createRoot(rootNode());
+	root.render(<App />);
 });
