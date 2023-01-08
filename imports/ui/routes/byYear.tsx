@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 
 import dateFormat from 'date-fns/format';
 
-import branch, {BranchProps} from './branch';
+import branch, {type BranchProps} from './branch';
 
 type Params = {
 	year?: string;

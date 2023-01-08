@@ -190,7 +190,7 @@ export const searchForPatient = async (app, query, {name, id}) => {
 	await findByRole('heading', {name: `/patient/${id}`});
 };
 
-interface EditConsultationOptions {
+type EditConsultationOptions = {
 	reason?: string;
 	done?: string;
 	todo?: string;
@@ -202,7 +202,7 @@ interface EditConsultationOptions {
 	book?: string;
 	inBookNumber?: string;
 	save?: boolean;
-}
+};
 
 export const editConsultation = async (
 	app,

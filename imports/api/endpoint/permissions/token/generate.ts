@@ -3,7 +3,7 @@ import {check} from 'meteor/check';
 import {beginningOfTime, endOfTime} from '../../../../util/datetime';
 import {PermissionTokens} from '../../../collection/permissionTokens';
 
-import {genKey, HMACConfig, sign} from '../../../../lib/hmac';
+import {genKey, type HMACConfig, sign} from '../../../../lib/hmac';
 
 import define from '../../define';
 import {encode} from '../../../permissions/token';
@@ -53,7 +53,7 @@ export default define({
 		const _id = PermissionTokens.insert(permissionToken);
 		return encode(_id, key);
 	},
-	simulate(_permissions: string[]): void {
+	simulate(_permissions: string[]) {
 		return undefined;
 	},
 });

@@ -1,4 +1,4 @@
-import React, {Key} from 'react';
+import React, {type Key} from 'react';
 import {Link} from 'react-router-dom';
 
 import {styled} from '@mui/material/styles';
@@ -17,15 +17,15 @@ const LinkButton = styled(UnstyledLinkButton)(({theme}) => ({
 	margin: theme.spacing(1),
 }));
 
-interface Item<K> {
+type Item<K> = {
 	key: K;
 	url: string;
 	disabled: boolean;
-}
+};
 
-interface Props<K> {
+type Props<K> = {
 	items: Array<Item<K>>;
-}
+};
 
 const Jumper = <K extends Key>({items}: Props<K>) => {
 	return (

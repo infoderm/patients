@@ -1,10 +1,10 @@
 import {Mongo} from 'meteor/mongo';
 
-import TagDocument from '../tags/TagDocument';
+import type TagDocument from '../tags/TagDocument';
 
-export interface AllergyDocument extends TagDocument {
+export type AllergyDocument = {
 	color?: string;
-}
+} & TagDocument;
 
 export const collection = 'allergies';
 export const Allergies = new Mongo.Collection<AllergyDocument>(collection);

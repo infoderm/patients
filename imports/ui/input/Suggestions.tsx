@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
-import {UseComboboxGetItemPropsOptions} from 'downshift';
+import {type UseComboboxGetItemPropsOptions} from 'downshift';
 import Suggestion from './Suggestion';
 import CreateItemSuggestion from './CreateItemSuggestion';
 
-interface SuggestionsProps<Item> {
+type SuggestionsProps<Item> = {
 	className?: string;
 	hide?: boolean;
 	loading?: boolean;
@@ -22,7 +22,7 @@ interface SuggestionsProps<Item> {
 	itemToString: (item: Item) => React.ReactNode;
 	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
 	Item?: React.ElementType;
-}
+};
 
 const PREFIX = 'Suggestions';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import ErrorPageProps from './error/ErrorPageProps';
+import type ErrorPageProps from './error/ErrorPageProps';
 import AnyErrorPage from './error/AnyErrorPage';
 import NetworkErrorPage from './error/NetworkErrorPage';
 

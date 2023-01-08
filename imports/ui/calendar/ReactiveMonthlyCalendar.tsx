@@ -13,21 +13,20 @@ import {
 
 import useEvents from '../events/useEvents';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';
 import {monthly} from './ranges';
 
-interface Props
-	extends Omit<
-		PropsOf<typeof StaticMonthlyCalendar>,
-		'next' | 'prev' | 'weekly' | 'weekOptions' | 'DayHeader' | 'events'
-	> {
+type Props = {
 	year: number;
 	month: number;
 	showCancelledEvents?: boolean;
 	showNoShowEvents?: boolean;
-}
+} & Omit<
+	PropsOf<typeof StaticMonthlyCalendar>,
+	'next' | 'prev' | 'weekly' | 'weekOptions' | 'DayHeader' | 'events'
+>;
 
 const ReactiveMonthlyCalendar = ({
 	year,

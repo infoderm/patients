@@ -1,12 +1,17 @@
 // @ts-expect-error Needs more recent @types/node
-import {Buffer} from 'buffer';
-import {Readable} from 'stream';
-import {Canvas, JpegConfig, PdfConfig, PngConfig} from 'canvas/types';
+import {type Buffer} from 'buffer';
+import {type Readable} from 'stream';
+import {
+	type Canvas,
+	type JpegConfig,
+	type PdfConfig,
+	type PngConfig,
+} from 'canvas/types';
 import addDays from 'date-fns/addDays';
-import {DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
-import {PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
+import {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
+import {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
-import lru, {IndexedDBPersistedLRUCache} from '../cache/lru';
+import lru, {type IndexedDBPersistedLRUCache} from '../cache/lru';
 import {fetchPDF} from './pdf';
 
 let cache: IndexedDBPersistedLRUCache;
@@ -17,10 +22,10 @@ if (Meteor.isClient) {
 	});
 }
 
-interface CreateCanvasOptions {
+type CreateCanvasOptions = {
 	width: number;
 	height: number;
-}
+};
 
 const createCanvasIso = async ({
 	width,
@@ -45,7 +50,7 @@ const destroyCanvasIso = (canvas: HTMLCanvasElement | Canvas) => {
 	}
 };
 
-interface CreateContextOptions extends CreateCanvasOptions {}
+type CreateContextOptions = {} & CreateCanvasOptions;
 
 const createContextIso = async (
 	options: CreateContextOptions,
@@ -55,10 +60,10 @@ const createContextIso = async (
 	);
 };
 
-interface RenderContext {
+type RenderContext = {
 	canvasContext: CanvasRenderingContext2D;
 	viewport: PageViewport;
-}
+};
 
 const createRenderContextIso = async (
 	page: any,
@@ -90,11 +95,11 @@ const destroyRenderContextIso = (renderContext: RenderContext) => {
 	renderContext.canvasContext = null;
 };
 
-interface PageOptions {
+type PageOptions = {
 	page?: number;
 	minWidth?: number;
 	minHeight?: number;
-}
+};
 
 const thumbnailRender = async (
 	document: DocumentInitParameters,
@@ -117,10 +122,10 @@ const thumbnailRender = async (
 			});
 		});
 
-interface RenderOptions {
+type RenderOptions = {
 	type?: string;
 	quality?: number;
-}
+};
 
 export const thumbnailDataURL = async (
 	url: string,
@@ -182,20 +187,20 @@ export const thumbnailBlob = async (
 	return blob;
 };
 
-interface CanvasPngRenderOptions {
+type CanvasPngRenderOptions = {
 	type?: 'image/png';
 	config?: PngConfig;
-}
+};
 
-interface CanvasJpegRenderOptions {
+type CanvasJpegRenderOptions = {
 	type: 'image/jpeg';
 	config?: JpegConfig;
-}
+};
 
-interface CanvasPdfRenderOptions {
+type CanvasPdfRenderOptions = {
 	type: 'image/pdf';
 	config?: PdfConfig;
-}
+};
 
 type CanvasRenderOptions =
 	| CanvasPngRenderOptions
@@ -242,17 +247,24 @@ export const thumbnailStream = async (
 	const canvas = renderContext.canvasContext.canvas as unknown as Canvas;
 	let stream: Readable;
 	switch (type) {
-		case 'image/png':
+		case 'image/png': {
 			stream = canvas.createPNGStream(config as PngConfig);
 			break;
-		case 'image/jpeg':
+		}
+
+		case 'image/jpeg': {
 			stream = canvas.createJPEGStream(config as JpegConfig);
 			break;
-		case 'image/pdf':
+		}
+
+		case 'image/pdf': {
 			stream = canvas.createPDFStream(config as PdfConfig);
 			break;
-		default:
+		}
+
+		default: {
 			throw new Error('not implemented');
+		}
 	}
 
 	stream.on('close', () => {

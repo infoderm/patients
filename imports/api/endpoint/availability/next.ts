@@ -8,13 +8,13 @@ import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';
 import overlapsInterval from '../../interval/overlapsInterval';
 import {Availability} from '../../collection/availability';
 import {
-	Constraint,
-	Duration,
+	type Constraint,
+	type Duration,
 	initialSlot,
 	overlapsAfterDate,
 } from '../../availability';
 import {WEEK_MODULO} from '../../../util/datetime';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'availability.next',

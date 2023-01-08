@@ -1,4 +1,4 @@
-import {Readable, ReadableOptions} from 'stream';
+import {Readable, type ReadableOptions} from 'stream';
 
 const promiseToStream = <T>(promise: Promise<T>, options: ReadableOptions) =>
 	new StreamFromPromise(promise, options);

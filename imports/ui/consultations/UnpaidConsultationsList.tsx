@@ -10,13 +10,13 @@ import FixedFab from '../button/FixedFab';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import YearJumper from '../navigation/YearJumper';
-import Filter from '../../api/transaction/Filter';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import type Filter from '../../api/transaction/Filter';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import ConsultationsPager from './ConsultationsPager';
 
-interface Props {
+type Props = {
 	year: number;
-}
+};
 
 const UnpaidConsultationsList = ({year}: Props) => {
 	const begin = new Date(`${year}-01-01`);

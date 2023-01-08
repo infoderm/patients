@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import classNames from 'classnames';
 
-import {makeStyles, createStyles, CSSProperties} from '@mui/styles';
+import {makeStyles, createStyles, type CSSProperties} from '@mui/styles';
 import Paper from '@mui/material/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
@@ -19,7 +19,7 @@ import {useDateFormat} from '../../i18n/datetime';
 
 import {ALL_WEEK_DAYS, generateDays} from '../../util/datetime';
 import EventFragment from './EventFragment';
-import Event from './Event';
+import type Event from './Event';
 
 const ColumnHeader = ({classes, day, col}) => {
 	const getDayName = useDateFormat('cccc');
@@ -65,12 +65,12 @@ const setTime = (datetime: Date, HHmm: string) =>
  */
 const dayKey = (datetime: Date) => dateFormat(datetime, 'yyyyMMdd');
 
-interface DayProps {
+type DayProps = {
 	day: Date;
 	row: number;
 	col: number;
 	isFirstDisplayedDayOfMonth: boolean;
-}
+};
 
 /**
  * Generate props for each day in range.
@@ -102,11 +102,11 @@ function* generateDaysProps(
 	}
 }
 
-interface Occupancy {
+type Occupancy = {
 	usedSlots: number;
 	totalEvents: number;
 	shownEvents: number;
-}
+};
 
 type OccupancyMap = Map<string, Occupancy>;
 
@@ -120,12 +120,12 @@ function createOccupancyMap(begin: Date, end: Date): OccupancyMap {
 	return occupancy;
 }
 
-interface EventProps {
+type EventProps = {
 	event: Event;
 	day: string;
 	slot: number;
 	slots: number;
-}
+};
 
 /**
  * Assumes the input events are sorted by begin datetime.
@@ -205,10 +205,10 @@ function* generateEventProps(
 	}
 }
 
-interface MoreProps {
+type MoreProps = {
 	day: string;
 	count: number;
-}
+};
 
 function* generateMoreProps(
 	occupancy: Map<string, {totalEvents: number; shownEvents: number}>,
@@ -232,7 +232,7 @@ const More = ({className, count}) => (
 	<div className={className}>{count} more</div>
 );
 
-interface CalendarDataGridStyles {
+type CalendarDataGridStyles = {
 	[key: string]: CSSProperties;
 	header: CSSProperties;
 	corner: CSSProperties;
@@ -240,13 +240,13 @@ interface CalendarDataGridStyles {
 	weekNumber: CSSProperties;
 	dayHeader: CSSProperties;
 	more: CSSProperties;
-}
+};
 
 type CalendarDataGridClasses = {
 	[key in keyof CalendarDataGridStyles]: string;
 };
 
-interface CalendarDataGridProps {
+type CalendarDataGridProps = {
 	DayHeader?: React.ElementType;
 	WeekNumber?: React.ElementType;
 	useStyles: () => CalendarDataGridClasses;
@@ -257,7 +257,7 @@ interface CalendarDataGridProps {
 	weekOptions: {};
 	onSlotClick?: () => void;
 	onEventClick?: () => void;
-}
+};
 
 const CalendarDataGrid = ({
 	useStyles,
@@ -341,7 +341,7 @@ const CalendarDataGrid = ({
 	);
 };
 
-interface CalendarDataProps {
+type CalendarDataProps = {
 	begin: Date;
 	end: Date;
 	events: Event[];
@@ -356,9 +356,9 @@ interface CalendarDataProps {
 	displayedWeekDays?: number[];
 	onSlotClick?: () => void;
 	onEventClick?: () => void;
-}
+};
 
-interface MakeGridStylesOptions {
+type MakeGridStylesOptions = {
 	displayWeekNumbers: boolean;
 	nrows: number;
 	headerHeight: number;
@@ -367,7 +367,7 @@ interface MakeGridStylesOptions {
 	maxLines: number;
 	eventProps: EventProps[];
 	daysProps: DayProps[];
-}
+};
 
 const makeGridStyles = ({
 	displayWeekNumbers,

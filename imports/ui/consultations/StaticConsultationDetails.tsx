@@ -5,18 +5,18 @@ import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 const Root = styled('div')(({theme}) => ({
 	padding: theme.spacing(3),
 }));
 
-interface Props {
+type Props = {
 	loading: boolean;
 	found: boolean;
 	consultation: ConsultationDocument;
-}
+};
 
 const StaticConsultationDetails = ({loading, found, consultation}: Props) => {
 	if (loading) {

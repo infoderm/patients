@@ -1,4 +1,4 @@
-import React, {Dispatch, ReducerAction, useState} from 'react';
+import React, {type Dispatch, type ReducerAction, useState} from 'react';
 
 import {useSnackbar} from 'notistack';
 
@@ -13,7 +13,7 @@ import call from '../../api/endpoint/call';
 import patientsUpdate from '../../api/endpoint/patients/update';
 import patientsAttach from '../../api/endpoint/patients/attach';
 
-import {PatientDocument} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 import AttachFileButton from '../attachments/AttachFileButton';
@@ -21,15 +21,15 @@ import AttachFileButton from '../attachments/AttachFileButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 
 import {documentDiff} from '../../api/update';
-import {reducer} from './usePatientPersonalInformationReducer';
+import {type reducer} from './usePatientPersonalInformationReducer';
 
-interface PatientPersonalInformationButtonsStaticProps {
+type PatientPersonalInformationButtonsStaticProps = {
 	dirty: boolean;
 	editing: boolean;
 	dispatch: Dispatch<ReducerAction<typeof reducer>>;
 	patient: PatientDocument;
 	patientInit: PatientDocument;
-}
+};
 
 const PatientPersonalInformationButtonsStatic = ({
 	dispatch,

@@ -45,24 +45,30 @@ const useStatusNotifications = () => {
 		let key;
 		const timeout = setTimeout(() => {
 			switch (status) {
-				case 'connected':
+				case 'connected': {
 					if (!isFirstRender.current) {
 						key = enqueueSnackbar('You are connected', {variant: 'success'});
 					}
 
 					break;
-				case 'connecting':
+				}
+
+				case 'connecting': {
 					key = enqueueSnackbar('Connecting', {
 						variant: 'default',
 						persist: true,
 					});
 					break;
-				case 'failed':
+				}
+
+				case 'failed': {
 					key = enqueueSnackbar(
 						`All connection attempts have failed: ${reason}.`,
 						{variant: 'error', persist: true, action},
 					);
 					break;
+				}
+
 				case 'waiting': {
 					const msBeforeNextRetry = retryTime - Date.now();
 					key = enqueueSnackbar(
@@ -74,19 +80,22 @@ const useStatusNotifications = () => {
 					break;
 				}
 
-				case 'offline':
+				case 'offline': {
 					key = enqueueSnackbar('You are working offline', {
 						variant: 'info',
 						persist: true,
 						action,
 					});
 					break;
-				default:
+				}
+
+				default: {
 					key = enqueueSnackbar(`Unknown connection status: ${status}`, {
 						variant: 'error',
 						persist: true,
 						action,
 					});
+				}
 			}
 
 			isFirstRender.current = false;

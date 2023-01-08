@@ -1,20 +1,20 @@
 import {Mongo} from 'meteor/mongo';
 
-import {NormalizedLine} from '../string';
+import {type NormalizedLine} from '../string';
 
-export interface BookFields {
+export type BookFields = {
 	name: NormalizedLine;
-}
+};
 
-interface BookComputedFields {
+type BookComputedFields = {
 	fiscalYear: number | string;
 	bookNumber: number | string;
-}
+};
 
-interface BookMetadata {
+type BookMetadata = {
 	_id: string;
 	owner: string;
-}
+};
 
 export type BookDocument = BookFields & BookComputedFields & BookMetadata;
 

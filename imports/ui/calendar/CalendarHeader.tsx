@@ -7,7 +7,7 @@ import ViewWeekIcon from '@mui/icons-material/ViewWeek';
 import EventIcon from '@mui/icons-material/Event';
 import Header from './Header';
 
-interface CalendarHeaderProps {
+type CalendarHeaderProps = {
 	title?: string;
 	next?: () => void;
 	prev?: () => void;
@@ -15,7 +15,7 @@ interface CalendarHeaderProps {
 	monthly?: () => void;
 	navigationRole?: 'button' | 'link';
 	actions?: React.ReactNode[];
-}
+};
 
 const CalendarHeader = ({
 	title,

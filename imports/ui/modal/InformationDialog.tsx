@@ -9,14 +9,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 
-interface Props {
+type Props = {
 	open?: boolean;
 	onClose: () => void;
 	title: string;
 	text: string | JSX.Element;
 	close: string;
 	CloseIcon: React.ElementType;
-}
+};
 
 const InformationDialog = ({
 	open = false,

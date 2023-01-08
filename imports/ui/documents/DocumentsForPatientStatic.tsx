@@ -1,17 +1,17 @@
-import React, {ComponentPropsWithoutRef} from 'react';
+import React, {type ComponentPropsWithoutRef} from 'react';
 
-import {DocumentDocument} from '../../api/collection/documents';
+import {type DocumentDocument} from '../../api/collection/documents';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import DocumentCard from './DocumentCard';
 
-interface Props extends ComponentPropsWithoutRef<'div'> {
+type Props = {
 	loading: boolean;
 	documents: DocumentDocument[];
 	page: number;
-}
+} & ComponentPropsWithoutRef<'div'>;
 
 const DocumentsForPatientStatic = ({
 	loading,

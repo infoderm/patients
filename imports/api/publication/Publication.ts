@@ -1,5 +1,5 @@
-interface Publication {
+type Publication = {
 	readonly name: string;
-}
+};
 
 export default Publication;

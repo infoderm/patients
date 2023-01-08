@@ -8,7 +8,10 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {DocumentDocument, DocumentResult} from '../../api/collection/documents';
+import {
+	type DocumentDocument,
+	type DocumentResult,
+} from '../../api/collection/documents';
 import DocumentToolbar from './DocumentToolbar';
 
 const styles = (theme) =>
@@ -58,9 +61,9 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-interface HealthOneLabResultsTableProps {
+type HealthOneLabResultsTableProps = {
 	document: DocumentDocument;
-}
+};
 
 const HealthOneLabResultsTable = ({
 	document,
@@ -113,7 +116,7 @@ const HealthOneLabResultsTable = ({
 				break;
 			}
 
-			default:
+			default: {
 				if (result.flag !== '') {
 					className = classes.unknownFlagRow;
 				} else if (result.code?.startsWith('t_')) {
@@ -146,6 +149,7 @@ const HealthOneLabResultsTable = ({
 						}
 						// No default
 					}
+			}
 		}
 
 		rows.push({

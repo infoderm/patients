@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
 
-import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
+import {type PermissionTokenDocument} from '../../api/collection/permissionTokens';
 
 import PermissionTokenAccordion from './PermissionTokenAccordion';
 import PermissionTokenGenerationButton from './PermissionTokenGenerationButton';
@@ -25,9 +25,9 @@ const Root = styled('div')(({theme}) => ({
 	},
 }));
 
-interface Props {
+type Props = {
 	className?: string;
-}
+};
 
 const PermissionTokens = ({className}: Props) => {
 	const {results} = usePermissionTokens({}, {}, []);

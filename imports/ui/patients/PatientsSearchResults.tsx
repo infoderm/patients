@@ -17,10 +17,10 @@ type Params = {
 	page?: string;
 };
 
-interface Props {
+type Props = {
 	defaultPage?: number;
 	defaultPerpage?: number;
-}
+};
 
 const PatientsSearchResults = ({
 	defaultPage = 1,

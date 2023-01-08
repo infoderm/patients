@@ -5,8 +5,8 @@ import {map} from '@iterable-iterator/map';
 import {sum} from '@iterable-iterator/reduce';
 
 import authorized from '../authorized';
-import Params from './Params';
-import Publication from './Publication';
+import type Params from './Params';
+import type Publication from './Publication';
 
 // TODO early branch out
 const exactlyOne = (array: any[]) =>
@@ -30,6 +30,7 @@ const define = <T, U = T>({
 						return;
 					}
 
+					// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
 					return Reflect.apply(fn, this, args);
 				});
 				break;

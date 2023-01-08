@@ -3,10 +3,10 @@ import React, {useMemo} from 'react';
 import Typography from '@mui/material/Typography';
 import SetPicker from '../input/SetPicker';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import {useSetting} from './hooks';
 
-interface BaseProps {
+type BaseProps = {
 	className?: string;
 	setting: string;
 	makeSuggestions?: (
@@ -18,7 +18,7 @@ interface BaseProps {
 	itemToKey?: (x: any) => any;
 	itemToString?: (x: any) => any;
 	sort?: (items: any[]) => any[];
-}
+};
 
 type Props = BaseProps &
 	Omit<

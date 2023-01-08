@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
 import {Drugs} from '../../collection/drugs';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 

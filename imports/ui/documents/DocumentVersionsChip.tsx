@@ -5,12 +5,12 @@ import {Link} from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames';
 
-import Chip, {ChipProps} from '@mui/material/Chip';
+import Chip, {type ChipProps} from '@mui/material/Chip';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import {myEncodeURIComponent} from '../../util/uri';
-import {DocumentDocument} from '../../api/collection/documents';
+import {type DocumentDocument} from '../../api/collection/documents';
 import useDocumentVersions from './useDocumentVersions';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,10 +20,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-interface DocumentVersionsChipProps
-	extends Omit<ChipProps<typeof Link>, 'component' | 'to'> {
+type DocumentVersionsChipProps = {
 	document: DocumentDocument;
-}
+} & Omit<ChipProps<typeof Link>, 'component' | 'to'>;
 
 const DocumentVersionsChip = ({
 	document,

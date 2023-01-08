@@ -1,20 +1,19 @@
 import React from 'react';
 
 import {Link} from 'react-router-dom';
-import PropsOf from '../../util/PropsOf';
-import CardPatientProjection from './CardPatientProjection';
+import type PropsOf from '../../util/PropsOf';
+import type CardPatientProjection from './CardPatientProjection';
 
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
-interface StaticPatientCardProps
-	extends Omit<
-		PropsOf<typeof GenericStaticPatientCard>,
-		'patient' | 'component' | 'to' | 'aria-label'
-	> {
+type StaticPatientCardProps = {
 	patient: CardPatientProjection<typeof GenericStaticPatientCard> & {
 		_id: string;
 	};
-}
+} & Omit<
+	PropsOf<typeof GenericStaticPatientCard>,
+	'patient' | 'component' | 'to' | 'aria-label'
+>;
 
 const StaticPatientCard = (props: StaticPatientCardProps) => {
 	const firstname = props.patient.firstname || '?';

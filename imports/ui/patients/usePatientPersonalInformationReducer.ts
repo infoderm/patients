@@ -1,13 +1,13 @@
 import {useReducer} from 'react';
 
-import {PatientDocument} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 
-interface State {
+type State = {
 	patient: PatientDocument;
 	editing: boolean;
 	dirty: boolean;
 	deleting: boolean;
-}
+};
 
 const initialState = (patient: PatientDocument): State => ({
 	patient,
@@ -21,9 +21,9 @@ export const reducer = (
 	action: {type: string; key?: string; value?: any; payload?: any},
 ) => {
 	switch (action.type) {
-		case 'update':
+		case 'update': {
 			switch (action.key) {
-				case 'deathdateModifiedAt':
+				case 'deathdateModifiedAt': {
 					return {
 						...state,
 						patient: {
@@ -33,23 +33,35 @@ export const reducer = (
 						},
 						dirty: true,
 					};
-				default:
+				}
+
+				default: {
 					return {
 						...state,
 						patient: {...state.patient, [action.key]: action.value},
 						dirty: true,
 					};
+				}
 			}
+		}
 
-		case 'editing':
+		case 'editing': {
 			return {...state, editing: true};
-		case 'not-editing':
+		}
+
+		case 'not-editing': {
 			return {...state, editing: false, dirty: false};
-		case 'deleting':
+		}
+
+		case 'deleting': {
 			return {...state, deleting: true};
-		case 'not-deleting':
+		}
+
+		case 'not-deleting': {
 			return {...state, deleting: false};
-		case 'init':
+		}
+
+		case 'init': {
 			return {
 				...state,
 				editing: false,
@@ -57,8 +69,11 @@ export const reducer = (
 				deleting: false,
 				patient: action.payload,
 			};
-		default:
+		}
+
+		default: {
 			throw new Error(`Unknown action type ${action.type}.`);
+		}
 	}
 };
 

@@ -3,22 +3,21 @@ import React from 'react';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import Paginator from '../navigation/Paginator';
 import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 
-interface Props
-	extends Omit<
-		PropsOf<typeof DocumentsForPatientStatic>,
-		'page' | 'perpage' | 'documents'
-	> {
+type Props = {
 	patientId: string;
 	loading: boolean;
 	found: boolean;
 	page?: number;
 	perpage?: number;
-}
+} & Omit<
+	PropsOf<typeof DocumentsForPatientStatic>,
+	'page' | 'perpage' | 'documents'
+>;
 
 const DocumentsForPatient = ({
 	patientId,

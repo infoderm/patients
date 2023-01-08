@@ -1,15 +1,15 @@
-import {DependencyList} from 'react';
-import {Mongo} from 'meteor/mongo';
+import {type DependencyList} from 'react';
+import {type Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
 
 import subscribe from '../publication/subscribe';
-import Publication from '../publication/Publication';
-import TagDocument from './TagDocument';
+import type Publication from '../publication/Publication';
+import type TagDocument from './TagDocument';
 
-interface ReturnType<U> {
+type ReturnType<U> = {
 	loading: boolean;
 	item?: U;
-}
+};
 
 const makeItem =
 	<T extends TagDocument, U = T>(

@@ -1,17 +1,16 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import {weekly} from './ranges';
 import CalendarData from './CalendarData';
 
-interface Props
-	extends Omit<PropsOf<typeof CalendarData>, 'maxLines' | 'begin' | 'end'> {
+type Props = {
 	year: number;
 	week: number;
 	weekOptions: {};
 	maxLines?: number;
-}
+} & Omit<PropsOf<typeof CalendarData>, 'maxLines' | 'begin' | 'end'>;
 
 const WeeklyCalendarData = ({
 	year,

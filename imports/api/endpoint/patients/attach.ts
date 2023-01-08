@@ -3,7 +3,7 @@ import {check} from 'meteor/check';
 import {Patients} from '../../collection/patients';
 import {Attachments} from '../../collection/attachments';
 
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 
@@ -45,8 +45,9 @@ export default define({
 		return result;
 	},
 	simulate(patientId: string, uploadId: string) {
-		return Attachments.update(uploadId, {
+		Attachments.update(uploadId, {
 			$addToSet: {'meta.attachedToPatients': patientId},
 		});
+		return undefined;
 	},
 });

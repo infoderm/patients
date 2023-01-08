@@ -1,13 +1,13 @@
 import React from 'react';
 
 import {useCachedDoctor} from '../../api/doctors';
-import {TagNameFields} from '../../api/tags/TagDocument';
+import {type TagNameFields} from '../../api/tags/TagDocument';
 
 import StaticDoctorCard from './StaticDoctorCard';
 
-interface Props {
+type Props = {
 	item: TagNameFields;
-}
+};
 
 const ReactiveDoctorCard = ({item}: Props) => {
 	const init = {...item};

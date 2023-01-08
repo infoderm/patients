@@ -2,7 +2,7 @@ import React from 'react';
 
 import NoContent from '../navigation/NoContent';
 import ErrorLog from './ErrorLog';
-import ErrorPageProps from './ErrorPageProps';
+import type ErrorPageProps from './ErrorPageProps';
 import RestoreAppAfterErrorButtons from './RestoreAppAfterErrorButtons';
 import ErrorExplanation from './ErrorExplanation';
 

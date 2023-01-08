@@ -1,6 +1,6 @@
 import React from 'react';
 
-import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
+import type EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 import EidCardDialogStepPreviewSingleCreate from './EidCardDialogStepPreviewSingleCreate';
 import EidCardDialogStepPreviewSingleUpdate from './EidCardDialogStepPreviewSingleUpdate';
 

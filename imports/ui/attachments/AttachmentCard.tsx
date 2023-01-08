@@ -24,7 +24,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 
 import CardActionArea from '@mui/material/CardActionArea';
-import {AttachmentDocument} from '../../api/collection/attachments';
+import {type AttachmentDocument} from '../../api/collection/attachments';
 
 import {link} from '../../api/attachments';
 import patientsDetach from '../../api/endpoint/patients/detach';
@@ -90,40 +90,61 @@ const initialState = {
  */
 const reducer = (state, action) => {
 	switch (action.type) {
-		case 'openMenu':
+		case 'openMenu': {
 			return {...state, menu: action.event.currentTarget};
-		case 'closeMenu':
+		}
+
+		case 'closeMenu': {
 			return {...state, menu: null};
-		case 'openEditionDialog':
+		}
+
+		case 'openEditionDialog': {
 			return {...state, menu: null, editing: true};
-		case 'openLinkingDialog':
+		}
+
+		case 'openLinkingDialog': {
 			return {...state, menu: null, linking: true};
-		case 'openDeletionDialog':
+		}
+
+		case 'openDeletionDialog': {
 			return {...state, menu: null, deleting: true};
-		case 'openSuperDeletionDialog':
+		}
+
+		case 'openSuperDeletionDialog': {
 			return {...state, menu: null, superDeleting: true};
-		case 'closeEditionDialog':
+		}
+
+		case 'closeEditionDialog': {
 			return {...state, editing: false};
-		case 'closeLinkingDialog':
+		}
+
+		case 'closeLinkingDialog': {
 			return {...state, linking: false};
-		case 'closeDeletionDialog':
+		}
+
+		case 'closeDeletionDialog': {
 			return {...state, deleting: false};
-		case 'closeSuperDeletionDialog':
+		}
+
+		case 'closeSuperDeletionDialog': {
 			return {...state, superDeleting: false};
-		default:
+		}
+
+		default: {
 			throw new Error(`Unknown action type ${action.type}.`);
+		}
 	}
 };
 
-export interface AttachmentInfo {
+export type AttachmentInfo = {
 	parentCollection: string;
 	parentId: string;
-}
+};
 
-interface Props {
+type Props = {
 	attachment: AttachmentDocument;
 	info?: AttachmentInfo;
-}
+};
 
 const AttachmentCard = ({attachment, info}: Props) => {
 	const [state, dispatch] = useReducer(reducer, initialState);

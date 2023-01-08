@@ -49,19 +49,19 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles);
 
-interface Data {
+type Data = {
 	name: string;
 	iban: string;
 	currency: string;
 	amount: number;
 	unstructuredReference?: string;
-}
+};
 
-interface SEPAPaymentDetailsStaticProps {
+type SEPAPaymentDetailsStaticProps = {
 	accountHolder: string;
 	iban: string;
 	currency: string;
-}
+};
 
 const SEPAPaymentDetailsStatic = ({
 	accountHolder,

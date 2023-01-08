@@ -2,7 +2,9 @@ import React from 'react';
 import {useLocation} from 'react-router-dom';
 
 import {styled} from '@mui/material/styles';
-import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
+import MuiAppBar, {
+	type AppBarProps as MuiAppBarProps,
+} from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -30,9 +32,9 @@ const Toolbar = styled(MuiToolbar)({
 	flex: 'auto',
 });
 
-interface AppBarProps extends MuiAppBarProps {
+type AppBarProps = {
 	open?: boolean;
-}
+} & MuiAppBarProps;
 
 const AppBar = styled(MuiAppBar, {
 	shouldForwardProp: (prop) => prop !== 'open',

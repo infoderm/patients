@@ -49,9 +49,9 @@ const PatientRecordTabs = () => {
 	);
 };
 
-interface Props {
+type Props = {
 	patientId: string;
-}
+};
 
 const PatientRecord = ({patientId}: Props) => {
 	return (

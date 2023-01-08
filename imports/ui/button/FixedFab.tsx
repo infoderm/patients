@@ -1,18 +1,18 @@
-import React, {CSSProperties} from 'react';
+import React, {type CSSProperties} from 'react';
 
-import {styled, Theme, useTheme} from '@mui/material/styles';
-import Fab, {FabProps} from '@mui/material/Fab';
+import {styled, type Theme, useTheme} from '@mui/material/styles';
+import Fab, {type FabProps} from '@mui/material/Fab';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import addTooltip from '../accessibility/addTooltip';
 import FixedFabAnimation from './FixedFabAnimation';
 
-interface Options {
+type Options = {
 	theme?: Theme;
 	row?: number;
 	col?: number;
 	style?: object;
-}
+};
 
 const DEFAULT_ROW = 1;
 const DEFAULT_COL = 1;
@@ -29,12 +29,12 @@ export const computeFixedFabStyle = ({
 	right: theme?.spacing(3 + 9 * (col - 1)),
 });
 
-interface FixedFabExtraProps {
+type FixedFabExtraProps = {
 	col?: number;
 	row?: number;
 	visible?: boolean;
 	pending?: boolean;
-}
+};
 
 const Progress = styled(CircularProgress)({
 	position: 'absolute',

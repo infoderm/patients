@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useDoctorsFind} from '../../api/doctors';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import TagNamePrefixFilteredList from '../tags/TagNamePrefixFilteredList';
 import ReactiveDoctorCard from './ReactiveDoctorCard';
 

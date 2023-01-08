@@ -1,8 +1,8 @@
-import {ConsultationMetadata} from './consultations';
+import {type ConsultationMetadata} from './consultations';
 
 export {Consultations as Appointments} from './consultations';
 
-export interface AppointmentFields {
+export type AppointmentFields = {
 	patientId: string;
 	datetime: Date;
 	scheduledDatetime: Date;
@@ -11,18 +11,18 @@ export interface AppointmentFields {
 	reason: string;
 
 	isDone: boolean;
-}
+};
 
-interface AppointmentCancellationFields {
+type AppointmentCancellationFields = {
 	isCancelled?: boolean;
 	cancellationDatetime?: Date;
 	cancellationReason?: string;
 	cancellationExplanation?: string;
-}
+};
 
-export interface AppointmentComputedFields {
+export type AppointmentComputedFields = {
 	end: Date;
-}
+};
 
 export type AppointmentDocument = AppointmentFields &
 	AppointmentCancellationFields &

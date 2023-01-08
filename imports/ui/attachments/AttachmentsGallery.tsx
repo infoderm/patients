@@ -13,7 +13,7 @@ import {groupby} from '@iterable-iterator/group';
 import Loading from '../navigation/Loading';
 
 import useAttachments from './useAttachments';
-import AttachmentInfo from './AttachmentInfo';
+import type AttachmentInfo from './AttachmentInfo';
 import AttachmentsGrid from './AttachmentsGrid';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-interface StaticAttachmentsGalleryProps {
+type StaticAttachmentsGalleryProps = {
 	loading: boolean;
 	attachmentsInfo: Map<string, AttachmentInfo>;
 	attachments: any[];
-}
+};
 
 const StaticAttachmentsGallery = ({
 	loading,
@@ -90,9 +90,9 @@ const StaticAttachmentsGallery = ({
 	);
 };
 
-interface ReactiveAttachmentsGalleryProps {
+type ReactiveAttachmentsGalleryProps = {
 	attachmentsInfo: AttachmentInfo[];
-}
+};
 
 const ReactiveAttachmentsGallery = ({
 	attachmentsInfo,

@@ -1,10 +1,10 @@
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
-interface ObserveOptions {
+type ObserveOptions = {
 	added?: boolean;
 	removed?: boolean;
 	changed?: boolean;
-}
+};
 
 const makeObservedQuerySubscription = <T, U = T>(
 	QueriedCollection: Mongo.Collection<T, U>,

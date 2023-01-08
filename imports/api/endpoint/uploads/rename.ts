@@ -18,9 +18,10 @@ export default define({
 		}),
 		'userId',
 	),
-	simulate(uploadId: string, filename: string): void {
+	simulate(uploadId: string, filename: string) {
 		Uploads.collection.update(uploadId, {
 			$set: {name: filename},
 		});
+		return undefined;
 	},
 });

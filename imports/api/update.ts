@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
-import TransactionDriver from './transaction/TransactionDriver';
+import type TransactionDriver from './transaction/TransactionDriver';
 
 const id = (x) => x;
 
@@ -32,14 +32,14 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 	}
 };
 
-interface Changes<T> {
+type Changes<T> = {
 	$set?: Partial<T> | undefined;
 	$unset?:
 		| {
 				[K in keyof T]?: boolean;
 		  }
 		| undefined;
-}
+};
 
 export const simulateUpdate = <T>(
 	state: undefined | T,

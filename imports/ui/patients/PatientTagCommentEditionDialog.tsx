@@ -1,6 +1,6 @@
-import React, {ElementType, MouseEventHandler, useState} from 'react';
+import React, {type ElementType, type MouseEventHandler, useState} from 'react';
 
-import Button, {ButtonProps} from '@mui/material/Button';
+import Button, {type ButtonProps} from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,7 +19,7 @@ import {formattedLineInput} from '../../api/string';
 
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
-export interface ConfirmationDialogProps {
+export type ConfirmationDialogProps = {
 	open?: boolean;
 	pending?: boolean;
 	onCancel: EventHandler;
@@ -30,7 +30,7 @@ export interface ConfirmationDialogProps {
 	cancelColor?: ButtonProps['color'];
 	confirmColor?: ButtonProps['color'];
 	initialValue: string;
-}
+};
 
 const emptyInput = formattedLineInput('');
 

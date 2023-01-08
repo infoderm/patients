@@ -1,5 +1,6 @@
 import {Mongo} from 'meteor/mongo';
-import TagDocument, {TagNameFields} from '../tags/TagDocument';
+import {type TagNameFields} from '../tags/TagDocument';
+import type TagDocument from '../tags/TagDocument';
 
 export type DoctorDocument = TagDocument;
 export type DoctorFields = TagNameFields;

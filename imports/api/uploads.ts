@@ -1,9 +1,9 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
 // @ts-expect-error Needs more recent @types/node
-import {Buffer} from 'buffer';
+import {type Buffer} from 'buffer';
 import {Readable} from 'stream';
 import {Meteor} from 'meteor/meteor';
-import {FileObj, FilesCollection} from 'meteor/ostrio:files';
+import {type FileObj, FilesCollection} from 'meteor/ostrio:files';
 import MemoryLRU from 'lru-cache';
 
 import {all} from '@iterable-iterator/reduce';
@@ -35,10 +35,10 @@ if (Meteor.isServer) {
 	});
 }
 
-export interface ThumbSizeOptions {
+export type ThumbSizeOptions = {
 	minWidth?: number;
 	minHeight?: number;
-}
+};
 
 const imageThumb = async ({minWidth, minHeight}: ThumbSizeOptions) => {
 	const {default: sharp} = await import('sharp');
@@ -105,14 +105,14 @@ const thumbify = async <T>(
 	return cacheResult(upload, transform, source, size);
 };
 
-export interface MetadataType {
+export type MetadataType = {
 	createdAt?: Date;
 	lastModified?: Date;
 	gridFsFileId?: string;
 	isDeleted?: boolean;
 	attachedToPatients?: string[];
 	attachedToConsultations?: string[];
-}
+};
 
 const getId = (upload: FileObj<MetadataType>, version: string) => {
 	const {gridFsFileId} = upload.versions[version]?.meta ?? {};

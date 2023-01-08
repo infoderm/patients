@@ -1,6 +1,6 @@
-import React, {ElementType, MouseEventHandler} from 'react';
+import React, {type ElementType, type MouseEventHandler} from 'react';
 
-import Button, {ButtonProps} from '@mui/material/Button';
+import Button, {type ButtonProps} from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -14,7 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
-export interface ConfirmationDialogProps {
+export type ConfirmationDialogProps = {
 	open?: boolean;
 	loading?: boolean;
 	pending?: boolean;
@@ -28,7 +28,7 @@ export interface ConfirmationDialogProps {
 	ConfirmIcon?: ElementType;
 	cancelColor?: ButtonProps['color'];
 	confirmColor?: ButtonProps['color'];
-}
+};
 
 const ConfirmationDialog = ({
 	open = false,

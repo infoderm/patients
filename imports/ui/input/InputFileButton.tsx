@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {styled} from '@mui/material/styles';
 import MuiButton from '@mui/material/Button';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import useUniqueId from '../hooks/useUniqueId';
 
 const Input = styled('input')({
@@ -17,10 +17,10 @@ type ComponentWithoutCollidingProps<C> = PropsOf<C> extends
 	? never
 	: C;
 
-interface OwnProps<C> {
+type OwnProps<C> = {
 	onChange: (event: any) => void;
 	Button?: ComponentWithoutCollidingProps<C>;
-}
+};
 
 type Props<C> = PropsOf<C> & OwnProps<C>;
 

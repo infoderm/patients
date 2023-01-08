@@ -1,11 +1,11 @@
-import React, {DependencyList, useState} from 'react';
+import React, {type DependencyList, useState} from 'react';
 
 import Typography from '@mui/material/Typography';
 
 import Center from '../grid/Center';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
-import GenericQueryHook from '../../api/GenericQueryHook';
+import type GenericQueryHook from '../../api/GenericQueryHook';
 
 const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
 	const {loading, item} = useItem(name, [name]);
@@ -31,7 +31,7 @@ const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
 	);
 };
 
-interface Props<T> {
+type Props<T> = {
 	Card?: React.ElementType;
 
 	useItem?: (
@@ -49,7 +49,7 @@ interface Props<T> {
 	fields?: {};
 	page: number;
 	perpage: number;
-}
+};
 
 const TagDetails = <T,>(props: Props<T>) => {
 	const {

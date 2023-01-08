@@ -9,9 +9,9 @@ import FixedFab from '../button/FixedFab';
 import ConsultationsPager from './ConsultationsPager';
 import ManageConsultationsForPatientButton from './ManageConsultationsForPatientButton';
 
-interface Props {
+type Props = {
 	patientId: string;
-}
+};
 
 const ConsultationsForPatient = ({patientId}: Props) => {
 	const options = {fields: {_id: 1}};

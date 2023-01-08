@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';

@@ -4,7 +4,7 @@ import {useSnackbar} from 'notistack';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import update from '../../api/endpoint/consultations/update';
 
 import {useCurrencyFormat} from '../../i18n/currency';
@@ -15,11 +15,11 @@ import ConfirmationDialog from '../modal/ConfirmationDialog';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	consultation: ConsultationDocument;
-}
+};
 
 const ConsultationDebtSettlementDialog = ({
 	open,

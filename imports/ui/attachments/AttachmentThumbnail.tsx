@@ -1,18 +1,17 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import eee from '../../util/eee';
 import {thumb} from '../../api/attachments';
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 import useAttachment from './useAttachment';
 
-interface AttachmentThumbnailProps
-	extends Omit<PropsOf<typeof AnimatedCardMedia>, 'loading' | 'image'> {
+type AttachmentThumbnailProps = {
 	attachmentId: string;
 	height: number;
 	width?: number;
-}
+} & Omit<PropsOf<typeof AnimatedCardMedia>, 'loading' | 'image'>;
 
 const AttachmentThumbnail = ({
 	attachmentId,

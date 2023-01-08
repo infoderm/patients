@@ -2,15 +2,15 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import Chip, {ChipProps} from '@mui/material/Chip';
+import Chip, {type ChipProps} from '@mui/material/Chip';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
-import {InsuranceFields} from '../../api/collection/insurances';
+import {type InsuranceFields} from '../../api/collection/insurances';
 
-interface AddedProps {
+type AddedProps = {
 	item: InsuranceFields;
-}
+};
 
 type StaticInsuranceChipProps = ChipProps & AddedProps;
 

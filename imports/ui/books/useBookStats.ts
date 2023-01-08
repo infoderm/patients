@@ -1,5 +1,5 @@
 import useConsultationsStats from '../consultations/useConsultationsStats';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import {books} from '../../api/books';
 
 const useBookStats = (

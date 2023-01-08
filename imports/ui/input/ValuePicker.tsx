@@ -6,7 +6,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import useUniqueId from '../hooks/useUniqueId';
 
-interface Props {
+type Props = {
 	options: string[];
 	optionToString?: (option: string) => string;
 	pairToKey?: (option: string, index: number) => React.Key;
@@ -19,7 +19,7 @@ interface Props {
 
 	// input
 	name?: string;
-}
+};
 
 const ValuePicker = ({
 	label,

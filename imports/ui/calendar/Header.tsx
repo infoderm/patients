@@ -19,10 +19,10 @@ const Title = styled(Typography)({
 	textOverflow: 'ellipsis',
 });
 
-interface CalendarHeaderProps {
+type CalendarHeaderProps = {
 	title?: string;
 	actions?: React.ReactNode[];
-}
+};
 
 const CalendarHeader = ({title, actions}: CalendarHeaderProps) => {
 	return (

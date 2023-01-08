@@ -6,7 +6,7 @@ import addYears from 'date-fns/addYears';
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
 import {
-	NormalizedLine,
+	type NormalizedLine,
 	normalizedLine,
 	normalizedLineInput,
 	parseUint32StrictOrString,
@@ -17,7 +17,7 @@ import {BooksCache} from './collection/books/cache';
 
 import publication from './publication/books/find';
 import cachePublication from './publication/books/observe';
-import TransactionDriver from './transaction/TransactionDriver';
+import type TransactionDriver from './transaction/TransactionDriver';
 
 export const useBooks = makeQuery(Books, publication);
 

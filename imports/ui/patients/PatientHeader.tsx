@@ -15,9 +15,9 @@ import CopiableTextField from '../input/CopiableTextField';
 
 import useCachedPatient from './useCachedPatient';
 
-interface Props {
+type Props = {
 	patientId: string;
-}
+};
 
 const PatientHeader = ({patientId}: Props) => {
 	const init = {_id: patientId};

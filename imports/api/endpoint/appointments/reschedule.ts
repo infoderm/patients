@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
 import {Appointments} from '../../collection/appointments';
 import {sanitizeAppointmentUpdate} from '../../appointments';
@@ -7,9 +7,9 @@ import {sanitizeAppointmentUpdate} from '../../appointments';
 import define from '../define';
 
 import {availability} from '../../availability';
-import {ConsultationDocument} from '../../collection/consultations';
+import {type ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 import {validate} from '../../../util/schema';
 import createPatientForAppointment from './createPatient';
@@ -95,7 +95,7 @@ export default define({
 			patientId: $set.patientId ?? existing.patientId,
 		};
 	},
-	simulate(_appointmentId: string, _appointment: any): void {
+	simulate(_appointmentId: string, _appointment: any) {
 		return undefined;
 	},
 });

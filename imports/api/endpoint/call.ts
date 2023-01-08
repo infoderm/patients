@@ -1,6 +1,6 @@
 import _apply from '../_apply';
 
-import Endpoint from './Endpoint';
+import type Endpoint from './Endpoint';
 
 const call = async <R>(endpoint: Endpoint<R>, ...args: any[]): Promise<R> =>
 	_apply<R>(endpoint.name, args, endpoint.options);

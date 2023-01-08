@@ -2,7 +2,7 @@ import React from 'react';
 
 import {styled} from '@mui/material/styles';
 
-import {UseMultipleSelectionGetSelectedItemPropsOptions} from 'downshift';
+import {type UseMultipleSelectionGetSelectedItemPropsOptions} from 'downshift';
 
 const PREFIX = 'Selection';
 
@@ -17,7 +17,7 @@ const Root = styled('div')(({theme}) => ({
 	},
 }));
 
-interface SelectionProps<Item, ChipProps> {
+type SelectionProps<Item, ChipProps> = {
 	Chip: React.ElementType;
 	chipProps: ((item: Item, index: number) => ChipProps) | ChipProps;
 	selectedItems: Item[];
@@ -28,7 +28,7 @@ interface SelectionProps<Item, ChipProps> {
 	) => any;
 	readOnly: boolean;
 	removeSelectedItem: (item: Item) => void | Promise<void>;
-}
+};
 
 const Selection = React.memo(
 	({

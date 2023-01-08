@@ -1,14 +1,14 @@
 import React from 'react';
 
 import Grid from '@mui/material/Grid';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
-import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
+import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 
-interface TagGridProps extends PropsOf<typeof Grid> {
+type TagGridProps = {
 	Card: React.ElementType;
 	tags: Array<TagNameFields & TagMetadata>;
-}
+} & PropsOf<typeof Grid>;
 
 const TagGrid = ({Card, tags, ...rest}: TagGridProps) => (
 	<Grid container spacing={3} {...rest}>

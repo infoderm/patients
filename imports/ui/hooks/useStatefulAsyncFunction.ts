@@ -1,8 +1,8 @@
 import {useCallback, useState} from 'react';
 
-interface State {
+type State = {
 	pending: boolean;
-}
+};
 
 const useStatefulAsyncFunction = <Callback>(
 	fn: Callback,

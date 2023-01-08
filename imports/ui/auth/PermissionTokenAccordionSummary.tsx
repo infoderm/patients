@@ -3,12 +3,12 @@ import React from 'react';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
+import {type PermissionTokenDocument} from '../../api/collection/permissionTokens';
 import {useDateFormatRelative} from '../../i18n/datetime';
 
-interface Props {
+type Props = {
 	item: PermissionTokenDocument;
-}
+};
 
 const PermissionTokenAccordionSummary = ({item}: Props) => {
 	const localizedDateFormatRelative = useDateFormatRelative();

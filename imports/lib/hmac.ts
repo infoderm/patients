@@ -1,6 +1,6 @@
 import assert from 'assert';
 // @ts-expect-error Needs more recent @types/node
-import {Buffer} from 'buffer';
+import {type Buffer} from 'buffer';
 import promisify from '../util/promisify';
 
 type SUPPORTED_HASH_ALGOS = 'sha256';
@@ -9,33 +9,36 @@ type SUPPORTED_INPUT_ENCODING = 'utf8';
 type SUPPORTED_DOCUMENT_ENCODING = 'json';
 type SUPPORTED_SIGNATURE_ENCODING = 'base64';
 
-export interface HMACConfig {
+export type HMACConfig = {
 	hashAlgo: SUPPORTED_HASH_ALGOS;
 	keyEncoding: SUPPORTED_KEY_ENCODING;
 	inputEncoding: SUPPORTED_INPUT_ENCODING;
 	documentEncoding: SUPPORTED_DOCUMENT_ENCODING;
 	signatureEncoding: SUPPORTED_SIGNATURE_ENCODING;
-}
+};
 
-export interface Document {
+export type Document = {
 	hmac: HMACConfig;
-}
+};
 
 type Key = string;
 type Signature = string;
 
-export interface SignedDocument extends Document {
+export type SignedDocument = {
 	signature: Signature;
-}
+} & Document;
 
 const encodeDocument = (encoding: string, document: Document) => {
 	switch (encoding) {
-		case 'json':
+		case 'json': {
 			// TODO Careful here, we may need to follow a canonical order
 			// see https://stackoverflow.com/questions/5046835/mongodb-field-order-and-document-position-change-after-update/6453755#6453755
 			return JSON.stringify(document);
-		default:
+		}
+
+		default: {
 			throw new Error(`unknown encoding ${encoding}`);
+		}
 	}
 };
 

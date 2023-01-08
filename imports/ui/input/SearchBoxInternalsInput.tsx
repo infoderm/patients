@@ -3,11 +3,11 @@ import React from 'react';
 import {styled} from '@mui/material/styles';
 
 import InputBase from '@mui/material/InputBase';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
-interface Props extends PropsOf<typeof InputBase> {
+type Props = {
 	expands?: boolean;
-}
+} & PropsOf<typeof InputBase>;
 
 const StyledInputBase = styled(InputBase, {
 	shouldForwardProp: (prop) => prop !== 'expands',

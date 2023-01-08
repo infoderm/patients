@@ -1,9 +1,9 @@
-import {DependencyList, useState, useEffect} from 'react';
-import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
+import {type DependencyList, useState, useEffect} from 'react';
+import {type Meteor} from 'meteor/meteor';
+import {type Mongo} from 'meteor/mongo';
 
 import useRandom from '../ui/hooks/useRandom';
-import Publication from './publication/Publication';
+import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 
 /**

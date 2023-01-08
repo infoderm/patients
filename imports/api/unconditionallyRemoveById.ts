@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
-import TransactionDriver from './transaction/TransactionDriver';
+import type TransactionDriver from './transaction/TransactionDriver';
 
 const unconditionallyRemoveById = (Collection) =>
 	async function (

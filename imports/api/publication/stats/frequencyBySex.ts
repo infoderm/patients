@@ -1,19 +1,19 @@
 import {Consultations} from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
-import {countCollection, PollResult} from '../../collection/stats';
+import {countCollection, type PollResult} from '../../collection/stats';
 import define from '../define';
 
 export const frequencySexKey = (query) =>
 	`frequencySex-${JSON.stringify(query ?? {})}`;
 export const frequencySexPublication = `${countCollection}.frequencySex`;
 
-export interface GenderCount {
+export type GenderCount = {
 	other?: number;
 	female?: number;
 	male?: number;
 	''?: number;
 	undefined?: number;
-}
+};
 
 export default define({
 	name: frequencySexPublication,

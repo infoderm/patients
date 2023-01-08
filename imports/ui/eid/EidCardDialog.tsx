@@ -1,22 +1,22 @@
 import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {type useNavigate} from 'react-router-dom';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
-import {PatientIdFields} from '../../api/collection/patients';
+import {type PatientIdFields} from '../../api/collection/patients';
 
 import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
-interface Props {
+type Props = {
 	navigate: ReturnType<typeof useNavigate>;
 	eidInfo: PatientIdFields;
 	open: boolean;
 	onClose: () => void;
-}
+};
 
 const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 	const [selected, setSelected] = useState(new Set<string>());

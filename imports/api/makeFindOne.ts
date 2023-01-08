@@ -1,7 +1,7 @@
-import {Mongo} from 'meteor/mongo';
-import {DependencyList} from 'react';
+import {type Mongo} from 'meteor/mongo';
+import {type DependencyList} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
-import Publication from './publication/Publication';
+import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 
 const makeFindOne =

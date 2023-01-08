@@ -1,17 +1,17 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import CalendarHeader from './CalendarHeader';
 import MonthlyCalendarData from './MonthlyCalendarData';
 
-interface Props extends PropsOf<typeof MonthlyCalendarData> {
+type Props = {
 	className?: string;
 	title?: string;
 	next: () => void;
 	prev: () => void;
 	weekly: () => void;
 	navigationRole?: 'button' | 'link';
-}
+} & PropsOf<typeof MonthlyCalendarData>;
 
 const StaticMonthlyCalendar = ({
 	className,

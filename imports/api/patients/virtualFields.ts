@@ -1,4 +1,4 @@
-import {PatientDocument} from '../collection/patients';
+import {type PatientDocument} from '../collection/patients';
 import eidParseBirthdate from '../eidParseBirthdate';
 
 const virtualFields = (patient: PatientDocument) => {

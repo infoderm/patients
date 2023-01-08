@@ -5,12 +5,12 @@ import Router from './Router';
 import ErrorBoundary from './ErrorBoundary';
 import Main from './Main';
 
-interface Props {
+type Props = {
 	loading: boolean;
 	loggingIn: boolean;
 	loggingOut: boolean;
 	currentUser: any;
-}
+};
 
 const Child = ({loading, loggingIn, loggingOut, currentUser}: Props) => {
 	if (loading) return <NoContent>Loading...</NoContent>;

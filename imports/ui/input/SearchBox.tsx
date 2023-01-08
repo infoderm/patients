@@ -1,16 +1,16 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
 import SearchBoxInternalsInputContainer from './SearchBoxInternalsInputContainer';
 import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
-interface Props extends PropsOf<typeof SearchBoxInternalsInput> {
+type Props = {
 	className?: string;
 	icon: React.ReactNode;
-}
+} & PropsOf<typeof SearchBoxInternalsInput>;
 
 const SearchBox = ({className, icon, ...rest}: Props) => (
 	<SearchBoxInternalsContainer>

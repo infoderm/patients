@@ -1,8 +1,8 @@
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
 import {useDebounce} from 'use-debounce';
 
-import GenericQueryHook from '../../api/GenericQueryHook';
+import type GenericQueryHook from '../../api/GenericQueryHook';
 import {escapeStringRegexp} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 

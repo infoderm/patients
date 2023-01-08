@@ -9,7 +9,7 @@ import {dropId, dropIds, server} from '../../test/fixtures';
 import TestingTransactionDriver from './TestingTransactionDriver';
 import executeTransaction from './executeTransaction';
 import MeteorTransactionSimulationDriver from './MeteorTransactionSimulationDriver';
-import TransactionDriver from './TransactionDriver';
+import type TransactionDriver from './TransactionDriver';
 
 server(__filename, () => {
 	const MongoDriver = new TestingTransactionDriver(async (txn) =>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import Loading from '../navigation/Loading';
 import Paginator from '../navigation/Paginator';
@@ -9,15 +9,14 @@ import NoContent from '../navigation/NoContent';
 
 import ConsultationsList from './ConsultationsList';
 
-interface PagedConsultationsListProps
-	extends PropsOf<typeof ConsultationsList> {
+type PagedConsultationsListProps = {
 	page: number;
 	perpage: number;
 	items: any[];
 	loading?: boolean;
 	dirty?: boolean;
 	refresh?: () => void;
-}
+} & PropsOf<typeof ConsultationsList>;
 
 const PagedConsultationsList = ({
 	loading = false,

@@ -14,18 +14,18 @@ import {increasing} from '@total-order/primitive';
 
 const percentage = (p) => `${(p * 100).toPrecision(4)}%`;
 
-interface Margin {
+type Margin = {
 	top?: number;
 	left?: number;
-}
+};
 
-interface Props {
+type Props = {
 	width: number;
 	height: number;
 	margin?: Margin;
 	data: any[];
 	color: any;
-}
+};
 
 const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 	const {

@@ -1,13 +1,13 @@
 import {check} from 'meteor/check';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
-import {ConsultationDocument} from '../../collection/consultations';
+import {type ConsultationDocument} from '../../collection/consultations';
 
 import {Appointments} from '../../collection/appointments';
 
 import {availability} from '../../availability';
 
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
@@ -74,7 +74,7 @@ export default define({
 		_consultationId: string,
 		_cancellationReason: string,
 		_cancellationExplanation: string,
-	): void {
+	) {
 		return undefined;
 	},
 });

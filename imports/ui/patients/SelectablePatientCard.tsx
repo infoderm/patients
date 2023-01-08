@@ -53,12 +53,12 @@ const Root = styled('div')(({theme}) => ({
 	},
 }));
 
-interface Props {
+type Props = {
 	patient: {_id: string};
 	onClick: (patient: {_id: string}) => void;
 	selected?: boolean | undefined;
 	Card?: React.ElementType;
-}
+};
 
 const SelectablePatientCard = ({
 	onClick,

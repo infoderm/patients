@@ -2,13 +2,13 @@ import React from 'react';
 
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
-interface ConsultationsListProps {
+type ConsultationsListProps = {
 	className?: string;
 	loading?: boolean;
 	items: any[];
 	itemProps?: object;
 	defaultExpandedFirst?: boolean;
-}
+};
 
 const ConsultationsList = ({
 	className = undefined,

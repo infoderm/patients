@@ -1,14 +1,14 @@
 import React from 'react';
 
-import {ChipProps} from '@mui/material/Chip';
+import {type ChipProps} from '@mui/material/Chip';
 
 import {useAllergy} from '../../api/allergies';
-import {PatientTag} from '../../api/collection/patients';
+import {type PatientTag} from '../../api/collection/patients';
 import StaticAllergyChip from './StaticAllergyChip';
 
-interface Tweaks {
+type Tweaks = {
 	item: PatientTag;
-}
+};
 
 type ReactiveAllergyChipProps = ChipProps & Tweaks;
 

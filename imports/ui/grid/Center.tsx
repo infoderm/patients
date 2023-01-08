@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Grid, {GridProps} from '@mui/material/Grid';
+import Grid, {type GridProps} from '@mui/material/Grid';
 
 const Center = ({
 	xs = 12,

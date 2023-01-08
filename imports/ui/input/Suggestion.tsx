@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MenuItem, {MenuItemProps} from '@mui/material/MenuItem';
+import MenuItem, {type MenuItemProps} from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import {styled} from '@mui/material/styles';
 import Keyboard from '../accessibility/Keyboard';
@@ -19,7 +19,7 @@ const StyledMenuItem = styled(MenuItem)(({theme}) => ({
 	},
 }));
 
-interface SuggestionProps<Item> extends Omit<MenuItemProps, 'ref'> {
+type SuggestionProps<Item> = {
 	highlightedIndex: number;
 	index: number;
 	item: Item;
@@ -27,7 +27,7 @@ interface SuggestionProps<Item> extends Omit<MenuItemProps, 'ref'> {
 	itemToKey: (item: Item) => React.Key;
 	itemToString: (item: Item) => React.ReactNode;
 	Item?: React.ElementType;
-}
+} & Omit<MenuItemProps, 'ref'>;
 
 const Suggestion = React.forwardRef(
 	<ItemType,>(

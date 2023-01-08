@@ -1,14 +1,10 @@
 import React from 'react';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import PagedConsultationsList from './PagedConsultationsList';
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 
-interface Props
-	extends Omit<
-		PropsOf<typeof PagedConsultationsList>,
-		'page' | 'perpage' | 'items'
-	> {
+type Props = {
 	url?: string;
 	page?: number;
 	perpage?: number;
@@ -16,7 +12,7 @@ interface Props
 	query?: object;
 	sort: object;
 	defaultExpandedFirst?: boolean;
-}
+} & Omit<PropsOf<typeof PagedConsultationsList>, 'page' | 'perpage' | 'items'>;
 
 const ConsultationsPage = ({
 	query = {},

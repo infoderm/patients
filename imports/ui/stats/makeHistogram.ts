@@ -1,15 +1,15 @@
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {Count, PollResult} from '../../api/collection/stats';
+import {Count, type PollResult} from '../../api/collection/stats';
 import subscribe from '../../api/publication/subscribe';
 
 import {countPublicationName, countPublicationKey} from '../../api/stats';
 
-interface Result<T> {
+type Result<T> = {
 	loading: boolean;
 	total?: number;
 	count?: T;
-}
+};
 
 const makeHistogram =
 	<T>(QueriedCollection, values) =>

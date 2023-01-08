@@ -22,7 +22,7 @@ import {DatePicker} from '@mui/x-date-pickers';
 import isValid from 'date-fns/isValid';
 import Button from '@mui/material/Button';
 
-import {parseOneAddress, ParsedMailbox} from 'email-addresses';
+import {parseOneAddress, type ParsedMailbox} from 'email-addresses';
 
 import TextField from '../input/TextField';
 
@@ -36,9 +36,9 @@ import eidFormatBirthdate from '../../api/eidFormatBirthdate';
 import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
 import {
-	PatientDocument,
-	Email,
-	PatientTag,
+	type PatientDocument,
+	type Email,
+	type PatientTag,
 } from '../../api/collection/patients';
 
 import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
@@ -163,10 +163,10 @@ const openUpdateTagCommentDialog = ({
 		  }
 		: undefined;
 
-interface PatientPersonalInformationStaticProps {
+type PatientPersonalInformationStaticProps = {
 	patient: PatientDocument;
 	loading?: boolean;
-}
+};
 
 const noSuggestions = () => ({results: []});
 

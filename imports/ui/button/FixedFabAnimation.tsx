@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {useTheme} from '@mui/material/styles';
-import Zoom, {ZoomProps} from '@mui/material/Zoom';
+import Zoom, {type ZoomProps} from '@mui/material/Zoom';
 
 const FixedFabAnimation = ({in: transitionIn, ...rest}: ZoomProps) => {
 	const theme = useTheme();

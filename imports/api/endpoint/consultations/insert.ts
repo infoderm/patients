@@ -9,7 +9,7 @@ import {books} from '../../books';
 
 import define from '../define';
 import {availability} from '../../availability';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 
 const {sanitize} = consultations;
@@ -62,7 +62,7 @@ export default define({
 
 		return db.insertOne(Consultations, document);
 	},
-	simulate(_consultation: any): void {
+	simulate(_consultation: any) {
 		return undefined;
 	},
 });

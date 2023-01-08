@@ -23,16 +23,16 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField';
 
 import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	consultation: ConsultationDocument;
-}
+};
 
 const ConsultationAppointmentRestorationDialog = ({
 	open,

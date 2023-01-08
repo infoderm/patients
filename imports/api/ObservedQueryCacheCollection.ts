@@ -1,6 +1,6 @@
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
-import CacheItem from './CacheItem';
+import type CacheItem from './CacheItem';
 
 type ObservedQueryCacheCollection<T> = Mongo.Collection<CacheItem<T>>;
 

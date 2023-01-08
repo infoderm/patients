@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import {styled} from '@mui/material/styles';
 
 import {useTransition, animated} from 'react-spring';
-import CardMedia, {CardMediaProps} from '@mui/material/CardMedia';
+import CardMedia, {type CardMediaProps} from '@mui/material/CardMedia';
 import Skeleton from '@mui/material/Skeleton';
 
 const PREFIX = 'AnimatedCardMedia';
@@ -28,12 +28,11 @@ const Root = styled('div')({
 	},
 });
 
-interface AnimatedCardMediaProps
-	extends Omit<CardMediaProps<typeof animated.div>, 'placeholder'> {
+type AnimatedCardMediaProps = {
 	loading: boolean;
 	image: string;
 	placeholder?: React.ReactNode;
-}
+} & Omit<CardMediaProps<typeof animated.div>, 'placeholder'>;
 
 const AnimatedCardMedia = ({
 	className,

@@ -22,11 +22,11 @@ const BookAvatar = styled(Avatar)({
 	backgroundColor: orange[500],
 });
 
-interface Props {
+type Props = {
 	item: {
 		name: string;
 	};
-}
+};
 
 const BookCard = ({item}: Props) => {
 	const dateFormatRange = useDateFormatRange('PPP');

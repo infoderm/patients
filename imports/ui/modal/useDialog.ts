@@ -1,5 +1,5 @@
 import {useContext, useMemo} from 'react';
-import dialog, {ComponentExecutor, Options} from './dialog';
+import dialog, {type ComponentExecutor, type Options} from './dialog';
 import ModalContext from './ModalContext';
 
 const useDialog = () => {

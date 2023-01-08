@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import FixedFab from '../button/FixedFab';
 
@@ -11,7 +11,7 @@ import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../util/mergeFields';
 
 import Refresh from '../navigation/Refresh';
-import {PatientCacheResult} from '../../api/collection/patients/search/cache';
+import {type PatientCacheResult} from '../../api/collection/patients/search/cache';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';

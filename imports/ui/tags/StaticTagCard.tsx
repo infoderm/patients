@@ -80,7 +80,7 @@ const Veil = styled('div')({
 	fontSize: '2rem',
 });
 
-export interface StaticTagCardProps {
+export type StaticTagCardProps = {
 	loading: boolean;
 	found: boolean;
 	tag: {name: string; displayName?: string};
@@ -94,7 +94,7 @@ export interface StaticTagCardProps {
 	RenamingDialog?: React.ElementType;
 	DeletionDialog?: React.ElementType;
 	abbr?: string;
-}
+};
 
 const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 	(

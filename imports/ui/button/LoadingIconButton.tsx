@@ -3,14 +3,14 @@ import React from 'react';
 import {styled} from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import IconButton, {IconButtonProps} from '@mui/material/IconButton';
+import IconButton, {type IconButtonProps} from '@mui/material/IconButton';
 import MuiBox from '@mui/material/Box';
 import addTooltip from '../accessibility/addTooltip';
 
-interface LoadingIconButtonExtraProps {
+type LoadingIconButtonExtraProps = {
 	loading?: boolean;
 	size?: 'medium' | 'large' | 'small';
-}
+};
 
 const Box = styled(MuiBox)({
 	position: 'relative',
@@ -19,27 +19,41 @@ const Box = styled(MuiBox)({
 
 const getTopFromsize = (size: number | string) => {
 	switch (size) {
-		case 40:
+		case 40: {
 			return -8;
-		case 48:
+		}
+
+		case 48: {
 			return -12;
-		case 32:
+		}
+
+		case 32: {
 			return -6;
-		default:
+		}
+
+		default: {
 			return -8;
+		}
 	}
 };
 
 const getProgressSizeFromButtonSize = (size: string) => {
 	switch (size) {
-		case 'medium':
+		case 'medium': {
 			return 40;
-		case 'large':
+		}
+
+		case 'large': {
 			return 48;
-		case 'small':
+		}
+
+		case 'small': {
 			return 32;
-		default:
+		}
+
+		default: {
 			return 40;
+		}
 	}
 };
 

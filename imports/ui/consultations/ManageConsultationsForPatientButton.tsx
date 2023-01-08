@@ -2,14 +2,14 @@ import React, {useState} from 'react';
 
 import AssistantIcon from '@mui/icons-material/Assistant';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';
 
-interface ExtraProps<B> {
+type ExtraProps<B> = {
 	Button: B;
 	patientId: string;
 	children: React.ReactNode;
-}
+};
 
 const ManageConsultationsForPatientButton = React.forwardRef(
 	<B extends React.ElementType>(

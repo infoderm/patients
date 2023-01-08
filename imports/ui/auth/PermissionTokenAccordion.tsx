@@ -3,15 +3,15 @@ import React from 'react';
 import Accordion from '@mui/material/Accordion';
 import Divider from '@mui/material/Divider';
 
-import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
+import {type PermissionTokenDocument} from '../../api/collection/permissionTokens';
 
 import PermissionTokenAccordionActions from './PermissionTokenAccordionActions';
 import PermissionTokenAccordionDetails from './PermissionTokenAccordionDetails';
 import PermissionTokenAccordionSummary from './PermissionTokenAccordionSummary';
 
-interface Props {
+type Props = {
 	item: PermissionTokenDocument;
-}
+};
 
 const PermissionTokenAccordion = ({item}: Props) => (
 	<Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}}>

@@ -1,12 +1,15 @@
-import {DependencyList} from 'react';
+import {type DependencyList} from 'react';
 
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
 
 import isValid from 'date-fns/isValid';
 
 import subscribe from '../../api/publication/subscribe';
-import {Availability, SlotDocument} from '../../api/collection/availability';
+import {
+	Availability,
+	type SlotDocument,
+} from '../../api/collection/availability';
 import intersectsInterval from '../../api/interval/intersectsInterval';
 import intersects from '../../api/publication/availability/intersects';
 

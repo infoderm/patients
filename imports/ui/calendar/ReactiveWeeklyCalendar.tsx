@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {useNavigate} from 'react-router-dom';
 
-import {SnackbarOrigin, useSnackbar} from 'notistack';
+import {type SnackbarOrigin, useSnackbar} from 'notistack';
 
 import {styled} from '@mui/material/styles';
 
@@ -54,11 +54,11 @@ import {
 import useEvents from '../events/useEvents';
 
 import useAvailability from '../availability/useAvailability';
-import {SlotDocument} from '../../api/collection/availability';
+import {type SlotDocument} from '../../api/collection/availability';
 import {generateDays, getDayOfWeekModulo} from '../../util/datetime';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import {mod} from '../../util/artithmetic';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import useTimeSlotToString from '../settings/useTimeSlotToString';
 import useIsMounted from '../hooks/useIsMounted';
 import next from '../../api/endpoint/availability/next';
@@ -68,7 +68,7 @@ import intersection from '../../lib/interval/intersection';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import {useSetting} from '../settings/hooks';
 import call from '../../api/endpoint/call';
-import ModuloWeekInterval from '../settings/ModuloWeekInterval';
+import type ModuloWeekInterval from '../settings/ModuloWeekInterval';
 import ColorChip from '../chips/ColorChip';
 import Header from './Header';
 import DayHeader from './DayHeader';
@@ -153,16 +153,15 @@ const toProps = (
 	);
 };
 
-interface Props
-	extends Omit<
-		PropsOf<typeof StaticWeeklyCalendar>,
-		'next' | 'prev' | 'monthly' | 'weekOptions' | 'DayHeader' | 'events'
-	> {
+type Props = {
 	year: number;
 	week: number;
 	showCancelledEvents?: boolean;
 	showNoShowEvents?: boolean;
-}
+} & Omit<
+	PropsOf<typeof StaticWeeklyCalendar>,
+	'next' | 'prev' | 'monthly' | 'weekOptions' | 'DayHeader' | 'events'
+>;
 
 const ListItem = styled('li')(({theme}) => ({
 	margin: theme.spacing(0.5),

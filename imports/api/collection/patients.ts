@@ -1,6 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 import {Match} from 'meteor/check';
-import {FormattedLine, NormalizedLine} from '../string';
+import {type FormattedLine, type NormalizedLine} from '../string';
 
 const maybe = Match.Maybe;
 
@@ -14,13 +14,13 @@ export const PatientTagShape = {
 	comment: maybe(String),
 };
 
-export interface PatientTag {
+export type PatientTag = {
 	displayName: FormattedLine;
 	name: NormalizedLine;
 	comment?: string;
-}
+};
 
-export interface PatientIdFields {
+export type PatientIdFields = {
 	niss: string;
 	firstname: string;
 	lastname: string;
@@ -31,7 +31,7 @@ export interface PatientIdFields {
 	municipality: string;
 	streetandnumber: string;
 	zip: string;
-}
+};
 
 export const PatientEmailShape = {
 	address: String,
@@ -40,20 +40,20 @@ export const PatientEmailShape = {
 	name: maybe(String),
 };
 
-export interface Email {
+export type Email = {
 	name?: string;
 	address: string;
 	local: string;
 	domain: string;
-}
+};
 
-export interface PatientTagFields {
+export type PatientTagFields = {
 	allergies: PatientTag[];
 	doctors: PatientTag[];
 	insurances: PatientTag[];
-}
+};
 
-interface PatientPersonalInformationFields {
+type PatientPersonalInformationFields = {
 	deathdateModifiedAt?: Date;
 	deathdate?: Date;
 	phone: string;
@@ -66,21 +66,21 @@ interface PatientPersonalInformationFields {
 
 	noshow?: number;
 	createdForAppointment?: boolean;
-}
+};
 
 export type PatientFields = PatientIdFields &
 	PatientPersonalInformationFields &
 	PatientTagFields;
 
-export interface PatientComputedFields {
+export type PatientComputedFields = {
 	normalizedName: string;
-}
+};
 
-interface PatientMetadata {
+type PatientMetadata = {
 	_id: string;
 	owner: string;
 	createdAt: Date;
-}
+};
 
 export type PatientDocument = PatientFields &
 	PatientComputedFields &

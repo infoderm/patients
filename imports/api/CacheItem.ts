@@ -1,4 +1,5 @@
-export default interface CacheItem<T> {
+type CacheItem<T> = {
 	key: string;
 	results: T[];
-}
+};
+export default CacheItem;

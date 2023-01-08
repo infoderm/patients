@@ -33,9 +33,9 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
 	},
 }));
 
-interface DocumentToolbarProps {
+type DocumentToolbarProps = {
 	printSource: HTMLElement;
-}
+};
 
 const DocumentToolbar = ({printSource}: DocumentToolbarProps) => {
 	const [pending, setPending] = useState(false);

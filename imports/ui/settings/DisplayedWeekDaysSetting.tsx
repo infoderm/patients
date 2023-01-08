@@ -8,7 +8,11 @@ import {sorted} from '@iterable-iterator/sorted';
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
 
-import {useDaysNames, useWeekStartsOn, WeekStartsOn} from '../../i18n/datetime';
+import {
+	useDaysNames,
+	useWeekStartsOn,
+	type WeekStartsOn,
+} from '../../i18n/datetime';
 
 import InputManySetting from './InputManySetting';
 

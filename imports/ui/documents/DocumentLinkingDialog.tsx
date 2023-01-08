@@ -16,12 +16,12 @@ import link from '../../api/endpoint/documents/link';
 import CancelButton from '../button/CancelButton';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	document: {_id: string};
 	existingLink?: {_id: string};
-}
+};
 
 const DocumentLinkingDialog = ({
 	open,

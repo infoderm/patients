@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 
 import {useSnackbar} from 'notistack';
-import PropsOf from '../../../util/PropsOf';
-import {DocumentDocument} from '../../../api/collection/documents';
+import type PropsOf from '../../../util/PropsOf';
+import {type DocumentDocument} from '../../../api/collection/documents';
 import downloadDocument from './downloadDocument';
 
-interface ExtraProps {
+type ExtraProps = {
 	document: DocumentDocument;
 	component: React.ElementType;
 	children: React.ReactNode;
 	size?: string;
-}
+};
 
 const DocumentDownloadGenericButton = ({
 	document,

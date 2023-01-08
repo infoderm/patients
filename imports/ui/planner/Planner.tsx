@@ -9,14 +9,14 @@ import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 import FixedFab from '../button/FixedFab';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import usePlannerContextState from './usePlannerContextState';
 import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialogState';
 
-interface Props<C> {
+type Props<C> = {
 	Calendar: C extends React.ElementType ? C : never;
 	CalendarProps?: PropsOf<C extends React.ElementType ? C : never>;
-}
+};
 
 const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
 	const {patientId} = useParams<{patientId?: string}>();

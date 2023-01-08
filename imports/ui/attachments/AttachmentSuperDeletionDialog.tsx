@@ -30,11 +30,11 @@ const Thumbnail = styled(AttachmentThumbnail)({
 	height: 300,
 });
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	attachment: {_id: string; name: string};
-}
+};
 
 const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

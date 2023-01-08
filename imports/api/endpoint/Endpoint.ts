@@ -1,17 +1,17 @@
-import Authentication from '../Authentication';
-import Options from './Options';
-import Executor from './Executor';
-import Validator from './Validator';
-import Transaction from './Transaction';
-import Simulator from './Simulator';
+import type Authentication from '../Authentication';
+import type Options from './Options';
+import type Executor from './Executor';
+import type Validator from './Validator';
+import type Transaction from './Transaction';
+import type Simulator from './Simulator';
 
-interface Endpoint<R> {
+type Endpoint<R> = {
 	readonly name: string;
 	readonly authentication: Authentication;
 	readonly validate: Validator;
 	readonly transaction?: Transaction<R>;
 	readonly run: Executor<R> | Simulator;
 	readonly options?: Options<R>;
-}
+};
 
 export default Endpoint;

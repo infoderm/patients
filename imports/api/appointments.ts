@@ -1,10 +1,10 @@
 import addMilliseconds from 'date-fns/addMilliseconds';
 import {optional, validate, where} from '../util/schema';
 import removeUndefined from '../util/removeUndefined';
-import {Entry, makeSanitize, yieldKey} from './update';
+import {type Entry, makeSanitize, yieldKey} from './update';
 import {
-	AppointmentComputedFields,
-	AppointmentFields,
+	type AppointmentComputedFields,
+	type AppointmentFields,
 } from './collection/appointments';
 
 const sanitizeAppointmentGen = function* (
@@ -31,7 +31,7 @@ const sanitizeAppointmentGen = function* (
 
 const sanitizeAppointment = makeSanitize(sanitizeAppointmentGen);
 
-export interface AppointmentUpdate {
+export type AppointmentUpdate = {
 	patient: {
 		_id: string;
 		firstname?: string;
@@ -41,7 +41,7 @@ export interface AppointmentUpdate {
 	datetime: Date;
 	duration: number;
 	reason: string;
-}
+};
 
 export const sanitizeAppointmentUpdate = ({
 	patient,

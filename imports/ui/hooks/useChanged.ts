@@ -1,4 +1,4 @@
-import {DependencyList} from 'react';
+import {type DependencyList} from 'react';
 import usePreviousRenderValues from './usePreviousRenderValues';
 
 const useChanged = (values: DependencyList) => {

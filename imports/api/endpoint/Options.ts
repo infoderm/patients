@@ -1,13 +1,13 @@
-import {Meteor} from 'meteor/meteor';
-import {EJSONable, EJSONableProperty} from 'meteor/ejson';
+import {type Meteor} from 'meteor/meteor';
+import {type EJSONable, type EJSONableProperty} from 'meteor/ejson';
 
-interface Options<
+type Options<
 	Result extends
 		| EJSONable
 		| EJSONable[]
 		| EJSONableProperty
 		| EJSONableProperty[],
-> {
+> = {
 	wait?: boolean | undefined;
 	onResultReceived?:
 		| ((error: Error | Meteor.Error | undefined, result?: Result) => void)
@@ -15,6 +15,6 @@ interface Options<
 	returnStubValue?: boolean | undefined;
 	throwStubExceptions?: boolean | undefined;
 	noRetry?: boolean | undefined;
-}
+};
 
 export default Options;

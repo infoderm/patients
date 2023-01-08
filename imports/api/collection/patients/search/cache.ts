@@ -1,11 +1,11 @@
 import {Mongo} from 'meteor/mongo';
-import CacheItem from '../../../CacheItem';
-import {SexAllowed} from '../../patients';
+import type CacheItem from '../../../CacheItem';
+import {type SexAllowed} from '../../patients';
 
 export const indexObservedQueryCacheCollection =
 	'patients.index.cache.collection';
 
-export interface PatientCacheResult {
+export type PatientCacheResult = {
 	_id: string;
 	firstnameWords: string[];
 	lastnameWords: string[];
@@ -19,7 +19,7 @@ export interface PatientCacheResult {
 	lastModifiedAt: Date;
 	sex: SexAllowed;
 	owner: string;
-}
+};
 
 export type PatientCacheItem = CacheItem<PatientCacheResult>;
 

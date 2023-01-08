@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {PatientDocument, Patients} from '../../collection/patients';
+import {type PatientDocument, Patients} from '../../collection/patients';
 
 import define from '../define';
 
@@ -16,7 +16,7 @@ export default define({
 	): Promise<Array<Partial<PatientDocument>>> {
 		return Patients.find({...query, owner: this.userId}, options).fetch();
 	},
-	simulate(_query: any, _options: any): void {
+	simulate(_query: any, _options: any) {
 		return undefined;
 	},
 });

@@ -31,11 +31,11 @@ const StyledMenuItem = styled(MenuItem)(({theme}) => ({
 	},
 }));
 
-interface NewItemSuggestionProps {
+type NewItemSuggestionProps = {
 	inputValue?: string;
 	highlightedIndex?: number;
 	onClick?: () => void;
-}
+};
 
 const CreateItemSuggestion = React.forwardRef(
 	(

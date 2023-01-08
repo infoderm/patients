@@ -17,7 +17,7 @@ const MergePatientsForm = () => {
 	const [toMerge, setToMerge] = useState([]);
 
 	switch (step) {
-		case 'select':
+		case 'select': {
 			return (
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
@@ -47,8 +47,9 @@ const MergePatientsForm = () => {
 					)}
 				</Grid>
 			);
+		}
 
-		case 'prepare':
+		case 'prepare': {
 			return (
 				<MergePatientsFormStepPrepare
 					toMerge={list(map((x) => x._id, toMerge))}
@@ -57,12 +58,15 @@ const MergePatientsForm = () => {
 					}}
 				/>
 			);
-		default:
+		}
+
+		default: {
 			return (
 				<div>
 					Unknown step <i>{step}</i>
 				</div>
 			);
+		}
 	}
 };
 

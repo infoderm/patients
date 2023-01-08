@@ -16,14 +16,14 @@ const columnData = [
 
 export type Order = 'asc' | 'desc';
 
-interface Props {
+type Props = {
 	numSelected: number;
 	onRequestSort: (e: any, property: string) => void;
 	onSelectAllClick: (e: any, checked: boolean) => void;
 	order: Order;
 	orderBy: string;
 	rowCount: number;
-}
+};
 
 const EnhancedTableHead = ({
 	onSelectAllClick,

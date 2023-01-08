@@ -44,9 +44,9 @@ const Root = styled('div')(({theme}) => ({
 	},
 }));
 
-interface Props {
+type Props = {
 	day: Date;
-}
+};
 
 const ConsultationsOfTheDay = ({day}: Props) => {
 	const [showConsultations, setShowConsultations] = useState(true);

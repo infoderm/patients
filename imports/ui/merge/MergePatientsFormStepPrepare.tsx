@@ -10,21 +10,24 @@ import Typography from '@mui/material/Typography';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
-import {PatientDocument, PatientFields} from '../../api/collection/patients';
-import {ConsultationDocument} from '../../api/collection/consultations';
-import {DocumentDocument} from '../../api/collection/documents';
-import {AttachmentDocument} from '../../api/collection/attachments';
+import {
+	type PatientDocument,
+	type PatientFields,
+} from '../../api/collection/patients';
+import {type ConsultationDocument} from '../../api/collection/consultations';
+import {type DocumentDocument} from '../../api/collection/documents';
+import {type AttachmentDocument} from '../../api/collection/attachments';
 
 import PatientSheet from '../patients/PatientSheet';
 
 import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog';
 import useMergeInfo from './useMergeInfo';
 
-interface MergeInfoError {
+type MergeInfoError = {
 	message: string;
-}
+};
 
-interface StaticMergePatientsFormStepPrepareProps {
+type StaticMergePatientsFormStepPrepareProps = {
 	toMerge: string[];
 	onPrevStep?: () => void;
 	error?: MergeInfoError;
@@ -36,7 +39,7 @@ interface StaticMergePatientsFormStepPrepareProps {
 	newConsultations?: ConsultationDocument[];
 	newAttachments?: AttachmentDocument[];
 	newDocuments?: DocumentDocument[];
-}
+};
 
 const StaticMergePatientsFormStepPrepare = ({
 	toMerge,

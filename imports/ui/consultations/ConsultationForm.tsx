@@ -87,13 +87,13 @@ export const defaultState = {
 
 export type State = typeof defaultState;
 
-interface Props {
+type Props = {
 	consultation: State;
 	update?: (
 		key: string,
 		transform?: (x: any) => any,
 	) => (event: {target: {value: any}}) => void;
-}
+};
 
 const ConsultationForm = ({consultation, update}: Props) => {
 	const {

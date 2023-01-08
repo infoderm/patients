@@ -1,10 +1,10 @@
 import {check} from 'meteor/check';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import {availability} from '../../availability';
 
 import {Appointments} from '../../collection/appointments';
-import {ConsultationDocument} from '../../collection/consultations';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import {type ConsultationDocument} from '../../collection/consultations';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
@@ -50,7 +50,7 @@ export default define({
 			return modifier;
 		},
 	),
-	simulate(_consultationId: string): void {
+	simulate(_consultationId: string) {
 		return undefined;
 	},
 });

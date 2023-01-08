@@ -7,9 +7,9 @@ type Params = {
 	filter?: string;
 };
 
-interface Props {
+type Props = {
 	List: React.ElementType;
-}
+};
 
 const TagListRoute = ({List}: Props) => {
 	const params = useParams<Params>();

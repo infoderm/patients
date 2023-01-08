@@ -8,11 +8,11 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {useDoctor} from '../../api/doctors';
 import StaticDoctorCard from './StaticDoctorCard';
 
-interface Props {
+type Props = {
 	name: string;
 	page?: number;
 	perpage?: number;
-}
+};
 
 const DoctorDetails = ({name, page = 1, perpage = 10}: Props) => {
 	return (

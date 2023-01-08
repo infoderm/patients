@@ -14,7 +14,7 @@ import StaticPatientChip, {
 } from '../patients/StaticPatientChip';
 
 import call from '../../api/endpoint/call';
-import {AllergyDocument} from '../../api/collection/allergies';
+import {type AllergyDocument} from '../../api/collection/allergies';
 import {useAllergyStats, usePatientsHavingAllergy} from '../../api/allergies';
 
 import ColorPicker from '../input/ColorPicker';
@@ -36,11 +36,11 @@ const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
 	color: '#fff',
 }));
 
-interface StaticAllergyCardProps {
+type StaticAllergyCardProps = {
 	loading?: boolean;
 	found?: boolean;
 	item: AllergyDocument;
-}
+};
 
 const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 	({loading = false, found = true, item}, ref) => {
@@ -52,11 +52,11 @@ const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 	},
 );
 
-interface LoadedTagCardProps {
+type LoadedTagCardProps = {
 	loading: boolean;
 	found: boolean;
 	item: AllergyDocument;
-}
+};
 
 const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 	({loading, found, item}, ref) => {

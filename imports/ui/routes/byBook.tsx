@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 
 import {myDecodeURIComponent} from '../../util/uri';
 
-import branch, {BranchProps} from './branch';
+import branch, {type BranchProps} from './branch';
 
 type Params = {
 	year: string;

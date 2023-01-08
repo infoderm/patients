@@ -19,12 +19,12 @@ import ConfirmationTextField, {
 import DeleteButton from '../button/DeleteButton';
 import CancelButton from '../button/CancelButton';
 
-import Endpoint from '../../api/endpoint/Endpoint';
+import type Endpoint from '../../api/endpoint/Endpoint';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
-import {TagMetadata, TagNameFields} from '../../api/tags/TagDocument';
+import {type TagMetadata, type TagNameFields} from '../../api/tags/TagDocument';
 
-interface Props<T> {
+type Props<T> = {
 	open: boolean;
 	onClose: () => void;
 	title: string;
@@ -32,7 +32,7 @@ interface Props<T> {
 	tag: T;
 	nameKey?: string;
 	nameKeyTitle?: string;
-}
+};
 
 const TagDeletionDialog = <T extends TagMetadata & TagNameFields>({
 	open,

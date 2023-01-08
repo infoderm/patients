@@ -2,9 +2,9 @@ import React from 'react';
 
 import SelectColorSetting from './SelectColorSetting';
 
-interface Props {
+type Props = {
 	className?: string;
-}
+};
 
 const ThemePaletteModeSetting = ({className}: Props) => {
 	return (

@@ -1,6 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {styled, useTheme, Theme, CSSObject} from '@mui/material/styles';
+import {
+	styled,
+	useTheme,
+	type Theme,
+	type CSSObject,
+} from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -49,17 +54,17 @@ const DrawerItem = ({expand, disabled, link}) => (
 	</Tooltip>
 );
 
-interface BlockLink {
+type BlockLink = {
 	title: string;
 	to: string;
 	icon: JSX.Element;
 	disabled?: boolean;
-}
+};
 
-interface Block {
+type Block = {
 	title: string;
 	links: BlockLink[];
-}
+};
 
 export const navigationDrawerBlocks: Block[] = [
 	{

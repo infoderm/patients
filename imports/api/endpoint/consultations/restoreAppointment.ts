@@ -1,17 +1,17 @@
 import {check} from 'meteor/check';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
 import {
-	ConsultationDocument,
+	type ConsultationDocument,
 	Consultations,
 } from '../../collection/consultations';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import {availability} from '../../availability';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'consultations.restoreAppointment',
@@ -54,7 +54,7 @@ export default define({
 			return modifier;
 		},
 	),
-	simulate(_consultationId: string): void {
+	simulate(_consultationId: string) {
 		return undefined;
 	},
 });

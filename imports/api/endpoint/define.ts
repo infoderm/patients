@@ -1,12 +1,12 @@
 import {Meteor} from 'meteor/meteor';
 import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionSimulationDriver';
 import executeTransaction from '../transaction/executeTransaction';
-import Params from './Params';
-import Endpoint from './Endpoint';
+import type Params from './Params';
+import type Endpoint from './Endpoint';
 import invoke from './invoke';
-import Transaction from './Transaction';
-import Executor from './Executor';
-import Simulator from './Simulator';
+import type Transaction from './Transaction';
+import type Executor from './Executor';
+import type Simulator from './Simulator';
 
 const define = <R>(params: Params<R>): Endpoint<R> => {
 	const {
@@ -56,6 +56,7 @@ const wrapTransactionClient = <R>(txn: Transaction<R>): Simulator => {
 	const db = new MeteorTransactionSimulationDriver();
 	return function (...args: any[]) {
 		Reflect.apply(txn, this, [db, ...args]);
+		return undefined;
 	};
 };
 

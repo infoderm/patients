@@ -1,4 +1,4 @@
-import React, {ErrorInfo} from 'react';
+import React, {type ErrorInfo} from 'react';
 import {styled} from '@mui/material/styles';
 
 const PREFIX = 'ErrorLog';
@@ -30,13 +30,12 @@ const Details = styled('details')(() => ({
 	},
 }));
 
-interface ErrorLogProps {
+type ErrorLogProps = {
 	error: Error;
 	errorInfo: ErrorInfo;
-}
+};
 
 const ErrorLog = ({error, errorInfo}: ErrorLogProps) => {
-	// eslint-disable-next-line @typescript-eslint/no-base-to-string
 	const title = error.toString();
 	const description = errorInfo.componentStack;
 	return (

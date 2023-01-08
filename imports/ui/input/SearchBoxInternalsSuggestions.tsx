@@ -4,9 +4,9 @@ import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 import {
-	GetPropsCommonOptions,
-	UseComboboxGetItemPropsOptions,
-	UseComboboxGetMenuPropsOptions,
+	type GetPropsCommonOptions,
+	type UseComboboxGetItemPropsOptions,
+	type UseComboboxGetMenuPropsOptions,
 } from 'downshift';
 
 const PREFIX = 'SearchBoxInternalsSuggestions';
@@ -30,7 +30,7 @@ const StyledPaper = styled(Paper)(({theme}) => ({
 	},
 }));
 
-interface SearchBoxInternalsSuggestionsProps<Item> {
+type SearchBoxInternalsSuggestionsProps<Item> = {
 	isOpen: boolean;
 	loading: boolean;
 	suggestions: Item[];
@@ -43,7 +43,7 @@ interface SearchBoxInternalsSuggestionsProps<Item> {
 	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
 	highlightedIndex?: number;
 	selectedItem: Item;
-}
+};
 
 const SearchBoxInternalsSuggestions = <Item,>({
 	isOpen,

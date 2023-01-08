@@ -40,9 +40,9 @@ import patientVirtualFields from '../../api/patients/virtualFields';
 import NoContent from '../navigation/NoContent';
 import usePatient from './usePatient';
 
-interface PatientHistoryProps {
+type PatientHistoryProps = {
 	patientId: string;
-}
+};
 
 const Dot = ({_id, isDone, isCancelled, isNoShow, isRemote}) => {
 	const color = isDone

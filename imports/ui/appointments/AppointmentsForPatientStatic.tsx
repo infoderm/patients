@@ -4,11 +4,11 @@ import NoContent from '../navigation/NoContent';
 
 import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
 
-interface Props {
+type Props = {
 	patientId: string;
 	appointments: Array<{_id: string}>;
 	page: number;
-}
+};
 
 const AppointmentsForPatientStatic = ({
 	patientId,

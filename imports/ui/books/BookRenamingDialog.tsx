@@ -5,14 +5,14 @@ import TagRenamingDialog from '../tags/TagRenamingDialog';
 import rename from '../../api/endpoint/books/rename';
 
 import {books, useBooksFind} from '../../api/books';
-import {BookDocument} from '../../api/collection/books';
+import {type BookDocument} from '../../api/collection/books';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	onRename: () => void;
 	tag: BookDocument;
-}
+};
 
 const BookRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 	return (

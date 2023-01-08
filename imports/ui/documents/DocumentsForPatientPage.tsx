@@ -2,17 +2,13 @@ import React from 'react';
 
 import usePatient from '../patients/usePatient';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import DocumentsForPatient from './DocumentsForPatient';
 
-interface Props
-	extends Omit<
-		PropsOf<typeof DocumentsForPatient>,
-		'page' | 'perpage' | 'documents'
-	> {
+type Props = {
 	page?: number;
 	perpage?: number;
-}
+} & Omit<PropsOf<typeof DocumentsForPatient>, 'page' | 'perpage' | 'documents'>;
 
 const DocumentsForPatientPage = ({
 	patientId,

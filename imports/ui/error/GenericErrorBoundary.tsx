@@ -1,9 +1,9 @@
-import React, {ErrorInfo} from 'react';
+import React, {type ErrorInfo} from 'react';
 
-interface GenericErrorBoundaryProps {
+type GenericErrorBoundaryProps = {
 	component: React.ElementType;
 	children: React.ReactNode;
-}
+};
 
 export default class GenericErrorBoundary extends React.Component<GenericErrorBoundaryProps> {
 	override state = {error: null, errorInfo: null};

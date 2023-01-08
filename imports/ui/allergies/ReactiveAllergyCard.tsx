@@ -1,13 +1,13 @@
 import React from 'react';
 
 import {useCachedAllergy} from '../../api/allergies';
-import {TagNameFields} from '../../api/tags/TagDocument';
+import {type TagNameFields} from '../../api/tags/TagDocument';
 
 import StaticAllergyCard from './StaticAllergyCard';
 
-interface Props {
+type Props = {
 	item: TagNameFields;
-}
+};
 
 const ReactiveAllergyCard = ({item}: Props) => {
 	const init = {...item};

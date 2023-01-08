@@ -29,11 +29,11 @@ import CancelButton from '../button/CancelButton';
 import useCall from '../action/useCall';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	consultation: any;
-}
+};
 
 const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 	const {patientId, isDone} = consultation;

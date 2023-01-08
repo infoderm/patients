@@ -6,15 +6,15 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
-interface BaseProps {
+type BaseProps = {
 	itemToString?: (x: any) => any;
 	useSuggestions: (x: string) => {loading: boolean; results: any[]};
 	inputValue: string;
 	TextFieldProps?: any;
 	InputProps?: any;
-}
+};
 
 type Props = BaseProps &
 	Omit<PropsOf<typeof Autocomplete>, 'renderInput' | 'options'>;

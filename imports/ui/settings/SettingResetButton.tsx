@@ -5,9 +5,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import {useSetting} from './hooks';
 
-interface Props {
+type Props = {
 	setting: string;
-}
+};
 
 const SettingResetButton = ({setting}: Props) => {
 	const {loading, resetValue} = useSetting(setting);

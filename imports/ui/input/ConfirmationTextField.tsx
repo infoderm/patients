@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
 import useAny from '../hooks/useAny';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 export const useConfirmationTextFieldState = (
 	expected: string,
@@ -59,9 +59,9 @@ export const useConfirmationTextFieldState = (
 	};
 };
 
-interface ConfirmationTextFieldAdditionalProps {
+type ConfirmationTextFieldAdditionalProps = {
 	onAutoFill: () => void;
-}
+};
 
 const ConfirmationTextField = ({
 	onAutoFill,

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
 import {useSnackbar} from 'notistack';
 
@@ -24,14 +24,14 @@ import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
-import Endpoint from '../../api/endpoint/Endpoint';
-import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
+import type Endpoint from '../../api/endpoint/Endpoint';
+import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
-import GenericQueryHook from '../../api/GenericQueryHook';
+import type GenericQueryHook from '../../api/GenericQueryHook';
 import RenameButton from '../button/RenameButton';
 
-interface Props<T> {
+type Props<T> = {
 	open: boolean;
 	onClose: () => void;
 	onRename: (name: string) => void;
@@ -44,7 +44,7 @@ interface Props<T> {
 	nameKeyTitle?: string;
 	nameFormat?: (tag: T, name: string) => string;
 	inputFormat?: (input: string) => string;
-}
+};
 
 const defaultUseTagsFind = () => ({results: []});
 const defaultNameFormat = <T,>(_tag: T, name: string) => name;

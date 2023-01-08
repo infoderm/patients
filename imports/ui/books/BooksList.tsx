@@ -17,11 +17,11 @@ import FixedFab from '../button/FixedFab';
 import BookCard from './BookCard';
 import BooksDownloadDialog from './BooksDownloadDialog';
 
-interface Props {
+type Props = {
 	type?: string;
 	filter?: string;
 	defaultPerpage?: number;
-}
+};
 
 const BooksList = ({
 	type = undefined,

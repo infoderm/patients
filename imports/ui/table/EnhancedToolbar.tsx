@@ -50,10 +50,10 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
 	},
 }));
 
-interface Props {
+type Props = {
 	onDelete: () => void;
 	numSelected: number;
-}
+};
 
 const EnhancedTableToolbar = ({onDelete, numSelected}: Props) => {
 	return (

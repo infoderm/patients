@@ -18,8 +18,8 @@ import {dataURL as pngDataURL} from '../../util/png';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
-import PropsOf from '../../util/PropsOf';
-import {PatientDocument} from '../../api/collection/patients';
+import type PropsOf from '../../util/PropsOf';
+import {type PatientDocument} from '../../api/collection/patients';
 
 const PREFIX = 'GenericStaticPatientCard';
 
@@ -133,13 +133,13 @@ const projection = {
 
 type Projection = typeof projection;
 
-interface GenericStaticPatientCardProps extends PropsOf<typeof StyledCard> {
+type GenericStaticPatientCardProps = {
 	patient: Pick<PatientDocument, keyof Projection> & {score?: number};
 	loading?: boolean;
 	found?: boolean;
 	highlightNn?: boolean | string;
 	showScore?: boolean;
-}
+} & PropsOf<typeof StyledCard>;
 
 const GenericStaticPatientCard = ({
 	patient,

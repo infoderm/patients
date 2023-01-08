@@ -5,21 +5,21 @@ import TextField from '@mui/material/TextField';
 
 import {useSetting} from './hooks';
 
-interface Outcome {
+type Outcome = {
 	outcome: -1 | 0 | 1;
 	//  1 valid input (sync)
 	// -1 intermediate input (no sync, update, error/warning? label)
 	//  0 wrong input (no sync, no update)
-}
+};
 
-interface Props {
+type Props = {
 	className?: string;
 	title?: string;
 	label?: string;
 	setting: string;
 	sanitize?: (inputValue: string) => any;
 	validate?: (x: any) => Outcome;
-}
+};
 
 const InputOneSetting = ({
 	className,

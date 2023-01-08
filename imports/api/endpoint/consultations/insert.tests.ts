@@ -6,7 +6,7 @@ import {randomUserId, server, throws} from '../../../test/fixtures';
 
 import {Books} from '../../collection/books';
 import {Availability} from '../../collection/availability';
-import {NormalizedLine} from '../../string';
+import {type NormalizedLine} from '../../string';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 

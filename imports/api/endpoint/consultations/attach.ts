@@ -4,7 +4,7 @@ import {Consultations} from '../../collection/consultations';
 import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: '/consultations/attach',
@@ -44,8 +44,9 @@ export default define({
 		return result;
 	},
 	simulate(consultationId: string, uploadId: string) {
-		return Attachments.update(uploadId, {
+		Attachments.update(uploadId, {
 			$addToSet: {'meta.attachedToConsultations': consultationId},
 		});
+		return undefined;
 	},
 });

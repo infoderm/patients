@@ -3,7 +3,7 @@ import React from 'react';
 import {range} from '@iterable-iterator/range';
 import {list} from '@iterable-iterator/list';
 
-import TabJumper, {Props as TabJumperProps} from './TabJumper';
+import TabJumper, {type Props as TabJumperProps} from './TabJumper';
 
 // Waiting for https://github.com/microsoft/TypeScript/pulls/47607
 // type Props =  Omit<PropsOf<typeof TabJumper<number>>, 'tabs' | 'number'>;

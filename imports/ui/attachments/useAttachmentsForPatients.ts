@@ -4,7 +4,7 @@ import {iterable} from '@total-order/iter';
 
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 import useAttachments from './useAttachments';
-import AttachmentInfo from './AttachmentInfo';
+import type AttachmentInfo from './AttachmentInfo';
 
 const order = key(iterable(decreasing), function* (x: AttachmentInfo) {
 	yield x.group;

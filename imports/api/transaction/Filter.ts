@@ -20,7 +20,7 @@ type AlternativeType<T> = T extends ReadonlyArray<infer U>
 
 type RegExpOrString<T> = T extends string ? BSONRegExp | RegExp | T : T;
 
-interface RootFilterOperators<TSchema> extends Document {
+type RootFilterOperators<TSchema> = {
 	$and?: Array<Filter<TSchema>>;
 	$nor?: Array<Filter<TSchema>>;
 	$or?: Array<Filter<TSchema>>;
@@ -32,9 +32,9 @@ interface RootFilterOperators<TSchema> extends Document {
 	};
 	$where?: string | ((this: TSchema) => boolean);
 	$comment?: string | Document;
-}
+} & Document;
 
-interface FilterOperators<TValue> extends Document {
+type FilterOperators<TValue> = {
 	// Comparison
 	$eq?: TValue;
 	$gt?: TValue;
@@ -77,7 +77,7 @@ interface FilterOperators<TValue> extends Document {
 	$bitsAnyClear?: BitwiseFilter;
 	$bitsAnySet?: BitwiseFilter;
 	$rand?: Record<string, never>;
-}
+} & Document;
 
 type BitwiseFilter =
 	| number /** numeric bit mask */

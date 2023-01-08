@@ -5,7 +5,7 @@ import {findLastConsultationInInterval} from '../../api/consultations';
 import subscribe from '../../api/publication/subscribe';
 import last from '../../api/publication/consultations/interval/last';
 import MeteorTransactionSimulationDriver from '../../api/transaction/MeteorTransactionSimulationDriver';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 
 export default function useLastConsultationOfThisYear(filter) {
 	const interval = thisYearsInterval();

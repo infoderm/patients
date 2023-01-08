@@ -2,11 +2,11 @@ import React from 'react';
 
 import AccordionDetails from '@mui/material/AccordionDetails';
 
-import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
+import {type PermissionTokenDocument} from '../../api/collection/permissionTokens';
 
-interface Props {
+type Props = {
 	item: PermissionTokenDocument;
-}
+};
 
 const PermissionTokenAccordionDetails = ({item}: Props) => (
 	<AccordionDetails>

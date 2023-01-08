@@ -27,7 +27,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import DocumentChips from './DocumentChips';
 import DocumentVersionsButton from './actions/DocumentVersionsButton';
@@ -53,10 +53,10 @@ const List = styled(MuiList)({
 	width: '100%',
 });
 
-interface Props extends PropsOf<typeof DocumentChips> {
+type Props = {
 	VersionsButton?: React.ElementType;
 	defaultExpanded?: boolean;
-}
+} & PropsOf<typeof DocumentChips>;
 
 const DocumentCard = ({
 	document,

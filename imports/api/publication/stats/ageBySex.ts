@@ -6,12 +6,17 @@ import eidParseBirthdate from '../../eidParseBirthdate';
 
 const sexToString = (sex) => {
 	switch (sex) {
-		case undefined:
+		case undefined: {
 			return 'undefined';
-		case '':
+		}
+
+		case '': {
 			return 'none';
-		default:
+		}
+
+		default: {
 			return sex;
+		}
 	}
 };
 

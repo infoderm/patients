@@ -5,12 +5,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import call from '../../api/endpoint/call';
 import revoke from '../../api/endpoint/permissions/token/revoke';
-import {PermissionTokenDocument} from '../../api/collection/permissionTokens';
+import {type PermissionTokenDocument} from '../../api/collection/permissionTokens';
 import useIsMounted from '../hooks/useIsMounted';
 
-interface Props {
+type Props = {
 	item: PermissionTokenDocument;
-}
+};
 
 const PermissionTokenRevocationButton = ({item}: Props) => {
 	const [revoking, setRevoking] = useState(false);

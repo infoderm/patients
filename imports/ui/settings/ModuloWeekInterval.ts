@@ -1,4 +1,5 @@
-export default interface ModuloWeekInterval {
+type ModuloWeekInterval = {
 	beginModuloWeek: number;
 	endModuloWeek: number;
-}
+};
+export default ModuloWeekInterval;

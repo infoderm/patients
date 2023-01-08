@@ -1,18 +1,17 @@
 import React, {useMemo} from 'react';
 
-import Endpoint from '../../api/endpoint/Endpoint';
+import type Endpoint from '../../api/endpoint/Endpoint';
 import useApply from '../action/useApply';
 import useIsMounted from '../hooks/useIsMounted';
 import ConfirmationDialog, {
-	ConfirmationDialogProps,
+	type ConfirmationDialogProps,
 } from './ConfirmationDialog';
 
-interface EndpointCallConfirmationDialogProps<T>
-	extends Omit<ConfirmationDialogProps, 'pending' | 'onCancel' | 'onConfirm'> {
+type EndpointCallConfirmationDialogProps<T> = {
 	endpoint: Endpoint<T>;
 	args: any[];
 	onClose: () => void;
-}
+} & Omit<ConfirmationDialogProps, 'pending' | 'onCancel' | 'onConfirm'>;
 
 const EndpointCallConfirmationDialog = <T,>({
 	endpoint,
