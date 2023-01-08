@@ -11,10 +11,10 @@ type Params = {
 	identifier: string;
 };
 
-interface Props {
+type Props = {
 	page?: number;
 	perpage?: number;
-}
+};
 
 const DocumentsFromIdentifierList = ({page = 1, perpage = 10}: Props) => {
 	const params = useParams<Params>();

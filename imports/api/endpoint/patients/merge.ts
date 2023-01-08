@@ -9,7 +9,7 @@ import {Attachments} from '../../collection/attachments';
 import {computeUpdate, patients} from '../../patients';
 
 import define from '../define';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 const {sanitize, updateIndex} = patients;
 
@@ -166,7 +166,7 @@ export default define({
 		_attachmentIds,
 		_documentIds,
 		_newPatient,
-	): void {
+	) {
 		return undefined;
 	},
 });

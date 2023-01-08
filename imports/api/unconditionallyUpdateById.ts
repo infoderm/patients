@@ -1,8 +1,8 @@
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
-import TransactionDriver from './transaction/TransactionDriver';
-import Filter from './transaction/Filter';
+import type TransactionDriver from './transaction/TransactionDriver';
+import type Filter from './transaction/Filter';
 
 type OpReturnValue<T> = Promise<Mongo.Modifier<T>> | Mongo.Modifier<T>;
 

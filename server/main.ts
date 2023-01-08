@@ -2,7 +2,7 @@
 import './polyfill';
 import assert from 'assert';
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import {WebApp} from 'meteor/webapp';
 import {Accounts} from 'meteor/accounts-base';
 
@@ -43,7 +43,7 @@ import '../imports/api/endpoint/_register/enabled';
 
 // DECLARE ALL ENABLED ICS ENDPOINTS
 import {names} from '../imports/api/createTagCollection';
-import TagDocument from '../imports/api/tags/TagDocument';
+import type TagDocument from '../imports/api/tags/TagDocument';
 import ics from './api/ics/index';
 
 if (Meteor.isTest || Meteor.isAppTest) {

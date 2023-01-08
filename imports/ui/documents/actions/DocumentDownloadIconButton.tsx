@@ -3,8 +3,8 @@ import React from 'react';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 import LoadingIconButton from '../../button/LoadingIconButton';
-import PropsOf from '../../../util/PropsOf';
-import {DocumentDocument} from '../../../api/collection/documents';
+import type PropsOf from '../../../util/PropsOf';
+import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 
 type DocumentDownloadIconButtonProps = Omit<

@@ -1,31 +1,38 @@
 import React, {useState} from 'react';
 
-import {useCombobox, UseComboboxProps} from 'downshift';
+import {useCombobox, type UseComboboxProps} from 'downshift';
 
 import SearchBoxWithSuggestionsInternals from './SearchBoxWithSuggestionsInternals';
 
 const comboboxStateReducer = (state, {type, changes}) => {
 	switch (type) {
-		case useCombobox.stateChangeTypes.InputChange:
+		case useCombobox.stateChangeTypes.InputChange: {
 			return {
 				...changes,
 				highlightedIndex: -1,
 			};
-		case useCombobox.stateChangeTypes.InputBlur:
+		}
+
+		case useCombobox.stateChangeTypes.InputBlur: {
 			return {
 				...changes,
 				highlightedIndex: state.highlightedIndex,
 				inputValue: state.inputValue,
 			};
+		}
+
 		case useCombobox.stateChangeTypes.InputKeyDownEnter:
-		case useCombobox.stateChangeTypes.ItemClick:
+		case useCombobox.stateChangeTypes.ItemClick: {
 			return {
 				...changes,
 				highlightedIndex: -1,
 				inputValue: '',
 			};
-		default:
+		}
+
+		default: {
 			return changes;
+		}
 	}
 };
 

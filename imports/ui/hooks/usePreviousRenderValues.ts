@@ -1,4 +1,4 @@
-import {useRef, useEffect, DependencyList} from 'react';
+import {useRef, useEffect, type DependencyList} from 'react';
 
 const usePreviousRenderValues = (
 	values: DependencyList,

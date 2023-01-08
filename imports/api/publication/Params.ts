@@ -1,8 +1,8 @@
-import {Subscription} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
-import Authentication from '../Authentication';
+import {type Subscription} from 'meteor/meteor';
+import {type Mongo} from 'meteor/mongo';
+import type Authentication from '../Authentication';
 
-interface Params<T, U = T> {
+type Params<T, U = T> = {
 	readonly name: string;
 	readonly authentication?: Authentication;
 	readonly cursor?: (this: Subscription, ...args: any[]) => Mongo.Cursor<T, U>;
@@ -11,6 +11,6 @@ interface Params<T, U = T> {
 		...args: any[]
 	) => Array<Mongo.Cursor<T, U>>;
 	readonly handle?: (this: Subscription, ...args: any[]) => void;
-}
+};
 
 export default Params;

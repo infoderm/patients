@@ -4,7 +4,7 @@ import insertPatient from '../patients/insert';
 
 import compose from '../compose';
 import define from '../define';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'appointments.createPatient',

@@ -2,13 +2,13 @@ import React from 'react';
 
 import List from '@mui/material/List';
 
-import {DocumentDocument} from '../../api/collection/documents';
+import {type DocumentDocument} from '../../api/collection/documents';
 import DocumentListItem from './DocumentListItem';
 
-interface Props {
+type Props = {
 	loading?: boolean;
 	documents: DocumentDocument[];
-}
+};
 
 const DocumentsPage = ({loading = false, documents}: Props) => {
 	return (

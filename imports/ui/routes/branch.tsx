@@ -2,12 +2,12 @@ import React from 'react';
 
 import {Route, Routes} from 'react-router-dom';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
-interface Props {
+type Props = {
 	paths: string[];
 	element: JSX.Element;
-}
+};
 
 const Branches = ({paths, element}: Props) => (
 	<Routes>
@@ -23,10 +23,10 @@ const branched =
 	(props: PropsOf<C>) =>
 		<Branches paths={paths} element={<Component {...props} />} />;
 
-export interface BranchProps<C extends React.ElementType> {
+export type BranchProps<C extends React.ElementType> = {
 	component: C;
 	props: PropsOf<C>;
-}
+};
 
 type BranchElementType<C extends React.ElementType> = React.ElementType<
 	BranchProps<C>

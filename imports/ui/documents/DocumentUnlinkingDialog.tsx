@@ -8,11 +8,11 @@ import unlink from '../../api/endpoint/documents/unlink';
 import EndpointCallConfirmationDialog from '../modal/EndpointCallConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	document: {_id: string};
-}
+};
 
 const DocumentUnlinkingDialog = ({open, onClose, document}: Props) => {
 	return (

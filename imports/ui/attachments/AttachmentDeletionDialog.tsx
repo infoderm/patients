@@ -14,7 +14,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {normalizedLine} from '../../api/string';
 
-import Endpoint from '../../api/endpoint/Endpoint';
+import type Endpoint from '../../api/endpoint/Endpoint';
 
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
@@ -31,13 +31,13 @@ const Thumbnail = styled(AttachmentThumbnail)({
 	height: 300,
 });
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	itemId: string;
 	attachment: {_id: string; name: string};
 	endpoint: Endpoint<any>;
-}
+};
 
 const AttachmentDeletionDialog = ({
 	open,

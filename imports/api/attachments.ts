@@ -1,5 +1,5 @@
-import {ThumbSizeOptions, Uploads} from './uploads';
-import {AttachmentDocument} from './collection/attachments';
+import {type ThumbSizeOptions, Uploads} from './uploads';
+import {type AttachmentDocument} from './collection/attachments';
 
 export const link = (attachment: AttachmentDocument, version = 'original') =>
 	Uploads.link(attachment, version, '/');

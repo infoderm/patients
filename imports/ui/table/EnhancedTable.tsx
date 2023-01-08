@@ -17,7 +17,7 @@ import remove from '../../api/endpoint/drugs/remove';
 import call from '../../api/endpoint/call';
 
 import useDrugs from '../drugs/useDrugs';
-import EnhancedTableHead, {Order} from './EnhancedTableHead';
+import EnhancedTableHead, {type Order} from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedToolbar';
 
 const PREFIX = 'EnhancedTable';
@@ -49,9 +49,9 @@ function sortRows<T>(data: T[], order: Order, orderBy: string) {
 		: Array.from(data).sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 }
 
-interface Props {
+type Props = {
 	query: string;
-}
+};
 
 const EnhancedTable = ({query}: Props) => {
 	// TODO split away drug specifics

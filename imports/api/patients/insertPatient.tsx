@@ -1,7 +1,7 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import {type useNavigate} from 'react-router-dom';
 
-import useDialog from '../../ui/modal/useDialog';
+import type useDialog from '../../ui/modal/useDialog';
 import EidCardDialog from '../../ui/eid/EidCardDialog';
 
 import eidParseXML from '../eidParseXML';

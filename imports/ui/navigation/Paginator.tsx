@@ -5,14 +5,14 @@ import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
 import Prev from './Prev';
 import Next from './Next';
 
-interface Props {
+type Props = {
 	root: string;
 	page?: number;
 	firstPage?: number;
 	end?: boolean;
 	disabled?: boolean;
 	loading?: boolean;
-}
+};
 
 const PaginatorBase = ({
 	root,

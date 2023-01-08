@@ -1,5 +1,5 @@
 import executeTransaction from './executeTransaction';
-import Transaction from './Transaction';
+import type Transaction from './Transaction';
 
 const readOwnWritesTransaction = async (transaction: Transaction) =>
 	executeTransaction(transaction, {readConcern: {level: 'local'}});

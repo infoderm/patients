@@ -1,5 +1,5 @@
 import {Buffer} from 'buffer';
-import {Readable} from 'stream';
+import {type Readable} from 'stream';
 
 const streamToBuffer = async (stream: Readable) =>
 	new Promise<Buffer>((resolve, reject) => {

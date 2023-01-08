@@ -4,17 +4,17 @@ import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import colorizeText from '../text/colorizeText';
 
-interface ReadOnlyColorizedTextAreaProps {
+type ReadOnlyColorizedTextAreaProps = {
 	className?: string;
 	label?: string;
 	maxRows?: number;
 	dict: (piece: string) => boolean;
 	value: string;
-}
+};
 
 const ReadOnlyColorizedTextArea = ({
 	className,

@@ -2,8 +2,8 @@ import React, {
 	useState,
 	useReducer,
 	useEffect,
-	Dispatch,
-	ReducerAction,
+	type Dispatch,
+	type ReducerAction,
 } from 'react';
 import {useNavigate} from 'react-router-dom';
 
@@ -31,11 +31,11 @@ import usePrompt from '../navigation/usePrompt';
 import {books} from '../../api/books';
 import {documentDiff} from '../../api/update';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
-import ConsultationForm, {defaultState, State} from './ConsultationForm';
+import ConsultationForm, {defaultState, type State} from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
 import useNextInBookNumber from './useNextInBookNumber';
 
-interface ConsultationEditorFields {
+type ConsultationEditorFields = {
 	_id: string | undefined;
 	isDone: boolean;
 	patientId: string;
@@ -53,7 +53,7 @@ interface ConsultationEditorFields {
 	paid?: number;
 	book?: string;
 	inBookNumber?: number;
-}
+};
 
 const Main = styled(Grid)(({theme}) => ({
 	marginTop: 64,
@@ -111,22 +111,26 @@ const init = (consultation: ConsultationEditorFields): State => {
 	};
 };
 
-interface Action {
+type Action = {
 	type: string;
 	key?: string;
 	value?: any;
 	insertedId?: string;
 	inBookNumber?: number;
-}
+};
 
 const reducer = (state: State, action: Action) => {
 	switch (action.type) {
-		case 'update':
+		case 'update': {
 			switch (action.key) {
-				case '_id':
+				case '_id': {
 					throw new Error('Cannot update _id.');
-				case 'dirty':
+				}
+
+				case 'dirty': {
 					throw new Error('Cannot update dirty.');
+				}
+
 				case 'paidString': {
 					const paidString = action.value;
 					return {
@@ -168,23 +172,26 @@ const reducer = (state: State, action: Action) => {
 					};
 				}
 
-				default:
+				default: {
 					if (!Object.prototype.hasOwnProperty.call(defaultState, action.key)) {
 						throw new Error(`Unknown key ${action.key}`);
 					}
 
 					return {...state, [action.key]: action.value, dirty: true};
+				}
 			}
+		}
 
-		case 'loading-next-in-book-number':
+		case 'loading-next-in-book-number': {
 			return {
 				...state,
 				loadingInBookNumber: true,
 				inBookNumberDisabled: false,
 				syncInBookNumber: true,
 			};
+		}
 
-		case 'disable-in-book-number':
+		case 'disable-in-book-number': {
 			return {
 				...state,
 				inBookNumberString: '',
@@ -193,8 +200,9 @@ const reducer = (state: State, action: Action) => {
 				syncInBookNumber: false,
 				dirty: true,
 			};
+		}
 
-		case 'sync-in-book-number':
+		case 'sync-in-book-number': {
 			return {
 				...state,
 				inBookNumberString: String(action.inBookNumber),
@@ -202,10 +210,13 @@ const reducer = (state: State, action: Action) => {
 				loadingInBookNumber: false,
 				syncInBookNumber: true,
 			};
+		}
 
-		case 'save':
+		case 'save': {
 			return {...state, saving: true};
-		case 'save-success':
+		}
+
+		case 'save-success': {
 			if (action.insertedId) {
 				return {
 					...state,
@@ -222,21 +233,27 @@ const reducer = (state: State, action: Action) => {
 				dirty: false,
 				lastSaveWasSuccessful: true,
 			};
+		}
 
-		case 'save-failure':
+		case 'save-failure': {
 			return {...state, saving: false, lastSaveWasSuccessful: false};
-		case 'not-dirty':
+		}
+
+		case 'not-dirty': {
 			return {...state, dirty: false};
-		default:
+		}
+
+		default: {
 			throw new Error(`Unknown action type ${action.type}.`);
+		}
 	}
 };
 
-interface LoaderProps {
+type LoaderProps = {
 	loading: boolean;
 	found: boolean;
 	consultation: ConsultationEditorFields;
-}
+};
 
 const Loader = ({loading, found, consultation}: LoaderProps) => {
 	if (loading) return <Loading />;
@@ -282,9 +299,9 @@ const useInBookNumberEffect = (
 	}, [loading, syncInBookNumber, inBookNumber]);
 };
 
-interface ConsultationEditorProps {
+type ConsultationEditorProps = {
 	consultation: ConsultationEditorFields;
-}
+};
 
 const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 	const navigate = useNavigate();

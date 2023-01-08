@@ -13,11 +13,11 @@ import useIsMounted from '../hooks/useIsMounted';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	document: any;
-}
+};
 
 const DocumentDeletionDialog = ({open, onClose, document}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

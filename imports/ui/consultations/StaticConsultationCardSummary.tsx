@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import AccordionSummary from '@mui/material/AccordionSummary';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 

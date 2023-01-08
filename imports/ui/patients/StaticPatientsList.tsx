@@ -9,19 +9,19 @@ import Paginator from '../navigation/Paginator';
 import PatientGridItem from './PatientGridItem';
 import PatientsPage from './PatientsPage';
 import NewPatientCard from './NewPatientCard';
-import CardPatientProjection from './CardPatientProjection';
+import type CardPatientProjection from './CardPatientProjection';
 
-interface StaticPatientsListProps<
+type StaticPatientsListProps<
 	C,
 	T = CardPatientProjection<C> & {_id: string},
-> {
+> = {
 	className?: string;
 	page: number;
 	perpage: number;
 	loading?: boolean;
 	patients: T[];
 	Card?: React.ElementType;
-}
+};
 
 const StaticPatientsList = ({
 	page,

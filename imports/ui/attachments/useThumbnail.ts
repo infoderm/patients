@@ -4,12 +4,12 @@ import eee from '../../util/eee';
 
 import {thumbnailDataURL} from '../../lib/pdf/pdfthumbnails';
 
-interface Options {
+type Options = {
 	isImage?: boolean;
 	isPDF?: boolean;
 	minWidth?: number;
 	minHeight?: number;
-}
+};
 
 const useThumbnail = (
 	url: string,

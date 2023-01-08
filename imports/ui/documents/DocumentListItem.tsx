@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import DocumentChips from './DocumentChips';
 
@@ -38,9 +38,9 @@ const ListItem = styled(UnstyledListItem, {
 	opacity: loading ? 0.7 : 1,
 }));
 
-interface Props extends PropsOf<typeof DocumentChips> {
+type Props = {
 	loading?: boolean;
-}
+} & PropsOf<typeof DocumentChips>;
 
 const DocumentListItem = ({loading = false, document, ...rest}: Props) => {
 	const {_id} = document;

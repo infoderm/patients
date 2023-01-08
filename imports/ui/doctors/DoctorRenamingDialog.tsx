@@ -3,15 +3,15 @@ import React from 'react';
 import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import {renameDoctor, useDoctorsFind} from '../../api/doctors';
-import TagDocument from '../../api/tags/TagDocument';
+import type TagDocument from '../../api/tags/TagDocument';
 import {formattedLineInput} from '../../api/string';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	onRename: () => void;
 	tag: TagDocument;
-}
+};
 
 const DoctorRenamingDialog = ({open, onClose, onRename, tag}: Props) => {
 	return (

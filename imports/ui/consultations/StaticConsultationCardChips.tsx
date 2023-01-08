@@ -15,8 +15,8 @@ import UnstyledLinkChip from '../chips/LinkChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
-import {PatientDocument} from '../../api/collection/patients';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type PatientDocument} from '../../api/collection/patients';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import {msToString, msToStringShort} from '../../api/duration';
 
 const Chips = styled('div')(({theme}) => ({
@@ -60,12 +60,12 @@ const styles: any = ({
 	}),
 });
 
-interface AdditionalChipProps {
+type AdditionalChipProps = {
 	didNotOrWillNotHappen?: boolean;
 	isPrice?: boolean;
 	isDebt?: boolean;
 	bold?: boolean;
-}
+};
 
 const Chip = styled(MuiChip, {shouldForwardProp})<AdditionalChipProps>(styles);
 const LinkChip = styled(UnstyledLinkChip, {
@@ -74,18 +74,23 @@ const LinkChip = styled(UnstyledLinkChip, {
 
 function paymentMethodIcon(payment_method) {
 	switch (payment_method) {
-		case 'wire':
+		case 'wire': {
 			return <PaymentIcon />;
-		case 'third-party':
+		}
+
+		case 'third-party': {
 			return <AccountBalanceWalletIcon />;
+		}
+
 		// eslint-disable-next-line unicorn/no-useless-switch-case
 		case 'cash':
-		default:
+		default: {
 			return <MoneyIcon />;
+		}
 	}
 }
 
-interface StaticConsultationCardChipsProps {
+type StaticConsultationCardChipsProps = {
 	isNoShow: boolean;
 	patient?: PatientDocument;
 	consultation: ConsultationDocument;
@@ -99,7 +104,7 @@ interface StaticConsultationCardChipsProps {
 	owes: boolean;
 	owed: number;
 	attachments: any[];
-}
+};
 
 const StaticConsultationCardChips = ({
 	isNoShow,

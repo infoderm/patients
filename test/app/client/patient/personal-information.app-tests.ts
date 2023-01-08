@@ -16,7 +16,7 @@ import {
 	fillIn,
 } from '../fixtures';
 
-interface EditPatientOptions {
+type EditPatientOptions = {
 	nn?: string;
 	lastname?: string;
 	firstname?: string;
@@ -34,7 +34,7 @@ interface EditPatientOptions {
 	about?: string;
 	noshow?: number;
 	action?: 'Save' | 'Undo';
-}
+};
 
 const editPatient = async (
 	app,

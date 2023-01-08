@@ -1,7 +1,7 @@
 import {Mongo} from 'meteor/mongo';
-import {HMACConfig} from '../../lib/hmac';
+import {type HMACConfig} from '../../lib/hmac';
 
-export interface PermissionTokenFields {
+export type PermissionTokenFields = {
 	userId?: string[];
 	groupId?: string[];
 	permissions: string[];
@@ -9,16 +9,16 @@ export interface PermissionTokenFields {
 	validUntil: Date;
 	hmac: HMACConfig;
 	signature: string;
-}
+};
 
 type PermissionTokenComputedFields = {};
 
-interface PermissionTokenMetadata {
+type PermissionTokenMetadata = {
 	_id: string;
 	createdAt: Date;
 	lastUsedAt: Date;
 	lastUsedIPAddress: string;
-}
+};
 
 export type PermissionTokenDocument = PermissionTokenFields &
 	PermissionTokenComputedFields &

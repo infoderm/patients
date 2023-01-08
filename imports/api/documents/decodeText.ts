@@ -1,5 +1,5 @@
 // @ts-expect-error Needs more recent @types/node
-import {Buffer} from 'buffer';
+import {type Buffer} from 'buffer';
 
 const decodeText = async (encoding: string, array: Uint8Array) => {
 	// Console.debug('constructing decoder');

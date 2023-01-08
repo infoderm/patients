@@ -31,9 +31,9 @@ import {red} from '@mui/material/colors';
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
 import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
-import {ConsultationDocument} from '../../api/collection/consultations';
-import {AttachmentDocument} from '../../api/collection/attachments';
-import PropsOf from '../../util/PropsOf';
+import {type ConsultationDocument} from '../../api/collection/consultations';
+import {type AttachmentDocument} from '../../api/collection/attachments';
+import type PropsOf from '../../util/PropsOf';
 
 const PREFIX = 'StaticConsultationCardDetails';
 
@@ -74,21 +74,25 @@ const StyledAccordionDetails = styled(AccordionDetails)(() => ({
 
 function paymentMethodString(payment_method) {
 	switch (payment_method) {
-		case 'wire':
+		case 'wire': {
 			return 'Virement';
-		case 'third-party':
+		}
+
+		case 'third-party': {
 			return 'Tiers Payant';
+		}
+
 		// eslint-disable-next-line unicorn/no-useless-switch-case
 		case 'cash':
-		default:
+		default: {
 			return 'Cash';
+		}
 	}
 }
 
-interface ConsultationsCardListItemBaseProps
-	extends PropsOf<typeof ListItemText> {
+type ConsultationsCardListItemBaseProps = {
 	avatar: React.ReactNode;
-}
+} & PropsOf<typeof ListItemText>;
 
 const ConsultationsCardListItemBase = ({
 	avatar,
@@ -112,10 +116,9 @@ const ConsultationsCardListItemBase = ({
 	</ListItem>
 );
 
-interface ConsultationsCardListItemProps
-	extends Omit<PropsOf<typeof ConsultationsCardListItemBase>, 'avatar'> {
+type ConsultationsCardListItemProps = {
 	Icon: React.ElementType;
-}
+} & Omit<PropsOf<typeof ConsultationsCardListItemBase>, 'avatar'>;
 
 const ConsultationsCardListItem = ({
 	Icon,
@@ -131,13 +134,13 @@ const ConsultationsCardListItem = ({
 	/>
 );
 
-interface StaticConsultationCardDetailsProps {
+type StaticConsultationCardDetailsProps = {
 	deleted: boolean;
 	missingPaymentData: boolean;
 	isNoShow: boolean;
 	consultation: ConsultationDocument;
 	attachments: AttachmentDocument[];
-}
+};
 
 const StaticConsultationCardDetails = (
 	props: StaticConsultationCardDetailsProps,

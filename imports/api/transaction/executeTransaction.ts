@@ -1,9 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
-import {ClientSessionOptions, TransactionOptions} from 'mongodb';
+import {type ClientSessionOptions, type TransactionOptions} from 'mongodb';
 
 import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
-import Transaction from './Transaction';
+import type Transaction from './Transaction';
 
 /**
  * See https://forums.meteor.com/t/solved-transactions-with-mongodb-meteor-methods/48677.

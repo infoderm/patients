@@ -45,7 +45,7 @@ import PatientsGrid from '../patients/PatientsGrid';
 import usePatient from '../patients/usePatient';
 
 import useCall from '../action/useCall';
-import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
+import type EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const computeDifferences = function* (state, changes) {
 	for (const key of Object.keys(changes)) {
@@ -58,7 +58,7 @@ const renderDiff = function* (parts) {
 	let key = 0;
 	for (const [type, value] of parts) {
 		switch (type) {
-			case -1:
+			case -1: {
 				yield (
 					<span
 						key={++key}
@@ -70,7 +70,9 @@ const renderDiff = function* (parts) {
 					</span>
 				);
 				break;
-			case 1:
+			}
+
+			case 1: {
 				yield (
 					<span
 						key={++key}
@@ -82,10 +84,13 @@ const renderDiff = function* (parts) {
 					</span>
 				);
 				break;
-			default:
+			}
+
+			default: {
 				assert(type === 0);
 				yield <span key={++key}>{value}</span>;
 				break;
+			}
 		}
 	}
 };

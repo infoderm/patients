@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
 const pageQuery = <T, U>(Collection: Mongo.Collection<T, U>) =>
 	function (query: Mongo.Selector<T>, options: Mongo.Options<T>) {

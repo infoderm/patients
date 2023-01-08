@@ -10,10 +10,10 @@ import TextField from '@mui/material/TextField';
 import {dataURL as pngDataURL} from '../../util/png';
 
 import SetPicker from '../input/SetPicker';
-import {PatientFields} from '../../api/collection/patients';
-import {ConsultationDocument} from '../../api/collection/consultations';
-import {DocumentDocument} from '../../api/collection/documents';
-import {AttachmentDocument} from '../../api/collection/attachments';
+import {type PatientFields} from '../../api/collection/patients';
+import {type ConsultationDocument} from '../../api/collection/consultations';
+import {type DocumentDocument} from '../../api/collection/documents';
+import {type AttachmentDocument} from '../../api/collection/attachments';
 
 const PREFIX = 'PatientSheet';
 
@@ -102,12 +102,12 @@ const SmallMultilineReadOnlyTextField = (props) => (
 	<MultilineReadOnlyTextField rows={1} {...props} />
 );
 
-interface Props {
+type Props = {
 	patient: PatientFields;
 	consultations: ConsultationDocument[];
 	attachments: AttachmentDocument[];
 	documents: DocumentDocument[];
-}
+};
 
 const PatientSheet = ({
 	patient,

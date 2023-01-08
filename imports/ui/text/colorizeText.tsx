@@ -10,7 +10,7 @@ function* split(s: string) {
 		switch (c) {
 			case ' ':
 			case '\t':
-			case '\n':
+			case '\n': {
 				if (word !== '') {
 					yield word;
 					word = '';
@@ -18,9 +18,12 @@ function* split(s: string) {
 
 				yield c;
 				break;
-			default:
+			}
+
+			default: {
 				word += c;
 				break;
+			}
 		}
 	}
 

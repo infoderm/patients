@@ -1,20 +1,20 @@
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import {Count} from '../../api/collection/stats';
 
 import publication, {
 	frequencySexKey,
-	GenderCount,
+	type GenderCount,
 } from '../../api/publication/stats/frequencyBySex';
 import subscribe from '../../api/publication/subscribe';
 
-interface Result {
+type Result = {
 	loading: boolean;
 	total?: number;
 	count?: GenderCount[];
-}
+};
 
 const useFrequencyStats = (
 	query?: Mongo.Selector<ConsultationDocument>,

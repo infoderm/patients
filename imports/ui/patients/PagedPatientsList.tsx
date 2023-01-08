@@ -3,17 +3,17 @@ import React from 'react';
 import Paginator from '../navigation/Paginator';
 import Refresh from '../navigation/Refresh';
 
-import {PatientDocument} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 import ReactivePatientCard from './ReactivePatientCard';
 import PatientsPage from './PatientsPage';
 
-interface Props {
+type Props = {
 	loading: boolean;
 	perpage: number;
 	items: PatientDocument[];
 	refresh?: () => void;
 	dirty?: boolean;
-}
+};
 
 const PagedPatientsList = ({
 	loading,

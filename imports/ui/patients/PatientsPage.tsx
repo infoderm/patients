@@ -4,13 +4,13 @@ import Grid from '@mui/material/Grid';
 
 import PatientGridItem from './PatientGridItem';
 import StaticPatientCard from './StaticPatientCard';
-import CardPatientProjection from './CardPatientProjection';
+import type CardPatientProjection from './CardPatientProjection';
 
-interface PatientPageProps<C, T = CardPatientProjection<C> & {_id: string}> {
+type PatientPageProps<C, T = CardPatientProjection<C> & {_id: string}> = {
 	patients: T[];
 	Card?: React.ElementType;
 	NewCard?: React.ElementType;
-}
+};
 
 const PatientsPage = ({
 	patients,

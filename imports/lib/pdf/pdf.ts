@@ -1,4 +1,4 @@
-import {DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
+import {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
 
 export const WORKER_URL = Meteor.isClient
 	? '/pdfjs-dist/build/pdf.worker.min.js'

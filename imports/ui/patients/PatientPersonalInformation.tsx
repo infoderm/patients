@@ -7,9 +7,9 @@ import PatientPersonalInformationStatic from './PatientPersonalInformationStatic
 
 import usePatient from './usePatient';
 
-interface PatientPersonalInformationProps {
+type PatientPersonalInformationProps = {
 	patientId: string;
-}
+};
 
 const PatientPersonalInformation = ({
 	patientId,

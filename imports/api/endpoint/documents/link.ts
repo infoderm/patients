@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
 import {Patients} from '../../collection/patients';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 

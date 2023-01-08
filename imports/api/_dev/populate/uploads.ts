@@ -1,6 +1,6 @@
-import {FileRef} from 'meteor/ostrio:files';
+import {type FileRef} from 'meteor/ostrio:files';
 import {randomPNGBuffer, randomPNGDataURI} from '../../../test/png';
-import {MetadataType, Uploads} from '../../uploads';
+import {type MetadataType, Uploads} from '../../uploads';
 
 export const newUpload = async (
 	invocation,

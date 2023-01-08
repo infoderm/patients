@@ -17,7 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import withLazyOpening from '../modal/withLazyOpening';
-import {PatientDocument} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 import PatientSuperDeletionDialog from './PatientSuperDeletionDialog';
 import StaticPatientCard from './StaticPatientCard';
 import PatientDeathDateEditionDialog from './PatientDeathDateEditionDialog';
@@ -32,11 +32,11 @@ const SecondaryAvatar = styled(Avatar)({
 	color: red[600],
 });
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	patient: PatientDocument;
-}
+};
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 	const [settingDeathDate, setSettingDeathDate] = useState(false);

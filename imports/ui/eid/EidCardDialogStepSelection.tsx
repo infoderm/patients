@@ -32,7 +32,7 @@ import CancelButton from '../button/CancelButton';
 
 import mergeFields from '../../util/mergeFields';
 
-import {PatientIdFields} from '../../api/collection/patients';
+import {type PatientIdFields} from '../../api/collection/patients';
 import {patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
@@ -116,14 +116,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-interface Props {
+type Props = {
 	titleId?: string;
 	onClose: () => void;
 	onNext: () => void;
 	eidInfo: PatientIdFields;
 	selected: Set<string>;
 	setSelected: (selection: Set<string>) => void;
-}
+};
 
 const EidCardDialogStepSelection = ({
 	titleId,

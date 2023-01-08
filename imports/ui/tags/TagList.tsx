@@ -1,9 +1,9 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
 
-import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
+import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
-import TagListPage, {TagListPageProps} from './TagListPage';
+import TagListPage, {type TagListPageProps} from './TagListPage';
 
 type TagListProps<T> = Omit<TagListPageProps<T>, 'page'>;
 

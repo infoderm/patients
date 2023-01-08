@@ -1,8 +1,8 @@
-import {useNavigate} from 'react-router-dom';
+import {type useNavigate} from 'react-router-dom';
 import insertPatient from '../../api/patients/insertPatient';
 import insertDrugs from '../../api/drugs/insertDrugs';
 import insertDocument from '../../api/documents/insertDocument';
-import useDialog from '../modal/useDialog';
+import type useDialog from '../modal/useDialog';
 
 function unpack(data, item) {
 	if (item.kind === 'file') {
@@ -37,25 +37,34 @@ const handleDrop =
 		for (const item of data.items) {
 			const [kind, object] = unpack(data, item);
 			switch (kind) {
-				case 'drugs':
+				case 'drugs': {
 					// eslint-disable-next-line no-await-in-loop
 					await insertDrugs(object);
 					break;
-				case 'patient':
+				}
+
+				case 'patient': {
 					// eslint-disable-next-line no-await-in-loop
 					await insertPatient(navigate, dialog, object);
 					break;
-				case 'document':
+				}
+
+				case 'document': {
 					// eslint-disable-next-line no-await-in-loop
 					await insertDocument(navigate, undefined, object);
 					break;
-				case 'attachment':
+				}
+
+				case 'attachment': {
 					throw new Error(
 						'Cannot drop PDFs! Please attach them to the patient directly.',
 					);
-				default:
+				}
+
+				default: {
 					console.debug('handleDrop-default', kind, object);
 					break;
+				}
 			}
 		}
 	};

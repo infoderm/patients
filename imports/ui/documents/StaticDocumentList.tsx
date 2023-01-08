@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DocumentDocument} from '../../api/collection/documents';
+import {type DocumentDocument} from '../../api/collection/documents';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -8,12 +8,12 @@ import Paginator from '../navigation/Paginator';
 
 import DocumentsPage from './DocumentsPage';
 
-interface Props {
+type Props = {
 	page: number;
 	perpage: number;
 	loading?: boolean;
 	documents: DocumentDocument[];
-}
+};
 
 const StaticDocumentList = ({
 	page,

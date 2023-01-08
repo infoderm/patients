@@ -3,16 +3,16 @@ import React from 'react';
 import withLazyOpening from '../modal/withLazyOpening';
 import reschedule from '../../api/endpoint/appointments/reschedule';
 import useCall from '../action/useCall';
-import {AppointmentDocument} from '../../api/collection/appointments';
-import {AppointmentUpdate} from '../../api/appointments';
-import {Entry} from '../../api/update';
+import {type AppointmentDocument} from '../../api/collection/appointments';
+import {type AppointmentUpdate} from '../../api/appointments';
+import {type Entry} from '../../api/update';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	appointment: AppointmentDocument;
-}
+};
 
 const appointmentDiffGen = function* (
 	appointment: AppointmentDocument,

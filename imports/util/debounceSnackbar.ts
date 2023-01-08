@@ -1,4 +1,4 @@
-import {SnackbarKey, OptionsObject} from 'notistack';
+import {type SnackbarKey, type OptionsObject} from 'notistack';
 
 const DEBOUNCE_DELAY = 500;
 

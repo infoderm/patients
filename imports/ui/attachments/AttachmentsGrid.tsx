@@ -1,15 +1,15 @@
 import React from 'react';
 
 import Grid from '@mui/material/Grid';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
-import {AttachmentDocument} from '../../api/collection/attachments';
-import AttachmentCard, {AttachmentInfo} from './AttachmentCard';
+import {type AttachmentDocument} from '../../api/collection/attachments';
+import AttachmentCard, {type AttachmentInfo} from './AttachmentCard';
 
-interface AttachmentsGridProps extends PropsOf<typeof Grid> {
+type AttachmentsGridProps = {
 	attachments: AttachmentDocument[];
 	attachmentsInfo?: Map<string, AttachmentInfo>;
-}
+} & PropsOf<typeof Grid>;
 
 const AttachmentsGrid = ({
 	attachments,

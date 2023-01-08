@@ -11,7 +11,7 @@ import FaceIcon from '@mui/icons-material/Face';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
-import {PatientDocument} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 import {patients} from '../../api/patients';
 
 import SetPicker from '../input/SetPicker';
@@ -45,12 +45,12 @@ const Suggestion = ({item: patient}) => {
 	);
 };
 
-interface Props {
+type Props = {
 	selection: PatientDocument[];
 	setSelection: (selection: PatientDocument[]) => void;
 	label?: string;
 	placeholder?: string;
-}
+};
 
 const MergePatientsFormStepSelect = ({
 	selection,

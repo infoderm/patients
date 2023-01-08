@@ -1,15 +1,15 @@
-import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
-import {DependencyList, useEffect, useRef} from 'react';
+import {type Meteor} from 'meteor/meteor';
+import {type Mongo} from 'meteor/mongo';
+import {type DependencyList, useEffect, useRef} from 'react';
 
 import useForceUpdate from '../ui/hooks/useForceUpdate';
 import useChanged from '../ui/hooks/useChanged';
 
-import ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
+import type ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 
-import Publication from './publication/Publication';
+import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
-import GenericQueryHook from './GenericQueryHook';
+import type GenericQueryHook from './GenericQueryHook';
 
 const makeObservedQueryHook =
 	<R, T = R>(

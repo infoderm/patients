@@ -15,11 +15,11 @@ import DocumentCard from './DocumentCard';
 
 type DocumentId = string;
 
-interface StaticDocumentDetailsProps {
+type StaticDocumentDetailsProps = {
 	documentId: DocumentId;
 	loading: boolean;
 	document: any;
-}
+};
 
 const StaticDocumentDetails = ({
 	documentId,

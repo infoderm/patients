@@ -1,18 +1,18 @@
 import {Mongo} from 'meteor/mongo';
 
-export interface SlotFields {
+export type SlotFields = {
 	begin: Date;
 	end: Date;
 	weekShiftedBegin: number;
 	weekShiftedEnd: number;
 	measure: number;
 	weight: number;
-}
+};
 
-export interface SlotMetadata {
+export type SlotMetadata = {
 	_id: string;
 	owner: string;
-}
+};
 
 export type SlotDocument = SlotFields & SlotMetadata;
 

@@ -60,11 +60,11 @@ const formatDatetime = (datetime: Date) => {
 	return `du ${dateFormat(datetime, 'dd/MM/yyyy à HH:mm')}`;
 };
 
-interface Props {
+type Props = {
 	onClose: () => void;
 	open: boolean;
 	patientId: string;
-}
+};
 
 const ManageConsultationsForPatientDialog = ({
 	open,

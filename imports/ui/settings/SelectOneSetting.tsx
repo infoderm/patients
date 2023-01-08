@@ -6,14 +6,14 @@ import ValuePicker from '../input/ValuePicker';
 
 import {useSetting} from './hooks';
 
-interface Props {
+type Props = {
 	className?: string;
 	title?: string;
 	label?: string;
 	setting: string;
 	options: string[];
 	optionToString?: (option: string) => string;
-}
+};
 
 const SelectOneSetting = ({
 	className,

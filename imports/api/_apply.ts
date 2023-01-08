@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import promisify from '../util/promisify';
-import Options from './endpoint/Options';
+import type Options from './endpoint/Options';
 
 const __meteor_apply = promisify<unknown>(Meteor.apply.bind(Meteor));
 

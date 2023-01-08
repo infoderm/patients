@@ -8,11 +8,11 @@ import ColorPicker from '../input/ColorPicker';
 import {useSetting} from './hooks';
 import SettingResetButton from './SettingResetButton';
 
-interface Props {
+type Props = {
 	className?: string;
 	title?: string;
 	setting: string;
-}
+};
 
 const SelectColorSetting = ({className, setting, title}: Props) => {
 	const {loading, value, setValue} = useSetting(setting);

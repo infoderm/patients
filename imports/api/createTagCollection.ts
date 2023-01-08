@@ -17,20 +17,18 @@ import definePublication from './publication/define';
 import {
 	containsNonAlphabetical,
 	formattedLine,
-	NormalizedLine,
+	type NormalizedLine,
 	normalizedLine,
 } from './string';
 
-import CacheItem from './CacheItem';
-import TagDocument, {
-	TagComputedFields,
-	TagNameFields,
-} from './tags/TagDocument';
+import type CacheItem from './CacheItem';
+import {type TagComputedFields, type TagNameFields} from './tags/TagDocument';
+import type TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
 import subscribe from './publication/subscribe';
-import Publication from './publication/Publication';
-import TransactionDriver from './transaction/TransactionDriver';
-import Filter from './transaction/Filter';
+import type Publication from './publication/Publication';
+import type TransactionDriver from './transaction/TransactionDriver';
+import type Filter from './transaction/Filter';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -62,7 +60,7 @@ const computedFields = (displayName: string): TagComputedFields => {
 	};
 };
 
-interface Options<T, P> {
+type Options<T, P> = {
 	Collection: Mongo.Collection<T>;
 	collection: string;
 	publication: string;
@@ -70,11 +68,11 @@ interface Options<T, P> {
 	Parent: Mongo.Collection<P>;
 	parentPublication: Publication;
 	key: string;
-}
+};
 
-interface TagStats {
+type TagStats = {
 	count: number;
-}
+};
 
 const createTagCollection = <
 	T extends TagDocument,
@@ -283,7 +281,7 @@ const createTagCollection = <
 				{upsert: true},
 			);
 		},
-		simulate(_tagId: string, _newname: string): void {
+		simulate(_tagId: string, _newname: string) {
 			return undefined;
 		},
 	});
@@ -312,7 +310,7 @@ const createTagCollection = <
 
 			return db.deleteOne(Collection, {_id: tagId} as Filter<T>);
 		},
-		simulate(_tagId: string): void {
+		simulate(_tagId: string) {
 			return undefined;
 		},
 	});

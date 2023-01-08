@@ -2,9 +2,9 @@ import React from 'react';
 
 import SelectOneSetting from './SelectOneSetting';
 
-interface Props {
+type Props = {
 	className?: string;
-}
+};
 
 const NavigationDrawerIsOpenSetting = ({className}: Props) => {
 	const options = ['open', 'closed'];

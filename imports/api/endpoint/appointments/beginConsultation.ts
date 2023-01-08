@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {thisYearsInterval} from '../../../util/datetime';
 
-import {ConsultationDocument} from '../../collection/consultations';
+import {type ConsultationDocument} from '../../collection/consultations';
 
 import {
 	findLastConsultationInInterval,
@@ -13,7 +13,7 @@ import {Appointments} from '../../collection/appointments';
 
 import {availability} from '../../availability';
 
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
@@ -74,7 +74,7 @@ export default define({
 			return modifier;
 		},
 	),
-	simulate(_consultationId: string): void {
+	simulate(_consultationId: string) {
 		return undefined;
 	},
 });

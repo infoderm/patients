@@ -20,7 +20,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import isValid from 'date-fns/isValid';
 
-import {PatientDocument} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 import virtualFields from '../../api/patients/virtualFields';
 import useBirthdatePickerProps from '../birthdate/useBirthdatePickerProps';
 import CancelButton from '../button/CancelButton';
@@ -31,11 +31,11 @@ import patientsUpdate from '../../api/endpoint/patients/update';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	patient: PatientDocument;
-}
+};
 
 const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {
 	const {

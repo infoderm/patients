@@ -1,8 +1,13 @@
 import {
-	PermissionTokenDocument,
+	type PermissionTokenDocument,
 	PermissionTokens,
 } from '../collection/permissionTokens';
-import {extractSignature, sign, SignedDocument, verify} from '../../lib/hmac';
+import {
+	extractSignature,
+	sign,
+	type SignedDocument,
+	verify,
+} from '../../lib/hmac';
 import {encode as _encode, decode as _decode} from '../../lib/base64/rfc7515';
 import executeTransaction from '../transaction/executeTransaction';
 

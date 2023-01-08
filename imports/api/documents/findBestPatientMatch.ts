@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Patients} from '../collection/patients';
 import {patients} from '../patients';
-import TransactionDriver from '../transaction/TransactionDriver';
+import type TransactionDriver from '../transaction/TransactionDriver';
 
 function* findBestPatientMatch_queries(entry) {
 	if (entry.patient) {
@@ -35,15 +35,20 @@ async function findBestPatientMatch(db: TransactionDriver, owner, entry) {
 		// eslint-disable-next-line no-await-in-loop
 		const matches = await db.fetch(Patients, {...query, owner}, firstTwo);
 		switch (matches.length) {
-			case 0:
+			case 0: {
 				// If no patient matches
 				continue;
-			case 1:
+			}
+
+			case 1: {
 				// If exactly 1 patient matches
 				return matches[0]._id;
-			default:
+			}
+
+			default: {
 				// If more than 1 patient matches
 				return undefined;
+			}
 		}
 	}
 

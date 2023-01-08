@@ -16,7 +16,7 @@ import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import consultationsAttach from '../../api/endpoint/consultations/attach';
 
@@ -28,22 +28,18 @@ import EditAppointmentDialog from '../appointments/EditAppointmentDialog';
 
 import call from '../../api/endpoint/call';
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
-import {AppointmentDocument} from '../../api/collection/appointments';
+import {type AppointmentDocument} from '../../api/collection/appointments';
 import ConsultationPaymentDialog from './ConsultationPaymentDialog';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
 import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';
 
-interface Props
-	extends Omit<
-		PropsOf<typeof ConsultationAdvancedActionsDialog>,
-		'open' | 'onClose'
-	> {
+type Props = {
 	found?: boolean;
 	attachAction?: boolean;
 	editAction?: boolean;
 	moreAction?: boolean;
 	owes: boolean;
-}
+} & Omit<PropsOf<typeof ConsultationAdvancedActionsDialog>, 'open' | 'onClose'>;
 
 const StaticConsultationCardActions = ({
 	found = true,

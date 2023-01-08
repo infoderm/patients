@@ -12,14 +12,21 @@ const eventBackgroundColor = ({begin, calendar, isCancelled}) => {
 	const today = startOfToday();
 	const isPast = isBefore(begin, today); // TODO make reactive?
 	switch (calendar) {
-		case 'appointments':
+		case 'appointments': {
 			return isPast ? '#ccc' : '#fff5d6';
-		case 'consultations':
+		}
+
+		case 'consultations': {
 			return '#757de8';
-		case 'availability':
+		}
+
+		case 'availability': {
 			return '#a5f8ad';
-		default:
+		}
+
+		default: {
 			return '#eee';
+		}
 	}
 };
 
@@ -106,24 +113,33 @@ const AvailabilityFragment = ({event, className, eventProps}) => {
 	);
 };
 
-interface Props {
+type Props = {
 	className: string;
 	event: any;
 	eventProps: any;
-}
+};
 
 const EventFragment = (props: Props) => {
 	switch (props.event.calendar) {
-		case 'consultations':
+		case 'consultations': {
 			return <ConsultationFragment {...props} />;
-		case 'appointments':
+		}
+
+		case 'appointments': {
 			return <AppointmentFragment {...props} />;
-		case 'availability':
+		}
+
+		case 'availability': {
 			return <AvailabilityFragment {...props} />;
-		case 'availability-hidden':
+		}
+
+		case 'availability-hidden': {
 			return <AvailabilityFragment {...props} />;
-		default:
+		}
+
+		default: {
 			break;
+		}
 	}
 
 	const {className, event, eventProps} = props;

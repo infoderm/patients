@@ -18,11 +18,11 @@ import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	attachment: {_id: string; name: string};
-}
+};
 
 const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

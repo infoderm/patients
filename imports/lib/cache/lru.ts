@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {openDB, DBSchema, IDBPDatabase} from 'idb/with-async-ittr';
+import {openDB, type DBSchema, type IDBPDatabase} from 'idb/with-async-ittr';
 
 const DEFAULT_DB_NAME = 'cache-lru';
 const DB_VERSION = 1;
@@ -19,7 +19,7 @@ type Value = string;
 type Expiry = Date;
 type Access = Date;
 
-interface Schema extends DBSchema {
+type Schema = {
 	[STORE]: {
 		key: Key;
 		value: {
@@ -33,16 +33,16 @@ interface Schema extends DBSchema {
 			[ACCESS]: Access;
 		};
 	};
-}
+} & DBSchema;
 
 type IndexedField = keyof Schema[typeof STORE]['indexes'];
 
 type DB = IDBPDatabase<Schema>;
 
-interface Metadata {
+type Metadata = {
 	[EXPIRY]: Expiry;
 	[ACCESS]?: Access;
-}
+};
 
 export class IndexedDBPersistedLRUCache {
 	readonly #dbPromise: Promise<DB>;
@@ -172,11 +172,11 @@ export class IndexedDBPersistedLRUCache {
 	}
 }
 
-interface CacheOptions {
+type CacheOptions = {
 	dbName?: string;
 	dbVersion?: number;
 	maxCount: number;
-}
+};
 
 const cache = ({
 	dbName = DEFAULT_DB_NAME,

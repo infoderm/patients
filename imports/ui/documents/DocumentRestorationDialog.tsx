@@ -11,11 +11,11 @@ import restore from '../../api/endpoint/documents/restore';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	document: any;
-}
+};
 
 const DocumentRestorationDialog = ({open, onClose, document}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

@@ -8,16 +8,16 @@ import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 import {books} from './books';
 
 import {
-	ConsultationComputedFields,
-	ConsultationDocument,
-	ConsultationFields,
+	type ConsultationComputedFields,
+	type ConsultationDocument,
+	type ConsultationFields,
 	Consultations,
 } from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
-import TransactionDriver from './transaction/TransactionDriver';
-import Filter from './transaction/Filter';
+import type TransactionDriver from './transaction/TransactionDriver';
+import type Filter from './transaction/Filter';
 import {
-	Entry,
+	type Entry,
 	makeSanitize,
 	makeComputedFields,
 	makeComputeUpdate,

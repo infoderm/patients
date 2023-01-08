@@ -6,7 +6,7 @@ import {books} from '../../books';
 import {parseUint32StrictOrString} from '../../string';
 
 import define from '../define';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'books.changeBookNumber',

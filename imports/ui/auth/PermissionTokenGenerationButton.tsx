@@ -11,9 +11,9 @@ import generate from '../../api/endpoint/permissions/token/generate';
 import useSaveTextToClipboardAndNotify from '../input/useSaveTextToClipboardAndNotify';
 import {ICS_CALENDAR_READ} from '../../api/permissions/codes';
 
-interface Props {
+type Props = {
 	className?: string;
-}
+};
 
 const PermissionTokenGenerationButton = ({className}: Props) => {
 	const [generating, setGenerating] = useState(false);

@@ -8,11 +8,11 @@ import PagedPatientsList from '../patients/PagedPatientsList';
 import {useAllergy} from '../../api/allergies';
 import StaticAllergyCard from './StaticAllergyCard';
 
-interface Props {
+type Props = {
 	name: string;
 	page?: number;
 	perpage?: number;
-}
+};
 
 const AllergyDetails = ({name, page = 1, perpage = 10}: Props) => {
 	return (

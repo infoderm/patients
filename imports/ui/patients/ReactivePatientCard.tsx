@@ -3,12 +3,12 @@ import StaticPatientCard from './StaticPatientCard';
 
 import useCachedPatient from './useCachedPatient';
 
-interface Props {
+type Props = {
 	patient: {
 		_id: string;
 	};
 	Card?: React.ElementType;
-}
+};
 
 const ReactivePatientCard = ({
 	patient,

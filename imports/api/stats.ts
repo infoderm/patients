@@ -1,8 +1,8 @@
-import {Subscription} from 'meteor/meteor';
+import {type Subscription} from 'meteor/meteor';
 
-import {countCollection, PollResult} from './collection/stats';
+import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
-import Collection from './transaction/Collection';
+import type Collection from './transaction/Collection';
 
 export const countPublicationName = (QueriedCollection, {values}) =>
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;
@@ -12,11 +12,11 @@ export const countPublicationKey = (QueriedCollection, {values}, query) =>
 		query ?? {},
 	)}`;
 
-interface CountOptions {
+type CountOptions = {
 	fields: string[];
 	discretize: (x: object) => Iterable<[string, string | number]>;
 	values: string[];
-}
+};
 
 export const getCountOptions = (options): CountOptions =>
 	typeof options === 'string'

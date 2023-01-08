@@ -35,7 +35,7 @@ import {useDateMask} from '../../i18n/datetime';
 
 import {msToString} from '../../api/duration';
 
-import {AppointmentDocument} from '../../api/collection/appointments';
+import {type AppointmentDocument} from '../../api/collection/appointments';
 
 import {patients} from '../../api/patients';
 import {useSetting} from '../settings/hooks';
@@ -52,7 +52,7 @@ import {AVAILABILITY_TIMEZONE, weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../lib/interval/isContiguous';
-import {AppointmentUpdate} from '../../api/appointments';
+import {type AppointmentUpdate} from '../../api/appointments';
 
 const Multiline = styled(TextField)({
 	overflow: 'auto',
@@ -83,7 +83,7 @@ const unserializeTime = (time: string) =>
 
 const isEqual = (a, b) => a === b;
 
-interface AppointmentDialogProps {
+type AppointmentDialogProps = {
 	open: boolean;
 	pending: boolean;
 	onClose: () => void;
@@ -97,7 +97,7 @@ interface AppointmentDialogProps {
 		lastname: string;
 		phone: string;
 	};
-}
+};
 
 const AppointmentDialog = ({
 	initialDatetime,

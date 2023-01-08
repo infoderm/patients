@@ -20,7 +20,7 @@ import {red} from '@mui/material/colors';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog';
 import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';
@@ -31,14 +31,13 @@ const SecondaryAvatar = styled(Avatar)({
 	color: red[600],
 });
 
-interface Props
-	extends Omit<
-		PropsOf<typeof StaticConsultationCardChips>,
-		'showDate' | 'showTime' | 'showPrice' | 'PatientChip'
-	> {
+type Props = {
 	open: boolean;
 	onClose: () => void;
-}
+} & Omit<
+	PropsOf<typeof StaticConsultationCardChips>,
+	'showDate' | 'showTime' | 'showPrice' | 'PatientChip'
+>;
 
 const ConsultationAdvancedActionsDialog = ({open, onClose, ...rest}: Props) => {
 	const {consultation} = rest;

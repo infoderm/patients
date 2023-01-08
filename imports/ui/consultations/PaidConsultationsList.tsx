@@ -10,16 +10,16 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import {capitalized} from '../../api/string';
 import Center from '../grid/Center';
 import YearJumper from '../navigation/YearJumper';
-import Filter from '../../api/transaction/Filter';
-import {ConsultationDocument} from '../../api/collection/consultations';
+import type Filter from '../../api/transaction/Filter';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import FixedFab from '../button/FixedFab';
 import ConsultationsStatsCard from './ConsultationsStatsCard';
 import ConsultationsPager from './ConsultationsPager';
 
-interface Props {
+type Props = {
 	year?: number;
 	payment_method?: string;
-}
+};
 
 const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 	const [showBookZero, setShowBookZero] = useState(false);

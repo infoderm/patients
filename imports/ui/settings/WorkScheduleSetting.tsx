@@ -6,7 +6,7 @@ import {sorted} from '@iterable-iterator/sorted';
 import simplifyUnion from '../../lib/interval/simplifyUnion';
 import InputManySetting from './InputManySetting';
 import useWorkScheduleSort, {weekSlotsCyclicOrder} from './useWorkScheduleSort';
-import ModuloWeekInterval from './ModuloWeekInterval';
+import type ModuloWeekInterval from './ModuloWeekInterval';
 import useTimeSlotToString from './useTimeSlotToString';
 import timeSlotFromString from './timeSlotFromString';
 

@@ -8,14 +8,14 @@ import {filter} from '@iterable-iterator/filter';
 
 import isValid from 'date-fns/isValid';
 import {
-	PatientFields,
-	PatientComputedFields,
+	type PatientFields,
+	type PatientComputedFields,
 	SEX_ALLOWED,
 	PatientEmailShape,
 	PatientTagShape,
-	PatientTag,
-	PatientDocument,
-	PatientTagFields,
+	type PatientTag,
+	type PatientDocument,
+	type PatientTagFields,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -34,11 +34,11 @@ import {
 	junctionTrigrams,
 } from './string';
 
-import TransactionDriver from './transaction/TransactionDriver';
+import type TransactionDriver from './transaction/TransactionDriver';
 
 import {names as tagNames} from './createTagCollection';
 import {
-	Entry,
+	type Entry,
 	makeComputedFields,
 	makeComputeUpdate,
 	makeSanitize,

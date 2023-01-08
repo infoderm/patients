@@ -3,12 +3,15 @@ import addMinutes from 'date-fns/addMinutes';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 
-import {ConsultationDocument, Consultations} from './collection/consultations';
+import {
+	type ConsultationDocument,
+	Consultations,
+} from './collection/consultations';
 
 import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
 
-import {EventDocument, events} from './collection/events';
+import {type EventDocument, events} from './collection/events';
 
 export const event = (
 	_id: string,

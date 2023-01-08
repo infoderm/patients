@@ -34,11 +34,11 @@ const styles = () =>
 
 const useStyles = makeStyles(styles);
 
-interface Options {
+type Options = {
 	[key: string]: any;
 	callback: (data: any) => Promise<void>;
 	className?: string;
-}
+};
 
 const WholeWindowDropZone = ({callback, className, ...rest}: Options) => {
 	const classes = useStyles();

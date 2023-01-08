@@ -1,17 +1,22 @@
-import {Meteor} from 'meteor/meteor';
-import Authentication from './Authentication';
+import {type Meteor} from 'meteor/meteor';
+import type Authentication from './Authentication';
 
 const authorized = (
 	authentication: Authentication,
 	invocation: Partial<Meteor.MethodThisType>,
 ): boolean => {
 	switch (authentication) {
-		case 'DANGEROUS-NONE':
+		case 'DANGEROUS-NONE': {
 			return true;
-		case 'logged-in':
+		}
+
+		case 'logged-in': {
 			return typeof invocation.userId === 'string' && invocation.userId !== '';
-		default:
+		}
+
+		default: {
 			return false;
+		}
 	}
 };
 

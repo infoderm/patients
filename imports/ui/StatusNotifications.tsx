@@ -6,7 +6,7 @@ import ConnectingIcon from '@mui/material/CircularProgress';
 import ConnectedIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
 import FailedIcon from '@mui/icons-material/Error';
 
-import {SnackbarOrigin, SnackbarProvider} from 'notistack';
+import {type SnackbarOrigin, SnackbarProvider} from 'notistack';
 import useStatusNotifications from './users/useStatusNotifications';
 
 const anchorOrigin: SnackbarOrigin = {

@@ -6,10 +6,10 @@ import useDocuments from './useDocuments';
 import StaticDocumentList from './StaticDocumentList';
 import CustomDocumentImportButton from './CustomDocumentImportButton';
 
-interface Props {
+type Props = {
 	page?: number;
 	perpage?: number;
-}
+};
 
 const DocumentsList = ({page = 1, perpage = 10}: Props) => {
 	const options = {

@@ -1,8 +1,8 @@
-import {Meteor} from 'meteor/meteor';
-import TransactionDriver from '../transaction/TransactionDriver';
-import Endpoint from './Endpoint';
+import {type Meteor} from 'meteor/meteor';
+import type TransactionDriver from '../transaction/TransactionDriver';
+import type Endpoint from './Endpoint';
 
-const compose = <T>(
+const compose = async <T>(
 	db: TransactionDriver,
 	endpoint: Endpoint<T>,
 	invocation: Partial<Meteor.MethodThisType>,

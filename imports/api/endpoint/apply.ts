@@ -1,7 +1,7 @@
 import _apply from '../_apply';
 
-import Endpoint from './Endpoint';
-import Options from './Options';
+import type Endpoint from './Endpoint';
+import type Options from './Options';
 
 const apply = async <R>(
 	endpoint: Endpoint<R>,

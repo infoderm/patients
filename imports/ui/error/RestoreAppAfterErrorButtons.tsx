@@ -26,9 +26,9 @@ const Buttons = styled('div')(() => ({
 	},
 }));
 
-interface RestoreAppAfterErrorButtonsProps {
+type RestoreAppAfterErrorButtonsProps = {
 	retry: () => void;
-}
+};
 
 const RestoreAppAfterErrorButtons = ({
 	retry,

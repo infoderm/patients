@@ -1,20 +1,20 @@
 import {Mongo} from 'meteor/mongo';
 
-interface Patient {
+type Patient = {
 	firstname: string;
 	lastname: string;
-}
+};
 
-export interface DocumentResult {
+export type DocumentResult = {
 	name: string;
 	flag?: string;
 	code?: string;
 	measure?: string;
 	unit?: string;
 	normal?: string;
-}
+};
 
-export interface DocumentDocument {
+export type DocumentDocument = {
 	_id: string;
 	owner: string;
 	encoding?: string;
@@ -34,6 +34,6 @@ export interface DocumentDocument {
 	deleted?: boolean;
 	status?: string;
 	results?: DocumentResult[];
-}
+};
 
 export const Documents = new Mongo.Collection<DocumentDocument>('documents');

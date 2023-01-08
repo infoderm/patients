@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';
 import Divider from '@mui/material/Divider';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import virtualFields from '../../api/consultations/virtualFields';
 
@@ -12,12 +12,12 @@ import StaticConsultationCardSummary from './StaticConsultationCardSummary';
 import StaticConsultationCardDetails from './StaticConsultationCardDetails';
 import StaticConsultationCardActions from './StaticConsultationCardActions';
 
-interface AdditionalProps {
+type AdditionalProps = {
 	loading: boolean;
 	deleted: boolean;
 	isAppointment: boolean;
 	didNotOrWillNotHappen: boolean;
-}
+};
 
 const additionalProps = new Set<number | string | Symbol>([
 	'didNotOrWillNotHappen',

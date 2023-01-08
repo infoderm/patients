@@ -2,18 +2,17 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import Button, {ButtonProps} from '@mui/material/Button';
+import Button, {type ButtonProps} from '@mui/material/Button';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import {myEncodeURIComponent} from '../../../util/uri';
 import useDocumentVersions from '../useDocumentVersions';
-import {DocumentDocument} from '../../../api/collection/documents';
+import {type DocumentDocument} from '../../../api/collection/documents';
 
-interface DocumentVersionsButtonProps
-	extends Omit<ButtonProps<typeof Link>, 'component' | 'to'> {
+type DocumentVersionsButtonProps = {
 	document: DocumentDocument;
-}
+} & Omit<ButtonProps<typeof Link>, 'component' | 'to'>;
 
 const DocumentVersionsButton = ({
 	document,

@@ -1,13 +1,13 @@
 import type {Blocker, History, Transition} from 'history';
-import {ContextType, useCallback, useContext, useEffect} from 'react';
+import {type ContextType, useCallback, useContext, useEffect} from 'react';
 import {
-	Navigator as BaseNavigator,
+	type Navigator as BaseNavigator,
 	UNSAFE_NavigationContext as NavigationContext,
 } from 'react-router-dom';
 
-interface Navigator extends BaseNavigator {
+type Navigator = {
 	block: History['block'];
-}
+} & BaseNavigator;
 
 type NavigationContextWithBlock = ContextType<typeof NavigationContext> & {
 	navigator: Navigator;

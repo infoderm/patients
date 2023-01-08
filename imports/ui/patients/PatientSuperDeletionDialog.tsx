@@ -26,13 +26,13 @@ import ConfirmationTextField, {
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 import StaticPatientCard from './StaticPatientCard';
-import CardPatientProjection from './CardPatientProjection';
+import type CardPatientProjection from './CardPatientProjection';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	patient: CardPatientProjection<typeof StaticPatientCard>;
-}
+};
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

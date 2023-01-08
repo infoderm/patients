@@ -9,7 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import LinearProgress from '@mui/material/LinearProgress';
 
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 
 import {normalizedLine} from '../../api/string';
 import usePatient from '../patients/usePatient';
@@ -25,11 +25,11 @@ import DeleteButton from '../button/DeleteButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	consultation: ConsultationDocument;
-}
+};
 
 const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 	const options = {fields: ConsultationDeletionDialog.projection};

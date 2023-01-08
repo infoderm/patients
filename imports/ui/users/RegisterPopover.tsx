@@ -8,11 +8,11 @@ import createUserWithPassword from '../../api/user/createUserWithPassword';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
-interface Props {
+type Props = {
 	anchorEl: HTMLElement;
 	handleClose: () => void;
 	changeMode: (mode: string) => void;
-}
+};
 
 const RegisterPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

@@ -16,12 +16,12 @@ import PatientPicker from '../patients/PatientPicker';
 import CancelButton from '../button/CancelButton';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	attachment: {_id: string};
 	existingLink?: {_id: string};
-}
+};
 
 const AttachmentLinkingDialog = ({
 	open,

@@ -1,8 +1,8 @@
-import {Mongo} from 'meteor/mongo';
-import {DependencyList, useRef} from 'react';
+import {type Mongo} from 'meteor/mongo';
+import {type DependencyList, useRef} from 'react';
 import {useTracker} from 'meteor/react-meteor-data';
 
-import Publication from './publication/Publication';
+import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 
 const init = [];

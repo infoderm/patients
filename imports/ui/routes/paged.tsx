@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 
 import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
 
-import branch, {BranchProps} from './branch';
+import branch, {type BranchProps} from './branch';
 
 type Params = {
 	page?: string;

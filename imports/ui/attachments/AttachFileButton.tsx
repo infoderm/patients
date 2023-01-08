@@ -1,23 +1,26 @@
-import React, {ReactNode} from 'react';
+import React, {type ReactNode} from 'react';
 
 import Button from '@mui/material/Button';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import {useSnackbar, OptionsObject as NotistackOptionsObject} from 'notistack';
+import {
+	useSnackbar,
+	type OptionsObject as NotistackOptionsObject,
+} from 'notistack';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import call from '../../api/endpoint/call';
-import Endpoint from '../../api/endpoint/Endpoint';
-import {MetadataType, Uploads} from '../../api/uploads';
+import type Endpoint from '../../api/endpoint/Endpoint';
+import {type MetadataType, Uploads} from '../../api/uploads';
 
 import InputFileButton from '../input/InputFileButton';
 import debounceSnackbar from '../../util/debounceSnackbar';
 
-interface Props extends Omit<PropsOf<typeof InputFileButton>, 'onChange'> {
+type Props = {
 	endpoint: Endpoint<any>;
 	item: string;
 	children?: ReactNode;
-}
+} & Omit<PropsOf<typeof InputFileButton>, 'onChange'>;
 
 const AttachFileButton = React.forwardRef(
 	({endpoint, item: itemId, children, ...rest}: Props, ref) => {

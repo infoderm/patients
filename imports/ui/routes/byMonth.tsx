@@ -6,7 +6,7 @@ import startOfToday from 'date-fns/startOfToday';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-import branch, {BranchProps} from './branch';
+import branch, {type BranchProps} from './branch';
 
 type Params = {
 	year?: string;

@@ -1,8 +1,8 @@
-import {WithId} from 'mongodb';
+import {type WithId} from 'mongodb';
 import snapshotTransaction from './snapshotTransaction';
-import MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
-import Collection from './Collection';
-import Filter from './Filter';
+import type MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
+import type Collection from './Collection';
+import type Filter from './Filter';
 
 type ForEachAsyncCallback<T> = (
 	db: MongoTransactionExecutionDriver,

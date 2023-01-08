@@ -12,11 +12,11 @@ import superdelete from '../../api/endpoint/documents/superdelete';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	document: any;
-}
+};
 
 const DocumentSuperDeletionDialog = ({open, onClose, document}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

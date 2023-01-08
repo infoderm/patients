@@ -5,7 +5,7 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import {availability} from '../../availability';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: 'consultations.remove',

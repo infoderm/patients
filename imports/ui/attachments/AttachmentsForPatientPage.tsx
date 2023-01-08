@@ -1,17 +1,17 @@
-import React, {ComponentPropsWithoutRef} from 'react';
+import React, {type ComponentPropsWithoutRef} from 'react';
 
 import NoContent from '../navigation/NoContent';
 import Paginator from '../navigation/Paginator';
 
 import AttachmentsGallery from './AttachmentsGallery';
-import AttachmentInfo from './AttachmentInfo';
+import type AttachmentInfo from './AttachmentInfo';
 
-interface Props extends ComponentPropsWithoutRef<'div'> {
+type Props = {
 	patientId: string;
 	attachmentsInfo: AttachmentInfo[];
 	page?: number;
 	perpage?: number;
-}
+} & ComponentPropsWithoutRef<'div'>;
 
 const AttachmentsForPatientPage = ({
 	patientId,

@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import authorized from '../authorized';
-import Endpoint from './Endpoint';
+import type Endpoint from './Endpoint';
 
 const invoke = async <R>(
 	endpoint: Endpoint<R>,

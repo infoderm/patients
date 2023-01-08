@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 
-import PropsOf from '../../../util/PropsOf';
+import type PropsOf from '../../../util/PropsOf';
 
-import {DocumentDocument} from '../../../api/collection/documents';
+import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentDeletionDialog from '../DocumentDeletionDialog';
 
-interface DocumentDownloadGenericButtonAdditionalProps {
+type DocumentDownloadGenericButtonAdditionalProps = {
 	document: DocumentDocument;
 	component: React.ElementType;
-}
+};
 
 const DocumentDownloadGenericButton = ({
 	document,

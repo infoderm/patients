@@ -27,10 +27,10 @@ import intersectsOrTouchesInterval from './interval/intersectsOrTouchesInterval'
 
 import {
 	Availability,
-	SlotDocument,
-	SlotFields,
+	type SlotDocument,
+	type SlotFields,
 } from './collection/availability';
-import TransactionDriver from './transaction/TransactionDriver';
+import type TransactionDriver from './transaction/TransactionDriver';
 
 export type Constraint = [number, number];
 export type Duration = number;
@@ -125,23 +125,34 @@ const getDatetimePartsInTimeZone = (timeZone: string, datetime: Date) => {
 	let milliseconds: number;
 	for (const {type, value} of parts) {
 		switch (type) {
-			case 'weekday':
+			case 'weekday': {
 				day = WEEKDAYS_MAP[value];
 				break;
-			case 'hour':
+			}
+
+			case 'hour': {
 				hours = Number.parseInt(value, 10);
 				break;
-			case 'minute':
+			}
+
+			case 'minute': {
 				minutes = Number.parseInt(value, 10);
 				break;
-			case 'second':
+			}
+
+			case 'second': {
 				seconds = Number.parseInt(value, 10);
 				break;
-			case 'fractionalSecond':
+			}
+
+			case 'fractionalSecond': {
 				milliseconds = Number.parseInt(value, 10);
 				break;
-			default:
+			}
+
+			default: {
 				throw new Error(`Invalid part type ${type} with value ${value}.`);
+			}
 		}
 	}
 
@@ -226,15 +237,18 @@ const dateToZoned = (timeZone: string, datetime: Date): Date => {
 			.filter(({type}) => type !== 'literal')
 			.map(({type, value}) => {
 				switch (type) {
-					case 'era':
+					case 'era': {
 						return [
 							'yearTransform',
 							value === 'B'
 								? (year: number) => 1 - year
 								: (year: number) => year,
 						];
-					default:
+					}
+
+					default: {
 						return [type, Number.parseInt(value, 10)];
+					}
 				}
 			}),
 	);
@@ -322,16 +336,21 @@ const simplify = (
 	if (weightFirst === weightSecond) {
 		if (weightNextToLast === weightLast) {
 			switch (slots.length) {
-				case 2:
+				case 2: {
 					return [[beginFirst, endSecond, weightFirst]];
-				case 3:
+				}
+
+				case 3: {
 					return [[beginFirst, endLast, weightFirst]];
-				default:
+				}
+
+				default: {
 					return [
 						[beginFirst, endSecond, weightFirst],
 						...slots.slice(2, -2),
 						[beginNextToLast, endLast, weightLast],
 					];
+				}
 			}
 		}
 

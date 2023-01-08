@@ -21,7 +21,7 @@ import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
 import useCall from '../action/useCall';
-import EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
+import type EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const EidCardDialogStepPreviewSingleCreate = ({
 	titleId,

@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 
 import {
 	Consultations,
-	ConsultationDocument,
+	type ConsultationDocument,
 } from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 
@@ -12,7 +12,7 @@ import {books} from '../../books';
 
 import define from '../define';
 import {availability} from '../../availability';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 const {sanitize} = consultations;
 
@@ -88,7 +88,7 @@ export default define({
 
 		return db.updateOne(Consultations, {_id: consultationId}, modifier);
 	},
-	simulate(_consultationId: string, _newfields: any): void {
+	simulate(_consultationId: string, _newfields: any) {
 		return undefined;
 	},
 });

@@ -1,16 +1,16 @@
 import {useCallback} from 'react';
 import {useDateFormat, useDaysOfWeek} from '../../i18n/datetime';
 import {units as durationUnits} from '../../api/duration';
-import ModuloWeekInterval from './ModuloWeekInterval';
+import type ModuloWeekInterval from './ModuloWeekInterval';
 
-interface Interval {
+type Interval = {
 	beginDay: number;
 	beginHour: number;
 	beginMinutes: number;
 	endDay: number;
 	endHour: number;
 	endMinutes: number;
-}
+};
 
 const moduloWeekIntervalToInterval = ({
 	beginModuloWeek,

@@ -1,5 +1,5 @@
-import TransactionDriver from './TransactionDriver';
-import Collection from './Collection';
+import type TransactionDriver from './TransactionDriver';
+import type Collection from './Collection';
 
 type TransactionExecutor = (txn: (db: TransactionDriver) => any) => any;
 

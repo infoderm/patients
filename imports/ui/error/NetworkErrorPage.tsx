@@ -5,7 +5,7 @@ import NoContent from '../navigation/NoContent';
 import useStatus from '../users/useStatus';
 import usePreviousRenderValues from '../hooks/usePreviousRenderValues';
 import ErrorLog from './ErrorLog';
-import ErrorPageProps from './ErrorPageProps';
+import type ErrorPageProps from './ErrorPageProps';
 import ErrorExplanation from './ErrorExplanation';
 import ReconnectAfterNetworkErrorButtons from './ReconnectAfterNetworkErrorButtons';
 

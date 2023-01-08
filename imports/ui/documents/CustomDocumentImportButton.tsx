@@ -1,5 +1,5 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import {type useNavigate} from 'react-router-dom';
 
 import {useSnackbar} from 'notistack';
 

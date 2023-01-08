@@ -18,7 +18,7 @@ import {useDateFormat} from '../../i18n/datetime';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
-import {DocumentDocument} from '../../api/collection/documents';
+import {type DocumentDocument} from '../../api/collection/documents';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
@@ -31,9 +31,9 @@ const chipMargins = (theme) => ({
 	marginBottom: theme.spacing(1 / 2),
 });
 
-interface AdditionalLinkChipProps {
+type AdditionalLinkChipProps = {
 	maxWidth?: boolean;
-}
+};
 
 const LinkChip = styled(UnstyledLinkChip, {
 	shouldForwardProp: (prop) => prop !== 'maxWidth',
@@ -44,10 +44,10 @@ const LinkChip = styled(UnstyledLinkChip, {
 	}),
 }));
 
-interface ChipProps {
+type ChipProps = {
 	maxWidth?: boolean;
 	kind?: string;
-}
+};
 
 const Chip = styled(MuiChip, {
 	shouldForwardProp: (prop) => prop !== 'maxWidth' && prop !== 'kind',
@@ -76,11 +76,11 @@ const Chip = styled(MuiChip, {
 	}),
 }));
 
-interface Props {
+type Props = {
 	document: DocumentDocument;
 	PatientChip?: React.ElementType;
 	VersionsChip?: React.ElementType;
-}
+};
 
 const DocumentChips = ({
 	document,

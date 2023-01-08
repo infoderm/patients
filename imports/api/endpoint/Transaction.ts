@@ -1,4 +1,4 @@
-import TransactionDriver from '../transaction/TransactionDriver';
+import type TransactionDriver from '../transaction/TransactionDriver';
 
 type Transaction<R> = (db: TransactionDriver, ...args: any[]) => Promise<R>;
 

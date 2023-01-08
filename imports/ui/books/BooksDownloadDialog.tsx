@@ -31,13 +31,13 @@ import csv from '../../api/endpoint/books/csv';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	initialBegin: Date;
 	initialEnd?: Date;
 	initialAdvancedFunctionality?: boolean;
-}
+};
 
 const BooksDownloadDialog = ({
 	open,

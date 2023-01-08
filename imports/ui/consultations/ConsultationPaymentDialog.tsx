@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import CloseIcon from '@mui/icons-material/Close';
 
-import {ConsultationDocument} from '../../api/collection/consultations';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 
 import {onlyASCII} from '../../api/string';
 
@@ -62,11 +62,11 @@ const useStyles = makeStyles({
 	},
 });
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	consultation: ConsultationDocument;
-}
+};
 
 const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 	const classes = useStyles();

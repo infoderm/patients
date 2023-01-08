@@ -20,11 +20,11 @@ import withLazyOpening from '../modal/withLazyOpening';
 import cancel from '../../api/endpoint/appointments/cancel';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	appointment: any;
-}
+};
 
 const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 	const {loading, value: reasons} = useSetting(

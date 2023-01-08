@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import FixedFab from '../button/FixedFab';
 

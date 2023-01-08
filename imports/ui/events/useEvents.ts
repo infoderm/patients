@@ -1,11 +1,11 @@
-import {DependencyList} from 'react';
+import {type DependencyList} from 'react';
 
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import {useTracker} from 'meteor/react-meteor-data';
 
 import isValid from 'date-fns/isValid';
 
-import {Events, EventDocument} from '../../api/collection/events';
+import {Events, type EventDocument} from '../../api/collection/events';
 import {beginsInInterval} from '../../api/events';
 import subscribe from '../../api/publication/subscribe';
 import interval from '../../api/publication/events/interval';

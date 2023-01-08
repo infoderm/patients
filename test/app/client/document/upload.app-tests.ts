@@ -84,13 +84,13 @@ const selectFiles = async ({findByLabelText}, file) => {
 	uploadFile(button, file);
 };
 
-interface MacroExpected {
+type MacroExpected = {
 	[key: string]: any;
 	exact?: boolean;
 	text: string;
-}
+};
 
-interface MacroOptions {
+type MacroOptions = {
 	firstname: string;
 	lastname: string;
 	contents: string;
@@ -98,7 +98,7 @@ interface MacroOptions {
 	metadata?: any;
 	method: typeof dropFiles;
 	expected: MacroExpected[];
-}
+};
 
 const macro = (
 	title,

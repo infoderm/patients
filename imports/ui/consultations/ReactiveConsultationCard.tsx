@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import useAttachments from '../attachments/useAttachments';
 
 import StaticConsultationCard from './StaticConsultationCard';

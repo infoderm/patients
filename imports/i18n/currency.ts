@@ -34,13 +34,17 @@ export const useCurrencyOptions = (currency: string, options?: any) => {
 
 		for (const {type, value} of parts) {
 			switch (type) {
-				case 'group':
+				case 'group': {
 					groupDelimiter = value;
 					break;
-				case 'decimal':
+				}
+
+				case 'decimal': {
 					decimalDelimiter = value;
 					break;
-				case 'integer':
+				}
+
+				case 'integer': {
 					thousandsGroupStyle =
 						value === '1'
 							? 'lakh'
@@ -50,8 +54,11 @@ export const useCurrencyOptions = (currency: string, options?: any) => {
 							? 'thousand'
 							: thousandsGroupStyle;
 					break;
-				default:
+				}
+
+				default: {
 					break;
+				}
 			}
 		}
 

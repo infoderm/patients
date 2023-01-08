@@ -6,7 +6,7 @@ import decodeText from './documents/decodeText';
 import detectTextEncoding from './documents/detectTextEncoding';
 import parseHealthOne from './documents/parseHealthOne';
 import parseMedidoc from './documents/parseMedidoc';
-import TransactionDriver from './transaction/TransactionDriver';
+import type TransactionDriver from './transaction/TransactionDriver';
 
 const DETECT_REGEX_HEALTHONE = /^A1\\ *[A-Za-z\d-]+ *\\/;
 const DETECT_REGEX_MEDIDOC_DOCTOR = /^(\d\/\d{5}\/\d{2}\/\d{3}|\d{11})[\r\n]/;
@@ -26,11 +26,11 @@ const detectFormat = (string: string): string | undefined => {
 	return matches.length === 1 ? matches[0] : undefined;
 };
 
-export interface DirtyDocument {
+export type DirtyDocument = {
 	patientId?: string;
 	format?: string;
 	array: Uint8Array;
-}
+};
 
 async function* sanitize({
 	patientId,

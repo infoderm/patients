@@ -2,12 +2,12 @@ import React from 'react';
 
 import Grid from '@mui/material/Grid';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
-interface PatientGridItemProps<T> {
+type PatientGridItemProps<T> = {
 	Card: React.ElementType;
 	patient?: T;
-}
+};
 
 const PatientGridItem = <T,>({
 	Card,

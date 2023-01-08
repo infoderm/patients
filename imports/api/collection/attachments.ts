@@ -1,5 +1,5 @@
-import {FileObj} from 'meteor/ostrio:files';
-import {Uploads, MetadataType} from '../uploads';
+import {type FileObj} from 'meteor/ostrio:files';
+import {Uploads, type MetadataType} from '../uploads';
 
 export const Attachments = Uploads.collection;
 

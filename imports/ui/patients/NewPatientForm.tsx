@@ -57,14 +57,14 @@ const StyledGrid = styled(Grid)(({theme}) => ({
 	},
 }));
 
-interface OnSubmitProps {
+type OnSubmitProps = {
 	niss: string;
 	firstname: string;
 	lastname: string;
 	birthdate: Date | null;
 	sex: string;
 	noshow: number;
-}
+};
 
 const useSubmit = ({
 	niss,

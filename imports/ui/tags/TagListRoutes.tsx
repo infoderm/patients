@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import TagListRoute from './TagListRoute';
 
 type Props = PropsOf<typeof TagListRoute>;

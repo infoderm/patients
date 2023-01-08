@@ -1,10 +1,13 @@
 import assert from 'assert';
 import {Appointments} from '../../collection/appointments';
 import {Patients} from '../../collection/patients';
-import {AppointmentUpdate, sanitizeAppointmentUpdate} from '../../appointments';
+import {
+	type AppointmentUpdate,
+	sanitizeAppointmentUpdate,
+} from '../../appointments';
 import {availability} from '../../availability';
 
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 import {validate} from '../../../util/schema';
 
 import define from '../define';
@@ -62,7 +65,7 @@ export default define({
 			patientId: $set.patientId,
 		};
 	},
-	simulate(_appointment: any): void {
+	simulate(_appointment: any) {
 		return undefined;
 	},
 });

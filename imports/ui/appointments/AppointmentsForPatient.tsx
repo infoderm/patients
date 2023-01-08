@@ -14,9 +14,9 @@ import FixedFab from '../button/FixedFab';
 import ConsultationsPager from '../consultations/ConsultationsPager';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 
-interface Props {
+type Props = {
 	patientId: string;
-}
+};
 
 const AppointmentsForPatient = ({patientId}: Props) => {
 	const [showCancelled, setShowCancelled] = useState(true);

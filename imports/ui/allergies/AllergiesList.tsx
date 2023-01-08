@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useAllergiesFind} from '../../api/allergies';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import TagNamePrefixFilteredList from '../tags/TagNamePrefixFilteredList';
 import ReactiveAllergyCard from './ReactiveAllergyCard';
 

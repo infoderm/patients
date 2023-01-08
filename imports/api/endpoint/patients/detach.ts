@@ -4,7 +4,7 @@ import {Patients} from '../../collection/patients';
 import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
-import TransactionDriver from '../../transaction/TransactionDriver';
+import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({
 	name: '/patients/detach',
@@ -44,8 +44,9 @@ export default define({
 		return result;
 	},
 	simulate(patientId: string, uploadId: string) {
-		return Attachments.update(uploadId, {
+		Attachments.update(uploadId, {
 			$pull: {'meta.attachedToPatients': patientId},
 		});
+		return undefined;
 	},
 });

@@ -40,9 +40,9 @@ const Logout = () => {
 	return <MenuItem onClick={uiLogout}>Logout</MenuItem>;
 };
 
-interface OfflineOnlineToggleProps {
+type OfflineOnlineToggleProps = {
 	onSuccess: () => void;
-}
+};
 
 const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 	const {status} = useStatus();
@@ -69,12 +69,17 @@ const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 	}, [status]);
 
 	switch (status) {
-		case 'connected':
+		case 'connected': {
 			return <MenuItem onClick={offline}>Work offline</MenuItem>;
-		case 'offline':
+		}
+
+		case 'offline': {
 			return <MenuItem onClick={online}>Work online</MenuItem>;
-		default:
+		}
+
+		default: {
 			return <MenuItem disabled>Work offline</MenuItem>;
+		}
 	}
 };
 

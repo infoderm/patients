@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 
 import {myEncodeURIComponent} from '../../util/uri';
 import {escapeStringRegexp} from '../../api/string';
@@ -10,10 +10,10 @@ import AlphabetJumper from '../navigation/AlphabetJumper';
 import NoMatch from '../navigation/NoMatch';
 import TagList from './TagList';
 
-interface Props extends Omit<PropsOf<typeof TagList>, 'query'> {
+type Props = {
 	type?: string;
 	filter?: string;
-}
+} & Omit<PropsOf<typeof TagList>, 'query'>;
 
 const TagNamePrefixFilteredList = ({
 	type = undefined,

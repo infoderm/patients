@@ -8,11 +8,11 @@ import appointmentsRemove from '../../api/endpoint/appointments/remove';
 import EndpointCallConfirmationDialog from '../modal/EndpointCallConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	appointment: {_id: string};
-}
+};
 
 const AppointmentDeletionDialog = ({open, onClose, appointment}: Props) => (
 	<EndpointCallConfirmationDialog

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 
-import GenericQueryHook from '../../api/GenericQueryHook';
-import {TagNameFields, TagMetadata} from '../../api/tags/TagDocument';
+import type GenericQueryHook from '../../api/GenericQueryHook';
+import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';
 
@@ -14,7 +14,7 @@ import Refresh from '../navigation/Refresh';
 
 import TagGrid from './TagGrid';
 
-export interface TagListPageProps<T> {
+export type TagListPageProps<T> = {
 	Card: React.ElementType;
 	page?: number;
 	perpage?: number;
@@ -23,7 +23,7 @@ export interface TagListPageProps<T> {
 	sort?: {};
 
 	useTags?: GenericQueryHook<T>;
-}
+};
 
 const TagListPage = <T extends TagNameFields & TagMetadata>({
 	useTags,

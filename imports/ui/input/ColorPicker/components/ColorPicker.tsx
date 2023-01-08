@@ -9,12 +9,12 @@ import {colord} from 'colord';
 import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
 
-interface Props {
+type Props = {
 	defaultValue: string;
 	onChange: (color: string) => void;
 	convert?: keyof typeof converters;
 	readOnly?: boolean;
-}
+};
 
 const ColorPicker = ({
 	defaultValue,

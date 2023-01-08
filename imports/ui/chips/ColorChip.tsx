@@ -4,7 +4,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {darken} from '@mui/material/styles';
 import classNames from 'classnames';
 
-import Chip, {ChipProps} from '@mui/material/Chip';
+import Chip, {type ChipProps} from '@mui/material/Chip';
 
 import {colord} from 'colord';
 
@@ -28,9 +28,9 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-interface ColorChipExtraProps {
+type ColorChipExtraProps = {
 	color?: string;
-}
+};
 
 const ColorChip = React.forwardRef(
 	(

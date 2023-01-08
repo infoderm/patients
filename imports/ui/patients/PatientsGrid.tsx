@@ -3,15 +3,15 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 
 import StaticPatientCard from './StaticPatientCard';
-import CardPatientProjection from './CardPatientProjection';
+import type CardPatientProjection from './CardPatientProjection';
 
-interface PatientsGridProps<C, T = CardPatientProjection<C> & {_id: string}> {
+type PatientsGridProps<C, T = CardPatientProjection<C> & {_id: string}> = {
 	patients: T[];
 	Card?: React.ElementType;
 	CardProps?: {};
 	getCardProps?: (patient: T) => {};
 	selected?: Set<string>;
-}
+};
 
 const PatientsGrid = ({
 	patients,

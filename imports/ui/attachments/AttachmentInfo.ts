@@ -1,4 +1,4 @@
-export default interface AttachmentInfo {
+type AttachmentInfo = {
 	parentCollection: string;
 	parentId: string;
 	attachmentId: string;
@@ -6,4 +6,5 @@ export default interface AttachmentInfo {
 	group: number;
 	createdAt: number;
 	lastModified: number;
-}
+};
+export default AttachmentInfo;

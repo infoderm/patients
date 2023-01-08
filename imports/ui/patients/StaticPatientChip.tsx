@@ -8,13 +8,13 @@ import Avatar from '@mui/material/Avatar';
 
 import {dataURL as pngDataURL} from '../../util/png';
 
-interface MuiChipProps {
+type MuiChipProps = {
 	loading: boolean | undefined;
 	found: boolean | undefined;
 	willBeCreated: boolean;
 	component: React.ElementType | undefined;
 	to: string | undefined;
-}
+};
 
 const additionalProps = new Set<string | number | Symbol>([
 	'loading',
@@ -49,7 +49,7 @@ const Chip = styled(MuiChip, {
 		  }),
 }));
 
-interface Props {
+type Props = {
 	className?: string;
 	style?: React.CSSProperties;
 	loading?: boolean;
@@ -62,7 +62,7 @@ interface Props {
 	};
 	onClick?: () => void;
 	onDelete?: () => void;
-}
+};
 
 const StaticPatientChip = React.forwardRef(
 	(

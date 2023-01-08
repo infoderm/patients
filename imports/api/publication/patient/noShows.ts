@@ -4,7 +4,7 @@ import startOfToday from 'date-fns/startOfToday';
 
 import {Appointments} from '../../collection/appointments';
 
-import {noShows, State} from '../../collection/noShows';
+import {noShows, type State} from '../../collection/noShows';
 
 import define from '../define';
 

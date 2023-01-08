@@ -1,7 +1,7 @@
-import {Mongo} from 'meteor/mongo';
+import {type Mongo} from 'meteor/mongo';
 import isAfter from 'date-fns/isAfter';
 import {check} from 'meteor/check';
-import {Availability, SlotDocument} from '../../collection/availability';
+import {Availability, type SlotDocument} from '../../collection/availability';
 import intersectsInterval from '../../interval/intersectsInterval';
 import define from '../define';
 

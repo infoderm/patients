@@ -10,11 +10,11 @@ import loginWithPassword from '../../api/user/loginWithPassword';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
-interface Props {
+type Props = {
 	anchorEl: HTMLElement;
 	handleClose: () => void;
 	changeMode: (mode: string) => void;
-}
+};
 
 const LoginPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();

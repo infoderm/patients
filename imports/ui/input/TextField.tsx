@@ -3,7 +3,7 @@ import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 
 import MuiTextField, {
-	TextFieldProps as MuiTextFieldProps,
+	type TextFieldProps as MuiTextFieldProps,
 } from '@mui/material/TextField';
 
 const styles = () => ({
@@ -19,9 +19,9 @@ const styles = () => ({
 
 const useStyles = makeStyles(styles);
 
-interface AddedProps {
+type AddedProps = {
 	readOnly?: boolean;
-}
+};
 
 type Props = MuiTextFieldProps & AddedProps;
 

@@ -12,10 +12,10 @@ type Params = {
 	reference: string;
 };
 
-interface Props {
+type Props = {
 	page?: number;
 	perpage?: number;
-}
+};
 
 const DocumentsVersionsList = ({page = 1, perpage = 10}: Props) => {
 	const params = useParams<Params>();

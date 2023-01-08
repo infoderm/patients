@@ -2,13 +2,12 @@ import React from 'react';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import AppointmentDialog from './AppointmentDialog';
 
-interface AppointmentFromPatientIdDialogProps
-	extends Omit<PropsOf<typeof AppointmentDialog>, 'initialPatient'> {
+type AppointmentFromPatientIdDialogProps = {
 	patientId: string;
-}
+} & Omit<PropsOf<typeof AppointmentDialog>, 'initialPatient'>;
 
 const AppointmentFromPatientIdDialog = ({
 	patientId,

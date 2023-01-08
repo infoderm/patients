@@ -1,14 +1,14 @@
 import {
-	ClientSession,
-	UpdateResult as MongoUpdateResult,
-	InsertOneResult as MongoInsertOneResult,
-	InsertManyResult as MongoInsertManyResult,
-	DeleteResult as MongoDeleteResult,
-	WithId,
+	type ClientSession,
+	type UpdateResult as MongoUpdateResult,
+	type InsertOneResult as MongoInsertOneResult,
+	type InsertManyResult as MongoInsertManyResult,
+	type DeleteResult as MongoDeleteResult,
+	type WithId,
 } from 'mongodb';
 
-import Collection from './Collection';
-import Filter from './Filter';
+import type Collection from './Collection';
+import type Filter from './Filter';
 
 export type ValueOrPromise<X> = X | Promise<X>;
 
@@ -25,7 +25,7 @@ export type InsertManyResult<T> = MongoInsertManyResult<T>;
 export type DeleteResult = MongoDeleteResult;
 
 export type Options = Record<string, any>;
-export default interface TransactionDriver {
+type TransactionDriver = {
 	session: ClientSession;
 	// TODO template depends on Collection document type
 	insertOne: <T, U = T>(
@@ -81,4 +81,5 @@ export default interface TransactionDriver {
 		filter?: Filter<T>,
 		options?: Options,
 	) => ValueOrPromise<any[]>;
-}
+};
+export default TransactionDriver;

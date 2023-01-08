@@ -1,4 +1,5 @@
-export default interface Event {
+type Event = {
 	begin: Date;
 	end: Date;
-}
+};
+export default Event;

@@ -1,9 +1,9 @@
 import {
-	DependencyList,
+	type DependencyList,
 	useState,
 	useEffect,
-	Dispatch,
-	SetStateAction,
+	type Dispatch,
+	type SetStateAction,
 } from 'react';
 
 const useStateWithInitOverride = <T>(

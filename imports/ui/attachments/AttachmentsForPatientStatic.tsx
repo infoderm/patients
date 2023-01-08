@@ -6,13 +6,14 @@ import patientsAttach from '../../api/endpoint/patients/attach';
 
 import FixedFab from '../button/FixedFab';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import AttachFileButton from './AttachFileButton';
 import AttachmentsForPatientPager from './AttachmentsForPatientPager';
 
-interface Props extends PropsOf<typeof AttachmentsForPatientPager> {
+type Props = {
 	patientId: string;
-}
+	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+} & PropsOf<typeof AttachmentsForPatientPager>;
 
 const AttachmentsForPatientStatic = ({patientId, ...rest}: Props) => {
 	return (

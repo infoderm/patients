@@ -2,17 +2,17 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import {ChipProps} from '@mui/material/Chip';
+import {type ChipProps} from '@mui/material/Chip';
 
 import {myEncodeURIComponent} from '../../util/uri';
 
-import {AllergyDocument} from '../../api/collection/allergies';
+import {type AllergyDocument} from '../../api/collection/allergies';
 import ColorChip from '../chips/ColorChip';
 
-interface AddedProps {
+type AddedProps = {
 	loading?: boolean;
 	item: AllergyDocument;
-}
+};
 
 type StaticAllergyChipProps = ChipProps & AddedProps;
 

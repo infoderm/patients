@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 
 import {Documents} from '../../collection/documents';
-import {DirtyDocument, documents} from '../../documents';
+import {type DirtyDocument, documents} from '../../documents';
 import findBestPatientMatch from '../../documents/findBestPatientMatch';
 import executeTransaction from '../../transaction/executeTransaction';
 
@@ -121,7 +121,7 @@ export default define({
 
 		return result;
 	},
-	simulate(_document: any): void {
+	simulate(_document: any) {
 		return undefined;
 	},
 });

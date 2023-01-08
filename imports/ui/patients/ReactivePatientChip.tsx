@@ -1,15 +1,15 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import StaticPatientChip, {
 	projection as StaticPatientChipProjection,
 } from './StaticPatientChip';
 
 import usePatient from './usePatient';
 
-interface Props extends PropsOf<typeof StaticPatientChip> {
+type Props = {
 	patient: {_id: string};
-}
+} & PropsOf<typeof StaticPatientChip>;
 
 const ReactivePatientChip = React.forwardRef(
 	({patient, ...rest}: Props, ref) => {

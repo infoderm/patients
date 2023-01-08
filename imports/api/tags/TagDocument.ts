@@ -1,18 +1,18 @@
-import {FormattedLine, NormalizedLine} from '../string';
+import {type FormattedLine, type NormalizedLine} from '../string';
 
-export interface TagNameFields {
+export type TagNameFields = {
 	displayName?: FormattedLine;
 	name: NormalizedLine;
-}
+};
 
-export interface TagComputedFields {
+export type TagComputedFields = {
 	containsNonAlphabetical: boolean;
-}
+};
 
-export interface TagMetadata {
+export type TagMetadata = {
 	_id: string;
 	owner: string;
-}
+};
 
 type TagDocument = TagNameFields & TagComputedFields & TagMetadata;
 

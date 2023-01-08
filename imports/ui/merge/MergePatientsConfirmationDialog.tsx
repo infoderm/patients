@@ -14,7 +14,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import debounceSnackbar from '../../util/debounceSnackbar';
 import useCall from '../action/useCall';
 
-interface Props {
+type Props = {
 	open: boolean;
 	onClose: () => void;
 	toCreate: {};
@@ -22,7 +22,7 @@ interface Props {
 	attachmentsToAttach: unknown[];
 	documentsToAttach: unknown[];
 	toDelete: unknown[];
-}
+};
 
 const MergePatientsConfirmationDialog = ({
 	open,

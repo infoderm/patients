@@ -89,7 +89,7 @@ const StyledCard = styled(Card)(({theme}) => ({
 	},
 }));
 
-interface Props {
+type Props = {
 	query: {};
 
 	title: string;
@@ -97,7 +97,7 @@ interface Props {
 	url?: string;
 	actions?: (item: {}) => React.ReactNode;
 	abbr: string;
-}
+};
 
 const ConsultationsStatsCard = ({
 	query,

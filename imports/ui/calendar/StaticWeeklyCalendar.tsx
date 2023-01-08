@@ -1,10 +1,10 @@
 import React from 'react';
 
-import PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../util/PropsOf';
 import CalendarHeader from './CalendarHeader';
 import WeeklyCalendarData from './WeeklyCalendarData';
 
-interface Props extends PropsOf<typeof WeeklyCalendarData> {
+type Props = {
 	className?: string;
 	title?: string;
 	next: () => void;
@@ -12,7 +12,7 @@ interface Props extends PropsOf<typeof WeeklyCalendarData> {
 	monthly: () => void;
 	actions?: React.ReactNode[];
 	navigationRole?: 'button' | 'link';
-}
+} & PropsOf<typeof WeeklyCalendarData>;
 
 const StaticWeeklyCalendar = ({
 	className,

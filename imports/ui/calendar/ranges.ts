@@ -3,14 +3,17 @@ import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
 import endOfMonth from 'date-fns/endOfMonth';
 import addDays from 'date-fns/addDays';
-import {Locale} from 'date-fns';
-import {FirstWeekContainsDate, WeekStartsOn} from '../../i18n/datetime';
+import {type Locale} from 'date-fns';
+import {
+	type FirstWeekContainsDate,
+	type WeekStartsOn,
+} from '../../i18n/datetime';
 
-interface WeekOptions {
+type WeekOptions = {
 	locale?: Locale;
 	weekStartsOn?: WeekStartsOn;
 	firstWeekContainsDate?: FirstWeekContainsDate;
-}
+};
 
 export function monthly(year: number, month: number, weekOptions: WeekOptions) {
 	const firstDayOfMonth = new Date(year, month - 1, 1);

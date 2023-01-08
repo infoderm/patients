@@ -1,7 +1,8 @@
-import {ErrorInfo} from 'react';
+import {type ErrorInfo} from 'react';
 
-export default interface ErrorPageProps {
+type ErrorPageProps = {
 	error: Error;
 	errorInfo: ErrorInfo;
 	retry: () => void;
-}
+};
+export default ErrorPageProps;
