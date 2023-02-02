@@ -32,13 +32,13 @@ export const newPatientFormData = makeTemplate({
 	municipality: () => faker.address.city(),
 	streetandnumber: () => faker.address.streetAddress(),
 	zip: () => faker.address.zipCode(),
-	phone: () => faker.phone.phoneNumber(),
+	phone: () => faker.phone.number(),
 
 	insurances: () =>
 		list(
 			map(
 				() => ({
-					displayName: faker.company.companyName(),
+					displayName: faker.company.name(),
 					name: '',
 				}),
 				range(faker.datatype.number(2)),
