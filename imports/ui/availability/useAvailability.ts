@@ -1,16 +1,16 @@
 import {type DependencyList} from 'react';
 
 import {type Mongo} from 'meteor/mongo';
-import {useTracker} from 'meteor/react-meteor-data';
 
 import isValid from 'date-fns/isValid';
 
-import subscribe from '../../api/publication/subscribe';
 import {
 	Availability,
 	type SlotDocument,
 } from '../../api/collection/availability';
 import intersectsInterval from '../../api/interval/intersectsInterval';
+import useSubscription from '../../api/publication/useSubscription';
+import useCursor from '../../api/publication/useCursor';
 import intersects from '../../api/publication/availability/intersects';
 
 const useAvailability = (
@@ -20,20 +20,21 @@ const useAvailability = (
 	options: Mongo.Options<SlotDocument>,
 	deps: DependencyList,
 ) => {
+	// TODO Do not oversubscribe
+	const publication = isValid(begin) && isValid(end) ? intersects : null;
+	const isLoading = useSubscription(publication, begin, end, filter);
+
 	const query = {
 		...intersectsInterval(begin, end),
 		...filter,
 	};
 
-	return useTracker(() => {
-		if (!isValid(begin) || !isValid(end)) return {loading: false, results: []};
-		// TODO Do not oversubscribe
-		const handle = subscribe(intersects, begin, end, filter);
-		return {
-			loading: !handle.ready(),
-			results: Availability.find(query, options).fetch(),
-		};
-	}, deps);
+	const results = useCursor(() => Availability.find(query, options), deps);
+
+	return {
+		loading: isLoading(),
+		results: publication ? results : [],
+	};
 };
 
 export default useAvailability;

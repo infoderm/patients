@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
-import {useTracker} from 'meteor/react-meteor-data';
 
-const useUserId = () => useTracker(() => Meteor.userId());
+import useReactive from '../../api/publication/useReactive';
+
+const useUserId = () => useReactive(() => Meteor.userId());
 
 export default useUserId;

@@ -1,7 +1,7 @@
-import {useTracker} from 'meteor/react-meteor-data';
 import {Mongo} from 'meteor/mongo';
 import define from './publication/define';
-import subscribe from './publication/subscribe';
+import useCursor from './publication/useCursor';
+import useSubscription from './publication/useSubscription';
 
 const makeFilteredCollection = (
 	Collection,
@@ -46,14 +46,12 @@ const makeFilteredCollection = (
 
 	const Filtered = new Mongo.Collection(name);
 
-	return (hookQuery = {}, options = undefined, deps = []) =>
-		useTracker(() => {
-			const handle = subscribe(publication, undefined, options);
-			return {
-				loading: !handle.ready(),
-				results: Filtered.find(hookQuery, options).fetch(),
-			};
-		}, deps);
+	return (hookQuery = {}, options = undefined, deps = []) => {
+		const isLoading = useSubscription(publication, undefined, options);
+		const loading = isLoading();
+		const results = useCursor(() => Filtered.find(hookQuery, options), deps);
+		return {loading, results};
+	};
 };
 
 export default makeFilteredCollection;

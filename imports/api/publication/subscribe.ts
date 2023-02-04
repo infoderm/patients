@@ -1,3 +1,4 @@
+import {Meteor} from 'meteor/meteor';
 import type Publication from './Publication';
 
 const subscribe = ({name}: Publication, ...args: any[]) =>

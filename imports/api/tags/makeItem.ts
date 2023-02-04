@@ -1,8 +1,8 @@
 import {type DependencyList} from 'react';
 import {type Mongo} from 'meteor/mongo';
-import {useTracker} from 'meteor/react-meteor-data';
 
 import subscribe from '../publication/subscribe';
+import useReactive from '../publication/useReactive';
 import type Publication from '../publication/Publication';
 import type TagDocument from './TagDocument';
 
@@ -13,14 +13,14 @@ type ReturnType<U> = {
 
 const makeItem =
 	<T extends TagDocument, U = T>(
-		collection: Mongo.Collection<T, U>,
+		Collection: Mongo.Collection<T, U>,
 		singlePublication: Publication,
 	) =>
 	(name: string, deps: DependencyList): ReturnType<U> =>
-		useTracker(() => {
+		useReactive(() => {
 			const handle = subscribe(singlePublication, name);
 			if (handle.ready()) {
-				const item = collection.findOne({name} as Mongo.Selector<T>);
+				const item = Collection.findOne({name} as Mongo.Selector<T>);
 				return {
 					loading: false,
 					item,
