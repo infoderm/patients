@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
-import {useTracker} from 'meteor/react-meteor-data';
 
-const useLoggingOut = () => useTracker(() => Meteor.loggingOut());
+import useReactive from '../../api/publication/useReactive';
+
+const useLoggingOut = () => useReactive(() => Meteor.loggingOut());
 
 export default useLoggingOut;

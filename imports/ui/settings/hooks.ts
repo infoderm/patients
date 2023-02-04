@@ -1,8 +1,8 @@
 import {useCallback} from 'react';
-import {useTracker} from 'meteor/react-meteor-data';
 import {Settings} from '../../api/collection/settings';
 import {settings as _settings} from '../../api/settings';
-import _subscribe from '../../api/publication/subscribe';
+import useSubscription from '../../api/publication/useSubscription';
+import useReactive from '../../api/publication/useReactive';
 import byKey from '../../api/publication/settings/byKey';
 import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/settings/update';
@@ -13,7 +13,7 @@ import useLoggingIn from '../users/useLoggingIn';
 
 const {defaults} = _settings;
 
-const subscribe = (key: string) => _subscribe(byKey, key);
+const useSettingSubscription = (key: string) => useSubscription(byKey, key);
 
 const get = (_loading: boolean, _userId: string | null, key: string) => {
 	const item = Settings.findOne({key});
@@ -90,14 +90,12 @@ export const useSetting = (key: string, getFn: typeof get = get) => {
 	const userId = useUserId();
 	const loggingIn = useLoggingIn();
 	const loggingOut = useLoggingOut();
-	const ready = useTracker(() => {
-		const handle = subscribe(key);
-		return handle.ready();
-	}, [key]);
+	const isLoadingSetting = useSettingSubscription(key);
+	const loadingSetting = isLoadingSetting();
 
-	const loading = loggingIn || loggingOut || !ready;
+	const loading = loggingIn || loggingOut || loadingSetting;
 
-	const value = useTracker(
+	const value = useReactive(
 		() => getFn(loading, userId, key),
 		[getFn, loading, userId, key],
 	);
@@ -110,7 +108,7 @@ export const useSetting = (key: string, getFn: typeof get = get) => {
 	const resetValue = useCallback(async () => resetSetting(key), [key]);
 
 	return {
-		loading: !ready,
+		loading: loadingSetting,
 		value,
 		setValue,
 		resetValue,
@@ -122,7 +120,7 @@ export const useSettingCached = (key: string) =>
 
 export const settings = {
 	defaults,
-	subscribe,
+	useSettingSubscription,
 	useSetting,
 	get,
 	getWithBrowserCache,

@@ -1,8 +1,8 @@
 import {type Mongo} from 'meteor/mongo';
 import {type DependencyList} from 'react';
-import {useTracker} from 'meteor/react-meteor-data';
 import type Publication from './publication/Publication';
-import subscribe from './publication/subscribe';
+import useReactive from './publication/useReactive';
+import useSubscription from './publication/useSubscription';
 
 const makeFindOne =
 	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
@@ -12,12 +12,10 @@ const makeFindOne =
 		options: Mongo.Options<T>,
 		deps: DependencyList,
 	) => {
-		const loading = useTracker(() => {
-			const handle = subscribe(publication, query, options);
-			return !handle.ready();
-		}, deps);
+		const isLoading = useSubscription(publication, query, options);
+		const loading = isLoading();
 
-		const upToDate = useTracker(
+		const upToDate = useReactive(
 			() => (loading ? undefined : Collection.findOne(query, options)),
 			[loading, ...deps],
 		);
