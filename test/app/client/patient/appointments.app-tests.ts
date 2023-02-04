@@ -28,13 +28,13 @@ const scheduleAppointmentForPatient = async (
 	const {user, findByRole, queryByRole, findAllByRole} = app;
 	await user.click(await findByRole('button', {name: /^more actions/i}));
 
-	await user.click(
-		await findByRole('button', {name: 'Programmer un nouveau rendez-vous'}),
+	await navigateTo(
+		app,
+		'Programmer un nouveau rendez-vous',
+		`/new/appointment/for/${patientId}/week/current`,
+		'button',
 	);
 
-	await findByRole('heading', {
-		name: `/new/appointment/for/${patientId}/week/current`,
-	});
 	const buttons = await findAllByRole('button', {
 		name: /^Schedule an appointment/,
 	});

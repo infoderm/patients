@@ -150,13 +150,14 @@ export const changePassword = async (
 
 export const navigateTo = async (
 	{findByRole, userWithoutPointerEventsCheck},
-	title: string,
+	title: string | RegExp,
 	url: string | RegExp,
+	role = 'link',
 ) => {
 	await userWithoutPointerEventsCheck.click(
-		await findByRole('link', {name: title}),
+		await findByRole(role, {name: title}),
 	);
-	await findByRole('heading', {name: url});
+	await findByRole('heading', {name: url}, {timeout: 3000});
 };
 
 export const createNewPatient = async (app, {firstname, lastname}) => {
@@ -164,7 +165,7 @@ export const createNewPatient = async (app, {firstname, lastname}) => {
 
 	const {findByRole, getByLabelText, getByRole, user} = app;
 
-	await findByRole('button', {name: 'Create new patient'});
+	await findByRole('button', {name: 'Create new patient'}, {timeout: 2000});
 	await user.type(getByLabelText('Last name'), lastname);
 	await user.type(getByLabelText('First name'), firstname);
 	await user.click(getByRole('button', {name: 'Create new patient'}));
