@@ -1,4 +1,5 @@
 import {fireEvent} from '@testing-library/dom';
+import {type Test, type AsyncFunc} from 'mocha';
 import {
 	exampleHealthoneLab,
 	exampleHealthoneReport,
@@ -100,8 +101,10 @@ type MacroOptions = {
 	expected: MacroExpected[];
 };
 
+type TestFunction = (title: string, fn: AsyncFunc) => Test;
+
 const macro = (
-	title,
+	title: string,
 	{
 		firstname,
 		lastname,
@@ -111,8 +114,9 @@ const macro = (
 		method,
 		expected,
 	}: MacroOptions,
+	test: TestFunction = it,
 ) => {
-	return it(title, async () => {
+	return test(title, async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
