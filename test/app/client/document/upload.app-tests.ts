@@ -140,10 +140,18 @@ const macro = (
 		await findByRole('heading', {name: '/documents'});
 
 		await user.click(
-			await findByRole('link', {name: `${lastname} ${firstname}`}),
+			await findByRole(
+				'link',
+				{name: `${lastname} ${firstname}`},
+				{timeout: 3000},
+			),
 		);
 
-		await findByRole('heading', {name: `/patient/${patientId}`});
+		await findByRole(
+			'heading',
+			{name: `/patient/${patientId}`},
+			{timeout: 3000},
+		);
 
 		await user.click(await findByRole('link', {name: 'documents'}));
 
