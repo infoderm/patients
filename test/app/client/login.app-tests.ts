@@ -51,7 +51,7 @@ client(__filename, () => {
 		await app.findByText('User not found');
 	});
 
-	it("should not allow to log in with other user's passowrd", async () => {
+	it("should not allow to log in with other user's password", async () => {
 		const username1 = randomUserId();
 		const password1 = randomPassword();
 		const username2 = randomUserId();
