@@ -27,7 +27,7 @@ const App = () => {
 
 	return (
 		<BrowserRouter>
-			<LocalizationProvider dateAdapter={AdapterDateFns} locale={locale}>
+			<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
 				<StyledEngineProvider injectFirst>
 					<ThemeProvider theme={theme}>
 						<ModalProvider>
