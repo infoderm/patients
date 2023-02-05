@@ -5,19 +5,16 @@ import {useRef, useEffect} from 'react';
  * @deprecated see https://github.com/facebook/react/pull/22114
  */
 const useIsMounted = () => {
-	// Component is certainly mounted from the beginning
-	const componentIsMounted = useRef(true);
+	const componentIsMounted = useRef(false);
 
-	useEffect(
-		() =>
-			// When non-SSR + (ComponentDidMount or ComponentDidUpdate):
-			// do nothing.
-			// when non-SSR + ComponentWillUnmount:
-			() => {
-				componentIsMounted.current = false;
-			},
-		[],
-	);
+	useEffect(() => {
+		// Component is mounted.
+		componentIsMounted.current = true;
+		return () => {
+			// Component is unmounted.
+			componentIsMounted.current = false;
+		};
+	}, []);
 
 	return () => componentIsMounted.current;
 };
