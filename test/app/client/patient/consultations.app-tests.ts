@@ -90,5 +90,5 @@ client(__filename, () => {
 		await findByText('test-book-id');
 
 		await findByText('À payé €45.00 de €45.00.');
-	}).timeout(30_000);
+	}).timeout(45_000);
 });

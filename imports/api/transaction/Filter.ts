@@ -109,5 +109,5 @@ const BSONType = Object.freeze({
 } as const);
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-type BSONType = typeof BSONType[keyof typeof BSONType];
+type BSONType = (typeof BSONType)[keyof typeof BSONType];
 type BSONTypeAlias = keyof typeof BSONType;

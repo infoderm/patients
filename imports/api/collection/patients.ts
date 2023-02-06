@@ -6,7 +6,7 @@ const maybe = Match.Maybe;
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
-export type SexAllowed = typeof SEX_ALLOWED[number];
+export type SexAllowed = (typeof SEX_ALLOWED)[number];
 
 export const PatientTagShape = {
 	displayName: String,
