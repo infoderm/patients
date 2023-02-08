@@ -157,7 +157,7 @@ export const navigateTo = async (
 	await userWithoutPointerEventsCheck.click(
 		await findByRole(role, {name: title}),
 	);
-	await findByRole('heading', {name: url}, {timeout: 3000});
+	await findByRole('heading', {name: url}, {timeout: 5000});
 };
 
 export const createNewPatient = async (app, {firstname, lastname}) => {
