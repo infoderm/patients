@@ -1,16 +1,13 @@
-import {useTracker} from 'meteor/react-meteor-data';
-
 import {NoShows} from './collection/noShows';
 import noShows from './publication/patient/noShows';
-import subscribe from './publication/subscribe';
+import useSubscription from './publication/useSubscription';
+import useReactive from './publication/useReactive';
 
 const useNoShowsForPatient = (patientId: string) => {
-	const loading = useTracker(() => {
-		const handle = subscribe(noShows, patientId);
-		return !handle.ready();
-	}, [patientId]);
+	const isLoading = useSubscription(noShows, patientId);
+	const loading = isLoading();
 
-	const upToDate = useTracker(
+	const upToDate = useReactive(
 		() => (loading ? undefined : NoShows.findOne(patientId)),
 		[loading, patientId],
 	);

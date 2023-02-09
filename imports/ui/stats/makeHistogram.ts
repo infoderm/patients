@@ -1,7 +1,6 @@
-import {useTracker} from 'meteor/react-meteor-data';
-
 import {Count, type PollResult} from '../../api/collection/stats';
-import subscribe from '../../api/publication/subscribe';
+import useSubscription from '../../api/publication/useSubscription';
+import useReactive from '../../api/publication/useReactive';
 
 import {countPublicationName, countPublicationKey} from '../../api/stats';
 
@@ -17,18 +16,19 @@ const makeHistogram =
 		const name = countPublicationName(QueriedCollection, {values});
 		const publication = {name};
 		const key = countPublicationKey(QueriedCollection, {values}, query);
-		return useTracker(() => {
-			const handle = subscribe(publication, query);
-			const loading = !handle.ready();
-			const results: PollResult<T> | undefined = loading
-				? undefined
-				: Count.findOne(key);
-			return {
-				loading,
-				total: results?.total,
-				count: results?.count,
-			};
-		}, [name, key]);
+
+		const isLoading = useSubscription(publication, query);
+		const loading = isLoading();
+
+		const results: PollResult<T> | undefined = useReactive(() => {
+			return loading ? undefined : Count.findOne(key);
+		}, [loading, key]);
+
+		return {
+			loading,
+			total: results?.total,
+			count: results?.count,
+		};
 	};
 
 export default makeHistogram;

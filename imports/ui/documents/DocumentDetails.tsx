@@ -1,14 +1,13 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
 
-import {useTracker} from 'meteor/react-meteor-data';
-
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import {Documents} from '../../api/collection/documents';
 
-import subscribe from '../../api/publication/subscribe';
+import useSubscription from '../../api/publication/useSubscription';
+import useReactive from '../../api/publication/useReactive';
 import findOne from '../../api/publication/documents/findOne';
 import {myDecodeURIComponent} from '../../util/uri';
 import DocumentCard from './DocumentCard';
@@ -45,15 +44,17 @@ type Params = {
 	id: string;
 };
 
-const useDocument = (documentId: DocumentId) =>
-	useTracker(() => {
-		const handle = subscribe(findOne, documentId);
-		const loading = !handle.ready();
-		return {
-			loading,
-			result: Documents.findOne(documentId),
-		};
-	}, [documentId]);
+const useDocument = (documentId: DocumentId) => {
+	const isLoading = useSubscription(findOne, documentId);
+	const loading = isLoading();
+
+	const result = useReactive(() => Documents.findOne(documentId), [documentId]);
+
+	return {
+		loading,
+		result,
+	};
+};
 
 const ReactiveDocumentDetails = () => {
 	const params = useParams<Params>();

@@ -1,5 +1,3 @@
-import {useTracker} from 'meteor/react-meteor-data';
-
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
 import {_chain as chain} from '@iterable-iterator/chain';
@@ -10,6 +8,7 @@ import {Attachments} from '../../api/collection/attachments';
 import {Documents} from '../../api/collection/documents';
 
 import {patients} from '../../api/patients';
+import useReactive from '../../api/publication/useReactive';
 import subscribe from '../../api/publication/subscribe';
 import patient from '../../api/publication/patients/patient';
 import consultationsAndAppointments from '../../api/publication/patient/consultationsAndAppointments';
@@ -17,7 +16,7 @@ import attachedToPatient from '../../api/publication/patient/attachments';
 import all from '../../api/publication/patient/documents/all';
 
 const useMergeInfo = (toMerge) =>
-	useTracker(() => {
+	useReactive(() => {
 		for (const patientId of toMerge) {
 			subscribe(patient, patientId);
 			subscribe(consultationsAndAppointments, patientId);

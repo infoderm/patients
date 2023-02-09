@@ -1,21 +1,24 @@
-import {useTracker} from 'meteor/react-meteor-data';
-
 import {key, Stats} from '../../api/collection/consultations/stats';
-import subscribe from '../../api/publication/subscribe';
+import useSubscription from '../../api/publication/useSubscription';
+import useReactive from '../../api/publication/useReactive';
 import publication from '../../api/publication/consultations/stats';
 
-const useConsultationsStats = (query) =>
-	useTracker(() => {
-		const handle = subscribe(publication, query);
-		const loading = !handle.ready();
-		const result = loading ? undefined : Stats.findOne(key(query));
-		const found = Boolean(result);
+const useConsultationsStats = (query) => {
+	const isLoading = useSubscription(publication, query);
+	const loading = isLoading();
 
-		return {
-			loading,
-			found,
-			result,
-		};
-	}, [JSON.stringify(query)]);
+	const result = useReactive(
+		() => (loading ? undefined : Stats.findOne(key(query))),
+		[loading, JSON.stringify(query)],
+	);
+
+	const found = Boolean(result);
+
+	return {
+		loading,
+		found,
+		result,
+	};
+};
 
 export default useConsultationsStats;

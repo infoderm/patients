@@ -1,6 +1,6 @@
-import {useTracker} from 'meteor/react-meteor-data';
 import {Documents} from '../../api/collection/documents';
-import subscribe from '../../api/publication/subscribe';
+import useSubscription from '../../api/publication/useSubscription';
+import useCursor from '../../api/publication/useCursor';
 import find from '../../api/publication/documents/find';
 
 const useDocumentVersions = (document) => {
@@ -14,15 +14,17 @@ const useDocumentVersions = (document) => {
 
 	const deps = [JSON.stringify(query), JSON.stringify(options)];
 
-	return useTracker(() => {
-		if (!parsed) return {loading: false, versions: [document]};
+	const isLoading = useSubscription(parsed ? find : null, query, options);
+	const loading = isLoading();
 
-		const handle = subscribe(find, query, options);
-		return {
-			loading: !handle.ready(),
-			versions: Documents.find(query, options).fetch(),
-		};
-	}, deps);
+	const fetchedVersions = useCursor(
+		() => (parsed ? Documents.find(query, options) : null),
+		deps,
+	);
+
+	return parsed
+		? {loading, versions: fetchedVersions}
+		: {loading: false, versions: [document]};
 };
 
 export default useDocumentVersions;

@@ -1,7 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
-import {useTracker} from 'meteor/react-meteor-data';
 
 import mergeOptions from '../util/mergeOptions';
 
@@ -13,6 +12,9 @@ import pageQuery from './pageQuery';
 
 import defineEndpoint from './endpoint/define';
 import definePublication from './publication/define';
+import useCursor from './publication/useCursor';
+import useReactive from './publication/useReactive';
+import useSubscription from './publication/useSubscription';
 
 import {
 	containsNonAlphabetical,
@@ -25,7 +27,6 @@ import type CacheItem from './CacheItem';
 import {type TagComputedFields, type TagNameFields} from './tags/TagDocument';
 import type TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
-import subscribe from './publication/subscribe';
 import type Publication from './publication/Publication';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
@@ -128,21 +129,32 @@ const createTagCollection = <
 
 	const useTag = makeItem(Collection, _singlePublication);
 
-	const useTaggedDocuments = (name: string, options) =>
-		useTracker(() => {
-			const selector = {[key]: {$elemMatch: {name}}} as Mongo.Selector<P>;
-			const mergedOptions = mergeOptions(options, {
-				fields: {
-					[key]: 1,
-				},
-			});
-			const handle = subscribe(parentPublication, selector, mergedOptions);
-			const loading = !handle.ready();
-			return {
-				loading,
-				results: Parent.find(selector, options).fetch(),
-			};
-		}, [name, JSON.stringify(options)]);
+	const useTaggedDocuments = (name: string, options) => {
+		const selector = {[key]: {$elemMatch: {name}}} as Mongo.Selector<P>;
+
+		const mergedOptions = mergeOptions(options, {
+			fields: {
+				[key]: 1,
+			},
+		});
+
+		const isLoading = useSubscription(
+			parentPublication,
+			selector,
+			mergedOptions,
+		);
+		const loading = isLoading();
+
+		const results = useCursor(
+			() => Parent.find(selector, options),
+			[name, JSON.stringify(options)],
+		);
+
+		return {
+			loading,
+			results,
+		};
+	};
 
 	// Publish the current size of a collection.
 	const _statsPublication = definePublication({
@@ -195,15 +207,17 @@ const createTagCollection = <
 		},
 	});
 
-	const useTagStats = (name) =>
-		useTracker(() => {
-			const handle = subscribe(_statsPublication, name);
-			const loading = !handle.ready();
-			return {
-				loading,
-				result: Stats.findOne({name}),
-			};
-		}, [name]);
+	const useTagStats = (name) => {
+		const isLoading = useSubscription(_statsPublication, name);
+		const loading = isLoading();
+
+		const result = useReactive(() => Stats.findOne({name}), [name]);
+
+		return {
+			loading,
+			result,
+		};
+	};
 
 	const renameEndpoint = defineEndpoint({
 		name: `${collection}.rename`,
