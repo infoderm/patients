@@ -10,19 +10,17 @@ import {Documents} from '../../api/collection/documents';
 import {patients} from '../../api/patients';
 import useReactive from '../../api/publication/useReactive';
 import subscribe from '../../api/publication/subscribe';
-import patient from '../../api/publication/patients/patient';
-import consultationsAndAppointments from '../../api/publication/patient/consultationsAndAppointments';
-import attachedToPatient from '../../api/publication/patient/attachments';
-import all from '../../api/publication/patient/documents/all';
+import patientsPub from '../../api/publication/patients/patients';
+import consultationsAndAppointments from '../../api/publication/consultationsAndAppointments/find';
+import attachmentsPub from '../../api/publication/attachments/attachments';
+import documentsPub from '../../api/publication/documents/find';
 
 const useMergeInfo = (toMerge) =>
 	useReactive(() => {
-		for (const patientId of toMerge) {
-			subscribe(patient, patientId);
-			subscribe(consultationsAndAppointments, patientId);
-			subscribe(attachedToPatient, patientId);
-			subscribe(all, patientId);
-		}
+		subscribe(patientsPub, {_id: {$in: toMerge}});
+		subscribe(consultationsAndAppointments, {patientId: {$in: toMerge}});
+		subscribe(documentsPub, {patientId: {$in: toMerge}});
+		subscribe(attachmentsPub, {'meta.attachedToPatients': {$in: toMerge}});
 
 		const oldPatients = [];
 		const consultations = {};

@@ -47,11 +47,7 @@ import '../../../imports/api/publication/events/interval';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/patient/attachments';
 // eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/patient/consultationsAndAppointments';
-// eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/patient/consultations';
-// eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/patient/documents/all';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/patient/documents';
 // eslint-disable-next-line import/no-unassigned-import
