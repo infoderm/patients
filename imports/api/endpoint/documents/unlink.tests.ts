@@ -25,18 +25,18 @@ server(__filename, () => {
 
 		await invoke(documentsUnlink, {userId}, [documentAId]);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Documents.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(await Documents.find().countAsync(), 2);
 
 		assert.equal(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: patientAId,
 			}),
 			undefined,
 		);
 
 		assert.deepInclude(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: {$exists: false},
 			}),
 			{
@@ -45,7 +45,7 @@ server(__filename, () => {
 		);
 
 		assert.deepInclude(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: patientBId,
 			}),
 			{
@@ -54,7 +54,7 @@ server(__filename, () => {
 		);
 
 		assert.deepInclude(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: {$exists: true},
 			}),
 			{
@@ -64,18 +64,18 @@ server(__filename, () => {
 
 		await invoke(documentsUnlink, {userId}, [documentBId]);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Documents.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(await Documents.find().countAsync(), 2);
 
 		assert.equal(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: patientAId,
 			}),
 			undefined,
 		);
 
 		assert.equal(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: patientBId,
 			}),
 			undefined,
@@ -92,7 +92,7 @@ server(__filename, () => {
 		await invoke(documentsUnlink, {userId}, [documentId]);
 
 		assert.equal(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: {$exists: true},
 			}),
 			undefined,
@@ -101,7 +101,7 @@ server(__filename, () => {
 		await invoke(documentsUnlink, {userId}, [documentId]);
 
 		assert.equal(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId: {$exists: true},
 			}),
 			undefined,

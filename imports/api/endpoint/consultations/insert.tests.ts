@@ -54,7 +54,10 @@ server(__filename, () => {
 
 		const bookName = books.name(datetime, book) as NormalizedLine;
 
-		assert.equal(Books.findOne({name: bookName, owner: userId}), undefined);
+		assert.equal(
+			await Books.findOneAsync({name: bookName, owner: userId}),
+			undefined,
+		);
 
 		await newConsultation(
 			{userId},
@@ -65,7 +68,10 @@ server(__filename, () => {
 			},
 		);
 
-		assert.notEqual(Books.findOne({name: bookName, owner: userId}), undefined);
+		assert.notEqual(
+			await Books.findOneAsync({name: bookName, owner: userId}),
+			undefined,
+		);
 	});
 
 	it('does not fill availability', async () => {
@@ -73,7 +79,7 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		assert.equal(Availability.find({owner: userId}).count(), 0);
+		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
 
 		await newConsultation(
 			{userId},
@@ -82,6 +88,6 @@ server(__filename, () => {
 			},
 		);
 
-		assert.equal(Availability.find({owner: userId}).count(), 0);
+		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
 	});
 });

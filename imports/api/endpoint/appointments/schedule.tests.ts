@@ -39,7 +39,7 @@ server(__filename, () => {
 
 		const patientXId = await newPatient({userId: `${userId}x`});
 
-		const patient = Patients.findOne(patientXId);
+		const patient = await Patients.findOneAsync(patientXId);
 
 		return throws(async () => newAppointment({userId}, {patient}), /not-found/);
 	});
@@ -49,17 +49,19 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		const patient = Patients.findOne(patientId);
+		const patient = await Patients.findOneAsync(patientId);
 
 		const appointmentId = await newAppointment({userId}, {patient});
 
-		assert.deepInclude(Appointments.findOne(appointmentId), {patientId});
+		assert.deepInclude(await Appointments.findOneAsync(appointmentId), {
+			patientId,
+		});
 	});
 
 	it('creates associated patient', async () => {
 		const userId = randomUserId();
 
-		assert.equal(Patients.findOne(), undefined);
+		assert.equal(await Patients.findOneAsync(), undefined);
 
 		const patientFields = {
 			firstname: 'Jane',
@@ -75,9 +77,9 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId}, {patient, phone});
 
-		const {patientId} = Appointments.findOne(appointmentId);
+		const {patientId} = await Appointments.findOneAsync(appointmentId);
 
-		assert.deepInclude(Patients.findOne(patientId), {
+		assert.deepInclude(await Patients.findOneAsync(patientId), {
 			...patientFields,
 			phone,
 		});
@@ -88,9 +90,9 @@ server(__filename, () => {
 
 		await newAppointment({userId});
 
-		const {begin, end} = Appointments.findOne();
+		const {begin, end} = await Appointments.findOneAsync();
 
-		const actual = Availability.find().fetch();
+		const actual = await Availability.find().fetchAsync();
 
 		assert.sameDeepMembers(dropIds(actual), [
 			{

@@ -1,3 +1,4 @@
+import {type Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
@@ -16,6 +17,7 @@ import {
 import {key as statsKey} from './collection/consultations/stats';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
+import type Options from './Options';
 import {
 	type Entry,
 	makeSanitize,
@@ -33,35 +35,78 @@ export const DEFAULT_DURATION_IN_MILLISECONDS =
 export const isUnpaid = ({price = undefined, paid = undefined}) =>
 	paid !== price;
 
-export const findLastConsultation = (
-	db: TransactionDriver,
+const findLastConsultationArgs = (
 	filter?: Filter<ConsultationDocument>,
-) =>
-	db.findOne(
-		Consultations,
-		{
-			isDone: true,
-			...filter,
+): {
+	query: Filter<ConsultationDocument>;
+	options: Options<ConsultationDocument>;
+} => ({
+	query: {
+		isDone: true,
+		...filter,
+	},
+	options: {
+		sort: {
+			datetime: -1,
 		},
-		{
-			sort: {
-				datetime: -1,
-			},
-		},
-	);
+	},
+});
 
-export const findLastConsultationInInterval = (
-	db: TransactionDriver,
+const findLastConsultationInIntervalArgs = (
 	[begin, end]: [Date, Date],
 	filter?: Filter<ConsultationDocument>,
 ) =>
-	findLastConsultation(db, {
+	findLastConsultationArgs({
 		datetime: {
 			$gte: begin,
 			$lt: end,
 		},
 		...filter,
 	});
+
+export const findLastConsultation = async (
+	db: TransactionDriver,
+	filter?: Filter<ConsultationDocument>,
+) => {
+	const {query, options} = findLastConsultationArgs(filter);
+	return db.findOne(Consultations, query, options);
+};
+
+export const findLastConsultationSync = (
+	filter?: Filter<ConsultationDocument>,
+) => {
+	const {query, options} = findLastConsultationArgs(filter);
+	return Consultations.findOne(
+		query as Mongo.Selector<ConsultationDocument>,
+		options,
+	);
+};
+
+export const findLastConsultationInInterval = async (
+	db: TransactionDriver,
+	[begin, end]: [Date, Date],
+	filter?: Filter<ConsultationDocument>,
+) => {
+	const {query, options} = findLastConsultationInIntervalArgs(
+		[begin, end],
+		filter,
+	);
+	return db.findOne(Consultations, query, options);
+};
+
+export const findLastConsultationInIntervalSync = (
+	[begin, end]: [Date, Date],
+	filter?: Filter<ConsultationDocument>,
+) => {
+	const {query, options} = findLastConsultationInIntervalArgs(
+		[begin, end],
+		filter,
+	);
+	return Consultations.findOne(
+		query as Mongo.Selector<ConsultationDocument>,
+		options,
+	);
+};
 
 export const filterBookPrefill = () => ({
 	book: {

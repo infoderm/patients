@@ -9,8 +9,8 @@ export default define({
 	validate(documentId: string) {
 		check(documentId, String);
 	},
-	run(documentId: string) {
-		const document = Documents.findOne(
+	async run(documentId: string) {
+		const document = await Documents.findOneAsync(
 			{
 				_id: documentId,
 				owner: this.userId,

@@ -80,24 +80,30 @@ server(__filename, () => {
 		const price = 100;
 		const paid = 0;
 
-		assert.equal(Consultations.findOne(), undefined);
+		assert.equal(await Consultations.findOneAsync(), undefined);
 
 		const {insertedId: consultationId} = await newConsultation(
 			{userId},
 			{patientId, price, paid},
 		);
 
-		assert.deepInclude(Consultations.findOne({_id: consultationId}), {
-			unpaid: true,
-		});
+		assert.deepInclude(
+			await Consultations.findOneAsync({_id: consultationId}),
+			{
+				unpaid: true,
+			},
+		);
 
 		const newFields = newConsultationFormData({patientId, price, paid: price});
 
 		await invoke(update, {userId}, [consultationId, newFields]);
 
-		assert.deepInclude(Consultations.findOne({_id: consultationId}), {
-			unpaid: false,
-		});
+		assert.deepInclude(
+			await Consultations.findOneAsync({_id: consultationId}),
+			{
+				unpaid: false,
+			},
+		);
 	});
 
 	it('does not fill availability', async () => {
@@ -105,19 +111,19 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		assert.equal(Availability.find({owner: userId}).count(), 0);
+		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
 
 		const {insertedId: consultationId} = await newConsultation(
 			{userId},
 			{patientId},
 		);
 
-		assert.equal(Availability.find({owner: userId}).count(), 0);
+		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
 
 		const newFields = newConsultationFormData({patientId});
 
 		await invoke(update, {userId}, [consultationId, newFields]);
 
-		assert.equal(Availability.find({owner: userId}).count(), 0);
+		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
 	});
 });

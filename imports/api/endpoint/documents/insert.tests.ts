@@ -28,7 +28,7 @@ server(__filename, () => {
 			/not-authorized/,
 		);
 
-		assert.equal(Documents.find().count(), 0);
+		assert.equal(await Documents.find().countAsync(), 0);
 	});
 
 	it('cannot insert a document linked to a non-existing patient', async () => {
@@ -44,7 +44,7 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		assert.equal(Documents.find().count(), 0);
+		assert.equal(await Documents.find().countAsync(), 0);
 	});
 
 	it('cannot insert a document linked to a patient that is not owned', async () => {
@@ -61,7 +61,7 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		assert.equal(Documents.find().count(), 0);
+		assert.equal(await Documents.find().countAsync(), 0);
 	});
 
 	it('can insert a document linked to a patient that is owned', async () => {
@@ -74,9 +74,13 @@ server(__filename, () => {
 			},
 		]);
 
-		assert.equal(Documents.find().count(), exampleHealthoneLab.count);
+		assert.equal(
+			await Documents.find().countAsync(),
+			exampleHealthoneLab.count,
+		);
 		for (const documentId of documentIds) {
-			assert.deepInclude(Documents.findOne(documentId), {
+			// eslint-disable-next-line no-await-in-loop
+			assert.deepInclude(await Documents.findOneAsync(documentId), {
 				patientId,
 			});
 		}
@@ -95,8 +99,11 @@ server(__filename, () => {
 			},
 		]);
 
-		assert.equal(Documents.find().count(), exampleHealthoneReport.count);
-		assert.equal(Documents.find({patientId}).count(), 1);
+		assert.equal(
+			await Documents.find().countAsync(),
+			exampleHealthoneReport.count,
+		);
+		assert.equal(await Documents.find({patientId}).countAsync(), 1);
 	});
 
 	it('set patientId overwrites patient matching', async () => {
@@ -111,9 +118,12 @@ server(__filename, () => {
 			},
 		]);
 
-		assert.equal(Documents.find().count(), exampleHealthoneReport.count);
 		assert.equal(
-			Documents.find({patientId}).count(),
+			await Documents.find().countAsync(),
+			exampleHealthoneReport.count,
+		);
+		assert.equal(
+			await Documents.find({patientId}).countAsync(),
 			exampleHealthoneReport.count,
 		);
 	});
@@ -130,7 +140,13 @@ server(__filename, () => {
 			},
 		]);
 
-		assert.equal(Documents.find().count(), exampleHealthoneReport.count);
-		assert.equal(Documents.find({patientId: {$exists: true}}).count(), 0);
+		assert.equal(
+			await Documents.find().countAsync(),
+			exampleHealthoneReport.count,
+		);
+		assert.equal(
+			await Documents.find({patientId: {$exists: true}}).countAsync(),
+			0,
+		);
 	});
 });

@@ -54,8 +54,8 @@ const wrapTransactionServer = <R>(txn: Transaction<R>): Executor<R> => {
 
 const wrapTransactionClient = <R>(txn: Transaction<R>): Simulator => {
 	const db = new MeteorTransactionSimulationDriver();
-	return function (...args: any[]) {
-		Reflect.apply(txn, this, [db, ...args]);
+	return async function (...args: any[]) {
+		await Reflect.apply(txn, this, [db, ...args]);
 		return undefined;
 	};
 };

@@ -20,13 +20,13 @@ server(__filename, () => {
 
 		const {_id: uploadId} = await newUpload({userId}, {name: before});
 
-		assert.deepInclude(Attachments.findOne(uploadId), {
+		assert.deepInclude(await Attachments.findOneAsync(uploadId), {
 			name: before,
 		});
 
 		await invoke(rename, {userId}, [uploadId, after]);
 
-		assert.deepInclude(Attachments.findOne(uploadId), {
+		assert.deepInclude(await Attachments.findOneAsync(uploadId), {
 			name: after,
 		});
 	});
@@ -42,7 +42,7 @@ server(__filename, () => {
 		await invoke(rename, {userId}, [uploadId, after]);
 		await invoke(rename, {userId}, [uploadId, after]);
 
-		assert.deepInclude(Attachments.findOne(uploadId), {
+		assert.deepInclude(await Attachments.findOneAsync(uploadId), {
 			name: after,
 		});
 	});
@@ -60,7 +60,7 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		assert.deepInclude(Attachments.findOne(uploadId), {
+		assert.deepInclude(await Attachments.findOneAsync(uploadId), {
 			name: before,
 		});
 	});
@@ -78,7 +78,7 @@ server(__filename, () => {
 			/not-authorized/,
 		);
 
-		assert.deepInclude(Attachments.findOne(uploadId), {
+		assert.deepInclude(await Attachments.findOneAsync(uploadId), {
 			name: before,
 		});
 	});

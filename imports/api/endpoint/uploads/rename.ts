@@ -18,8 +18,8 @@ export default define({
 		}),
 		'userId',
 	),
-	simulate(uploadId: string, filename: string) {
-		Uploads.collection.update(uploadId, {
+	async simulate(uploadId: string, filename: string) {
+		await Uploads.collection.updateAsync(uploadId, {
 			$set: {name: filename},
 		});
 		return undefined;

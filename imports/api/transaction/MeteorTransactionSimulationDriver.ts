@@ -10,20 +10,23 @@ export default class MeteorTransactionSimulationDriver
 		return null;
 	}
 
-	insertOne<T, U = T>(Collection: Collection<T, U>, doc, options?) {
+	async insertOne<T, U = T>(Collection: Collection<T, U>, doc, options?) {
+		const insertedId = (await Collection.insertAsync(
+			doc,
+			this._makeOptions(options),
+		)) as unknown as InferIdType<T>;
+
 		return {
 			acknowledged: true,
-			insertedId: Collection.insert(
-				doc,
-				this._makeOptions(options),
-			) as unknown as InferIdType<T>,
+			insertedId,
 		};
 	}
 
-	insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
+	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
 		const insertedIds = [];
 		for (const doc of docs) {
-			const {insertedId} = this.insertOne<T, U>(Collection, doc, options);
+			// eslint-disable-next-line no-await-in-loop
+			const {insertedId} = await this.insertOne<T, U>(Collection, doc, options);
 			insertedIds.push(insertedId);
 		}
 
@@ -34,22 +37,26 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	findOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return Collection.findOne(filter, this._makeOptions(options)) ?? null;
+	async findOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+		const found = await Collection.findOneAsync(
+			filter,
+			this._makeOptions(options),
+		);
+		return found ?? null;
 	}
 
 	find<T, U = T>(Collection: Collection<T, U>, filter, options?) {
 		return Collection.find(filter, this._makeOptions(options));
 	}
 
-	fetch<T, U = T>(Collection: Collection<T, U>, filter, options?) {
-		return this.find<T, U>(Collection, filter, options).fetch();
+	async fetch<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+		return this.find<T, U>(Collection, filter, options).fetchAsync();
 	}
 
-	deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
 		options = this._makeOptions(options);
 		if (filter._id === undefined) {
-			const found = this.findOne(Collection, filter, options);
+			const found = await this.findOne(Collection, filter, options);
 			if (found === null)
 				return {
 					acknowledged: true,
@@ -58,23 +65,34 @@ export default class MeteorTransactionSimulationDriver
 			filter = {_id: found._id, ...filter};
 		}
 
+		const deletedCount = await Collection.removeAsync(filter, options);
+
 		return {
 			acknowledged: true,
-			deletedCount: Collection.remove(filter, options),
+			deletedCount,
 		};
 	}
 
-	deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+		const deletedCount = await Collection.removeAsync(
+			filter,
+			this._makeOptions(options),
+		);
 		return {
 			acknowledged: true,
-			deletedCount: Collection.remove(filter, this._makeOptions(options)),
+			deletedCount,
 		};
 	}
 
-	updateOne<T, U = T>(Collection: Collection<T, U>, filter, update, options?) {
+	async updateOne<T, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		update,
+		options?,
+	) {
 		const {upsert, ...rest} = options ?? {};
 		if (upsert) {
-			const {numberAffected, insertedId} = Collection.upsert(
+			const {numberAffected, insertedId} = await Collection.upsertAsync(
 				filter,
 				update,
 				this._makeOptions(rest),
@@ -97,7 +115,7 @@ export default class MeteorTransactionSimulationDriver
 			};
 		}
 
-		const numberAffected = Collection.update(
+		const numberAffected = await Collection.updateAsync(
 			filter,
 			update,
 			this._makeOptions(rest),
@@ -111,10 +129,15 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	updateMany<T, U = T>(Collection: Collection<T, U>, filter, update, options?) {
+	async updateMany<T, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		update,
+		options?,
+	) {
 		const {upsert, ...rest} = options ?? {};
 		if (upsert) {
-			const {numberAffected, insertedId} = Collection.upsert(
+			const {numberAffected, insertedId} = await Collection.upsertAsync(
 				filter,
 				update,
 				this._makeOptions({multi: true, ...rest}),
@@ -130,7 +153,7 @@ export default class MeteorTransactionSimulationDriver
 			};
 		}
 
-		const numberAffected = Collection.update(
+		const numberAffected = await Collection.updateAsync(
 			filter,
 			update,
 			this._makeOptions({multi: true, ...rest}),
@@ -145,12 +168,12 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	distinct<T, U = T>(
+	async distinct<T, U = T>(
 		_Collection: Collection<T, U>,
 		_key,
 		_filter?,
 		_options?,
-	): any[] {
+	): Promise<any[]> {
 		throw new Error('not implemented');
 	}
 

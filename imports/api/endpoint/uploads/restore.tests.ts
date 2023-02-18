@@ -22,7 +22,7 @@ server(__filename, () => {
 
 		await invoke(uploadsRestore, {userId}, [uploadId]);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': false,
 		});
 	});
@@ -34,7 +34,7 @@ server(__filename, () => {
 
 		await invoke(uploadsRestore, {userId}, [uploadId]);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': false,
 		});
 
@@ -44,7 +44,7 @@ server(__filename, () => {
 
 		await invoke(uploadsRestore, {userId}, [uploadId]);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': false,
 		});
 	});
@@ -61,7 +61,7 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 	});
@@ -78,7 +78,7 @@ server(__filename, () => {
 			/not-authorized/,
 		);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 	});

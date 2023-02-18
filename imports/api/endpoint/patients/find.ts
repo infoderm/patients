@@ -14,7 +14,7 @@ export default define({
 		query: any,
 		options: any,
 	): Promise<Array<Partial<PatientDocument>>> {
-		return Patients.find({...query, owner: this.userId}, options).fetch();
+		return Patients.find({...query, owner: this.userId}, options).fetchAsync();
 	},
 	simulate(_query: any, _options: any) {
 		return undefined;

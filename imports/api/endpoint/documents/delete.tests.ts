@@ -15,23 +15,23 @@ server(__filename, () => {
 	it('cannot delete a document when not logged in', async () => {
 		const userId = randomUserId();
 		const documentId = await newDocument({userId});
-		assert.equal(Documents.find().count(), 1);
+		assert.equal(await Documents.find().countAsync(), 1);
 		await throws(
 			async () => invoke(documentDelete, {userId: undefined}, [documentId]),
 			/not-authorized/,
 		);
-		assert.equal(Documents.find().count(), 1);
+		assert.equal(await Documents.find().countAsync(), 1);
 	});
 
 	it('cannot delete a document owned by another user', async () => {
 		const userId = randomUserId();
 		const documentId = await newDocument({userId: `${userId}x`});
-		assert.equal(Documents.find().count(), 1);
+		assert.equal(await Documents.find().countAsync(), 1);
 		await throws(
 			async () => invoke(documentDelete, {userId}, [documentId]),
 			/not-found/,
 		);
-		assert.equal(Documents.find().count(), 1);
+		assert.equal(await Documents.find().countAsync(), 1);
 	});
 
 	it('cannot delete a document that does not exist', async () => {
@@ -47,25 +47,28 @@ server(__filename, () => {
 		const documentAId = await newDocument({userId});
 		const documentBId = await newDocument({userId});
 
-		assert.equal(Documents.find().count(), 2);
+		assert.equal(await Documents.find().countAsync(), 2);
 		await invoke(documentDelete, {userId}, [documentAId]);
-		assert.equal(Documents.find().count(), 2);
-		assert.equal(Documents.find({deleted: true}).count(), 1);
-		assert.equal(Documents.find({_id: documentAId, deleted: true}).count(), 1);
+		assert.equal(await Documents.find().countAsync(), 2);
+		assert.equal(await Documents.find({deleted: true}).countAsync(), 1);
+		assert.equal(
+			await Documents.find({_id: documentAId, deleted: true}).countAsync(),
+			1,
+		);
 		await invoke(documentDelete, {userId}, [documentBId]);
-		assert.equal(Documents.find().count(), 2);
-		assert.equal(Documents.find({deleted: true}).count(), 2);
+		assert.equal(await Documents.find().countAsync(), 2);
+		assert.equal(await Documents.find({deleted: true}).countAsync(), 2);
 	});
 
 	it('is idempotent', async () => {
 		const userId = randomUserId();
 		const documentId = await newDocument({userId});
-		assert.equal(Documents.find({deleted: true}).count(), 0);
+		assert.equal(await Documents.find({deleted: true}).countAsync(), 0);
 
 		await invoke(documentDelete, {userId}, [documentId]);
-		assert.equal(Documents.find({deleted: true}).count(), 1);
+		assert.equal(await Documents.find({deleted: true}).countAsync(), 1);
 
 		await invoke(documentDelete, {userId}, [documentId]);
-		assert.equal(Documents.find({deleted: true}).count(), 1);
+		assert.equal(await Documents.find({deleted: true}).countAsync(), 1);
 	});
 });

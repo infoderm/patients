@@ -9,8 +9,8 @@ export default define({
 	validate(drugId: string) {
 		check(drugId, String);
 	},
-	run(drugId: string) {
-		const nRemoved = Drugs.remove({_id: drugId, owner: this.userId});
+	async run(drugId: string) {
+		const nRemoved = await Drugs.removeAsync({_id: drugId, owner: this.userId});
 		if (nRemoved === 0) {
 			throw new Meteor.Error('not-found');
 		}

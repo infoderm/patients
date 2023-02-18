@@ -283,7 +283,10 @@ export const editConsultation = async (
 		await fillIn(app, await findByRole('textbox', {name: 'N°'}), inBookNumber);
 	}
 
-	if (save) await user.click(await findByRole('button', {name: 'save'}));
+	if (save) {
+		await user.click(await findByRole('button', {name: 'save'}));
+		await findByRole('button', {name: 'saved'});
+	}
 };
 
 export const uploadFile = (button, file) => {

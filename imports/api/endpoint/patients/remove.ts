@@ -93,8 +93,8 @@ export default define({
 		await db.deleteOne(PatientsSearchIndex, {_id: patientId});
 		return db.deleteOne(Patients, {_id: patientId});
 	},
-	simulate(patientId: string) {
-		Patients.remove(patientId);
+	async simulate(patientId: string) {
+		await Patients.removeAsync(patientId);
 		return undefined;
 	},
 });

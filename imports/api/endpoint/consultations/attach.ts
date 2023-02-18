@@ -43,8 +43,8 @@ export default define({
 
 		return result;
 	},
-	simulate(consultationId: string, uploadId: string) {
-		Attachments.update(uploadId, {
+	async simulate(consultationId: string, uploadId: string) {
+		await Attachments.updateAsync(uploadId, {
 			$addToSet: {'meta.attachedToConsultations': consultationId},
 		});
 		return undefined;

@@ -43,8 +43,8 @@ export default define({
 
 		return result;
 	},
-	simulate(patientId: string, uploadId: string) {
-		Attachments.update(uploadId, {
+	async simulate(patientId: string, uploadId: string) {
+		await Attachments.updateAsync(uploadId, {
 			$pull: {'meta.attachedToPatients': patientId},
 		});
 		return undefined;

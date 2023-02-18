@@ -27,13 +27,19 @@ server(__filename, () => {
 			{patientId},
 		);
 
-		assert.equal(Consultations.find({_id: consultationId}).count(), 1);
-		assert.equal(Consultations.find({patientId}).count(), 1);
+		assert.equal(
+			await Consultations.find({_id: consultationId}).countAsync(),
+			1,
+		);
+		assert.equal(await Consultations.find({patientId}).countAsync(), 1);
 
 		await invoke(consultationsRemove, {userId}, [consultationId]);
 
-		assert.equal(Consultations.find({patientId}).count(), 0);
-		assert.equal(Consultations.find({_id: consultationId}).count(), 0);
+		assert.equal(await Consultations.find({patientId}).countAsync(), 0);
+		assert.equal(
+			await Consultations.find({_id: consultationId}).countAsync(),
+			0,
+		);
 	});
 
 	it("cannot remove other user's consultation", async () => {
@@ -73,69 +79,81 @@ server(__filename, () => {
 	it("detaches removed consultation's attachments", async () => {
 		const userId = randomUserId();
 
-		assert.equal(Patients.find({}).count(), 0);
+		assert.equal(await Patients.find({}).countAsync(), 0);
 
 		const patientId = await newPatient({userId});
 
-		assert.equal(Patients.find({}).count(), 1);
+		assert.equal(await Patients.find({}).countAsync(), 1);
 
-		assert.equal(Consultations.find({}).count(), 0);
+		assert.equal(await Consultations.find({}).countAsync(), 0);
 
 		const {insertedId: consultationId} = await newConsultation(
 			{userId},
 			{patientId},
 		);
 
-		assert.equal(Consultations.find({}).count(), 1);
+		assert.equal(await Consultations.find({}).countAsync(), 1);
 
-		assert.equal(Uploads.find({}).count(), 0);
+		assert.equal(await Uploads.collection.find({}).countAsync(), 0);
 
 		const uploadA = await newUpload({userId});
 		const uploadB = await newUpload({userId});
 
-		assert.equal(Uploads.find({}).count(), 2);
+		assert.equal(await Uploads.collection.find({}).countAsync(), 2);
 		assert.equal(
-			Uploads.find({
-				'meta.attachedToConsultations': consultationId,
-			}).count(),
+			await Uploads.collection
+				.find({
+					'meta.attachedToConsultations': consultationId,
+				})
+				.countAsync(),
 			0,
 		);
 		assert.equal(
-			Uploads.find({'meta.attachedToPatients': patientId}).count(),
+			await Uploads.collection
+				.find({'meta.attachedToPatients': patientId})
+				.countAsync(),
 			0,
 		);
 
 		await invoke(consultationsAttach, {userId}, [consultationId, uploadA._id]);
 		await invoke(consultationsAttach, {userId}, [consultationId, uploadB._id]);
 
-		assert.equal(Patients.find({}).count(), 1);
-		assert.equal(Consultations.find({}).count(), 1);
-		assert.equal(Uploads.find({}).count(), 2);
+		assert.equal(await Patients.find({}).countAsync(), 1);
+		assert.equal(await Consultations.find({}).countAsync(), 1);
+		assert.equal(await Uploads.collection.find({}).countAsync(), 2);
 		assert.equal(
-			Uploads.find({
-				'meta.attachedToConsultations': consultationId,
-			}).count(),
+			await Uploads.collection
+				.find({
+					'meta.attachedToConsultations': consultationId,
+				})
+				.countAsync(),
 			2,
 		);
 		assert.equal(
-			Uploads.find({'meta.attachedToPatients': patientId}).count(),
+			await Uploads.collection
+				.find({'meta.attachedToPatients': patientId})
+				.countAsync(),
 			0,
 		);
 
 		await invoke(consultationsRemove, {userId}, [consultationId]);
 
-		assert.equal(Uploads.find({}).count(), 2);
+		assert.equal(await Uploads.collection.find({}).countAsync(), 2);
 		assert.equal(
-			Uploads.find({
-				'meta.attachedToConsultations': consultationId,
-			}).count(),
+			await Uploads.collection
+				.find({
+					'meta.attachedToConsultations': consultationId,
+				})
+				.countAsync(),
 			0,
 		);
 		assert.equal(
-			Uploads.find({'meta.attachedToPatients': patientId}).count(),
+			await Uploads.collection
+				.find({'meta.attachedToPatients': patientId})
+				.countAsync(),
 			0,
 		);
-		assert.equal(Consultations.find({}).count(), 0);
-		assert.equal(Patients.find({}).count(), 1);
+		assert.equal(await Consultations.find({}).countAsync(), 0);
+		assert.equal(await Patients.find({}).countAsync(), 1);
 	});
 });

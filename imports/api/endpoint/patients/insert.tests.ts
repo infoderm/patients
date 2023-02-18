@@ -29,7 +29,7 @@ server(__filename, () => {
 
 		await newPatient({userId}, {allergies, doctors, insurances});
 
-		assert.equal(Patients.find({owner: userId}).count(), 1);
+		assert.equal(await Patients.find({owner: userId}).countAsync(), 1);
 
 		assert.sameDeepMembers(
 			Allergies.find()

@@ -1,8 +1,5 @@
 import {type Mongo} from 'meteor/mongo';
 
-type Options = Pick<
-	Mongo.Options<unknown>,
-	'fields' | 'sort' | 'skip' | 'limit'
->;
+type Options<T> = Pick<Mongo.Options<T>, 'fields' | 'sort' | 'skip' | 'limit'>;
 
 export default Options;

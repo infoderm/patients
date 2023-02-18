@@ -26,13 +26,25 @@ server(__filename, () => {
 			{patientId: patientAId},
 		);
 
-		assert.equal(Consultations.find({patientId: patientAId}).count(), 1);
-		assert.equal(Consultations.find({patientId: patientBId}).count(), 0);
+		assert.equal(
+			await Consultations.find({patientId: patientAId}).countAsync(),
+			1,
+		);
+		assert.equal(
+			await Consultations.find({patientId: patientBId}).countAsync(),
+			0,
+		);
 
 		await invoke(consultationsTransfer, {userId}, [consultationId, patientBId]);
 
-		assert.equal(Consultations.find({patientId: patientAId}).count(), 0);
-		assert.equal(Consultations.find({patientId: patientBId}).count(), 1);
+		assert.equal(
+			await Consultations.find({patientId: patientAId}).countAsync(),
+			0,
+		);
+		assert.equal(
+			await Consultations.find({patientId: patientBId}).countAsync(),
+			1,
+		);
 	});
 
 	it("cannot transfer other user's consultation", async () => {

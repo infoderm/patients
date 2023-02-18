@@ -22,12 +22,12 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		assert.equal(Appointments.find({}).count(), 1);
-		assert.equal(Appointments.find({_id: appointmentId}).count(), 1);
+		assert.equal(await Appointments.find({}).countAsync(), 1);
+		assert.equal(await Appointments.find({_id: appointmentId}).countAsync(), 1);
 
 		await invoke(appointmentsRemove, {userId}, [appointmentId]);
 
-		assert.equal(Appointments.find({}).count(), 0);
+		assert.equal(await Appointments.find({}).countAsync(), 0);
 	});
 
 	it("cannot remove other user's consultation", async () => {
@@ -47,9 +47,9 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const {begin, end} = Appointments.findOne(appointmentId);
+		const {begin, end} = await Appointments.findOneAsync(appointmentId);
 
-		const before = Availability.find().fetch();
+		const before = await Availability.find().fetchAsync();
 
 		assert.sameDeepMembers(dropIds(before), [
 			{
@@ -68,7 +68,7 @@ server(__filename, () => {
 
 		await invoke(appointmentsRemove, {userId}, [appointmentId]);
 
-		const after = Availability.find().fetch();
+		const after = await Availability.find().fetchAsync();
 		assert.sameDeepMembers(dropIds(after), [dropId(initialSlot(userId))]);
 	});
 });

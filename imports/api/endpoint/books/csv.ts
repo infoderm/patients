@@ -27,7 +27,7 @@ export default define({
 		check(lastBook, Number);
 		check(maxRows, Number);
 	},
-	run(
+	async run(
 		begin: Date,
 		end: Date,
 		firstBook: number,
@@ -37,7 +37,7 @@ export default define({
 		const beginBook = firstBook;
 		const endBook = lastBook + 1;
 
-		const consultations = Consultations.find(
+		const consultations = await Consultations.find(
 			{
 				isDone: true,
 				datetime: {
@@ -51,7 +51,7 @@ export default define({
 					datetime: 1,
 				},
 			},
-		).fetch();
+		).fetchAsync();
 
 		const data = {};
 

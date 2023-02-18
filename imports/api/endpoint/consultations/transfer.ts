@@ -10,8 +10,8 @@ export default define({
 		check(consultationId, String);
 		check(patientId, String);
 	},
-	run(consultationId: string, patientId: string) {
-		const numUpdated = Consultations.update(
+	async run(consultationId: string, patientId: string) {
+		const numUpdated = await Consultations.updateAsync(
 			{
 				_id: consultationId,
 				owner: this.userId,

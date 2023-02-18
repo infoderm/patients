@@ -41,20 +41,26 @@ server(__filename, () => {
 
 		await invoke(consultationsDetach, {userId}, [consultationAId, uploadAId]);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Consultations.find({patientId: patientAId}).count(), 1);
-		assert.equal(Consultations.find({patientId: patientBId}).count(), 1);
-		assert.equal(Attachments.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(
+			await Consultations.find({patientId: patientAId}).countAsync(),
+			1,
+		);
+		assert.equal(
+			await Consultations.find({patientId: patientBId}).countAsync(),
+			1,
+		);
+		assert.equal(await Attachments.find().countAsync(), 2);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationAId,
 			}),
 			undefined,
 		);
 
 		assert.deepInclude(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationBId,
 			}),
 			{
@@ -64,20 +70,26 @@ server(__filename, () => {
 
 		await invoke(consultationsDetach, {userId}, [consultationBId, uploadBId]);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Consultations.find({patientId: patientAId}).count(), 1);
-		assert.equal(Consultations.find({patientId: patientBId}).count(), 1);
-		assert.equal(Attachments.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(
+			await Consultations.find({patientId: patientAId}).countAsync(),
+			1,
+		);
+		assert.equal(
+			await Consultations.find({patientId: patientBId}).countAsync(),
+			1,
+		);
+		assert.equal(await Attachments.find().countAsync(), 2);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationAId,
 			}),
 			undefined,
 		);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationBId,
 			}),
 			undefined,
@@ -101,7 +113,7 @@ server(__filename, () => {
 		await invoke(consultationsDetach, {userId}, [consultationId, uploadId]);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationId,
 			}),
 			undefined,
@@ -110,7 +122,7 @@ server(__filename, () => {
 		await invoke(consultationsDetach, {userId}, [consultationId, uploadId]);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationId,
 			}),
 			undefined,

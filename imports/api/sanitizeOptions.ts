@@ -1,6 +1,6 @@
 import type Options from './Options';
 
-const sanitizeOptions = (options: Options): Options => {
+const sanitizeOptions = <T>(options: Options<T>): Options<T> => {
 	if (options === undefined) return undefined;
 
 	const {fields, sort, skip, limit} = options;

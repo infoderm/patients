@@ -18,17 +18,18 @@ server(__filename, () => {
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
 
-		assert.equal(Allergies.find({}).count(), 1);
-		assert.equal(Allergies.find({_id: allergyId}).count(), 1);
-		assert.equal(Allergies.findOne({_id: allergyId}).color, undefined);
+		assert.equal(await Allergies.find({}).countAsync(), 1);
+		assert.equal(await Allergies.find({_id: allergyId}).countAsync(), 1);
+		const {color} = await Allergies.findOneAsync({_id: allergyId});
+		assert.equal(color, undefined);
 
 		const expected = '#fff';
 
 		await invoke(changeAllergyColor, {userId}, [allergyId, expected]);
 
-		assert.equal(Allergies.find({}).count(), 1);
+		assert.equal(await Allergies.find({}).countAsync(), 1);
 
-		assert.deepInclude(Allergies.findOne({_id: allergyId}), {
+		assert.deepInclude(await Allergies.findOneAsync({_id: allergyId}), {
 			color: expected,
 		});
 	});
@@ -38,9 +39,11 @@ server(__filename, () => {
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
 
-		assert.equal(Allergies.find({}).count(), 1);
-		assert.equal(Allergies.find({_id: allergyId}).count(), 1);
-		assert.equal(Allergies.findOne({_id: allergyId}).color, undefined);
+		assert.equal(await Allergies.find({}).countAsync(), 1);
+		assert.equal(await Allergies.find({_id: allergyId}).countAsync(), 1);
+
+		const {color} = await Allergies.findOneAsync({_id: allergyId});
+		assert.equal(color, undefined);
 
 		const expected = '#fff';
 
@@ -49,9 +52,9 @@ server(__filename, () => {
 			/not-authorized/,
 		);
 
-		assert.equal(Allergies.find({}).count(), 1);
+		assert.equal(await Allergies.find({}).countAsync(), 1);
 
-		assert.notDeepInclude(Allergies.findOne({_id: allergyId}), {
+		assert.notDeepInclude(await Allergies.findOneAsync({_id: allergyId}), {
 			color: expected,
 		});
 	});
@@ -61,9 +64,10 @@ server(__filename, () => {
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
 
-		assert.equal(Allergies.find({}).count(), 1);
-		assert.equal(Allergies.find({_id: allergyId}).count(), 1);
-		assert.equal(Allergies.findOne({_id: allergyId}).color, undefined);
+		assert.equal(await Allergies.find({}).countAsync(), 1);
+		assert.equal(await Allergies.find({_id: allergyId}).countAsync(), 1);
+		const {color} = await Allergies.findOneAsync({_id: allergyId});
+		assert.equal(color, undefined);
 
 		const expected = '#fff';
 
@@ -76,9 +80,9 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		assert.equal(Allergies.find({}).count(), 1);
+		assert.equal(await Allergies.find({}).countAsync(), 1);
 
-		assert.notDeepInclude(Allergies.findOne({_id: allergyId}), {
+		assert.notDeepInclude(await Allergies.findOneAsync({_id: allergyId}), {
 			color: expected,
 		});
 	});

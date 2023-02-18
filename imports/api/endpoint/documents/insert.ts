@@ -75,7 +75,7 @@ export default define({
 					// We update the document if it did not have a binary field before.
 
 					// if (!existingDocument.binary) {
-					// Documents.update(existingDocument._id, {
+					// await Documents.updateAsync(existingDocument._id, {
 					// $set: {
 					// binary: entry.binary,
 					// }

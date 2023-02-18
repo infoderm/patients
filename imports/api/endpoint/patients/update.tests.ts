@@ -53,7 +53,7 @@ server(__filename, () => {
 			{allergies, doctors, insurances},
 		]);
 
-		assert.equal(Patients.find({owner: userId}).count(), 1);
+		assert.equal(await Patients.find({owner: userId}).countAsync(), 1);
 
 		assert.includeDeepMembers(
 			Allergies.find()

@@ -454,7 +454,7 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 			<FixedFab
 				col={1}
 				color="primary"
-				aria-label="save"
+				aria-label={showSuccess ? 'saved' : 'save'}
 				disabled={!dirty}
 				pending={saving}
 				onClick={handleSave}

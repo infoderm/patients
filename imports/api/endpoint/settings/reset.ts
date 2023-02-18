@@ -9,7 +9,7 @@ export default define({
 	validate(key: string) {
 		check(key, String);
 	},
-	run(key: string) {
-		return Settings.remove({owner: this.userId, key});
+	async run(key: string) {
+		return Settings.removeAsync({owner: this.userId, key});
 	},
 });

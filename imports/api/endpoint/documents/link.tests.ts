@@ -26,21 +26,21 @@ server(__filename, () => {
 		const documentAId = await newDocument({userId});
 		const documentBId = await newDocument({userId});
 
-		assert.equal(Patients.find().count(), 3);
-		assert.equal(Documents.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 3);
+		assert.equal(await Documents.find().countAsync(), 2);
 
 		await invoke(documentsLink, invocation, [documentAId, patientAId]);
 		await invoke(documentsLink, invocation, [documentBId, patientBId]);
 
-		assert.deepNestedInclude(Documents.findOne(documentAId), {
+		assert.deepNestedInclude(await Documents.findOneAsync(documentAId), {
 			patientId: patientAId,
 		});
 
-		assert.deepNestedInclude(Documents.findOne(documentBId), {
+		assert.deepNestedInclude(await Documents.findOneAsync(documentBId), {
 			patientId: patientBId,
 		});
-		assert.equal(Patients.find().count(), 3);
-		assert.equal(Documents.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 3);
+		assert.equal(await Documents.find().countAsync(), 2);
 	});
 
 	it('is idempotent', async () => {
@@ -51,7 +51,7 @@ server(__filename, () => {
 		const documentId = await newDocument({userId});
 
 		assert.equal(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId,
 			}),
 			undefined,
@@ -60,7 +60,7 @@ server(__filename, () => {
 		await invoke(documentsLink, {userId}, [documentId, patientId]);
 
 		assert.deepInclude(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId,
 			}),
 			{
@@ -71,7 +71,7 @@ server(__filename, () => {
 		await invoke(documentsLink, {userId}, [documentId, patientId]);
 
 		assert.deepInclude(
-			Documents.findOne({
+			await Documents.findOneAsync({
 				patientId,
 			}),
 			{

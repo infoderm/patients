@@ -27,7 +27,7 @@ server(__filename, () => {
 
 		await invoke(patientsRemove, invocation, [patientId]);
 
-		assert.equal(Patients.find().count(), 0);
+		assert.equal(await Patients.find().countAsync(), 0);
 	});
 
 	it("cannot delete someone else's patient", async () => {
@@ -53,17 +53,17 @@ server(__filename, () => {
 		await newAppointment({userId}, {patient: {_id: patientAId}});
 		await newConsultation({userId}, {patientId: patientBId});
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Consultations.find().count(), 3);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(await Consultations.find().countAsync(), 3);
 
 		await invoke(patientsRemove, {userId}, [patientAId]);
 
-		assert.equal(Patients.find().count(), 1);
-		assert.equal(Consultations.find().count(), 1);
+		assert.equal(await Patients.find().countAsync(), 1);
+		assert.equal(await Consultations.find().countAsync(), 1);
 
 		await invoke(patientsRemove, {userId}, [patientBId]);
 
-		assert.equal(Patients.find().count(), 0);
-		assert.equal(Consultations.find().count(), 0);
+		assert.equal(await Patients.find().countAsync(), 0);
+		assert.equal(await Consultations.find().countAsync(), 0);
 	});
 });

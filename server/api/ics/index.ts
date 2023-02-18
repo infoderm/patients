@@ -61,7 +61,7 @@ const response = async (token, IPAddress, query, res) => {
 		end: {$gte: startDate},
 	};
 
-	const lastModified = Consultations.findOne(selector, {
+	const lastModified = await Consultations.findOneAsync(selector, {
 		sort: {lastModifiedAt: -1},
 	});
 
@@ -78,25 +78,25 @@ const response = async (token, IPAddress, query, res) => {
 	) {
 		const calendar = ical({name: `Calendar for ${JSON.stringify(userId)}`});
 
-		Consultations.find(selector, {sort: {lastModifiedAt: -1}}).forEach(
-			({_id, ...fields}) => {
-				const {begin, end, title, description, isCancelled, uri} = event(
-					_id,
-					fields,
-				);
-				const path = uri.slice(1);
-				calendar.createEvent({
-					start: begin,
-					end,
-					description,
-					created: fields.createdAt,
-					lastModified: fields.lastModifiedAt,
-					summary: title,
-					status: isCancelled ? ICalEventStatus.CANCELLED : null,
-					url: Meteor.absoluteUrl(path),
-				});
-			},
-		);
+		await Consultations.find(selector, {
+			sort: {lastModifiedAt: -1},
+		}).forEachAsync(({_id, ...fields}) => {
+			const {begin, end, title, description, isCancelled, uri} = event(
+				_id,
+				fields,
+			);
+			const path = uri.slice(1);
+			calendar.createEvent({
+				start: begin,
+				end,
+				description,
+				created: fields.createdAt,
+				lastModified: fields.lastModifiedAt,
+				summary: title,
+				status: isCancelled ? ICalEventStatus.CANCELLED : null,
+				url: Meteor.absoluteUrl(path),
+			});
+		});
 
 		cache.set(cacheKey, {
 			lastModifiedAt: lastModified.lastModifiedAt,

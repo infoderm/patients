@@ -50,7 +50,7 @@ export default define({
 			...fields,
 			signature,
 		};
-		const _id = PermissionTokens.insert(permissionToken);
+		const _id = await PermissionTokens.insertAsync(permissionToken);
 		return encode(_id, key);
 	},
 	simulate(_permissions: string[]) {

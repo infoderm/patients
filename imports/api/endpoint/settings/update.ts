@@ -9,12 +9,12 @@ export default define({
 	validate(key: string, _value: any) {
 		check(key, String);
 	},
-	run(key: string, value: any) {
+	async run(key: string, value: any) {
 		// const updatedAt = new Date();
 		const owner = this.userId;
-		// const username = Meteor.users.findOne(this.userId).username;
+		// const username = await Meteor.users.findOneAsync(this.userId).username;
 
-		return Settings.upsert(
+		return Settings.upsertAsync(
 			{owner, key},
 			{
 				$set: {

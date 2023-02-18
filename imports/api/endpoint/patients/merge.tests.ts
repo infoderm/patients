@@ -50,15 +50,15 @@ server(__filename, () => {
 			patientId: patientAId,
 		});
 
-		let documentA = Documents.findOne(documentAId);
+		let documentA = await Documents.findOneAsync(documentAId);
 
 		// create an irrelevant document
 		await newDocument(invocation);
 
-		assert.equal(Patients.find().count(), 3);
+		assert.equal(await Patients.find().countAsync(), 3);
 
-		const patientA = Patients.findOne(patientAId);
-		const patientB = Patients.findOne(patientBId);
+		const patientA = await Patients.findOneAsync(patientAId);
+		const patientB = await Patients.findOneAsync(patientBId);
 
 		const newPatientFields = patients.merge([patientA, patientB]);
 
@@ -77,12 +77,12 @@ server(__filename, () => {
 
 		const newPatientId = await invoke(patientsMerge, invocation, parameters);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Consultations.find().count(), 2);
-		assert.equal(Attachments.find().count(), 2);
-		assert.equal(Documents.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(await Consultations.find().countAsync(), 2);
+		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.equal(await Documents.find().countAsync(), 2);
 
-		const mergedPatient = Patients.findOne(newPatientId);
+		const mergedPatient = await Patients.findOneAsync(newPatientId);
 
 		assert.equal(mergedPatient.firstname, patientB.firstname);
 
@@ -90,21 +90,21 @@ server(__filename, () => {
 			[uploadA, uploadB].map(({meta, ...rest}) => rest),
 		);
 
-		const newPatientAttachments = Attachments.find(
+		const newPatientAttachments = await Attachments.find(
 			{
 				userId,
 				'meta.attachedToPatients': newPatientId,
 			},
 			{fields: {meta: 0, 'versions.original.meta': 0}},
-		).fetch();
+		).fetchAsync();
 
 		assert.deepEqual(setLike(newPatientAttachments), expectedAttachments);
 
-		const consultationA = Consultations.findOne(consultationAId);
+		const consultationA = await Consultations.findOneAsync(consultationAId);
 
 		assert.equal(consultationA.patientId, newPatientId);
 
-		documentA = Documents.findOne(documentA._id);
+		documentA = await Documents.findOneAsync(documentA._id);
 
 		assert.equal(documentA.patientId, newPatientId);
 	});

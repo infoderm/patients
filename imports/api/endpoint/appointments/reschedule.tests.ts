@@ -37,7 +37,7 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const before = Appointments.findOne();
+		const before = await Appointments.findOneAsync();
 
 		const updated = newAppointmentFormData();
 
@@ -46,7 +46,7 @@ server(__filename, () => {
 			/not-authorized/,
 		);
 
-		const after = Appointments.findOne();
+		const after = await Appointments.findOneAsync();
 
 		assert.deepEqual(after, before);
 	});
@@ -56,7 +56,7 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const before = Appointments.findOne();
+		const before = await Appointments.findOneAsync();
 
 		const updated = newAppointmentFormData();
 
@@ -69,7 +69,7 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		const after = Appointments.findOne();
+		const after = await Appointments.findOneAsync();
 
 		assert.deepEqual(after, before);
 	});
@@ -79,11 +79,11 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const before = Appointments.findOne();
+		const before = await Appointments.findOneAsync();
 
 		assert.equal(before._id, appointmentId);
 		assert.sameDeepMembers(
-			dropIds(Availability.find().fetch()),
+			dropIds(await Availability.find().fetchAsync()),
 			expected(before),
 		);
 
@@ -91,11 +91,11 @@ server(__filename, () => {
 
 		await invoke(appointmentsReschedule, {userId}, [appointmentId, updated]);
 
-		const after = Appointments.findOne();
+		const after = await Appointments.findOneAsync();
 
 		assert.equal(after._id, appointmentId);
 		assert.sameDeepMembers(
-			dropIds(Availability.find().fetch()),
+			dropIds(await Availability.find().fetchAsync()),
 			expected(after),
 		);
 	});

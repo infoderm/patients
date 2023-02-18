@@ -72,7 +72,7 @@ server(__filename, () => {
 	it('starts with complete availability', async () => {
 		const userId = randomUserId();
 
-		assert.deepEqual(Availability.findOne(), undefined);
+		assert.deepEqual(await Availability.findOneAsync(), undefined);
 
 		const actual = await findNextAvailable(userId, new Date(), 1);
 		const expected = dropId(initialSlot(userId));

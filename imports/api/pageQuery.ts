@@ -4,7 +4,7 @@ import type Options from './Options';
 import sanitizeOptions from './sanitizeOptions';
 
 const pageQuery = <T, U>(Collection: Mongo.Collection<T, U>) =>
-	function (query: Mongo.Selector<T>, options: Options) {
+	function (query: Mongo.Selector<T>, options: Options<T>) {
 		const selector = {...query, owner: this.userId};
 		options = sanitizeOptions(options);
 

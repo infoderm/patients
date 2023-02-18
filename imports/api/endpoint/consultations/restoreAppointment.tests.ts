@@ -25,9 +25,9 @@ server(__filename, () => {
 
 		await invoke(restoreAppointment, {userId}, [appointmentId]);
 
-		assert.equal(Appointments.find({}).count(), 1);
+		assert.equal(await Appointments.find({}).countAsync(), 1);
 
-		assert.deepInclude(Appointments.findOne({_id: appointmentId}), {
+		assert.deepInclude(await Appointments.findOneAsync({_id: appointmentId}), {
 			isDone: false,
 		});
 	});
@@ -65,13 +65,13 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const {begin, end} = Appointments.findOne(appointmentId);
+		const {begin, end} = await Appointments.findOneAsync(appointmentId);
 
 		await invoke(appointmentsBeginConsultation, {userId}, [appointmentId]);
 
 		await invoke(restoreAppointment, {userId}, [appointmentId]);
 
-		const after = Availability.find().fetch();
+		const after = await Availability.find().fetchAsync();
 
 		assert.sameDeepMembers(dropIds(after), [
 			{

@@ -29,18 +29,18 @@ server(__filename, () => {
 
 		await invoke(patientsDetach, {userId}, [patientAId, uploadAId]);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Attachments.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(await Attachments.find().countAsync(), 2);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientAId,
 			}),
 			undefined,
 		);
 
 		assert.deepInclude(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientBId,
 			}),
 			{
@@ -50,18 +50,18 @@ server(__filename, () => {
 
 		await invoke(patientsDetach, {userId}, [patientBId, uploadBId]);
 
-		assert.equal(Patients.find().count(), 2);
-		assert.equal(Attachments.find().count(), 2);
+		assert.equal(await Patients.find().countAsync(), 2);
+		assert.equal(await Attachments.find().countAsync(), 2);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientAId,
 			}),
 			undefined,
 		);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientBId,
 			}),
 			undefined,
@@ -80,7 +80,7 @@ server(__filename, () => {
 		await invoke(patientsDetach, {userId}, [patientId, uploadId]);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientId,
 			}),
 			undefined,
@@ -89,7 +89,7 @@ server(__filename, () => {
 		await invoke(patientsDetach, {userId}, [patientId, uploadId]);
 
 		assert.equal(
-			Attachments.findOne({
+			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientId,
 			}),
 			undefined,

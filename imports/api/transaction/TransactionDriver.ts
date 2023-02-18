@@ -10,8 +10,6 @@ import {
 import type Collection from './Collection';
 import type Filter from './Filter';
 
-export type ValueOrPromise<X> = X | Promise<X>;
-
 export type ObjectId = string;
 
 export type ObjectIds = Record<number, ObjectId>;
@@ -32,17 +30,17 @@ type TransactionDriver = {
 		Collection: Collection<T, U>,
 		doc: any,
 		options?: Options,
-	) => ValueOrPromise<InsertOneResult<T>>;
+	) => Promise<InsertOneResult<T>>;
 	insertMany: <T, U = T>(
 		Collection: Collection<T, U>,
 		docs: any[],
 		options?: Options,
-	) => ValueOrPromise<InsertManyResult<T>>;
+	) => Promise<InsertManyResult<T>>;
 	findOne: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
-	) => ValueOrPromise<null | T>;
+	) => Promise<null | T>;
 	find: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
@@ -52,34 +50,34 @@ type TransactionDriver = {
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
-	) => ValueOrPromise<Array<WithId<T>>>;
+	) => Promise<Array<WithId<T>>>;
 	deleteOne: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
-	) => ValueOrPromise<DeleteResult>;
+	) => Promise<DeleteResult>;
 	deleteMany: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
-	) => ValueOrPromise<DeleteResult>;
+	) => Promise<DeleteResult>;
 	updateOne: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		update: any,
 		options?: Options,
-	) => ValueOrPromise<UpdateResult>;
+	) => Promise<UpdateResult>;
 	updateMany: <T, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		update: any,
 		options?: Options,
-	) => ValueOrPromise<UpdateResult>;
+	) => Promise<UpdateResult>;
 	distinct: <T, U = T>(
 		Collection: Collection<T, U>,
 		key: string,
 		filter?: Filter<T>,
 		options?: Options,
-	) => ValueOrPromise<any[]>;
+	) => Promise<any[]>;
 };
 export default TransactionDriver;

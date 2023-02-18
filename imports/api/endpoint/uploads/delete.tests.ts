@@ -17,13 +17,13 @@ server(__filename, () => {
 
 		const {_id: uploadId} = await newUpload({userId});
 
-		assert.notDeepNestedInclude(Attachments.findOne(uploadId), {
+		assert.notDeepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 
 		await invoke(uploadsDelete, {userId}, [uploadId]);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 	});
@@ -37,7 +37,7 @@ server(__filename, () => {
 
 		await invoke(uploadsDelete, {userId}, [uploadId]);
 
-		assert.deepNestedInclude(Attachments.findOne(uploadId), {
+		assert.deepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 	});
@@ -52,7 +52,7 @@ server(__filename, () => {
 			/not-found/,
 		);
 
-		assert.notDeepNestedInclude(Attachments.findOne(uploadId), {
+		assert.notDeepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 	});
@@ -67,7 +67,7 @@ server(__filename, () => {
 			/not-authorized/,
 		);
 
-		assert.notDeepNestedInclude(Attachments.findOne(uploadId), {
+		assert.notDeepNestedInclude(await Attachments.findOneAsync(uploadId), {
 			'meta.isDeleted': true,
 		});
 	});

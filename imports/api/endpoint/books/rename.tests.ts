@@ -27,18 +27,21 @@ server(__filename, () => {
 			},
 		);
 
-		const {datetime, book: oldBookNumber} =
-			Consultations.findOne(consultationAId);
+		const {datetime, book: oldBookNumber} = await Consultations.findOneAsync(
+			consultationAId,
+		);
 
 		const newBookNumber = `renamed-${oldBookNumber}`;
 
 		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
-		const {_id} = Books.findOne({name});
+		const {_id} = await Books.findOneAsync({name});
 
 		await invoke(bookRename, {userId}, [_id, newBookNumber]);
 
-		const {book: updatedBookNumber} = Consultations.findOne(consultationAId);
+		const {book: updatedBookNumber} = await Consultations.findOneAsync(
+			consultationAId,
+		);
 
 		assert.equal(updatedBookNumber, newBookNumber);
 	});
@@ -55,8 +58,9 @@ server(__filename, () => {
 			},
 		);
 
-		const {datetime, book: oldBookNumber} =
-			Consultations.findOne(consultationAId);
+		const {datetime, book: oldBookNumber} = await Consultations.findOneAsync(
+			consultationAId,
+		);
 
 		const {insertedId: consultationBId} = await newConsultation(
 			{userId},
@@ -80,13 +84,19 @@ server(__filename, () => {
 
 		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
-		const {_id} = Books.findOne({name});
+		const {_id} = await Books.findOneAsync({name});
 
 		await invoke(bookRename, {userId}, [_id, newBookNumber]);
 
-		assert.equal(Consultations.findOne(consultationAId).book, newBookNumber);
-		assert.equal(Consultations.findOne(consultationBId).book, newBookNumber);
-		assert.equal(Consultations.findOne(consultationCId).book, newBookNumber);
+		for (const consultationId of [
+			consultationAId,
+			consultationBId,
+			consultationCId,
+		]) {
+			// eslint-disable-next-line no-await-in-loop
+			const {book} = await Consultations.findOneAsync(consultationId);
+			assert.equal(book, newBookNumber);
+		}
 	});
 
 	it('renaming a book updates its consultations only', async () => {
@@ -102,8 +112,9 @@ server(__filename, () => {
 			},
 		);
 
-		const {datetime, book: oldBookNumber} =
-			Consultations.findOne(consultationAId);
+		const {datetime, book: oldBookNumber} = await Consultations.findOneAsync(
+			consultationAId,
+		);
 
 		const {insertedId: consultationBId} = await newConsultation(
 			{userId},
@@ -154,22 +165,30 @@ server(__filename, () => {
 
 		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
-		const {_id} = Books.findOne({name, owner: userId});
+		const {_id} = await Books.findOneAsync({name, owner: userId});
 
 		await invoke(bookRename, {userId}, [_id, newBookNumber]);
 
-		assert.equal(Consultations.findOne(consultationAId).book, newBookNumber);
-		assert.equal(Consultations.findOne(consultationBId).book, newBookNumber);
-		assert.equal(Consultations.findOne(consultationCId).book, newBookNumber);
+		for (const consultationId of [
+			consultationAId,
+			consultationBId,
+			consultationCId,
+		]) {
+			// eslint-disable-next-line no-await-in-loop
+			const {book} = await Consultations.findOneAsync(consultationId);
+			assert.equal(book, newBookNumber);
+		}
 
-		assert.equal(Consultations.findOne(consultationDId).book, oldBookNumber);
-		assert.equal(
-			Consultations.findOne(consultationEId).book,
-			`${oldBookNumber}x`,
-		);
-		assert.equal(
-			Consultations.findOne(consultationFId).book,
-			`${oldBookNumber}x`,
-		);
+		for (const consultationId of [consultationDId]) {
+			// eslint-disable-next-line no-await-in-loop
+			const {book} = await Consultations.findOneAsync(consultationId);
+			assert.equal(book, oldBookNumber);
+		}
+
+		for (const consultationId of [consultationEId, consultationFId]) {
+			// eslint-disable-next-line no-await-in-loop
+			const {book} = await Consultations.findOneAsync(consultationId);
+			assert.equal(book, `${oldBookNumber}x`);
+		}
 	});
 });
