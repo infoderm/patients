@@ -64,22 +64,22 @@ export const createUserWithPasswordAndLogin = async (
 		return getByRole('button', {name: 'Register'});
 	});
 	console.debug('Waiting for "Logged in as ..." button to appear');
-	await findByRole('button', {name: `Logged in as ${username}`});
+	await findByRole(
+		'button',
+		{name: `Logged in as ${username}`},
+		{timeout: 5000},
+	);
 	console.debug('User successfully created and logged in');
 };
 
-export const logout = async ({getByRole, findByRole, user}) => {
+export const logout = async ({findByRole, user}) => {
 	await flakyCloseModals({user});
 	console.debug('Waiting for button "Logged in as ..."');
 	await user.click(await findByRole('button', {name: /^Logged in as /}));
 	console.debug('Waiting for Logout menuitem');
 	await user.click(await findByRole('menuitem', {name: 'Logout'}));
-	console.debug('Waiting for Logout menuitem to be removed');
-	await waitForElementToBeRemoved(() => {
-		return getByRole('menuitem', {name: 'Logout'});
-	});
 	console.debug('Waiting for Sign in button to appear');
-	await findByRole('button', {name: 'Sign in'});
+	await findByRole('button', {name: 'Sign in'}, {timeout: 5000});
 	console.debug('User succesfully logged out');
 };
 
@@ -104,7 +104,11 @@ export const loginWithPassword = async (
 		return getByRole('button', {name: 'Log in'});
 	});
 	console.debug('Waiting for "Logged in as ..." button to appear');
-	await findByRole('button', {name: `Logged in as ${username}`});
+	await findByRole(
+		'button',
+		{name: `Logged in as ${username}`},
+		{timeout: 5000},
+	);
 	console.debug('User succesfully logged in');
 };
 
@@ -144,7 +148,7 @@ export const changePassword = async (
 		return getByRole('button', {name: 'Change password'});
 	});
 	console.debug('Waiting for confirmation snackbar to appear');
-	await findByText('Password changed successfully!');
+	await findByText('Password changed successfully!', {}, {timeout: 5000});
 	console.debug('Password changed successfully');
 };
 

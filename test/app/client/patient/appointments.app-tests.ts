@@ -57,7 +57,6 @@ const scheduleAppointmentForPatient = async (
 	if (toggle !== null) await user.click(toggle);
 	await findByRole('link', {
 		name: `13:05-13:35 ${lastname} ${firstname}`,
-		exact: false,
 	});
 };
 
@@ -141,7 +140,6 @@ client(__filename, () => {
 		);
 		await findByRole('link', {
 			name: `13:05-13:35 ${lastname} ${firstname}`,
-			exact: false,
 		});
 		await user.click(
 			await findByRole('button', {name: 'Hide cancelled events'}),
@@ -149,13 +147,11 @@ client(__filename, () => {
 		if (
 			queryByRole('link', {
 				name: `13:05-13:35 ${lastname} ${firstname}`,
-				exact: false,
 			}) !== null
 		) {
 			await waitForElementToBeRemoved(() => {
 				return getByRole('link', {
 					name: `13:05-13:35 ${lastname} ${firstname}`,
-					exact: false,
 				});
 			});
 		}
@@ -214,7 +210,6 @@ client(__filename, () => {
 		await user.click(
 			await findByRole('link', {
 				name: `${lastname} ${firstname}`,
-				exact: false,
 			}),
 		);
 
