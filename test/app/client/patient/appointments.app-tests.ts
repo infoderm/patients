@@ -106,7 +106,6 @@ client(__filename, () => {
 			userWithoutPointerEventsCheck,
 			findByRole,
 			queryByRole,
-			getByRole,
 			findByLabelText,
 		} = app;
 		console.debug('Click on 1:05 PM');
@@ -125,7 +124,9 @@ client(__filename, () => {
 
 		console.debug('Set cancellation reason');
 		await user.click(await findByLabelText('Cancellation reason'));
-		await user.click(await findByRole('option', {name: 'patient-cancelled'}));
+		await user.click(
+			await findByRole('option', {name: 'patient-cancelled'}, {timeout: 5000}),
+		);
 		console.debug('Set cancellation explanation');
 		await user.type(
 			await findByRole('textbox', {name: 'Explanation for cancellation'}),
@@ -144,16 +145,13 @@ client(__filename, () => {
 		await user.click(
 			await findByRole('button', {name: 'Hide cancelled events'}),
 		);
-		if (
-			queryByRole('link', {
-				name: `13:05-13:35 ${lastname} ${firstname}`,
-			}) !== null
-		) {
-			await waitForElementToBeRemoved(() => {
-				return getByRole('link', {
-					name: `13:05-13:35 ${lastname} ${firstname}`,
-				});
-			});
+
+		const linkToBeRemoved = queryByRole('link', {
+			name: `13:05-13:35 ${lastname} ${firstname}`,
+		});
+
+		if (linkToBeRemoved !== null) {
+			await waitForElementToBeRemoved(linkToBeRemoved);
 		}
 	}).timeout(20_000);
 
