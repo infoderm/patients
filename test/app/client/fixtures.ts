@@ -1,11 +1,21 @@
 import {
-	within,
+	getQueriesForElement,
 	fireEvent,
 	waitForElementToBeRemoved,
+	type queries,
+	type BoundFunctions,
 } from '@testing-library/dom';
 import userEvent, {PointerEventsCheckLevel} from '@testing-library/user-event';
 
-export const setupApp = () => {
+type UserEvent = ReturnType<typeof userEvent.setup>;
+
+export type App = {
+	user: UserEvent;
+	userWithoutPointerEventsCheck: UserEvent;
+	userWithRealisticTypingSpeed: UserEvent;
+} & BoundFunctions<typeof queries>;
+
+export const setupApp = (): App => {
 	const user = userEvent.setup();
 	return {
 		user,
@@ -15,11 +25,15 @@ export const setupApp = () => {
 		userWithRealisticTypingSpeed: user.setup({
 			delay: 100,
 		}),
-		...within(document.body),
+		...getQueriesForElement(document.body),
 	};
 };
 
-export const fillIn = async ({user}, element: HTMLElement, value: string) => {
+export const fillIn = async (
+	{user}: {user: UserEvent},
+	element: HTMLElement,
+	value: string,
+) => {
 	await user.clear(element);
 	if (value !== '') {
 		await user.type(element, value);
@@ -33,7 +47,7 @@ export const fillIn = async ({user}, element: HTMLElement, value: string) => {
 /**
  * @deprecated
  */
-const flakyCloseModals = async ({user}) => {
+const flakyCloseModals = async ({user}: {user: UserEvent}) => {
 	// This is to escape any modals that have been opened by previous tests.
 	// TODO find way to do this in cleanup hook
 	await user.keyboard('[Escape]');
@@ -42,7 +56,7 @@ const flakyCloseModals = async ({user}) => {
 };
 
 export const createUserWithPasswordAndLogin = async (
-	{getByRole, findByRole, getByLabelText, user},
+	{getByRole, findByRole, getByLabelText, user}: App,
 	username: string,
 	password: string,
 ) => {
@@ -72,7 +86,7 @@ export const createUserWithPasswordAndLogin = async (
 	console.debug('User successfully created and logged in');
 };
 
-export const logout = async ({findByRole, user}) => {
+export const logout = async ({findByRole, user}: App) => {
 	await flakyCloseModals({user});
 	console.debug('Waiting for button "Logged in as ..."');
 	await user.click(await findByRole('button', {name: /^Logged in as /}));
@@ -84,7 +98,7 @@ export const logout = async ({findByRole, user}) => {
 };
 
 export const loginWithPassword = async (
-	{getByRole, findByRole, getByLabelText, user},
+	{getByRole, findByRole, getByLabelText, user}: App,
 	username: string,
 	password: string,
 ) => {
@@ -113,7 +127,7 @@ export const loginWithPassword = async (
 };
 
 export const createUserWithPassword = async (
-	app,
+	app: App,
 	username: string,
 	password: string,
 ) => {
@@ -122,7 +136,7 @@ export const createUserWithPassword = async (
 };
 
 export const changePassword = async (
-	{getByRole, findByRole, getByLabelText, findByText, user},
+	{getByRole, findByRole, getByLabelText, findByText, user}: App,
 	oldPassword: string,
 	newPassword: string,
 ) => {
@@ -153,7 +167,7 @@ export const changePassword = async (
 };
 
 export const navigateTo = async (
-	{findByRole, userWithoutPointerEventsCheck},
+	{findByRole, userWithoutPointerEventsCheck}: App,
 	title: string | RegExp,
 	url: string | RegExp,
 	role = 'link',
@@ -164,7 +178,7 @@ export const navigateTo = async (
 	await findByRole('heading', {name: url}, {timeout: 5000});
 };
 
-export const createNewPatient = async (app, {firstname, lastname}) => {
+export const createNewPatient = async (app: App, {firstname, lastname}) => {
 	await navigateTo(app, 'Nouveau', '/new/patient');
 
 	const {findByRole, getByLabelText, getByRole, user} = app;
@@ -179,8 +193,10 @@ export const createNewPatient = async (app, {firstname, lastname}) => {
 	return window.location.href.split('/').pop();
 };
 
-export const searchResultsForQuery = async (app, query) => {
-	const {userWithoutPointerEventsCheck, findByRole, getByRole} = app;
+export const searchResultsForQuery = async (
+	{userWithoutPointerEventsCheck, findByRole, getByRole}: App,
+	query,
+) => {
 	await userWithoutPointerEventsCheck.type(
 		getByRole('searchbox', {name: 'Patient search'}),
 		query,
@@ -188,7 +204,7 @@ export const searchResultsForQuery = async (app, query) => {
 	await findByRole('heading', {name: /^Results for query/});
 };
 
-export const searchForPatient = async (app, query, {name, id}) => {
+export const searchForPatient = async (app: App, query, {name, id}) => {
 	const {findByRole, user} = app;
 	await searchResultsForQuery(app, query);
 	await user.click(await findByRole('link', {name}));
@@ -210,7 +226,7 @@ type EditConsultationOptions = {
 };
 
 export const editConsultation = async (
-	app,
+	app: App,
 	{
 		reason,
 		done,
