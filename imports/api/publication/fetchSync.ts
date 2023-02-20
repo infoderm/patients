@@ -1,5 +1,7 @@
 import {type Mongo} from 'meteor/mongo';
 
+import makeReactive from './makeReactive';
+
 /**
  * Synchronous cursor fetch.
  */
@@ -9,13 +11,25 @@ const fetchSync = <T>(cursor: Mongo.Cursor<T>) => {
 	// NOTE Uses cursor observing instead of cursor.fetch() because synchronous
 	// fetch is deprecated.
 	const items: T[] = [];
+
 	const observer = cursor.observe({
 		addedAt(document, atIndex, _before) {
 			// TODO Use something more efficient.
 			items.splice(atIndex, 0, document);
 		},
 	});
-	observer.stop();
+
+	if (
+		!makeReactive(cursor, {
+			addedBefore: true,
+			removed: true,
+			changed: true,
+			movedBefore: true,
+		})
+	) {
+		observer.stop();
+	}
+
 	return items;
 };
 

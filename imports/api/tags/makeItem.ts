@@ -24,7 +24,7 @@ const makeItem =
 			loading ? null : Collection,
 			{name} as Mongo.Selector<T>,
 			undefined,
-			deps,
+			[loading, ...deps],
 		);
 
 		return {
