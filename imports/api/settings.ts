@@ -2,6 +2,7 @@ import {indigo, pink} from '@mui/material/colors';
 
 import {ALL_WEEK_DAYS} from '../util/datetime';
 import {Settings} from './collection/settings';
+import findOneSync from './publication/findOneSync';
 
 export const defaults: Record<string, any> = {
 	'theme-palette-mode': 'light',
@@ -29,7 +30,7 @@ export const settings = {
 };
 
 export function get(owner: string, key: string) {
-	const item = Settings.findOne({owner, key});
+	const item = findOneSync(Settings, {owner, key});
 	if (item === undefined) {
 		return defaults[key];
 	}

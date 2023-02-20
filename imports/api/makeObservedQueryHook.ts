@@ -10,6 +10,7 @@ import type ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 import type GenericQueryHook from './GenericQueryHook';
+import findOneSync from './publication/findOneSync';
 
 const makeObservedQueryHook =
 	<R, T = R>(
@@ -54,7 +55,7 @@ const makeObservedQueryHook =
 				},
 				onReady() {
 					if (handleRef.current === handle) {
-						results.current = Collection.findOne({key})?.results ?? [];
+						results.current = findOneSync(Collection, {key})?.results ?? [];
 						loading.current = false;
 						forceUpdate();
 					}

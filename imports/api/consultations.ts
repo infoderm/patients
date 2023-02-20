@@ -26,6 +26,7 @@ import {
 	yieldKey,
 	yieldResettableKey,
 } from './update';
+import findOneSync from './publication/findOneSync';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -76,7 +77,8 @@ export const findLastConsultationSync = (
 	filter?: Filter<ConsultationDocument>,
 ) => {
 	const {query, options} = findLastConsultationArgs(filter);
-	return Consultations.findOne(
+	return findOneSync(
+		Consultations,
 		query as Mongo.Selector<ConsultationDocument>,
 		options,
 	);
@@ -102,7 +104,8 @@ export const findLastConsultationInIntervalSync = (
 		[begin, end],
 		filter,
 	);
-	return Consultations.findOne(
+	return findOneSync(
+		Consultations,
 		query as Mongo.Selector<ConsultationDocument>,
 		options,
 	);

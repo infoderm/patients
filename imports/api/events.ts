@@ -12,6 +12,7 @@ import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
 
 import {type EventDocument, events} from './collection/events';
+import findOneSync from './publication/findOneSync';
 
 export const event = (
 	_id: string,
@@ -26,7 +27,7 @@ export const event = (
 		createdAt,
 	}: Omit<ConsultationDocument, '_id'>,
 ): EventDocument => {
-	const patient = Patients.findOne(patientId); // TODO Make reactive (maybe)?
+	const patient = findOneSync(Patients, {_id: patientId}); // TODO Make reactive (maybe)?
 	const begin = datetime;
 	const end = isDone
 		? doneDatetime

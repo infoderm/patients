@@ -13,6 +13,7 @@ import createBucket from '../backend/gridfs/createBucket';
 import createObjectId from '../backend/gridfs/createObjectId';
 import streamToBuffer from '../lib/stream/streamToBuffer';
 import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
+import fetchSync from './publication/fetchSync';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
@@ -246,7 +247,7 @@ export const Uploads = new FilesCollection<MetadataType>({
 		return true;
 	},
 	onBeforeRemove(cursor) {
-		return all(map((x) => x.userId === this.userId, cursor.fetch()));
+		return all(map((x) => x.userId === this.userId, fetchSync(cursor)));
 	},
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {

@@ -3,6 +3,7 @@ import {Settings} from '../../api/collection/settings';
 import {settings as _settings} from '../../api/settings';
 import useSubscription from '../../api/publication/useSubscription';
 import useReactive from '../../api/publication/useReactive';
+import findOneSync from '../../api/publication/findOneSync';
 import byKey from '../../api/publication/settings/byKey';
 import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/settings/update';
@@ -16,7 +17,7 @@ const {defaults} = _settings;
 const useSettingSubscription = (key: string) => useSubscription(byKey, key);
 
 const get = (_loading: boolean, _userId: string | null, key: string) => {
-	const item = Settings.findOne({key});
+	const item = findOneSync(Settings, {key});
 	return item === undefined ? defaults[key] : item.value;
 };
 
@@ -38,7 +39,7 @@ const getWithBrowserCache = (
 	// + warning message if cache was found on login
 	// OR maybe if not logged in and not logging in clear all cache with
 	// warning
-	const item = Settings.findOne({key});
+	const item = findOneSync(Settings, {key});
 	if (item === undefined) {
 		if (!loading && userId !== null) {
 			window.localStorage.removeItem(localStorageKey(defaultFilter(), key));
