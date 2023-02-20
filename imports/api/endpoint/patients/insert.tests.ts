@@ -32,21 +32,24 @@ server(__filename, () => {
 		assert.equal(await Patients.find({owner: userId}).countAsync(), 1);
 
 		assert.sameDeepMembers(
-			Allergies.find()
-				.fetch()
-				.map(({displayName, name}) => ({displayName, name})),
+			await Allergies.find().mapAsync(({displayName, name}) => ({
+				displayName,
+				name,
+			})),
 			allergies,
 		);
 		assert.sameDeepMembers(
-			Doctors.find()
-				.fetch()
-				.map(({displayName, name}) => ({displayName, name})),
+			await Doctors.find().mapAsync(({displayName, name}) => ({
+				displayName,
+				name,
+			})),
 			doctors,
 		);
 		assert.sameDeepMembers(
-			Insurances.find()
-				.fetch()
-				.map(({displayName, name}) => ({displayName, name})),
+			await Insurances.find().mapAsync(({displayName, name}) => ({
+				displayName,
+				name,
+			})),
 			insurances,
 		);
 	});
