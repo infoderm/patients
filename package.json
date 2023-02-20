@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@async-iterable-iterator/async-iterable-to-array": "0.0.1",
-    "@babel/runtime": "^7.20.13",
+    "@babel/runtime": "^7.21.0",
     "@combinatorics/n-combinations": "^0.1.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
