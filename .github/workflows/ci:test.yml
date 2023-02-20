@@ -14,6 +14,15 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Cache ~/.cache/puppeteer 🎭
+        uses: actions/cache@v3
+        id: cache-puppeteer
+        env:
+          cache-name: cache-puppeteer
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install 💾
         uses: meteor-actions/install@v2
 
@@ -39,6 +48,15 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
+
+      - name: Cache ~/.cache/puppeteer 🎭
+        uses: actions/cache@v3
+        id: cache-puppeteer
+        env:
+          cache-name: cache-puppeteer
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install 💾
         uses: meteor-actions/install@v2
