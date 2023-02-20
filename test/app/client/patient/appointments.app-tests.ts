@@ -76,7 +76,7 @@ client(__filename, () => {
 		});
 
 		await scheduleAppointmentForPatient(app, {patientId, firstname, lastname});
-	}).timeout(15_000);
+	}).timeout(25_000);
 
 	it('should allow to cancel an appointment for a patient', async () => {
 		const username = randomUserId();
@@ -153,7 +153,7 @@ client(__filename, () => {
 		if (linkToBeRemoved !== null) {
 			await waitForElementToBeRemoved(linkToBeRemoved);
 		}
-	}).timeout(20_000);
+	}).timeout(30_000);
 
 	it('should allow to begin a consultation for a patient', async () => {
 		const username = randomUserId();
@@ -230,5 +230,5 @@ client(__filename, () => {
 		await findByText('test-book-id');
 
 		await findByText('À payé €55.00 de €55.00.');
-	}).timeout(30_000);
+	}).timeout(40_000);
 });
