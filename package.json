@@ -55,7 +55,7 @@
     "@iterable-iterator/zip": "^0.0.2",
     "@mui/icons-material": "^5.11.9",
     "@mui/lab": "^5.0.0-alpha.120",
-    "@mui/material": "^5.11.9",
+    "@mui/material": "^5.11.10",
     "@mui/styles": "^5.11.9",
     "@mui/x-date-pickers": "^5.0.19",
     "@set-theory/cartesian-product": "^1.0.2",
