@@ -91,7 +91,7 @@ const initialState = {
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'openMenu': {
-			return {...state, menu: action.event.currentTarget};
+			return {...state, menu: action.anchorEl};
 		}
 
 		case 'closeMenu': {
@@ -212,7 +212,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 							aria-haspopup="true"
 							aria-expanded={open ? 'true' : undefined}
 							onClick={(event) => {
-								dispatch({type: 'openMenu', event});
+								dispatch({type: 'openMenu', anchorEl: event.currentTarget});
 							}}
 						>
 							<MoreVertIcon />
