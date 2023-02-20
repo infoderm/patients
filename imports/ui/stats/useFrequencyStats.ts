@@ -7,7 +7,7 @@ import publication, {
 	frequencySexKey,
 	type GenderCount,
 } from '../../api/publication/stats/frequencyBySex';
-import useReactive from '../../api/publication/useReactive';
+import useItem from '../../api/publication/useItem';
 import useSubscription from '../../api/publication/useSubscription';
 
 type Result = {
@@ -24,10 +24,10 @@ const useFrequencyStats = (
 	const isLoading = useSubscription(publication, query);
 	const loading = isLoading();
 
-	const results = useReactive(
-		() => (loading ? undefined : Count.findOne(key)),
-		[loading, key],
-	);
+	const results = useItem(loading ? null : Count, {_id: key}, undefined, [
+		loading,
+		key,
+	]);
 
 	return {
 		loading,

@@ -13,7 +13,7 @@ import pageQuery from './pageQuery';
 import defineEndpoint from './endpoint/define';
 import definePublication from './publication/define';
 import useCursor from './publication/useCursor';
-import useReactive from './publication/useReactive';
+import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
 
 import {
@@ -211,7 +211,7 @@ const createTagCollection = <
 		const isLoading = useSubscription(_statsPublication, name);
 		const loading = isLoading();
 
-		const result = useReactive(() => Stats.findOne({name}), [name]);
+		const result = useItem(Stats, {name}, undefined, [name]);
 
 		return {
 			loading,

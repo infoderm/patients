@@ -1,7 +1,7 @@
 import {type Mongo} from 'meteor/mongo';
 import {type DependencyList} from 'react';
 import type Publication from './publication/Publication';
-import useReactive from './publication/useReactive';
+import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
 
 const makeFindOne =
@@ -15,8 +15,10 @@ const makeFindOne =
 		const isLoading = useSubscription(publication, query, options);
 		const loading = isLoading();
 
-		const upToDate = useReactive(
-			() => (loading ? undefined : Collection.findOne(query, options)),
+		const upToDate = useItem<T, U>(
+			loading ? null : Collection,
+			typeof query === 'string' ? ({_id: query} as Mongo.Selector<T>) : query,
+			options,
 			[loading, ...deps],
 		);
 

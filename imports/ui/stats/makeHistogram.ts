@@ -1,6 +1,6 @@
 import {Count, type PollResult} from '../../api/collection/stats';
 import useSubscription from '../../api/publication/useSubscription';
-import useReactive from '../../api/publication/useReactive';
+import useItem from '../../api/publication/useItem';
 
 import {countPublicationName, countPublicationKey} from '../../api/stats';
 
@@ -20,9 +20,12 @@ const makeHistogram =
 		const isLoading = useSubscription(publication, query);
 		const loading = isLoading();
 
-		const results: PollResult<T> | undefined = useReactive(() => {
-			return loading ? undefined : Count.findOne(key);
-		}, [loading, key]);
+		const results: PollResult<T> | undefined = useItem(
+			loading ? null : Count,
+			{_id: key},
+			undefined,
+			[loading, key],
+		);
 
 		return {
 			loading,

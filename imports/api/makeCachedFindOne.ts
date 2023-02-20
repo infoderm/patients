@@ -2,7 +2,7 @@ import {type DependencyList, useRef} from 'react';
 import {type Mongo} from 'meteor/mongo';
 import type Publication from './publication/Publication';
 import useSubscription from './publication/useSubscription';
-import useReactive from './publication/useReactive';
+import useItem from './publication/useItem';
 
 const makeCachedFindOne =
 	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
@@ -17,8 +17,10 @@ const makeCachedFindOne =
 		const isLoading = useSubscription(publication, query, options);
 		const loading = isLoading();
 
-		const upToDate = useReactive<U | undefined>(
-			() => (loading ? undefined : Collection.findOne(query, options)),
+		const upToDate = useItem(
+			loading ? null : Collection,
+			typeof query === 'string' ? ({_id: query} as Mongo.Selector<T>) : query,
+			options,
 			[loading, ...deps],
 		);
 

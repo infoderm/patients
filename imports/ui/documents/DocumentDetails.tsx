@@ -7,7 +7,7 @@ import NoContent from '../navigation/NoContent';
 import {Documents} from '../../api/collection/documents';
 
 import useSubscription from '../../api/publication/useSubscription';
-import useReactive from '../../api/publication/useReactive';
+import useItem from '../../api/publication/useItem';
 import findOne from '../../api/publication/documents/findOne';
 import {myDecodeURIComponent} from '../../util/uri';
 import DocumentCard from './DocumentCard';
@@ -48,7 +48,7 @@ const useDocument = (documentId: DocumentId) => {
 	const isLoading = useSubscription(findOne, documentId);
 	const loading = isLoading();
 
-	const result = useReactive(() => Documents.findOne(documentId), [documentId]);
+	const result = useItem(Documents, {_id: documentId}, undefined, [documentId]);
 
 	return {
 		loading,

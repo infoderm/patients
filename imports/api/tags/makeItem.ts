@@ -2,7 +2,7 @@ import {type DependencyList} from 'react';
 import {type Mongo} from 'meteor/mongo';
 
 import useSubscription from '../publication/useSubscription';
-import useReactive from '../publication/useReactive';
+import useItem from '../publication/useItem';
 import type Publication from '../publication/Publication';
 import type TagDocument from './TagDocument';
 
@@ -20,9 +20,10 @@ const makeItem =
 		const isLoading = useSubscription(singlePublication, name);
 		const loading = isLoading();
 
-		const item = useReactive(
-			() =>
-				loading ? undefined : Collection.findOne({name} as Mongo.Selector<T>),
+		const item = useItem(
+			loading ? null : Collection,
+			{name} as Mongo.Selector<T>,
+			undefined,
 			deps,
 		);
 
