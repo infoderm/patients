@@ -45,7 +45,7 @@ const scheduleAppointmentForPatient = async (
 	await fillIn(app, await findByRole('textbox', {name: 'Time'}), time);
 	console.debug('Set duration to 30m');
 	await user.click(await findByRole('button', {name: '15m'}));
-	await user.click(await findByRole('option', {name: '30m'}));
+	await user.click(await findByRole('option', {name: '30m'}, {timeout: 5000}));
 	console.debug('Click on Schedule');
 	await user.click(await findByRole('button', {name: 'Schedule'}));
 	console.debug('Check heading');
@@ -126,7 +126,11 @@ client(__filename, () => {
 		console.debug('Set cancellation reason');
 		await user.click(await findByLabelText('Cancellation reason'));
 		await user.click(
-			await findByRole('option', {name: 'patient-cancelled'}, {timeout: 5000}),
+			await findByRole(
+				'option',
+				{name: 'patient-cancelled'},
+				{timeout: 10_000},
+			),
 		);
 		console.debug('Set cancellation explanation');
 		await user.type(

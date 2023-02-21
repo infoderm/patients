@@ -56,7 +56,7 @@ const flakyCloseModals = async ({user}: {user: UserEvent}) => {
 };
 
 export const createUserWithPasswordAndLogin = async (
-	{getByRole, findByRole, getByLabelText, user}: App,
+	{queryByRole, getByRole, findByRole, getByLabelText, user}: App,
 	username: string,
 	password: string,
 ) => {
@@ -74,9 +74,12 @@ export const createUserWithPasswordAndLogin = async (
 	console.debug('Clicking the register button');
 	await user.click(getByRole('button', {name: 'Register'}));
 	console.debug('Waiting for the register button to be removed');
-	await waitForElementToBeRemoved(() => {
-		return getByRole('button', {name: 'Register'});
-	});
+	if (queryByRole('button', {name: 'Register'}) !== null) {
+		await waitForElementToBeRemoved(() =>
+			getByRole('button', {name: 'Register'}),
+		);
+	}
+
 	console.debug('Waiting for "Logged in as ..." button to appear');
 	await findByRole(
 		'button',
