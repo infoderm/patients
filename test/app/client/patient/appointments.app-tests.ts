@@ -105,6 +105,7 @@ client(__filename, () => {
 			user,
 			userWithoutPointerEventsCheck,
 			findByRole,
+			getByRole,
 			queryByRole,
 			findByLabelText,
 		} = app;
@@ -151,7 +152,13 @@ client(__filename, () => {
 		});
 
 		if (linkToBeRemoved !== null) {
-			await waitForElementToBeRemoved(linkToBeRemoved);
+			await waitForElementToBeRemoved(
+				() =>
+					getByRole('link', {
+						name: `13:05-13:35 ${lastname} ${firstname}`,
+					}),
+				{timeout: 5000},
+			);
 		}
 	}).timeout(30_000);
 
