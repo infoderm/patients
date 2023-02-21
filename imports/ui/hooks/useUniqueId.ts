@@ -1,11 +1,11 @@
-import useUniqueIncreasingBigNumber from './useUniqueIncreasingBigNumber';
+import {useId} from 'react';
 
 /**
- * @deprecated mui v5 handles this for all inputs and that's the only place we
- * need this
+ * @deprecated MUI v5 handles this for most inputs, and that's the only place
+ * we need this.
  */
 const useUniqueId = (prefix: string) => {
-	const i = useUniqueIncreasingBigNumber();
+	const i = useId();
 	return `${prefix}-${i}`;
 };
 
