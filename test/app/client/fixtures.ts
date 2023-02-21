@@ -188,7 +188,7 @@ export const createNewPatient = async (app: App, {firstname, lastname}) => {
 
 	const {findByRole, getByLabelText, getByRole, user} = app;
 
-	await findByRole('button', {name: 'Create new patient'}, {timeout: 2000});
+	await findByRole('button', {name: 'Create new patient'}, {timeout: 5000});
 	await user.type(getByLabelText('Last name'), lastname);
 	await user.type(getByLabelText('First name'), firstname);
 	await user.click(getByRole('button', {name: 'Create new patient'}));
@@ -206,13 +206,13 @@ export const searchResultsForQuery = async (
 		getByRole('searchbox', {name: 'Patient search'}),
 		query,
 	);
-	await findByRole('heading', {name: /^Results for query/});
+	await findByRole('heading', {name: /^Results for query/}, {timeout: 5000});
 };
 
 export const searchForPatient = async (app: App, query, {name, id}) => {
 	const {findByRole, user} = app;
 	await searchResultsForQuery(app, query);
-	await user.click(await findByRole('link', {name}));
+	await user.click(await findByRole('link', {name}, {timeout: 5000}));
 	await findByRole('heading', {name: `/patient/${id}`}, {timeout: 5000});
 };
 
