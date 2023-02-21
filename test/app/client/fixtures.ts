@@ -75,8 +75,9 @@ export const createUserWithPasswordAndLogin = async (
 	await user.click(getByRole('button', {name: 'Register'}));
 	console.debug('Waiting for the register button to be removed');
 	if (queryByRole('button', {name: 'Register'}) !== null) {
-		await waitForElementToBeRemoved(() =>
-			getByRole('button', {name: 'Register'}),
+		await waitForElementToBeRemoved(
+			() => getByRole('button', {name: 'Register'}),
+			{timeout: 5000},
 		);
 	}
 
@@ -117,8 +118,8 @@ export const loginWithPassword = async (
 	console.debug('Clicking the "Log in" button');
 	await user.click(getByRole('button', {name: 'Log in'}));
 	console.debug('Waiting for the "Log in" button to be removed');
-	await waitForElementToBeRemoved(() => {
-		return getByRole('button', {name: 'Log in'});
+	await waitForElementToBeRemoved(() => getByRole('button', {name: 'Log in'}), {
+		timeout: 2000,
 	});
 	console.debug('Waiting for "Logged in as ..." button to appear');
 	await findByRole(
@@ -161,9 +162,10 @@ export const changePassword = async (
 	await user.click(await findByRole('button', {name: 'Change password'}));
 
 	console.debug('Waiting for the "Change password" button to be removed');
-	await waitForElementToBeRemoved(() => {
-		return getByRole('button', {name: 'Change password'});
-	});
+	await waitForElementToBeRemoved(
+		() => getByRole('button', {name: 'Change password'}),
+		{timeout: 2000},
+	);
 	console.debug('Waiting for confirmation snackbar to appear');
 	await findByText('Password changed successfully!', {}, {timeout: 5000});
 	console.debug('Password changed successfully');
