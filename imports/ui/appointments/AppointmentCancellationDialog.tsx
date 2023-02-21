@@ -10,6 +10,9 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
 import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
@@ -54,26 +57,41 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 					If you do not want to cancel this appointment, click cancel. If you
 					really want to cancel this appointment from the system, click cancel.
 				</DialogContentText>
-				<TextField
-					select
+				<FormControl
 					fullWidth
+					required
+					variant="standard"
 					margin="normal"
-					label="Cancellation reason"
-					InputProps={{
-						readOnly: loading,
-					}}
-					value={reason}
 					error={!reason}
-					onChange={(e) => {
-						setReason(e.target.value);
-					}}
 				>
-					{reasons.map((x) => (
-						<MenuItem key={x} value={x}>
-							{x}
-						</MenuItem>
-					))}
-				</TextField>
+					<InputLabel shrink>Cancellation reason</InputLabel>
+					<Select
+						displayEmpty
+						renderValue={(value) => {
+							return (
+								value ||
+								(loading
+									? 'Loading options ...'
+									: 'Please choose a reason for the cancellation (required)')
+							);
+						}}
+						value={reason}
+						inputProps={{
+							readOnly: loading,
+						}}
+						onChange={(e) => {
+							setReason(e.target.value);
+						}}
+					>
+						{loading
+							? null
+							: reasons.map((x) => (
+									<MenuItem key={x} value={x}>
+										{x}
+									</MenuItem>
+							  ))}
+					</Select>
+				</FormControl>
 				<TextField
 					fullWidth
 					margin="normal"

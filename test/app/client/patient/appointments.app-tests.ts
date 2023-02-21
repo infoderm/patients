@@ -107,7 +107,6 @@ client(__filename, () => {
 			findByRole,
 			getByRole,
 			queryByRole,
-			findByLabelText,
 		} = app;
 		console.debug('Click on 1:05 PM');
 		await userWithoutPointerEventsCheck.click(
@@ -124,13 +123,17 @@ client(__filename, () => {
 		await findByRole('heading', {name: 'Cancel this appointment'});
 
 		console.debug('Set cancellation reason');
-		await user.click(await findByLabelText('Cancellation reason'));
+		console.debug('Open cancellation reason choice menu');
 		await user.click(
 			await findByRole(
-				'option',
-				{name: 'patient-cancelled'},
-				{timeout: 10_000},
+				'button',
+				{name: 'Please choose a reason for the cancellation (required)'},
+				{timeout: 5000},
 			),
+		);
+		console.debug('Choose cancellation reason');
+		await user.click(
+			await findByRole('option', {name: 'patient-cancelled'}, {timeout: 5000}),
 		);
 		console.debug('Set cancellation explanation');
 		await user.type(
