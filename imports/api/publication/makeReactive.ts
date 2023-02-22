@@ -13,10 +13,15 @@ const makeReactive = <T, U = T>(
 	cursor: Mongo.Cursor<T, U>,
 	events: Events,
 	_allow_unordered = false,
-): boolean => {
+): void => {
 	// NOTE Adapted from
 	// https://github.com/meteor/meteor/blob/9b6c797f09e4a16068541667cdde5b3eabfc5c95/packages/minimongo/cursor.js#L358-L377
-	if (!Tracker.active) return false;
+
+	if (!Tracker.active) return;
+
+	// @ts-expect-error cursor.reactive is a harmless property check. Does not
+	// exist on server.
+	if (!cursor.reactive) return;
 
 	const dependency = new Tracker.Dependency();
 	const notify = dependency.changed.bind(dependency);
@@ -34,7 +39,6 @@ const makeReactive = <T, U = T>(
 	// observeChanges will stop() when this computation is invalidated
 	// @ts-expect-error Types are wrong.
 	cursor.observeChanges({...handlers, ...options});
-	return true;
 };
 
 export default makeReactive;

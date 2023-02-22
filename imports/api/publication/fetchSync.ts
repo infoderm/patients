@@ -12,23 +12,21 @@ const fetchSync = <T>(cursor: Mongo.Cursor<T>) => {
 	// fetch is deprecated.
 	const items: T[] = [];
 
-	const observer = cursor.observe({
-		addedAt(document, atIndex, _before) {
-			// TODO Use something more efficient.
-			items.splice(atIndex, 0, document);
-		},
-	});
-
-	if (
-		!makeReactive(cursor, {
-			addedBefore: true,
-			removed: true,
-			changed: true,
-			movedBefore: true,
+	cursor
+		.observe({
+			addedAt(document, atIndex, _before) {
+				// TODO Use something more efficient.
+				items.splice(atIndex, 0, document);
+			},
 		})
-	) {
-		observer.stop();
-	}
+		.stop();
+
+	makeReactive(cursor, {
+		addedBefore: true,
+		removed: true,
+		changed: true,
+		movedBefore: true,
+	});
 
 	return items;
 };
