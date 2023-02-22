@@ -38,7 +38,7 @@ import {msToString} from '../../api/duration';
 import {type AppointmentDocument} from '../../api/collection/appointments';
 
 import {patients} from '../../api/patients';
-import {useSetting} from '../settings/hooks';
+import {useSettingCached} from '../settings/hooks';
 
 import useIntersectingEvents from '../events/useIntersectingEvents';
 
@@ -111,7 +111,7 @@ const AppointmentDialog = ({
 }: AppointmentDialogProps) => {
 	const navigate = useNavigate();
 
-	const {loading, value: appointmentDuration} = useSetting(
+	const {loading, value: appointmentDuration} = useSettingCached(
 		'appointment-duration',
 	);
 
