@@ -1,13 +1,13 @@
 import {useRef, useEffect} from 'react';
 
 const useHasMounted = () => {
-	const componentWasMounted = useRef(false);
+	const componentHasMounted = useRef(false);
 
 	useEffect(() => {
-		componentWasMounted.current = true;
+		componentHasMounted.current = true;
 	}, []);
 
-	return () => componentWasMounted.current;
+	return () => componentHasMounted.current;
 };
 
 export default useHasMounted;
