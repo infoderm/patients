@@ -1,11 +1,5 @@
-import {useCallback, useState} from 'react';
+import useUniqueObject from './useUniqueObject';
 
-const useForceUpdate = () => {
-	// eslint-disable-next-line react/hook-use-state
-	const [, updateState] = useState<object>();
-	return useCallback(() => {
-		updateState({});
-	}, []);
-};
+const useForceUpdate = () => useUniqueObject()[1];
 
 export default useForceUpdate;
