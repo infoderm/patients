@@ -1,35 +1,37 @@
 import {Meteor} from 'meteor/meteor';
-import {useTracker} from 'meteor/react-meteor-data';
-// import {useSubscribe} from 'meteor/react-meteor-data';
+import {Tracker} from 'meteor/tracker';
+import {useState, useEffect} from 'react';
 
-import useHasMounted from '../../ui/hooks/useHasMounted';
 import subscribe from './subscribe';
 import type Publication from './Publication';
-
-// const useSubscription = ({name}: Publication, ...args: any[]) =>
-// useSubscribe(name, ...args);
-
-// What follows is adapted from
-// https://github.com/meteor/react-packages/blob/284623702436500a2e01c98feac487ad0e3acdea/packages/react-meteor-data/useSubscribe.ts#L1-L28
-// using hasMounted to skip updates that happen before the component has
-// mounted.
 
 const useSubscriptionClient = (
 	publication?: Publication,
 	...args: any[]
 ): (() => boolean) => {
-	const hasMounted = useHasMounted();
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		setLoading(true);
+		const computation = Tracker.nonreactive(() =>
+			Tracker.autorun(() => {
+				const ready = !publication || subscribe(publication, ...args).ready();
+				if (updateOnReady) {
+					setLoading(!ready);
+				}
+			}),
+		);
+
+		// Stop the computation on when publication changes or unmount.
+		return () => {
+			computation.stop();
+		};
+	}, [publication, JSON.stringify(args)]);
+
 	let updateOnReady = false;
-
-	const isReady = useTracker(
-		() => !publication || subscribe(publication, ...args).ready(),
-		// @ts-expect-error Types are wrong.
-		() => !updateOnReady || !hasMounted(),
-	);
-
 	return () => {
 		updateOnReady = true;
-		return !isReady;
+		return loading;
 	};
 };
 
