@@ -1,6 +1,6 @@
 import {type Mongo} from 'meteor/mongo';
 
-import makeReactive from './makeReactive';
+import makeCursorReactive from './makeCursorReactive';
 
 /**
  * Synchronous cursor fetch.
@@ -21,7 +21,7 @@ const fetchSync = <T>(cursor: Mongo.Cursor<T>) => {
 		})
 		.stop();
 
-	makeReactive(cursor, {
+	makeCursorReactive(cursor, {
 		addedBefore: true,
 		removed: true,
 		changed: true,

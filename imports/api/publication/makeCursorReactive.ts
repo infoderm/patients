@@ -9,7 +9,7 @@ type Events = {
 	removed?: boolean;
 };
 
-const makeReactive = <T, U = T>(
+const makeCursorReactive = <T, U = T>(
 	cursor: Mongo.Cursor<T, U>,
 	events: Events,
 	_allow_unordered = false,
@@ -41,4 +41,4 @@ const makeReactive = <T, U = T>(
 	cursor.observeChanges({...handlers, ...options});
 };
 
-export default makeReactive;
+export default makeCursorReactive;
