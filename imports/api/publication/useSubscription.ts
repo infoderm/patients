@@ -2,6 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Tracker} from 'meteor/tracker';
 import {useState, useEffect} from 'react';
 
+import useChanged from '../../ui/hooks/useChanged';
+
 import subscribe from './subscribe';
 import type Publication from './Publication';
 
@@ -10,6 +12,8 @@ const useSubscriptionClient = (
 	...args: any[]
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
+
+	const deps = [publication, JSON.stringify(args)];
 
 	useEffect(() => {
 		setLoading(true);
@@ -26,12 +30,15 @@ const useSubscriptionClient = (
 		return () => {
 			computation.stop();
 		};
-	}, [publication, JSON.stringify(args)]);
+	}, deps);
+
+	const effectWillTrigger = useChanged(deps);
+	const userFacingLoadingState = effectWillTrigger || loading;
 
 	let updateOnReady = false;
 	return () => {
 		updateOnReady = true;
-		return loading;
+		return userFacingLoadingState;
 	};
 };
 
