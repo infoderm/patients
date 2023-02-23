@@ -303,7 +303,6 @@ const AppointmentDialog = ({
 						<FormControl fullWidth>
 							<InputLabel htmlFor="duration">Duration</InputLabel>
 							<Select
-								readOnly={loading}
 								value={duration}
 								inputProps={{
 									name: 'duration',
