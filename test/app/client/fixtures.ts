@@ -1,4 +1,5 @@
 import {
+	configure,
 	getQueriesForElement,
 	fireEvent,
 	waitForElementToBeRemoved,
@@ -6,6 +7,10 @@ import {
 	type BoundFunctions,
 } from '@testing-library/dom';
 import userEvent, {PointerEventsCheckLevel} from '@testing-library/user-event';
+
+configure({
+	asyncUtilTimeout: 2000,
+});
 
 type UserEvent = ReturnType<typeof userEvent.setup>;
 
