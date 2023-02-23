@@ -20,9 +20,7 @@ const useSubscriptionClient = (
 		const computation = Tracker.nonreactive(() =>
 			Tracker.autorun(() => {
 				const ready = !publication || subscribe(publication, ...args).ready();
-				if (updateOnReady) {
-					setLoading(!ready);
-				}
+				setLoading(!ready);
 			}),
 		);
 
@@ -35,11 +33,7 @@ const useSubscriptionClient = (
 	const effectWillTrigger = useChanged(deps);
 	const userFacingLoadingState = effectWillTrigger || loading;
 
-	let updateOnReady = false;
-	return () => {
-		updateOnReady = true;
-		return userFacingLoadingState;
-	};
+	return () => userFacingLoadingState;
 };
 
 const useSubscriptionServer =
