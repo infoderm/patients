@@ -107,11 +107,15 @@ const ReactiveAttachmentsGallery = ({
 		attachmentsInfo.map((x) => [x.attachmentId, x]),
 	);
 
+	const filteredAttachments = attachments.filter((attachment) =>
+		attachmentsInfoMap.has(attachment._id),
+	);
+
 	return (
 		<StaticAttachmentsGallery
 			loading={loading}
 			attachmentsInfo={attachmentsInfoMap}
-			attachments={attachments}
+			attachments={filteredAttachments}
 		/>
 	);
 };
