@@ -16,7 +16,6 @@ const useSubscriptionClient = (
 	const deps = [publication, JSON.stringify(args)];
 
 	useEffect(() => {
-		setLoading(true);
 		const computation = Tracker.nonreactive(() =>
 			Tracker.autorun(() => {
 				const ready = !publication || subscribe(publication, ...args).ready();
