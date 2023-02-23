@@ -9,7 +9,7 @@ import {Mongo} from 'meteor/mongo';
 
 import {useEffect, useMemo, type DependencyList} from 'react';
 
-import areEqual from 'react-fast-compare';
+import areDeepEqual from 'react-fast-compare';
 
 import useUniqueObject from '../../ui/hooks/useUniqueObject';
 
@@ -71,12 +71,13 @@ const useTrackerClientImpl = <T = any>(
 
 	useEffect(() => {
 		let prevData = data;
+
 		const computation = Tracker.nonreactive(() =>
 			Tracker.autorun((c: Tracker.Computation) => {
 				const nextData = reactiveFn(c);
 				if (
-					(!c.firstRun || !areEqual(prevData, nextData)) &&
-					!skipUpdate?.(data, nextData)
+					(!c.firstRun || !areDeepEqual(prevData, nextData)) &&
+					!skipUpdate?.(prevData, nextData)
 				) {
 					prevData = nextData;
 					forceUpdate();
