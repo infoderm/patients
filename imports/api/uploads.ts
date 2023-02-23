@@ -145,7 +145,7 @@ export const Uploads = new FilesCollection<MetadataType>({
 	downloadRoute: '/cdn/storage',
 	allowClientCode: true,
 	onBeforeUpload(file) {
-		console.debug({file});
+		console.debug({file, chunkId: this.chunkId, eof: this.eof});
 		if (!this.userId) {
 			return 'Must be logged in to upload a file.';
 		}
@@ -158,23 +158,61 @@ export const Uploads = new FilesCollection<MetadataType>({
 	},
 	onAfterUpload(upload) {
 		console.debug({upload});
-		this.collection.update(upload._id, {
-			$set: {
-				'meta.createdAt': new Date(),
-				'meta.isDeleted': false,
-			},
-		});
+		const createdAt = new Date();
+		// TODO Find a way to set this on insertion. The only reason this code
+		// is so complicated is because in tests, things move so fast that we
+		// could have marked an upload as deleted before this gets a chance to
+		// run.
+		this.collection
+			.rawCollection()
+			.updateOne(
+				{_id: upload._id, 'meta.isDeleted': {$exists: false}},
+				{
+					$set: {
+						'meta.createdAt': createdAt,
+						'meta.isDeleted': false,
+					},
+				},
+			)
+			.then((result) => {
+				return result.matchedCount === 0
+					? this.collection.rawCollection().updateOne(
+							{_id: upload._id},
+							{
+								$set: {
+									'meta.createdAt': createdAt,
+								},
+							},
+					  )
+					: result;
+			})
+			.catch((error) => {
+				console.error(
+					`Failed to initialize metadata for upload ${upload._id}.`,
+				);
+				console.debug(error);
+			});
 
 		const unlink = (versionName: string) => {
 			// Unlink files from FS
-			const document = this.collection.findOne(upload._id);
-			if (document !== undefined) {
-				this.unlink(document, versionName);
-			} else {
-				console.error(
-					`Could not unlink upload ${upload._id} because it could not be found.`,
-				);
-			}
+			this.collection
+				.rawCollection()
+				.findOne({_id: upload._id})
+				.then((document) => {
+					if (document === undefined) {
+						throw new Error(
+							`Could not unlink upload ${upload._id} because it could not be found.`,
+						);
+					}
+
+					this.unlink(document, versionName);
+				})
+				.catch((error) => {
+					console.error(
+						`Error while unlinking ${versionName} file for ${upload._id} after upload.`,
+					);
+					console.debug(error);
+				});
 		};
 
 		// Move file to GridFS
@@ -205,16 +243,32 @@ export const Uploads = new FilesCollection<MetadataType>({
 				// once we are finished, we attach the gridFS Object id on the
 				// FilesCollection document's meta section and finally unlink the
 				// upload file from the filesystem
-				.on(
-					'finish',
-					Meteor.bindEnvironment((version) => {
-						const property = `versions.${versionName}.meta.gridFsFileId`;
-						this.collection.update(upload._id, {
-							$set: {[property]: version._id.toHexString()},
+				.on('finish', (version) => {
+					const property = `versions.${versionName}.meta.gridFsFileId`;
+					const versionId = version._id.toHexString();
+					this.collection
+						.rawCollection()
+						.updateOne(
+							{_id: upload._id},
+							{
+								$set: {[property]: versionId},
+							},
+						)
+						.then((result) => {
+							if (result.matchedCount === 0) {
+								throw new Error(
+									`Could not find upload ${upload._id} to attach version to.`,
+								);
+							}
+						})
+						.catch((error) => {
+							console.error(
+								`Failed to attach version ${versionName} to upload ${upload._id}.`,
+							);
+							console.debug(error);
 						});
-						unlink(versionName);
-					}),
-				);
+					unlink(versionName);
+				});
 		});
 	},
 	protected(fileObj) {
