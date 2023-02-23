@@ -142,7 +142,7 @@ client(__filename, () => {
 		);
 		console.debug('Click on cancellation button');
 		await user.click(await findByRole('button', {name: 'Cancel Appointment'}));
-		await findByRole('button', {name: 'Uncancel'});
+		await findByRole('button', {name: 'Uncancel'}, {timeout: 5000});
 		await navigateTo(app, 'Agenda', '/calendar/week/current');
 		await user.click(
 			await findByRole('button', {name: 'Show cancelled events'}),

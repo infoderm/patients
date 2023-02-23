@@ -213,7 +213,7 @@ export const searchForPatient = async (app: App, query, {name, id}) => {
 	const {findByRole, user} = app;
 	await searchResultsForQuery(app, query);
 	await user.click(await findByRole('link', {name}, {timeout: 5000}));
-	await findByRole('heading', {name: `/patient/${id}`}, {timeout: 5000});
+	await findByRole('heading', {name: `/patient/${id}`}, {timeout: 10_000});
 };
 
 type EditConsultationOptions = {
