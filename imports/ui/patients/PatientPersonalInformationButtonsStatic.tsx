@@ -18,7 +18,7 @@ import {type PatientDocument} from '../../api/collection/patients';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 import AttachFileButton from '../attachments/AttachFileButton';
 
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 
 import {documentDiff} from '../../api/update';
 import {type reducer} from './usePatientPersonalInformationReducer';

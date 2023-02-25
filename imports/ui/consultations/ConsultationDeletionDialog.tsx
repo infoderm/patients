@@ -22,7 +22,7 @@ import ConfirmationTextField, {
 import remove from '../../api/endpoint/consultations/remove';
 import CancelButton from '../button/CancelButton';
 import DeleteButton from '../button/DeleteButton';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {

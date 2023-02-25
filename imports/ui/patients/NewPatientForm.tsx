@@ -33,7 +33,7 @@ import patientsInsert from '../../api/endpoint/patients/insert';
 import call from '../../api/endpoint/call';
 
 import useBirthdatePickerProps from '../birthdate/useBirthdatePickerProps';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 
 const PREFIX = 'NewPatientForm';
 

@@ -7,7 +7,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import {useSnackbar} from 'notistack';
 import loginWithPassword from '../../api/user/loginWithPassword';
 
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {

@@ -23,7 +23,7 @@ import CancelButton from '../button/CancelButton';
 import ConfirmationTextField, {
 	useConfirmationTextFieldState,
 } from '../input/ConfirmationTextField';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 import StaticPatientCard from './StaticPatientCard';
 import type CardPatientProjection from './CardPatientProjection';

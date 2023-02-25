@@ -23,7 +23,7 @@ import ConfirmationTextField, {
 
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const Thumbnail = styled(AttachmentThumbnail)({

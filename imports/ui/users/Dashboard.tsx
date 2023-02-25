@@ -11,7 +11,7 @@ import logout from '../../api/user/logout';
 
 import reconnect from '../../api/connection/reconnect';
 import disconnect from '../../api/connection/disconnect';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useUniqueId from '../hooks/useUniqueId';
 import ChangePasswordPopover from './ChangePasswordPopover';
 import useStatus from './useStatus';

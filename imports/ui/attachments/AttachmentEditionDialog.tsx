@@ -15,7 +15,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import withLazyOpening from '../modal/withLazyOpening';
 import rename from '../../api/endpoint/uploads/rename';
 import CancelButton from '../button/CancelButton';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {

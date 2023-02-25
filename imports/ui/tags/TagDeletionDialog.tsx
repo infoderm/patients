@@ -20,7 +20,7 @@ import DeleteButton from '../button/DeleteButton';
 import CancelButton from '../button/CancelButton';
 
 import type Endpoint from '../../api/endpoint/Endpoint';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 import {type TagMetadata, type TagNameFields} from '../../api/tags/TagDocument';
 

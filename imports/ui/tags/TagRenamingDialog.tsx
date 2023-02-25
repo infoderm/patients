@@ -26,7 +26,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import type Endpoint from '../../api/endpoint/Endpoint';
 import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 import type GenericQueryHook from '../../api/GenericQueryHook';
 import RenameButton from '../button/RenameButton';

@@ -28,7 +28,7 @@ import saveTextAs from '../output/saveTextAs';
 import {books} from '../../api/books';
 import withLazyOpening from '../modal/withLazyOpening';
 import csv from '../../api/endpoint/books/csv';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {

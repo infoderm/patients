@@ -25,7 +25,7 @@ import ConfirmationTextField, {
 import restoreAppointment from '../../api/endpoint/consultations/restoreAppointment';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import CancelButton from '../button/CancelButton';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {

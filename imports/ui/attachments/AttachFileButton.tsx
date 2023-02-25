@@ -14,7 +14,7 @@ import type Endpoint from '../../api/endpoint/Endpoint';
 import {type MetadataType, Uploads} from '../../api/uploads';
 
 import InputFileButton from '../input/InputFileButton';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 
 type Props = {
 	endpoint: Endpoint<any>;

@@ -12,7 +12,7 @@ import {useCurrencyFormat} from '../../i18n/currency';
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
-import debounceSnackbar from '../../util/debounceSnackbar';
+import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {
