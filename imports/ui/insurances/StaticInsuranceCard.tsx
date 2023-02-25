@@ -13,7 +13,7 @@ import StaticPatientChip, {
 } from '../patients/StaticPatientChip';
 
 import {useInsuranceStats, usePatientsInsuredBy} from '../../api/insurances';
-import {myEncodeURIComponent} from '../../util/uri';
+import {myEncodeURIComponent} from '../../lib/uri';
 import type TagDocument from '../../api/tags/TagDocument';
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';

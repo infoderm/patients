@@ -9,7 +9,7 @@ import Chip, {type ChipProps} from '@mui/material/Chip';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
-import {myEncodeURIComponent} from '../../util/uri';
+import {myEncodeURIComponent} from '../../lib/uri';
 import {type DocumentDocument} from '../../api/collection/documents';
 import useDocumentVersions from './useDocumentVersions';
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useParams} from 'react-router-dom';
 
-import {myDecodeURIComponent} from '../../util/uri';
+import {myDecodeURIComponent} from '../../lib/uri';
 
 import branch, {type BranchProps} from './branch';
 

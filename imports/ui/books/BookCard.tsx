@@ -10,7 +10,7 @@ import StaticTagCard from '../tags/StaticTagCard';
 
 import {books} from '../../api/books';
 
-import {myEncodeURIComponent} from '../../util/uri';
+import {myEncodeURIComponent} from '../../lib/uri';
 
 import {useDateFormatRange} from '../../i18n/datetime';
 import useBookStats from './useBookStats';

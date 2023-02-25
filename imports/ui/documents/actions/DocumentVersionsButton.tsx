@@ -6,7 +6,7 @@ import Button, {type ButtonProps} from '@mui/material/Button';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
-import {myEncodeURIComponent} from '../../../util/uri';
+import {myEncodeURIComponent} from '../../../lib/uri';
 import useDocumentVersions from '../useDocumentVersions';
 import {type DocumentDocument} from '../../../api/collection/documents';
 

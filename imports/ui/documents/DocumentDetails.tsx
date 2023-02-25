@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import {myDecodeURIComponent} from '../../util/uri';
+import {myDecodeURIComponent} from '../../lib/uri';
 import {type DocumentId} from '../../api/collection/documents';
 import DocumentCard from './DocumentCard';
 import useDocument from './useDocument';

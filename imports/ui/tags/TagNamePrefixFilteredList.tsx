@@ -3,7 +3,7 @@ import {Route, Routes} from 'react-router-dom';
 
 import type PropsOf from '../../lib/types/PropsOf';
 
-import {myEncodeURIComponent} from '../../util/uri';
+import {myEncodeURIComponent} from '../../lib/uri';
 import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';

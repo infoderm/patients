@@ -14,7 +14,7 @@ import StaticPatientChip, {
 
 import {useDoctorStats, usePatientsGoingToDoctor} from '../../api/doctors';
 
-import {myEncodeURIComponent} from '../../util/uri';
+import {myEncodeURIComponent} from '../../lib/uri';
 import type TagDocument from '../../api/tags/TagDocument';
 import DoctorRenamingDialog from './DoctorRenamingDialog';
 import DoctorDeletionDialog from './DoctorDeletionDialog';
