@@ -1,6 +1,6 @@
 import addMilliseconds from 'date-fns/addMilliseconds';
 import {optional, validate, where} from '../lib/schema';
-import removeUndefined from '../util/removeUndefined';
+import removeUndefined from '../lib/object/removeUndefined';
 import {type Entry, makeSanitize, yieldKey} from './update';
 import {
 	type AppointmentComputedFields,

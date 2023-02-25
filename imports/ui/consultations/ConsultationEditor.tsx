@@ -14,7 +14,7 @@ import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
 
-import removeUndefined from '../../util/removeUndefined';
+import removeUndefined from '../../lib/object/removeUndefined';
 import call from '../../api/endpoint/call';
 
 import Loading from '../navigation/Loading';
