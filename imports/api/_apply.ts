@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {DDP} from 'meteor/ddp';
-import promisify from '../util/promisify';
+import promisify from '../lib/async/promisify';
 import type Options from './endpoint/Options';
 
 const __meteor_apply_promisified = promisify<unknown>(

@@ -1,7 +1,7 @@
 import assert from 'assert';
 // @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
-import promisify from '../util/promisify';
+import promisify from './async/promisify';
 
 type SUPPORTED_HASH_ALGOS = 'sha256';
 type SUPPORTED_KEY_ENCODING = 'base64';
