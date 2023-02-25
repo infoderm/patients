@@ -1,5 +1,5 @@
 import {type useNavigate} from 'react-router-dom';
-import createPromise from '../../util/createPromise';
+import createPromise from '../../lib/async/createPromise';
 import call from '../endpoint/call';
 import insert from '../endpoint/documents/insert';
 

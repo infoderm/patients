@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import createPromise from '../../util/createPromise';
+import createPromise from '../../lib/async/createPromise';
 import call from '../endpoint/call';
 import insertMany from '../endpoint/drugs/insertMany';
 
