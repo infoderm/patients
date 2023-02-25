@@ -4,7 +4,7 @@ import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
 
 import {units as durationUnits} from '../../api/duration';
-import {mod} from '../../util/arithmetic';
+import {mod} from '../../lib/arithmetic';
 import {useWeekStartsOn} from '../../i18n/datetime';
 
 export const weekSlotsCyclicOrder = (weekStartsOn: number) =>

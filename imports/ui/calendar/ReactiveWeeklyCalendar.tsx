@@ -57,7 +57,7 @@ import useAvailability from '../availability/useAvailability';
 import {type SlotDocument} from '../../api/collection/availability';
 import {generateDays, getDayOfWeekModulo} from '../../util/datetime';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
-import {mod} from '../../util/arithmetic';
+import {mod} from '../../lib/arithmetic';
 import type PropsOf from '../../lib/types/PropsOf';
 import useTimeSlotToString from '../settings/useTimeSlotToString';
 import useIsMounted from '../hooks/useIsMounted';
