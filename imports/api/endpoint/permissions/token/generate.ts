@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {beginningOfTime, endOfTime} from '../../../../util/datetime';
+import {beginningOfTime, endOfTime} from '../../../../lib/datetime';
 import {PermissionTokens} from '../../../collection/permissionTokens';
 
 import {genKey, type HMACConfig, sign} from '../../../../lib/hmac';

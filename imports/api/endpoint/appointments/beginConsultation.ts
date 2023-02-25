@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {thisYearsInterval} from '../../../util/datetime';
+import {thisYearsInterval} from '../../../lib/datetime';
 
 import {type ConsultationDocument} from '../../collection/consultations';
 

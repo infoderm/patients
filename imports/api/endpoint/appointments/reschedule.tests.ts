@@ -11,7 +11,7 @@ import {
 	newAppointmentFormData,
 } from '../../_dev/populate/appointments';
 import {slot} from '../../availability';
-import {beginningOfTime, endOfTime} from '../../../util/datetime';
+import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 import {dropIds, server, throws} from '../../../test/fixtures';
 import invoke from '../invoke';
 import appointmentsReschedule from './reschedule';

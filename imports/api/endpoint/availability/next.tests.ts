@@ -12,7 +12,7 @@ import {
 	beginningOfTime,
 	endOfTime,
 	someDateAtGivenDayOfWeek,
-} from '../../../util/datetime';
+} from '../../../lib/datetime';
 import {dropId, randomUserId, server} from '../../../test/fixtures';
 import nonOverlappingIntersection from '../../../lib/interval/nonOverlappingIntersection';
 import {weekSlotsCyclicOrder} from '../../../ui/settings/useWorkScheduleSort';

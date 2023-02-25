@@ -17,7 +17,7 @@ import {
 	ALL_WEEK_DAYS,
 	someDateAtGivenDayOfWeek,
 	someDateAtGivenPositionOfYear,
-} from '../util/datetime';
+} from '../lib/datetime';
 import useLocaleKey from './useLocale';
 
 const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {

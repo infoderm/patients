@@ -1,6 +1,6 @@
 import {indigo, pink} from '@mui/material/colors';
 
-import {ALL_WEEK_DAYS} from '../util/datetime';
+import {ALL_WEEK_DAYS} from '../lib/datetime';
 import {Settings} from './collection/settings';
 import findOneSync from './publication/findOneSync';
 

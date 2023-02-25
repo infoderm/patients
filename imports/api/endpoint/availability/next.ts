@@ -13,7 +13,7 @@ import {
 	initialSlot,
 	overlapsAfterDate,
 } from '../../availability';
-import {WEEK_MODULO} from '../../../util/datetime';
+import {WEEK_MODULO} from '../../../lib/datetime';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 export default define({

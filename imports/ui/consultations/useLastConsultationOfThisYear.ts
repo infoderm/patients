@@ -1,4 +1,4 @@
-import {thisYearsInterval} from '../../util/datetime';
+import {thisYearsInterval} from '../../lib/datetime';
 import {findLastConsultationInIntervalSync} from '../../api/consultations';
 import useSubscription from '../../api/publication/useSubscription';
 import useReactive from '../../api/publication/useReactive';

@@ -1,5 +1,5 @@
 import {createContext} from 'react';
-import {ALL_WEEK_DAYS} from '../../util/datetime';
+import {ALL_WEEK_DAYS} from '../../lib/datetime';
 
 const PlannerContext = createContext({
 	showCancelledEvents: false,

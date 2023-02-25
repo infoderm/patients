@@ -55,7 +55,7 @@ import useEvents from '../events/useEvents';
 
 import useAvailability from '../availability/useAvailability';
 import {type SlotDocument} from '../../api/collection/availability';
-import {generateDays, getDayOfWeekModulo} from '../../util/datetime';
+import {generateDays, getDayOfWeekModulo} from '../../lib/datetime';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import {mod} from '../../lib/arithmetic';
 import type PropsOf from '../../lib/types/PropsOf';

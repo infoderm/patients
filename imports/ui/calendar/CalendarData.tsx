@@ -17,7 +17,7 @@ import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
 import {useDateFormat} from '../../i18n/datetime';
 
-import {ALL_WEEK_DAYS, generateDays} from '../../util/datetime';
+import {ALL_WEEK_DAYS, generateDays} from '../../lib/datetime';
 import EventFragment from './EventFragment';
 import type Event from './Event';
 

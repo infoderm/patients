@@ -17,7 +17,7 @@ import {
 	endOfTime,
 	someDateAtGivenDayOfWeek,
 	WEEK_MODULO,
-} from '../util/datetime';
+} from '../lib/datetime';
 import add from '../lib/interval/add';
 import isEmpty from '../lib/interval/isEmpty';
 import isContiguous from '../lib/interval/isContiguous';
