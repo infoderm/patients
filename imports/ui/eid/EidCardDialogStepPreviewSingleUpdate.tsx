@@ -31,7 +31,7 @@ import {red, green} from '@mui/material/colors';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import diff from '../../util/diff';
-import {dataURL as pngDataURL} from '../../util/png';
+import pngDataURL from '../../lib/png/dataURL';
 
 import patientsUpdate from '../../api/endpoint/patients/update';
 import {patients} from '../../api/patients';

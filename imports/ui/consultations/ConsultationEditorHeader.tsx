@@ -5,7 +5,7 @@ import FaceIcon from '@mui/icons-material/Face';
 
 import {DateTimePicker} from '@mui/x-date-pickers';
 
-import {dataURL as pngDataURL} from '../../util/png';
+import pngDataURL from '../../lib/png/dataURL';
 
 import {useDateTimeMask} from '../../i18n/datetime';
 

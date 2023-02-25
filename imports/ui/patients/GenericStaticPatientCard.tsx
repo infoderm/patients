@@ -14,7 +14,7 @@ import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import {blue, pink, red, yellow} from '@mui/material/colors';
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 
-import {dataURL as pngDataURL} from '../../util/png';
+import pngDataURL from '../../lib/png/dataURL';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';

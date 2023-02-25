@@ -26,7 +26,7 @@ import {parseOneAddress, type ParsedMailbox} from 'email-addresses';
 
 import TextField from '../input/TextField';
 
-import {dataURL as pngDataURL} from '../../util/png';
+import pngDataURL from '../../lib/png/dataURL';
 
 import {useInsurancesFind} from '../../api/insurances';
 import {useDoctorsFind} from '../../api/doctors';

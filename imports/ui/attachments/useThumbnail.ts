@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 
-import eee from '../../util/eee';
+import eee from '../../lib/png/eee';
 
 import {thumbnailDataURL} from '../../lib/pdf/pdfthumbnails';
 

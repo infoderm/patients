@@ -2,7 +2,7 @@ import React from 'react';
 
 import type PropsOf from '../../lib/types/PropsOf';
 
-import eee from '../../util/eee';
+import eee from '../../lib/png/eee';
 import {thumb} from '../../api/attachments';
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 import useAttachment from './useAttachment';
