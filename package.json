@@ -148,7 +148,7 @@
     "husky": "8.0.3",
     "lint-staged": "13.1.2",
     "moment": "2.29.4",
-    "moment-timezone": "0.5.40",
+    "moment-timezone": "0.5.41",
     "mup": "1.5.10",
     "npm-check-updates": "16.7.9",
     "postinstall": "0.8.0",
