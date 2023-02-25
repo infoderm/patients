@@ -2,7 +2,7 @@ import React from 'react';
 
 import usePatient from '../patients/usePatient';
 import withLazyOpening from '../modal/withLazyOpening';
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 import AppointmentDialog from './AppointmentDialog';
 
 type AppointmentFromPatientIdDialogProps = {

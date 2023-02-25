@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Grid from '@mui/material/Grid';
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 
 import {type AttachmentDocument} from '../../api/collection/attachments';
 import AttachmentCard, {type AttachmentInfo} from './AttachmentCard';

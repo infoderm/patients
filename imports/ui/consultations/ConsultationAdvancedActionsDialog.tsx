@@ -20,7 +20,7 @@ import {red} from '@mui/material/colors';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import AppointmentDeletionDialog from '../appointments/AppointmentDeletionDialog';
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 import ConsultationDeletionDialog from './ConsultationDeletionDialog';
 import ConsultationAppointmentRestorationDialog from './ConsultationAppointmentRestorationDialog';

@@ -3,7 +3,7 @@ import React from 'react';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 import Paginator from '../navigation/Paginator';
 import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';

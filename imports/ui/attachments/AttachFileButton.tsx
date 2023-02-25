@@ -7,7 +7,7 @@ import {
 	type OptionsObject as NotistackOptionsObject,
 } from 'notistack';
 
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 
 import call from '../../api/endpoint/call';
 import type Endpoint from '../../api/endpoint/Endpoint';

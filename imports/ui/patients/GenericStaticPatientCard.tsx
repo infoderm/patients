@@ -18,7 +18,7 @@ import {dataURL as pngDataURL} from '../../util/png';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 import {type PatientDocument} from '../../api/collection/patients';
 
 const PREFIX = 'GenericStaticPatientCard';

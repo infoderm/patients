@@ -1,5 +1,5 @@
 import React from 'react';
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 import ReactiveWeeklyCalendar from '../calendar/ReactiveWeeklyCalendar';
 import Planner from './Planner';
 

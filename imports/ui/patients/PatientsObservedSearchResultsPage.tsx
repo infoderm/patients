@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 
 import FixedFab from '../button/FixedFab';
 

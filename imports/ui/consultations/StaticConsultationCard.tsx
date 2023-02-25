@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';
 import Divider from '@mui/material/Divider';
 
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 
 import virtualFields from '../../api/consultations/virtualFields';
 

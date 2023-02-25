@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 
 import {myEncodeURIComponent} from '../../util/uri';
 import {escapeStringRegexp} from '../../api/string';

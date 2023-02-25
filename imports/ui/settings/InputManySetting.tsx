@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import Typography from '@mui/material/Typography';
 import SetPicker from '../input/SetPicker';
 
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 import {useSetting} from './hooks';
 
 type BaseProps = {

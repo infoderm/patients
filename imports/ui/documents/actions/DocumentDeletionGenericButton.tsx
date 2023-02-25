@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import type PropsOf from '../../../util/PropsOf';
+import type PropsOf from '../../../lib/types/PropsOf';
 
 import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentDeletionDialog from '../DocumentDeletionDialog';

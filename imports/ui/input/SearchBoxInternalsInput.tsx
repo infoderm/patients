@@ -3,7 +3,7 @@ import React from 'react';
 import {styled} from '@mui/material/styles';
 
 import InputBase from '@mui/material/InputBase';
-import type PropsOf from '../../util/PropsOf';
+import type PropsOf from '../../lib/types/PropsOf';
 
 type Props = {
 	expands?: boolean;
