@@ -30,7 +30,7 @@ import SearchBox from '../input/SearchBox';
 
 import CancelButton from '../button/CancelButton';
 
-import mergeFields from '../../util/mergeFields';
+import mergeFields from '../../api/query/mergeFields';
 
 import {type PatientIdFields} from '../../api/collection/patients';
 import {patients} from '../../api/patients';

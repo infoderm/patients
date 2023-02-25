@@ -8,7 +8,7 @@ import type PropsOf from '../../lib/types/PropsOf';
 import FixedFab from '../button/FixedFab';
 
 import {normalizeSearch} from '../../api/string';
-import mergeFields from '../../util/mergeFields';
+import mergeFields from '../../api/query/mergeFields';
 
 import Refresh from '../navigation/Refresh';
 import {type PatientCacheResult} from '../../api/collection/patients/search/cache';

@@ -3,7 +3,7 @@ import {useDebounce} from 'use-debounce';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 
-import mergeFields from '../../util/mergeFields';
+import mergeFields from '../../api/query/mergeFields';
 
 import {normalizeSearch} from '../../api/string';
 

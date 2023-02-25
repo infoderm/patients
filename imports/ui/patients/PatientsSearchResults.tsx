@@ -7,7 +7,7 @@ import call from '../../api/endpoint/call';
 import find from '../../api/endpoint/patients/find';
 
 import {myDecodeURIComponent} from '../../lib/uri';
-import mergeFields from '../../util/mergeFields';
+import mergeFields from '../../api/query/mergeFields';
 
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';

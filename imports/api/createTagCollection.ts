@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
-import mergeOptions from '../util/mergeOptions';
+import mergeOptions from './query/mergeOptions';
 
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';

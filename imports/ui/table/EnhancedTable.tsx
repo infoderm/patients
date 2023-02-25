@@ -11,7 +11,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 
-import mergeFields from '../../util/mergeFields';
+import mergeFields from '../../api/query/mergeFields';
 
 import remove from '../../api/endpoint/drugs/remove';
 import call from '../../api/endpoint/call';

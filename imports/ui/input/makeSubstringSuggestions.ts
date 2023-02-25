@@ -4,7 +4,7 @@ import {useDebounce} from 'use-debounce';
 
 import type GenericQueryHook from '../../api/GenericQueryHook';
 import {escapeStringRegexp} from '../../api/string';
-import mergeFields from '../../util/mergeFields';
+import mergeFields from '../../api/query/mergeFields';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 
