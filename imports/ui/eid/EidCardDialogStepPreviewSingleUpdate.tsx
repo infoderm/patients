@@ -30,7 +30,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import {red, green} from '@mui/material/colors';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import diff from '../../util/diff';
+import diff from '../../lib/lcs/diff';
 import pngDataURL from '../../lib/png/dataURL';
 
 import patientsUpdate from '../../api/endpoint/patients/update';
