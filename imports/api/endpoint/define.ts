@@ -31,13 +31,20 @@ const define = <R>(params: Params<R>): Endpoint<R> => {
 		options: simulate ? {returnStubValue: false, ...options} : options,
 	};
 
-	if (!testOnly || Meteor.isTest || Meteor.isAppTest) {
-		Meteor.methods({
-			async [params.name](...args: any[]) {
-				return invoke(endpoint, this, args);
-			},
-		});
+	if (testOnly) {
+		if (!Meteor.isTest && !Meteor.isAppTest) {
+			// NOTE Do not publish endpoint if not testing.
+			return endpoint;
+		}
+
+		console.warn(`Publishing test-only method '${params.name}'.`);
 	}
+
+	Meteor.methods({
+		async [params.name](...args: any[]) {
+			return invoke(endpoint, this, args);
+		},
+	});
 
 	return endpoint;
 };
