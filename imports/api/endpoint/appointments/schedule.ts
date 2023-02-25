@@ -8,7 +8,7 @@ import {
 import {availability} from '../../availability';
 
 import type TransactionDriver from '../../transaction/TransactionDriver';
-import {validate} from '../../../util/schema';
+import {validate} from '../../../lib/schema';
 
 import define from '../define';
 import compose from '../compose';

@@ -11,7 +11,7 @@ import {type ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
-import {validate} from '../../../util/schema';
+import {validate} from '../../../lib/schema';
 import createPatientForAppointment from './createPatient';
 
 export default define({

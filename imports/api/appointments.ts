@@ -1,5 +1,5 @@
 import addMilliseconds from 'date-fns/addMilliseconds';
-import {optional, validate, where} from '../util/schema';
+import {optional, validate, where} from '../lib/schema';
 import removeUndefined from '../util/removeUndefined';
 import {type Entry, makeSanitize, yieldKey} from './update';
 import {
