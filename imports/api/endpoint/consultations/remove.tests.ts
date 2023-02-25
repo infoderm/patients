@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
 import {Patients} from '../../collection/patients';
-import {randomUserId, server, throws} from '../../../test/fixtures';
+import {randomUserId, server, throws} from '../../../_test/fixtures';
 import {Consultations} from '../../collection/consultations';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';

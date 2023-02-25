@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime.js';
 
 import {assert} from 'chai';
 
-import {randomUserId, server, throws} from '../../../test/fixtures';
+import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
 import {settings, get} from '../../settings';

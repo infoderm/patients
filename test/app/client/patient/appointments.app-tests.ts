@@ -4,7 +4,7 @@ import {
 	historyBack,
 	randomPassword,
 	randomUserId,
-} from '../../../../imports/test/fixtures';
+} from '../../../../imports/_test/fixtures';
 
 import {
 	setupApp,

@@ -5,7 +5,7 @@ import {assert} from 'chai';
 import startOfYear from 'date-fns/startOfYear';
 import addYears from 'date-fns/addYears';
 
-import {randomUserId, server, throws} from '../../../test/fixtures';
+import {randomUserId, server, throws} from '../../../_test/fixtures';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 

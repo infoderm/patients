@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime.js';
 import React from 'react';
 import {render, waitForElementToBeRemoved} from '@testing-library/react';
 
-import {client, randomPassword, randomUserId} from '../test/fixtures';
+import {client, randomPassword, randomUserId} from '../_test/fixtures';
 import App from './App';
 
 const setup = async (jsx: JSX.Element) => {

@@ -2,8 +2,8 @@ import {
 	client,
 	randomPassword,
 	randomUserId,
-} from '../../../../imports/test/fixtures';
-import {randomPNGArrayBuffer} from '../../../../imports/test/png';
+} from '../../../../imports/_test/fixtures';
+import {randomPNGArrayBuffer} from '../../../../imports/_test/png';
 
 import {
 	setupApp,

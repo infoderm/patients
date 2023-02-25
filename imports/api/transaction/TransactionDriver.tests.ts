@@ -5,7 +5,7 @@ import {Mongo} from 'meteor/mongo';
 
 import {Random} from 'meteor/random';
 
-import {dropId, dropIds, server} from '../../test/fixtures';
+import {dropId, dropIds, server} from '../../_test/fixtures';
 import TestingTransactionDriver from './TestingTransactionDriver';
 import executeTransaction from './executeTransaction';
 import MeteorTransactionSimulationDriver from './MeteorTransactionSimulationDriver';

@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker';
 
-import {makeTemplate} from '../../../test/fixtures';
+import {makeTemplate} from '../../../_test/fixtures';
 
 import invoke from '../../endpoint/invoke';
 import insertDocument from '../../endpoint/documents/insert';

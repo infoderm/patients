@@ -13,7 +13,7 @@ import {
 	endOfTime,
 	someDateAtGivenDayOfWeek,
 } from '../../../lib/datetime';
-import {dropId, randomUserId, server} from '../../../test/fixtures';
+import {dropId, randomUserId, server} from '../../../_test/fixtures';
 import nonOverlappingIntersection from '../../../lib/interval/nonOverlappingIntersection';
 import {weekSlotsCyclicOrder} from '../../../ui/settings/useWorkScheduleSort';
 import {Availability} from '../../collection/availability';

@@ -4,7 +4,7 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
-import {server, setLike} from '../../../test/fixtures';
+import {server, setLike} from '../../../_test/fixtures';
 
 import {Patients} from '../../collection/patients';
 import {Consultations} from '../../collection/consultations';

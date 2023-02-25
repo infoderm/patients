@@ -3,7 +3,7 @@ import {
 	randomPassword,
 	randomUserId,
 	throws,
-} from '../../../imports/test/fixtures';
+} from '../../../imports/_test/fixtures';
 
 import {setupApp, createUserWithPassword, loginWithPassword} from './fixtures';
 

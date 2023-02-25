@@ -2,7 +2,7 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {dropIds, randomUserId, server, throws} from '../../../test/fixtures';
+import {dropIds, randomUserId, server, throws} from '../../../_test/fixtures';
 
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 

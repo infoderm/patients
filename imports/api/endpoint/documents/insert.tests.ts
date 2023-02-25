@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime.js';
 import 'core-js/features/string/replace-all';
 import {assert} from 'chai';
 
-import {randomUserId, server, throws} from '../../../test/fixtures';
+import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import {Documents} from '../../collection/documents';
 import {newPatient} from '../../_dev/populate/patients';

@@ -7,7 +7,7 @@ import {Random} from 'meteor/random';
 import {Allergies} from '../../collection/allergies';
 import {newAllergy} from '../../_dev/populate/allergies';
 
-import {server, throws} from '../../../test/fixtures';
+import {server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
 import changeAllergyColor from './changeColor';

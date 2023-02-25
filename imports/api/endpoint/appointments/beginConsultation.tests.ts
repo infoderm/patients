@@ -8,7 +8,7 @@ import {
 	randomUserId,
 	server,
 	throws,
-} from '../../../test/fixtures';
+} from '../../../_test/fixtures';
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 
 import {Appointments} from '../../collection/appointments';

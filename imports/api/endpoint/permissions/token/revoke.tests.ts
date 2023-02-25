@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'regenerator-runtime/runtime.js';
 
-import {randomUserId, server, throws} from '../../../../test/fixtures';
+import {randomUserId, server, throws} from '../../../../_test/fixtures';
 import {decode, getPermissionsForToken} from '../../../permissions/token';
 
 import invoke from '../../invoke';

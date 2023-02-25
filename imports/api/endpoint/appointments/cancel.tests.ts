@@ -4,7 +4,7 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
-import {dropId, dropIds, server, throws} from '../../../test/fixtures';
+import {dropId, dropIds, server, throws} from '../../../_test/fixtures';
 
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 

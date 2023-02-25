@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker';
 
-import {makeTemplate} from '../../../test/fixtures';
+import {makeTemplate} from '../../../_test/fixtures';
 
 import {allergies} from '../../allergies';
 import executeTransaction from '../../transaction/executeTransaction';

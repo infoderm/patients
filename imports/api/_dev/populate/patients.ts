@@ -6,7 +6,7 @@ import {range} from '@iterable-iterator/range';
 
 import format from 'date-fns/format';
 
-import {makeTemplate} from '../../../test/fixtures';
+import {makeTemplate} from '../../../_test/fixtures';
 
 import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../../collection/patients';
 
