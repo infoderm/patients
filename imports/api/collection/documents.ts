@@ -14,8 +14,10 @@ export type DocumentResult = {
 	normal?: string;
 };
 
+export type DocumentId = string;
+
 export type DocumentDocument = {
-	_id: string;
+	_id: DocumentId;
 	owner: string;
 	encoding?: string;
 	decoded: string;

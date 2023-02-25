@@ -4,15 +4,10 @@ import {useParams} from 'react-router-dom';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
-import {Documents} from '../../api/collection/documents';
-
-import useSubscription from '../../api/publication/useSubscription';
-import useItem from '../../api/publication/useItem';
-import findOne from '../../api/publication/documents/findOne';
 import {myDecodeURIComponent} from '../../util/uri';
+import {type DocumentId} from '../../api/collection/documents';
 import DocumentCard from './DocumentCard';
-
-type DocumentId = string;
+import useDocument from './useDocument';
 
 type StaticDocumentDetailsProps = {
 	documentId: DocumentId;
@@ -42,18 +37,6 @@ const StaticDocumentDetails = ({
 
 type Params = {
 	id: string;
-};
-
-const useDocument = (documentId: DocumentId) => {
-	const isLoading = useSubscription(findOne, documentId);
-	const loading = isLoading();
-
-	const result = useItem(Documents, {_id: documentId}, undefined, [documentId]);
-
-	return {
-		loading,
-		result,
-	};
 };
 
 const ReactiveDocumentDetails = () => {
