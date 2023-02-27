@@ -1,9 +1,9 @@
 import {check} from 'meteor/check';
-import {type Mongo} from 'meteor/mongo';
 import {availability} from '../../availability';
 
 import {Appointments} from '../../collection/appointments';
 import {type ConsultationDocument} from '../../collection/consultations';
+import type Modifier from '../../Modifier';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
@@ -18,7 +18,7 @@ export default define({
 	transaction: unconditionallyUpdateById<ConsultationDocument>(
 		Appointments,
 		async (db: TransactionDriver, existing) => {
-			const modifier: Mongo.Modifier<ConsultationDocument> = {
+			const modifier: Modifier<ConsultationDocument> = {
 				$set: {
 					isCancelled: false,
 				},

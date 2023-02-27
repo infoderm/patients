@@ -1,5 +1,4 @@
 import {check} from 'meteor/check';
-import {type Mongo} from 'meteor/mongo';
 
 import {type ConsultationDocument} from '../../collection/consultations';
 
@@ -11,6 +10,7 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
+import type Modifier from '../../Modifier';
 
 export default define({
 	name: 'appointments.cancel',
@@ -33,7 +33,7 @@ export default define({
 		) => {
 			check(cancellationReason, String);
 			check(cancellationExplanation, String);
-			const modifier: Mongo.Modifier<ConsultationDocument> = {
+			const modifier: Modifier<ConsultationDocument> = {
 				$set: {
 					isCancelled: true,
 					cancellationReason,
