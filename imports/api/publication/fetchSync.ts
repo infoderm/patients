@@ -1,11 +1,10 @@
-import {type Mongo} from 'meteor/mongo';
-
+import type Cursor from './Cursor';
 import makeCursorReactive from './makeCursorReactive';
 
 /**
  * Synchronous cursor fetch.
  */
-const fetchSync = <T>(cursor: Mongo.Cursor<T>) => {
+const fetchSync = <T>(cursor: Cursor<T>) => {
 	// NOTE Adapted from
 	// https://github.com/meteor/react-packages/blob/d0645787dac675bbf5412cac0da9387b6315f5c4/packages/react-meteor-data/useFind.ts#L62-L72
 	// NOTE Uses cursor observing instead of cursor.fetch() because synchronous

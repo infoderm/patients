@@ -1,5 +1,5 @@
-import {type Mongo} from 'meteor/mongo';
 import {Tracker} from 'meteor/tracker';
+import type Cursor from './Cursor';
 
 type Events = {
 	added?: boolean;
@@ -10,7 +10,7 @@ type Events = {
 };
 
 const makeCursorReactive = <T, U = T>(
-	cursor: Mongo.Cursor<T, U>,
+	cursor: Cursor<T, U>,
 	events: Events,
 	_allow_unordered = false,
 ): void => {

@@ -5,23 +5,23 @@ import assert from 'assert';
 
 import {Meteor} from 'meteor/meteor';
 import {Tracker} from 'meteor/tracker';
-import {Mongo} from 'meteor/mongo';
 
 import {useEffect, useMemo, type DependencyList} from 'react';
 
 import areDeepEqual from 'react-fast-compare';
 
 import useUniqueObject from '../../ui/hooks/useUniqueObject';
+import Cursor from './Cursor';
 
-// Warns if data is a Mongo.Cursor or a POJO containing a Mongo.Cursor.
+// Warns if data is a Cursor or a POJO containing a Cursor.
 function checkCursor(data: any): void {
 	let shouldWarn = false;
-	if (Mongo && data && typeof data === 'object') {
-		if (data instanceof Mongo.Cursor) {
+	if (data && typeof data === 'object') {
+		if (data instanceof Cursor) {
 			shouldWarn = true;
 		} else if (Object.getPrototypeOf(data) === Object.prototype) {
 			Object.keys(data).forEach((key) => {
-				if (data[key] instanceof Mongo.Cursor) {
+				if (data[key] instanceof Cursor) {
 					shouldWarn = true;
 				}
 			});
@@ -30,7 +30,7 @@ function checkCursor(data: any): void {
 
 	if (shouldWarn) {
 		console.warn(
-			'Warning: your reactive function is returning a Mongo cursor. ' +
+			'Warning: your reactive function is returning a cursor. ' +
 				'This value will not be reactive. You probably want to call ' +
 				'`.fetch()` on the cursor before returning it.',
 		);
