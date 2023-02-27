@@ -2,7 +2,6 @@ import React from 'react';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
 
 import dateFormat from 'date-fns/format';
 
@@ -12,11 +11,12 @@ import {groupby} from '@iterable-iterator/group';
 
 import Loading from '../navigation/Loading';
 
+import makeStyles from '../styles/makeStyles';
 import useAttachments from './useAttachments';
 import type AttachmentInfo from './AttachmentInfo';
 import AttachmentsGrid from './AttachmentsGrid';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
 	group: {
 		padding: theme.spacing(2),
 		marginBottom: theme.spacing(2),
@@ -34,7 +34,7 @@ const StaticAttachmentsGallery = ({
 	attachmentsInfo,
 	attachments,
 }: StaticAttachmentsGalleryProps) => {
-	const classes = useStyles();
+	const {classes} = useStyles();
 
 	if (loading) {
 		return <Loading />;

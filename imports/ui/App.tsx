@@ -2,7 +2,9 @@ import React from 'react';
 
 import {BrowserRouter} from 'react-router-dom';
 
-import {ThemeProvider, StyledEngineProvider} from '@mui/material/styles';
+import {CacheProvider} from '@emotion/react';
+import createCache from '@emotion/cache';
+import {ThemeProvider} from '@mui/material/styles';
 
 import {SnackbarProvider} from 'notistack';
 
@@ -21,6 +23,11 @@ import useUserTheme from './useUserTheme';
 import StatusNotifications from './StatusNotifications';
 import PlannerProvider from './planner/PlannerProvider';
 
+export const muiCache = createCache({
+	key: 'mui',
+	prepend: true,
+});
+
 const App = () => {
 	const locale = useLocale();
 	const theme = useUserTheme();
@@ -28,7 +35,7 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
-				<StyledEngineProvider injectFirst>
+				<CacheProvider value={muiCache}>
 					<ThemeProvider theme={theme}>
 						<ModalProvider>
 							<CssBaseline />
@@ -43,7 +50,7 @@ const App = () => {
 							</PlannerProvider>
 						</ModalProvider>
 					</ThemeProvider>
-				</StyledEngineProvider>
+				</CacheProvider>
 			</LocalizationProvider>
 		</BrowserRouter>
 	);

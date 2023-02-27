@@ -1,12 +1,11 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
-
 import MuiTextField, {
 	type TextFieldProps as MuiTextFieldProps,
 } from '@mui/material/TextField';
+import makeStyles from '../styles/makeStyles';
 
-const styles = () => ({
+const useStyles = makeStyles()({
 	readOnlyInput: {
 		'&::before': {
 			border: '0 !important',
@@ -17,8 +16,6 @@ const styles = () => ({
 	},
 });
 
-const useStyles = makeStyles(styles);
-
 type AddedProps = {
 	readOnly?: boolean;
 };
@@ -26,7 +23,7 @@ type AddedProps = {
 type Props = MuiTextFieldProps & AddedProps;
 
 const TextField = React.forwardRef<any, Props>((props, ref) => {
-	const classes = useStyles();
+	const {classes} = useStyles();
 
 	const {readOnly, InputProps, inputProps, ...rest} = props;
 

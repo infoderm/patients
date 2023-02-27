@@ -1,57 +1,34 @@
 import React from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
-import {darken} from '@mui/material/styles';
-import classNames from 'classnames';
+import {styled, darken} from '@mui/material/styles';
 
 import Chip, {type ChipProps} from '@mui/material/Chip';
 
 import {colord} from 'colord';
 
-const styles = {
-	chip({color}) {
-		const backgroundColor = color;
-		const foregroundColor = color
-			? colord(color).isLight()
-				? '#111'
-				: '#ddd'
-			: undefined;
-		return {
-			backgroundColor,
-			color: foregroundColor,
-			'&:hover, &:focus': {
-				backgroundColor: backgroundColor && darken(backgroundColor, 0.1),
-			},
-		};
-	},
+type Props<C extends React.ElementType> = Omit<ChipProps<C>, 'color'> & {
+	color: string;
 };
 
-const useStyles = makeStyles(styles);
-
-type ColorChipExtraProps = {
-	color?: string;
-};
-
-const ColorChip = React.forwardRef(
-	(
-		{
-			color,
-			className,
-			component,
-			...rest
-		}: ColorChipExtraProps & Omit<ChipProps<typeof component>, 'color'>,
-		ref,
-	) => {
-		const classes = useStyles({color});
-		return (
-			<Chip
-				ref={ref}
-				component={component}
-				className={classNames(classes.chip, className)}
-				{...rest}
-			/>
-		);
-	},
-);
-
+const ColorChip = styled(
+	React.forwardRef(
+		({color, component, ...rest}: Props<typeof component>, ref) => (
+			<Chip ref={ref} component={component} {...rest} />
+		),
+	),
+)(({color}) => {
+	const backgroundColor = color;
+	const foregroundColor = color
+		? colord(color).isLight()
+			? '#111'
+			: '#ddd'
+		: undefined;
+	return {
+		backgroundColor,
+		color: foregroundColor,
+		'&:hover, &:focus': {
+			backgroundColor: backgroundColor && darken(backgroundColor, 0.1),
+		},
+	};
+});
 export default ColorChip;

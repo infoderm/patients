@@ -1,38 +1,33 @@
 import React, {useState, useEffect} from 'react';
 
-import classNames from 'classnames';
-import {makeStyles, createStyles} from '@mui/styles';
-
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
 import {blue} from '@mui/material/colors';
+import makeStyles from '../styles/makeStyles';
 
-const styles = () =>
-	createStyles({
-		root: {
-			display: 'flex',
-			zIndex: 999_999_999,
-			visibility: 'hidden',
-			opacity: 0,
-			transition: 'all 0.5s ease-out',
-			alignItems: 'center',
-			justifyContent: 'center',
-			color: 'white',
-			position: 'fixed',
-			top: 0,
-			left: 0,
-			width: '100%',
-			height: '100vh',
-			backgroundColor: blue[900],
-		},
-		visible: {
-			visibility: 'visible',
-			opacity: 0.5,
-		},
-	});
-
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles()({
+	root: {
+		display: 'flex',
+		zIndex: 999_999_999,
+		visibility: 'hidden',
+		opacity: 0,
+		transition: 'all 0.5s ease-out',
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: 'white',
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		width: '100%',
+		height: '100vh',
+		backgroundColor: blue[900],
+	},
+	visible: {
+		visibility: 'visible',
+		opacity: 0.5,
+	},
+});
 
 type Options = {
 	[key: string]: any;
@@ -41,7 +36,7 @@ type Options = {
 };
 
 const WholeWindowDropZone = ({callback, className, ...rest}: Options) => {
-	const classes = useStyles();
+	const {classes, cx} = useStyles();
 	const [visible, setVisible] = useState(false);
 
 	useEffect(() => {
@@ -90,7 +85,7 @@ const WholeWindowDropZone = ({callback, className, ...rest}: Options) => {
 
 	return (
 		<div
-			className={classNames(
+			className={cx(
 				classes.root,
 				{
 					[classes.visible]: visible,

@@ -3,8 +3,6 @@ import React, {useEffect} from 'react';
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
 
-import {makeStyles, createStyles} from '@mui/styles';
-
 import Grid from '@mui/material/Grid';
 
 import Typography from '@mui/material/Typography';
@@ -23,6 +21,7 @@ import isValid from 'date-fns/isValid';
 import Button from '@mui/material/Button';
 
 import {parseOneAddress, type ParsedMailbox} from 'email-addresses';
+import makeStyles from '../styles/makeStyles';
 
 import TextField from '../input/TextField';
 
@@ -64,62 +63,59 @@ import usePatientPersonalInformationReducer from './usePatientPersonalInformatio
 import PatientPersonalInformationButtonsStatic from './PatientPersonalInformationButtonsStatic';
 import PatientTagCommentEditionDialog from './PatientTagCommentEditionDialog';
 
-const styles = (theme) =>
-	createStyles({
-		root: {
-			padding: theme.spacing(3),
-			paddingBottom: theme.spacing(5),
+const useStyles = makeStyles()((theme) => ({
+	root: {
+		padding: theme.spacing(3),
+		paddingBottom: theme.spacing(5),
+	},
+	photoPlaceHolder: {
+		display: 'inline-flex',
+		fontSize: '4rem',
+		margin: 0,
+		width: 140,
+		height: 200,
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: '#fff',
+		backgroundColor: '#999',
+		verticalAlign: 'top',
+		marginBottom: theme.spacing(2),
+	},
+	left: {
+		textAlign: 'center',
+	},
+	photo: {
+		width: 140,
+		height: 200,
+		verticalAlign: 'top',
+		marginBottom: theme.spacing(2),
+	},
+	formControl: {
+		overflow: 'auto',
+		'& input, & div': {
+			color: 'black !important',
 		},
-		photoPlaceHolder: {
-			display: 'inline-flex',
-			fontSize: '4rem',
-			margin: 0,
-			width: 140,
-			height: 200,
-			alignItems: 'center',
-			justifyContent: 'center',
-			color: '#fff',
-			backgroundColor: '#999',
-			verticalAlign: 'top',
-			marginBottom: theme.spacing(2),
+	},
+	setPicker: {
+		height: '100%',
+	},
+	multiline: {
+		height: '100%',
+		overflow: 'auto',
+		'& textarea': {
+			color: 'black !important',
 		},
-		left: {
-			textAlign: 'center',
-		},
-		photo: {
-			width: 140,
-			height: 200,
-			verticalAlign: 'top',
-			marginBottom: theme.spacing(2),
-		},
-		formControl: {
-			overflow: 'auto',
-			'& input, & div': {
-				color: 'black !important',
-			},
-		},
-		setPicker: {
-			height: '100%',
-		},
-		multiline: {
-			height: '100%',
-			overflow: 'auto',
-			'& textarea': {
-				color: 'black !important',
-			},
-		},
-		button: {
-			margin: theme.spacing(1),
-		},
-		problem: {
-			color: 'red',
-		},
-		noShowsAdornment: {
-			color: '#999',
-		},
-	});
-
-const useStyles = makeStyles(styles);
+	},
+	button: {
+		margin: theme.spacing(1),
+	},
+	problem: {
+		color: 'red',
+	},
+	noShowsAdornment: {
+		color: '#999',
+	},
+}));
 
 const tagToKey = (x) => x.name;
 const tagCreate = (name) => ({name, displayName: name});
@@ -192,7 +188,7 @@ const PatientPersonalInformationStatic = (
 		dirty,
 	);
 
-	const classes = useStyles();
+	const {classes} = useStyles();
 
 	const {value: reifiedNoShows} = useNoShowsForPatient(props.patient._id);
 

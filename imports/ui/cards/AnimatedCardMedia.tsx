@@ -1,6 +1,5 @@
 import React from 'react';
 
-import classnames from 'classnames';
 import {styled} from '@mui/material/styles';
 
 import {useTransition, animated} from 'react-spring';
@@ -10,15 +9,10 @@ import Skeleton from '@mui/material/Skeleton';
 const PREFIX = 'AnimatedCardMedia';
 
 const classes = {
-	container: `${PREFIX}-container`,
 	item: `${PREFIX}-item`,
 };
 
 const Root = styled('div')({
-	[`&.${classes.container}`]: {
-		position: 'relative',
-	},
-
 	[`& .${classes.item}`]: {
 		position: 'absolute',
 		top: 0,
@@ -49,7 +43,7 @@ const AnimatedCardMedia = ({
 	});
 
 	return (
-		<Root className={classnames(classes.container, className)}>
+		<Root className={className} sx={{position: 'relative'}}>
 			{transition((style, item) => {
 				const children =
 					(!loading && item !== '') || placeholder === undefined ? (

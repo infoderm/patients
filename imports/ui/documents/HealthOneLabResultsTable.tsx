@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {makeStyles, createStyles} from '@mui/styles';
 
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -8,58 +7,56 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import makeStyles from '../styles/makeStyles';
 import {
 	type DocumentDocument,
 	type DocumentResult,
 } from '../../api/collection/documents';
 import DocumentToolbar from './DocumentToolbar';
 
-const styles = (theme) =>
-	createStyles({
-		root: {
-			maxWidth: 1200,
-			margin: '0 auto',
-			marginTop: theme.spacing(3),
-			overflowX: 'auto',
+const useStyles = makeStyles()((theme) => ({
+	root: {
+		maxWidth: 1200,
+		margin: '0 auto',
+		marginTop: theme.spacing(3),
+		overflowX: 'auto',
+	},
+	table: {
+		minWidth: 700,
+	},
+	anomalyRow: {
+		backgroundColor: '#fa8',
+	},
+	unknownFlagRow: {
+		backgroundColor: '#f8a',
+	},
+	headerRow: {
+		backgroundColor: '#ddd',
+	},
+	subheaderRow: {
+		backgroundColor: '#eee',
+	},
+	endRow: {
+		'& th': {
+			color: '#666 !important',
 		},
-		table: {
-			minWidth: 700,
+		'& td': {
+			color: '#666 !important',
 		},
-		anomalyRow: {
-			backgroundColor: '#fa8',
+	},
+	commentRow: {
+		'& th': {
+			color: '#666 !important',
 		},
-		unknownFlagRow: {
-			backgroundColor: '#f8a',
+		'& td': {
+			color: '#666 !important',
 		},
-		headerRow: {
-			backgroundColor: '#ddd',
-		},
-		subheaderRow: {
-			backgroundColor: '#eee',
-		},
-		endRow: {
-			'& th': {
-				color: '#666 !important',
-			},
-			'& td': {
-				color: '#666 !important',
-			},
-		},
-		commentRow: {
-			'& th': {
-				color: '#666 !important',
-			},
-			'& td': {
-				color: '#666 !important',
-			},
-		},
-		row: {},
-		normalCell: {
-			color: '#444',
-		},
-	});
-
-const useStyles = makeStyles(styles);
+	},
+	row: {},
+	normalCell: {
+		color: '#444',
+	},
+}));
 
 type HealthOneLabResultsTableProps = {
 	document: DocumentDocument;
@@ -68,7 +65,7 @@ type HealthOneLabResultsTableProps = {
 const HealthOneLabResultsTable = ({
 	document,
 }: HealthOneLabResultsTableProps) => {
-	const classes = useStyles();
+	const {classes} = useStyles();
 	const [printSource, setPrintSource] = useState<HTMLTableElement>(null);
 
 	if (!document.results || document.results.length === 0) {

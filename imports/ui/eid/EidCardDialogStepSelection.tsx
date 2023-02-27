@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
-import makeStyles from '@mui/styles/makeStyles';
 import {alpha} from '@mui/material/styles';
-import classNames from 'classnames';
 
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -25,6 +23,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import {red, orange, green} from '@mui/material/colors';
+import makeStyles from '../styles/makeStyles';
 
 import SearchBox from '../input/SearchBox';
 
@@ -49,6 +48,7 @@ import PatientsGrid from '../patients/PatientsGrid';
 
 const DEFAULT_LIMIT = 3;
 const DEFAULT_FIELDS = {
+	// @ts-expect-error TODO Find a different solution to deduplicate queries. GraphQL?
 	...SelectablePatientCard.projection,
 	// We fetch the picture through a dedicated subscription to get live
 	// updates while avoiding double loading on init.
@@ -95,7 +95,7 @@ const usePatientsNormalizedNameSearch = ({normalizedName}) => {
 	return useObservedPatients(query, options, [normalizedName]);
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
 	expandButton: {},
 	expand: {
 		transform: 'rotate(0deg)',
@@ -133,7 +133,7 @@ const EidCardDialogStepSelection = ({
 	selected,
 	setSelected,
 }: Props) => {
-	const classes = useStyles();
+	const {classes, cx} = useStyles();
 	const dialog = useDialog();
 
 	const {$set} = patients.sanitize(eidInfo);
@@ -315,7 +315,7 @@ const EidCardDialogStepSelection = ({
 									<Button
 										className={classes.expandButton}
 										classes={{
-											endIcon: classNames(classes.expand, {
+											endIcon: cx(classes.expand, {
 												[classes.expandOpen]: nameMatchesExpanded,
 											}),
 										}}

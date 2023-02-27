@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {styled} from '@mui/material/styles';
-import classNames from 'classnames';
 
 import ButtonBase from '@mui/material/ButtonBase';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
@@ -19,8 +18,50 @@ const classes = {
 	checkbox: `${PREFIX}-checkbox`,
 };
 
-const Root = styled('div')(({theme}) => ({
-	[`&.${classes.root}`]: {
+type Props = {
+	patient: {_id: string};
+	onClick: (patient: {_id: string}) => void;
+	selected?: boolean | undefined;
+	Card?: React.ElementType;
+};
+
+const SelectablePatientCard = styled(
+	({
+		onClick,
+		selected = undefined,
+		Card = GenericStaticPatientCard,
+		patient,
+		...rest
+	}: Props) => {
+		return (
+			<div className={classes.root}>
+				<Card patient={patient} {...rest} />
+				{selected !== undefined && selected && (
+					<CheckCircleOutlinedIcon
+						className={classes.checkbox}
+						color="primary"
+						fontSize="large"
+					/>
+				)}
+				{selected !== undefined && !selected && (
+					<RadioButtonUncheckedOutlinedIcon
+						className={classes.checkbox}
+						color="action"
+						fontSize="large"
+					/>
+				)}
+				<ButtonBase
+					focusRipple
+					className={classes.veil}
+					onClick={() => {
+						onClick(patient);
+					}}
+				/>
+			</div>
+		);
+	},
+)(({theme, selected}) => ({
+	[`& .${classes.root}`]: {
 		position: 'relative',
 	},
 
@@ -34,16 +75,13 @@ const Root = styled('div')(({theme}) => ({
 		fontSize: '2rem',
 		cursor: 'pointer',
 		color: theme.palette.primary.main,
-		backgroundColor: 'transparent',
+		backgroundColor:
+			selected === undefined
+				? 'transparent'
+				: selected
+				? 'rgba(128,128,255,0.25)'
+				: 'rgba(255,255,255,0.5)',
 		transition: 'background-color 500ms ease-out',
-	},
-
-	[`& .${classes.veilSelected}`]: {
-		backgroundColor: 'rgba(128,128,255,0.25)',
-	},
-
-	[`& .${classes.veilNotSelected}`]: {
-		backgroundColor: 'rgba(255,255,255,0.5)',
 	},
 
 	[`& .${classes.checkbox}`]: {
@@ -53,51 +91,7 @@ const Root = styled('div')(({theme}) => ({
 	},
 }));
 
-type Props = {
-	patient: {_id: string};
-	onClick: (patient: {_id: string}) => void;
-	selected?: boolean | undefined;
-	Card?: React.ElementType;
-};
-
-const SelectablePatientCard = ({
-	onClick,
-	selected = undefined,
-	Card = GenericStaticPatientCard,
-	patient,
-	...rest
-}: Props) => {
-	return (
-		<Root className={classes.root}>
-			<Card patient={patient} {...rest} />
-			{selected !== undefined && selected && (
-				<CheckCircleOutlinedIcon
-					className={classes.checkbox}
-					color="primary"
-					fontSize="large"
-				/>
-			)}
-			{selected !== undefined && !selected && (
-				<RadioButtonUncheckedOutlinedIcon
-					className={classes.checkbox}
-					color="action"
-					fontSize="large"
-				/>
-			)}
-			<ButtonBase
-				focusRipple
-				className={classNames(classes.veil, {
-					[classes.veilSelected]: selected !== undefined && selected,
-					[classes.veilNotSelected]: selected !== undefined && !selected,
-				})}
-				onClick={() => {
-					onClick(patient);
-				}}
-			/>
-		</Root>
-	);
-};
-
+// @ts-expect-error TODO Find a different solution to deduplicate queries. GraphQL?
 SelectablePatientCard.projection = GenericStaticPatientCard.projection;
 
 export default SelectablePatientCard;

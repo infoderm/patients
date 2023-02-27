@@ -2,8 +2,6 @@ import React from 'react';
 
 import dateFormat from 'date-fns/format';
 
-import makeStyles from '@mui/styles/makeStyles';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -14,6 +12,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import CloseIcon from '@mui/icons-material/Close';
+import makeStyles from '../styles/makeStyles';
 
 import {type ConsultationDocument} from '../../api/collection/consultations';
 
@@ -31,7 +30,7 @@ const SIZE_CODE = 256;
 const SIZE_PROGRESS = 128;
 const THICKNESS_PROGRESS = 3.6;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
 	code: {},
 	codeContainer: {
 		position: 'relative',
@@ -69,7 +68,7 @@ type Props = {
 };
 
 const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
-	const classes = useStyles();
+	const {classes} = useStyles();
 
 	const {loading: loadingAccountHolder, value: accountHolder} =
 		useSetting('account-holder');

@@ -2,18 +2,16 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames';
-
 import Chip, {type ChipProps} from '@mui/material/Chip';
 
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
+import makeStyles from '../styles/makeStyles';
 
 import {myEncodeURIComponent} from '../../lib/uri';
 import {type DocumentDocument} from '../../api/collection/documents';
 import useDocumentVersions from './useDocumentVersions';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
 	chip: {
 		marginRight: theme.spacing(1),
 		backgroundColor: '#bbb',
@@ -29,7 +27,7 @@ const DocumentVersionsChip = ({
 	className,
 	...rest
 }: DocumentVersionsChipProps) => {
-	const classes = useStyles();
+	const {classes, cx} = useStyles();
 
 	const {loading, versions} = useDocumentVersions(document);
 
@@ -41,7 +39,7 @@ const DocumentVersionsChip = ({
 		<Chip
 			icon={<DynamicFeedIcon />}
 			label={lastVersion ? `${versions.length} versions` : 'old version'}
-			className={classNames(classes.chip, className)}
+			className={cx(classes.chip, className)}
 			component={Link}
 			to={`/document/versions/${myEncodeURIComponent(
 				identifier,

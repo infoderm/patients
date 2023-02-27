@@ -1,17 +1,16 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
 import {useNavigate} from 'react-router-dom';
-import classNames from 'classnames';
 
 import dateFormat from 'date-fns/format';
 import isToday from 'date-fns/isToday';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
-import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
@@ -27,30 +26,18 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient';
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
+import type PropsOf from '../../lib/types/PropsOf';
+import {type AppointmentDocument} from '../../api/collection/appointments';
+import {type ConsultationDocument} from '../../api/collection/consultations';
 import useConsultationsForPatient from './useConsultationsForPatient';
 
 const PREFIX = 'ManageConsultationsForPatientDialog';
 
 const classes = {
-	avatarBegin: `${PREFIX}-avatarBegin`,
-	avatarEdit: `${PREFIX}-avatarEdit`,
-	avatarSchedule: `${PREFIX}-avatarSchedule`,
+	iconBegin: `${PREFIX}-iconBegin`,
+	iconEdit: `${PREFIX}-iconEdit`,
+	iconSchedule: `${PREFIX}-iconSchedule`,
 };
-
-const StyledDialog = styled(Dialog)({
-	[`& .${classes.avatarBegin}`]: {
-		backgroundColor: green[100],
-		color: green[600],
-	},
-	[`& .${classes.avatarEdit}`]: {
-		backgroundColor: blue[100],
-		color: blue[600],
-	},
-	[`& .${classes.avatarSchedule}`]: {
-		backgroundColor: orange[100],
-		color: orange[600],
-	},
-});
 
 const formatDatetime = (datetime: Date) => {
 	if (isToday(datetime)) {
@@ -65,6 +52,76 @@ type Props = {
 	open: boolean;
 	patientId: string;
 };
+
+type BeginConsultationItemProps = PropsOf<typeof ListItemButton> & {
+	appointment: AppointmentDocument;
+};
+
+const BeginConsultationItem = styled(
+	({appointment: {datetime}, ...rest}: BeginConsultationItemProps) => (
+		<ListItemButton {...rest}>
+			<ListItemAvatar>
+				<Avatar className={isToday(datetime) ? classes.iconBegin : undefined}>
+					<AlarmIcon />
+				</Avatar>
+			</ListItemAvatar>
+			<ListItemText
+				primary={`Commencer le rendez-vous ${formatDatetime(datetime)}`}
+			/>
+		</ListItemButton>
+	),
+)({
+	[`& .${classes.iconBegin}`]: {
+		backgroundColor: green[100],
+		color: green[600],
+	},
+});
+
+type EditExistingConsultationItemProps = PropsOf<typeof ListItemButton> & {
+	consultation: ConsultationDocument;
+};
+
+const EditExistingConsultationItem = styled(
+	({consultation: {datetime}, ...rest}: EditExistingConsultationItemProps) => (
+		<ListItemButton {...rest}>
+			<ListItemAvatar>
+				<Avatar className={isToday(datetime) ? classes.iconEdit : undefined}>
+					<BookmarkIcon />
+				</Avatar>
+			</ListItemAvatar>
+			<ListItemText
+				primary={`Éditer la consultation ${formatDatetime(datetime)}`}
+			/>
+		</ListItemButton>
+	),
+)({
+	[`& .${classes.iconEdit}`]: {
+		backgroundColor: blue[100],
+		color: blue[600],
+	},
+});
+
+type ScheduleNewAppointmentItemProps = PropsOf<typeof ListItemButton> & {
+	emphasize: boolean;
+};
+
+const ScheduleNewAppointmentItem = styled(
+	({emphasize, ...rest}: ScheduleNewAppointmentItemProps) => (
+		<ListItemButton {...rest}>
+			<ListItemAvatar>
+				<Avatar className={emphasize ? classes.iconSchedule : undefined}>
+					<TodayIcon />
+				</Avatar>
+			</ListItemAvatar>
+			<ListItemText primary="Programmer un nouveau rendez-vous" />
+		</ListItemButton>
+	),
+)({
+	[`& .${classes.iconSchedule}`]: {
+		backgroundColor: orange[100],
+		color: orange[600],
+	},
+});
 
 const ManageConsultationsForPatientDialog = ({
 	open,
@@ -107,69 +164,39 @@ const ManageConsultationsForPatientDialog = ({
 	const loading = loadingAppointments || loadingConsultations;
 
 	return (
-		<StyledDialog open={open} onClose={onClose}>
+		<Dialog open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
 			<DialogTitle>What do you want to do?</DialogTitle>
 			<List>
-				{appointments.map(({_id, datetime}, i) => (
-					<ListItem
-						key={_id}
-						button
+				{appointments.map((appointment, i) => (
+					<BeginConsultationItem
+						key={appointment._id}
+						appointment={appointment}
 						autoFocus={i === 0}
-						onClick={beginThisConsultation(_id)}
-					>
-						<ListItemAvatar>
-							<Avatar
-								className={classNames({
-									[classes.avatarBegin]: isToday(datetime),
-								})}
-							>
-								<AlarmIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary={`Commencer le rendez-vous ${formatDatetime(datetime)}`}
-						/>
-					</ListItem>
+						onClick={beginThisConsultation(appointment._id)}
+					/>
 				))}
-				{consultations.map(({_id, datetime}) => (
-					<ListItem key={_id} button onClick={editExistingConsultation(_id)}>
-						<ListItemAvatar>
-							<Avatar
-								className={classNames({
-									[classes.avatarEdit]: isToday(datetime),
-								})}
-							>
-								<BookmarkIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary={`Éditer la consultation ${formatDatetime(datetime)}`}
-						/>
-					</ListItem>
+				{consultations.map((consultation) => (
+					<EditExistingConsultationItem
+						key={consultation._id}
+						consultation={consultation}
+						onClick={editExistingConsultation(consultation._id)}
+					/>
 				))}
-				<ListItem button onClick={scheduleNewAppointment}>
-					<ListItemAvatar>
-						<Avatar
-							className={classNames({
-								[classes.avatarSchedule]: appointments.length === 0,
-							})}
-						>
-							<TodayIcon />
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary="Programmer un nouveau rendez-vous" />
-				</ListItem>
-				<ListItem button onClick={createNewConsultation}>
+				<ScheduleNewAppointmentItem
+					emphasize={appointments.length === 0}
+					onClick={scheduleNewAppointment}
+				/>
+				<ListItemButton onClick={createNewConsultation}>
 					<ListItemAvatar>
 						<Avatar>
 							<NewReleasesIcon />
 						</Avatar>
 					</ListItemAvatar>
 					<ListItemText primary="Créer une nouvelle consultation vierge" />
-				</ListItem>
+				</ListItemButton>
 			</List>
-		</StyledDialog>
+		</Dialog>
 	);
 };
 

@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 
-import {makeStyles, createStyles} from '@mui/styles';
-
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
+import makeStyles from '../styles/makeStyles';
 import TextField from '../input/TextField';
 
 import {useSetting} from '../settings/hooks';
@@ -16,38 +15,35 @@ import CurrencyAmountInput from '../input/CurrencyAmountInput';
 
 import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 
-const styles = (theme) =>
-	createStyles({
-		container: {
-			height: '100%',
-		},
-		paper: {
-			width: 800,
-			height: 500,
-		},
-		form: {
-			padding: theme.spacing(3),
-		},
-		qrcodeWrap: {
-			display: 'table',
-			backgroundColor: '#ccc',
-			width: 500,
-			height: 500,
-		},
-		qrcode: {
-			display: 'table-cell',
-			verticalAlign: 'middle',
-			textAlign: 'center',
-		},
-		title: {
-			margin: theme.spacing(2),
-		},
-		textField: {
-			margin: theme.spacing(3),
-		},
-	});
-
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles()((theme) => ({
+	container: {
+		height: '100%',
+	},
+	paper: {
+		width: 800,
+		height: 500,
+	},
+	form: {
+		padding: theme.spacing(3),
+	},
+	qrcodeWrap: {
+		display: 'table',
+		backgroundColor: '#ccc',
+		width: 500,
+		height: 500,
+	},
+	qrcode: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		textAlign: 'center',
+	},
+	title: {
+		margin: theme.spacing(2),
+	},
+	textField: {
+		margin: theme.spacing(3),
+	},
+}));
 
 type Data = {
 	name: string;
@@ -68,7 +64,7 @@ const SEPAPaymentDetailsStatic = ({
 	iban,
 	currency,
 }: SEPAPaymentDetailsStaticProps) => {
-	const classes = useStyles();
+	const {classes} = useStyles();
 
 	const defaultReference = format(startOfToday(), 'yyyy-MM-dd');
 

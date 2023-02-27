@@ -1,7 +1,5 @@
 import React, {useMemo} from 'react';
-import classNames from 'classnames';
 
-import {makeStyles, createStyles, type CSSProperties} from '@mui/styles';
 import Paper from '@mui/material/Paper';
 
 import differenceInDays from 'date-fns/differenceInDays';
@@ -15,17 +13,19 @@ import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
+import makeStyles from '../styles/makeStyles';
 import {useDateFormat} from '../../i18n/datetime';
 
 import {ALL_WEEK_DAYS, generateDays} from '../../lib/datetime';
-import EventFragment from './EventFragment';
+import type CSSObject from '../styles/CSSObject';
 import type Event from './Event';
+import EventFragment from './EventFragment';
 
-const ColumnHeader = ({classes, day, col}) => {
+const ColumnHeader = ({classes, cx, day, col}) => {
 	const getDayName = useDateFormat('cccc');
 	return (
 		<div
-			className={classNames(classes.columnHeader, {
+			className={cx(classes.columnHeader, {
 				[classes[`col${col}`]]: true,
 			})}
 		>
@@ -34,7 +34,7 @@ const ColumnHeader = ({classes, day, col}) => {
 	);
 };
 
-const DayBox = ({classes, day, row, col, onSlotClick}) => {
+const DayBox = ({classes, cx, day, row, col, onSlotClick}) => {
 	const ariaLabel = `Schedule an appointment on ${dateFormat(day, 'PPPP')}`;
 	const role = onSlotClick ? 'button' : undefined;
 	const onClick = useMemo(() => {
@@ -46,7 +46,7 @@ const DayBox = ({classes, day, row, col, onSlotClick}) => {
 	}, [onSlotClick, day]);
 	return (
 		<div
-			className={classNames(classes.dayBox, {
+			className={cx(classes.dayBox, {
 				[classes[`col${col}`]]: true,
 				[classes[`row${row}`]]: true,
 			})}
@@ -232,15 +232,7 @@ const More = ({className, count}) => (
 	<div className={className}>{count} more</div>
 );
 
-type CalendarDataGridStyles = {
-	[key: string]: CSSProperties;
-	header: CSSProperties;
-	corner: CSSProperties;
-	grid: CSSProperties;
-	weekNumber: CSSProperties;
-	dayHeader: CSSProperties;
-	more: CSSProperties;
-};
+type CalendarDataGridStyles = Record<string, CSSObject>;
 
 type CalendarDataGridClasses = {
 	[key in keyof CalendarDataGridStyles]: string;
@@ -249,7 +241,8 @@ type CalendarDataGridClasses = {
 type CalendarDataGridProps = {
 	DayHeader?: React.ElementType;
 	WeekNumber?: React.ElementType;
-	useStyles: () => CalendarDataGridClasses;
+	classes: CalendarDataGridClasses;
+	cx: any;
 	rowSize: number;
 	days: DayProps[];
 	events: EventProps[];
@@ -260,7 +253,8 @@ type CalendarDataGridProps = {
 };
 
 const CalendarDataGrid = ({
-	useStyles,
+	classes,
+	cx,
 	rowSize,
 	days,
 	events,
@@ -270,14 +264,12 @@ const CalendarDataGrid = ({
 	weekOptions,
 	onSlotClick,
 }: CalendarDataGridProps) => {
-	const classes = useStyles();
-
 	return (
 		<Paper>
 			<div className={classes.header}>
 				{WeekNumber && <div className={classes.corner} />}
 				{list(take(days, rowSize)).map((props, key) => (
-					<ColumnHeader key={key} classes={classes} {...props} />
+					<ColumnHeader key={key} classes={classes} cx={cx} {...props} />
 				))}
 			</div>
 			<div className={classes.grid}>
@@ -287,7 +279,7 @@ const CalendarDataGrid = ({
 						.map((props, key) => (
 							<WeekNumber
 								key={key}
-								className={classNames(classes.weekNumber, {
+								className={cx(classes.weekNumber, {
 									[classes[`row${props.row}`]]: true,
 								})}
 								weekOptions={weekOptions}
@@ -298,6 +290,7 @@ const CalendarDataGrid = ({
 					<DayBox
 						key={key}
 						classes={classes}
+						cx={cx}
 						{...props}
 						onSlotClick={onSlotClick}
 					/>
@@ -305,7 +298,7 @@ const CalendarDataGrid = ({
 				{days.map((props, key) => (
 					<DayHeader
 						key={key}
-						className={classNames(classes.dayHeader, {
+						className={cx(classes.dayHeader, {
 							[classes[`col${props.col}`]]: true,
 							[classes[`row${props.row}`]]: true,
 						})}
@@ -317,7 +310,7 @@ const CalendarDataGrid = ({
 					.map((props, key) => (
 						<EventFragment
 							key={key}
-							className={classNames(classes.slot, {
+							className={cx(classes.slot, {
 								[classes[`slot${props.slots}`]]: true,
 								[classes[`day${props.day}slot${props.slot}`]]: true,
 							})}
@@ -330,7 +323,7 @@ const CalendarDataGrid = ({
 					.map((props, key) => (
 						<More
 							key={key}
-							className={classNames(classes.more, {
+							className={cx(classes.more, {
 								[classes[`day${props.day}more`]]: true,
 							})}
 							{...props}
@@ -369,151 +362,155 @@ type MakeGridStylesOptions = {
 	daysProps: DayProps[];
 };
 
-const makeGridStyles = ({
-	displayWeekNumbers,
-	nrows,
-	headerHeight,
-	lineHeight,
-	rowSize,
-	maxLines,
-	eventProps,
-	daysProps,
-}: MakeGridStylesOptions) => {
-	const gridTemplateColumns = [
-		displayWeekNumbers && '25px',
-		`repeat(${rowSize}, 1fr)`,
-	]
-		.filter(Boolean)
-		.join(' ');
+const useGridStyles = makeStyles<MakeGridStylesOptions>()(
+	(
+		_theme,
+		{
+			displayWeekNumbers,
+			nrows,
+			headerHeight,
+			lineHeight,
+			rowSize,
+			maxLines,
+			eventProps,
+			daysProps,
+		}: MakeGridStylesOptions,
+	) => {
+		const gridTemplateColumns = [
+			displayWeekNumbers && '25px',
+			`repeat(${rowSize}, 1fr)`,
+		]
+			.filter(Boolean)
+			.join(' ');
 
-	const gridStyles: CalendarDataGridStyles = {
-		header: {
-			display: 'grid',
-			gridTemplateColumns,
-			gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
-			lineHeight: `calc(2*${lineHeight})`,
-			backgroundColor: '#aaa',
-			gridGap: '1px',
-		},
-		columnHeader: {
-			backgroundColor: '#fff',
-			fontWeight: 'bold',
-			textAlign: 'center',
-			color: '#aaa',
-			padding: '5px 5px',
-			gridColumnEnd: 'span 1',
-			gridRowEnd: `span ${headerHeight}`,
-		},
-		corner: {
-			backgroundColor: '#fff',
-			gridColumnEnd: 'span 1',
-			gridRowEnd: `span ${headerHeight}`,
-		},
-		grid: {
-			display: 'grid',
-			gridTemplateColumns,
-			gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
-			backgroundColor: '#aaa',
-			gridGap: '1px',
-		},
-		dayHeader: {
-			margin: '3px auto',
-			textAlign: 'center',
-			gridColumnEnd: 'span 1',
-			gridRowEnd: 'span 1',
-		},
-		weekNumber: {
-			backgroundColor: '#fff',
-			gridColumnEnd: 'span 1',
-			gridRowEnd: `span ${maxLines}`,
-			paddingTop: '5px',
-			textAlign: 'center',
-		},
-		dayBox: {
-			backgroundColor: '#fff',
-			gridColumnEnd: 'span 1',
-			gridRowEnd: `span ${maxLines}`,
-			'&:hover': {
-				backgroundColor: '#f5f5f5',
+		const gridStyles: CalendarDataGridStyles = {
+			header: {
+				display: 'grid',
+				gridTemplateColumns,
+				gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
+				lineHeight: `calc(2*${lineHeight})`,
+				backgroundColor: '#aaa',
+				gridGap: '1px',
 			},
-		},
-		slot: {
-			gridColumnEnd: 'span 1',
-			margin: '0 10px 3px 10px',
-			'&:hover': {
-				opacity: 0.8,
+			columnHeader: {
+				backgroundColor: '#fff',
+				fontWeight: 'bold',
+				textAlign: 'center',
+				color: '#aaa',
+				padding: '5px 5px',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: `span ${headerHeight}`,
 			},
-		},
-		slot1: {
-			gridRowEnd: 'span 1',
-			textOverflow: 'ellipsis',
-			whiteSpace: 'nowrap',
-			overflow: 'hidden',
-		},
-		event: {
-			display: 'inline-block',
-			width: '100%',
-			height: '100%',
-			overflow: 'hidden',
-			textOverflow: 'ellipsis',
-			padding: '1px 6px',
-			borderRadius: '3px',
-		},
-		more: {
-			margin: '0 auto 0 15px',
-			gridColumnEnd: 'span 1',
-			gridRowEnd: 'span 1',
-			textOverflow: 'ellipsis',
-			whiteSpace: 'nowrap',
-			overflow: 'hidden',
-			fontWeight: 'bold',
-		},
-	};
-
-	const colOffset = displayWeekNumbers ? 1 : 0;
-
-	for (const i of range(1, rowSize + 1)) {
-		gridStyles[`col${i}`] = {
-			gridColumnStart: colOffset + (i as number),
+			corner: {
+				backgroundColor: '#fff',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: `span ${headerHeight}`,
+			},
+			grid: {
+				display: 'grid',
+				gridTemplateColumns,
+				gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
+				backgroundColor: '#aaa',
+				gridGap: '1px',
+			},
+			dayHeader: {
+				margin: '3px auto',
+				textAlign: 'center',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: 'span 1',
+			},
+			weekNumber: {
+				backgroundColor: '#fff',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: `span ${maxLines}`,
+				paddingTop: '5px',
+				textAlign: 'center',
+			},
+			dayBox: {
+				backgroundColor: '#fff',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: `span ${maxLines}`,
+				'&:hover': {
+					backgroundColor: '#f5f5f5',
+				},
+			},
+			slot: {
+				gridColumnEnd: 'span 1',
+				margin: '0 10px 3px 10px',
+				'&:hover': {
+					opacity: 0.8,
+				},
+			},
+			slot1: {
+				gridRowEnd: 'span 1',
+				textOverflow: 'ellipsis',
+				whiteSpace: 'nowrap',
+				overflow: 'hidden',
+			},
+			event: {
+				display: 'inline-block',
+				width: '100%',
+				height: '100%',
+				overflow: 'hidden',
+				textOverflow: 'ellipsis',
+				padding: '1px 6px',
+				borderRadius: '3px',
+			},
+			more: {
+				margin: '0 auto 0 15px',
+				gridColumnEnd: 'span 1',
+				gridRowEnd: 'span 1',
+				textOverflow: 'ellipsis',
+				whiteSpace: 'nowrap',
+				overflow: 'hidden',
+				fontWeight: 'bold',
+			},
 		};
-	}
 
-	for (const i of range(1, nrows + 1)) {
-		gridStyles[`row${i}`] = {
-			gridRowStart: (i - 1) * maxLines + 1,
-		};
-	}
+		const colOffset = displayWeekNumbers ? 1 : 0;
 
-	for (const {day, row, col} of daysProps) {
-		const dayId = dayKey(day);
-		for (const j of range(1, maxLines)) {
-			gridStyles[`day${dayId}slot${j}`] = {
-				gridColumnStart: colOffset + col,
-				gridRowStart: (row - 1) * maxLines + 1 + (j as number),
+		for (const i of range(1, rowSize + 1)) {
+			gridStyles[`col${i}`] = {
+				gridColumnStart: colOffset + (i as number),
 			};
 		}
 
-		gridStyles[`day${dayId}more`] = {
-			gridColumnStart: colOffset + col,
-			gridRowStart: row * maxLines,
-		};
-	}
+		for (const i of range(1, nrows + 1)) {
+			gridStyles[`row${i}`] = {
+				gridRowStart: (i - 1) * maxLines + 1,
+			};
+		}
 
-	const slotTypes = new Set(
-		eventProps.map(({slots}) => slots).filter((x) => x !== 1),
-	);
-	for (const slots of slotTypes) {
-		gridStyles[`slot${slots}`] = {
-			gridRowEnd: `span ${slots}`,
-			textOverflow: 'ellipsis',
-			whiteSpace: 'pre-wrap',
-			overflow: 'hidden',
-		};
-	}
+		for (const {day, row, col} of daysProps) {
+			const dayId = dayKey(day);
+			for (const j of range(1, maxLines)) {
+				gridStyles[`day${dayId}slot${j}`] = {
+					gridColumnStart: colOffset + col,
+					gridRowStart: (row - 1) * maxLines + 1 + (j as number),
+				};
+			}
 
-	const styles = createStyles(() => gridStyles);
-	return makeStyles(styles) as () => CalendarDataGridClasses;
-};
+			gridStyles[`day${dayId}more`] = {
+				gridColumnStart: colOffset + col,
+				gridRowStart: row * maxLines,
+			};
+		}
+
+		const slotTypes = new Set(
+			eventProps.map(({slots}) => slots).filter((x) => x !== 1),
+		);
+		for (const slots of slotTypes) {
+			gridStyles[`slot${slots}`] = {
+				gridRowEnd: `span ${slots}`,
+				textOverflow: 'ellipsis',
+				whiteSpace: 'pre-wrap',
+				overflow: 'hidden',
+			};
+		}
+
+		return gridStyles;
+	},
+);
 
 const CalendarData = ({
 	events,
@@ -553,7 +550,7 @@ const CalendarData = ({
 	);
 	const moreProps = Array.from(generateMoreProps(occupancy, begin, end));
 
-	const useStyles = makeGridStyles({
+	const {classes, cx} = useGridStyles({
 		displayWeekNumbers: Boolean(WeekNumber),
 		nrows: days / 7,
 		lineHeight,
@@ -566,7 +563,8 @@ const CalendarData = ({
 
 	return (
 		<CalendarDataGrid
-			useStyles={useStyles}
+			classes={classes}
+			cx={cx}
 			rowSize={rowSize}
 			days={daysProps}
 			events={eventProps}

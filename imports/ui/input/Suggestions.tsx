@@ -1,10 +1,10 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
 import {type UseComboboxGetItemPropsOptions} from 'downshift';
+import type PropsOf from '../../lib/types/PropsOf';
 import Suggestion from './Suggestion';
 import CreateItemSuggestion from './CreateItemSuggestion';
 
@@ -24,35 +24,30 @@ type SuggestionsProps<Item> = {
 	Item?: React.ElementType;
 };
 
-const PREFIX = 'Suggestions';
-
-const classes = {
-	root: `${PREFIX}-root`,
-	hidden: `${PREFIX}-hidden`,
-	list: `${PREFIX}-list`,
-};
-
-const StyledPaper = styled(Paper)(({theme}) => ({
-	[`&.${classes.root}`]: {
-		position: 'absolute',
-		zIndex: 1,
-		marginTop: theme.spacing(1),
-		left: 0,
-		right: 0,
-	},
-	[`&.${classes.hidden}`]: {
-		display: 'none',
-	},
-	[`& .${classes.list}`]: {
-		padding: 0,
-		margin: 0,
-	},
+const Root = styled(
+	React.forwardRef(
+		(
+			{open, ...rest}: PropsOf<typeof Paper> & {open: boolean},
+			ref: React.Ref<HTMLDivElement>,
+		) => <Paper ref={ref} square {...rest} />,
+	),
+)(({theme, open}) => ({
+	position: 'absolute',
+	zIndex: 1,
+	marginTop: theme.spacing(1),
+	left: 0,
+	right: 0,
+	display: open ? 'block' : 'none',
 }));
+
+const UnorderedList = styled('ul')({
+	padding: 0,
+	margin: 0,
+});
 
 const Suggestions = React.forwardRef(
 	<ItemType,>(
 		{
-			className,
 			hide = false,
 			loading = false,
 			suggestions,
@@ -70,16 +65,10 @@ const Suggestions = React.forwardRef(
 		ref: React.Ref<HTMLDivElement>,
 	) => {
 		const createItemSuggestion = createNewItem && !error && inputValue;
+		const open = hide || (!suggestions?.length && !createItemSuggestion);
 		return (
-			<StyledPaper
-				ref={ref}
-				square
-				className={classNames(classes.root, {
-					[classes.hidden]:
-						hide || (!suggestions?.length && !createItemSuggestion),
-				})}
-			>
-				<ul className={classNames(className, classes.list)} {...rest}>
+			<Root ref={ref} open={open}>
+				<UnorderedList {...rest}>
 					{!hide && (
 						<>
 							{createItemSuggestion && (
@@ -104,8 +93,8 @@ const Suggestions = React.forwardRef(
 							))}
 						</>
 					)}
-				</ul>
-			</StyledPaper>
+				</UnorderedList>
+			</Root>
 		);
 	},
 );

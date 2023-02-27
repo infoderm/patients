@@ -2,8 +2,6 @@ import React from 'react';
 
 import {styled, lighten} from '@mui/material/styles';
 
-import classNames from 'classnames';
-
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -21,35 +19,6 @@ const classes = {
 	title: `${PREFIX}-title`,
 };
 
-const StyledToolbar = styled(Toolbar)(({theme}) => ({
-	[`&.${classes.root}`]: {
-		paddingRight: theme.spacing(1),
-	},
-
-	[`&.${classes.highlight}`]:
-		theme.palette.mode === 'light'
-			? {
-					color: theme.palette.secondary.dark,
-					backgroundColor: lighten(theme.palette.secondary.light, 0.4),
-			  }
-			: {
-					color: lighten(theme.palette.secondary.light, 0.4),
-					backgroundColor: theme.palette.secondary.dark,
-			  },
-
-	[`& .${classes.spacer}`]: {
-		flex: '1 1 100%',
-	},
-
-	[`& .${classes.actions}`]: {
-		color: theme.palette.text.secondary,
-	},
-
-	[`& .${classes.title}`]: {
-		flex: '0 0 auto',
-	},
-}));
-
 type Props = {
 	onDelete: () => void;
 	numSelected: number;
@@ -57,11 +26,7 @@ type Props = {
 
 const EnhancedTableToolbar = ({onDelete, numSelected}: Props) => {
 	return (
-		<StyledToolbar
-			className={classNames(classes.root, {
-				[classes.highlight]: numSelected > 0,
-			})}
-		>
+		<Toolbar className={classes.root}>
 			<div className={classes.title}>
 				{numSelected > 0 ? (
 					<Typography variant="subtitle1">{numSelected} selected</Typography>
@@ -85,8 +50,39 @@ const EnhancedTableToolbar = ({onDelete, numSelected}: Props) => {
 					</Tooltip>
 				)}
 			</div>
-		</StyledToolbar>
+		</Toolbar>
 	);
 };
 
-export default EnhancedTableToolbar;
+const StyledEnhancedTableToolbar = styled(EnhancedTableToolbar)(
+	({theme, numSelected}) => ({
+		[`& .${classes.root}`]: {
+			paddingRight: theme.spacing(1),
+			...(numSelected === 0
+				? undefined
+				: theme.palette.mode === 'light'
+				? {
+						color: theme.palette.secondary.dark,
+						backgroundColor: lighten(theme.palette.secondary.light, 0.4),
+				  }
+				: {
+						color: lighten(theme.palette.secondary.light, 0.4),
+						backgroundColor: theme.palette.secondary.dark,
+				  }),
+		},
+
+		[`& .${classes.spacer}`]: {
+			flex: '1 1 100%',
+		},
+
+		[`& .${classes.actions}`]: {
+			color: theme.palette.text.secondary,
+		},
+
+		[`& .${classes.title}`]: {
+			flex: '0 0 auto',
+		},
+	}),
+);
+
+export default StyledEnhancedTableToolbar;

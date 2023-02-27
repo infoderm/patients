@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useCallback, useState} from 'react';
-import classNames from 'classnames';
 import {
 	useCombobox,
 	useMultipleSelection,
@@ -9,7 +8,6 @@ import {
 import {any} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
 
-import {makeStyles, createStyles} from '@mui/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 
@@ -17,6 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 import DefaultChip from '@mui/material/Chip';
+import makeStyles from '../styles/makeStyles';
 
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import TextField from './TextField';
@@ -24,13 +23,11 @@ import TextField from './TextField';
 import Suggestions from './Suggestions';
 import Selection from './Selection';
 
-const toggleButtonStyles = {
+const useToggleButtonStyles = makeStyles()({
 	hidden: {
 		display: 'none',
 	},
-};
-
-const useToggleButtonStyles = makeStyles(toggleButtonStyles);
+});
 
 type ToggleButtonProps = {
 	isOpen: boolean;
@@ -47,14 +44,14 @@ const ToggleButton = ({
 	hasSuggestions,
 	getToggleButtonProps,
 }: ToggleButtonProps) => {
-	const classes = useToggleButtonStyles();
+	const {classes, cx} = useToggleButtonStyles();
 
 	return (
 		<InputAdornment position="end">
 			<IconButton
 				size="large"
 				{...getToggleButtonProps({
-					className: readOnly || !hasSuggestions ? classes.hidden : undefined,
+					className: cx({[classes.hidden]: readOnly || !hasSuggestions}),
 				})}
 			>
 				{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -63,23 +60,20 @@ const ToggleButton = ({
 	);
 };
 
-const styles = (theme) =>
-	createStyles({
-		container: {
-			flexGrow: 1,
-			position: 'relative',
-		},
-		inputRoot: {
-			flexWrap: 'wrap',
-		},
-		inputInput: {
-			margin: `${theme.spacing(1 / 2)} 0`,
-			width: 'auto',
-			flexGrow: 1,
-		},
-	});
-
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles()((theme) => ({
+	container: {
+		flexGrow: 1,
+		position: 'relative',
+	},
+	inputRoot: {
+		flexWrap: 'wrap',
+	},
+	inputInput: {
+		margin: `${theme.spacing(1 / 2)} 0`,
+		width: 'auto',
+		flexGrow: 1,
+	},
+}));
 
 type SetPickerProps<Item, ChipProps> = {
 	className?: string;
@@ -194,7 +188,7 @@ const SetPicker = <ItemType, ChipProps>({
 	inputTransform = DEFAULT_INPUT_TRANSFORM,
 	inputValidation = DEFAULT_INPUT_VALIDATION,
 }: SetPickerProps<ItemType, ChipProps>) => {
-	const classes = useStyles();
+	const {classes, cx} = useStyles();
 
 	const emptyInput = inputTransform('');
 
@@ -332,7 +326,7 @@ const SetPicker = <ItemType, ChipProps>({
 	};
 
 	return (
-		<div className={classNames(classes.container, className)}>
+		<div className={cx(classes.container, className)}>
 			<TextField
 				fullWidth
 				readOnly={readOnly}
