@@ -1,10 +1,10 @@
 import _apply from '../_apply';
 
-import type Arg from './Arg';
+import type Args from '../Args';
 import type Endpoint from './Endpoint';
 import type Options from './Options';
 
-const apply = async <A extends Arg[], R>(
+const apply = async <A extends Args, R>(
 	endpoint: Endpoint<A, R>,
 	args: A,
 	callOptions?: Options<R>,

@@ -1,5 +1,5 @@
-import type Arg from './Arg';
+import type Args from '../Args';
 
-type Validator<A extends Arg[]> = (...args: A) => void;
+type Validator<A extends Args> = (...args: A) => void;
 
 export default Validator;

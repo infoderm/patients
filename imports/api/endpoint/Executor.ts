@@ -1,5 +1,5 @@
-import type Arg from './Arg';
+import type Args from '../Args';
 
-type Executor<A extends Arg[], R> = (...args: A) => Promise<R> | R;
+type Executor<A extends Args, R> = (...args: A) => Promise<R> | R;
 
 export default Executor;

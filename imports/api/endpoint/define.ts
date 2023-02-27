@@ -1,15 +1,15 @@
 import {Meteor} from 'meteor/meteor';
 import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionSimulationDriver';
 import executeTransaction from '../transaction/executeTransaction';
+import type Args from '../Args';
 import type Params from './Params';
 import type Endpoint from './Endpoint';
 import invoke from './invoke';
 import type Transaction from './Transaction';
 import type Executor from './Executor';
 import type Simulator from './Simulator';
-import type Arg from './Arg';
 
-const define = <A extends Arg[], R>(params: Params<A, R>): Endpoint<A, R> => {
+const define = <A extends Args, R>(params: Params<A, R>): Endpoint<A, R> => {
 	const {
 		testOnly,
 		authentication,
@@ -52,7 +52,7 @@ const define = <A extends Arg[], R>(params: Params<A, R>): Endpoint<A, R> => {
 
 export default define;
 
-const wrapTransactionServer = <A extends Arg[], R>(
+const wrapTransactionServer = <A extends Args, R>(
 	txn: Transaction<A, R>,
 ): Executor<A, R> => {
 	return async function (...args: A) {
@@ -62,7 +62,7 @@ const wrapTransactionServer = <A extends Arg[], R>(
 	};
 };
 
-const wrapTransactionClient = <A extends Arg[], R>(
+const wrapTransactionClient = <A extends Args, R>(
 	txn: Transaction<A, R>,
 ): Simulator<A> => {
 	const db = new MeteorTransactionSimulationDriver();
@@ -72,7 +72,7 @@ const wrapTransactionClient = <A extends Arg[], R>(
 	};
 };
 
-const wrapTransaction = <A extends Arg[], R>(
+const wrapTransaction = <A extends Args, R>(
 	txn: Transaction<A, R>,
 ): Executor<A, R> | Simulator<A> => {
 	return Meteor.isServer
