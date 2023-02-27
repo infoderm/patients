@@ -3,7 +3,7 @@ import {DDP} from 'meteor/ddp';
 import promisify from '../lib/async/promisify';
 import type Options from './endpoint/Options';
 
-const __meteor_apply_promisified = promisify<unknown>(
+const __meteor_apply_promisified = promisify(
 	// @ts-expect-error Private access.
 	Meteor.applyAsync.bind(Meteor),
 );

@@ -87,7 +87,7 @@ export const genKey = async (bytes: number, hmac: HMACConfig): Promise<Key> => {
 	// const keyObject = await generate(type, {length});
 	// return keyObject.export().toString(hmac.keyEncoding);
 	const {randomBytes} = await crypto();
-	const generate = promisify<Buffer>(randomBytes);
+	const generate = promisify(randomBytes);
 	const buffer = await generate(bytes);
 	return buffer.toString(hmac.keyEncoding);
 };
