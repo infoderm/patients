@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime.js';
 
 import {randomUserId, server, throws} from '../../../../_test/fixtures';
 import {decode, getPermissionsForToken} from '../../../permissions/token';
+import type Context from '../../Context';
 
 import invoke from '../../invoke';
 import generate from './generate';
@@ -15,7 +16,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -39,7 +40,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -59,7 +60,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 

@@ -11,6 +11,7 @@ import {
 } from '../../../permissions/token';
 
 import invoke from '../../invoke';
+import type Context from '../../Context';
 import generate from './generate';
 
 server(__filename, () => {
@@ -20,7 +21,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -83,7 +84,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -99,7 +100,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -119,7 +120,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Meteor.MethodThisType;
+		const invocation = {userId, connection} as Context;
 
 		const permissions = ['a', 'b', 'c'];
 

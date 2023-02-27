@@ -1,13 +1,10 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 import type TransactionDriver from './transaction/TransactionDriver';
+import type Context from './endpoint/Context';
 
 const unconditionallyRemoveById = (Collection) =>
-	async function (
-		this: Meteor.MethodThisType,
-		db: TransactionDriver,
-		_id: string,
-	) {
+	async function (this: Context, db: TransactionDriver, _id: string) {
 		check(_id, String);
 
 		const item = await db.findOne(Collection, {_id, owner: this.userId});

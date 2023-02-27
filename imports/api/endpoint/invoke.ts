@@ -2,13 +2,14 @@ import {Meteor} from 'meteor/meteor';
 import authorized from '../authorized';
 
 import type Args from '../Args';
+import type Context from './Context';
 import type Endpoint from './Endpoint';
 
 const EndpointError = Meteor.Error;
 
 const invoke = async <A extends Args, R>(
 	endpoint: Endpoint<A, R>,
-	invocation: Partial<Meteor.MethodThisType>,
+	invocation: Partial<Context>,
 	args: A,
 ): Promise<R | undefined> => {
 	if (!authorized(endpoint.authentication, invocation)) {

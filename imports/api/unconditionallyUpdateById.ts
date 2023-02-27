@@ -3,6 +3,7 @@ import {type Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
+import type Context from './endpoint/Context';
 
 type OpReturnValue<T> = Promise<Mongo.Modifier<T>> | Mongo.Modifier<T>;
 
@@ -20,7 +21,7 @@ const unconditionallyUpdateById = <T>(
 	ownerKey = 'owner',
 ) =>
 	async function (
-		this: Meteor.MethodThisType,
+		this: Context,
 		db: TransactionDriver,
 		_id: string,
 		...rest: any[]
