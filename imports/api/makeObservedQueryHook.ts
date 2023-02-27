@@ -1,5 +1,4 @@
 import {type Meteor} from 'meteor/meteor';
-import {type Mongo} from 'meteor/mongo';
 import {type DependencyList, useEffect, useRef} from 'react';
 
 import useForceUpdate from '../ui/hooks/useForceUpdate';
@@ -11,17 +10,15 @@ import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 import type GenericQueryHook from './GenericQueryHook';
 import findOneSync from './publication/findOneSync';
+import type Selector from './Selector';
+import type Options from './Options';
 
 const makeObservedQueryHook =
 	<R, T = R>(
 		Collection: ObservedQueryCacheCollection<R>,
-		publication: Publication,
+		publication: Publication<[string, Selector<T>, Options<T>]>,
 	): GenericQueryHook<R, T> =>
-	(
-		query: Mongo.Selector<T>,
-		options: Mongo.Options<T>,
-		deps: DependencyList,
-	) => {
+	(selector: Selector<T>, options: Options<T>, deps: DependencyList) => {
 		const loading = useRef<boolean>(true);
 		const results = useRef<any[]>([]);
 		const dirty = useRef<boolean>(false);
@@ -44,8 +41,8 @@ const makeObservedQueryHook =
 			loading.current = true;
 
 			const timestamp = Date.now();
-			const key = JSON.stringify({timestamp, query, options});
-			const handle = subscribe(publication, key, query, options, {
+			const key = JSON.stringify({timestamp, query: selector, options});
+			const handle = subscribe(publication, key, selector, options, {
 				onStop() {
 					if (handleRef.current === handle) {
 						dirty.current = true;

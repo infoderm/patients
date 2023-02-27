@@ -1,24 +1,31 @@
 import {type DependencyList, useState, useEffect} from 'react';
 import {type Meteor} from 'meteor/meteor';
-import {type Mongo} from 'meteor/mongo';
 
 import useRandom from '../ui/hooks/useRandom';
 import type Publication from './publication/Publication';
-import subscribe from './publication/subscribe';
+import subscribe, {type SubscriptionError} from './publication/subscribe';
+import type Options from './Options';
+import type Selector from './Selector';
+import type Collection from './Collection';
+
+type LiveQueryHandle = Meteor.LiveQueryHandle;
 
 /**
  * WARNING: Does not work properly if used multiple times with the same
  * parameters on the same page.
  */
 const makeCachedFindOneOpt =
-	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
+	<T, U>(
+		collection: Collection<T, U>,
+		publication: Publication<[Selector<T>, Options<T>]>,
+	) =>
 	(
 		init: Partial<U>,
-		query: Mongo.Selector<T>,
-		options: Mongo.Options<T>,
+		selector: Selector<T>,
+		options: Options<T>,
 		deps: DependencyList,
 	) => {
-		console.debug({init, query, options, deps});
+		console.debug({init, query: selector, options, deps});
 
 		const [loading, setLoading] = useState(true);
 		const [found, setFound] = useState(false);
@@ -33,9 +40,9 @@ const makeCachedFindOneOpt =
 			setFields(init);
 			let current = init;
 
-			let queryHandle: Meteor.LiveQueryHandle;
-			const handle = subscribe(publication, query, options, {
-				onStop(e: Meteor.Error) {
+			let queryHandle: LiveQueryHandle;
+			const handle = subscribe(publication, selector, options, {
+				onStop(e: SubscriptionError) {
 					console.debug('onStop()', {e, queryHandle});
 					if (queryHandle) queryHandle.stop();
 					else reset();
@@ -43,7 +50,7 @@ const makeCachedFindOneOpt =
 				onReady() {
 					console.debug('onReady()');
 					setLoading(false);
-					queryHandle = Collection.find(query, options).observeChanges({
+					queryHandle = collection.find(selector, options).observeChanges({
 						added(_id, upToDate) {
 							setFound(true);
 							current = {...init, ...upToDate};

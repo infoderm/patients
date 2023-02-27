@@ -3,7 +3,7 @@ import define from '../define';
 
 export default define({
 	name: 'consultations.last',
-	cursor(filter) {
+	cursor(filter?) {
 		return Consultations.find(
 			{
 				isDone: true,

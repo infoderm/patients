@@ -1,4 +1,4 @@
-type Publication = {
+type Publication<_ extends any[]> = {
 	readonly name: string;
 };
 

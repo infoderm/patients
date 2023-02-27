@@ -12,13 +12,13 @@ import type Publication from './Publication';
 const exactlyOne = (array: any[]) =>
 	sum(map((x: any) => (x ? 1 : 0), array)) === 1;
 
-const define = <T, U = T>({
+const define = <A extends any[], T, U = T>({
 	name,
 	authentication,
 	cursor,
 	cursors,
 	handle,
-}: Params<T, U>): Publication => {
+}: Params<A, T, U>): Publication<A> => {
 	if (Meteor.isServer) {
 		const fns = [cursor, cursors, handle];
 		assert(exactlyOne(fns));
@@ -30,7 +30,6 @@ const define = <T, U = T>({
 						return;
 					}
 
-					// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
 					return Reflect.apply(fn, this, args);
 				});
 				break;

@@ -4,7 +4,7 @@ import define from '../define';
 
 export default define({
 	name: 'attachments',
-	cursor(query, options) {
+	cursor(query, options?) {
 		const selector = {
 			...query,
 			userId: this.userId,

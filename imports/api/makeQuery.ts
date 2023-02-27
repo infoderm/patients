@@ -1,20 +1,22 @@
-import {type Mongo} from 'meteor/mongo';
 import {type DependencyList} from 'react';
 
 import type Publication from './publication/Publication';
 import useSubscription from './publication/useSubscription';
 import useCursor from './publication/useCursor';
 
+import type Collection from './Collection';
+import type Selector from './Selector';
+import type Options from './Options';
+
 const makeQuery =
-	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
-	(
-		query: Mongo.Selector<T>,
-		options: Mongo.Options<T>,
-		deps: DependencyList,
-	) => {
-		const isLoading = useSubscription(publication, query, options);
+	<T, U>(
+		collection: Collection<T, U>,
+		publication: Publication<[Selector<T>, Options<T>]>,
+	) =>
+	(selector: Selector<T>, options: Options<T>, deps: DependencyList) => {
+		const isLoading = useSubscription(publication, selector, options);
 		const loading = isLoading();
-		const results = useCursor(() => Collection.find(query, options), deps);
+		const results = useCursor(() => collection.find(selector, options), deps);
 		return {loading, results};
 	};
 

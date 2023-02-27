@@ -30,6 +30,9 @@ import makeItem from './tags/makeItem';
 import type Publication from './publication/Publication';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
+import type Collection from './Collection';
+import type Selector from './Selector';
+import type Options from './Options';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -61,13 +64,13 @@ const computedFields = (displayName: string): TagComputedFields => {
 	};
 };
 
-type Options<T, P> = {
-	Collection: Mongo.Collection<T>;
+type TagCollectionOptions<T, P> = {
+	Collection: Collection<T>;
 	collection: string;
 	publication: string;
 	singlePublication: string;
-	Parent: Mongo.Collection<P>;
-	parentPublication: Publication;
+	Parent: Collection<P>;
+	parentPublication: Publication<[Selector<P>, Options<P>]>;
 	key: string;
 };
 
@@ -79,7 +82,7 @@ const createTagCollection = <
 	T extends TagDocument,
 	P extends {[key: string]: any; owner: string},
 >(
-	options: Options<T, P>,
+	options: TagCollectionOptions<T, P>,
 ) => {
 	const {
 		Collection,

@@ -1,23 +1,30 @@
-import {type Mongo} from 'meteor/mongo';
 import {type DependencyList} from 'react';
 import type Publication from './publication/Publication';
 import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
+import type Collection from './Collection';
+import type Selector from './Selector';
+import type Options from './Options';
 
 const makeFindOne =
-	<T, U>(Collection: Mongo.Collection<T, U>, publication: Publication) =>
+	<T, U>(
+		collection: Collection<T, U>,
+		publication: Publication<[Selector<T>, Options<T>]>,
+	) =>
 	(
 		init: Partial<U>,
-		query: Mongo.Selector<T> | string,
-		options: Mongo.Options<T>,
+		selector: Selector<T> | string,
+		options: Options<T>,
 		deps: DependencyList,
 	) => {
-		const isLoading = useSubscription(publication, query, options);
+		const isLoading = useSubscription(publication, selector, options);
 		const loading = isLoading();
 
 		const upToDate = useItem<T, U>(
-			loading ? null : Collection,
-			typeof query === 'string' ? ({_id: query} as Mongo.Selector<T>) : query,
+			loading ? null : collection,
+			typeof selector === 'string'
+				? ({_id: selector} as Selector<T>)
+				: selector,
 			options,
 			[loading, ...deps],
 		);

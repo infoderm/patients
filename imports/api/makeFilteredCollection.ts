@@ -1,20 +1,25 @@
-import {Mongo} from 'meteor/mongo';
+import {type DependencyList} from 'react';
+
+import Collection from './Collection';
+import type Selector from './Selector';
+import type Options from './Options';
+
 import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
 
-const makeFilteredCollection = (
-	Collection,
-	filterQuery,
-	filterOptions,
+const makeFilteredCollection = <T, U = T>(
+	collection: Collection<T, U>,
+	filterSelector: Selector<T>,
+	filterOptions: Options<T>,
 	name: string,
 ) => {
 	const publication = define({
 		name,
-		handle(publicationQuery, publicationOptions) {
+		handle(publicationSelector: Selector<T>, publicationOptions: Options<T>) {
 			const selector = {
-				...filterQuery,
-				...publicationQuery,
+				...filterSelector,
+				...publicationSelector,
 				owner: this.userId,
 			};
 
@@ -25,7 +30,7 @@ const makeFilteredCollection = (
 				limit: 0,
 			};
 
-			const handle = Collection.find(selector, options).observeChanges({
+			const handle = collection.find(selector, options).observeChanges({
 				added: (_id, fields) => {
 					this.added(name, _id, fields);
 				},
@@ -39,17 +44,23 @@ const makeFilteredCollection = (
 				},
 			});
 
-			this.onStop(() => handle.stop());
+			this.onStop(() => {
+				handle.stop();
+			});
 			this.ready();
 		},
 	});
 
-	const Filtered = new Mongo.Collection(name);
+	const Filtered = new Collection<T, U>(name);
 
-	return (hookQuery = {}, options = undefined, deps = []) => {
+	return (
+		hookSelector: Selector<T> = {},
+		options: Options<T> = undefined,
+		deps: DependencyList = [],
+	) => {
 		const isLoading = useSubscription(publication, undefined, options);
 		const loading = isLoading();
-		const results = useCursor(() => Filtered.find(hookQuery, options), deps);
+		const results = useCursor(() => Filtered.find(hookSelector, options), deps);
 		return {loading, results};
 	};
 };

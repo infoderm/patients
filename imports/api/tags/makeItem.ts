@@ -1,9 +1,12 @@
 import {type DependencyList} from 'react';
-import {type Mongo} from 'meteor/mongo';
+
+import type Collection from '../Collection';
+import type Selector from '../Selector';
 
 import useSubscription from '../publication/useSubscription';
 import useItem from '../publication/useItem';
 import type Publication from '../publication/Publication';
+
 import type TagDocument from './TagDocument';
 
 type ReturnType<U> = {
@@ -13,16 +16,16 @@ type ReturnType<U> = {
 
 const makeItem =
 	<T extends TagDocument, U = T>(
-		Collection: Mongo.Collection<T, U>,
-		singlePublication: Publication,
+		collection: Collection<T, U>,
+		singlePublication: Publication<[string]>,
 	) =>
 	(name: string, deps: DependencyList): ReturnType<U> => {
 		const isLoading = useSubscription(singlePublication, name);
 		const loading = isLoading();
 
 		const item = useItem(
-			loading ? null : Collection,
-			{name} as Mongo.Selector<T>,
+			loading ? null : collection,
+			{name} as Selector<T>,
 			undefined,
 			[loading, ...deps],
 		);

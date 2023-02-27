@@ -7,9 +7,9 @@ import useChanged from '../../ui/hooks/useChanged';
 import subscribe from './subscribe';
 import type Publication from './Publication';
 
-const useSubscriptionClient = (
-	publication?: Publication,
-	...args: any[]
+const useSubscriptionClient = <A extends any[]>(
+	publication?: Publication<A>,
+	...args: A
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
 
