@@ -1,5 +1,10 @@
 import type TransactionDriver from '../transaction/TransactionDriver';
 
-type Transaction<R> = (db: TransactionDriver, ...args: any[]) => Promise<R>;
+import type Arg from './Arg';
+
+type Transaction<A extends Arg[], R> = (
+	db: TransactionDriver,
+	...args: A
+) => Promise<R>;
 
 export default Transaction;

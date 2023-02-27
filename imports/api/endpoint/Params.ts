@@ -1,30 +1,33 @@
 import type Authentication from '../Authentication';
+import type Arg from './Arg';
 import type Executor from './Executor';
 import type Options from './Options';
 import type Simulator from './Simulator';
 import type Transaction from './Transaction';
 import type Validator from './Validator';
 
-type ParamsCommon<R> = {
+type ParamsCommon<A extends Arg[], R> = {
 	readonly testOnly?: boolean;
 	readonly authentication?: Authentication;
 	readonly name: string;
-	readonly validate: Validator;
+	readonly validate: Validator<A>;
 	readonly options?: Options<R>;
 };
 
-type ParamsWithTransaction<R> = {
-	readonly transaction: Transaction<R>;
-	readonly simulate?: Simulator;
+type ParamsWithTransaction<A extends Arg[], R> = {
+	readonly transaction: Transaction<A, R>;
+	readonly simulate?: Simulator<A>;
 	readonly run?: never;
-} & ParamsCommon<R>;
+} & ParamsCommon<A, R>;
 
-type ParamsWithoutTransaction<R> = {
+type ParamsWithoutTransaction<A extends Arg[], R> = {
 	readonly transaction?: never;
-	readonly simulate?: Simulator;
-	readonly run: Executor<R>;
-} & ParamsCommon<R>;
+	readonly simulate?: Simulator<A>;
+	readonly run: Executor<A, R>;
+} & ParamsCommon<A, R>;
 
-type Params<R> = ParamsWithTransaction<R> | ParamsWithoutTransaction<R>;
+type Params<A extends Arg[], R> =
+	| ParamsWithTransaction<A, R>
+	| ParamsWithoutTransaction<A, R>;
 
 export default Params;

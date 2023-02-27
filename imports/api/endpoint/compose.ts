@@ -1,12 +1,14 @@
 import {type Meteor} from 'meteor/meteor';
 import type TransactionDriver from '../transaction/TransactionDriver';
+
+import type Arg from './Arg';
 import type Endpoint from './Endpoint';
 
-const compose = async <T>(
+const compose = async <A extends Arg[], T>(
 	db: TransactionDriver,
-	endpoint: Endpoint<T>,
+	endpoint: Endpoint<A, T>,
 	invocation: Partial<Meteor.MethodThisType>,
-	args: any[],
+	args: A,
 ) => {
 	// TODO will need to check authorized here if we ever compose endpoints
 	// with different authorization levels

@@ -20,6 +20,7 @@ import {patients} from '../../patients';
 
 import invoke from '../invoke';
 
+import tuple from '../../../lib/types/tuple';
 import patientsMerge from './merge';
 import patientsAttach from './attach';
 
@@ -67,13 +68,13 @@ server(__filename, () => {
 		const attachmentIds = [uploadA._id, uploadB._id];
 		const documentIds = [documentA._id];
 
-		const parameters = [
+		const parameters = tuple(
 			oldPatientIds,
 			consultationIds,
 			attachmentIds,
 			documentIds,
 			newPatientFields,
-		];
+		);
 
 		const newPatientId = await invoke(patientsMerge, invocation, parameters);
 

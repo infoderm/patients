@@ -7,8 +7,9 @@ import invoke from './invoke';
 import type Transaction from './Transaction';
 import type Executor from './Executor';
 import type Simulator from './Simulator';
+import type Arg from './Arg';
 
-const define = <R>(params: Params<R>): Endpoint<R> => {
+const define = <A extends Arg[], R>(params: Params<A, R>): Endpoint<A, R> => {
 	const {
 		testOnly,
 		authentication,
@@ -22,7 +23,7 @@ const define = <R>(params: Params<R>): Endpoint<R> => {
 	const executor =
 		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction);
 
-	const endpoint: Endpoint<R> = {
+	const endpoint: Endpoint<A, R> = {
 		name,
 		authentication: authentication ?? 'logged-in',
 		validate,
@@ -42,7 +43,7 @@ const define = <R>(params: Params<R>): Endpoint<R> => {
 
 	Meteor.methods({
 		async [params.name](...args: any[]) {
-			return invoke(endpoint, this, args);
+			return invoke(endpoint, this, args as A);
 		},
 	});
 
@@ -51,23 +52,29 @@ const define = <R>(params: Params<R>): Endpoint<R> => {
 
 export default define;
 
-const wrapTransactionServer = <R>(txn: Transaction<R>): Executor<R> => {
-	return async function (...args: any[]) {
+const wrapTransactionServer = <A extends Arg[], R>(
+	txn: Transaction<A, R>,
+): Executor<A, R> => {
+	return async function (...args: A) {
 		return executeTransaction(async (db) =>
 			Reflect.apply(txn, this, [db, ...args]),
 		);
 	};
 };
 
-const wrapTransactionClient = <R>(txn: Transaction<R>): Simulator => {
+const wrapTransactionClient = <A extends Arg[], R>(
+	txn: Transaction<A, R>,
+): Simulator<A> => {
 	const db = new MeteorTransactionSimulationDriver();
-	return async function (...args: any[]) {
+	return async function (...args: A) {
 		await Reflect.apply(txn, this, [db, ...args]);
 		return undefined;
 	};
 };
 
-const wrapTransaction = <R>(txn: Transaction<R>): Executor<R> | Simulator => {
+const wrapTransaction = <A extends Arg[], R>(
+	txn: Transaction<A, R>,
+): Executor<A, R> | Simulator<A> => {
 	return Meteor.isServer
 		? wrapTransactionServer(txn)
 		: wrapTransactionClient(txn);

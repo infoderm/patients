@@ -1,6 +1,6 @@
 import {check} from 'meteor/check';
 
-import {Patients} from '../../collection/patients';
+import {type PatientFields, Patients} from '../../collection/patients';
 import {PatientsSearchIndex} from '../../collection/patients/search';
 import {Consultations} from '../../collection/consultations';
 import {Documents} from '../../collection/documents';
@@ -16,11 +16,11 @@ const {sanitize, updateIndex} = patients;
 export default define({
 	name: '/patients/merge',
 	validate(
-		oldPatientIds,
-		consultationIds,
-		attachmentIds,
-		documentIds,
-		newPatient,
+		oldPatientIds: string[],
+		consultationIds: string[],
+		attachmentIds: string[],
+		documentIds: string[],
+		newPatient: Partial<PatientFields>,
 	) {
 		check(oldPatientIds, Array);
 		check(consultationIds, Array);
@@ -30,11 +30,11 @@ export default define({
 	},
 	async transaction(
 		db: TransactionDriver,
-		oldPatientIds,
-		consultationIds,
-		attachmentIds,
-		documentIds,
-		newPatient,
+		oldPatientIds: string[],
+		consultationIds: string[],
+		attachmentIds: string[],
+		documentIds: string[],
+		newPatient: Partial<PatientFields>,
 	) {
 		// Here is what is done in this method
 		// (2) Check that each patient in `oldPatientIds` is owned by the user
@@ -161,11 +161,11 @@ export default define({
 		return newPatientId;
 	},
 	simulate(
-		_oldPatientIds,
-		_consultationIds,
-		_attachmentIds,
-		_documentIds,
-		_newPatient,
+		_oldPatientIds: string[],
+		_consultationIds: string[],
+		_attachmentIds: string[],
+		_documentIds: string[],
+		_newPatient: Partial<PatientFields>,
 	) {
 		return undefined;
 	},

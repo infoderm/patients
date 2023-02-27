@@ -1,8 +1,5 @@
-// import {EJSONable, EJSONableProperty} from 'meteor/ejson';
+import type Arg from './Arg';
 
-// type Arg = EJSONable | EJSONable[] | EJSONableProperty | EJSONableProperty[];
-type Arg = any;
-
-type Executor<R> = (...args: Arg[]) => Promise<R> | R;
+type Executor<A extends Arg[], R> = (...args: A) => Promise<R> | R;
 
 export default Executor;

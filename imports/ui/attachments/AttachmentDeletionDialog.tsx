@@ -36,7 +36,7 @@ type Props = {
 	onClose: () => void;
 	itemId: string;
 	attachment: {_id: string; name: string};
-	endpoint: Endpoint<any>;
+	endpoint: Endpoint<[string, string], any>;
 };
 
 const AttachmentDeletionDialog = ({

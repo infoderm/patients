@@ -1,5 +1,7 @@
-type Arg = any;
+import type Arg from './Arg';
 
-type Simulator = (...args: Arg[]) => Promise<undefined> | undefined;
+type Simulator<A extends Arg[]> = (
+	...args: A
+) => Promise<undefined> | undefined;
 
 export default Simulator;

@@ -28,7 +28,7 @@ type Props<T> = {
 	open: boolean;
 	onClose: () => void;
 	title: string;
-	endpoint: Endpoint<any>;
+	endpoint: Endpoint<[string], any>;
 	tag: T;
 	nameKey?: string;
 	nameKeyTitle?: string;

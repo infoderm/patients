@@ -18,10 +18,10 @@ type Props = {
 	open: boolean;
 	onClose: () => void;
 	toCreate: {};
-	consultationsToAttach: unknown[];
-	attachmentsToAttach: unknown[];
-	documentsToAttach: unknown[];
-	toDelete: unknown[];
+	consultationsToAttach: string[];
+	attachmentsToAttach: string[];
+	documentsToAttach: string[];
+	toDelete: string[];
 };
 
 const MergePatientsConfirmationDialog = ({

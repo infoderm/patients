@@ -17,7 +17,7 @@ import InputFileButton from '../input/InputFileButton';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
 
 type Props = {
-	endpoint: Endpoint<any>;
+	endpoint: Endpoint<[string, string], any>;
 	item: string;
 	children?: ReactNode;
 } & Omit<PropsOf<typeof InputFileButton>, 'onChange'>;

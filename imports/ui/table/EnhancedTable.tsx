@@ -75,7 +75,7 @@ const EnhancedTable = ({query}: Props) => {
 
 	const [order, setOrder] = useState<Order>('asc');
 	const [orderBy, setOrderBy] = useState('mppcv');
-	const [selected, setSelected] = useState(new Set());
+	const [selected, setSelected] = useState<Set<string>>(new Set());
 
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -124,7 +124,7 @@ const EnhancedTable = ({query}: Props) => {
 		setSelected(new Set());
 	};
 
-	const isSelected = (id) => selected.has(id);
+	const isSelected = (id: string) => selected.has(id);
 
 	const emptyRows =
 		rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);

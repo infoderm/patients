@@ -4,7 +4,7 @@ import {PermissionTokens} from '../../../collection/permissionTokens';
 
 import define from '../../define';
 
-export default define<number>({
+export default define({
 	name: 'permissions.token.revoke',
 	validate(_id: string) {
 		check(_id, String);

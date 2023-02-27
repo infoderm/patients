@@ -5,12 +5,12 @@ import type Validator from './Validator';
 import type Transaction from './Transaction';
 import type Simulator from './Simulator';
 
-type Endpoint<R> = {
+type Endpoint<A extends any[], R> = {
 	readonly name: string;
 	readonly authentication: Authentication;
-	readonly validate: Validator;
-	readonly transaction?: Transaction<R>;
-	readonly run: Executor<R> | Simulator;
+	readonly validate: Validator<A>;
+	readonly transaction?: Transaction<A, R>;
+	readonly run: Executor<A, R> | Simulator<A>;
 	readonly options?: Options<R>;
 };
 

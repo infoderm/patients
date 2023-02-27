@@ -38,7 +38,7 @@ type Props<T> = {
 	title: string;
 	useTagsFind?: GenericQueryHook<T>;
 	suggestionFilter?: Mongo.Selector<T>;
-	endpoint: Endpoint<any>;
+	endpoint: Endpoint<[string, string], any>;
 	tag: T;
 	nameKey?: string;
 	nameKeyTitle?: string;
