@@ -23,7 +23,7 @@ export default define({
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},
-	transaction: unconditionallyUpdateById<ConsultationDocument>(
+	transaction: unconditionallyUpdateById(
 		Appointments,
 		async (db: TransactionDriver, existing: ConsultationDocument) => {
 			const {

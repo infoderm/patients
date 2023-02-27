@@ -4,10 +4,11 @@ import {useState, useEffect} from 'react';
 
 import useChanged from '../../ui/hooks/useChanged';
 
+import type Args from '../Args';
 import subscribe from './subscribe';
 import type Publication from './Publication';
 
-const useSubscriptionClient = <A extends any[]>(
+const useSubscriptionClient = <A extends Args>(
 	publication?: Publication<A>,
 	...args: A
 ): (() => boolean) => {
@@ -36,12 +37,14 @@ const useSubscriptionClient = <A extends any[]>(
 };
 
 const useSubscriptionServer =
-	// @ts-expect-error Those parameters are not used.
-
-
-		(publication?: Publication, ...args: any[]): (() => boolean) =>
-		() =>
-			false;
+	<A extends Args>(
+		// @ts-expect-error Those parameters are not used.
+		publication?: Publication<A>,
+		// @ts-expect-error Those parameters are not used.
+		...args: A
+	): (() => boolean) =>
+	() =>
+		false;
 
 const useSubscription = Meteor.isServer
 	? useSubscriptionServer

@@ -1,4 +1,6 @@
-type Publication<_ extends any[]> = {
+import type Args from '../Args';
+
+type Publication<_ extends Args> = {
 	readonly name: string;
 };
 

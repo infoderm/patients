@@ -2,6 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {DDP} from 'meteor/ddp';
 import promisify from '../lib/async/promisify';
 import type Options from './endpoint/Options';
+import type Args from './Args';
 
 const __meteor_apply_promisified = promisify(
 	// @ts-expect-error Private access.
@@ -10,7 +11,7 @@ const __meteor_apply_promisified = promisify(
 
 const _apply = async <R>(
 	name: string,
-	args: any[],
+	args: Args,
 	options: Options<R>,
 ): Promise<R> => {
 	// NOTE Like

@@ -23,7 +23,7 @@ export default define({
 		check(cancellationReason, String);
 		check(cancellationExplanation, String);
 	},
-	transaction: unconditionallyUpdateById<ConsultationDocument>(
+	transaction: unconditionallyUpdateById(
 		Appointments,
 		async (
 			db: TransactionDriver,

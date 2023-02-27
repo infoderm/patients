@@ -1,36 +1,39 @@
 import {Meteor} from 'meteor/meteor';
-import {type Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
+
+import type Args from './Args';
+
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
+import type Collection from './Collection';
 import type Modifier from './Modifier';
 import type Context from './endpoint/Context';
 
 type OpReturnValue<T> = Promise<Modifier<T>> | Modifier<T>;
 
-type OpFunction<T> = (
+type OpFunction<A extends Args, T> = (
 	db: TransactionDriver,
 	existing: T,
-	...rest: any[]
+	...rest: A
 ) => OpReturnValue<T>;
 
-type Op<T> = OpFunction<T> | Modifier<T>;
+type Op<A extends Args, T> = OpFunction<A, T> | Modifier<T>;
 
-const unconditionallyUpdateById = <T>(
-	Collection: Mongo.Collection<T>,
-	op: Op<T>,
+const unconditionallyUpdateById = <A extends Args, T, U>(
+	collection: Collection<T, U>,
+	op: Op<A, T>,
 	ownerKey = 'owner',
 ) =>
 	async function (
 		this: Context,
 		db: TransactionDriver,
 		_id: string,
-		...rest: any[]
+		...rest: A
 	) {
 		check(_id, String);
 
 		const selector = {_id, [ownerKey]: this.userId} as unknown as Filter<T>;
-		const existing = await db.findOne(Collection, selector);
+		const existing = await db.findOne(collection, selector);
 		if (existing === null) {
 			throw new Meteor.Error('not-found');
 		}
@@ -40,7 +43,7 @@ const unconditionallyUpdateById = <T>(
 				? await Reflect.apply(op, this, [db, existing, ...rest])
 				: op;
 
-		return db.updateOne(Collection, {_id} as unknown as Filter<T>, modifier);
+		return db.updateOne(collection, {_id} as unknown as Filter<T>, modifier);
 	};
 
 export default unconditionallyUpdateById;

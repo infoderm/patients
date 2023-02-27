@@ -1,15 +1,18 @@
-import {Books} from '../../collection/books';
+import {type BookDocument, Books} from '../../collection/books';
+import type Selector from '../../Selector';
+import type Filter from '../../transaction/Filter';
 import define from '../define';
 
 const publication = 'books';
 
 export default define({
 	name: publication,
-	cursor(args) {
-		const query = {
-			...args,
+	cursor(filter: Filter<BookDocument>) {
+		const selector = {
+			...filter,
 			owner: this.userId,
-		};
-		return Books.find(query);
+		} as Selector<BookDocument>;
+
+		return Books.find(selector);
 	},
 });

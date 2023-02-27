@@ -1,10 +1,15 @@
 import {check} from 'meteor/check';
-import {Consultations} from '../../../collection/consultations';
+import {
+	type ConsultationDocument,
+	Consultations,
+} from '../../../collection/consultations';
+import type Selector from '../../../Selector';
+import type Filter from '../../../transaction/Filter';
 import define from '../../define';
 
 export default define({
 	name: 'consultations.interval.last',
-	cursor(from: Date, to: Date, filter) {
+	cursor(from: Date, to: Date, filter?: Filter<ConsultationDocument>) {
 		check(from, Date);
 		check(to, Date);
 		return Consultations.find(
@@ -16,7 +21,7 @@ export default define({
 				},
 				...filter,
 				owner: this.userId,
-			},
+			} as Selector<ConsultationDocument>,
 			{
 				sort: {
 					datetime: -1,

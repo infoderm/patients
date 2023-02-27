@@ -1,6 +1,10 @@
-import {Consultations} from '../../collection/consultations';
+import {
+	type ConsultationDocument,
+	Consultations,
+} from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 import {countCollection, type PollResult} from '../../collection/stats';
+import type Selector from '../../Selector';
 import define from '../define';
 
 export const frequencySexKey = (query) =>
@@ -17,7 +21,7 @@ export type GenderCount = {
 
 export default define({
 	name: frequencySexPublication,
-	handle(query) {
+	handle(query: Selector<ConsultationDocument>) {
 		const collection = countCollection;
 		const key = frequencySexKey(query);
 		const selector = {...query, isDone: true, owner: this.userId};

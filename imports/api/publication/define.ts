@@ -5,6 +5,7 @@ import {map} from '@iterable-iterator/map';
 import {sum} from '@iterable-iterator/reduce';
 
 import authorized from '../authorized';
+import type Args from '../Args';
 import type Params from './Params';
 import type Publication from './Publication';
 
@@ -12,7 +13,7 @@ import type Publication from './Publication';
 const exactlyOne = (array: any[]) =>
 	sum(map((x: any) => (x ? 1 : 0), array)) === 1;
 
-const define = <A extends any[], T, U = T>({
+const define = <A extends Args, T, U = T>({
 	name,
 	authentication,
 	cursor,

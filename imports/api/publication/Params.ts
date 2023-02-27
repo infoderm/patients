@@ -1,9 +1,10 @@
+import type Args from '../Args';
 import type Authentication from '../Authentication';
 
 import type Cursor from './Cursor';
 import type Subscription from './Subscription';
 
-type Params<A extends any[], T, U = T> = {
+type Params<A extends Args, T, U = T> = {
 	readonly name: string;
 	readonly authentication?: Authentication;
 	readonly cursor?: (this: Subscription, ...args: A) => Cursor<T, U>;
