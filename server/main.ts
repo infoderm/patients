@@ -2,7 +2,6 @@
 import './polyfill';
 import assert from 'assert';
 import {Meteor} from 'meteor/meteor';
-import {type Mongo} from 'meteor/mongo';
 import {WebApp} from 'meteor/webapp';
 import {Accounts} from 'meteor/accounts-base';
 
@@ -44,6 +43,7 @@ import '../imports/api/endpoint/_register/enabled';
 // DECLARE ALL ENABLED ICS ENDPOINTS
 import {names} from '../imports/api/createTagCollection';
 import type TagDocument from '../imports/api/tags/TagDocument';
+import type Collection from '../imports/api/Collection';
 import ics from './api/ics/index';
 
 if (Meteor.isTest || Meteor.isAppTest) {
@@ -57,7 +57,7 @@ Meteor.startup(async () => {
 	console.time('migrations');
 	// Code to run on server at startup
 
-	const collections: Array<Mongo.Collection<any>> = [
+	const collections: Array<Collection<any>> = [
 		Settings,
 		Patients,
 		PatientsSearchIndex,

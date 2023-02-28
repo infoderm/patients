@@ -1,5 +1,4 @@
 import {check} from 'meteor/check';
-import {type Mongo} from 'meteor/mongo';
 
 import addMilliseconds from 'date-fns/addMilliseconds';
 
@@ -12,6 +11,7 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import type Modifier from '../../Modifier';
 
 export default define({
 	name: 'consultations.restoreAppointment',
@@ -21,7 +21,7 @@ export default define({
 	transaction: unconditionallyUpdateById(
 		Consultations,
 		async (db: TransactionDriver, existing) => {
-			const modifier: Mongo.Modifier<ConsultationDocument> = {
+			const modifier: Modifier<ConsultationDocument> = {
 				$set: {
 					datetime: existing.scheduledDatetime,
 					begin: existing.scheduledDatetime,

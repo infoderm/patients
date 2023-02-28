@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
-import {Mongo} from 'meteor/mongo';
 
 import {Random} from 'meteor/random';
 
 import {dropId, dropIds, server} from '../../_test/fixtures';
+import Collection from '../Collection';
 import TestingTransactionDriver from './TestingTransactionDriver';
 import executeTransaction from './executeTransaction';
 import MeteorTransactionSimulationDriver from './MeteorTransactionSimulationDriver';
@@ -26,7 +26,7 @@ server(__filename, () => {
 		it(`${title} (Meteor transaction simulation)`, unit(MeteorDriver));
 	};
 
-	const Tests = new Mongo.Collection<any>('test-8h9e8w89hf98239');
+	const Tests = new Collection<any>('test-8h9e8w89hf98239');
 
 	it2('insertOne', (db) => async () => {
 		assert.equal(await Tests.find().countAsync(), 0);

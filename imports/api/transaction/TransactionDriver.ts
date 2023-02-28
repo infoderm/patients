@@ -7,7 +7,7 @@ import {
 	type WithId,
 } from 'mongodb';
 
-import type Collection from './Collection';
+import type Collection from '../Collection';
 import type Filter from './Filter';
 
 export type ObjectId = string;

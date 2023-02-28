@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../Collection';
 
 export type SlotFields = {
 	begin: Date;
@@ -17,6 +17,6 @@ export type SlotMetadata = {
 export type SlotDocument = SlotFields & SlotMetadata;
 
 const availabilityCollectionName = 'availability';
-export const Availability = new Mongo.Collection<SlotDocument>(
+export const Availability = new Collection<SlotDocument>(
 	availabilityCollectionName,
 );

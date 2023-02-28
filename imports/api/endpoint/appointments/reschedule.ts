@@ -1,5 +1,4 @@
 import assert from 'assert';
-import {type Mongo} from 'meteor/mongo';
 
 import {Appointments} from '../../collection/appointments';
 import {sanitizeAppointmentUpdate} from '../../appointments';
@@ -12,6 +11,7 @@ import compose from '../compose';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 import {validate} from '../../../lib/schema';
+import type Modifier from '../../Modifier';
 import createPatientForAppointment from './createPatient';
 
 export default define({
@@ -83,7 +83,7 @@ export default define({
 			);
 		}
 
-		const modifier: Mongo.Modifier<ConsultationDocument> = {
+		const modifier: Modifier<ConsultationDocument> = {
 			$set,
 			$currentDate: {lastModifiedAt: true},
 		};

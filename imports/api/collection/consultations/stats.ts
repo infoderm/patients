@@ -1,7 +1,8 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../../Collection';
+import type Selector from '../../Selector';
 import {collection, type ConsultationDocument} from '../consultations';
 
-export const key = (query: Mongo.Selector<ConsultationDocument>) =>
+export const key = (query: Selector<ConsultationDocument>) =>
 	JSON.stringify(query);
 
 export type ConsultationsStats = {
@@ -12,4 +13,4 @@ export type ConsultationsStats = {
 };
 
 export const stats = collection + '.stats';
-export const Stats = new Mongo.Collection<ConsultationsStats>(stats);
+export const Stats = new Collection<ConsultationsStats>(stats);

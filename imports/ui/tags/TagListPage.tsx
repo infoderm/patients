@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {type Mongo} from 'meteor/mongo';
-
 import type GenericQueryHook from '../../api/GenericQueryHook';
+import type Options from '../../api/Options';
+import type Selector from '../../api/Selector';
 import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';
@@ -19,7 +19,7 @@ export type TagListPageProps<T> = {
 	page?: number;
 	perpage?: number;
 
-	query?: Mongo.Selector<T>;
+	query?: Selector<T>;
 	sort?: {};
 
 	useTags?: GenericQueryHook<T>;
@@ -41,7 +41,7 @@ const TagListPage = <T extends TagNameFields & TagMetadata>({
 		perpage,
 		key,
 	];
-	const options: Mongo.Options<T> = {
+	const options: Options<T> = {
 		sort,
 		skip: (page - 1) * perpage,
 		limit: perpage,

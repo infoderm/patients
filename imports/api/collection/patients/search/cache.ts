@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../../../Collection';
 import type CacheItem from '../../../CacheItem';
 import {type SexAllowed} from '../../patients';
 
@@ -23,6 +23,6 @@ export type PatientCacheResult = {
 
 export type PatientCacheItem = CacheItem<PatientCacheResult>;
 
-export const PatientsSearchIndexCache = new Mongo.Collection<PatientCacheItem>(
+export const PatientsSearchIndexCache = new Collection<PatientCacheItem>(
 	indexObservedQueryCacheCollection,
 );

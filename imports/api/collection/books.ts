@@ -1,5 +1,4 @@
-import {Mongo} from 'meteor/mongo';
-
+import Collection from '../Collection';
 import {type NormalizedLine} from '../string';
 
 export type BookFields = {
@@ -19,4 +18,4 @@ type BookMetadata = {
 export type BookDocument = BookFields & BookComputedFields & BookMetadata;
 
 export const collection = 'books';
-export const Books = new Mongo.Collection<BookDocument>(collection);
+export const Books = new Collection<BookDocument>(collection);

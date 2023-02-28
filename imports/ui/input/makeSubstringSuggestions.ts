@@ -1,5 +1,3 @@
-import {type Mongo} from 'meteor/mongo';
-
 import {useDebounce} from 'use-debounce';
 
 import type GenericQueryHook from '../../api/GenericQueryHook';
@@ -7,6 +5,8 @@ import {escapeStringRegexp} from '../../api/string';
 import mergeFields from '../../api/query/mergeFields';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
+import type Projection from '../../api/Projection';
+import type Selector from '../../api/Selector';
 
 const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input
@@ -16,8 +16,8 @@ const makeSubstringSuggestions =
 		useCollectionFind: GenericQueryHook<T>,
 		$nin: string[] = [],
 		key = 'name',
-		filter?: Mongo.Selector<T> | undefined,
-		projection?: Mongo.FieldSpecifier | undefined,
+		filter?: Selector<T>,
+		projection?: Projection<T>,
 	) =>
 	(searchString: string) => {
 		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(

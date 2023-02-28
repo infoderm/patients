@@ -1,6 +1,7 @@
 import {type DependencyList} from 'react';
 
 import Collection from './Collection';
+import type Filter from './transaction/Filter';
 import type Selector from './Selector';
 import type Options from './Options';
 
@@ -16,10 +17,10 @@ const makeFilteredCollection = <T, U = T>(
 ) => {
 	const publication = define({
 		name,
-		handle(publicationSelector: Selector<T>, publicationOptions: Options<T>) {
+		handle(publicationFilter: Filter<T>, publicationOptions: Options<T>) {
 			const selector = {
 				...filterSelector,
-				...publicationSelector,
+				...publicationFilter,
 				owner: this.userId,
 			};
 

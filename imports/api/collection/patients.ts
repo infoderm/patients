@@ -1,5 +1,5 @@
-import {Mongo} from 'meteor/mongo';
 import {Match} from 'meteor/check';
+import Collection from '../Collection';
 import {type FormattedLine, type NormalizedLine} from '../string';
 
 const maybe = Match.Maybe;
@@ -87,4 +87,4 @@ export type PatientDocument = PatientFields &
 	PatientMetadata;
 
 const collection = 'patients';
-export const Patients = new Mongo.Collection<PatientDocument>(collection);
+export const Patients = new Collection<PatientDocument>(collection);

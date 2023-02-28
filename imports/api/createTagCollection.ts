@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import mergeOptions from './query/mergeOptions';
@@ -30,9 +29,10 @@ import makeItem from './tags/makeItem';
 import type Publication from './publication/Publication';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
-import type Collection from './Collection';
+import Collection from './Collection';
 import type Selector from './Selector';
 import type Options from './Options';
+import type Modifier from './Modifier';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -85,7 +85,7 @@ const createTagCollection = <
 	options: TagCollectionOptions<T, P>,
 ) => {
 	const {
-		Collection,
+		Collection: tagsCollection,
 		collection,
 		publication,
 		singlePublication,
@@ -100,21 +100,21 @@ const createTagCollection = <
 	const cacheCollection = collection + FIND_CACHE_SUFFIX;
 	const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 
-	const Stats = new Mongo.Collection<TagStats>(stats);
+	const Stats = new Collection<TagStats>(stats);
 
-	const TagsCache = new Mongo.Collection<CacheItem<T>>(cacheCollection);
+	const TagsCache = new Collection<CacheItem<T>>(cacheCollection);
 
 	const _publication = definePublication({
 		name: publication,
-		cursor: pageQuery(Collection),
+		cursor: pageQuery(tagsCollection),
 	});
 
-	const useTags = makeQuery(Collection, _publication);
-	const useCachedTag = makeCachedFindOne(Collection, _publication);
+	const useTags = makeQuery(tagsCollection, _publication);
+	const useCachedTag = makeCachedFindOne(tagsCollection, _publication);
 
 	const _cachePublication = definePublication({
 		name: cachePublication,
-		handle: makeObservedQueryPublication(Collection, cacheCollection),
+		handle: makeObservedQueryPublication(tagsCollection, cacheCollection),
 	});
 
 	// TODO rename to useObservedTags
@@ -123,17 +123,17 @@ const createTagCollection = <
 	const _singlePublication = definePublication({
 		name: singlePublication,
 		cursor(name: string) {
-			return Collection.find({
+			return tagsCollection.find({
 				owner: this.userId,
 				name,
-			} as Mongo.Selector<T>);
+			} as Selector<T>);
 		},
 	});
 
-	const useTag = makeItem(Collection, _singlePublication);
+	const useTag = makeItem(tagsCollection, _singlePublication);
 
 	const useTaggedDocuments = (name: string, options) => {
-		const selector = {[key]: {$elemMatch: {name}}} as Mongo.Selector<P>;
+		const selector = {[key]: {$elemMatch: {name}}} as Selector<P>;
 
 		const mergedOptions = mergeOptions(options, {
 			fields: {
@@ -168,7 +168,7 @@ const createTagCollection = <
 			const query = {
 				[key]: {$elemMatch: {name}},
 				owner: this.userId,
-			} as Mongo.Selector<P>;
+			} as Selector<P>;
 			// We only include relevant fields
 			const options = {fields: {_id: 1, [key]: 1}};
 
@@ -234,7 +234,7 @@ const createTagCollection = <
 			rawDisplayName: string,
 		) {
 			const owner = this.userId;
-			const tag = await db.findOne(Collection, {
+			const tag = await db.findOne(tagsCollection, {
 				_id: tagId,
 				owner,
 			} as Filter<T>);
@@ -290,11 +290,11 @@ const createTagCollection = <
 				name: newname,
 			};
 
-			await db.deleteOne(Collection, {_id} as Filter<T>);
+			await db.deleteOne(tagsCollection, {_id} as Filter<T>);
 			return db.updateOne(
-				Collection,
+				tagsCollection,
 				selector as Filter<T>,
-				{$set: newFields} as unknown as Mongo.Modifier<T>,
+				{$set: newFields} as unknown as Modifier<T>,
 				{upsert: true},
 			);
 		},
@@ -310,7 +310,7 @@ const createTagCollection = <
 		},
 		async transaction(db: TransactionDriver, tagId: string) {
 			const owner = this.userId;
-			const tag = await db.findOne(Collection, {
+			const tag = await db.findOne(tagsCollection, {
 				_id: tagId,
 				owner,
 			} as Filter<T>);
@@ -325,7 +325,7 @@ const createTagCollection = <
 				{$pull: {[key]: {name: tag.name}}},
 			);
 
-			return db.deleteOne(Collection, {_id: tagId} as Filter<T>);
+			return db.deleteOne(tagsCollection, {_id: tagId} as Filter<T>);
 		},
 		simulate(_tagId: string) {
 			return undefined;
@@ -354,9 +354,9 @@ const createTagCollection = <
 			};
 
 			return db.updateOne(
-				Collection,
+				tagsCollection,
 				selector as Filter<T>,
-				{$set: fields} as Mongo.Modifier<T>,
+				{$set: fields} as Modifier<T>,
 				{upsert: true},
 			);
 		},
@@ -370,7 +370,7 @@ const createTagCollection = <
 				name,
 			} as Filter<T>;
 
-			return db.deleteOne(Collection, selector);
+			return db.deleteOne(tagsCollection, selector);
 		},
 	};
 

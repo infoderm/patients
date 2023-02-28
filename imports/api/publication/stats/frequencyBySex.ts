@@ -5,6 +5,7 @@ import {
 import {Patients} from '../../collection/patients';
 import {countCollection, type PollResult} from '../../collection/stats';
 import type Selector from '../../Selector';
+import type Filter from '../../transaction/Filter';
 import define from '../define';
 
 export const frequencySexKey = (query) =>
@@ -21,10 +22,14 @@ export type GenderCount = {
 
 export default define({
 	name: frequencySexPublication,
-	handle(query: Selector<ConsultationDocument>) {
+	handle(filter: Filter<ConsultationDocument>) {
 		const collection = countCollection;
-		const key = frequencySexKey(query);
-		const selector = {...query, isDone: true, owner: this.userId};
+		const key = frequencySexKey(filter);
+		const selector = {
+			...filter,
+			isDone: true,
+			owner: this.userId,
+		} as Selector<ConsultationDocument>;
 		const options = {
 			fields: {
 				patientId: 1,

@@ -1,6 +1,7 @@
 import assert from 'assert';
-
-import {type Mongo} from 'meteor/mongo';
+import type Collection from '../Collection';
+import type Options from '../Options';
+import type Selector from '../Selector';
 
 import fetchSync from './fetchSync';
 
@@ -8,9 +9,9 @@ import fetchSync from './fetchSync';
  * Synchronous cursor fetch for a single item.
  */
 const findOneSync = <T, U = T>(
-	collection: Mongo.Collection<T, U>,
-	selector?: Mongo.Selector<T>,
-	options?: Mongo.Options<T>,
+	collection: Collection<T, U>,
+	selector?: Selector<T>,
+	options?: Options<T>,
 ): U | undefined => {
 	const cursor = collection.find(selector, {...options, limit: 1});
 	const items = fetchSync(cursor);

@@ -1,4 +1,5 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../Collection';
+
 import {type HMACConfig} from '../../lib/hmac';
 
 export type PermissionTokenFields = {
@@ -25,6 +26,6 @@ export type PermissionTokenDocument = PermissionTokenFields &
 	PermissionTokenMetadata;
 
 const collection = 'permissionTokens';
-export const PermissionTokens = new Mongo.Collection<PermissionTokenDocument>(
+export const PermissionTokens = new Collection<PermissionTokenDocument>(
 	collection,
 );

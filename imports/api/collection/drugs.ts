@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../Collection';
 
 type DrugDocument = {
 	_id: string;
@@ -9,4 +9,4 @@ type DrugDocument = {
 	nvos_?: string;
 };
 
-export const Drugs = new Mongo.Collection<DrugDocument>('drugs');
+export const Drugs = new Collection<DrugDocument>('drugs');

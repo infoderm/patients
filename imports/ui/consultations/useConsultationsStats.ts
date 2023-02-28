@@ -2,8 +2,10 @@ import {key, Stats} from '../../api/collection/consultations/stats';
 import useSubscription from '../../api/publication/useSubscription';
 import useItem from '../../api/publication/useItem';
 import publication from '../../api/publication/consultations/stats';
+import {type ConsultationDocument} from '../../api/collection/consultations';
+import type Selector from '../../api/Selector';
 
-const useConsultationsStats = (query) => {
+const useConsultationsStats = (query: Selector<ConsultationDocument>) => {
 	const isLoading = useSubscription(publication, query);
 	const loading = isLoading();
 

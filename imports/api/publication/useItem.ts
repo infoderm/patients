@@ -1,16 +1,16 @@
-import {type Mongo} from 'meteor/mongo';
-
 import {type DependencyList} from 'react';
 
-import type Collection from '../transaction/Collection';
+import type Collection from '../Collection';
+import type Selector from '../Selector';
+import type Options from '../Options';
 
 import useReactive from './useReactive';
 import findOneSync from './findOneSync';
 
 const useItem = <T, U = T>(
 	collection: Collection<T, U> | null,
-	selector: Mongo.Selector<T>,
-	options: Mongo.Options<T>,
+	selector: Selector<T>,
+	options: Options<T>,
 	deps: DependencyList,
 ): U | undefined =>
 	useReactive(

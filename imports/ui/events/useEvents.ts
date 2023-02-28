@@ -1,7 +1,5 @@
 import {type DependencyList} from 'react';
 
-import {type Mongo} from 'meteor/mongo';
-
 import isValid from 'date-fns/isValid';
 
 import {Events, type EventDocument} from '../../api/collection/events';
@@ -9,24 +7,26 @@ import {beginsInInterval} from '../../api/events';
 import useSubscription from '../../api/publication/useSubscription';
 import useCursor from '../../api/publication/useCursor';
 import interval from '../../api/publication/events/interval';
+import type Selector from '../../api/Selector';
+import type Options from '../../api/Options';
 
 const useEvents = (
 	begin: Date,
 	end: Date,
-	filter: Mongo.Selector<EventDocument>,
-	options: Mongo.Options<EventDocument>,
+	filter: Selector<EventDocument>,
+	options: Options<EventDocument>,
 	deps: DependencyList,
 ) => {
 	// TODO Do not oversubscribe
 	const publication = isValid(begin) && isValid(end) ? interval : null;
 	const isLoading = useSubscription(publication, begin, end);
 
-	const query = {
+	const selector = {
 		...beginsInInterval(begin, end),
 		...filter,
 	};
 
-	const results = useCursor(() => Events.find(query, options), deps);
+	const results = useCursor(() => Events.find(selector, options), deps);
 
 	return {
 		loading: isLoading(),

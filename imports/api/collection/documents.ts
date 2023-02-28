@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../Collection';
 
 type Patient = {
 	firstname: string;
@@ -38,4 +38,4 @@ export type DocumentDocument = {
 	results?: DocumentResult[];
 };
 
-export const Documents = new Mongo.Collection<DocumentDocument>('documents');
+export const Documents = new Collection<DocumentDocument>('documents');

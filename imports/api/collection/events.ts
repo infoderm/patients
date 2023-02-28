@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../Collection';
 
 export type EventDocument = {
 	owner: string;
@@ -13,4 +13,4 @@ export type EventDocument = {
 };
 
 export const events = 'events';
-export const Events = new Mongo.Collection<EventDocument>(events);
+export const Events = new Collection<EventDocument>(events);

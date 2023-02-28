@@ -1,5 +1,3 @@
-import {type Mongo} from 'meteor/mongo';
-
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import {Count} from '../../api/collection/stats';
 
@@ -9,6 +7,7 @@ import publication, {
 } from '../../api/publication/stats/frequencyBySex';
 import useItem from '../../api/publication/useItem';
 import useSubscription from '../../api/publication/useSubscription';
+import type Filter from '../../api/transaction/Filter';
 
 type Result = {
 	loading: boolean;
@@ -16,12 +15,10 @@ type Result = {
 	count?: GenderCount[];
 };
 
-const useFrequencyStats = (
-	query?: Mongo.Selector<ConsultationDocument>,
-): Result => {
-	const key = frequencySexKey(query);
+const useFrequencyStats = (filter?: Filter<ConsultationDocument>): Result => {
+	const key = frequencySexKey(filter);
 
-	const isLoading = useSubscription(publication, query);
+	const isLoading = useSubscription(publication, filter);
 	const loading = isLoading();
 
 	const results = useItem(loading ? null : Count, {_id: key}, undefined, [

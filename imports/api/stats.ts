@@ -2,7 +2,7 @@ import {type Subscription} from 'meteor/meteor';
 
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
-import type Collection from './transaction/Collection';
+import type Collection from './Collection';
 
 export const countPublicationName = (QueriedCollection, {values}) =>
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;

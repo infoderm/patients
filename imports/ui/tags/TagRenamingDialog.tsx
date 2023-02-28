@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {type Mongo} from 'meteor/mongo';
 
 import {useSnackbar} from 'notistack';
 
@@ -30,6 +29,7 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 import type GenericQueryHook from '../../api/GenericQueryHook';
 import RenameButton from '../button/RenameButton';
+import type Selector from '../../api/Selector';
 
 type Props<T> = {
 	open: boolean;
@@ -37,7 +37,7 @@ type Props<T> = {
 	onRename: (name: string) => void;
 	title: string;
 	useTagsFind?: GenericQueryHook<T>;
-	suggestionFilter?: Mongo.Selector<T>;
+	suggestionFilter?: Selector<T>;
 	endpoint: Endpoint<[string, string], any>;
 	tag: T;
 	nameKey?: string;

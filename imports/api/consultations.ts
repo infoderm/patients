@@ -1,4 +1,3 @@
-import {type Mongo} from 'meteor/mongo';
 import {check} from 'meteor/check';
 
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
@@ -27,6 +26,7 @@ import {
 	yieldResettableKey,
 } from './update';
 import findOneSync from './publication/findOneSync';
+import type Selector from './Selector';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -79,7 +79,7 @@ export const findLastConsultationSync = (
 	const {query, options} = findLastConsultationArgs(filter);
 	return findOneSync(
 		Consultations,
-		query as Mongo.Selector<ConsultationDocument>,
+		query as Selector<ConsultationDocument>,
 		options,
 	);
 };
@@ -106,7 +106,7 @@ export const findLastConsultationInIntervalSync = (
 	);
 	return findOneSync(
 		Consultations,
-		query as Mongo.Selector<ConsultationDocument>,
+		query as Selector<ConsultationDocument>,
 		options,
 	);
 };

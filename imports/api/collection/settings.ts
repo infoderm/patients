@@ -1,4 +1,4 @@
-import {Mongo} from 'meteor/mongo';
+import Collection from '../Collection';
 
 type SettingDocument = {
 	owner: string;
@@ -6,4 +6,4 @@ type SettingDocument = {
 	value: any;
 };
 
-export const Settings = new Mongo.Collection<SettingDocument>('settings');
+export const Settings = new Collection<SettingDocument>('settings');

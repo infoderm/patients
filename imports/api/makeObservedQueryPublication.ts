@@ -1,4 +1,7 @@
-import {type Mongo} from 'meteor/mongo';
+import type Collection from './Collection';
+import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
+import type Options from './Options';
+import type Selector from './Selector';
 
 type ObserveOptions = {
 	added?: boolean;
@@ -7,13 +10,13 @@ type ObserveOptions = {
 };
 
 const makeObservedQuerySubscription = <T, U = T>(
-	QueriedCollection: Mongo.Collection<T, U>,
+	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
 	function (
 		key: string,
-		query: Mongo.Selector<T>,
-		options: Mongo.Options<T>,
+		query: Selector<T>,
+		options: Options<T>,
 		observe?: ObserveOptions,
 	) {
 		query = {
@@ -38,7 +41,7 @@ const makeObservedQuerySubscription = <T, U = T>(
 			this.stop();
 		};
 
-		const observers: Mongo.ObserveChangesCallbacks<T> = {
+		const observers: ObserveChangesCallbacks<T> = {
 			added(_id, fields) {
 				if (initializing) results.push({_id, ...fields});
 				else if (observe.added) stop();

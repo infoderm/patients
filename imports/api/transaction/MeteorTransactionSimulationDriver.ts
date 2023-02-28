@@ -1,7 +1,7 @@
 import {type InferIdType} from 'mongodb';
 
+import type Collection from '../Collection';
 import type TransactionDriver from './TransactionDriver';
-import type Collection from './Collection';
 
 export default class MeteorTransactionSimulationDriver
 	implements TransactionDriver

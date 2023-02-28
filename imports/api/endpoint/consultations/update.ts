@@ -13,6 +13,7 @@ import {books} from '../../books';
 import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import type Modifier from '../../Modifier';
 
 const {sanitize} = consultations;
 
@@ -57,7 +58,7 @@ export default define({
 			await books.add(db, owner, books.name(newState.datetime, newState.book));
 		}
 
-		const modifier: Mongo.Modifier<ConsultationDocument> = {
+		const modifier: Modifier<ConsultationDocument> = {
 			$currentDate: {lastModifiedAt: true},
 			$set,
 			$unset,
