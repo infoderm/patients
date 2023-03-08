@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Settings} from '../../collection/settings';
@@ -8,10 +8,8 @@ import define from '../define';
 export default define({
 	name: 'settings.update',
 	authentication: AuthenticationLoggedIn,
-	validate(key: string, _value: any) {
-		check(key, String);
-	},
-	async run(key: string, value: any) {
+	schema: schema.tuple([schema.string(), schema.any()]),
+	async run(key, value) {
 		// const updatedAt = new Date();
 		const owner = this.userId;
 		// const username = await Meteor.users.findOneAsync(this.userId).username;

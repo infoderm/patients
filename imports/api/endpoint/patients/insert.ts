@@ -1,6 +1,6 @@
-import {check} from 'meteor/check';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
+import schema from '../../../lib/schema';
 import {Patients} from '../../collection/patients';
 import {computeUpdate, patients} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';
@@ -12,10 +12,8 @@ const {sanitize, updateIndex, updateTags} = patients;
 export default define({
 	name: '/api/patients/insert',
 	authentication: AuthenticationLoggedIn,
-	validate(patient: any) {
-		check(patient, Object);
-	},
-	async transaction(db: TransactionDriver, patient: any) {
+	schema: schema.tuple([schema.object({})]),
+	async transaction(db: TransactionDriver, patient) {
 		const owner = this.userId;
 		const changes = sanitize(patient);
 		const {newState: fields} = await computeUpdate(

@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {Consultations} from '../../collection/consultations';
 import {Attachments} from '../../collection/attachments';
 
@@ -7,19 +5,13 @@ import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import EndpointError from '../EndpointError';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: '/consultations/attach',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string, uploadId: string) {
-		check(consultationId, String);
-		check(uploadId, String);
-	},
-	async transaction(
-		db: TransactionDriver,
-		consultationId: string,
-		uploadId: string,
-	) {
+	schema: schema.tuple([schema.string(), schema.string()]),
+	async transaction(db: TransactionDriver, consultationId, uploadId) {
 		const consultation = await db.findOne(Consultations, {
 			_id: consultationId,
 			owner: this.userId,
@@ -46,7 +38,7 @@ export default define({
 
 		return result;
 	},
-	async simulate(consultationId: string, uploadId: string) {
+	async simulate(consultationId, uploadId) {
 		await Attachments.updateAsync(uploadId, {
 			$addToSet: {'meta.attachedToConsultations': consultationId},
 		});

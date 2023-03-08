@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import addMilliseconds from 'date-fns/addMilliseconds';
 
 import {
@@ -13,13 +11,12 @@ import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'consultations.restoreAppointment',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string) {
-		check(consultationId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	transaction: unconditionallyUpdateById(
 		Consultations,
 		async (db: TransactionDriver, existing) => {
@@ -56,7 +53,7 @@ export default define({
 			return modifier as Modifier<ConsultationDocument>;
 		},
 	),
-	simulate(_consultationId: string) {
+	simulate(_consultationId) {
 		return undefined;
 	},
 });

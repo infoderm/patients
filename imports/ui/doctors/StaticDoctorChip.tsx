@@ -31,7 +31,7 @@ const StaticDoctorChip = React.forwardRef(
 		}
 
 		return (
-			<Chip ref={ref} {...rest} style={style} component={component} to={to} />
+			<Chip ref={ref} {...rest} style={style} component={component!} to={to} />
 		);
 	},
 );

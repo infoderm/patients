@@ -1,11 +1,11 @@
-import {check} from 'meteor/check';
-
 import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
 import {product} from '@set-theory/cartesian-product';
 import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
+
+import schema from '../../../lib/schema';
 
 import {Consultations} from '../../collection/consultations';
 import {books} from '../../books';
@@ -16,26 +16,14 @@ import {AuthenticationLoggedIn} from '../../Authentication';
 export default define({
 	name: 'books.interval.csv',
 	authentication: AuthenticationLoggedIn,
-	validate(
-		begin: Date,
-		end: Date,
-		firstBook: number,
-		lastBook: number,
-		maxRows: number,
-	) {
-		check(begin, Date);
-		check(end, Date);
-		check(firstBook, Number);
-		check(lastBook, Number);
-		check(maxRows, Number);
-	},
-	async run(
-		begin: Date,
-		end: Date,
-		firstBook: number,
-		lastBook: number,
-		maxRows: number,
-	) {
+	schema: schema.tuple([
+		schema.date(),
+		schema.date(),
+		schema.number(),
+		schema.number(),
+		schema.number(),
+	]),
+	async run(begin, end, firstBook, lastBook, maxRows) {
 		const beginBook = firstBook;
 		const endBook = lastBook + 1;
 

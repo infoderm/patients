@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {type PatientDocument, Patients} from '../../collection/patients';
@@ -8,17 +8,14 @@ import define from '../define';
 export default define({
 	name: '/patients/find',
 	authentication: AuthenticationLoggedIn,
-	validate(query: any, options: any) {
-		check(query, Object);
-		check(options, Object);
-	},
+	schema: schema.tuple([schema.object({}), schema.object({})]),
 	async run(
-		query: any,
-		options: any,
+		query,
+		options,
 	): Promise<Array<Partial<PatientDocument> & {_id: string}>> {
 		return Patients.find({...query, owner: this.userId}, options).fetchAsync();
 	},
-	simulate(_query: any, _options: any) {
+	simulate(_query, _options) {
 		return undefined;
 	},
 });

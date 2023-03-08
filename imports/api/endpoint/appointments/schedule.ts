@@ -8,7 +8,7 @@ import {
 import {availability} from '../../availability';
 
 import type TransactionDriver from '../../transaction/TransactionDriver';
-import {validate} from '../../../lib/schema';
+import schema from '../../../lib/schema';
 
 import define from '../define';
 import compose from '../compose';
@@ -19,9 +19,21 @@ import createPatientForAppointment from './createPatient';
 export default define({
 	name: 'appointments.schedule',
 	authentication: AuthenticationLoggedIn,
-	validate(appointment: any) {
-		validate(appointment, Object);
-	},
+	schema: schema.tuple([
+		schema.object({
+			patient: schema
+				.object({
+					_id: schema.string(),
+					firstname: schema.string().optional(),
+					lastname: schema.string().optional(),
+				})
+				.optional(),
+			phone: schema.string().optional(),
+			datetime: schema.date(),
+			duration: schema.number(),
+			reason: schema.string(),
+		}),
+	]),
 	async transaction(db: TransactionDriver, appointment: AppointmentUpdate) {
 		const {
 			createPatient,

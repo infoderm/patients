@@ -1,6 +1,8 @@
+import type Serializable from '../Serializable';
 import type Args from '../Args';
 import {type Authentication} from '../Authentication';
-import type Serializable from '../Serializable';
+import type ArgsSchema from '../ArgsSchema';
+// import type InferArgs from '../InferArgs';
 
 import type Options from './Options';
 import type Executor from './Executor';
@@ -16,9 +18,11 @@ type Endpoint<
 	C extends ContextFor<Auth> = ContextFor<Auth>,
 > = {
 	readonly name: string;
+	// readonly schema: A extends InferArgs<infer S> ? S : never;
+	readonly schema: ArgsSchema;
 	readonly options?: Options<R>;
 	readonly authentication: Auth;
-	readonly validate: Validator<C, A>;
+	readonly validate?: Validator<C, A>;
 	readonly transaction?: Transaction<C, A, R>;
 	readonly run: Executor<C, A, R> | Simulator<C, A>;
 };

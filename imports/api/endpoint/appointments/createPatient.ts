@@ -1,19 +1,16 @@
-import {check} from 'meteor/check';
-
 import insertPatient from '../patients/insert';
 
 import compose from '../compose';
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'appointments.createPatient',
 	authentication: AuthenticationLoggedIn,
-	validate(fields: any) {
-		check(fields, Object);
-	},
-	async transaction(db: TransactionDriver, fields: any) {
+	schema: schema.tuple([schema.object({})]),
+	async transaction(db: TransactionDriver, fields) {
 		const patient = {
 			...fields,
 			createdForAppointment: true,

@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {thisYearsInterval} from '../../../lib/datetime';
 
 import {type ConsultationDocument} from '../../collection/consultations';
@@ -18,13 +16,12 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'appointments.beginConsultation',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string) {
-		check(consultationId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	transaction: unconditionallyUpdateById(
 		Appointments,
 		async (db: TransactionDriver, existing: ConsultationDocument) => {
@@ -76,7 +73,7 @@ export default define({
 			return modifier;
 		},
 	),
-	simulate(_consultationId: string) {
+	simulate(_consultationId) {
 		return undefined;
 	},
 });

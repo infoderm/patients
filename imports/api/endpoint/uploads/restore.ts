@@ -1,17 +1,14 @@
-import {check} from 'meteor/check';
-
 import {Uploads} from '../../uploads';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'uploads.restore',
 	authentication: AuthenticationLoggedIn,
-	validate(uploadId: string) {
-		check(uploadId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	transaction: unconditionallyUpdateById(
 		Uploads.collection,
 		{

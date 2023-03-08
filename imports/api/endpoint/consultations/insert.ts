@@ -1,7 +1,9 @@
 import assert from 'assert';
-import {check} from 'meteor/check';
 
-import {Consultations} from '../../collection/consultations';
+import {
+	type ConsultationFields,
+	Consultations,
+} from '../../collection/consultations';
 
 import {computeUpdate, consultations} from '../../consultations';
 
@@ -12,18 +14,21 @@ import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.insert',
 	authentication: AuthenticationLoggedIn,
-	validate(consultation: any) {
-		check(consultation, Object);
-	},
-	async transaction(db: TransactionDriver, consultation: any) {
+	schema: schema.tuple([
+		schema.object({
+			/* TODO ConsultationFields */
+		}),
+	]),
+	async transaction(db: TransactionDriver, consultation) {
 		const owner = this.userId;
-		const changes = sanitize(consultation);
+		const changes = sanitize(consultation as ConsultationFields);
 		const {$set, $unset, newState} = await computeUpdate(
 			db,
 			owner,

@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {availability} from '../../availability';
 
@@ -14,9 +14,7 @@ import define from '../define';
 export default define({
 	name: 'appointments.uncancel',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string) {
-		check(consultationId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	transaction: unconditionallyUpdateById(
 		Appointments,
 		async (db: TransactionDriver, existing) => {
@@ -52,7 +50,7 @@ export default define({
 			return modifier as Modifier<ConsultationDocument>;
 		},
 	),
-	simulate(_consultationId: string) {
+	simulate(_consultationId) {
 		return undefined;
 	},
 });

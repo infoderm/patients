@@ -1,5 +1,5 @@
 import addMilliseconds from 'date-fns/addMilliseconds';
-import {optional, validate, where} from '../lib/schema';
+import schema from '../lib/schema';
 import removeUndefined from '../lib/object/removeUndefined';
 import {type Entry, makeSanitize, yieldKey} from './update';
 import {
@@ -18,9 +18,13 @@ const sanitizeAppointmentGen = function* (fields: {
 		Object.prototype.hasOwnProperty.call(fields, 'datetime') ||
 		Object.prototype.hasOwnProperty.call(fields, 'duration')
 	) {
-		const {datetime, duration} = fields;
-		validate(datetime, Date);
-		validate(duration, Number);
+		const {datetime, duration} = schema
+			.object({
+				datetime: schema.date(),
+				duration: schema.number(),
+			})
+			.parse(fields);
+
 		yield ['datetime', datetime];
 		yield ['duration', duration];
 		yield ['scheduledDatetime', datetime];
@@ -46,30 +50,43 @@ export type AppointmentUpdate = {
 	reason: string;
 };
 
-export const sanitizeAppointmentUpdate = ({
-	patient,
-	phone,
-	datetime,
-	duration,
-	reason,
-}: Partial<AppointmentUpdate>) => {
-	validate(
-		patient,
-		where((patient: any) => {
-			if (patient === undefined) return phone === undefined;
-			validate(patient._id, String);
-			if (patient._id === '?') {
-				validate(patient.firstname, String);
-				validate(patient.lastname, String);
-				validate(phone, String);
-			}
-
-			return true;
-		}),
-	);
-	validate(datetime, optional(Date));
-	validate(duration, optional(Number));
-	validate(reason, optional(String));
+export const sanitizeAppointmentUpdate = (
+	update: Partial<AppointmentUpdate>,
+) => {
+	const {patient, phone, datetime, duration, reason} = schema
+		.union([
+			// TODO Use schema.switch
+			schema.object({
+				patient: schema.object({
+					_id: schema.literal('?'),
+					firstname: schema.string(),
+					lastname: schema.string(),
+				}),
+				phone: schema.string(),
+				datetime: schema.date().optional(),
+				duration: schema.number().optional(),
+				reason: schema.string().optional(),
+			}),
+			schema.object({
+				patient: schema.object({
+					_id: schema.string(),
+					firstname: schema.string(),
+					lastname: schema.string(),
+				}),
+				phone: schema.string().optional(),
+				datetime: schema.date().optional(),
+				duration: schema.number().optional(),
+				reason: schema.string().optional(),
+			}),
+			schema.object({
+				patient: schema.undefined(),
+				phone: schema.undefined(),
+				datetime: schema.date().optional(),
+				duration: schema.number().optional(),
+				reason: schema.string().optional(),
+			}),
+		])
+		.parse(update);
 
 	return {
 		createPatient:

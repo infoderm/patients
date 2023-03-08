@@ -12,7 +12,12 @@ const insertDrugs = async (fd) => {
 		header: true,
 		dynamicTyping: true,
 		async chunk(results: {data: unknown[]}, _parser: unknown) {
-			await call(insertMany, results.data);
+			await call(
+				insertMany,
+				results.data as Array<{
+					/* TODO */
+				}>,
+			);
 			i += results.data.length;
 		},
 		error(error: unknown) {

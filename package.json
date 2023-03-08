@@ -115,7 +115,8 @@
     "sharp": "^0.31.3",
     "tss-react": "^4.6.1",
     "use-debounce": "^9.0.3",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
