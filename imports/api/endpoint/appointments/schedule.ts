@@ -27,9 +27,10 @@ export default define({
 		} = sanitizeAppointmentUpdate(appointment);
 
 		assert($unset === undefined || Object.keys($unset).length === 0);
-		validate($set.begin, Date);
-		validate($set.end, Date);
-		validate($set.reason, String);
+		assert($set !== undefined);
+		assert($set.begin instanceof Date);
+		assert($set.end instanceof Date);
+		assert(typeof $set.reason === 'string');
 
 		const owner = this.userId;
 
@@ -38,7 +39,7 @@ export default define({
 				createPatient,
 			]);
 		} else {
-			validate($set.patientId, String);
+			assert(typeof $set.patientId === 'string');
 			const patient = await db.findOne(Patients, {
 				_id: $set.patientId,
 				owner,

@@ -70,6 +70,7 @@ import {useSetting} from '../settings/hooks';
 import call from '../../api/endpoint/call';
 import type ModuloWeekInterval from '../settings/ModuloWeekInterval';
 import ColorChip from '../chips/ColorChip';
+import {type Constraint} from '../../api/availability';
 import Header from './Header';
 import DayHeader from './DayHeader';
 import StaticWeeklyCalendar from './StaticWeeklyCalendar';
@@ -283,7 +284,7 @@ const ReactiveWeeklyCalendar = ({
 	// are given to next.
 	const weekConstraint: Array<[number, number]> = [[0, units.week + duration]];
 
-	const constraints = Array.from(
+	const constraints: Constraint[] = Array.from(
 		nonOverlappingIntersection(
 			weekConstraint,
 			map(

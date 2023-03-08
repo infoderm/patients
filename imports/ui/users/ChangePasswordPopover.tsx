@@ -10,7 +10,7 @@ import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {
 	id: string;
-	anchorEl: HTMLElement;
+	anchorEl?: HTMLElement | null;
 	handleClose: () => void;
 };
 

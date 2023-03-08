@@ -50,7 +50,7 @@ const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
 	const firstnameWords = words(firstname ?? '');
 	const middlenameWords = words(middlenames.join(''));
-	return [firstnameWords, middlenameWords];
+	return [firstnameWords, middlenameWords] as const;
 };
 
 function normalizedName(firstname, lastname) {
@@ -71,7 +71,7 @@ const updateIndex = async (
 		deathdateModifiedAt,
 		sex,
 	}: PatientDocument,
-	$unset = undefined,
+	$unset?: {},
 ) => {
 	const [firstnameWords, middlenameWords] = splitNames(firstname);
 	const lastnameWords = keepUnique(words(lastname));
@@ -142,7 +142,7 @@ const sanitizePatientTag = ({
 	...rest,
 });
 
-const trimString = (value: string | undefined) => value?.trim();
+const trimString = (value: any) => value?.trim();
 const sanitizePatientTags = (tags) => list(map(sanitizePatientTag, tags));
 const where = Match.Where;
 
@@ -307,7 +307,7 @@ function mergePatients(oldPatients: PatientFields[]): PatientFields {
 		for (const tag of tags) {
 			if (result.has(tag.name)) {
 				if (tag.comment) {
-					const newTag = result.get(tag.name);
+					const newTag = result.get(tag.name)!;
 					if (newTag.comment === undefined) {
 						newTag.comment = tag.comment;
 					} else {

@@ -13,12 +13,15 @@ import type PropsOf from '../../lib/types/PropsOf';
 import usePlannerContextState from './usePlannerContextState';
 import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialogState';
 
-type Props<C> = {
-	Calendar: C extends React.ElementType ? C : never;
-	CalendarProps?: PropsOf<C extends React.ElementType ? C : never>;
+type Props<C extends React.ElementType> = {
+	Calendar: C;
+	CalendarProps: PropsOf<C>;
 };
 
-const Planner = <C,>({Calendar, CalendarProps}: Props<C>) => {
+const Planner = <C extends React.ElementType>({
+	Calendar,
+	CalendarProps,
+}: Props<C>) => {
 	const {patientId} = useParams<{patientId?: string}>();
 
 	const {

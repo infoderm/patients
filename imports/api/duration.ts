@@ -5,25 +5,26 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 
-type UnitsRecord = Record<string, number>;
-type UnitsArray = Array<[string, number]>;
-
-export const units: UnitsRecord = {
+export const units = {
 	week: WEEK,
 	day: DAY,
 	hour: HOUR,
 	minute: MINUTE,
 	second: SECOND,
 	millisecond: MILLISECOND,
-};
+} as const;
 
-const DEFAULT_UNITS: UnitsArray = [
+export type UnitsRecord = typeof units;
+
+const DEFAULT_UNITS = [
 	['week', WEEK],
 	['day', DAY],
 	['hour', HOUR],
 	['minute', MINUTE],
 	['second', SECOND],
-];
+] as const;
+
+export type UnitsArray = typeof DEFAULT_UNITS;
 
 const DEFAULT_REST_UNIT = 'millisecond';
 

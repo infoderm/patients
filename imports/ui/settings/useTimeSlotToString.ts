@@ -1,13 +1,17 @@
 import {useCallback} from 'react';
-import {useDateFormat, useDaysOfWeek} from '../../i18n/datetime';
+import {
+	useDateFormat,
+	useDaysOfWeek,
+	type WeekStartsOn,
+} from '../../i18n/datetime';
 import {units as durationUnits} from '../../api/duration';
 import type ModuloWeekInterval from './ModuloWeekInterval';
 
 type Interval = {
-	beginDay: number;
+	beginDay: WeekStartsOn;
 	beginHour: number;
 	beginMinutes: number;
-	endDay: number;
+	endDay: WeekStartsOn;
 	endHour: number;
 	endMinutes: number;
 };
@@ -18,14 +22,14 @@ const moduloWeekIntervalToInterval = ({
 }: ModuloWeekInterval): Interval => {
 	const beginDay = Math.floor(
 		(beginModuloWeek % durationUnits.week) / durationUnits.day,
-	);
+	) as WeekStartsOn;
 	const beginModuloDay = beginModuloWeek % durationUnits.day;
 	const beginModuloHour = beginModuloWeek % durationUnits.hour;
 	const beginHour = Math.floor(beginModuloDay / durationUnits.hour);
 	const beginMinutes = Math.floor(beginModuloHour / durationUnits.minute);
 	const endDay = Math.floor(
 		(endModuloWeek % durationUnits.week) / durationUnits.day,
-	);
+	) as WeekStartsOn;
 	const endModuloDay = endModuloWeek % durationUnits.day;
 	const endModuloHour = endModuloWeek % durationUnits.hour;
 	const endHour = Math.floor(endModuloDay / durationUnits.hour);
@@ -44,7 +48,10 @@ const moduloWeekIntervalToInterval = ({
 const useTimeSlotFormat = () => {
 	const DAYS = useDaysOfWeek();
 	const timeFormat = useDateFormat('p');
-	const formatDayOfWeek = useCallback((i) => DAYS[i], DAYS);
+	const formatDayOfWeek = useCallback(
+		(i: WeekStartsOn) => DAYS.get(i),
+		[...DAYS.keys()],
+	);
 
 	return useCallback(
 		({

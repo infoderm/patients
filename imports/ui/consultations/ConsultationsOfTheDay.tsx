@@ -88,7 +88,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 			(showNoShowAppointments ||
 				c.isDone !== false ||
 				c.isCancelled ||
-				!isBefore(c.scheduledDatetime, thisMorning)),
+				!isBefore(c.scheduledDatetime!, thisMorning)),
 	);
 	const pm = consultations.filter(
 		(c) =>
@@ -99,7 +99,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 			(showNoShowAppointments ||
 				c.isDone !== false ||
 				c.isCancelled ||
-				!isBefore(c.scheduledDatetime, thisMorning)),
+				!isBefore(c.scheduledDatetime!, thisMorning)),
 	);
 	const cam = count(am);
 	const cpm = count(pm);

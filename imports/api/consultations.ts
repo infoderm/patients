@@ -33,8 +33,13 @@ export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
 export const DEFAULT_DURATION_IN_MILLISECONDS =
 	DEFAULT_DURATION_IN_SECONDS * 1000;
 
-export const isUnpaid = ({price = undefined, paid = undefined}) =>
-	paid !== price;
+export const isUnpaid = ({
+	price = undefined,
+	paid = undefined,
+}: {
+	price?: number;
+	paid?: number;
+}) => paid !== price;
 
 const findLastConsultationArgs = (
 	filter?: Filter<ConsultationDocument>,
@@ -161,7 +166,7 @@ export function setupConsultationsStatsPublication(collection, query) {
 			const [oldPrice, minRef, maxRef] = refs.get(_id);
 			let newPrice: number = oldPrice;
 			if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
-				newPrice = fields.price;
+				newPrice = fields.price!;
 				if (oldPrice) total -= oldPrice;
 				if (newPrice) total += newPrice;
 				refs.set(_id, [newPrice, minRef, maxRef]);
@@ -195,10 +200,10 @@ export function setupConsultationsStatsPublication(collection, query) {
 	return handle;
 }
 
-const trimString = (value: string | undefined) => value?.trim();
+const trimString = (value: any) => value?.trim();
 
 const sanitizeUpdate = function* (
-	fields: Partial<ConsultationFields>,
+	fields: ConsultationFields,
 ): IterableIterator<Entry<ConsultationFields & ConsultationComputedFields>> {
 	yield* yieldKey(fields, 'patientId', String);
 

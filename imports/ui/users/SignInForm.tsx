@@ -7,7 +7,7 @@ import LoginPopover from './LoginPopover';
 import RegisterPopover from './RegisterPopover';
 
 const SignInForm = () => {
-	const [anchorEl, setAnchorEl] = useState(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const [mode, setMode] = useState('choice');
 
 	const handleClick = (event) => {
@@ -31,7 +31,7 @@ const SignInForm = () => {
 						? mode === 'login'
 							? 'login-popover'
 							: 'register-popover'
-						: null
+						: undefined
 				}
 				aria-haspopup="true"
 				style={{color: 'inherit'}}

@@ -23,7 +23,7 @@ const createFileList = (files: File[]): FileList => {
 	const list: FileList & Iterable<File> = {
 		...files,
 		length: files.length,
-		item: (index: number) => list[index],
+		item: (index: number) => list[index]!,
 		[Symbol.iterator]: () => files[Symbol.iterator](),
 	};
 	list.constructor = FileList;
@@ -55,7 +55,7 @@ const createItemList = (files: File[]): DataTransferItemList => {
 		*[Symbol.iterator]() {
 			// eslint-disable-next-line unicorn/no-for-loop,@typescript-eslint/prefer-for-of
 			for (let i = 0; i < list.length; ++i) {
-				yield list[i];
+				yield list[i]!;
 			}
 		},
 	};

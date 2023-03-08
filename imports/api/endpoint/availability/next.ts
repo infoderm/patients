@@ -6,7 +6,7 @@ import define from '../define';
 import properlyIntersectsWithRightOpenInterval from '../../interval/containsDate';
 import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';
 import overlapsInterval from '../../interval/overlapsInterval';
-import {Availability} from '../../collection/availability';
+import {Availability, type SlotDocument} from '../../collection/availability';
 import {
 	type Constraint,
 	type Duration,
@@ -36,7 +36,7 @@ export default define({
 
 		const owner = this.userId;
 
-		const properlyIntersecting = await db.fetch(
+		const properlyIntersecting: SlotDocument[] = await db.fetch(
 			Availability,
 			{
 				$and: [{owner}, properlyIntersectsWithRightOpenInterval(after)],
@@ -53,11 +53,13 @@ export default define({
 			return initialSlot(owner);
 		}
 
+		const slot = properlyIntersecting[0]!;
+
 		if (
-			properlyIntersecting[0].weight === 0 &&
-			overlapsAfterDate(after, duration, constraints, properlyIntersecting[0])
+			slot.weight === 0 &&
+			overlapsAfterDate(after, duration, constraints, slot)
 		) {
-			return properlyIntersecting[0];
+			return slot;
 		}
 
 		const firstContainedAndOverlapping = await db.findOne(

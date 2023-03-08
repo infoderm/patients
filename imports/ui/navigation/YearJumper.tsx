@@ -1,3 +1,4 @@
+import assert from 'assert';
 import React from 'react';
 
 import {range} from '@iterable-iterator/range';
@@ -11,6 +12,7 @@ import TabJumper, {type Props as TabJumperProps} from './TabJumper';
 type Props = Omit<TabJumperProps<number>, 'tabs'>;
 
 const YearJumper = ({current, ...rest}: Props) => {
+	assert(current !== undefined);
 	const now = new Date();
 	const thisyear = now.getFullYear();
 	const end = Math.min(thisyear, current + 5) + 1;

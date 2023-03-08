@@ -1,5 +1,13 @@
 import assert from 'assert';
-import {openDB, type DBSchema, type IDBPDatabase} from 'idb/with-async-ittr';
+import type {
+	IDBPCursorWithValue,
+	IDBPCursorWithValueIteratorValue,
+	IDBPObjectStore,
+} from 'idb';
+
+import type {DBSchema, IDBPDatabase} from 'idb/with-async-ittr';
+
+import {openDB} from 'idb/with-async-ittr';
 
 const DEFAULT_DB_NAME = 'cache-lru';
 const DB_VERSION = 1;
@@ -11,46 +19,142 @@ const EXPIRY = 'expiry';
 const RO = 'readonly';
 const RW = 'readwrite';
 const ASCENDING = 'next';
+const DESCENDING = 'prev';
 
 const upTo = <T>(ub: T) => IDBKeyRange.upperBound(ub, true);
 
-type Key = string;
-type Value = string;
-type Expiry = Date;
-type Access = Date;
+export type Expiry = Date;
+export type Access = Date;
 
-type Schema = {
+export type IDBValidKey = number | string | Date | BufferSource | IDBValidKey[];
+
+export type Fields<V> = {
+	[VALUE]: V;
+	[EXPIRY]: Expiry;
+};
+
+export type Value<K, V> = Fields<V> & {
+	[KEY]: K;
+	[ACCESS]: Access;
+};
+
+export type Schema<K extends IDBValidKey, V> = DBSchema & {
 	[STORE]: {
-		key: Key;
-		value: {
-			[KEY]: Key;
-			[VALUE]: Value;
-			[EXPIRY]: Expiry;
-			[ACCESS]: Access;
-		};
+		key: K;
+		value: Value<K, V>;
 		indexes: {
 			[EXPIRY]: Expiry;
 			[ACCESS]: Access;
 		};
 	};
-} & DBSchema;
+};
 
-type IndexedField = keyof Schema[typeof STORE]['indexes'];
+export type IndexedField<K extends IDBValidKey, V> = keyof Schema<
+	K,
+	V
+>[typeof STORE]['indexes'];
 
-type DB = IDBPDatabase<Schema>;
+export type DB<K extends IDBValidKey, V> = IDBPDatabase<Schema<K, V>>;
 
-type Metadata = {
+export type Metadata = {
 	[EXPIRY]: Expiry;
 	[ACCESS]?: Access;
 };
 
-export class IndexedDBPersistedLRUCache {
-	readonly #dbPromise: Promise<DB>;
-	readonly #maxCount: number;
+const deleteN = async <K extends IDBValidKey, V>(
+	count: number,
+	iterable: AsyncIterable<
+		IDBPCursorWithValueIteratorValue<
+			Schema<K, V>,
+			Array<'store'>,
+			'store',
+			'access' | 'expiry',
+			'readwrite'
+		>
+	>,
+): Promise<number> => {
+	if (count > 0) {
+		for await (const cursor of iterable) {
+			await cursor.delete();
+			if (--count === 0) return 0;
+		}
+	}
 
-	constructor(dbPromise: Promise<DB>, maxCount: number) {
+	return count;
+};
+
+const deleteAll = async <K extends IDBValidKey, V>(
+	iterable: AsyncIterable<
+		IDBPCursorWithValueIteratorValue<
+			Schema<K, V>,
+			Array<'store'>,
+			'store',
+			'access' | 'expiry',
+			'readwrite'
+		>
+	>,
+): Promise<number> => {
+	let count = 0;
+	for await (const cursor of iterable) {
+		// See https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#using_an_index
+		await cursor.delete();
+		++count;
+	}
+
+	return count;
+};
+
+const expunge = async <K extends IDBValidKey, V>(
+	store: Store<K, V, 'readwrite'>,
+	count: number,
+	now: Date,
+): Promise<number> => {
+	if (count <= 0) return count;
+	// NOTE could also chain the async iterables
+	const leftToDelete = await deleteN(
+		count,
+		store.index(EXPIRY).iterate(upTo(now), ASCENDING),
+	);
+
+	assert(leftToDelete >= 0);
+
+	if (leftToDelete === 0) return 0;
+
+	return deleteN(leftToDelete, store.index(ACCESS).iterate(null, ASCENDING));
+};
+
+type Store<
+	K extends IDBValidKey,
+	V,
+	M extends IDBTransactionMode,
+> = IDBPObjectStore<Schema<K, V>, ArrayLike<typeof STORE>, typeof STORE, M>;
+type CursorWithValue<
+	K extends IDBValidKey,
+	V,
+	M extends IDBTransactionMode,
+> = IDBPCursorWithValue<
+	Schema<K, V>,
+	ArrayLike<typeof STORE>,
+	typeof STORE,
+	unknown,
+	M
+>;
+
+export class IndexedDBPersistedLRUCache<K extends IDBValidKey, V> {
+	readonly #dbPromise: Promise<DB<K, V>>;
+	#maxCount: number;
+
+	constructor(dbPromise: Promise<DB<K, V>>, maxCount: number) {
 		assert(maxCount > 0);
 		this.#dbPromise = dbPromise;
+		this.#maxCount = maxCount;
+	}
+
+	async resize(maxCount: number) {
+		assert(maxCount > 0);
+		const store = await this.store(RW);
+		const count = await store.count();
+		await expunge(store, count - maxCount, new Date());
 		this.#maxCount = maxCount;
 	}
 
@@ -58,17 +162,20 @@ export class IndexedDBPersistedLRUCache {
 		return this.#dbPromise;
 	}
 
-	async store(mode: IDBTransactionMode) {
+	async store<M extends IDBTransactionMode>(mode: M): Promise<Store<K, V, M>> {
 		return this.db().then((db) =>
 			db.transaction([STORE], mode).objectStore(STORE),
 		);
 	}
 
-	async index(mode: IDBTransactionMode, field: IndexedField) {
+	async index(mode: IDBTransactionMode, field: IndexedField<K, V>) {
 		return this.store(mode).then((store) => store.index(field));
 	}
 
-	async getCursor(mode: IDBTransactionMode, key: Key) {
+	async getCursor<M extends IDBTransactionMode>(
+		mode: M,
+		key: K,
+	): Promise<CursorWithValue<K, V, M> | null> {
 		const store = await this.store(mode);
 		return store.openCursor(key);
 	}
@@ -77,45 +184,67 @@ export class IndexedDBPersistedLRUCache {
 		return this.store(RO).then(async (store) => store.count());
 	}
 
-	async set(key: Key, value: Value, options: Metadata) {
-		const store = await this.store(RW);
+	async __set(
+		store: Store<K, V, typeof RW>,
+		key: K,
+		value: V,
+		options: Metadata,
+	) {
 		const cursor = await store.openCursor(key);
 		const now = new Date();
 		const newDocument = {
-			[ACCESS]: now,
+			[ACCESS]: now, // TODO handle given access
 			key,
 			value,
 			...options,
 		};
 		if (cursor === null) {
 			const count = await store.count();
-			assert(count <= this.#maxCount); // TODO handle resizing
-			if (count === this.#maxCount) {
-				// Count unchanged
-				let available;
-				const expired = await store
-					.index(EXPIRY)
-					.openCursor(upTo(now), ASCENDING);
-				if (expired === null) {
-					const lru = await store.index(ACCESS).openCursor(null, ASCENDING);
-					assert(lru !== null);
-					available = lru;
-				} else {
-					available = expired;
-				}
-
-				await available.update(newDocument);
-			} else {
-				// Count incremented
-				await store.add(newDocument);
-			}
+			await expunge(store, count + 1 - this.#maxCount, now);
+			// Count incremented
+			await store.add(newDocument);
 		} else {
 			// Count unchanged
 			await cursor.update(newDocument);
 		}
 	}
 
-	async find(key: Key) {
+	async set(key: K, value: V, options: Metadata) {
+		const store = await this.store(RW);
+		await this.__set(store, key, value, options);
+	}
+
+	async upsert(
+		key: K,
+		init: () => Fields<V>,
+		update: (value: Value<K, V>) => Fields<V>,
+	) {
+		const store = await this.store(RW);
+		const cursor = await store.openCursor(key);
+		if (cursor === null) {
+			const {value, ...metadata} = init();
+			return this.__set(store, key, value, metadata);
+		}
+
+		const newDocument = {
+			...cursor.value,
+			[ACCESS]: new Date(),
+			...update(cursor.value),
+		};
+		await cursor.update(newDocument);
+	}
+
+	async update(key: K, update: (value: Value<K, V>) => Fields<V>) {
+		await this.upsert(
+			key,
+			() => {
+				throw new Error('not found');
+			},
+			update,
+		);
+	}
+
+	async find(key: K) {
 		const now = new Date();
 		const cursor = await this.getCursor(RW, key);
 		if (cursor === null) return undefined;
@@ -132,18 +261,18 @@ export class IndexedDBPersistedLRUCache {
 		return result;
 	}
 
-	async get(key: Key) {
-		const result = this.find(key);
+	async get(key: K) {
+		const result = await this.find(key);
 		if (result === undefined) throw new Error(`not found`);
 		return result;
 	}
 
-	async has(key: Key) {
-		const result = this.find(key);
+	async has(key: K) {
+		const result = await this.find(key);
 		return result !== undefined;
 	}
 
-	async delete(key: Key) {
+	async delete(key: K) {
 		return this.db().then(async (db) => db.delete(STORE, key));
 	}
 
@@ -154,37 +283,47 @@ export class IndexedDBPersistedLRUCache {
 	async evict(count: number) {
 		const now = new Date();
 		const index = await this.index(RW, ACCESS);
-		if (count > 0) {
-			for await (const cursor of index.iterate(upTo(now), ASCENDING)) {
-				await cursor.delete();
-				if (--count === 0) break;
-			}
-		}
+		return deleteN(count, index.iterate(upTo(now), ASCENDING));
 	}
 
 	async gc() {
 		const now = new Date();
 		const index = await this.index(RW, EXPIRY);
-		for await (const cursor of index.iterate(upTo(now))) {
-			// see https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#using_an_index
-			await cursor.delete();
+		return deleteAll(index.iterate(upTo(now)));
+	}
+
+	async *[Symbol.asyncIterator]() {
+		const index = await this.index(RO, ACCESS);
+		yield* index.iterate(null, DESCENDING);
+	}
+
+	async toArray() {
+		const result: Array<Value<K, V>> = [];
+		for await (const cursor of this) {
+			result.push(cursor.value);
 		}
+
+		return result;
 	}
 }
 
-type CacheOptions = {
+export type CacheOptions = {
 	dbName?: string;
 	dbVersion?: number;
 	maxCount: number;
 };
 
-const cache = ({
+export const cache = <K extends IDBValidKey, V>({
 	dbName = DEFAULT_DB_NAME,
 	dbVersion = DB_VERSION,
 	maxCount,
 }: CacheOptions) => {
-	const dbPromise = openDB<Schema>(dbName, dbVersion, {
-		upgrade(db, oldVersion, newVersion) {
+	const dbPromise = openDB<Schema<K, V>>(dbName, dbVersion, {
+		upgrade(
+			db: IDBPDatabase<Schema<K, V>>,
+			oldVersion: number,
+			newVersion: number,
+		) {
 			console.debug(`upgrade ${db.name} from v${oldVersion} to v${newVersion}`);
 			if (newVersion === 1) {
 				const store = db.createObjectStore(STORE, {keyPath: KEY});
@@ -207,5 +346,3 @@ const cache = ({
 
 	return new IndexedDBPersistedLRUCache(dbPromise, maxCount);
 };
-
-export default cache;

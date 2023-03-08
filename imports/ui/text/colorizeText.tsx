@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {type ReactElement} from 'react';
 
 import {enumerate} from '@iterable-iterator/zip';
 
@@ -33,13 +33,13 @@ function* split(s: string) {
 }
 
 export default function colorizeText(
-	matches: (piece: string) => boolean,
+	matches: null | ((piece: string) => boolean),
 	text: string,
 ) {
 	if (!text) return [];
 	if (!matches) return [text];
 
-	const result = [];
+	const result: Array<string | ReactElement> = [];
 	for (const [i, piece] of enumerate(split(text))) {
 		if (matches(piece)) {
 			result.push(<mark key={i}>{piece}</mark>);

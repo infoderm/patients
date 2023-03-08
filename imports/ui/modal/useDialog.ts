@@ -3,7 +3,7 @@ import dialog, {type ComponentExecutor, type Options} from './dialog';
 import ModalContext from './ModalContext';
 
 const useDialog = () => {
-	const [append, replace, remove, key] = useContext(ModalContext);
+	const {append, replace, remove, key} = useContext(ModalContext);
 	return useMemo(() => {
 		return async <T>(
 			componentExecutor: ComponentExecutor<T>,

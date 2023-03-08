@@ -15,7 +15,10 @@ const PagedRoute = <C extends React.ElementType>({
 	props,
 }: BranchProps<C>) => {
 	const params = useParams<Params>();
-	const page = parseNonNegativeIntegerStrictOrUndefined(params.page);
+	const page =
+		params.page === undefined
+			? undefined
+			: parseNonNegativeIntegerStrictOrUndefined(params.page);
 	return <Component page={page} {...props} />;
 };
 

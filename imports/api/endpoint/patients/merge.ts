@@ -20,7 +20,7 @@ export default define({
 		consultationIds: string[],
 		attachmentIds: string[],
 		documentIds: string[],
-		newPatient: Partial<PatientFields>,
+		newPatient: PatientFields,
 	) {
 		check(oldPatientIds, Array);
 		check(consultationIds, Array);
@@ -34,7 +34,7 @@ export default define({
 		consultationIds: string[],
 		attachmentIds: string[],
 		documentIds: string[],
-		newPatient: Partial<PatientFields>,
+		newPatient: PatientFields,
 	) {
 		// Here is what is done in this method
 		// (2) Check that each patient in `oldPatientIds` is owned by the user
@@ -165,7 +165,7 @@ export default define({
 		_consultationIds: string[],
 		_attachmentIds: string[],
 		_documentIds: string[],
-		_newPatient: Partial<PatientFields>,
+		_newPatient: PatientFields,
 	) {
 		return undefined;
 	},

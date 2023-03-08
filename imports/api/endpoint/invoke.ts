@@ -1,17 +1,16 @@
-import {Meteor} from 'meteor/meteor';
 import authorized from '../authorized';
+import type Serializable from '../Serializable';
 
 import type Args from '../Args';
 import type Context from './Context';
 import type Endpoint from './Endpoint';
+import EndpointError from './EndpointError';
 
-const EndpointError = Meteor.Error;
-
-const invoke = async <A extends Args, R>(
+const invoke = async <A extends Args, R extends Serializable>(
 	endpoint: Endpoint<A, R>,
 	invocation: Partial<Context>,
 	args: A,
-): Promise<R | undefined> => {
+): Promise<R> => {
 	if (!authorized(endpoint.authentication, invocation)) {
 		throw new EndpointError('not-authorized');
 	}

@@ -1,36 +1,38 @@
-import React from 'react';
+import React, {type ReactNode} from 'react';
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
+import Select, {type SelectChangeEvent} from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import useUniqueId from '../hooks/useUniqueId';
 
-type Props = {
-	options: string[];
-	optionToString?: (option: string) => string;
-	pairToKey?: (option: string, index: number) => React.Key;
+type Props<T> = {
+	options: T[];
+	optionToString?: (option: T) => string;
+	pairToKey?: (option: T, index: number) => React.Key;
 
 	// Select
 	readOnly?: boolean;
-	label?: React.ReactNode;
-	value?: any;
-	onChange?: (e: any) => void;
+	label?: ReactNode;
+	value?: T;
+	onChange?: (e: SelectChangeEvent<T>) => void;
 
 	// input
 	name?: string;
 };
 
-const ValuePicker = ({
+const ValuePicker = <T extends {}>({
 	label,
 	name,
 	value,
 	onChange,
 	options,
+	// eslint-disable-next-line @typescript-eslint/no-base-to-string
 	optionToString = (x) => x.toString(),
-	pairToKey = (option, _index) => option,
+	// eslint-disable-next-line @typescript-eslint/no-base-to-string
+	pairToKey = (option, _index) => option.toString(),
 	...rest
-}: Props) => {
+}: Props<T>) => {
 	const id = useUniqueId('value-picker');
 	const selectId = `${id}-select`;
 	const labelId = `${id}-label`;
@@ -42,10 +44,12 @@ const ValuePicker = ({
 				labelId={labelId}
 				id={selectId}
 				value={value}
+				renderValue={optionToString}
 				onChange={onChange}
 				{...rest}
 			>
 				{options.map((option, index) => (
+					// @ts-expect-error Types are wrong.
 					<MenuItem key={pairToKey(option, index)} value={option}>
 						{optionToString(option)}
 					</MenuItem>

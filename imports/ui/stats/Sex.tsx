@@ -46,15 +46,22 @@ const Chart = ({width, height}) => {
 
 	const handleMouseMove = (datum) => (event) => {
 		const coords = localPoint(event.target.ownerSVGElement, event);
-		showTooltip({
-			tooltipLeft: coords.x,
-			tooltipTop: coords.y,
-			tooltipData: datum,
-		});
+		if (coords !== null) {
+			showTooltip({
+				tooltipLeft: coords.x,
+				tooltipTop: coords.y,
+				tooltipData: datum,
+			});
+		}
 	};
 
 	const radius = Math.min(width, height) / 2;
-	const sex = [];
+	const sex: Array<{
+		sex: string;
+		label?: string;
+		count?: number;
+		freq: number;
+	}> = [];
 	const loadingText = 'Loading...';
 	const noDataText = 'No data';
 	if (loading) {
@@ -63,10 +70,10 @@ const Chart = ({width, height}) => {
 		sex.push({sex: noDataText, freq: 1});
 	} else {
 		for (const s of ['female', 'male', 'other', '', 'undefined']) {
-			if (count[s]) {
+			if (count?.[s]) {
 				sex.push({
 					sex: s || 'none',
-					label: (s || 'none')[0].toUpperCase(),
+					label: (s || 'none').slice(0, 1).toUpperCase(),
 					count: count[s],
 					freq: count[s] / allCount,
 				});
@@ -113,7 +120,7 @@ const Chart = ({width, height}) => {
 								const {sex, label} = arc.data;
 								const [centroidX, centroidY] = pie.path.centroid(arc);
 								const hasSpaceForLabel = true; // Arc.endAngle - arc.startAngle >= 0.1;
-								const arcPath = pie.path(arc);
+								const arcPath = pie.path(arc) ?? undefined;
 								const arcFill = ordinalColorScale(sex);
 								return (
 									<g key={`arc-${sex}-${index}`}>
@@ -135,13 +142,17 @@ const Chart = ({width, height}) => {
 					</Pie>
 				</Group>
 			</svg>
-			{!loading && allCount > 0 && tooltipOpen && (
-				<TooltipWithBounds top={tooltipTop} left={tooltipLeft}>
-					{`${tooltipData.sex}: ${tooltipData.count} (${(
-						tooltipData.freq * 100
-					).toPrecision(4)}%)`}
-				</TooltipWithBounds>
-			)}
+			{!loading &&
+				allCount !== undefined &&
+				allCount > 0 &&
+				tooltipOpen &&
+				tooltipData && (
+					<TooltipWithBounds top={tooltipTop} left={tooltipLeft}>
+						{`${tooltipData.sex}: ${tooltipData.count} (${(
+							tooltipData.freq * 100
+						).toPrecision(4)}%)`}
+					</TooltipWithBounds>
+				)}
 		</>
 	);
 };

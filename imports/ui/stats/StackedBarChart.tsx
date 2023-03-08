@@ -122,7 +122,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 										width={bar.width}
 										fill={bar.color}
 										onMouseLeave={() => {
-											tooltipTimeout = window.setTimeout(() => {
+											tooltipTimeout = setTimeout(() => {
 												hideTooltip();
 											}, 300);
 										}}
@@ -174,7 +174,7 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 					/>
 				)}
 			</div>
-			{tooltipOpen && (
+			{tooltipOpen && tooltipData && (
 				<TooltipWithBounds top={tooltipTop} left={tooltipLeft}>
 					{`${tooltipData.key}: ${
 						tooltipData.bar.data[tooltipData.key]

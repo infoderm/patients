@@ -16,10 +16,15 @@ const initialState = (patient: PatientDocument): State => ({
 	deleting: false,
 });
 
-export const reducer = (
-	state: State,
-	action: {type: string; key?: string; value?: any; payload?: any},
-) => {
+type Action =
+	| {type: 'update'; key: string; value: any}
+	| {type: 'editing'}
+	| {type: 'not-editing'}
+	| {type: 'deleting'}
+	| {type: 'not-deleting'}
+	| {type: 'init'; payload: any};
+
+export const reducer = (state: State, action: Action) => {
 	switch (action.type) {
 		case 'update': {
 			switch (action.key) {
@@ -72,6 +77,7 @@ export const reducer = (
 		}
 
 		default: {
+			// @ts-expect-error This should never be called.
 			throw new Error(`Unknown action type ${action.type}.`);
 		}
 	}

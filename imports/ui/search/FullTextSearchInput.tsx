@@ -10,6 +10,7 @@ import {myEncodeURIComponent} from '../../lib/uri';
 import SearchBox from '../input/SearchBox';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
+import type Timeout from '../../lib/types/Timeout';
 
 const PREFIX = 'FullTextSearchInput';
 
@@ -36,7 +37,7 @@ const FullTextSearchInput = ({sx}) => {
 		Number.NEGATIVE_INFINITY,
 	);
 	const [value, setValue] = useState('');
-	const [pending, setPending] = useState(undefined);
+	const [pending, setPending] = useState<Timeout | undefined>(undefined);
 
 	const updateHistory = (newValue) => {
 		clearTimeout(pending);

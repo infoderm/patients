@@ -2,30 +2,31 @@ import React from 'react';
 
 import Typography from '@mui/material/Typography';
 
+import {type SelectChangeEvent} from '@mui/material';
 import ValuePicker from '../input/ValuePicker';
 
 import {useSetting} from './hooks';
 
-type Props = {
+type Props<T> = {
 	className?: string;
 	title?: string;
 	label?: string;
 	setting: string;
-	options: string[];
-	optionToString?: (option: string) => string;
+	options: T[];
+	optionToString?: (option: T) => string;
 };
 
-const SelectOneSetting = ({
+const SelectOneSetting = <T extends {}>({
 	className,
 	setting,
 	options,
 	optionToString,
 	label,
 	title,
-}: Props) => {
+}: Props<T>) => {
 	const {loading, value, setValue} = useSetting(setting);
 
-	const onChange = async (e) => {
+	const onChange = async (e: SelectChangeEvent<T>) => {
 		const newValue = e.target.value;
 		await setValue(newValue);
 	};

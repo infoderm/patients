@@ -4,7 +4,7 @@ import Jumper from './Jumper';
 
 export type Props<K> = {
 	tabs: K[];
-	current: K;
+	current?: K;
 	toURL: (tab: K) => string;
 };
 

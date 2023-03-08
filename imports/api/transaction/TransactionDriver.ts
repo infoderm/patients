@@ -24,7 +24,7 @@ export type DeleteResult = MongoDeleteResult;
 
 export type Options = Record<string, any>;
 type TransactionDriver = {
-	session: ClientSession;
+	session: ClientSession | null;
 	// TODO template depends on Collection document type
 	insertOne: <T, U = T>(
 		Collection: Collection<T, U>,

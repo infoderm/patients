@@ -1,3 +1,4 @@
+import assert from 'assert';
 import React, {useCallback} from 'react';
 import {useSnackbar} from 'notistack';
 
@@ -27,6 +28,10 @@ const ConsultationDebtSettlementDialog = ({
 	consultation,
 }: Props) => {
 	const {_id, patientId, currency, price, paid} = consultation;
+
+	assert(currency !== undefined);
+	assert(price !== undefined);
+	assert(paid !== undefined);
 
 	const owed = price - paid;
 

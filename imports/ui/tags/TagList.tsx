@@ -11,7 +11,10 @@ const TagList = <T extends TagNameFields & TagMetadata>(
 	props: TagListProps<T>,
 ) => {
 	const params = useParams<{page?: string}>();
-	const page = parseNonNegativeIntegerStrictOrUndefined(params.page);
+	const page =
+		params.page === undefined
+			? undefined
+			: parseNonNegativeIntegerStrictOrUndefined(params.page);
 	return <TagListPage page={page} {...props} />;
 };
 

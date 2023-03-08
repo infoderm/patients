@@ -4,7 +4,7 @@ const promiseToStream = <T>(promise: Promise<T>, options: ReadableOptions) =>
 	new StreamFromPromise(promise, options);
 
 class StreamFromPromise<T> extends Readable {
-	#promise: Promise<T>;
+	#promise: Promise<T> | null;
 
 	constructor(promise: Promise<T>, options: ReadableOptions) {
 		super(options);

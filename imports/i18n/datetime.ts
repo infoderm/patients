@@ -17,6 +17,7 @@ import {
 	ALL_WEEK_DAYS,
 	someDateAtGivenDayOfWeek,
 	someDateAtGivenPositionOfYear,
+	type WeekDay,
 } from '../lib/datetime';
 import useLocaleKey from './useLocale';
 
@@ -41,7 +42,7 @@ export const dateTimeMaskMap = {
 	'fr-BE': `${dateMaskMap['fr-BE']} __:__`,
 };
 
-const localesCache = new Map<string, Locale>();
+const localesCache = new Map<string, Locale | undefined>();
 
 const getLocale = async (owner: string): Promise<Locale | undefined> => {
 	const key = getSetting(owner, 'lang');
@@ -65,7 +66,9 @@ const getLocale = async (owner: string): Promise<Locale | undefined> => {
 
 export const useLocale = () => {
 	const key = useLocaleKey();
-	const [lastLoadedLocale, setLastLoadedLocale] = useState(undefined);
+	const [lastLoadedLocale, setLastLoadedLocale] = useState<Locale | undefined>(
+		undefined,
+	);
 
 	useEffect(() => {
 		if (localesCache.has(key)) {
@@ -96,10 +99,10 @@ export const useLocale = () => {
 	return localesCache.has(key) ? localesCache.get(key) : lastLoadedLocale;
 };
 
-export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type WeekStartsOn = WeekDay;
 export type FirstWeekContainsDate = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-const localeToWeekStartsOn = (locale: Locale): WeekStartsOn =>
+const localeToWeekStartsOn = (locale: Locale | undefined): WeekStartsOn =>
 	locale?.options?.weekStartsOn ?? 0;
 
 export const useLocaleWeekStartsOn = (): WeekStartsOn => {
@@ -113,8 +116,9 @@ export const useWeekStartsOn = (): WeekStartsOn => {
 	return setting === 'locale' ? localized : setting;
 };
 
-const localeToFirstWeekContainsDate = (locale: Locale): FirstWeekContainsDate =>
-	locale?.options?.firstWeekContainsDate ?? 1;
+const localeToFirstWeekContainsDate = (
+	locale: Locale | undefined,
+): FirstWeekContainsDate => locale?.options?.firstWeekContainsDate ?? 1;
 
 export const useLocaleFirstWeekContainsDate = (): FirstWeekContainsDate => {
 	const locale = useLocale();
@@ -254,10 +258,10 @@ export const useDaysPositions = (positions: number[]) => {
 	);
 };
 
-export const useDaysNames = (days: number[]) => {
+export const useDaysNames = <D extends number>(days: readonly D[]) => {
 	const format = useDateFormat('cccc');
 	return useMemo(
-		() => days.map((i) => format(someDateAtGivenDayOfWeek(i))),
+		() => new Map(days.map((i) => [i, format(someDateAtGivenDayOfWeek(i))])),
 		[days, format],
 	);
 };

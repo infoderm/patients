@@ -191,7 +191,7 @@ const AppointmentDialog = ({
 				? 0
 				: intersectionWithWorkSchedule[
 						intersectionWithWorkSchedule.length - 1
-				  ][1] - intersectionWithWorkSchedule[0][0];
+				  ]![1] - intersectionWithWorkSchedule[0]![0];
 		const measure = Number(end) - Number(begin);
 		assert(span <= measure);
 		return (
@@ -231,7 +231,8 @@ const AppointmentDialog = ({
 	};
 
 	const patientIsSelected = patientList.length === 1;
-	const selectedPatientExists = patientIsSelected && patientList[0]._id !== '?';
+	const selectedPatientExists =
+		patientIsSelected && patientList[0]!._id !== '?';
 	const phoneIsDisabled = !patientIsSelected;
 	const phoneIsReadOnly = !phoneIsDisabled && selectedPatientExists;
 	const phonePlaceholder = patientIsSelected

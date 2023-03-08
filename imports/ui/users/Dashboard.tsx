@@ -83,7 +83,19 @@ const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 	}
 };
 
-const OptionsPopover = ({id, anchorEl, handleClose, changeMode}) => {
+type OptionsPopoverProps = {
+	id: string;
+	anchorEl?: HTMLElement | null;
+	handleClose: () => void;
+	changeMode: (mode: string) => void;
+};
+
+const OptionsPopover = ({
+	id,
+	anchorEl,
+	handleClose,
+	changeMode,
+}: OptionsPopoverProps) => {
 	const handleModeChangePassword = () => {
 		changeMode('change-password');
 	};
@@ -104,7 +116,7 @@ const OptionsPopover = ({id, anchorEl, handleClose, changeMode}) => {
 
 const Dashboard = ({currentUser}) => {
 	const [mode, setMode] = useState('options');
-	const [anchorEl, setAnchorEl] = useState(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 	const handleClick = (event) => {
 		setMode('options');
@@ -131,7 +143,7 @@ const Dashboard = ({currentUser}) => {
 						? mode === 'options'
 							? 'dashboard-options'
 							: 'dashboard-change-password'
-						: null
+						: undefined
 				}
 				aria-haspopup="true"
 				aria-expanded={anchorEl ? 'true' : undefined}

@@ -1,7 +1,17 @@
 import {createContext} from 'react';
-import {ALL_WEEK_DAYS} from '../../lib/datetime';
+import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
 
-const PlannerContext = createContext({
+type Context = {
+	showCancelledEvents: boolean;
+	toggleShowCancelledEvents?: () => void;
+	showNoShowEvents: boolean;
+	toggleShowNoShowEvents?: () => void;
+	displayAllWeekDays: boolean;
+	toggleDisplayAllWeekDays?: () => void;
+	displayedWeekDays: readonly WeekDay[];
+};
+
+const PlannerContext = createContext<Context>({
 	showCancelledEvents: false,
 	toggleShowCancelledEvents: undefined,
 	showNoShowEvents: false,

@@ -9,7 +9,7 @@ import subscribe from './subscribe';
 import type Publication from './Publication';
 
 const useSubscriptionClient = <A extends Args>(
-	publication?: Publication<A>,
+	publication?: Publication<A> | null,
 	...args: A
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ const useSubscriptionClient = <A extends Args>(
 const useSubscriptionServer =
 	<A extends Args>(
 		// @ts-expect-error Those parameters are not used.
-		publication?: Publication<A>,
+		publication?: Publication<A> | null,
 		// @ts-expect-error Those parameters are not used.
 		...args: A
 	): (() => boolean) =>

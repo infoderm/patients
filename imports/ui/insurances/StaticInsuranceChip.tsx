@@ -16,9 +16,9 @@ type StaticInsuranceChipProps = ChipProps & AddedProps;
 
 const StaticInsuranceChip = React.forwardRef<any, StaticInsuranceChipProps>(
 	({item, ...rest}, ref) => {
-		let style: React.CSSProperties;
-		let component: React.ElementType;
-		let to: string;
+		let style: React.CSSProperties | undefined;
+		let component: React.ElementType | undefined;
+		let to: string | undefined;
 
 		if (item && !rest.onDelete) {
 			component = Link;

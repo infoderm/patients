@@ -13,11 +13,12 @@ import ConfirmationDialog from '../modal/ConfirmationDialog';
 import withLazyOpening from '../modal/withLazyOpening';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
+import {type PatientFields} from '../../api/collection/patients';
 
 type Props = {
 	open: boolean;
 	onClose: () => void;
-	toCreate: {};
+	toCreate: PatientFields;
 	consultationsToAttach: string[];
 	attachmentsToAttach: string[];
 	documentsToAttach: string[];

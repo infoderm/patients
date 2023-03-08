@@ -77,8 +77,8 @@ const StaticPatientChip = React.forwardRef(
 		}: Props,
 		ref: any,
 	) => {
-		let component: React.ElementType;
-		let to: string;
+		let component: React.ElementType | undefined;
+		let to: string | undefined;
 		if (!onClick && !onDelete) {
 			component = Link;
 			to = `/patient/${patient._id}`;
@@ -95,7 +95,7 @@ const StaticPatientChip = React.forwardRef(
 				avatar={
 					!loading && found && patient.photo ? (
 						<Avatar src={pngDataURL(patient.photo)} />
-					) : null
+					) : undefined
 				}
 				label={
 					loading

@@ -12,7 +12,7 @@ const Chart = (props) => {
 
 	const data = loading
 		? []
-		: Object.entries(count).map(([key, value]) => ({
+		: Object.entries(count ?? {}).map(([key, value]) => ({
 				key,
 				female: value.female ?? 0,
 				male: value.male ?? 0,

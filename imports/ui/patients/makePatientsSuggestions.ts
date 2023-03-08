@@ -8,12 +8,17 @@ import mergeFields from '../../api/query/mergeFields';
 import {normalizeSearch} from '../../api/string';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
+import type Options from '../../api/Options';
+import {type PatientCacheItem} from '../../api/collection/patients/search/cache';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 
 const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input
 
-const makePatientsSuggestions = (set = [], userOptions = undefined) => {
+const makePatientsSuggestions = (
+	set = [],
+	userOptions?: Options<PatientCacheItem>,
+) => {
 	const $nin = list(map((x) => x._id, set));
 	return (searchString: string) => {
 		const [debouncedSearchString, {isPending, cancel, flush}] = useDebounce(

@@ -7,7 +7,7 @@ import {navigatorLocale} from '../../i18n/navigator';
 import SelectOneSetting from './SelectOneSetting';
 
 const options = ['navigator', ...availableLocales];
-const optionToString = (x) =>
+const optionToString = (x: string) =>
 	x === 'navigator'
 		? `${localeDescriptions[navigatorLocale()]} (same as navigator)`
 		: localeDescriptions[x];

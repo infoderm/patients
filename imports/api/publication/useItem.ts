@@ -10,7 +10,7 @@ import findOneSync from './findOneSync';
 const useItem = <T, U = T>(
 	collection: Collection<T, U> | null,
 	selector: Selector<T>,
-	options: Options<T>,
+	options: Options<T> | undefined,
 	deps: DependencyList,
 ): U | undefined =>
 	useReactive(

@@ -16,7 +16,7 @@ import {enumerate} from '@iterable-iterator/zip';
 import makeStyles from '../styles/makeStyles';
 import {useDateFormat} from '../../i18n/datetime';
 
-import {ALL_WEEK_DAYS, generateDays} from '../../lib/datetime';
+import {ALL_WEEK_DAYS, generateDays, type WeekDay} from '../../lib/datetime';
 import type CSSObject from '../styles/CSSObject';
 import type Event from './Event';
 import EventFragment from './EventFragment';
@@ -139,8 +139,8 @@ function* generateEventProps(
 ): IterableIterator<EventProps> {
 	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
 
-	let previousEvent: {end: Date};
-	let previousDay: string;
+	let previousEvent: {end: Date} | undefined;
+	let previousDay: string | undefined;
 	for (const event of events) {
 		if (
 			(event.end && isBefore(event.end, begin)) ||
@@ -180,7 +180,7 @@ function* generateEventProps(
 					: 1
 				: 0;
 
-		let {usedSlots, totalEvents, shownEvents} = occupancy.get(day);
+		let {usedSlots, totalEvents, shownEvents} = occupancy.get(day)!;
 		const slot = usedSlots + skip + 1;
 		++totalEvents;
 		usedSlots += skip + slots;
@@ -217,7 +217,7 @@ function* generateMoreProps(
 ): IterableIterator<MoreProps> {
 	for (const day of generateDays(begin, end)) {
 		const key = dayKey(day);
-		const {totalEvents, shownEvents} = occupancy.get(key);
+		const {totalEvents, shownEvents} = occupancy.get(key)!;
 		const count = totalEvents - shownEvents;
 		if (count > 0) {
 			yield {
@@ -239,7 +239,7 @@ type CalendarDataGridClasses = {
 };
 
 type CalendarDataGridProps = {
-	DayHeader?: React.ElementType;
+	DayHeader: React.ElementType;
 	WeekNumber?: React.ElementType;
 	classes: CalendarDataGridClasses;
 	cx: any;
@@ -247,7 +247,7 @@ type CalendarDataGridProps = {
 	days: DayProps[];
 	events: EventProps[];
 	mores: MoreProps[];
-	weekOptions: {};
+	weekOptions?: {};
 	onSlotClick?: () => void;
 	onEventClick?: () => void;
 };
@@ -280,7 +280,7 @@ const CalendarDataGrid = ({
 							<WeekNumber
 								key={key}
 								className={cx(classes.weekNumber, {
-									[classes[`row${props.row}`]]: true,
+									[classes[`row${props.row}`]!]: true,
 								})}
 								weekOptions={weekOptions}
 								{...props}
@@ -299,8 +299,8 @@ const CalendarDataGrid = ({
 					<DayHeader
 						key={key}
 						className={cx(classes.dayHeader, {
-							[classes[`col${props.col}`]]: true,
-							[classes[`row${props.row}`]]: true,
+							[classes[`col${props.col}`]!]: true,
+							[classes[`row${props.row}`]!]: true,
 						})}
 						{...props}
 					/>
@@ -311,8 +311,8 @@ const CalendarDataGrid = ({
 						<EventFragment
 							key={key}
 							className={cx(classes.slot, {
-								[classes[`slot${props.slots}`]]: true,
-								[classes[`day${props.day}slot${props.slot}`]]: true,
+								[classes[`slot${props.slots}`]!]: true,
+								[classes[`day${props.day}slot${props.slot}`]!]: true,
 							})}
 							eventProps={{className: classes.event}}
 							{...props}
@@ -324,7 +324,7 @@ const CalendarDataGrid = ({
 						<More
 							key={key}
 							className={cx(classes.more, {
-								[classes[`day${props.day}more`]]: true,
+								[classes[`day${props.day}more`]!]: true,
 							})}
 							{...props}
 						/>
@@ -346,7 +346,7 @@ type CalendarDataProps = {
 	DayHeader: React.ElementType;
 	WeekNumber?: React.ElementType;
 	lineHeight?: string;
-	displayedWeekDays?: number[];
+	displayedWeekDays?: readonly WeekDay[];
 	onSlotClick?: () => void;
 	onEventClick?: () => void;
 };

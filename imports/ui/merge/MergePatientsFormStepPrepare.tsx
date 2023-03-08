@@ -65,9 +65,9 @@ const StaticMergePatientsFormStepPrepare = ({
 							<Typography variant="h1">{patient._id}</Typography>
 							<PatientSheet
 								patient={patient}
-								consultations={consultations[patient._id]}
-								attachments={attachments[patient._id]}
-								documents={documents[patient._id]}
+								consultations={consultations[patient._id]!}
+								attachments={attachments[patient._id]!}
+								documents={documents[patient._id]!}
 							/>
 						</Grid>
 					))}

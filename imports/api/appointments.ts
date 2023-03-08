@@ -7,9 +7,12 @@ import {
 	type AppointmentFields,
 } from './collection/appointments';
 
-const sanitizeAppointmentGen = function* (
-	fields: Partial<AppointmentFields>,
-): IterableIterator<Entry<AppointmentFields & AppointmentComputedFields>> {
+const sanitizeAppointmentGen = function* (fields: {
+	patientId: string;
+	datetime?: Date;
+	duration?: number;
+	reason: string;
+}): IterableIterator<Entry<AppointmentFields & AppointmentComputedFields>> {
 	yield* yieldKey(fields, 'patientId', String);
 	if (
 		Object.prototype.hasOwnProperty.call(fields, 'datetime') ||
@@ -32,12 +35,12 @@ const sanitizeAppointmentGen = function* (
 const sanitizeAppointment = makeSanitize(sanitizeAppointmentGen);
 
 export type AppointmentUpdate = {
-	patient: {
+	patient?: {
 		_id: string;
 		firstname?: string;
 		lastname?: string;
 	};
-	phone: string;
+	phone?: string;
 	datetime: Date;
 	duration: number;
 	reason: string;

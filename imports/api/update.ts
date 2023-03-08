@@ -2,7 +2,7 @@ import {check} from 'meteor/check';
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
 import type TransactionDriver from './transaction/TransactionDriver';
 
-const id = (x) => x;
+const id = <T>(x: T): T => x;
 
 export type Entry<T> = {
 	[K in keyof T]: [K, T[K]];
@@ -12,7 +12,7 @@ export const yieldKey = function* <T, K extends keyof T>(
 	fields: T,
 	key: K,
 	type,
-	transform = id,
+	transform: (x: T[K]) => T[K] = id<T[K]>,
 ): IterableIterator<[K, T[K]]> {
 	if (Object.prototype.hasOwnProperty.call(fields, key)) {
 		check(fields[key], type);
@@ -24,7 +24,7 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 	fields: T,
 	key: K,
 	type,
-	transform = id,
+	transform: (x: T[K]) => T[K] = id<T[K]>,
 ): IterableIterator<[K, T[K]]> {
 	if (Object.prototype.hasOwnProperty.call(fields, key)) {
 		if (fields[key] !== undefined) check(fields[key], type);
@@ -41,7 +41,7 @@ type Changes<T> = {
 		| undefined;
 };
 
-export const simulateUpdate = <T>(
+export const simulateUpdate = <T extends {}>(
 	state: undefined | T,
 	{$set, $unset}: Changes<T>,
 ): T => {
@@ -80,7 +80,7 @@ export const makeComputedFields =
 	};
 
 export const makeComputeUpdate =
-	<T>(computedFields: ComputedFields<T>) =>
+	<T extends {}>(computedFields: ComputedFields<T>) =>
 	async (
 		db: TransactionDriver,
 		owner: string,
@@ -103,7 +103,7 @@ export const makeComputeUpdate =
 		};
 	};
 
-type SanitizeUpdate<T, U> = (fields: Partial<T>) => IterableIterator<Entry<U>>;
+type SanitizeUpdate<T, U> = (fields: T) => IterableIterator<Entry<U>>;
 
 const fromEntries = <K extends string | number | symbol, V>(
 	entries: Array<[K, V]>,
@@ -114,7 +114,7 @@ const fromEntries = <K extends string | number | symbol, V>(
 
 export const makeSanitize =
 	<T, U>(sanitizeUpdate: SanitizeUpdate<T, U>) =>
-	(fields: Partial<T>): Changes<U> => {
+	(fields: T): Changes<U> => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
 			$set: fromEntries(
@@ -128,18 +128,18 @@ export const makeSanitize =
 		};
 	};
 
-const documentDiffGen = function* <T, U>(
+const documentDiffGen = function* <T, U extends {}>(
 	prevState: T,
 	newState: Required<T> extends U ? U : never,
 ): IterableIterator<Entry<U>> {
 	for (const [key, newValue] of Object.entries(newState)) {
 		if (JSON.stringify(newValue) !== JSON.stringify(prevState[key])) {
-			yield [key as keyof U, newValue];
+			yield [key as keyof U, newValue as U[keyof U]];
 		}
 	}
 };
 
-export const documentDiff = <T, U>(
+export const documentDiff = <T, U extends {}>(
 	prevState: T,
 	newState: Required<T> extends U ? U : never,
 ): Partial<U> =>

@@ -22,7 +22,7 @@ export type TagListPageProps<T> = {
 	query?: Selector<T>;
 	sort?: {};
 
-	useTags?: GenericQueryHook<T>;
+	useTags: GenericQueryHook<T>;
 };
 
 const TagListPage = <T extends TagNameFields & TagMetadata>({

@@ -85,7 +85,14 @@ export const defaultState = {
 	lastInsertedId: undefined,
 };
 
-export type State = typeof defaultState;
+export type State = Omit<
+	typeof defaultState,
+	'_id' | 'doneDatetime' | 'lastInsertedId'
+> & {
+	_id?: string;
+	doneDatetime?: Date;
+	lastInsertedId?: string;
+};
 
 type Props = {
 	consultation: State;
@@ -135,7 +142,8 @@ const ConsultationForm = ({consultation, update}: Props) => {
 
 	const bookIsFull =
 		!loadingBookStats &&
-		bookStats?.count >=
+		bookStats !== undefined &&
+		bookStats.count >=
 			books.MAX_CONSULTATIONS + (_id && initialBookName === bookName ? 1 : 0) &&
 		books.isReal(bookName);
 
@@ -145,12 +153,14 @@ const ConsultationForm = ({consultation, update}: Props) => {
 		loading: loadingInBookNumberCollisions,
 		result: inBookNumberCollisions,
 	} = useBookStats(bookName, {
-		_id: {$nin: [_id]},
+		_id: _id && {$nin: [_id]},
 		inBookNumber,
 	});
 
 	const inBookNumberCollides =
-		!loadingInBookNumberCollisions && inBookNumberCollisions?.count >= 1;
+		!loadingInBookNumberCollisions &&
+		inBookNumberCollisions !== undefined &&
+		inBookNumberCollisions.count >= 1;
 
 	const consultationYear = getYear(datetime);
 

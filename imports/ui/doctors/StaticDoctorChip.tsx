@@ -16,9 +16,9 @@ type StaticDoctorChipProps = ChipProps & AddedProps;
 
 const StaticDoctorChip = React.forwardRef<any, StaticDoctorChipProps>(
 	({item, ...rest}, ref) => {
-		let style: React.CSSProperties;
-		let component: React.ElementType;
-		let to: string;
+		let style: React.CSSProperties | undefined;
+		let component: React.ElementType | undefined;
+		let to: string | undefined;
 
 		if (item && !rest.onDelete) {
 			component = Link;

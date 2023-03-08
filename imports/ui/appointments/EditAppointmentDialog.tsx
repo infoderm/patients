@@ -1,3 +1,4 @@
+import assert from 'assert';
 import React from 'react';
 
 import withLazyOpening from '../modal/withLazyOpening';
@@ -18,6 +19,8 @@ const appointmentDiffGen = function* (
 	appointment: AppointmentDocument,
 	update: AppointmentUpdate,
 ): IterableIterator<Entry<AppointmentUpdate>> {
+	assert(update.patient !== undefined);
+
 	if (
 		JSON.stringify(update.datetime) !== JSON.stringify(appointment.datetime) ||
 		update.duration !== appointment.duration
@@ -55,7 +58,8 @@ const appointmentDiff = (
 	appointment: AppointmentDocument,
 	update: AppointmentUpdate,
 ): Partial<AppointmentUpdate> => {
-	return Object.fromEntries(appointmentDiffGen(appointment, update));
+	const entries = appointmentDiffGen(appointment, update);
+	return Object.fromEntries(entries);
 };
 
 const EditAppointmentDialog = ({open, onClose, appointment}: Props) => {

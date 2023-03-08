@@ -51,7 +51,7 @@ export const normalizedLine = (string: string): NormalizedLine =>
 	normalizeWhiteSpace(onlyLowerCaseASCII(string)).trim() as NormalizedLine;
 
 export const capitalized = (string: string) =>
-	string[0].toUpperCase() + string.slice(1);
+	string.slice(0, 1).toUpperCase() + string.slice(1);
 
 export const onlyASCII = (string: string) => deburr(string);
 
@@ -159,7 +159,7 @@ export const names = (string: string): string[] =>
 	split(onlyLowerCaseAlphabeticalAndHyphen(string, ' '));
 
 const trigrams = (string: string): IterableIterator<string> =>
-	map(([a, b, c]: string[]) => a + b + c, window(3, string));
+	map(([a, b, c]: [string, string, string]) => a + b + c, window(3, string));
 
 const wrapTrigram = (x: string) => `0${x}0`;
 

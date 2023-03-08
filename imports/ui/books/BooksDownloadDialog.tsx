@@ -1,3 +1,4 @@
+import assert from 'assert';
 import React, {useState, useEffect} from 'react';
 
 import addYears from 'date-fns/addYears';
@@ -52,17 +53,24 @@ const BooksDownloadDialog = ({
 	const [advancedFunctionality, setAdvancedFunctionality] = useState(
 		initialAdvancedFunctionality,
 	);
-	const [begin, setBegin] = useState(initialBegin);
-	const [end, setEnd] = useState(initialEnd ?? addYears(initialBegin, 1));
+	const [begin, setBegin] = useState<Date | null>(initialBegin);
+	const [end, setEnd] = useState<Date | null>(
+		initialEnd ?? addYears(initialBegin, 1),
+	);
 	const [firstBook, setFirstBook] = useState(String(books.DOWNLOAD_FIRST_BOOK));
 	const [lastBook, setLastBook] = useState(String(books.DOWNLOAD_LAST_BOOK));
 	const [maxRows, setMaxRows] = useState(String(books.DOWNLOAD_MAX_ROWS));
 
-	const setYear = (year) => {
-		const newBegin = new Date(year, 0, 1);
-		const newEnd = addYears(newBegin, 1);
-		setBegin(newBegin);
-		setEnd(newEnd);
+	const setYear = (year: number | undefined) => {
+		if (year === undefined) {
+			setBegin(null);
+			setEnd(null);
+		} else {
+			const newBegin = new Date(year, 0, 1);
+			const newEnd = addYears(newBegin, 1);
+			setBegin(newBegin);
+			setEnd(newEnd);
+		}
 	};
 
 	useEffect(() => {
@@ -75,6 +83,8 @@ const BooksDownloadDialog = ({
 	}, [initialAdvancedFunctionality, Number(initialBegin), Number(initialEnd)]);
 
 	const downloadData = async (event) => {
+		assert(begin !== null);
+		assert(end !== null);
 		event.preventDefault();
 		const _firstBook = Number.parseInt(firstBook, 10);
 		const _lastBook = Number.parseInt(lastBook, 10);
@@ -172,7 +182,7 @@ const BooksDownloadDialog = ({
 								label="Year"
 								value={begin}
 								onChange={(date) => {
-									setYear(date.getFullYear());
+									setYear(date === null ? undefined : date.getFullYear());
 								}}
 							/>
 						</Grid>
@@ -192,6 +202,7 @@ const BooksDownloadDialog = ({
 				</Button>
 				<LoadingButton
 					loading={pending}
+					disabled={begin === null}
 					color="primary"
 					endIcon={<SaveIcon />}
 					loadingPosition="end"

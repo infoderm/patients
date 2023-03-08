@@ -1,1 +1,4 @@
-export const mod = (n: number, m: number) => ((n % m) + m) % m;
+import type IntegersModN from './types/IntegersModN';
+
+export const mod = <M extends number>(n: number, m: M) =>
+	(((n % m) + m) % m) as IntegersModN<M>;

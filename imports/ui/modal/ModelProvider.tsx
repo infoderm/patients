@@ -6,7 +6,7 @@ const key = () => `${++i}`;
 
 const ModalProvider = ({children}) => {
 	// TODO use more efficient persistent data structure
-	const [modals, setModals] = useState([]);
+	const [modals, setModals] = useState<JSX.Element[]>([]);
 
 	const context = useMemo(() => {
 		const append = (child: JSX.Element) => {
@@ -23,7 +23,7 @@ const ModalProvider = ({children}) => {
 			);
 		};
 
-		return [append, replace, remove, key];
+		return {append, replace, remove, key};
 	}, [setModals]);
 
 	return (

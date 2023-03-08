@@ -1,3 +1,4 @@
+import assert from 'assert';
 import React from 'react';
 
 import dateFormat from 'date-fns/format';
@@ -75,6 +76,9 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 	const {loading: loadingIban, value: iban} = useSetting('iban');
 
 	const {currency, price, paid, datetime} = consultation;
+	assert(currency !== undefined);
+	assert(price !== undefined);
+	assert(paid !== undefined);
 
 	const currencyFormat = useCurrencyFormat(currency);
 
@@ -94,8 +98,8 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 	const loading = loadingAccountHolder || loadingIban || loadingPatient;
 
 	const _date = dateFormat(datetime, 'yyyy-MM-dd');
-	const _lastname = onlyASCII(patient.lastname);
-	const _firstname = onlyASCII(patient.firstname);
+	const _lastname = onlyASCII(patient.lastname ?? '');
+	const _firstname = onlyASCII(patient.firstname ?? '');
 	const unstructuredReference = `${_date} ${_lastname} ${_firstname}`;
 
 	const data = {

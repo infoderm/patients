@@ -1,8 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {list} from '@iterable-iterator/list';
 import {filter} from '@iterable-iterator/filter';
-import {range} from '@iterable-iterator/range';
 import {sorted} from '@iterable-iterator/sorted';
 
 import {key} from '@total-order/key';
@@ -14,6 +12,8 @@ import {
 	type WeekStartsOn,
 } from '../../i18n/datetime';
 
+import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
+import {mod} from '../../lib/arithmetic';
 import InputManySetting from './InputManySetting';
 
 const KEY = 'displayed-week-days';
@@ -22,7 +22,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 	const weekStartsOn = useWeekStartsOn();
 
 	const compare = useMemo(
-		() => key(increasing, (x: WeekStartsOn) => (7 + x - weekStartsOn) % 7),
+		() => key(increasing, (x: WeekStartsOn) => mod(x - weekStartsOn, 7)),
 		[weekStartsOn],
 	);
 
@@ -31,17 +31,17 @@ export default function DisplayedWeekDaysSetting({className}) {
 		[compare],
 	);
 
-	const options: WeekStartsOn[] = list(range(7));
+	const options = ALL_WEEK_DAYS;
 
 	const DAYS = useDaysNames(options);
 
-	const formatDayOfWeek = (i: WeekStartsOn) => DAYS[i];
+	const formatDayOfWeek = (i: WeekDay) => DAYS.get(i)!;
 
-	const makeSuggestions = (value: WeekStartsOn[]) => (inputValue: string) => ({
+	const makeSuggestions = (value: WeekDay[]) => (inputValue: string) => ({
 		results: sorted(
 			compare,
 			filter(
-				(i: WeekStartsOn) =>
+				(i: WeekDay) =>
 					!value.includes(i) &&
 					formatDayOfWeek(i).toLowerCase().startsWith(inputValue.toLowerCase()),
 				options,
@@ -55,7 +55,7 @@ export default function DisplayedWeekDaysSetting({className}) {
 			title="Displayed week days"
 			label="Week days"
 			setting={KEY}
-			itemToString={(x) => formatDayOfWeek(x)}
+			itemToString={(x: WeekDay) => formatDayOfWeek(x)}
 			createNewItem={undefined}
 			makeSuggestions={makeSuggestions}
 			placeholder="Give additional week days"

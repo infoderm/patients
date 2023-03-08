@@ -1,13 +1,7 @@
 import {type Meteor} from 'meteor/meteor';
-import {type EJSONable, type EJSONableProperty} from 'meteor/ejson';
+import type Serializable from '../Serializable';
 
-type Options<
-	Result extends
-		| EJSONable
-		| EJSONable[]
-		| EJSONableProperty
-		| EJSONableProperty[],
-> = {
+type Options<Result extends Serializable> = {
 	wait?: boolean | undefined;
 	onResultReceived?:
 		| ((error: Error | Meteor.Error | undefined, result?: Result) => void)

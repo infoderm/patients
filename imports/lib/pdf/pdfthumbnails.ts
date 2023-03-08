@@ -11,10 +11,10 @@ import addDays from 'date-fns/addDays';
 import {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
 import {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
-import lru, {type IndexedDBPersistedLRUCache} from '../cache/lru';
+import {cache as lru, type IndexedDBPersistedLRUCache} from '../cache/lru';
 import {fetchPDF} from './pdf';
 
-let cache: IndexedDBPersistedLRUCache;
+let cache: IndexedDBPersistedLRUCache<string, string>;
 if (Meteor.isClient) {
 	cache = lru({
 		dbName: 'pdf-thumbnails-cache',
@@ -163,7 +163,7 @@ const toBlob = async (
 ) =>
 	new Promise<Blob>((resolve, reject) => {
 		canvas.toBlob(
-			(blob: Blob) => {
+			(blob: Blob | null) => {
 				if (blob === null) {
 					reject();
 				} else {

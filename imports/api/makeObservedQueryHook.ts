@@ -1,4 +1,3 @@
-import {type Meteor} from 'meteor/meteor';
 import {type DependencyList, useEffect, useRef} from 'react';
 
 import useForceUpdate from '../ui/hooks/useForceUpdate';
@@ -12,6 +11,7 @@ import type GenericQueryHook from './GenericQueryHook';
 import findOneSync from './publication/findOneSync';
 import type Selector from './Selector';
 import type Options from './Options';
+import type SubscriptionHandle from './publication/SubscriptionHandle';
 
 const makeObservedQueryHook =
 	<R, T = R>(
@@ -22,7 +22,7 @@ const makeObservedQueryHook =
 		const loading = useRef<boolean>(true);
 		const results = useRef<any[]>([]);
 		const dirty = useRef<boolean>(false);
-		const handleRef = useRef<Meteor.SubscriptionHandle>(null);
+		const handleRef = useRef<SubscriptionHandle | null>(null);
 		const forceUpdate = useForceUpdate();
 
 		const effectWillTrigger = useChanged(deps);

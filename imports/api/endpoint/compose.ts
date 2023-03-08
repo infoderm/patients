@@ -4,9 +4,9 @@ import type Args from '../Args';
 import type Context from './Context';
 import type Endpoint from './Endpoint';
 
-const compose = async <A extends Args, T>(
+const compose = async <A extends Args, R>(
 	db: TransactionDriver,
-	endpoint: Endpoint<A, T>,
+	endpoint: Endpoint<A, R>,
 	invocation: Partial<Context>,
 	args: A,
 ) => {

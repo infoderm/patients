@@ -45,7 +45,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 	});
 	const subheader = count === undefined ? '...' : `assure ${count} patients`;
 	const content =
-		patients === undefined ? (
+		count === undefined || patients === undefined ? (
 			<>...</>
 		) : (
 			<div>

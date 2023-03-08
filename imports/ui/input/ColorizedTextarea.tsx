@@ -12,7 +12,7 @@ type ReadOnlyColorizedTextAreaProps = {
 	className?: string;
 	label?: string;
 	maxRows?: number;
-	dict: (piece: string) => boolean;
+	dict: null | ((piece: string) => boolean);
 	value: string;
 };
 

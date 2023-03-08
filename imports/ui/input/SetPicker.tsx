@@ -194,7 +194,7 @@ const SetPicker = <ItemType, ChipProps>({
 
 	const [inputValue, setInputValue] = useStateWithInitOverride(emptyInput);
 	const [error, setError] = useState(false);
-	const [helperText, setHelperText] = useState(undefined);
+	const [helperText, setHelperText] = useState<string | undefined>(undefined);
 
 	const selectedItems = value;
 	const count = selectedItems.length;
@@ -352,7 +352,7 @@ const SetPicker = <ItemType, ChipProps>({
 					},
 					startAdornment: (
 						<Selection
-							readOnly={readOnly}
+							readOnly={Boolean(readOnly)}
 							Chip={Chip}
 							chipProps={chipProps}
 							selectedItems={selectedItems}
@@ -365,7 +365,7 @@ const SetPicker = <ItemType, ChipProps>({
 					endAdornment: withoutToggle ? undefined : (
 						<ToggleButton
 							isOpen={isOpen}
-							readOnly={readOnly}
+							readOnly={Boolean(readOnly)}
 							hasSuggestions={hasSuggestions}
 							getToggleButtonProps={getToggleButtonProps}
 						/>

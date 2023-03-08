@@ -76,6 +76,7 @@ const init = (consultation: ConsultationEditorFields): State => {
 
 	const inBookNumberString =
 		Number.isInteger(consultation.inBookNumber) &&
+		consultation.inBookNumber !== undefined &&
 		consultation.inBookNumber >= 1
 			? String(consultation.inBookNumber)
 			: '';
@@ -106,18 +107,27 @@ const init = (consultation: ConsultationEditorFields): State => {
 			priceError: !isValidAmount(priceString),
 			paidError: !isValidAmount(paidString),
 			inBookNumberError: !isValidInBookNumber(inBookNumberString),
-			inBookNumberDisabled: !isRealBookNumber(consultation.book),
+			inBookNumberDisabled:
+				typeof consultation.book !== 'string' ||
+				!isRealBookNumber(consultation.book),
 		}),
 	};
 };
 
-type Action = {
-	type: string;
-	key?: string;
-	value?: any;
-	insertedId?: string;
-	inBookNumber?: number;
-};
+type Action =
+	| ({type: 'update'} & (
+			| {key: 'paidString'; value: string}
+			| {key: 'priceString'; value: string}
+			| {key: 'inBookNumberString'; value: string}
+			| {key: string; value: string}
+	  ))
+	| {type: 'save-success'; insertedId?: string}
+	| {type: 'sync-in-book-number'; inBookNumber: number}
+	| {type: 'loading-next-in-book-number'}
+	| {type: 'disable-in-book-number'}
+	| {type: 'save'}
+	| {type: 'save-failure'}
+	| {type: 'not-dirty'};
 
 const reducer = (state: State, action: Action) => {
 	switch (action.type) {
@@ -244,6 +254,7 @@ const reducer = (state: State, action: Action) => {
 		}
 
 		default: {
+			// @ts-expect-error NOTE Can code defensively and be type-safe.
 			throw new Error(`Unknown action type ${action.type}.`);
 		}
 	}

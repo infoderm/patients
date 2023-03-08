@@ -48,25 +48,27 @@ export default define({
 		const inc = (patientId: string) => {
 			if (!pRefs.has(patientId))
 				throw new Error(`inc: patientId ${patientId} does not exist`);
-			const patient = pRefs.get(patientId);
-			count[patient.freq][patient.sex] -= 1;
+			const patient = pRefs.get(patientId)!;
+			count[patient.freq]![patient.sex] -= 1;
 			patient.freq += 1;
 			if (count[patient.freq] === undefined) count[patient.freq] = {};
-			if (count[patient.freq][patient.sex] === undefined)
-				count[patient.freq][patient.sex] = 0;
-			(count[patient.freq][patient.sex] as number) += 1;
+			if (count[patient.freq]![patient.sex] === undefined)
+				count[patient.freq]![patient.sex] = 0;
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+			count[patient.freq]![patient.sex] += 1;
 		};
 
 		const dec = (patientId: string) => {
 			if (!pRefs.has(patientId))
 				throw new Error(`dec: patientId ${patientId} does not exist`);
-			const patient = pRefs.get(patientId);
-			count[patient.freq][patient.sex] -= 1;
+			const patient = pRefs.get(patientId)!;
+			count[patient.freq]![patient.sex] -= 1;
 			patient.freq -= 1;
 			if (count[patient.freq] === undefined) count[patient.freq] = {};
-			if (count[patient.freq][patient.sex] === undefined)
-				count[patient.freq][patient.sex] = 0;
-			(count[patient.freq][patient.sex] as number) += 1;
+			if (count[patient.freq]![patient.sex] === undefined)
+				count[patient.freq]![patient.sex] = 0;
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+			count[patient.freq]![patient.sex] += 1;
 		};
 
 		let initializing = true;
@@ -83,14 +85,16 @@ export default define({
 			added(_id, {sex}) {
 				pRefs.set(_id, {freq: 0, sex});
 				if (count[0][sex] === undefined) count[0][sex] = 0;
-				(count[0][sex] as number) += 1;
+				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+				count[0][sex] += 1;
 				commit();
 			},
 			changed(_id, {sex}) {
 				const {freq, sex: prev} = pRefs.get(_id);
 				count[freq][prev] -= 1;
 				if (count[freq][sex] === undefined) count[freq][sex] = 0;
-				(count[freq][sex] as number) += 1;
+				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+				count[freq][sex] += 1;
 				pRefs.set(_id, {freq, sex});
 				commit();
 			},

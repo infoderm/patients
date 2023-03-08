@@ -4,10 +4,9 @@ import addYears from 'date-fns/addYears';
 import addDays from 'date-fns/addDays';
 import getDay from 'date-fns/getDay';
 
-import {list} from '@iterable-iterator/list';
-import {range} from '@iterable-iterator/range';
+export type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-export const ALL_WEEK_DAYS = Object.freeze(list(range(7)));
+export const ALL_WEEK_DAYS = Object.freeze([0, 1, 2, 3, 4, 5, 6] as const);
 
 // +/- 8_640_000_000_000_000 are the max Date bounds
 // but we want to be able to exactly compute duration between any two dates and

@@ -21,8 +21,8 @@ type Props = {
 	query: string;
 	page?: number;
 	perpage?: number;
-	refresh: () => void;
-	refreshKey: number | string;
+	refresh?: () => void;
+	refreshKey?: number | string;
 } & Omit<
 	PropsOf<typeof StaticPatientsList>,
 	'page' | 'perpage' | 'loading' | 'patients' | 'root' | 'Card'

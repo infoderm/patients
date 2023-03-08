@@ -24,5 +24,6 @@ export default define({
 
 		await db.updateOne(Documents, {_id: documentId}, {$set: {deleted: false}});
 		await updateLastVersionFlags(db, this.userId, document);
+		return undefined;
 	},
 });
