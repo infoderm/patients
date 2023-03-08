@@ -59,6 +59,7 @@ const appointmentDiff = (
 	update: AppointmentUpdate,
 ): Partial<AppointmentUpdate> => {
 	const entries = appointmentDiffGen(appointment, update);
+	// @ts-expect-error Too complex to fix.
 	return Object.fromEntries(entries);
 };
 

@@ -11,6 +11,7 @@ import mergeFields from '../../api/query/mergeFields';
 
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
+import {PatientDocument} from '../../api/collection/patients';
 
 type Params = {
 	query: string;
@@ -28,12 +29,12 @@ const PatientsSearchResults = ({
 	...rest
 }: Props) => {
 	const params = useParams<Params>();
-	const page = Number.parseInt(params.page, 10) || defaultPage;
+	const page = Number.parseInt(params.page ?? '', 10) || defaultPage;
 	const perpage = defaultPerpage;
 
 	const {enqueueSnackbar} = useSnackbar();
 	const [loading, setLoading] = useState(true);
-	const [patients, setPatients] = useState([]);
+	const [patients, setPatients] = useState<({_id: string})[]>([]);
 
 	const $search = myDecodeURIComponent(params.query);
 
@@ -64,7 +65,7 @@ const PatientsSearchResults = ({
 			(res) => {
 				if (!cancelled) {
 					setLoading(false);
-					setPatients(res as unknown[]);
+					setPatients(res);
 				}
 			},
 			(error) => {

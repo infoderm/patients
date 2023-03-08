@@ -92,6 +92,7 @@ const createRenderContextIso = async (
 
 const destroyRenderContextIso = (renderContext: RenderContext) => {
 	destroyCanvasIso(renderContext.canvasContext.canvas);
+	// @ts-expect-error This is for garbage collection.
 	renderContext.canvasContext = null;
 };
 

@@ -240,7 +240,7 @@ Meteor.startup(async () => {
 				const begin = consultation.begin ?? consultation.datetime;
 				const end =
 					consultation.end ??
-					addMilliseconds(consultation.datetime, consultation.duration);
+					addMilliseconds(consultation.datetime, consultation.duration!);
 				await db.updateOne(
 					Consultations,
 					{_id: consultation._id},

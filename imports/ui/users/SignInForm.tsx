@@ -42,13 +42,13 @@ const SignInForm = () => {
 			</Button>
 			{mode === 'login' ? (
 				<LoginPopover
-					anchorEl={anchorEl}
+					anchorEl={anchorEl!}
 					handleClose={handleClose}
 					changeMode={changeMode}
 				/>
 			) : (
 				<RegisterPopover
-					anchorEl={anchorEl}
+					anchorEl={anchorEl!}
 					handleClose={handleClose}
 					changeMode={changeMode}
 				/>
