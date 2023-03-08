@@ -1,5 +1,5 @@
-import {type EJSONable, type EJSONableProperty} from 'meteor/ejson';
+import type Serializable from './Serializable';
 
-type Arg = EJSONable | EJSONable[] | EJSONableProperty | EJSONableProperty[];
+type Arg = Serializable;
 
 export default Arg;
