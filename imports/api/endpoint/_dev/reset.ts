@@ -1,4 +1,5 @@
 import {AuthenticationDangerousNone} from '../../Authentication';
+import schema from '../../../lib/schema';
 import reset from '../../reset';
 import define from '../define';
 
@@ -6,9 +7,7 @@ export default define({
 	testOnly: true,
 	authentication: AuthenticationDangerousNone,
 	name: 'dev.reset',
-	validate() {
-		return undefined;
-	},
+	schema: schema.tuple([]),
 	async run() {
 		return reset();
 	},

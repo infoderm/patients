@@ -1,5 +1,5 @@
-import {check} from 'meteor/check';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 import {Drugs} from '../../collection/drugs';
 import type TransactionDriver from '../../transaction/TransactionDriver';
@@ -9,10 +9,8 @@ import define from '../define';
 export default define({
 	name: 'drugs.insertMany',
 	authentication: AuthenticationLoggedIn,
-	validate(drugs: any[]) {
-		for (const drug of drugs) check(drug, Object);
-	},
-	async transaction(db: TransactionDriver, drugs: any[]) {
+	schema: schema.tuple([schema.array(schema.object({}))]),
+	async transaction(db: TransactionDriver, drugs) {
 		const createdAt = new Date();
 		const owner = this.userId;
 

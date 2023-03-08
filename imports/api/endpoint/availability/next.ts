@@ -1,7 +1,9 @@
 import assert from 'assert';
 
-import {check} from 'meteor/check';
 import define from '../define';
+
+import schema from '../../../lib/schema';
+import {WEEK_MODULO} from '../../../lib/datetime';
 
 import properlyIntersectsWithRightOpenInterval from '../../interval/containsDate';
 import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';
@@ -13,18 +15,17 @@ import {
 	initialSlot,
 	overlapsAfterDate,
 } from '../../availability';
-import {WEEK_MODULO} from '../../../lib/datetime';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'availability.next',
 	authentication: AuthenticationLoggedIn,
-	validate(after: Date, duration: Duration, constraints: Constraint[]) {
-		check(after, Date);
-		check(duration, Number);
-		check(constraints, [[Number]]);
-	},
+	schema: schema.tuple([
+		schema.date(),
+		schema.number(),
+		schema.array(schema.tuple([schema.number(), schema.number()])),
+	]),
 	async transaction(
 		db: TransactionDriver,
 		after: Date,

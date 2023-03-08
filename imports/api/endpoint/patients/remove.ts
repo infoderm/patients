@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {Patients} from '../../collection/patients';
 import {PatientsSearchIndex} from '../../collection/patients/search';
 import {Consultations} from '../../collection/consultations';
@@ -10,14 +8,13 @@ import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: '/api/patients/remove',
 	authentication: AuthenticationLoggedIn,
-	validate(patientId: string) {
-		check(patientId, String);
-	},
-	async transaction(db: TransactionDriver, patientId: string) {
+	schema: schema.tuple([schema.string()]),
+	async transaction(db: TransactionDriver, patientId) {
 		const owner = this.userId;
 		const patient = await db.findOne(Patients, {_id: patientId, owner});
 		if (patient === null) {

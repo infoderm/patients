@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {Consultations} from '../../collection/consultations';
 import {Books} from '../../collection/books';
 import {books} from '../../books';
@@ -9,19 +7,13 @@ import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import EndpointError from '../EndpointError';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'books.changeBookNumber',
 	authentication: AuthenticationLoggedIn,
-	validate(oldBookId: string, newBookNumberString: string) {
-		check(oldBookId, String);
-		check(newBookNumberString, String);
-	},
-	async transaction(
-		db: TransactionDriver,
-		oldBookId: string,
-		newBookNumberString: string,
-	) {
+	schema: schema.tuple([schema.string(), schema.string()]),
+	async transaction(db: TransactionDriver, oldBookId, newBookNumberString) {
 		const oldBook = await db.findOne(Books, {
 			_id: oldBookId,
 			owner: this.userId,

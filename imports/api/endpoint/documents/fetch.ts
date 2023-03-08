@@ -1,16 +1,15 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
 
 import define from '../define';
+import EndpointError from '../EndpointError';
 
 export default define({
 	name: 'documents.fetch',
 	authentication: AuthenticationLoggedIn,
-	validate(documentId: string) {
-		check(documentId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	async run(documentId: string) {
 		const document = await Documents.findOneAsync(
 			{
@@ -25,7 +24,7 @@ export default define({
 			},
 		);
 		if (!document) {
-			throw new Meteor.Error('not-found');
+			throw new EndpointError('not-found');
 		}
 
 		return document.decoded ?? document.source;

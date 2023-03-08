@@ -39,7 +39,7 @@ export default define({
 		};
 		let total = 0;
 		const refs = new Map<string, string>();
-		const pRefs = new Map<string, {freq: number; sex: string}>();
+		const pRefs = new Map<string, {freq: number; sex: string | undefined}>();
 		const count: [GenderCount, ...GenderCount[]] = [{}];
 
 		const state = (): PollResult<GenderCount[]> => ({
@@ -47,30 +47,30 @@ export default define({
 			count,
 		});
 
-		const inc = (patientId: string) => {
-			if (!pRefs.has(patientId))
+		const inc = (patientId: string | undefined) => {
+			if (patientId === undefined || !pRefs.has(patientId))
 				throw new Error(`inc: patientId ${patientId} does not exist`);
 			const patient = pRefs.get(patientId)!;
-			count[patient.freq]![patient.sex] -= 1;
+			count[patient.freq]![patient.sex ?? 'undefined'] -= 1;
 			patient.freq += 1;
 			if (count[patient.freq] === undefined) count[patient.freq] = {};
-			if (count[patient.freq]![patient.sex] === undefined)
-				count[patient.freq]![patient.sex] = 0;
+			if (count[patient.freq]![patient.sex ?? 'undefined'] === undefined)
+				count[patient.freq]![patient.sex ?? 'undefined'] = 0;
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			count[patient.freq]![patient.sex] += 1;
+			count[patient.freq]![patient.sex ?? 'undefined'] += 1;
 		};
 
-		const dec = (patientId: string) => {
-			if (!pRefs.has(patientId))
+		const dec = (patientId: string | undefined) => {
+			if (patientId === undefined || !pRefs.has(patientId))
 				throw new Error(`dec: patientId ${patientId} does not exist`);
 			const patient = pRefs.get(patientId)!;
-			count[patient.freq]![patient.sex] -= 1;
+			count[patient.freq]![patient.sex ?? 'undefined'] -= 1;
 			patient.freq -= 1;
 			if (count[patient.freq] === undefined) count[patient.freq] = {};
-			if (count[patient.freq]![patient.sex] === undefined)
-				count[patient.freq]![patient.sex] = 0;
+			if (count[patient.freq]![patient.sex ?? 'undefined'] === undefined)
+				count[patient.freq]![patient.sex ?? 'undefined'] = 0;
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			count[patient.freq]![patient.sex] += 1;
+			count[patient.freq]![patient.sex ?? 'undefined'] += 1;
 		};
 
 		let initializing = true;
@@ -94,7 +94,8 @@ export default define({
 			},
 			changed(_id, {sex}) {
 				const {freq, sex: prev} = pRefs.get(_id)!;
-				count[freq]![prev] -= 1;
+				const prevKey = `${prev}`;
+				count[freq]![prevKey] -= 1;
 				const sexKey = `${sex}`;
 				if (count[freq]![sexKey] === undefined) count[freq]![sexKey] = 0;
 				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands

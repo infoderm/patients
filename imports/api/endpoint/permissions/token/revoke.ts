@@ -1,5 +1,5 @@
-import {check} from 'meteor/check';
 import {AuthenticationLoggedIn} from '../../../Authentication';
+import schema from '../../../../lib/schema';
 
 import {PermissionTokens} from '../../../collection/permissionTokens';
 
@@ -8,9 +8,7 @@ import define from '../../define';
 export default define({
 	name: 'permissions.token.revoke',
 	authentication: AuthenticationLoggedIn,
-	validate(_id: string) {
-		check(_id, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	async run(_id: string) {
 		const nRemoved = await PermissionTokens.removeAsync({
 			_id,

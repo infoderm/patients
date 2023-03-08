@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 
+import schema from '../lib/schema';
 import mergeOptions from './query/mergeOptions';
 
 import makeQuery from './makeQuery';
@@ -233,15 +234,8 @@ const createTagCollection = <
 	const renameEndpoint = defineEndpoint({
 		name: `${collection}.rename`,
 		authentication: AuthenticationLoggedIn,
-		validate(tagId: string, newname: string) {
-			check(tagId, String);
-			check(newname, String);
-		},
-		async transaction(
-			db: TransactionDriver,
-			tagId: string,
-			rawDisplayName: string,
-		) {
+		schema: schema.tuple([schema.string(), schema.string()]),
+		async transaction(db: TransactionDriver, tagId, rawDisplayName) {
 			const owner = this.userId;
 			const tag = await db.findOne(tagsCollection, {
 				_id: tagId,
@@ -307,7 +301,7 @@ const createTagCollection = <
 				{upsert: true},
 			);
 		},
-		simulate(_tagId: string, _newname: string) {
+		simulate(_tagId, _newname) {
 			return undefined;
 		},
 	});
@@ -315,10 +309,8 @@ const createTagCollection = <
 	const deleteEndpoint = defineEndpoint({
 		name: `${collection}.delete`,
 		authentication: AuthenticationLoggedIn,
-		validate(tagId: string) {
-			check(tagId, String);
-		},
-		async transaction(db: TransactionDriver, tagId: string) {
+		schema: schema.tuple([schema.string()]),
+		async transaction(db: TransactionDriver, tagId) {
 			const owner = this.userId;
 			const tag = await db.findOne(tagsCollection, {
 				_id: tagId,
@@ -337,7 +329,7 @@ const createTagCollection = <
 
 			return db.deleteOne(tagsCollection, {_id: tagId} as Filter<T>);
 		},
-		simulate(_tagId: string) {
+		simulate(_tagId) {
 			return undefined;
 		},
 	});

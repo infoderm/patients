@@ -6,7 +6,6 @@ import type {
 } from 'idb';
 
 import type {DBSchema, IDBPDatabase} from 'idb/with-async-ittr';
-
 import {openDB} from 'idb/with-async-ittr';
 
 const DEFAULT_DB_NAME = 'cache-lru';

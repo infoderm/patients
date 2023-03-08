@@ -1,6 +1,4 @@
-import {check} from 'meteor/check';
-
-import {type PatientFields, Patients} from '../../collection/patients';
+import {Patients} from '../../collection/patients';
 import {PatientsSearchIndex} from '../../collection/patients/search';
 import {Consultations} from '../../collection/consultations';
 import {Documents} from '../../collection/documents';
@@ -11,32 +9,29 @@ import {computeUpdate, patients} from '../../patients';
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 const {sanitize, updateIndex} = patients;
 
 export default define({
 	name: '/patients/merge',
 	authentication: AuthenticationLoggedIn,
-	validate(
-		oldPatientIds: string[],
-		consultationIds: string[],
-		attachmentIds: string[],
-		documentIds: string[],
-		newPatient: PatientFields,
-	) {
-		check(oldPatientIds, Array);
-		check(consultationIds, Array);
-		check(attachmentIds, Array);
-		check(documentIds, Array);
-		check(newPatient, Object);
-	},
+	schema: schema.tuple([
+		schema.array(schema.string()),
+		schema.array(schema.string()),
+		schema.array(schema.string()),
+		schema.array(schema.string()),
+		schema.object({
+			/* TODO Should be PatientFields */
+		}),
+	]),
 	async transaction(
 		db: TransactionDriver,
-		oldPatientIds: string[],
-		consultationIds: string[],
-		attachmentIds: string[],
-		documentIds: string[],
-		newPatient: PatientFields,
+		oldPatientIds,
+		consultationIds,
+		attachmentIds,
+		documentIds,
+		newPatient,
 	) {
 		// Here is what is done in this method
 		// (2) Check that each patient in `oldPatientIds` is owned by the user
@@ -163,11 +158,11 @@ export default define({
 		return newPatientId;
 	},
 	simulate(
-		_oldPatientIds: string[],
-		_consultationIds: string[],
-		_attachmentIds: string[],
-		_documentIds: string[],
-		_newPatient: PatientFields,
+		_oldPatientIds,
+		_consultationIds,
+		_attachmentIds,
+		_documentIds,
+		_newPatient,
 	) {
 		return undefined;
 	},

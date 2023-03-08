@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
@@ -6,22 +6,21 @@ import {documents} from '../../documents';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
+import EndpointError from '../EndpointError';
 
 const {updateLastVersionFlags} = documents;
 
 export default define({
 	name: 'documents.restore',
 	authentication: AuthenticationLoggedIn,
-	validate(documentId: string) {
-		check(documentId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	async transaction(db: TransactionDriver, documentId: string) {
 		const document = await db.findOne(Documents, {
 			_id: documentId,
 			owner: this.userId,
 		});
 		if (document === null) {
-			throw new Meteor.Error('not-found');
+			throw new EndpointError('not-found');
 		}
 
 		await db.updateOne(Documents, {_id: documentId}, {$set: {deleted: false}});

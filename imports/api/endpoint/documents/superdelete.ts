@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
@@ -12,10 +12,8 @@ const {updateLastVersionFlags} = documents;
 export default define({
 	name: 'documents.superdelete',
 	authentication: AuthenticationLoggedIn,
-	validate(documentId: string) {
-		check(documentId, String);
-	},
-	async transaction(db: TransactionDriver, documentId: string) {
+	schema: schema.tuple([schema.string()]),
+	async transaction(db: TransactionDriver, documentId) {
 		const document = await db.findOne(Documents, {
 			_id: documentId,
 			owner: this.userId,

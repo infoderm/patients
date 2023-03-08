@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Settings} from '../../collection/settings';
@@ -8,10 +8,8 @@ import define from '../define';
 export default define({
 	name: 'settings.reset',
 	authentication: AuthenticationLoggedIn,
-	validate(key: string) {
-		check(key, String);
-	},
-	async run(key: string) {
+	schema: schema.tuple([schema.string()]),
+	async run(key) {
 		return Settings.removeAsync({owner: this.userId, key});
 	},
 });

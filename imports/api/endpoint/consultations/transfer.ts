@@ -1,18 +1,16 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Consultations} from '../../collection/consultations';
 
 import define from '../define';
+import EndpointError from '../EndpointError';
 
 export default define({
 	name: 'consultations.transfer',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string, patientId: string) {
-		check(consultationId, String);
-		check(patientId, String);
-	},
-	async run(consultationId: string, patientId: string) {
+	schema: schema.tuple([schema.string(), schema.string()]),
+	async run(consultationId, patientId) {
 		const numUpdated = await Consultations.updateAsync(
 			{
 				_id: consultationId,
@@ -28,7 +26,7 @@ export default define({
 		);
 
 		if (numUpdated === 0) {
-			throw new Meteor.Error('not-found');
+			throw new EndpointError('not-found');
 		}
 
 		return numUpdated;

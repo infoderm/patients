@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
@@ -10,8 +10,6 @@ import define from '../define';
 export default define({
 	name: 'documents.unlink',
 	authentication: AuthenticationLoggedIn,
-	validate(documentId: string) {
-		check(documentId, String);
-	},
+	schema: schema.tuple([schema.string()]),
 	transaction: unconditionallyUpdateById(Documents, {$unset: {patientId: ''}}),
 });

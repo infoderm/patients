@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
@@ -11,15 +11,8 @@ import EndpointError from '../EndpointError';
 export default define({
 	name: 'documents.link',
 	authentication: AuthenticationLoggedIn,
-	validate(documentId: string, patientId: string) {
-		check(documentId, String);
-		check(patientId, String);
-	},
-	async transaction(
-		db: TransactionDriver,
-		documentId: string,
-		patientId: string,
-	) {
+	schema: schema.tuple([schema.string(), schema.string()]),
+	async transaction(db: TransactionDriver, documentId, patientId) {
 		const document = await db.findOne(Documents, {
 			_id: documentId,
 			owner: this.userId,

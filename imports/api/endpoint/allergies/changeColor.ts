@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Allergies} from '../../collection/allergies';
@@ -9,17 +9,14 @@ import define from '../define';
 export default define({
 	name: 'allergies.changeColor',
 	authentication: AuthenticationLoggedIn,
-	validate(tagId: string, newColor: string) {
-		check(tagId, String);
-		check(newColor, String);
-	},
+	schema: schema.tuple([schema.string(), schema.string()]),
 	transaction: unconditionallyUpdateById(
 		Allergies,
 		(_db, _existing, newColor: string) => ({
 			$set: {color: newColor},
 		}),
 	),
-	simulate(_tagId: string, _newColor: string) {
+	simulate(_tagId, _newColor) {
 		return undefined;
 	},
 });

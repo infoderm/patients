@@ -21,7 +21,17 @@ const invoke = async <
 		throw new EndpointError('not-authorized');
 	}
 
-	Reflect.apply(endpoint.validate, invocation, args);
+	try {
+		endpoint.schema.parse(args);
+	} catch (error: unknown) {
+		console.debug({error});
+		throw new EndpointError('schema validation of endpoint args failed');
+	}
+
+	if (endpoint.validate) {
+		Reflect.apply(endpoint.validate, invocation, args);
+	}
+
 	return Reflect.apply(endpoint.run, invocation, args);
 };
 

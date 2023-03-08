@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {beginningOfTime, endOfTime} from '../../../../lib/datetime';
 import {PermissionTokens} from '../../../collection/permissionTokens';
 
@@ -8,6 +6,7 @@ import {genKey, type HMACConfig, sign} from '../../../../lib/hmac';
 import define from '../../define';
 import {encode} from '../../../permissions/token';
 import {AuthenticationLoggedIn} from '../../../Authentication';
+import schema from '../../../../lib/schema';
 
 const TOKEN_HASH_ALGO = 'sha256';
 // see https://crypto.stackexchange.com/questions/34864/key-size-for-hmac-sha256
@@ -29,10 +28,8 @@ const defaultHMACConfig = (): HMACConfig => ({
 export default define({
 	name: 'permissions.token.generate',
 	authentication: AuthenticationLoggedIn,
-	validate(permissions: string[]) {
-		check(permissions, Array);
-	},
-	async run(permissions: string[]) {
+	schema: schema.tuple([schema.array(schema.string())]),
+	async run(permissions): Promise<string> {
 		const hmac = defaultHMACConfig();
 		const key = await genKey(TOKEN_BYTES, hmac);
 		const now = new Date();
@@ -55,7 +52,7 @@ export default define({
 		const _id = await PermissionTokens.insertAsync(permissionToken);
 		return encode(_id, key);
 	},
-	simulate(_permissions: string[]) {
+	simulate(_permissions) {
 		return undefined;
 	},
 });

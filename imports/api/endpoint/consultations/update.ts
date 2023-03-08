@@ -1,6 +1,5 @@
-import {check} from 'meteor/check';
-
 import {
+	type ConsultationFields,
 	Consultations,
 	type ConsultationDocument,
 } from '../../collection/consultations';
@@ -15,21 +14,20 @@ import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.update',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string, newfields: any) {
-		check(consultationId, String);
-		check(newfields, Object);
-	},
-	async transaction(
-		db: TransactionDriver,
-		consultationId: string,
-		newfields: any,
-	) {
+	schema: schema.tuple([
+		schema.string(),
+		schema.object({
+			/* TODO ConsultationFields */
+		}),
+	]),
+	async transaction(db: TransactionDriver, consultationId, newfields) {
 		const owner = this.userId;
 		const existing = await db.findOne(Consultations, {
 			_id: consultationId,
@@ -39,7 +37,7 @@ export default define({
 			throw new Meteor.Error('not-found');
 		}
 
-		const changes = sanitize(newfields);
+		const changes = sanitize(newfields as ConsultationFields);
 		const {$set, $unset, newState} = await computeUpdate(
 			db,
 			owner,

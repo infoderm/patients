@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {type ConsultationDocument} from '../../collection/consultations';
 
 import {Appointments} from '../../collection/appointments';
@@ -12,29 +10,20 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 import define from '../define';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'appointments.cancel',
 	authentication: AuthenticationLoggedIn,
-	validate(
-		consultationId: string,
-		cancellationReason: string,
-		cancellationExplanation: string,
-	) {
-		check(consultationId, String);
-		check(cancellationReason, String);
-		check(cancellationExplanation, String);
-	},
+	schema: schema.tuple([schema.string(), schema.string(), schema.string()]),
 	transaction: unconditionallyUpdateById(
 		Appointments,
 		async (
 			db: TransactionDriver,
 			existing,
-			cancellationReason: string,
-			cancellationExplanation: string,
+			cancellationReason,
+			cancellationExplanation,
 		) => {
-			check(cancellationReason, String);
-			check(cancellationExplanation, String);
 			const modifier = {
 				$set: {
 					isCancelled: true,

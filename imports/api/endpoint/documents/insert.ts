@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
@@ -18,11 +18,13 @@ const LENGTH_THRESHOLD = Math.floor(SIZE_16_MB / 8);
 export default define({
 	name: 'documents.insert',
 	authentication: AuthenticationLoggedIn,
-	validate(document: any) {
-		check(document, Object);
-	},
-	async run(document: DirtyDocument) {
-		const entries = sanitize(document);
+	schema: schema.tuple([
+		schema.object({
+			/* TODO DirtyDocument */
+		}),
+	]),
+	async run(document) {
+		const entries = sanitize(document as DirtyDocument);
 
 		const result: string[] = [];
 
@@ -124,7 +126,7 @@ export default define({
 
 		return result;
 	},
-	simulate(_document: any) {
+	simulate(_document) {
 		return undefined;
 	},
 });

@@ -1,5 +1,5 @@
-import {check} from 'meteor/check';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 import {Patients} from '../../collection/patients';
 import {computeUpdate, patients} from '../../patients';
@@ -13,11 +13,8 @@ const {sanitize, updateIndex, updateTags} = patients;
 export default define({
 	name: '/api/patients/update',
 	authentication: AuthenticationLoggedIn,
-	validate(patientId: string, newfields: any) {
-		check(patientId, String);
-		check(newfields, Object);
-	},
-	async transaction(db: TransactionDriver, patientId: string, newfields: any) {
+	schema: schema.tuple([schema.string(), schema.object({})]),
+	async transaction(db: TransactionDriver, patientId, newfields) {
 		const owner = this.userId;
 
 		const patient = await db.findOne(Patients, {
@@ -43,7 +40,7 @@ export default define({
 
 		return db.updateOne(Patients, {_id: patientId, owner}, {$set, $unset});
 	},
-	simulate(_patientId: string, _newfields: any) {
+	simulate(_patientId, _newfields) {
 		return undefined;
 	},
 });

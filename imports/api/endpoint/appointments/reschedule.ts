@@ -10,7 +10,7 @@ import {type ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
-import {validate} from '../../../lib/schema';
+import schema from '../../../lib/schema';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import createPatientForAppointment from './createPatient';
@@ -18,15 +18,8 @@ import createPatientForAppointment from './createPatient';
 export default define({
 	name: 'appointments.reschedule',
 	authentication: AuthenticationLoggedIn,
-	validate(appointmentId: string, appointment: any) {
-		validate(appointmentId, String);
-		validate(appointment, Object);
-	},
-	async transaction(
-		db: TransactionDriver,
-		appointmentId: string,
-		appointment: any,
-	) {
+	schema: schema.tuple([schema.string(), schema.object({})]),
+	async transaction(db: TransactionDriver, appointmentId, appointment) {
 		const owner = this.userId;
 		const existing = await db.findOne(Appointments, {
 			_id: appointmentId,
@@ -58,9 +51,9 @@ export default define({
 		}
 
 		if ($set.datetime !== undefined || $set.duration !== undefined) {
-			validate($set.begin, Date);
-			validate($set.end, Date);
-			validate($set.isDone, Boolean);
+			schema.date().parse($set.begin);
+			schema.date().parse($set.end);
+			schema.boolean().parse($set.isDone);
 			const {
 				begin: oldBegin,
 				end: oldEnd,

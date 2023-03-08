@@ -5,6 +5,7 @@ import type Serializable from '../Serializable';
 import type Args from '../Args';
 import type ContextFor from './ContextFor';
 import type Endpoint from './Endpoint';
+import EndpointError from './EndpointError';
 
 const compose = async <
 	A extends Args,
@@ -19,7 +20,18 @@ const compose = async <
 ) => {
 	// TODO will need to check authorized here if we ever compose endpoints
 	// with different authorization levels
-	Reflect.apply(endpoint.validate, invocation, args);
+
+	try {
+		endpoint.schema.parse(args);
+	} catch (error: unknown) {
+		console.debug({error});
+		throw new EndpointError('schema validation of endpoint args failed');
+	}
+
+	if (endpoint.validate) {
+		Reflect.apply(endpoint.validate, invocation, args);
+	}
+
 	if (!endpoint.transaction) {
 		throw new Error(
 			`Endpoint "${endpoint.name}"'s definition lacks a transaction and thus cannot be part of a composition.`,

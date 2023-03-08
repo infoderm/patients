@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import {Consultations} from '../../collection/consultations';
 import {Attachments} from '../../collection/attachments';
 
@@ -7,14 +5,13 @@ import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'consultations.remove',
 	authentication: AuthenticationLoggedIn,
-	validate(consultationId: string) {
-		check(consultationId, String);
-	},
-	async transaction(db: TransactionDriver, consultationId: string) {
+	schema: schema.tuple([schema.string()]),
+	async transaction(db: TransactionDriver, consultationId) {
 		const owner = this.userId;
 		const consultation = await db.findOne(Consultations, {
 			_id: consultationId,
