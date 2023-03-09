@@ -232,7 +232,7 @@ const sanitizeUpdate = function* (
 		fields,
 		'book',
 		String,
-		(book: string | undefined) => books.sanitize(book || ''),
+		(book: string | undefined) => books.sanitize(book ?? ''),
 	);
 	yield* yieldResettableKey(fields, 'payment_method', String, (x) => x);
 
@@ -240,20 +240,21 @@ const sanitizeUpdate = function* (
 		fields,
 		'price',
 		Number,
-		(price: number | undefined) => (Number.isFinite(price) ? price : undefined),
+		(price: number | undefined) =>
+			Number.isFinite(price) ? price! : undefined,
 	);
 	yield* yieldResettableKey(
 		fields,
 		'paid',
 		Number,
-		(paid: number | undefined) => (Number.isFinite(paid) ? paid : undefined),
+		(paid: number | undefined) => (Number.isFinite(paid) ? paid! : undefined),
 	);
 	yield* yieldResettableKey(
 		fields,
 		'inBookNumber',
 		Number,
 		(inBookNumber: number | undefined) =>
-			Number.isInteger(inBookNumber) && inBookNumber >= 1
+			Number.isInteger(inBookNumber) && inBookNumber! >= 1
 				? inBookNumber
 				: undefined,
 	);

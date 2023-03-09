@@ -6,7 +6,7 @@ function* split(s: string) {
 	const n = s.length;
 	let word = '';
 	for (let i = 0; i < n; ++i) {
-		const c = s[i];
+		const c: string = s[i]!;
 		switch (c) {
 			case ' ':
 			case '\t':

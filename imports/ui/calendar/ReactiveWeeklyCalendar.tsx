@@ -139,16 +139,18 @@ const prepareAvailability = (
 const toProps = (
 	intervals: IterableIterator<[number, number]>,
 	calendar: (begin: Date, end: Date) => string,
-	onSlotClick: (slot: Date, noInitialTime?: boolean) => void,
+	onSlotClick?: (slot: Date, noInitialTime?: boolean) => void,
 ) => {
 	return map(
 		([begin, end]) => ({
 			calendar: calendar(begin, end),
 			begin,
 			end,
-			onClick() {
-				onSlotClick(begin, false);
-			},
+			onClick:
+				onSlotClick &&
+				(() => {
+					onSlotClick(begin, false);
+				}),
 		}),
 		intervals,
 	);
@@ -301,8 +303,8 @@ const ReactiveWeeklyCalendar = ({
 		chain(
 			filter(
 				(x) =>
-					(showCancelledEvents || !x.isCancelled) &&
-					(showNoShowEvents || !x.isNoShow),
+					(Boolean(showCancelledEvents) || !x.isCancelled) &&
+					(Boolean(showNoShowEvents) || !x.isNoShow),
 				events,
 			),
 			toProps(

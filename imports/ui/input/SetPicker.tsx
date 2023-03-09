@@ -200,7 +200,7 @@ const SetPicker = <ItemType, ChipProps>({
 	const count = selectedItems.length;
 	const full = count >= maxCount;
 
-	const inputDisabled = readOnly || full;
+	const inputDisabled = Boolean(readOnly) || full;
 
 	const {setSelectedItems, addSelectedItem, removeSelectedItem} =
 		useSelectionManagement(selectedItems, onChange);
@@ -251,7 +251,7 @@ const SetPicker = <ItemType, ChipProps>({
 			if (full) {
 				resetInputValue();
 			} else {
-				const newInputValue = inputTransform(inputValue.trimStart());
+				const newInputValue = inputTransform(inputValue?.trimStart() ?? '');
 				if (newInputValue === emptyInput) {
 					resetInputValue();
 				} else {
@@ -298,7 +298,7 @@ const SetPicker = <ItemType, ChipProps>({
 		// TODO avoid creating new item before multiset check,
 		// handle async item creation, use try/catch for error
 		// handling
-		const item = createNewItem(inputValue.trim());
+		const item = createNewItem?.(inputValue.trim());
 		if (item !== undefined && (multiset || !isSelected(item))) {
 			await addSelectedItem(item);
 			resetInputValue();
@@ -336,7 +336,7 @@ const SetPicker = <ItemType, ChipProps>({
 				InputLabelProps={getLabelProps()}
 				inputProps={{
 					...inputProps,
-					readOnly: readOnly || full,
+					readOnly: Boolean(readOnly) || full,
 				}}
 				InputProps={{
 					...getInputProps(

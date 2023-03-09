@@ -24,9 +24,9 @@ const virtualFields = (consultation: ConsultationDocument) => {
 	const isNoShow =
 		isAppointment &&
 		!isCancelled &&
-		isBefore(scheduledDatetime, startOfToday());
+		isBefore(scheduledDatetime!, startOfToday());
 
-	const didNotOrWillNotHappen = isCancelled || isNoShow;
+	const didNotOrWillNotHappen = Boolean(isCancelled) || isNoShow;
 
 	return {
 		didNotOrWillNotHappen,

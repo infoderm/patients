@@ -121,7 +121,7 @@ const getId = (upload: FileObj<MetadataType>, version: string) => {
 };
 
 // NOTE we need this function to be able to return null synchronously
-// eslint-disable-next-line @typescript-eslint/promise-function-async
+
 const getReadStreamPromise = (
 	upload: FileObj<MetadataType>,
 	version: string,

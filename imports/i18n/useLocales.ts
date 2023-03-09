@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 
 import useLocale from './useLocale';
 
-const useLocales = () => {
+const useLocales = (): string[] => {
 	const locale = useLocale();
 	return useMemo(() => [locale], [locale]);
 };

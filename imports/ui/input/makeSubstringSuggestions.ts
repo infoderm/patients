@@ -52,7 +52,7 @@ const makeSubstringSuggestions =
 		]);
 
 		return {
-			loading: loading || isPending(),
+			loading: Boolean(loading) || isPending(),
 			cancel,
 			flush,
 			...rest,

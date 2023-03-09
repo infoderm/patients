@@ -241,7 +241,7 @@ export const useDateFormatAge = (hookOptions?) => {
 			const ageInterval = {start: birthdate, end: thisMorningOrDeathdate};
 			const duration = intervalToDuration(ageInterval);
 			const detailedAge = tuple(duration, options);
-			const shortAge = detailedAge.split(',')[0];
+			const shortAge: string = detailedAge.split(',')[0]!;
 			const displayedAge =
 				(ageInterval.end < ageInterval.start ? '-' : '') + shortAge;
 			return displayedAge;

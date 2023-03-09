@@ -129,14 +129,14 @@ const AppointmentDialog = ({
 	);
 	const [duration, setDuration] = useStateWithInitOverride<number>(
 		appointmentDuration.includes(initialAppointment?.duration)
-			? initialAppointment.duration
+			? initialAppointment!.duration
 			: appointmentDuration.length > 0
 			? appointmentDuration[0]
 			: 0,
 		[initialAppointment, appointmentDuration],
 	);
 	const [reason, setReason] = useStateWithInitOverride(
-		initialAppointment?.reason || '',
+		initialAppointment?.reason ?? '',
 		[initialAppointment],
 	);
 
@@ -271,7 +271,7 @@ const AppointmentDialog = ({
 							)}
 							onChange={(pickedDatetime) => {
 								if (isValid(pickedDatetime)) {
-									setDate(serializeDate(pickedDatetime));
+									setDate(serializeDate(pickedDatetime!));
 									setValidDate(true);
 								} else {
 									setValidDate(false);
@@ -292,7 +292,7 @@ const AppointmentDialog = ({
 							value={unserializeTime(time)}
 							onChange={(pickedDatetime) => {
 								if (isValid(pickedDatetime)) {
-									setTime(serializeTime(pickedDatetime));
+									setTime(serializeTime(pickedDatetime!));
 									setValidTime(true);
 								} else {
 									setValidTime(false);

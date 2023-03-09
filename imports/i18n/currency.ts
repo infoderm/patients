@@ -2,14 +2,20 @@ import {useMemo} from 'react';
 
 import {useNumberFormat} from './number';
 
-export const useCurrencyFormatObject = (currency: string, options?: any) =>
+export const useCurrencyFormatObject = (
+	currency: string,
+	options?: Intl.NumberFormatOptions,
+) =>
 	useNumberFormat({
 		style: 'currency',
 		currency,
 		...options,
 	});
 
-export const useCurrencyFormat = (currency: string, options?: any) => {
+export const useCurrencyFormat = (
+	currency: string,
+	options?: Intl.NumberFormatOptions,
+) => {
 	const numberFormat = useCurrencyFormatObject(currency, options);
 
 	return useMemo(
@@ -62,17 +68,17 @@ export const useCurrencyOptions = (currency: string, options?: any) => {
 			}
 		}
 
-		if (parts[0].type === 'currency') {
+		if (parts[0]!.type === 'currency') {
 			currencyPosition = 'prefix';
-			currencySymbol = parts[0].value;
-			if (parts[1].type === 'literal') {
-				currencySpacing = parts[1].value;
+			currencySymbol = parts[0]!.value;
+			if (parts[1]!.type === 'literal') {
+				currencySpacing = parts[1]!.value;
 			}
-		} else if (parts[parts.length - 1].type === 'currency') {
+		} else if (parts[parts.length - 1]!.type === 'currency') {
 			currencyPosition = 'suffix';
-			currencySymbol = parts[parts.length - 1].value;
-			if (parts[parts.length - 2].type === 'literal') {
-				currencySpacing = parts[parts.length - 2].value;
+			currencySymbol = parts[parts.length - 1]!.value;
+			if (parts[parts.length - 2]!.type === 'literal') {
+				currencySpacing = parts[parts.length - 2]!.value;
 			}
 		}
 

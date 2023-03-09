@@ -9,9 +9,9 @@ import find from '../../api/endpoint/patients/find';
 import {myDecodeURIComponent} from '../../lib/uri';
 import mergeFields from '../../api/query/mergeFields';
 
+import {PatientDocument} from '../../api/collection/patients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
-import {PatientDocument} from '../../api/collection/patients';
 
 type Params = {
 	query: string;
@@ -34,7 +34,7 @@ const PatientsSearchResults = ({
 
 	const {enqueueSnackbar} = useSnackbar();
 	const [loading, setLoading] = useState(true);
-	const [patients, setPatients] = useState<({_id: string})[]>([]);
+	const [patients, setPatients] = useState<Array<{_id: string}>>([]);
 
 	const $search = myDecodeURIComponent(params.query);
 

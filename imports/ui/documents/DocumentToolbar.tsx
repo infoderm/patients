@@ -34,12 +34,13 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
 }));
 
 type DocumentToolbarProps = {
-	printSource: HTMLElement;
+	printSource: HTMLElement | null;
 };
 
 const DocumentToolbar = ({printSource}: DocumentToolbarProps) => {
 	const [pending, setPending] = useState(false);
 	const printResults = useCallback(async () => {
+		if (printSource === null) return;
 		setPending(true);
 		try {
 			await saveHTMLElementAsPDF(printSource, {filename: 'results.pdf'});

@@ -66,7 +66,7 @@ const HealthOneLabResultsTable = ({
 	document,
 }: HealthOneLabResultsTableProps) => {
 	const {classes} = useStyles();
-	const [printSource, setPrintSource] = useState<HTMLTableElement>(null);
+	const [printSource, setPrintSource] = useState<HTMLTableElement | null>(null);
 
 	if (!document.results || document.results.length === 0) {
 		return <Typography>No results</Typography>;
@@ -144,7 +144,10 @@ const HealthOneLabResultsTable = ({
 
 							break;
 						}
-						// No default
+
+						default: {
+							throw new Error('Should never happen');
+						}
 					}
 			}
 		}
@@ -176,7 +179,7 @@ const HealthOneLabResultsTable = ({
 				</TableHead>
 				<TableBody>
 					{rows.map((row, i) => {
-						const isResult = /^\d+$/.exec(row.code);
+						const isResult = /^\d+$/.exec(row.code ?? '');
 						const comment = row.measure ? row.measure.split('\t') : [];
 						comment.pop();
 						return (

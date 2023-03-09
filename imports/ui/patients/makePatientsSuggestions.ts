@@ -71,7 +71,7 @@ const makePatientsSuggestions = (
 		);
 
 		return {
-			loading: loading || isPending(),
+			loading: Boolean(loading) || isPending(),
 			cancel,
 			flush,
 			...rest,

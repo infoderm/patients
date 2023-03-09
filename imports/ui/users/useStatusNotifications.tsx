@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {SnackbarKey, useSnackbar} from 'notistack';
+import {type SnackbarKey, useSnackbar} from 'notistack';
 
 import Button from '@mui/material/Button';
 

@@ -172,7 +172,7 @@ const StaticConsultationCardDetails = (
 	} = props;
 
 	const localizedDatetime = useDateFormat('PPPPpppp');
-	const currencyFormat = useCurrencyFormat(currency);
+	const currencyFormat = useCurrencyFormat(currency!);
 
 	return (
 		<StyledAccordionDetails className={classes.details}>
@@ -194,7 +194,8 @@ const StaticConsultationCardDetails = (
 						Icon={AlarmOffIcon}
 						primary="Rendez-vous annulé"
 						secondary={`${cancellationReason} ${localizedDatetime(
-							cancellationDatetime,
+							cancellationDatetime!,
+							// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 						)}\nExplanation: ${cancellationExplanation || 'unknown'}`}
 					/>
 				)}
@@ -255,8 +256,8 @@ const StaticConsultationCardDetails = (
 					<ConsultationsCardListItem
 						Icon={EuroSymbolIcon}
 						primary="Paiement"
-						secondary={`À payé ${currencyFormat(paid)} de ${currencyFormat(
-							price,
+						secondary={`À payé ${currencyFormat(paid!)} de ${currencyFormat(
+							price!,
 						)}.`}
 					/>
 				)}

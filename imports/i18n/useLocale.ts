@@ -1,7 +1,7 @@
 import {useSettingCached} from '../ui/settings/hooks';
 import {navigatorLocale} from './navigator';
 
-const useLocale = () => {
+const useLocale = (): string => {
 	const {value} = useSettingCached('lang');
 	return value === 'navigator' ? navigatorLocale() : value;
 };
