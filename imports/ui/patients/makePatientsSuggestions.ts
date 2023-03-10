@@ -16,7 +16,7 @@ const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input
 
 const makePatientsSuggestions = (
-	set = [],
+	set: Array<{_id: string}> = [],
 	userOptions?: Options<PatientCacheItem>,
 ) => {
 	const $nin = list(map((x) => x._id, set));

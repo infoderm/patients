@@ -43,9 +43,10 @@ const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {
 		deathdateLegal: deathdateLegalInit,
 	} = virtualFields(patient);
 	const [deathdateModifiedAt, setDeathdateModifiedAt] =
-		useStateWithInitOverride(deathdateModifiedAtInit);
-	const [deathdateLegal, setDeathdateLegal] =
-		useStateWithInitOverride(deathdateLegalInit);
+		useStateWithInitOverride<Date | undefined>(deathdateModifiedAtInit);
+	const [deathdateLegal, setDeathdateLegal] = useStateWithInitOverride<
+		Date | undefined
+	>(deathdateLegalInit);
 	const birthdatePickerProps = useBirthdatePickerProps();
 	const {isDead} = virtualFields({
 		...patient,
@@ -89,7 +90,7 @@ const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {
 									if (value === 'dead') {
 										setDeathdateModifiedAt(new Date());
 									} else {
-										setDeathdateModifiedAt(null);
+										setDeathdateModifiedAt(undefined);
 									}
 								}}
 							>
@@ -118,10 +119,10 @@ const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {
 									{...props}
 								/>
 							)}
-							value={isDead ? deathdateLegal : null}
+							value={isDead ? deathdateLegal ?? null : null}
 							onChange={(date) => {
 								if (isValid(date)) {
-									setDeathdateLegal(date);
+									setDeathdateLegal(date!);
 								}
 							}}
 						/>

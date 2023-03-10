@@ -9,7 +9,6 @@ import find from '../../api/endpoint/patients/find';
 import {myDecodeURIComponent} from '../../lib/uri';
 import mergeFields from '../../api/query/mergeFields';
 
-import {PatientDocument} from '../../api/collection/patients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 

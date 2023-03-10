@@ -2,7 +2,11 @@ import {useMemo} from 'react';
 
 import {map} from '@iterable-iterator/map';
 
-import {Patients, type PatientDocument} from '../../api/collection/patients';
+import {
+	Patients,
+	type PatientDocument,
+	type PatientFields,
+} from '../../api/collection/patients';
 import {Consultations} from '../../api/collection/consultations';
 import {Attachments} from '../../api/collection/attachments';
 import {Documents} from '../../api/collection/documents';
@@ -16,6 +20,10 @@ import patientsPub from '../../api/publication/patients/patients';
 import consultationsPub from '../../api/publication/consultationsAndAppointments/find';
 import attachmentsPub from '../../api/publication/attachments/attachments';
 import documentsPub from '../../api/publication/documents/find';
+
+import {type ConsultationDocument} from '../../api/collection/consultations';
+import {type DocumentDocument} from '../../api/collection/documents';
+import {type AttachmentDocument} from '../../api/collection/attachments';
 
 const index = <T>(keys: (item: T) => Iterable<string>, items: Iterable<T>) => {
 	const table = {};
@@ -33,7 +41,36 @@ const index = <T>(keys: (item: T) => Iterable<string>, items: Iterable<T>) => {
 	return table;
 };
 
-const useMergeInfo = (toMerge: string[]) => {
+export type MergeInfoError = {
+	message: string;
+};
+
+export type MergeInfo = {loading: boolean} & (
+	| {
+			error: MergeInfoError;
+			oldPatients: undefined;
+			consultations: undefined;
+			attachments: undefined;
+			documents: undefined;
+			newPatient: undefined;
+			newConsultations: undefined;
+			newAttachments: undefined;
+			newDocuments: undefined;
+	  }
+	| {
+			error: undefined;
+			oldPatients: PatientDocument[];
+			consultations: Record<string, ConsultationDocument[]>;
+			attachments: Record<string, AttachmentDocument[]>;
+			documents: Record<string, DocumentDocument[]>;
+			newPatient: PatientFields;
+			newConsultations: ConsultationDocument[];
+			newAttachments: AttachmentDocument[];
+			newDocuments: DocumentDocument[];
+	  }
+);
+
+const useMergeInfo = (toMerge: string[]): MergeInfo => {
 	const patientsLoading = useSubscription(patientsPub, {_id: {$in: toMerge}});
 	const consultationsLoading = useSubscription(consultationsPub, {
 		patientId: {$in: toMerge},
@@ -77,9 +114,9 @@ const useMergeInfo = (toMerge: string[]) => {
 	);
 
 	const results = useMemo(() => {
-		const oldPatients = [];
+		const oldPatients: PatientDocument[] = [];
 
-		const fetchedPatientIndex = new Map(
+		const fetchedPatientIndex = new Map<string, PatientDocument>(
 			map(
 				(patient: PatientDocument) => [patient._id, patient],
 				fetchedPatients,
@@ -102,9 +139,9 @@ const useMergeInfo = (toMerge: string[]) => {
 			(consultation) => [consultation.patientId],
 			newConsultations,
 		);
-		const documents = index((document) => [document.patientId], newDocuments);
+		const documents = index((document) => [document.patientId!], newDocuments);
 		const attachments = index(
-			(attachment) => attachment.meta.attachedToPatients,
+			(attachment) => attachment.meta?.attachedToPatients ?? [],
 			newAttachments,
 		);
 
@@ -131,7 +168,7 @@ const useMergeInfo = (toMerge: string[]) => {
 		newConsultations,
 		newDocuments,
 		newAttachments,
-	};
+	} as MergeInfo;
 };
 
 export default useMergeInfo;

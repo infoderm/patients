@@ -89,7 +89,7 @@ type SetPickerProps<Item, ChipProps> = {
 	inputTransform?: (inputValue: string) => string;
 	inputValidation?: InputValidation;
 	onChange?: (event: any) => void | Promise<void>;
-	createNewItem?: (inputValue: string) => Item;
+	createNewItem?: (inputValue: string) => Item | undefined;
 	maxCount?: number;
 	multiset?: boolean;
 	TextFieldProps?: any;

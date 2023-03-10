@@ -236,7 +236,7 @@ export const useDateFormatDuration = (hookOptions?) => {
 export const useDateFormatAge = (hookOptions?) => {
 	const tuple = useDateFormatDuration({...hookOptions, delimiter: ','});
 	return useMemo(
-		() => (birthdate: Date, deathdate: Date | null, options?) => {
+		() => (birthdate: Date, deathdate: Date | undefined, options?) => {
 			const thisMorningOrDeathdate = deathdate ?? startOfToday();
 			const ageInterval = {start: birthdate, end: thisMorningOrDeathdate};
 			const duration = intervalToDuration(ageInterval);

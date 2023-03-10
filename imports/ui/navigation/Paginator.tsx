@@ -52,7 +52,10 @@ type Params = {page?: string};
 
 const Paginator = (props: Omit<Props, 'page' | 'root'>) => {
 	const params = useParams<Params>();
-	const page = parseNonNegativeIntegerStrictOrUndefined(params.page);
+	const page =
+		params.page === undefined
+			? undefined
+			: parseNonNegativeIntegerStrictOrUndefined(params.page);
 	const root = `${page === undefined ? '' : '../'}page/`;
 	return <PaginatorBase page={page} root={root} {...props} />;
 };

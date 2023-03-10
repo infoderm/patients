@@ -105,7 +105,7 @@ const MaybeDeathItem = ({loading, found, patient}) => {
 				variant="body2"
 				color="text.secondary"
 			>
-				{dateFormat(deathdate, 'PPPPpp')}
+				{dateFormat(deathdate!, 'PPPPpp')}
 			</TimelineOppositeContent>
 			<TimelineSeparator>
 				<TimelineDot>

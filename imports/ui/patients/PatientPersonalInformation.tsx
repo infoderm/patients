@@ -1,4 +1,5 @@
 import React from 'react';
+import {type PatientDocument} from '../../api/collection/patients';
 
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
@@ -31,7 +32,9 @@ const PatientPersonalInformation = ({
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	return <PatientPersonalInformationStatic patient={patient} />;
+	return (
+		<PatientPersonalInformationStatic patient={patient as PatientDocument} />
+	);
 };
 
 export default PatientPersonalInformation;
