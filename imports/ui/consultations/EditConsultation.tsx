@@ -12,7 +12,7 @@ type Params = {
 const EditConsultation = () => {
 	const params = useParams<Params>();
 	const init = {};
-	const query = myDecodeURIComponent(params.id);
+	const query = myDecodeURIComponent(params.id)!;
 	const options = {};
 	const deps = [query];
 

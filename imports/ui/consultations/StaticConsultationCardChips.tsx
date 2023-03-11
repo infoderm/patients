@@ -92,7 +92,7 @@ function paymentMethodIcon(payment_method) {
 
 type StaticConsultationCardChipsProps = {
 	isNoShow: boolean;
-	patient?: PatientDocument;
+	patient?: {_id: string} | PatientDocument;
 	consultation: ConsultationDocument;
 	PatientChip?: React.ElementType;
 	showDate?: boolean;

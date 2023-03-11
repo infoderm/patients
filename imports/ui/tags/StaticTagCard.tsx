@@ -88,8 +88,8 @@ export type StaticTagCardProps = {
 	avatar: {};
 
 	subheader: string;
-	content?: JSX.Element;
-	actions?: JSX.Element;
+	content?: JSX.Element | null;
+	actions?: JSX.Element | null;
 
 	RenamingDialog?: React.ElementType;
 	DeletionDialog?: React.ElementType;

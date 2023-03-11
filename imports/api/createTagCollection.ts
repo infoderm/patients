@@ -49,7 +49,7 @@ const sanitize = (
 	};
 };
 
-export const names = (rawDisplayName: string): TagNameFields => {
+export const names = (rawDisplayName: string) => {
 	const displayName = formattedLine(rawDisplayName);
 	const name = normalizedLine(displayName);
 	return {

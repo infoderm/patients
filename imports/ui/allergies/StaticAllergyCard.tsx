@@ -36,11 +36,10 @@ const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
 	color: '#fff',
 }));
 
-type StaticAllergyCardProps = {
-	loading?: boolean;
-	found?: boolean;
-	item: AllergyDocument;
-};
+type StaticAllergyCardProps =
+	| {loading: true; found: any; item: any}
+	| {loading: false; found: false; item: any}
+	| {loading: false; found: true; item: AllergyDocument};
 
 const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 	({loading = false, found = true, item}, ref) => {
@@ -111,7 +110,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 				content={content}
 				actions={
 					<ColorPicker
-						defaultValue={item.color || '#e0e0e0'}
+						defaultValue={item.color ?? '#e0e0e0'}
 						onChange={debounce(onChange, 1000)}
 					/>
 				}

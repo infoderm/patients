@@ -42,7 +42,7 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 	}> = [
 		{
 			isCancelled: {
-				$in: [false, null],
+				$in: [false, null!],
 			},
 			scheduledDatetime: {
 				$gt: startOfToday(), // TODO make reactive?
@@ -65,7 +65,7 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 	if (showNoShow) {
 		$or.push({
 			isCancelled: {
-				$in: [false, null],
+				$in: [false, null!],
 			},
 		});
 	}

@@ -134,8 +134,8 @@ const getReadStreamPromise = (
 
 	return isThumbnail
 		? thumbify(upload, () => bucket.openDownloadStream(gfsId), {
-				minWidth: Number.parseInt(version.split('x')[0], 10), // TODO do not allow all sizes
-				minHeight: Number.parseInt(version.split('x')[1], 10), // TODO do not allow all sizes
+				minWidth: Number.parseInt(version.split('x')[0]!, 10), // TODO do not allow all sizes
+				minHeight: Number.parseInt(version.split('x')[1]!, 10), // TODO do not allow all sizes
 		  })
 		: Promise.resolve(bucket.openDownloadStream(gfsId));
 };
@@ -199,7 +199,7 @@ export const Uploads = new FilesCollection<MetadataType>({
 				.rawCollection()
 				.findOne({_id: upload._id})
 				.then((document) => {
-					if (document === undefined) {
+					if (document === undefined || document === null) {
 						throw new Error(
 							`Could not unlink upload ${upload._id} because it could not be found.`,
 						);
@@ -229,7 +229,7 @@ export const Uploads = new FilesCollection<MetadataType>({
 				metadata,
 			});
 
-			const {path} = upload.versions[versionName];
+			const {path} = upload.versions[versionName]!;
 			const readStream = fs.createReadStream(path);
 
 			readStream

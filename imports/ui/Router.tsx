@@ -102,7 +102,7 @@ const Authentication = lazy(async () => import('./auth/Authentication'));
 
 const ConsultationsOfTheDayRoute = () => {
 	const {day: dayString} = useParams<{day: string}>();
-	const day = useMemo(() => startOfDay(dateParseISO(dayString)), [dayString]);
+	const day = useMemo(() => startOfDay(dateParseISO(dayString!)), [dayString]);
 	return <ConsultationsOfTheDay day={day} />;
 };
 

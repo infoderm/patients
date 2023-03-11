@@ -8,6 +8,7 @@ const LastConsultation = () => {
 	const {loading, found, consultation} = useLastConsultation();
 
 	return consultation?.doneDatetime ? (
+		// @ts-expect-error Too complicated to make it work.
 		<StaticConsultationDetails
 			loading={loading}
 			found={found}

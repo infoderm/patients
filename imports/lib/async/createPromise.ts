@@ -9,7 +9,9 @@ const createPromise = <T>() => {
 
 	return {
 		promise,
+		// @ts-expect-error Actually assigned at this point.
 		resolve,
+		// @ts-expect-error Actually assigned at this point.
 		reject,
 	};
 };

@@ -23,7 +23,7 @@ export default class MeteorTransactionSimulationDriver
 	}
 
 	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
-		const insertedIds = [];
+		const insertedIds: Array<InferIdType<T>> = [];
 		for (const doc of docs) {
 			// eslint-disable-next-line no-await-in-loop
 			const {insertedId} = await this.insertOne<T, U>(Collection, doc, options);
@@ -109,8 +109,8 @@ export default class MeteorTransactionSimulationDriver
 
 			return {
 				acknowledged: true,
-				matchedCount: numberAffected,
-				modifiedCount: numberAffected,
+				matchedCount: numberAffected ?? 0,
+				modifiedCount: numberAffected ?? 0,
 				upsertedCount: 0,
 			};
 		}
@@ -143,7 +143,7 @@ export default class MeteorTransactionSimulationDriver
 				this._makeOptions({multi: true, ...rest}),
 			);
 			const upsertedCount = insertedId ? 1 : 0;
-			const matchedCount = numberAffected - upsertedCount;
+			const matchedCount = (numberAffected ?? 0) - upsertedCount;
 			return {
 				acknowledged: true,
 				matchedCount,

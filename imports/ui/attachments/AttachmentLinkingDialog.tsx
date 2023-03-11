@@ -37,7 +37,7 @@ const AttachmentLinkingDialog = ({
 	const linkThisAttachment = async (event) => {
 		event.preventDefault();
 		const attachmentId = attachment._id;
-		const patientId = patient[0]._id;
+		const patientId = patient[0]!._id;
 		try {
 			await call(patientsAttach, patientId, attachmentId);
 			console.log(

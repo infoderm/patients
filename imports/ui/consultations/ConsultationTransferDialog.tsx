@@ -56,7 +56,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 		[patientId],
 	);
 
-	const [patients, setPatients] = useState([]);
+	const [patients, setPatients] = useState<Array<{_id: string}>>([]);
 	const [call, {pending}] = useCall();
 
 	const getError = (expected, value) =>
@@ -65,7 +65,10 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 			: 'Last names do not match';
 
 	const {validate, props: ConfirmationTextFieldProps} =
-		useConfirmationTextFieldState(currentPatient.lastname || '', getError);
+		useConfirmationTextFieldState(
+			foundPatient ? currentPatient.lastname ?? '' : '',
+			getError,
+		);
 
 	const isMounted = useIsMounted();
 
@@ -73,7 +76,7 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 		event.preventDefault();
 		if (validate()) {
 			const consultationId = consultation._id;
-			const patientId = patients[0]._id;
+			const patientId = patients[0]!._id;
 			try {
 				await call(transfer, consultationId, patientId);
 				console.log(

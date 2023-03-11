@@ -7,7 +7,7 @@ import type Selector from './Selector';
 import type Options from './Options';
 
 type ReturnValue<U, I> =
-	| {loading: boolean; found: false; fields: I}
+	| {loading: boolean; found: false; fields: I & Partial<U>}
 	| {loading: boolean; found: true; fields: I & U};
 
 const makeFindOne =
@@ -18,7 +18,7 @@ const makeFindOne =
 	<I extends Partial<U>>(
 		init: I,
 		selector: Selector<T> | string,
-		options: Options<T>,
+		options: Options<T> | undefined,
 		deps: DependencyList,
 	): ReturnValue<U, I> => {
 		const isLoading = useSubscription(publication, selector, options);

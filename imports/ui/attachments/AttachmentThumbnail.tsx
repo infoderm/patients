@@ -19,18 +19,17 @@ const AttachmentThumbnail = ({
 	height,
 	...rest
 }: AttachmentThumbnailProps) => {
-	const {loading, fields: attachment} = useAttachment(
-		{},
-		attachmentId,
-		undefined,
-		[attachmentId],
-	);
-	const src = loading
-		? eee
-		: thumb(attachment, {
+	const {
+		loading,
+		found,
+		fields: attachment,
+	} = useAttachment({}, attachmentId, undefined, [attachmentId]);
+	const src = found
+		? thumb(attachment, {
 				minWidth: width,
 				minHeight: height,
-		  });
+		  })
+		: eee;
 
 	return <AnimatedCardMedia {...rest} loading={loading} image={src} />;
 };

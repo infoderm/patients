@@ -112,7 +112,7 @@ export default class MongoTransactionExecutionDriver
 		);
 	}
 
-	private _makeOptions(options: Options): Options {
+	private _makeOptions(options?: Options): Options {
 		return {session: this.#session, ...options};
 	}
 

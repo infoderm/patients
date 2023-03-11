@@ -12,7 +12,7 @@ type Params = {
 const ConsultationDetails = () => {
 	const params = useParams<Params>();
 	const init = {};
-	const query = myDecodeURIComponent(params.id);
+	const query = myDecodeURIComponent(params.id)!;
 	const options = {fields: StaticConsultationDetails.projection};
 	const deps = [query, JSON.stringify(StaticConsultationDetails.projection)];
 	const {
@@ -22,6 +22,7 @@ const ConsultationDetails = () => {
 	} = useConsultation(init, query, options, deps);
 
 	return (
+		// @ts-expect-error Too complex to make it work.
 		<StaticConsultationDetails
 			loading={loading}
 			found={found}
