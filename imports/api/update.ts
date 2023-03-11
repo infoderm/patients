@@ -33,12 +33,10 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 };
 
 type Changes<T> = {
-	$set?: Partial<T> | undefined;
-	$unset?:
-		| {
-				[K in keyof T]?: boolean;
-		  }
-		| undefined;
+	$set?: Partial<T>;
+	$unset?: {
+		[K in keyof T]?: boolean;
+	};
 };
 
 export const simulateUpdate = <T extends {}>(

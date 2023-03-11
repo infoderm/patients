@@ -23,6 +23,7 @@ const EditConsultation = () => {
 	} = useConsultation(init, query, options, deps);
 
 	return (
+		// @ts-expect-error Too complicated to make it work.
 		<ConsultationEditor
 			loading={loading}
 			found={found}

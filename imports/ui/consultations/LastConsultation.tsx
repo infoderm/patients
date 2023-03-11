@@ -14,6 +14,7 @@ const LastConsultation = () => {
 			consultation={consultation}
 		/>
 	) : (
+		// @ts-expect-error Too complicated to make it work.
 		<ConsultationEditor
 			loading={loading}
 			found={found}

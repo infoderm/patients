@@ -39,13 +39,18 @@ const comboboxStateReducer = (state, {type, changes}) => {
 type SearchBoxWithSuggestionsProps<Item> = {
 	useSuggestions: (x: string) => {loading?: boolean; results: Item[]};
 	itemToKey: (x: Item) => React.Key;
+	itemToString: (x: Item | null) => string;
 	expands?: boolean;
 	placeholder?: string;
 	icon?: React.ReactNode;
 	className?: string;
 } & Omit<
 	UseComboboxProps<Item>,
-	'items' | 'inputValue' | 'onInputValueChange' | 'stateReducer'
+	| 'items'
+	| 'inputValue'
+	| 'onInputValueChange'
+	| 'stateReducer'
+	| 'itemToString'
 >;
 
 const SearchBoxWithSuggestions = <Item,>({
@@ -64,7 +69,7 @@ const SearchBoxWithSuggestions = <Item,>({
 	const internalsProps = {
 		className,
 		expands,
-		loading,
+		loading: Boolean(loading),
 		placeholder,
 		icon,
 		suggestions,
@@ -77,7 +82,7 @@ const SearchBoxWithSuggestions = <Item,>({
 		itemToString,
 		inputValue,
 		onInputValueChange({inputValue}) {
-			setInputValue(inputValue);
+			setInputValue(inputValue ?? '');
 		},
 		stateReducer: comboboxStateReducer,
 		...rest,

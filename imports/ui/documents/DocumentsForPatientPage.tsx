@@ -8,7 +8,10 @@ import DocumentsForPatient from './DocumentsForPatient';
 type Props = {
 	page?: number;
 	perpage?: number;
-} & Omit<PropsOf<typeof DocumentsForPatient>, 'page' | 'perpage' | 'documents'>;
+} & Omit<
+	PropsOf<typeof DocumentsForPatient>,
+	'page' | 'perpage' | 'documents' | 'loading' | 'found'
+>;
 
 const DocumentsForPatientPage = ({
 	patientId,

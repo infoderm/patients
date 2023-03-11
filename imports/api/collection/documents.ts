@@ -22,20 +22,37 @@ export type DocumentDocument = {
 	encoding?: string;
 	decoded: string;
 	source: string;
-	parsed: boolean;
-	format?: string;
-	kind?: string;
-	patientId?: string;
-	identifier?: string;
-	reference?: string;
-	datetime?: Date;
 	createdAt: Date;
-	lastVersion?: boolean;
-	anomalies?: number;
-	patient?: Patient;
 	deleted?: boolean;
-	status?: string;
-	results?: DocumentResult[];
-};
+} & (
+	| {
+			parsed: false;
+			format: undefined;
+			kind: undefined;
+			patientId: undefined;
+			identifier: undefined;
+			reference: undefined;
+			datetime: undefined;
+			lastVersion: undefined;
+			anomalies: undefined;
+			patient: undefined;
+			status: undefined;
+			results: undefined;
+	  }
+	| {
+			parsed: true;
+			format: string;
+			kind: string;
+			patientId: string;
+			identifier: string;
+			reference: string;
+			datetime: Date;
+			lastVersion: boolean;
+			anomalies: number;
+			patient: Patient;
+			status: string;
+			results: DocumentResult[];
+	  }
+);
 
 export const Documents = new Collection<DocumentDocument>('documents');

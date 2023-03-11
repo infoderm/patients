@@ -6,17 +6,21 @@ import type Collection from './Collection';
 import type Selector from './Selector';
 import type Options from './Options';
 
+type ReturnValue<U, I> =
+	| {loading: boolean; found: false; fields: I & Partial<U>}
+	| {loading: boolean; found: true; fields: I & U};
+
 const makeCachedFindOne =
-	<T, U>(
+	<T, U = T>(
 		collection: Collection<T, U>,
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>
-	(
-		init: Partial<U>,
+	<I extends Partial<U>>(
+		init: I,
 		selector: Selector<T> | string,
 		options: Options<T>,
 		deps: DependencyList,
-	) => {
+	): ReturnValue<U, I> => {
 		const ref = useRef(init);
 
 		const isLoading = useSubscription(publication, selector, options);
@@ -35,7 +39,7 @@ const makeCachedFindOne =
 		const fields = {...ref.current, ...upToDate};
 		ref.current = fields;
 
-		return {loading, found, fields};
+		return {loading, found, fields} as ReturnValue<U, I>;
 	};
 
 export default makeCachedFindOne;

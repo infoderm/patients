@@ -9,12 +9,13 @@ import Typography from '@mui/material/Typography';
 
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
+import {type PatientDocument} from '../../api/collection/patients';
 import MergePatientsFormStepSelect from './MergePatientsFormStepSelect';
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare';
 
 const MergePatientsForm = () => {
 	const [step, setStep] = useState('select');
-	const [toMerge, setToMerge] = useState([]);
+	const [toMerge, setToMerge] = useState<PatientDocument[]>([]);
 
 	switch (step) {
 		case 'select': {

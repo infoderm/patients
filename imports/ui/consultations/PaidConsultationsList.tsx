@@ -17,7 +17,7 @@ import ConsultationsStatsCard from './ConsultationsStatsCard';
 import ConsultationsPager from './ConsultationsPager';
 
 type Props = {
-	year?: number;
+	year: number;
 	payment_method?: string;
 };
 

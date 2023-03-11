@@ -15,7 +15,7 @@ import StaticPatientChip, {
 import {useDoctorStats, usePatientsGoingToDoctor} from '../../api/doctors';
 
 import {myEncodeURIComponent} from '../../lib/uri';
-import type TagDocument from '../../api/tags/TagDocument';
+import {type TagNameFields} from '../../api/tags/TagDocument';
 import DoctorRenamingDialog from './DoctorRenamingDialog';
 import DoctorDeletionDialog from './DoctorDeletionDialog';
 
@@ -34,7 +34,7 @@ const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
 type LoadedTagCardProps = {
 	loading: boolean;
 	found: boolean;
-	item: TagDocument;
+	item: TagNameFields;
 };
 
 const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
@@ -47,7 +47,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 
 	const subheader = count === undefined ? '...' : `soigne ${count} patients`;
 	const content =
-		patients === undefined ? (
+		count === undefined || patients === undefined ? (
 			<>...</>
 		) : (
 			<div>
@@ -82,7 +82,7 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 };
 
 type StaticDoctorCardProps = {
-	item?: TagDocument;
+	item?: TagNameFields;
 	loading?: boolean;
 	found?: boolean;
 };

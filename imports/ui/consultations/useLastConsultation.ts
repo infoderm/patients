@@ -6,6 +6,10 @@ import type Filter from '../../api/transaction/Filter';
 
 import {type ConsultationDocument} from '../../api/collection/consultations';
 
+type ReturnValue =
+	| {loading: boolean; found: false; consultation: undefined}
+	| {loading: boolean; found: true; consultation: ConsultationDocument};
+
 export default function useLastConsultation(
 	filter?: Filter<ConsultationDocument>,
 ) {
@@ -23,5 +27,5 @@ export default function useLastConsultation(
 		loading,
 		found,
 		consultation,
-	};
+	} as ReturnValue;
 }

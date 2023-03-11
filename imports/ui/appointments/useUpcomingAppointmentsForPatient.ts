@@ -1,4 +1,5 @@
 import startOfToday from 'date-fns/startOfToday';
+import {type AppointmentDocument} from '../../api/collection/appointments';
 
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 
@@ -32,7 +33,10 @@ const useUpcomingAppointmentsForPatient = (
 
 	const deps = [JSON.stringify(query), limit];
 
-	return useConsultationsAndAppointments(query, mergedOptions, deps);
+	return useConsultationsAndAppointments(query, mergedOptions, deps) as {
+		loading: boolean;
+		results: AppointmentDocument[];
+	};
 };
 
 export default useUpcomingAppointmentsForPatient;

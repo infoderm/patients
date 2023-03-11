@@ -193,6 +193,7 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 						</CardActions>
 					)}
 				</CardDetails>
+				{/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
 				<CardMedia>{abbr || displayName.slice(0, 1)}</CardMedia>
 			</Card>
 		);

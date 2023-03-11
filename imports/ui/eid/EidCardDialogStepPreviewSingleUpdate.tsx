@@ -266,7 +266,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 												key={key}
 												field={key}
 												oldValue={patientState[key]}
-												newValue={$set[key]}
+												newValue={$set![key]}
 											/>
 										))}
 									</TableBody>
