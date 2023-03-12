@@ -1,14 +1,15 @@
 import authorized from '../authorized';
+import Authentication from '../Authentication';
 import type Serializable from '../Serializable';
 
 import type Args from '../Args';
-import type Context from './Context';
+import type ContextFor from './ContextFor';
 import type Endpoint from './Endpoint';
 import EndpointError from './EndpointError';
 
-const invoke = async <A extends Args, R extends Serializable>(
-	endpoint: Endpoint<A, R>,
-	invocation: Partial<Context>,
+const invoke = async <A extends Args, R extends Serializable, Auth extends Authentication, C extends ContextFor<Auth>>(
+	endpoint: Endpoint<A, R, Auth, C>,
+	invocation: C,
 	args: A,
 ): Promise<R> => {
 	if (!authorized(endpoint.authentication, invocation)) {

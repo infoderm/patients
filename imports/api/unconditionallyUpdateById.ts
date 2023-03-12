@@ -7,7 +7,7 @@ import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
 import type Collection from './Collection';
 import type Modifier from './Modifier';
-import type Context from './endpoint/Context';
+import AuthenticatedContext from './endpoint/AuthenticatedContext';
 
 type OpReturnValue<T> = Promise<Modifier<T>> | Modifier<T>;
 
@@ -25,7 +25,7 @@ const unconditionallyUpdateById = <A extends Args, T, U>(
 	ownerKey = 'owner',
 ) =>
 	async function (
-		this: Context,
+		this: AuthenticatedContext,
 		db: TransactionDriver,
 		_id: string,
 		...rest: A

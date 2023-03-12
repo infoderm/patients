@@ -8,25 +8,25 @@ import authorized from '../authorized';
 import type Args from '../Args';
 import type Params from './Params';
 import type Publication from './Publication';
+import Authentication from '../Authentication';
 
 // TODO early branch out
 const exactlyOne = (array: any[]) =>
 	sum(map((x: any) => (x ? 1 : 0), array)) === 1;
 
-const define = <A extends Args, T, U = T>({
+const define = <A extends Args, T, U = T, Auth extends Authentication = Authentication>({
 	name,
 	authentication,
-	cursor,
-	cursors,
-	handle,
-}: Params<A, T, U>): Publication<A> => {
+	...rest
+}: Params<A, T, U, Auth>): Publication<A> => {
 	if (Meteor.isServer) {
-		const fns = [cursor, cursors, handle];
+		// @ts-expect-error Ignore this for now.
+		const fns = [rest.cursor, rest.cursors, rest.handle];
 		assert(exactlyOne(fns));
 		for (const fn of fns) {
 			if (fn) {
 				Meteor.publish(name, function (...args) {
-					if (!authorized(authentication ?? 'logged-in', this)) {
+					if (!authorized(authentication, this)) {
 						this.ready();
 						return;
 					}
