@@ -9,20 +9,20 @@ import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
 
-const makeFilteredCollection = <T, U = T>(
+const makeFilteredCollection = <T extends {}, U extends {} = T>(
 	collection: Collection<T, U>,
-	filterSelector: Selector<T>,
-	filterOptions: Options<T>,
+	filterSelector: Selector<T> | undefined,
+	filterOptions: Options<T> | undefined,
 	name: string,
 ) => {
 	const publication = define({
 		name,
-		handle(publicationFilter: Filter<T>, publicationOptions: Options<T>) {
+		handle(publicationFilter?: Filter<T>, publicationOptions?: Options<T>) {
 			const selector = {
 				...filterSelector,
 				...publicationFilter,
 				owner: this.userId,
-			};
+			} as Selector<T>;
 
 			const options = {
 				...filterOptions,
@@ -56,7 +56,7 @@ const makeFilteredCollection = <T, U = T>(
 
 	return (
 		hookSelector: Selector<T> = {},
-		options: Options<T> = undefined,
+		options: Options<T> | undefined = undefined,
 		deps: DependencyList = [],
 	) => {
 		const isLoading = useSubscription(publication, undefined, options);

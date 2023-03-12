@@ -57,7 +57,7 @@ const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {
 	const handleSave = async () => {
 		const changes = {
 			deathdateModifiedAt,
-			deathdate: deathdateModifiedAt === null ? null : deathdateLegal,
+			deathdate: deathdateModifiedAt === undefined ? undefined : deathdateLegal,
 		};
 		await call(patientsUpdate, patient._id, changes);
 		onClose();

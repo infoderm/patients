@@ -3,7 +3,7 @@ import type Selector from './Selector';
 
 type Query<T> = {
 	selector: Selector<T>;
-	options: Options<T>;
+	options?: Options<T>;
 };
 
 export default Query;

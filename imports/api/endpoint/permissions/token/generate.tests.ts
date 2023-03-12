@@ -79,12 +79,12 @@ server(__filename, () => {
 	});
 
 	it('cannot generate a token if not logged in', async () => {
-		const userId = undefined;
+		const userId = null;
 		const connection = {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Context;
+		const invocation = {userId, connection};
 
 		const permissions = ['a', 'b', 'c'];
 
