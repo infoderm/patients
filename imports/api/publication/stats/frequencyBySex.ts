@@ -79,7 +79,7 @@ export default define({
 		};
 
 		const pHandle = Patients.find(
-			{owner: this.userId},
+			{owner: this.userId!},
 			{fields: {sex: 1}},
 		).observeChanges({
 			added(_id, {sex}) {
