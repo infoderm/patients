@@ -38,7 +38,7 @@ export default define({
 		let total = 0;
 		const refs = new Map<string, string>();
 		const pRefs = new Map<string, {freq: number; sex: string}>();
-		const count: GenderCount[] = [{}];
+		const count: [GenderCount, ...GenderCount[]] = [{}];
 
 		const state = (): PollResult<GenderCount[]> => ({
 			total,
@@ -79,23 +79,25 @@ export default define({
 		};
 
 		const pHandle = Patients.find(
-			{owner: this.userId},
+			{owner: this.userId!},
 			{fields: {sex: 1}},
 		).observeChanges({
 			added(_id, {sex}) {
-				pRefs.set(_id, {freq: 0, sex});
-				if (count[0][sex] === undefined) count[0][sex] = 0;
+				const sexKey = `${sex}`;
+				pRefs.set(_id, {freq: 0, sex: sexKey});
+				if (count[0][sexKey] === undefined) count[0][sexKey] = 0;
 				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-				count[0][sex] += 1;
+				count[0][sexKey] += 1;
 				commit();
 			},
 			changed(_id, {sex}) {
-				const {freq, sex: prev} = pRefs.get(_id);
-				count[freq][prev] -= 1;
-				if (count[freq][sex] === undefined) count[freq][sex] = 0;
+				const {freq, sex: prev} = pRefs.get(_id)!;
+				count[freq]![prev] -= 1;
+				const sexKey = `${sex}`;
+				if (count[freq]![sexKey] === undefined) count[freq]![sexKey] = 0;
 				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-				count[freq][sex] += 1;
-				pRefs.set(_id, {freq, sex});
+				count[freq]![sexKey] += 1;
+				pRefs.set(_id, {freq, sex: sexKey});
 				commit();
 			},
 			removed(_id) {
@@ -106,6 +108,10 @@ export default define({
 
 		const cHandle = Consultations.find(selector, options).observeChanges({
 			added(_id, {patientId}) {
+				if (patientId === undefined)
+					throw new Error(
+						`added: consultation ${_id} is not linked to a patient.`,
+					);
 				total += 1;
 				inc(patientId);
 				refs.set(_id, patientId);
@@ -117,7 +123,7 @@ export default define({
 
 			removed(_id) {
 				total -= 1;
-				const patientId = refs.get(_id);
+				const patientId = refs.get(_id)!;
 				dec(patientId);
 				refs.delete(_id);
 				commit();
