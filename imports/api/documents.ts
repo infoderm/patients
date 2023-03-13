@@ -51,7 +51,7 @@ async function* sanitize({
 		console.debug('trying to detect encoding...');
 		const encoding = await detectTextEncoding(array);
 		console.debug('encoding', encoding);
-		if (encoding === null) {
+		if (encoding === undefined) {
 			throw new Error('could not detect text encoding');
 		}
 

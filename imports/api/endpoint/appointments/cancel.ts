@@ -33,7 +33,7 @@ export default define({
 		) => {
 			check(cancellationReason, String);
 			check(cancellationExplanation, String);
-			const modifier: Modifier<ConsultationDocument> = {
+			const modifier = {
 				$set: {
 					isCancelled: true,
 					cancellationReason,
@@ -67,7 +67,7 @@ export default define({
 				newEnd,
 				newWeight,
 			);
-			return modifier;
+			return modifier as Modifier<ConsultationDocument>;
 		},
 	),
 	simulate(

@@ -2,6 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionSimulationDriver';
 import executeTransaction from '../transaction/executeTransaction';
 import type Args from '../Args';
+import type Serializable from '../Serializable';
 import type Params from './Params';
 import type Endpoint from './Endpoint';
 import invoke from './invoke';
@@ -9,7 +10,9 @@ import type Transaction from './Transaction';
 import type Executor from './Executor';
 import type Simulator from './Simulator';
 
-const define = <A extends Args, R>(params: Params<A, R>): Endpoint<A, R> => {
+const define = <A extends Args, R extends Serializable>(
+	params: Params<A, R>,
+): Endpoint<A, R> => {
 	const {
 		testOnly,
 		authentication,
@@ -21,7 +24,7 @@ const define = <A extends Args, R>(params: Params<A, R>): Endpoint<A, R> => {
 		options,
 	} = params;
 	const executor =
-		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction);
+		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction!);
 
 	const endpoint: Endpoint<A, R> = {
 		name,

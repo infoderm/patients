@@ -12,7 +12,7 @@ import {
 } from '../../_dev/populate/appointments';
 import {slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
-import {dropIds, server, throws} from '../../../_test/fixtures';
+import {dropIds, findOneOrThrow, server, throws} from '../../../_test/fixtures';
 import invoke from '../invoke';
 import appointmentsReschedule from './reschedule';
 
@@ -79,7 +79,7 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const before = await Appointments.findOneAsync();
+		const before = await findOneOrThrow(Appointments);
 
 		assert.equal(before._id, appointmentId);
 		assert.sameDeepMembers(
@@ -91,7 +91,7 @@ server(__filename, () => {
 
 		await invoke(appointmentsReschedule, {userId}, [appointmentId, updated]);
 
-		const after = await Appointments.findOneAsync();
+		const after = await findOneOrThrow(Appointments);
 
 		assert.equal(after._id, appointmentId);
 		assert.sameDeepMembers(

@@ -4,7 +4,13 @@ import {assert} from 'chai';
 
 import {Random} from 'meteor/random';
 
-import {dropId, dropIds, server, throws} from '../../../_test/fixtures';
+import {
+	dropId,
+	dropIds,
+	findOneOrThrow,
+	server,
+	throws,
+} from '../../../_test/fixtures';
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 
 import {Appointments} from '../../collection/appointments';
@@ -47,7 +53,7 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const {begin, end} = await Appointments.findOneAsync(appointmentId);
+		const {begin, end} = await findOneOrThrow(Appointments, appointmentId);
 
 		const before = await Availability.find().fetchAsync();
 

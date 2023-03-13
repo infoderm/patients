@@ -11,6 +11,7 @@ import {Doctors} from '../../collection/doctors';
 import {Insurances} from '../../collection/insurances';
 
 import {newPatient} from '../../_dev/populate/patients';
+import {type FormattedLine, type NormalizedLine} from '../../string';
 
 server(__filename, () => {
 	it('cannot create a patient when not logged in', async () => {
@@ -23,9 +24,18 @@ server(__filename, () => {
 	it('creates associated tags', async () => {
 		const userId = randomUserId();
 
-		const allergies = ['a', 'b', 'c'].map((x) => ({displayName: x, name: x}));
-		const doctors = ['d', 'e', 'f'].map((x) => ({displayName: x, name: x}));
-		const insurances = ['g', 'h'].map((x) => ({displayName: x, name: x}));
+		const allergies = ['a', 'b', 'c'].map((x) => ({
+			displayName: x as FormattedLine,
+			name: x as NormalizedLine,
+		}));
+		const doctors = ['d', 'e', 'f'].map((x) => ({
+			displayName: x as FormattedLine,
+			name: x as NormalizedLine,
+		}));
+		const insurances = ['g', 'h'].map((x) => ({
+			displayName: x as FormattedLine,
+			name: x as NormalizedLine,
+		}));
 
 		await newPatient({userId}, {allergies, doctors, insurances});
 

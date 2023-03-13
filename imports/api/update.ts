@@ -112,7 +112,7 @@ const fromEntries = <K extends string | number | symbol, V>(
 
 export const makeSanitize =
 	<T, U>(sanitizeUpdate: SanitizeUpdate<T, U>) =>
-	(fields: T): Changes<U> => {
+	(fields: T) => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
 			$set: fromEntries(

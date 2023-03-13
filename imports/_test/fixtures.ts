@@ -11,6 +11,8 @@ import logout from '../api/user/logout';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
 import reset from '../api/endpoint/_dev/reset';
+import type Collection from '../api/Collection';
+import type Selector from '../api/Selector';
 
 export const randomUserId = () => Random.id();
 export const randomPassword = () => Random.id();
@@ -166,6 +168,18 @@ export const create = (template, extra) => {
 			]),
 		),
 	);
+};
+
+export const findOneOrThrow = async <T, U = T>(
+	collection: Collection<T, U>,
+	selector?: string | Selector<T>,
+) => {
+	const result = await collection.findOneAsync(selector);
+	if (result === undefined) {
+		throw new Error('findOneOrThrow returned undefined');
+	}
+
+	return result!;
 };
 
 export const makeTemplate = (template) => (extra?) => create(template, extra);

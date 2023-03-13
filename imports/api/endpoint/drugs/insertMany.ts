@@ -18,5 +18,7 @@ export default define({
 			Drugs,
 			drugs.map((drug) => ({...drug, createdAt, owner})),
 		);
+
+		return undefined;
 	},
 });

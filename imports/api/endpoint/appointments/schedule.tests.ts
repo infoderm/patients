@@ -2,7 +2,13 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {dropIds, randomUserId, server, throws} from '../../../_test/fixtures';
+import {
+	dropIds,
+	findOneOrThrow,
+	randomUserId,
+	server,
+	throws,
+} from '../../../_test/fixtures';
 
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 
@@ -77,7 +83,7 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId}, {patient, phone});
 
-		const {patientId} = await Appointments.findOneAsync(appointmentId);
+		const {patientId} = await findOneOrThrow(Appointments, appointmentId);
 
 		assert.deepInclude(await Patients.findOneAsync(patientId), {
 			...patientFields,
@@ -90,7 +96,7 @@ server(__filename, () => {
 
 		await newAppointment({userId});
 
-		const {begin, end} = await Appointments.findOneAsync();
+		const {begin, end} = await findOneOrThrow(Appointments);
 
 		const actual = await Availability.find().fetchAsync();
 

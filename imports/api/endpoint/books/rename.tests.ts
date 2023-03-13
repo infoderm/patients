@@ -9,7 +9,7 @@ import {Consultations} from '../../collection/consultations';
 import {Books} from '../../collection/books';
 import {books} from '../../books';
 import {type NormalizedLine} from '../../string';
-import {server} from '../../../_test/fixtures';
+import {findOneOrThrow, server} from '../../../_test/fixtures';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 import bookRename from './rename';
@@ -27,7 +27,8 @@ server(__filename, () => {
 			},
 		);
 
-		const {datetime, book: oldBookNumber} = await Consultations.findOneAsync(
+		const {datetime, book: oldBookNumber} = await findOneOrThrow(
+			Consultations,
 			consultationAId,
 		);
 
@@ -35,11 +36,12 @@ server(__filename, () => {
 
 		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
-		const {_id} = await Books.findOneAsync({name});
+		const {_id} = await findOneOrThrow(Books, {name});
 
 		await invoke(bookRename, {userId}, [_id, newBookNumber]);
 
-		const {book: updatedBookNumber} = await Consultations.findOneAsync(
+		const {book: updatedBookNumber} = await findOneOrThrow(
+			Consultations,
 			consultationAId,
 		);
 
@@ -58,7 +60,8 @@ server(__filename, () => {
 			},
 		);
 
-		const {datetime, book: oldBookNumber} = await Consultations.findOneAsync(
+		const {datetime, book: oldBookNumber} = await findOneOrThrow(
+			Consultations,
 			consultationAId,
 		);
 
@@ -84,7 +87,7 @@ server(__filename, () => {
 
 		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
-		const {_id} = await Books.findOneAsync({name});
+		const {_id} = await findOneOrThrow(Books, {name});
 
 		await invoke(bookRename, {userId}, [_id, newBookNumber]);
 
@@ -94,7 +97,7 @@ server(__filename, () => {
 			consultationCId,
 		]) {
 			// eslint-disable-next-line no-await-in-loop
-			const {book} = await Consultations.findOneAsync(consultationId);
+			const {book} = await findOneOrThrow(Consultations, consultationId);
 			assert.equal(book, newBookNumber);
 		}
 	});
@@ -112,7 +115,8 @@ server(__filename, () => {
 			},
 		);
 
-		const {datetime, book: oldBookNumber} = await Consultations.findOneAsync(
+		const {datetime, book: oldBookNumber} = await findOneOrThrow(
+			Consultations,
 			consultationAId,
 		);
 
@@ -165,7 +169,7 @@ server(__filename, () => {
 
 		const name = books.name(datetime, oldBookNumber) as NormalizedLine;
 
-		const {_id} = await Books.findOneAsync({name, owner: userId});
+		const {_id} = await findOneOrThrow(Books, {name, owner: userId});
 
 		await invoke(bookRename, {userId}, [_id, newBookNumber]);
 
@@ -175,19 +179,19 @@ server(__filename, () => {
 			consultationCId,
 		]) {
 			// eslint-disable-next-line no-await-in-loop
-			const {book} = await Consultations.findOneAsync(consultationId);
+			const {book} = await findOneOrThrow(Consultations, consultationId);
 			assert.equal(book, newBookNumber);
 		}
 
 		for (const consultationId of [consultationDId]) {
 			// eslint-disable-next-line no-await-in-loop
-			const {book} = await Consultations.findOneAsync(consultationId);
+			const {book} = await findOneOrThrow(Consultations, consultationId);
 			assert.equal(book, oldBookNumber);
 		}
 
 		for (const consultationId of [consultationEId, consultationFId]) {
 			// eslint-disable-next-line no-await-in-loop
-			const {book} = await Consultations.findOneAsync(consultationId);
+			const {book} = await findOneOrThrow(Consultations, consultationId);
 			assert.equal(book, `${oldBookNumber}x`);
 		}
 	});
