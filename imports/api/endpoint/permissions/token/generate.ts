@@ -7,6 +7,7 @@ import {genKey, type HMACConfig, sign} from '../../../../lib/hmac';
 
 import define from '../../define';
 import {encode} from '../../../permissions/token';
+import {AuthenticationLoggedIn} from '../../../Authentication';
 
 const TOKEN_HASH_ALGO = 'sha256';
 // see https://crypto.stackexchange.com/questions/34864/key-size-for-hmac-sha256
@@ -27,6 +28,7 @@ const defaultHMACConfig = (): HMACConfig => ({
 
 export default define({
 	name: 'permissions.token.generate',
+	authentication: AuthenticationLoggedIn,
 	validate(permissions: string[]) {
 		check(permissions, Array);
 	},
@@ -43,7 +45,7 @@ export default define({
 			validUntil: endOfTime(),
 			createdAt: now,
 			lastUsedAt: now,
-			lastUsedIPAddress: this.connection.clientAddress,
+			lastUsedIPAddress: this.connection?.clientAddress ?? '',
 		};
 		const signature = await sign(key, fields);
 		const permissionToken = {

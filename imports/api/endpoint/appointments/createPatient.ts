@@ -5,9 +5,11 @@ import insertPatient from '../patients/insert';
 import compose from '../compose';
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'appointments.createPatient',
+	authentication: AuthenticationLoggedIn,
 	validate(fields: any) {
 		check(fields, Object);
 	},

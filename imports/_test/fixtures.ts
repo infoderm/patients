@@ -103,7 +103,7 @@ export const client = (title, fn) => {
 export const server = (title, fn) => {
 	if (Meteor.isServer) {
 		const cleanup = async () => {
-			await invoke(reset, {}, []);
+			await invoke(reset, {userId: null}, []);
 		};
 
 		const prepare = cleanup;

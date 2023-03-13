@@ -13,10 +13,12 @@ import {validate} from '../../../lib/schema';
 import define from '../define';
 import compose from '../compose';
 
+import {AuthenticationLoggedIn} from '../../Authentication';
 import createPatientForAppointment from './createPatient';
 
 export default define({
 	name: 'appointments.schedule',
+	authentication: AuthenticationLoggedIn,
 	validate(appointment: any) {
 		validate(appointment, Object);
 	},

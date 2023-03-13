@@ -10,6 +10,7 @@ import {newAllergy} from '../../_dev/populate/allergies';
 import {findOneOrThrow, server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
+import {type AuthenticatedContext} from '../Context';
 import changeAllergyColor from './changeColor';
 
 server(__filename, () => {
@@ -48,7 +49,11 @@ server(__filename, () => {
 		const expected = '#fff';
 
 		await throws(
-			async () => invoke(changeAllergyColor, {}, [allergyId, expected]),
+			async () =>
+				invoke(changeAllergyColor, {} as AuthenticatedContext, [
+					allergyId,
+					expected,
+				]),
 			/not-authorized/,
 		);
 

@@ -129,7 +129,7 @@ server(__filename, () => {
 		const documentId = await newDocument({userId}, {patientId});
 
 		return throws(
-			async () => invoke(documentsUnlink, {userId: undefined}, [documentId]),
+			async () => invoke(documentsUnlink, {userId: undefined!}, [documentId]),
 			/not-authorized/,
 		);
 	});

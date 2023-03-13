@@ -1,10 +1,12 @@
 import isAfter from 'date-fns/isAfter';
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {intersectsInterval, publishEvents} from '../../events';
 import define from '../define';
 
 export default define({
 	name: 'events.intersects',
+	authentication: AuthenticationLoggedIn,
 	handle(begin: Date, end: Date) {
 		check(begin, Date);
 		check(end, Date);

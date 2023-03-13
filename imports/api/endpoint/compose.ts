@@ -1,13 +1,20 @@
 import type TransactionDriver from '../transaction/TransactionDriver';
+import {type Authentication} from '../Authentication';
+import type Serializable from '../Serializable';
 
 import type Args from '../Args';
-import type Context from './Context';
+import type ContextFor from './ContextFor';
 import type Endpoint from './Endpoint';
 
-const compose = async <A extends Args, R>(
+const compose = async <
+	A extends Args,
+	R extends Serializable,
+	Auth extends Authentication,
+	C extends ContextFor<Auth>,
+>(
 	db: TransactionDriver,
-	endpoint: Endpoint<A, R>,
-	invocation: Partial<Context>,
+	endpoint: Endpoint<A, R, Auth, C>,
+	invocation: C,
 	args: A,
 ) => {
 	// TODO will need to check authorized here if we ever compose endpoints

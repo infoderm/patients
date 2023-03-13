@@ -71,7 +71,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(consultationsRemove, {userId: undefined}, [consultationId]),
+				invoke(consultationsRemove, {userId: undefined!}, [consultationId]),
 			/not-authorized/,
 		);
 	});

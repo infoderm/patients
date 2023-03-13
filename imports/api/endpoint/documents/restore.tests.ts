@@ -18,7 +18,7 @@ server(__filename, () => {
 		const documentId = await newDocument({userId});
 		assert.equal(await Documents.find().countAsync(), 1);
 		await throws(
-			async () => invoke(documentRestore, {userId: undefined}, [documentId]),
+			async () => invoke(documentRestore, {userId: undefined!}, [documentId]),
 			/not-authorized/,
 		);
 		assert.equal(await Documents.find().countAsync(), 1);

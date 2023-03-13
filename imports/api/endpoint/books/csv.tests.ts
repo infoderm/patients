@@ -10,6 +10,7 @@ import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 
 import invoke from '../invoke';
+import {type AuthenticatedContext} from '../Context';
 import csv from './csv';
 
 const prepare = async (userId) => {
@@ -143,7 +144,14 @@ server(__filename, () => {
 		const {begin, end, firstBook, lastBook, maxRows} = await prepare(userId);
 
 		return throws(
-			async () => invoke(csv, {}, [begin, end, firstBook, lastBook, maxRows]),
+			async () =>
+				invoke(csv, {} as AuthenticatedContext, [
+					begin,
+					end,
+					firstBook,
+					lastBook,
+					maxRows,
+				]),
 			/not-authorized/,
 		);
 	});

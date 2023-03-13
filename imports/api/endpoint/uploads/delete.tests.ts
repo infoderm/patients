@@ -63,7 +63,7 @@ server(__filename, () => {
 		const {_id: uploadId} = await newUpload({userId});
 
 		await throws(
-			async () => invoke(uploadsDelete, {userId: undefined}, [uploadId]),
+			async () => invoke(uploadsDelete, {userId: undefined!}, [uploadId]),
 			/not-authorized/,
 		);
 

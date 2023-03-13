@@ -5,9 +5,11 @@ import intersectsInterval from '../../interval/intersectsInterval';
 import define from '../define';
 import type Filter from '../../transaction/Filter';
 import type Selector from '../../Selector';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'availability.intersects',
+	authentication: AuthenticationLoggedIn,
 	cursor(begin: Date, end: Date, filter: Filter<SlotDocument>) {
 		check(begin, Date);
 		check(end, Date);

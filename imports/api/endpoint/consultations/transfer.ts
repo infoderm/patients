@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Consultations} from '../../collection/consultations';
 
@@ -6,6 +7,7 @@ import define from '../define';
 
 export default define({
 	name: 'consultations.transfer',
+	authentication: AuthenticationLoggedIn,
 	validate(consultationId: string, patientId: string) {
 		check(consultationId, String);
 		check(patientId, String);

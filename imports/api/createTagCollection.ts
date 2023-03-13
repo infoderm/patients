@@ -33,6 +33,7 @@ import Collection from './Collection';
 import type Selector from './Selector';
 import type Options from './Options';
 import type Modifier from './Modifier';
+import {AuthenticationLoggedIn} from './Authentication';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -64,7 +65,10 @@ const computedFields = (displayName: string): TagComputedFields => {
 	};
 };
 
-type TagCollectionOptions<T, P> = {
+type TagCollectionOptions<
+	T extends TagDocument,
+	P extends {[key: string]: any; owner: string},
+> = {
 	Collection: Collection<T>;
 	collection: string;
 	publication: string;
@@ -106,6 +110,7 @@ const createTagCollection = <
 
 	const _publication = definePublication({
 		name: publication,
+		authentication: AuthenticationLoggedIn,
 		cursor: pageQuery(tagsCollection),
 	});
 
@@ -114,6 +119,7 @@ const createTagCollection = <
 
 	const _cachePublication = definePublication({
 		name: cachePublication,
+		authentication: AuthenticationLoggedIn,
 		handle: makeObservedQueryPublication(tagsCollection, cacheCollection),
 	});
 
@@ -122,6 +128,7 @@ const createTagCollection = <
 
 	const _singlePublication = definePublication({
 		name: singlePublication,
+		authentication: AuthenticationLoggedIn,
 		cursor(name: string) {
 			return tagsCollection.find({
 				owner: this.userId,
@@ -162,6 +169,7 @@ const createTagCollection = <
 	// Publish the current size of a collection.
 	const _statsPublication = definePublication({
 		name: statsPublication,
+		authentication: AuthenticationLoggedIn,
 		handle(name: string) {
 			check(name, String);
 			const uid = JSON.stringify({name, owner: this.userId});
@@ -224,6 +232,7 @@ const createTagCollection = <
 
 	const renameEndpoint = defineEndpoint({
 		name: `${collection}.rename`,
+		authentication: AuthenticationLoggedIn,
 		validate(tagId: string, newname: string) {
 			check(tagId, String);
 			check(newname, String);
@@ -263,7 +272,7 @@ const createTagCollection = <
 						],
 					},
 					owner,
-				});
+				} as Filter<P>);
 
 				if (problem !== null) {
 					throw new Error(
@@ -275,7 +284,7 @@ const createTagCollection = <
 
 			await db.updateMany(
 				Parent,
-				{[key]: {$elemMatch: {name: oldname}}, owner},
+				{[key]: {$elemMatch: {name: oldname}}, owner} as Filter<P>,
 				{
 					$set: {
 						[`${key}.$[old].name`]: newname,
@@ -305,6 +314,7 @@ const createTagCollection = <
 
 	const deleteEndpoint = defineEndpoint({
 		name: `${collection}.delete`,
+		authentication: AuthenticationLoggedIn,
 		validate(tagId: string) {
 			check(tagId, String);
 		},
@@ -321,7 +331,7 @@ const createTagCollection = <
 
 			await db.updateMany(
 				Parent,
-				{[key]: {$elemMatch: {name: tag.name}}, owner},
+				{[key]: {$elemMatch: {name: tag.name}}, owner} as Filter<P>,
 				{$pull: {[key]: {name: tag.name}}},
 			);
 

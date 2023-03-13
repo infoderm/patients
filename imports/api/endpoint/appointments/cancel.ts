@@ -11,9 +11,11 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import type Modifier from '../../Modifier';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'appointments.cancel',
+	authentication: AuthenticationLoggedIn,
 	validate(
 		consultationId: string,
 		cancellationReason: string,

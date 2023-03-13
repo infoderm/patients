@@ -128,7 +128,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(documentsLink, {userId: undefined}, [documentId, patientId]),
+				invoke(documentsLink, {userId: undefined!}, [documentId, patientId]),
 			/not-authorized/,
 		);
 	});

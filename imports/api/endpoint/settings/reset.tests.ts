@@ -57,7 +57,7 @@ server(__filename, () => {
 		const key = 'x';
 
 		return throws(
-			async () => invoke(reset, {userId: undefined}, [key]),
+			async () => invoke(reset, {userId: undefined!}, [key]),
 			/not-authorized/,
 		);
 	});

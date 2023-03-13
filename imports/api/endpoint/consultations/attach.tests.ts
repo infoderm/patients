@@ -220,7 +220,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(consultationsAttach, {userId: undefined}, [
+				invoke(consultationsAttach, {userId: undefined!}, [
 					consultationId,
 					uploadId,
 				]),

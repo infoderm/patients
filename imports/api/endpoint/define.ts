@@ -3,32 +3,36 @@ import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionS
 import executeTransaction from '../transaction/executeTransaction';
 import type Args from '../Args';
 import type Serializable from '../Serializable';
+import {type Authentication} from '../Authentication';
 import type Params from './Params';
 import type Endpoint from './Endpoint';
 import invoke from './invoke';
 import type Transaction from './Transaction';
 import type Executor from './Executor';
 import type Simulator from './Simulator';
+import {type Context} from './Context';
+import type ContextFor from './ContextFor';
 
-const define = <A extends Args, R extends Serializable>(
-	params: Params<A, R>,
-): Endpoint<A, R> => {
-	const {
-		testOnly,
-		authentication,
-		name,
-		validate,
-		run,
-		simulate,
-		transaction,
-		options,
-	} = params;
+const define = <
+	A extends Args,
+	R extends Serializable,
+	Auth extends Authentication = Authentication,
+>({
+	testOnly,
+	authentication,
+	name,
+	validate,
+	run,
+	simulate,
+	transaction,
+	options,
+}: Params<A, R, Auth>): Endpoint<A, R, Auth> => {
 	const executor =
 		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction!);
 
-	const endpoint: Endpoint<A, R> = {
+	const endpoint: Endpoint<A, R, Auth> = {
 		name,
-		authentication: authentication ?? 'logged-in',
+		authentication,
 		validate,
 		transaction,
 		run: executor,
@@ -41,12 +45,12 @@ const define = <A extends Args, R extends Serializable>(
 			return endpoint;
 		}
 
-		console.warn(`Publishing test-only method '${params.name}'.`);
+		console.warn(`Publishing test-only method '${name}'.`);
 	}
 
 	Meteor.methods({
-		async [params.name](...args: any[]) {
-			return invoke(endpoint, this, args as A);
+		async [name](...args: any[]) {
+			return invoke(endpoint, this as unknown as ContextFor<Auth>, args as A);
 		},
 	});
 
@@ -55,9 +59,9 @@ const define = <A extends Args, R extends Serializable>(
 
 export default define;
 
-const wrapTransactionServer = <A extends Args, R>(
-	txn: Transaction<A, R>,
-): Executor<A, R> => {
+const wrapTransactionServer = <C extends Context, A extends Args, R>(
+	txn: Transaction<C, A, R>,
+): Executor<C, A, R> => {
 	return async function (...args: A) {
 		return executeTransaction(async (db) =>
 			Reflect.apply(txn, this, [db, ...args]),
@@ -65,9 +69,9 @@ const wrapTransactionServer = <A extends Args, R>(
 	};
 };
 
-const wrapTransactionClient = <A extends Args, R>(
-	txn: Transaction<A, R>,
-): Simulator<A> => {
+const wrapTransactionClient = <C extends Context, A extends Args, R>(
+	txn: Transaction<C, A, R>,
+): Simulator<C, A> => {
 	const db = new MeteorTransactionSimulationDriver();
 	return async function (...args: A) {
 		await Reflect.apply(txn, this, [db, ...args]);
@@ -75,9 +79,9 @@ const wrapTransactionClient = <A extends Args, R>(
 	};
 };
 
-const wrapTransaction = <A extends Args, R>(
-	txn: Transaction<A, R>,
-): Executor<A, R> | Simulator<A> => {
+const wrapTransaction = <C extends Context, A extends Args, R>(
+	txn: Transaction<C, A, R>,
+): Executor<C, A, R> | Simulator<C, A> => {
 	return Meteor.isServer
 		? wrapTransactionServer(txn)
 		: wrapTransactionClient(txn);

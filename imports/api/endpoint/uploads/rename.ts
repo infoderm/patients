@@ -4,9 +4,11 @@ import {Uploads} from '../../uploads';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'uploads.updateFilename',
+	authentication: AuthenticationLoggedIn,
 	validate(uploadId: string, filename: string) {
 		check(uploadId, String);
 		check(filename, String);

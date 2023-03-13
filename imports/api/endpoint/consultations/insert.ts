@@ -11,11 +11,13 @@ import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.insert',
+	authentication: AuthenticationLoggedIn,
 	validate(consultation: any) {
 		check(consultation, Object);
 	},

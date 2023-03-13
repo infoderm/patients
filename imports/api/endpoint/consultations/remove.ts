@@ -6,9 +6,11 @@ import {Attachments} from '../../collection/attachments';
 import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'consultations.remove',
+	authentication: AuthenticationLoggedIn,
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},

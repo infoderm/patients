@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
 import {documents} from '../../documents';
@@ -10,6 +11,7 @@ const {updateLastVersionFlags} = documents;
 
 export default define({
 	name: 'documents.superdelete',
+	authentication: AuthenticationLoggedIn,
 	validate(documentId: string) {
 		check(documentId, String);
 	},

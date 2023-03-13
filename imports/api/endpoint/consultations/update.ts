@@ -14,11 +14,13 @@ import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.update',
+	authentication: AuthenticationLoggedIn,
 	validate(consultationId: string, newfields: any) {
 		check(consultationId, String);
 		check(newfields, Object);

@@ -23,7 +23,7 @@ server(__filename, () => {
 		]);
 
 		return throws(
-			async () => invoke(documentFetch, {userId: undefined}, [documentId!]),
+			async () => invoke(documentFetch, {userId: undefined!}, [documentId!]),
 			/not-authorized/,
 		);
 	});

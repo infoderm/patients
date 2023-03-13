@@ -1,3 +1,4 @@
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,
 	Consultations,
@@ -22,6 +23,7 @@ export type GenderCount = {
 
 export default define({
 	name: frequencySexPublication,
+	authentication: AuthenticationLoggedIn,
 	handle(filter: Filter<ConsultationDocument>) {
 		const collection = countCollection;
 		const key = frequencySexKey(filter);

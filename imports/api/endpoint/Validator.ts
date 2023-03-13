@@ -1,5 +1,9 @@
 import type Args from '../Args';
+import {type Context} from './Context';
 
-type Validator<A extends Args> = (...args: A) => void;
+type Validator<C extends Context, A extends Args> = (
+	this: C,
+	...args: A
+) => void;
 
 export default Validator;

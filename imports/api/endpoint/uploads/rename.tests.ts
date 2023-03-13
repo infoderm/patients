@@ -74,7 +74,7 @@ server(__filename, () => {
 		const {_id: uploadId} = await newUpload({userId}, {name: before});
 
 		await throws(
-			async () => invoke(rename, {userId: undefined}, [uploadId, after]),
+			async () => invoke(rename, {userId: undefined!}, [uploadId, after]),
 			/not-authorized/,
 		);
 

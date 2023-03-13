@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Allergies} from '../../collection/allergies';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
@@ -7,6 +8,7 @@ import define from '../define';
 
 export default define({
 	name: 'allergies.changeColor',
+	authentication: AuthenticationLoggedIn,
 	validate(tagId: string, newColor: string) {
 		check(tagId, String);
 		check(newColor, String);

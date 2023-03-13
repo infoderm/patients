@@ -1,10 +1,10 @@
 import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 import type TransactionDriver from './transaction/TransactionDriver';
-import type Context from './endpoint/Context';
 
 import type Collection from './Collection';
 import type Filter from './transaction/Filter';
+import {type AuthenticatedContext} from './endpoint/Context';
 
 type Base = {
 	_id: string;
@@ -14,7 +14,11 @@ type Base = {
 const unconditionallyRemoveById = <T extends Base, U extends Base = T>(
 	collection: Collection<T, U>,
 ) =>
-	async function (this: Context, db: TransactionDriver, _id: string) {
+	async function (
+		this: AuthenticatedContext,
+		db: TransactionDriver,
+		_id: string,
+	) {
 		check(_id, String);
 
 		const item = await db.findOne(collection, {

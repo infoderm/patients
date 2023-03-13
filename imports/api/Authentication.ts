@@ -1,3 +1,11 @@
-type Authentication = 'logged-in' | 'DANGEROUS-NONE';
+export const AuthenticationDangerousNone = 'DANGEROUS-NONE';
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type AuthenticationDangerousNone = typeof AuthenticationDangerousNone;
 
-export default Authentication;
+export const AuthenticationLoggedIn = 'logged-in';
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type AuthenticationLoggedIn = typeof AuthenticationLoggedIn;
+
+export type Authentication =
+	| AuthenticationDangerousNone
+	| AuthenticationLoggedIn;

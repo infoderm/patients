@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../../Authentication';
 
 import {PermissionTokens} from '../../../collection/permissionTokens';
 
@@ -6,6 +7,7 @@ import define from '../../define';
 
 export default define({
 	name: 'permissions.token.revoke',
+	authentication: AuthenticationLoggedIn,
 	validate(_id: string) {
 		check(_id, String);
 	},

@@ -20,7 +20,7 @@ server(__filename, () => {
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		return throws(
-			async () => invoke(update, {userId: undefined}, [patientId, {}]),
+			async () => invoke(update, {userId: undefined!}, [patientId, {}]),
 			/not-authorized/,
 		);
 	});

@@ -7,9 +7,12 @@ import {parseUint32StrictOrString} from '../../string';
 
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
+import EndpointError from '../EndpointError';
 
 export default define({
 	name: 'books.changeBookNumber',
+	authentication: AuthenticationLoggedIn,
 	validate(oldBookId: string, newBookNumberString: string) {
 		check(oldBookId, String);
 		check(newBookNumberString, String);
@@ -24,19 +27,19 @@ export default define({
 			owner: this.userId,
 		});
 		if (oldBook === null) {
-			throw new Meteor.Error('not-found');
+			throw new EndpointError('not-found');
 		}
 
 		const {name: oldName, fiscalYear, bookNumber: oldBookNumber} = oldBook;
 
 		newBookNumberString = books.sanitize(newBookNumberString);
 		if (newBookNumberString === '') {
-			throw new Meteor.Error('value-error');
+			throw new EndpointError('value-error');
 		}
 
 		const newBookNumber = parseUint32StrictOrString(newBookNumberString);
 		if (newBookNumber === oldBookNumber) {
-			throw new Meteor.Error('value-error');
+			throw new EndpointError('value-error');
 		}
 
 		const newName = books.format(fiscalYear, newBookNumber);

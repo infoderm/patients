@@ -11,7 +11,6 @@ import {
 } from '../../../permissions/token';
 
 import invoke from '../../invoke';
-import type Context from '../../Context';
 import generate from './generate';
 
 server(__filename, () => {
@@ -21,7 +20,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Context;
+		const invocation = {userId, connection};
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -79,7 +78,7 @@ server(__filename, () => {
 	});
 
 	it('cannot generate a token if not logged in', async () => {
-		const userId = null;
+		const userId = null!;
 		const connection = {
 			clientAddress: '1.2.3.4',
 		};
@@ -100,7 +99,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Context;
+		const invocation = {userId, connection};
 
 		const permissions = ['a', 'b', 'c'];
 
@@ -120,7 +119,7 @@ server(__filename, () => {
 			clientAddress: '1.2.3.4',
 		};
 
-		const invocation = {userId, connection} as Context;
+		const invocation = {userId, connection};
 
 		const permissions = ['a', 'b', 'c'];
 

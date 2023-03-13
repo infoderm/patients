@@ -12,10 +12,12 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 import {validate} from '../../../lib/schema';
 import type Modifier from '../../Modifier';
+import {AuthenticationLoggedIn} from '../../Authentication';
 import createPatientForAppointment from './createPatient';
 
 export default define({
 	name: 'appointments.reschedule',
+	authentication: AuthenticationLoggedIn,
 	validate(appointmentId: string, appointment: any) {
 		validate(appointmentId, String);
 		validate(appointment, Object);

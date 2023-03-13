@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {type PatientDocument, Patients} from '../../collection/patients';
 
@@ -6,6 +7,7 @@ import define from '../define';
 
 export default define({
 	name: '/patients/find',
+	authentication: AuthenticationLoggedIn,
 	validate(query: any, options: any) {
 		check(query, Object);
 		check(options, Object);
