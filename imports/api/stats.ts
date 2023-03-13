@@ -1,5 +1,6 @@
 import {type Subscription} from 'meteor/meteor';
 
+import schema from '../lib/schema';
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
 import type Collection from './Collection';
@@ -122,6 +123,11 @@ export const publishCount = (QueriedCollection, options) => {
 	return define({
 		name: countPublicationName(QueriedCollection, options),
 		authentication: AuthenticationLoggedIn,
+		schema: schema.tuple([
+			schema.object({
+				/* TODO */
+			}),
+		]),
 		handle: countPublication(QueriedCollection, options),
 	});
 };

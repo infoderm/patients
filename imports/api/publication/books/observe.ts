@@ -1,4 +1,6 @@
-import makeObservedQueryPublication from '../../makeObservedQueryPublication';
+import makeObservedQueryPublication, {
+	publicationSchema,
+} from '../../makeObservedQueryPublication';
 import define from '../define';
 import {Books, collection} from '../../collection/books';
 import {cacheCollection} from '../../collection/books/cache';
@@ -10,5 +12,6 @@ const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 export default define({
 	name: cachePublication,
 	authentication: AuthenticationLoggedIn,
+	schema: publicationSchema,
 	handle: makeObservedQueryPublication(Books, cacheCollection),
 });

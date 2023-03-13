@@ -12,11 +12,14 @@ import findOneSync from './publication/findOneSync';
 import type Selector from './Selector';
 import type Options from './Options';
 import type SubscriptionHandle from './publication/SubscriptionHandle';
+import {type ObserveOptions} from './makeObservedQueryPublication';
 
 const makeObservedQueryHook =
 	<R, T = R>(
 		Collection: ObservedQueryCacheCollection<R>,
-		publication: Publication<[string, Selector<T>, Options<T>]>,
+		publication: Publication<
+			[string, Selector<T>, Options<T>, ObserveOptions | null]
+		>,
 	): GenericQueryHook<R, T> =>
 	(selector: Selector<T>, options: Options<T>, deps: DependencyList) => {
 		const loading = useRef<boolean>(true);
@@ -42,7 +45,7 @@ const makeObservedQueryHook =
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query: selector, options});
-			const handle = subscribe(publication, key, selector, options, {
+			const handle = subscribe(publication, key, selector, options, null, {
 				onStop() {
 					if (handleRef.current === handle) {
 						dirty.current = true;

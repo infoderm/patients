@@ -1,5 +1,5 @@
 import isAfter from 'date-fns/isAfter';
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {intersectsInterval, publishEvents} from '../../events';
 import define from '../define';
@@ -7,10 +7,8 @@ import define from '../define';
 export default define({
 	name: 'events.intersects',
 	authentication: AuthenticationLoggedIn,
+	schema: schema.tuple([schema.date(), schema.date()]),
 	handle(begin: Date, end: Date) {
-		check(begin, Date);
-		check(end, Date);
-
 		if (isAfter(begin, end)) throw new Error('begin is after end');
 
 		const query = {

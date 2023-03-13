@@ -1,15 +1,36 @@
+import schema from '../lib/schema';
 import type Collection from './Collection';
 import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
 import type Options from './Options';
 import type Selector from './Selector';
 
-type ObserveOptions = {
+export type ObserveOptions = {
 	added?: boolean;
 	removed?: boolean;
 	changed?: boolean;
 };
 
-const makeObservedQuerySubscription = <T, U = T>(
+export const publicationSchema = schema.tuple([
+	schema.string(),
+	schema.object({
+		/* TODO */
+	}),
+	schema.object({
+		/* TODO */
+	}),
+	schema
+		.record(
+			schema.union([
+				schema.literal('added'),
+				schema.literal('removed'),
+				schema.literal('changed'),
+			]),
+			schema.boolean(),
+		)
+		.nullable(),
+]);
+
+const makeObservedQueryPublication = <T, U = T>(
 	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
@@ -17,7 +38,7 @@ const makeObservedQuerySubscription = <T, U = T>(
 		key: string,
 		query: Selector<T>,
 		options: Options<T>,
-		observe?: ObserveOptions,
+		observe: ObserveOptions | null,
 	) {
 		query = {
 			...query,
@@ -72,4 +93,4 @@ const makeObservedQuerySubscription = <T, U = T>(
 		});
 	};
 
-export default makeObservedQuerySubscription;
+export default makeObservedQueryPublication;

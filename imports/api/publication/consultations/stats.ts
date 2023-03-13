@@ -1,3 +1,4 @@
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {stats} from '../../collection/consultations/stats';
 import {setupConsultationsStatsPublication} from '../../consultations';
@@ -6,6 +7,11 @@ import define from '../define';
 export default define({
 	name: stats,
 	authentication: AuthenticationLoggedIn,
+	schema: schema.tuple([
+		schema.object({
+			/* TODO Filter<T> */
+		}),
+	]),
 	handle(query) {
 		const collection = stats;
 

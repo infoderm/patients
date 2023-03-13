@@ -1,3 +1,4 @@
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {type BookDocument, Books} from '../../collection/books';
 import type Selector from '../../Selector';
@@ -9,6 +10,11 @@ const publication = 'books';
 export default define({
 	name: publication,
 	authentication: AuthenticationLoggedIn,
+	schema: schema.tuple([
+		schema.object({
+			/* Filter<BookDocument> */
+		}),
+	]),
 	cursor(filter: Filter<BookDocument>) {
 		const selector = {
 			...filter,

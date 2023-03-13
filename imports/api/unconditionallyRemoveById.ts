@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {check} from 'meteor/check';
 import type TransactionDriver from './transaction/TransactionDriver';
 
 import type Collection from './Collection';
@@ -19,8 +18,6 @@ const unconditionallyRemoveById = <T extends Base, U extends Base = T>(
 		db: TransactionDriver,
 		_id: string,
 	) {
-		check(_id, String);
-
 		const item = await db.findOne(collection, {
 			_id,
 			owner: this.userId,

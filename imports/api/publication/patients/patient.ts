@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {type PatientDocument, Patients} from '../../collection/patients';
@@ -9,8 +9,15 @@ import define from '../define';
 export default define({
 	name: 'patient',
 	authentication: AuthenticationLoggedIn,
-	cursor(_id: string, options?: Options<PatientDocument>) {
-		check(_id, String);
+	schema: schema.tuple([
+		schema.string(),
+		schema
+			.object({
+				/* TODO */
+			})
+			.optional(),
+	]),
+	cursor(_id, options?: Options<PatientDocument>) {
 		return Patients.find({owner: this.userId, _id}, options);
 	},
 });

@@ -7,8 +7,12 @@ import mergeOptions from './query/mergeOptions';
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
 import makeCachedFindOne from './makeCachedFindOne';
-import makeObservedQueryPublication from './makeObservedQueryPublication';
-import pageQuery from './pageQuery';
+import makeObservedQueryPublication, {
+	publicationSchema as makeObservedQueryPublicationSchema,
+} from './makeObservedQueryPublication';
+import pageQuery, {
+	publicationSchema as pageQueryPublicationSchema,
+} from './pageQuery';
 
 import defineEndpoint from './endpoint/define';
 import definePublication from './publication/define';
@@ -112,6 +116,7 @@ const createTagCollection = <
 	const _publication = definePublication({
 		name: publication,
 		authentication: AuthenticationLoggedIn,
+		schema: pageQueryPublicationSchema,
 		cursor: pageQuery(tagsCollection),
 	});
 
@@ -121,6 +126,7 @@ const createTagCollection = <
 	const _cachePublication = definePublication({
 		name: cachePublication,
 		authentication: AuthenticationLoggedIn,
+		schema: makeObservedQueryPublicationSchema,
 		handle: makeObservedQueryPublication(tagsCollection, cacheCollection),
 	});
 
@@ -130,7 +136,8 @@ const createTagCollection = <
 	const _singlePublication = definePublication({
 		name: singlePublication,
 		authentication: AuthenticationLoggedIn,
-		cursor(name: string) {
+		schema: schema.tuple([schema.string()]),
+		cursor(name) {
 			return tagsCollection.find({
 				owner: this.userId,
 				name,
@@ -171,8 +178,8 @@ const createTagCollection = <
 	const _statsPublication = definePublication({
 		name: statsPublication,
 		authentication: AuthenticationLoggedIn,
-		handle(name: string) {
-			check(name, String);
+		schema: schema.tuple([schema.string()]),
+		handle(name) {
 			const uid = JSON.stringify({name, owner: this.userId});
 			const query = {
 				[key]: {$elemMatch: {name}},
