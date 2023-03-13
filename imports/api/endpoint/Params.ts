@@ -46,9 +46,11 @@ type Params<
 	S extends ArgsSchema,
 	R extends Serializable,
 	Auth extends Authentication = Authentication,
+	C extends ContextFor<Auth> = ContextFor<Auth>,
+	A extends InferArgs<S> = InferArgs<S>,
 > = {
 	readonly authentication: Auth;
 	readonly schema: S;
-} & _Params<ContextFor<Auth>, InferArgs<S>, R>;
+} & _Params<C, A, R>;
 
 export default Params;

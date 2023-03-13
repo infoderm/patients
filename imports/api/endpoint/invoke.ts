@@ -24,7 +24,7 @@ const invoke = async <
 	try {
 		endpoint.schema.parse(args);
 	} catch (error: unknown) {
-		console.debug({error});
+		console.debug({name: endpoint.name, error});
 		throw new EndpointError('schema validation of endpoint args failed');
 	}
 
