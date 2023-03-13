@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {check} from 'meteor/check';
 
 import type Args from './Args';
 
@@ -30,8 +29,6 @@ const unconditionallyUpdateById = <A extends Args, T, U>(
 		_id: string,
 		...rest: A
 	) {
-		check(_id, String);
-
 		const selector = {_id, [ownerKey]: this.userId} as unknown as Filter<T>;
 		const existing = await db.findOne(collection, selector);
 		if (existing === null) {

@@ -122,7 +122,10 @@ export const filterBookPrefill = () => ({
 	},
 });
 
-export function setupConsultationsStatsPublication(collection, query) {
+export function setupConsultationsStatsPublication<T>(
+	collectionName: string,
+	query: Filter<T>,
+) {
 	// Generate unique key depending on parameters
 	const key = statsKey(query);
 	const selector = {
@@ -158,7 +161,7 @@ export function setupConsultationsStatsPublication(collection, query) {
 			refs.set(_id, [price, minRef, maxRef]);
 
 			if (!initializing) {
-				this.changed(collection, key, state());
+				this.changed(collectionName, key, state());
 			}
 		},
 
@@ -178,7 +181,7 @@ export function setupConsultationsStatsPublication(collection, query) {
 				maxHeap.update(maxRef, datetime);
 			}
 
-			this.changed(collection, key, state());
+			this.changed(collectionName, key, state());
 		},
 
 		removed: (_id) => {
@@ -188,14 +191,14 @@ export function setupConsultationsStatsPublication(collection, query) {
 			minHeap.delete(minRef);
 			maxHeap.delete(maxRef);
 			refs.delete(_id);
-			this.changed(collection, key, state());
+			this.changed(collectionName, key, state());
 		},
 	});
 
 	// Instead, we'll send one `added` message right after `observeChanges` has
 	// returned, and mark the subscription as ready.
 	initializing = false;
-	this.added(collection, key, state());
+	this.added(collectionName, key, state());
 
 	return handle;
 }

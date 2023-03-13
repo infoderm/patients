@@ -71,16 +71,32 @@ export type MergeInfo = {loading: boolean} & (
 );
 
 const useMergeInfo = (toMerge: string[]): MergeInfo => {
-	const patientsLoading = useSubscription(patientsPub, {_id: {$in: toMerge}});
-	const consultationsLoading = useSubscription(consultationsPub, {
-		patientId: {$in: toMerge},
-	});
-	const documentsLoading = useSubscription(documentsPub, {
-		patientId: {$in: toMerge},
-	});
-	const attachmentsLoading = useSubscription(attachmentsPub, {
-		'meta.attachedToPatients': {$in: toMerge},
-	});
+	const patientsLoading = useSubscription(
+		patientsPub,
+		{_id: {$in: toMerge}},
+		undefined,
+	);
+	const consultationsLoading = useSubscription(
+		consultationsPub,
+		{
+			patientId: {$in: toMerge},
+		},
+		undefined,
+	);
+	const documentsLoading = useSubscription(
+		documentsPub,
+		{
+			patientId: {$in: toMerge},
+		},
+		undefined,
+	);
+	const attachmentsLoading = useSubscription(
+		attachmentsPub,
+		{
+			'meta.attachedToPatients': {$in: toMerge},
+		},
+		undefined,
+	);
 
 	const loading =
 		patientsLoading() ||

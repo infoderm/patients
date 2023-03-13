@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../../Authentication';
 import {
 	type ConsultationDocument,
@@ -11,9 +11,16 @@ import define from '../../define';
 export default define({
 	name: 'consultations.interval.last',
 	authentication: AuthenticationLoggedIn,
-	cursor(from: Date, to: Date, filter?: Filter<ConsultationDocument>) {
-		check(from, Date);
-		check(to, Date);
+	schema: schema.tuple([
+		schema.date(),
+		schema.date(),
+		schema
+			.object({
+				/* Filter<ConsultationDocument> */
+			})
+			.nullable(),
+	]),
+	cursor(from, to, filter: Filter<ConsultationDocument> | null) {
 		return Consultations.find(
 			{
 				isDone: true,

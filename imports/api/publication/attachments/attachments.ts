@@ -1,3 +1,4 @@
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type AttachmentDocument,
@@ -12,6 +13,16 @@ import define from '../define';
 export default define({
 	name: 'attachments',
 	authentication: AuthenticationLoggedIn,
+	schema: schema.tuple([
+		schema.object({
+			/* TODO Filter<AttachmentDocument> */
+		}),
+		schema
+			.object({
+				/* TODO Options<AttachmentDocument> */
+			})
+			.optional(),
+	]),
 	cursor(
 		filter: Filter<AttachmentDocument>,
 		options?: Options<AttachmentDocument>,

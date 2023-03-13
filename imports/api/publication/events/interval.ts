@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {beginsInInterval, publishEvents} from '../../events';
 import define from '../define';
@@ -6,10 +6,8 @@ import define from '../define';
 export default define({
 	name: 'events.interval',
 	authentication: AuthenticationLoggedIn,
+	schema: schema.tuple([schema.date(), schema.date()]),
 	handle(begin: Date, end: Date) {
-		check(begin, Date);
-		check(end, Date);
-
 		const query = {
 			...beginsInInterval(begin, end),
 			owner: this.userId,

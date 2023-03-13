@@ -1,3 +1,4 @@
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,
@@ -10,6 +11,11 @@ import define from '../define';
 export default define({
 	name: 'consultations',
 	authentication: AuthenticationLoggedIn,
+	schema: schema.tuple([
+		schema.object({
+			/* Filter<ConsultationDocument> */
+		}),
+	]),
 	cursor(filter: Filter<ConsultationDocument> = {}) {
 		return Consultations.find({
 			isDone: true,

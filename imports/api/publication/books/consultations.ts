@@ -1,4 +1,4 @@
-import {check} from 'meteor/check';
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {books} from '../../books';
 import {
@@ -11,9 +11,13 @@ import define from '../define';
 export default define({
 	name: books.options.parentPublication,
 	authentication: AuthenticationLoggedIn,
-	cursor(name: string, options: Options<ConsultationDocument> = {}) {
-		check(name, String);
-
+	schema: schema.tuple([
+		schema.string(),
+		schema.object({
+			/* TODO Options<ConsultationDocument> */
+		}),
+	]),
+	cursor(name, options: Options<ConsultationDocument> = {}) {
 		const query = {
 			...books.selector(name),
 			owner: this.userId,

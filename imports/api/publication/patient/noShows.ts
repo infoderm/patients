@@ -1,5 +1,3 @@
-import {check} from 'meteor/check';
-
 import startOfToday from 'date-fns/startOfToday';
 
 import {Appointments} from '../../collection/appointments';
@@ -8,13 +6,13 @@ import {noShows, type State} from '../../collection/noShows';
 
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import schema from '../../../lib/schema';
 
 export default define({
 	name: 'patient.noShows',
 	authentication: AuthenticationLoggedIn,
-	handle(patientId: string) {
-		check(patientId, String);
-
+	schema: schema.tuple([schema.string()]),
+	handle(patientId) {
 		const Collection = Appointments;
 		const collection = noShows;
 		const key = patientId;

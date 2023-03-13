@@ -1,3 +1,4 @@
+import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,
@@ -24,7 +25,14 @@ export type GenderCount = {
 export default define({
 	name: frequencySexPublication,
 	authentication: AuthenticationLoggedIn,
-	handle(filter: Filter<ConsultationDocument>) {
+	schema: schema.tuple([
+		schema
+			.object({
+				/* TODO */
+			})
+			.optional(),
+	]),
+	handle(filter?: Filter<ConsultationDocument>) {
 		const collection = countCollection;
 		const key = frequencySexKey(filter);
 		const selector = {

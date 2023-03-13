@@ -1,5 +1,6 @@
 import {type DependencyList} from 'react';
 
+import schema from '../lib/schema';
 import Collection from './Collection';
 import type Filter from './transaction/Filter';
 import type Selector from './Selector';
@@ -19,7 +20,22 @@ const makeFilteredCollection = <T extends {}, U extends {} = T>(
 	const publication = define({
 		name,
 		authentication: AuthenticationLoggedIn,
-		handle(publicationFilter?: Filter<T>, publicationOptions?: Options<T>) {
+		schema: schema.tuple([
+			schema
+				.object({
+					/* TODO Filter<T> */
+				})
+				.nullable(),
+			schema
+				.object({
+					/* TODO Options<T> */
+				})
+				.nullable(),
+		]),
+		handle(
+			publicationFilter: Filter<T> | null,
+			publicationOptions: Options<T> | null,
+		) {
 			const selector = {
 				...filterSelector,
 				...publicationFilter,
@@ -61,7 +77,7 @@ const makeFilteredCollection = <T extends {}, U extends {} = T>(
 		options: Options<T> | undefined = undefined,
 		deps: DependencyList = [],
 	) => {
-		const isLoading = useSubscription(publication, undefined, options);
+		const isLoading = useSubscription(publication, null, options ?? null);
 		const loading = isLoading();
 		const results = useCursor(() => Filtered.find(hookSelector, options), deps);
 		return {loading, results};
