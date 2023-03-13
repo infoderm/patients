@@ -255,7 +255,7 @@ const PatientSheet = ({
 							<Grid item xs={3}>
 								<MultilineReadOnlyTextField
 									label="PVPP"
-									value={patient.noshow || 0}
+									value={patient.noshow ?? 0}
 								/>
 							</Grid>
 							<Grid item xs={12} md={12}>

@@ -12,11 +12,10 @@ const Root = styled('div')(({theme}) => ({
 	padding: theme.spacing(3),
 }));
 
-type Props = {
-	loading: boolean;
-	found: boolean;
-	consultation: ConsultationDocument;
-};
+type Props =
+	| {loading: true; found: any; consultation: any}
+	| {loading: false; found: false; consultation: any}
+	| {loading: false; found: false; consultation: ConsultationDocument};
 
 const StaticConsultationDetails = ({loading, found, consultation}: Props) => {
 	if (loading) {

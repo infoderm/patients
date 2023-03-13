@@ -110,8 +110,8 @@ function useTrackerClient<T = any>(
 	arg1?: DependencyList | ISkipUpdate<T>,
 	arg2?: ISkipUpdate<T>,
 ): T {
-	let skipUpdate: ISkipUpdate<T>;
-	let deps: DependencyList;
+	let skipUpdate: ISkipUpdate<T> | undefined;
+	let deps: DependencyList | undefined;
 	if (
 		(arg1 === null || arg1 === undefined || !Array.isArray(arg1)) &&
 		typeof arg1 === 'function'
@@ -134,7 +134,7 @@ const useTrackerServer: typeof useTrackerClient = (reactiveFn) => {
 // We only do the first rendering on the server so we can get the data right away
 const useTrackerProd = Meteor.isServer ? useTrackerServer : useTrackerClient;
 
-function useTrackerDev(reactiveFn, deps = null, skipUpdate = null) {
+function useTrackerDev(reactiveFn, deps = undefined, skipUpdate = undefined) {
 	function warn(expects: string, pos: string, arg: string, type: string) {
 		console.warn(
 			`Warning: useTracker expected a ${expects} in it's ${pos} argument ` +

@@ -9,26 +9,17 @@ import {
 	type UseComboboxGetMenuPropsOptions,
 } from 'downshift';
 
-const PREFIX = 'SearchBoxInternalsSuggestions';
-
-const classes = {
-	suggestions: `${PREFIX}-suggestions`,
-	itemText: `${PREFIX}-itemText`,
-};
-
-const StyledPaper = styled(Paper)(({theme}) => ({
-	[`&.${classes.suggestions}`]: {
-		position: 'absolute',
-		marginTop: theme.spacing(1),
-		left: 0,
-		right: 0,
-	},
-
-	[`& .${classes.itemText}`]: {
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-	},
+const Menu = styled(Paper)(({theme}) => ({
+	position: 'absolute',
+	marginTop: theme.spacing(1),
+	left: 0,
+	right: 0,
 }));
+
+const MenuItemText = styled('span')({
+	overflow: 'hidden',
+	textOverflow: 'ellipsis',
+});
 
 type SearchBoxInternalsSuggestionsProps<Item> = {
 	isOpen: boolean;
@@ -42,7 +33,7 @@ type SearchBoxInternalsSuggestionsProps<Item> = {
 	) => any;
 	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
 	highlightedIndex?: number;
-	selectedItem: Item;
+	selectedItem: Item | null;
 };
 
 const SearchBoxInternalsSuggestions = <Item,>({
@@ -57,7 +48,7 @@ const SearchBoxInternalsSuggestions = <Item,>({
 	highlightedIndex,
 }: SearchBoxInternalsSuggestionsProps<Item>) => {
 	return (
-		<StyledPaper square className={classes.suggestions} {...getMenuProps()}>
+		<Menu square {...getMenuProps()}>
 			{isOpen &&
 				suggestions.map((item, index) => (
 					<MenuItem
@@ -72,10 +63,10 @@ const SearchBoxInternalsSuggestions = <Item,>({
 							},
 						})}
 					>
-						<span className={classes.itemText}>{itemToString(item)}</span>
+						<MenuItemText>{itemToString(item)}</MenuItemText>
 					</MenuItem>
 				))}
-		</StyledPaper>
+		</Menu>
 	);
 };
 

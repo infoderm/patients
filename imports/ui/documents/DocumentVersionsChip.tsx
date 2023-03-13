@@ -42,8 +42,8 @@ const DocumentVersionsChip = ({
 			className={cx(classes.chip, className)}
 			component={Link}
 			to={`/document/versions/${myEncodeURIComponent(
-				identifier,
-			)}/${myEncodeURIComponent(reference)}`}
+				identifier!,
+			)}/${myEncodeURIComponent(reference!)}`}
 			{...rest}
 		/>
 	);

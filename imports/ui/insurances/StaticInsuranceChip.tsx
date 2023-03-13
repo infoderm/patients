@@ -12,12 +12,16 @@ type AddedProps = {
 	item: InsuranceFields;
 };
 
-type StaticInsuranceChipProps = ChipProps & AddedProps;
+type StaticInsuranceChipProps<C extends React.ElementType> = ChipProps<C> &
+	AddedProps;
 
-const StaticInsuranceChip = React.forwardRef<any, StaticInsuranceChipProps>(
-	({item, ...rest}, ref) => {
+const StaticInsuranceChip = React.forwardRef(
+	<C extends React.ElementType>(
+		{item, ...rest}: StaticInsuranceChipProps<C>,
+		ref: React.Ref<any>,
+	) => {
 		let style: React.CSSProperties | undefined;
-		let component: React.ElementType | undefined;
+		let component: C | typeof Link | undefined;
 		let to: string | undefined;
 
 		if (item && !rest.onDelete) {

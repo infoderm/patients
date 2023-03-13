@@ -9,7 +9,7 @@ type Params = {
 
 const PatientRecordRoute = () => {
 	const params = useParams<Params>();
-	const patientId = myDecodeURIComponent(params.id);
+	const patientId = myDecodeURIComponent(params.id)!;
 
 	return <PatientRecord patientId={patientId} />;
 };

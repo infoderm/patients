@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {type useNavigate} from 'react-router-dom';
 import createPromise from '../../lib/async/createPromise';
 import call from '../endpoint/call';
@@ -16,8 +17,9 @@ export default async function insertDocument(
 
 	const reader = new FileReader();
 
-	reader.addEventListener('load', async (event) => {
-		const buffer = event.target.result as ArrayBuffer;
+	reader.addEventListener('load', async ({target}) => {
+		assert(target !== null);
+		const buffer = target.result as ArrayBuffer;
 		const array = new Uint8Array(buffer);
 		const op = {
 			format,

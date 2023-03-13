@@ -327,7 +327,7 @@ const PatientPersonalInformationStatic = (
 						<DatePicker<Date>
 							{...birthdatePickerProps}
 							label="Death date"
-							value={deathdateLegal}
+							value={deathdateLegal ?? null}
 							renderInput={(props) => (
 								<TextField
 									margin="normal"
@@ -427,7 +427,7 @@ const PatientPersonalInformationStatic = (
 													dispatch({
 														type: 'update',
 														key: 'birthdate',
-														value: eidFormatBirthdate(date),
+														value: eidFormatBirthdate(date!),
 													});
 												}
 											}}

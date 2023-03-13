@@ -18,7 +18,7 @@ export default define({
 	transaction: unconditionallyUpdateById(
 		Appointments,
 		async (db: TransactionDriver, existing) => {
-			const modifier: Modifier<ConsultationDocument> = {
+			const modifier = {
 				$set: {
 					isCancelled: false,
 				},
@@ -47,7 +47,7 @@ export default define({
 				newEnd,
 				newWeight,
 			);
-			return modifier;
+			return modifier as Modifier<ConsultationDocument>;
 		},
 	),
 	simulate(_consultationId: string) {

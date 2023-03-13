@@ -26,7 +26,7 @@ const useStyles = makeStyles()((theme) => ({
 type StaticAttachmentsGalleryProps = {
 	loading: boolean;
 	attachmentsInfo: Map<string, AttachmentInfo>;
-	attachments: any[];
+	attachments: Array<{_id: string}>;
 };
 
 const StaticAttachmentsGallery = ({
@@ -40,7 +40,7 @@ const StaticAttachmentsGallery = ({
 		return <Loading />;
 	}
 
-	const grp = (x) => attachmentsInfo.get(x._id).group;
+	const grp = (x: {_id: string}) => attachmentsInfo.get(x._id)!.group;
 
 	const groups = list(
 		map(

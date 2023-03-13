@@ -92,7 +92,7 @@ function paymentMethodIcon(payment_method) {
 
 type StaticConsultationCardChipsProps = {
 	isNoShow: boolean;
-	patient?: PatientDocument;
+	patient?: {_id: string} | PatientDocument;
 	consultation: ConsultationDocument;
 	PatientChip?: React.ElementType;
 	showDate?: boolean;
@@ -133,7 +133,7 @@ const StaticConsultationCardChips = ({
 	attachments,
 }: StaticConsultationCardChipsProps) => {
 	const localizedDateFormat = useDateFormat();
-	const currencyFormat = useCurrencyFormat(currency);
+	const currencyFormat = useCurrencyFormat(currency!);
 
 	return (
 		<Chips>
@@ -184,7 +184,7 @@ const StaticConsultationCardChips = ({
 					bold
 					isPrice
 					avatar={<Avatar>{paymentMethodIcon(payment_method)}</Avatar>}
-					label={currencyFormat(price)}
+					label={currencyFormat(price!)}
 				/>
 			)}
 			{owes && <Chip bold isDebt label={`Doit ${currencyFormat(owed)}`} />}

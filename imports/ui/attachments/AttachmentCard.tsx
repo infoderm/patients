@@ -169,9 +169,9 @@ const AttachmentCard = ({attachment, info}: Props) => {
 	};
 
 	const subheader = [
-		attachment.meta.createdAt &&
+		attachment.meta?.createdAt &&
 			`A ${format(attachment.meta.createdAt, 'yyyy-MM-dd')}`,
-		attachment.meta.lastModified &&
+		attachment.meta?.lastModified &&
 			`M ${format(attachment.meta.lastModified, 'yyyy-MM-dd')}`,
 	]
 		.filter(Boolean)
@@ -208,7 +208,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 					<>
 						<IconButton
 							size="large"
-							aria-controls={open ? menuId : null}
+							aria-controls={open ? menuId : undefined}
 							aria-haspopup="true"
 							aria-expanded={open ? 'true' : undefined}
 							onClick={(event) => {

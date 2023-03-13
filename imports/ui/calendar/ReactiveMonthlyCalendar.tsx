@@ -68,8 +68,8 @@ const ReactiveMonthlyCalendar = ({
 
 	const displayedEvents = events.filter(
 		(x) =>
-			(showCancelledEvents || !x.isCancelled) &&
-			(showNoShowEvents || !x.isNoShow),
+			(Boolean(showCancelledEvents) || !x.isCancelled) &&
+			(Boolean(showNoShowEvents) || !x.isNoShow),
 	);
 
 	const WeekNumber = useMemo(

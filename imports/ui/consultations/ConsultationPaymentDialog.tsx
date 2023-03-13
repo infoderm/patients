@@ -98,8 +98,8 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 	const loading = loadingAccountHolder || loadingIban || loadingPatient;
 
 	const _date = dateFormat(datetime, 'yyyy-MM-dd');
-	const _lastname = onlyASCII(patient.lastname ?? '');
-	const _firstname = onlyASCII(patient.firstname ?? '');
+	const _lastname = onlyASCII(found ? patient.lastname ?? '' : '');
+	const _firstname = onlyASCII(found ? patient.firstname ?? '' : '');
 	const unstructuredReference = `${_date} ${_lastname} ${_firstname}`;
 
 	const data = {

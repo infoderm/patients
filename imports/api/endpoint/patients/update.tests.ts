@@ -12,6 +12,7 @@ import {Insurances} from '../../collection/insurances';
 
 import {newPatient} from '../../_dev/populate/patients';
 import invoke from '../invoke';
+import {type FormattedLine, type NormalizedLine} from '../../string';
 import update from './update';
 
 server(__filename, () => {
@@ -44,9 +45,18 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		const allergies = ['a', 'b', 'c'].map((x) => ({displayName: x, name: x}));
-		const doctors = ['d', 'e', 'f'].map((x) => ({displayName: x, name: x}));
-		const insurances = ['g', 'h'].map((x) => ({displayName: x, name: x}));
+		const allergies = ['a', 'b', 'c'].map((x) => ({
+			displayName: x as FormattedLine,
+			name: x as NormalizedLine,
+		}));
+		const doctors = ['d', 'e', 'f'].map((x) => ({
+			displayName: x as FormattedLine,
+			name: x as NormalizedLine,
+		}));
+		const insurances = ['g', 'h'].map((x) => ({
+			displayName: x as FormattedLine,
+			name: x as NormalizedLine,
+		}));
 
 		await invoke(update, {userId}, [
 			patientId,

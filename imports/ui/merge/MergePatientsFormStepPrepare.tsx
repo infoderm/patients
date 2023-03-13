@@ -10,36 +10,15 @@ import Typography from '@mui/material/Typography';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
-import {
-	type PatientDocument,
-	type PatientFields,
-} from '../../api/collection/patients';
-import {type ConsultationDocument} from '../../api/collection/consultations';
-import {type DocumentDocument} from '../../api/collection/documents';
-import {type AttachmentDocument} from '../../api/collection/attachments';
-
 import PatientSheet from '../patients/PatientSheet';
 
 import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog';
-import useMergeInfo from './useMergeInfo';
-
-type MergeInfoError = {
-	message: string;
-};
+import useMergeInfo, {type MergeInfo} from './useMergeInfo';
 
 type StaticMergePatientsFormStepPrepareProps = {
 	toMerge: string[];
 	onPrevStep?: () => void;
-	error?: MergeInfoError;
-	oldPatients?: PatientDocument[];
-	consultations?: Record<string, ConsultationDocument[]>;
-	attachments?: Record<string, AttachmentDocument[]>;
-	documents?: Record<string, DocumentDocument[]>;
-	newPatient?: PatientFields;
-	newConsultations?: ConsultationDocument[];
-	newAttachments?: AttachmentDocument[];
-	newDocuments?: DocumentDocument[];
-};
+} & MergeInfo;
 
 const StaticMergePatientsFormStepPrepare = ({
 	toMerge,

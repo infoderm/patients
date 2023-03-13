@@ -6,7 +6,7 @@ import makeFilteredCollection from './makeFilteredCollection';
 export const usePatientsMissingABirthdate = makeFilteredCollection(
 	Patients,
 	{
-		$or: [{birthdate: null}, {birthdate: ''}],
+		$or: [{birthdate: null!}, {birthdate: ''}],
 	},
 	undefined,
 	'issues.PatientsMissingABirthdate',
@@ -15,7 +15,7 @@ export const usePatientsMissingABirthdate = makeFilteredCollection(
 export const usePatientsMissingAGender = makeFilteredCollection(
 	Patients,
 	{
-		$or: [{sex: null}, {sex: ''}],
+		$or: [{sex: null!}, {sex: ''}],
 	},
 	undefined,
 	'issues.PatientsMissingAGender',
@@ -25,7 +25,7 @@ export const useConsultationsMissingABook = makeFilteredCollection(
 	Consultations,
 	{
 		isDone: true,
-		$or: [{book: null}, {book: ''}],
+		$or: [{book: null!}, {book: ''}],
 	},
 	undefined,
 	'issues.ConsultationsMissingABook',
@@ -85,7 +85,7 @@ export const useConsultationsMissingPaymentData = makeFilteredCollection(
 export const useUnlinkedDocuments = makeFilteredCollection(
 	Documents,
 	{
-		patientId: null,
+		patientId: null!,
 	},
 	undefined,
 	'issues.UnlinkedDocuments',
@@ -94,7 +94,7 @@ export const useUnlinkedDocuments = makeFilteredCollection(
 export const useMangledDocuments = makeFilteredCollection(
 	Documents,
 	{
-		encoding: null,
+		encoding: null!,
 	},
 	undefined,
 	'issues.MangledDocuments',

@@ -30,7 +30,7 @@ server(__filename, () => {
 
 		const {insertedId: consultationBId} = await newConsultation(
 			{userId},
-			{patientId: patientBId},
+			{patientId: patientBId, datetime: new Date()},
 		);
 
 		const {_id: uploadAId} = await newUpload({userId});

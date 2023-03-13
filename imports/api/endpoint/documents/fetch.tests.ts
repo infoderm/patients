@@ -23,7 +23,7 @@ server(__filename, () => {
 		]);
 
 		return throws(
-			async () => invoke(documentFetch, {userId: undefined}, [documentId]),
+			async () => invoke(documentFetch, {userId: undefined}, [documentId!]),
 			/not-authorized/,
 		);
 	});
@@ -37,7 +37,7 @@ server(__filename, () => {
 		]);
 
 		return throws(
-			async () => invoke(documentFetch, {userId}, [documentId]),
+			async () => invoke(documentFetch, {userId}, [documentId!]),
 			/not-found/,
 		);
 	});
@@ -51,7 +51,7 @@ server(__filename, () => {
 		]);
 
 		assert.equal(
-			await invoke(documentFetch, {userId}, [documentId]),
+			await invoke(documentFetch, {userId}, [documentId!]),
 			exampleMedidocReport.contents,
 		);
 	});

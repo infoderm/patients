@@ -12,12 +12,16 @@ type AddedProps = {
 	item: DoctorFields;
 };
 
-type StaticDoctorChipProps = ChipProps & AddedProps;
+type StaticDoctorChipProps<C extends React.ElementType> = ChipProps<C> &
+	AddedProps;
 
-const StaticDoctorChip = React.forwardRef<any, StaticDoctorChipProps>(
-	({item, ...rest}, ref) => {
+const StaticDoctorChip = React.forwardRef(
+	<C extends React.ElementType>(
+		{item, ...rest}: StaticDoctorChipProps<C>,
+		ref: React.Ref<any>,
+	) => {
 		let style: React.CSSProperties | undefined;
-		let component: React.ElementType | undefined;
+		let component: C | typeof Link | undefined;
 		let to: string | undefined;
 
 		if (item && !rest.onDelete) {

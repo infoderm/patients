@@ -13,7 +13,7 @@ export default define({
 	async run(
 		query: any,
 		options: any,
-	): Promise<Array<Partial<PatientDocument>>> {
+	): Promise<Array<Partial<PatientDocument> & {_id: string}>> {
 		return Patients.find({...query, owner: this.userId}, options).fetchAsync();
 	},
 	simulate(_query: any, _options: any) {

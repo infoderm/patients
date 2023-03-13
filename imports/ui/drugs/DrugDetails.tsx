@@ -26,7 +26,7 @@ type Params = {
 
 const DrugDetails = () => {
 	const params = useParams<Params>();
-	const drugId = myDecodeURIComponent(params.id);
+	const drugId = myDecodeURIComponent(params.id)!;
 	const {
 		loading,
 		found,

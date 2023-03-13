@@ -87,10 +87,10 @@ export default define({
 				product([range(beginYear, endYear), range(beginBook, endBook)]),
 			),
 		);
-		const lines = [];
+		const lines: string[][] = [];
 
 		for (const i of range(maxRows)) {
-			const line = [];
+			const line: string[] = [];
 			for (const bookSlug of header) {
 				if (data[bookSlug]?.[i] !== undefined) {
 					line.push(data[bookSlug][i]);
@@ -102,7 +102,7 @@ export default define({
 			lines.push(line);
 		}
 
-		const table = [];
+		const table: string[] = [];
 		table.push(header.join(','));
 		for (const line of lines) {
 			table.push(line.join(','));

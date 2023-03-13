@@ -45,7 +45,10 @@ server(__filename, () => {
 		});
 
 		// create an irrelevant consultation
-		await newConsultation(invocation, {patientId: patientCId});
+		await newConsultation(invocation, {
+			patientId: patientCId,
+			datetime: new Date(),
+		});
 
 		const documentAId = await newDocument(invocation, {
 			patientId: patientAId,
@@ -61,12 +64,12 @@ server(__filename, () => {
 		const patientA = await Patients.findOneAsync(patientAId);
 		const patientB = await Patients.findOneAsync(patientBId);
 
-		const newPatientFields = patients.merge([patientA, patientB]);
+		const newPatientFields = patients.merge([patientA!, patientB!]);
 
 		const oldPatientIds = [patientAId, patientBId];
 		const consultationIds = [consultationAId];
 		const attachmentIds = [uploadA._id, uploadB._id];
-		const documentIds = [documentA._id];
+		const documentIds = [documentA!._id];
 
 		const parameters = tuple(
 			oldPatientIds,
@@ -85,7 +88,7 @@ server(__filename, () => {
 
 		const mergedPatient = await Patients.findOneAsync(newPatientId);
 
-		assert.equal(mergedPatient.firstname, patientB.firstname);
+		assert.equal(mergedPatient!.firstname, patientB!.firstname);
 
 		const expectedAttachments = setLike(
 			[uploadA, uploadB].map(({meta, ...rest}) => rest),
@@ -103,10 +106,10 @@ server(__filename, () => {
 
 		const consultationA = await Consultations.findOneAsync(consultationAId);
 
-		assert.equal(consultationA.patientId, newPatientId);
+		assert.equal(consultationA!.patientId, newPatientId);
 
-		documentA = await Documents.findOneAsync(documentA._id);
+		documentA = await Documents.findOneAsync(documentA!._id);
 
-		assert.equal(documentA.patientId, newPatientId);
+		assert.equal(documentA!.patientId, newPatientId);
 	});
 });

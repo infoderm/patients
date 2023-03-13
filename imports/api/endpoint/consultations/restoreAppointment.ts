@@ -21,11 +21,11 @@ export default define({
 	transaction: unconditionallyUpdateById(
 		Consultations,
 		async (db: TransactionDriver, existing) => {
-			const modifier: Modifier<ConsultationDocument> = {
+			const modifier = {
 				$set: {
-					datetime: existing.scheduledDatetime,
-					begin: existing.scheduledDatetime,
-					end: addMilliseconds(existing.scheduledDatetime, existing.duration),
+					datetime: existing.scheduledDatetime!,
+					begin: existing.scheduledDatetime!,
+					end: addMilliseconds(existing.scheduledDatetime!, existing.duration!),
 					isDone: false,
 				},
 				$currentDate: {lastModifiedAt: true},
@@ -51,7 +51,7 @@ export default define({
 				newEnd,
 				newWeight,
 			);
-			return modifier;
+			return modifier as Modifier<ConsultationDocument>;
 		},
 	),
 	simulate(_consultationId: string) {

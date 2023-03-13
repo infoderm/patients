@@ -27,9 +27,9 @@ type Props<C> = PropsOf<C> & OwnProps<C>;
 const InputFileButton = React.forwardRef(
 	<C extends React.ElementType>(
 		{onChange, Button = MuiButton, ...rest}: Props<C>,
-		ref,
+		ref: React.Ref<any>,
 	) => {
-		const inputRef = useRef<HTMLInputElement>(null);
+		const inputRef = useRef<HTMLInputElement | null>(null);
 		const id = useUniqueId('input-file-button');
 		const inputId = `${id}-input`;
 
@@ -39,7 +39,7 @@ const InputFileButton = React.forwardRef(
 					ref={ref}
 					{...rest}
 					onClick={() => {
-						inputRef.current.click();
+						inputRef.current!.click();
 					}}
 				/>
 				<Input

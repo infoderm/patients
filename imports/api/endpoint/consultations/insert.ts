@@ -58,6 +58,9 @@ export default define({
 
 		const {begin, end} = document;
 
+		assert(begin !== undefined);
+		assert(end !== undefined);
+
 		await availability.insertHook(db, owner, begin, end, 0);
 
 		return db.insertOne(Consultations, document);

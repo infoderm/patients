@@ -41,7 +41,7 @@ type Params = {
 
 const ReactiveDocumentDetails = () => {
 	const params = useParams<Params>();
-	const documentId = myDecodeURIComponent(params.id);
+	const documentId = myDecodeURIComponent(params.id)!;
 
 	const {loading, result: document} = useDocument(documentId);
 	return (

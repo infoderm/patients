@@ -31,7 +31,7 @@ export default publishCount(Patients, {
 		const _birthdate = eidParseBirthdate(birthdate);
 		const thisMorning = startOfToday();
 		const ageInterval = {start: _birthdate, end: thisMorning};
-		const ageInYears = intervalToDuration(ageInterval).years;
+		const ageInYears = intervalToDuration(ageInterval).years ?? 0;
 		const incrementYears = 10;
 		const decade = Math.trunc(ageInYears / incrementYears);
 		const fr = decade * incrementYears;

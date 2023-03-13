@@ -6,6 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {patients} from '../../api/patients';
 
 import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions';
+import {type PatientCacheResult} from '../../api/collection/patients/search/cache';
 import usePatientsSuggestions from './usePatientsSuggestions';
 
 const PREFIX = 'PatientsSearchBox';
@@ -26,7 +27,11 @@ const Root = styled('div')(({theme}) => ({
 const PatientsSearchBox = ({className}) => {
 	const navigate = useNavigate();
 
-	const handleChange = ({selectedItem = null}) => {
+	const handleChange = ({
+		selectedItem = null,
+	}: {
+		selectedItem?: PatientCacheResult | null;
+	}) => {
 		if (selectedItem) {
 			navigate(`/patient/${selectedItem._id}`);
 		}

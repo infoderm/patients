@@ -5,6 +5,7 @@ import {assert} from 'chai';
 import {
 	dropId,
 	dropIds,
+	findOneOrThrow,
 	randomUserId,
 	server,
 	throws,
@@ -71,7 +72,7 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const {begin, end} = await Appointments.findOneAsync(appointmentId);
+		const {begin, end} = await findOneOrThrow(Appointments, appointmentId);
 
 		const before = await Availability.find().fetchAsync();
 

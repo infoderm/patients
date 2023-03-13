@@ -31,7 +31,7 @@ const islice = function* <Endpoint>(
 	left: number,
 	right: number,
 ): IterableIterator<[Endpoint, Endpoint]> {
-	for (let i = left; i < right; ++i) yield data[i];
+	for (let i = left; i < right; ++i) yield data[i]!;
 };
 
 const nonOverlappingIntersectionQuery = <Endpoint>(

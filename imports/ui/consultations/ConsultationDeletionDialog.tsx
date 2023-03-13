@@ -51,7 +51,7 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 			: 'Last names do not match';
 
 	const {validate, props: ConfirmationTextFieldProps} =
-		useConfirmationTextFieldState(patient.lastname, getError);
+		useConfirmationTextFieldState(patient.lastname ?? '', getError);
 
 	const isMounted = useIsMounted();
 

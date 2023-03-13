@@ -6,17 +6,21 @@ import type Collection from './Collection';
 import type Selector from './Selector';
 import type Options from './Options';
 
+type ReturnValue<U, I> =
+	| {loading: boolean; found: false; fields: I & Partial<U>}
+	| {loading: boolean; found: true; fields: I & U};
+
 const makeFindOne =
-	<T, U>(
+	<T, U = T>(
 		collection: Collection<T, U>,
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>
-	(
-		init: Partial<U>,
+	<I extends Partial<U>>(
+		init: I,
 		selector: Selector<T> | string,
-		options: Options<T>,
+		options: Options<T> | undefined,
 		deps: DependencyList,
-	) => {
+	): ReturnValue<U, I> => {
 		const isLoading = useSubscription(publication, selector, options);
 		const loading = isLoading();
 
@@ -33,7 +37,7 @@ const makeFindOne =
 
 		const fields = {...init, ...upToDate};
 
-		return {loading, found, fields};
+		return {loading, found, fields} as ReturnValue<U, I>;
 	};
 
 export default makeFindOne;

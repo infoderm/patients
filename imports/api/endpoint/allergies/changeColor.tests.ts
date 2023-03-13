@@ -7,7 +7,7 @@ import {Random} from 'meteor/random';
 import {Allergies} from '../../collection/allergies';
 import {newAllergy} from '../../_dev/populate/allergies';
 
-import {server, throws} from '../../../_test/fixtures';
+import {findOneOrThrow, server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
 import changeAllergyColor from './changeColor';
@@ -20,7 +20,7 @@ server(__filename, () => {
 
 		assert.equal(await Allergies.find({}).countAsync(), 1);
 		assert.equal(await Allergies.find({_id: allergyId}).countAsync(), 1);
-		const {color} = await Allergies.findOneAsync({_id: allergyId});
+		const {color} = await findOneOrThrow(Allergies, {_id: allergyId});
 		assert.equal(color, undefined);
 
 		const expected = '#fff';
@@ -42,7 +42,7 @@ server(__filename, () => {
 		assert.equal(await Allergies.find({}).countAsync(), 1);
 		assert.equal(await Allergies.find({_id: allergyId}).countAsync(), 1);
 
-		const {color} = await Allergies.findOneAsync({_id: allergyId});
+		const {color} = await findOneOrThrow(Allergies, {_id: allergyId});
 		assert.equal(color, undefined);
 
 		const expected = '#fff';
@@ -66,7 +66,7 @@ server(__filename, () => {
 
 		assert.equal(await Allergies.find({}).countAsync(), 1);
 		assert.equal(await Allergies.find({_id: allergyId}).countAsync(), 1);
-		const {color} = await Allergies.findOneAsync({_id: allergyId});
+		const {color} = await findOneOrThrow(Allergies, {_id: allergyId});
 		assert.equal(color, undefined);
 
 		const expected = '#fff';

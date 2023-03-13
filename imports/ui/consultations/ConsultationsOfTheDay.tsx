@@ -82,23 +82,23 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 	const am = consultations.filter(
 		(c) =>
 			isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
-			(showConsultations || c.isDone === false) &&
-			(showAppointments || c.isDone !== false) &&
+			(showConsultations || !c.isDone) &&
+			(showAppointments || c.isDone) &&
 			(showCancelledAppointments || c.isCancelled !== true) &&
 			(showNoShowAppointments ||
-				c.isDone !== false ||
-				c.isCancelled ||
+				c.isDone ||
+				Boolean(c.isCancelled) ||
 				!isBefore(c.scheduledDatetime!, thisMorning)),
 	);
 	const pm = consultations.filter(
 		(c) =>
 			!isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
-			(showConsultations || c.isDone === false) &&
-			(showAppointments || c.isDone !== false) &&
+			(showConsultations || !c.isDone) &&
+			(showAppointments || c.isDone) &&
 			(showCancelledAppointments || c.isCancelled !== true) &&
 			(showNoShowAppointments ||
-				c.isDone !== false ||
-				c.isCancelled ||
+				c.isDone ||
+				Boolean(c.isCancelled) ||
 				!isBefore(c.scheduledDatetime!, thisMorning)),
 	);
 	const cam = count(am);

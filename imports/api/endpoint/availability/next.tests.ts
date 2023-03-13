@@ -23,6 +23,7 @@ import {newAppointment} from '../../_dev/populate/appointments';
 import cancelAppointment from '../appointments/cancel';
 import invoke from '../invoke';
 import timeSlotFromString from '../../../ui/settings/timeSlotFromString';
+import type ModuloWeekInterval from '../../../ui/settings/ModuloWeekInterval';
 import next from './next';
 
 const bookSlot = async (userId, begin, end) => {
@@ -38,10 +39,10 @@ const bookSlot = async (userId, begin, end) => {
 const slotOrder = weekSlotsCyclicOrder(0);
 
 const findNextAvailable = async (
-	userId,
-	after,
-	durationInMinutes,
-	givenConstraints = undefined,
+	userId: string,
+	after: Date,
+	durationInMinutes: number,
+	givenConstraints?: ModuloWeekInterval[],
 ) => {
 	const duration = durationInMinutes * units.minute;
 
@@ -146,7 +147,7 @@ server(__filename, () => {
 		await bookSlot(userId, addMinutes(now, 1), addMinutes(now, 16));
 
 		const actual = await findNextAvailable(userId, now, 61, [
-			timeSlotFromString('1 10 1 11'),
+			timeSlotFromString('1 10 1 11')!,
 		]);
 
 		const expected = null;
@@ -162,7 +163,7 @@ server(__filename, () => {
 		await bookSlot(userId, addMinutes(now, 60), addMinutes(now, 90));
 
 		const actual1 = await findNextAvailable(userId, now, 15, [
-			timeSlotFromString('1 0 1 1'),
+			timeSlotFromString('1 0 1 1')!,
 		]);
 
 		const expected1 = {
@@ -173,7 +174,7 @@ server(__filename, () => {
 		assert.deepEqual(actual1, expected1);
 
 		const actual2 = await findNextAvailable(userId, now, 90, [
-			timeSlotFromString('1 0 1 3'),
+			timeSlotFromString('1 0 1 3')!,
 		]);
 
 		const expected2 = {
@@ -184,7 +185,7 @@ server(__filename, () => {
 		assert.deepEqual(actual2, expected2);
 
 		const actual3 = await findNextAvailable(userId, now, 91, [
-			timeSlotFromString('1 0 1 3'),
+			timeSlotFromString('1 0 1 3')!,
 		]);
 
 		assert.deepEqual(actual3, expected2);
@@ -199,7 +200,7 @@ server(__filename, () => {
 		await bookSlot(userId, addMinutes(now, 300), addMinutes(now, 301));
 
 		const actual1 = await findNextAvailable(userId, now, 15, [
-			timeSlotFromString('1 0 1 1'),
+			timeSlotFromString('1 0 1 1')!,
 		]);
 
 		const expected1 = {
@@ -210,7 +211,7 @@ server(__filename, () => {
 		assert.deepEqual(actual1, expected1);
 
 		const actual2 = await findNextAvailable(userId, now, 90, [
-			timeSlotFromString('1 0 1 3'),
+			timeSlotFromString('1 0 1 3')!,
 		]);
 
 		const expected2 = {
@@ -221,7 +222,7 @@ server(__filename, () => {
 		assert.deepEqual(actual2, expected2);
 
 		const actual3 = await findNextAvailable(userId, now, 91, [
-			timeSlotFromString('1 0 1 3'),
+			timeSlotFromString('1 0 1 3')!,
 		]);
 
 		const expected3 = {

@@ -28,7 +28,7 @@ const UnpaidConsultationsList = ({year}: Props) => {
 	const [showWire, setShowWire] = useState(true);
 	const [showThirdParty, setShowThirdParty] = useState(false);
 
-	const displayedPaymentMethods = [];
+	const displayedPaymentMethods: Array<'cash' | 'wire' | 'third-party'> = [];
 	if (showCash) displayedPaymentMethods.push('cash');
 	if (showWire) displayedPaymentMethods.push('wire');
 	if (showThirdParty) displayedPaymentMethods.push('third-party');

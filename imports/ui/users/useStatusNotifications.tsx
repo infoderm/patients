@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {useSnackbar} from 'notistack';
+import {type SnackbarKey, useSnackbar} from 'notistack';
 
 import Button from '@mui/material/Button';
 
@@ -42,7 +42,7 @@ const useStatusNotifications = () => {
 	);
 
 	useEffect(() => {
-		let key;
+		let key: SnackbarKey | undefined;
 		const timeout = setTimeout(() => {
 			switch (status) {
 				case 'connected': {
@@ -70,7 +70,7 @@ const useStatusNotifications = () => {
 				}
 
 				case 'waiting': {
-					const msBeforeNextRetry = retryTime - Date.now();
+					const msBeforeNextRetry = retryTime! - Date.now();
 					key = enqueueSnackbar(
 						`You are disconnected: waiting ${msToStringShort(
 							msBeforeNextRetry,

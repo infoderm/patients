@@ -85,7 +85,7 @@ const AvailabilityFragment = ({event, className, eventProps}) => {
 		alignItems: 'center',
 		justifyContent: 'center',
 		fontWeight: 'bold',
-		cursor: 'pointer',
+		cursor: event.onClick && 'pointer',
 		backgroundColor: eventBackgroundColor(event),
 		color: '#111',
 	};

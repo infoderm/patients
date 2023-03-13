@@ -1,3 +1,4 @@
+import assert from 'assert';
 import addMilliseconds from 'date-fns/addMilliseconds';
 import addMinutes from 'date-fns/addMinutes';
 import isBefore from 'date-fns/isBefore';
@@ -28,6 +29,7 @@ export const event = (
 	}: Omit<ConsultationDocument, '_id'>,
 ): EventDocument => {
 	const patient = findOneSync(Patients, {_id: patientId}); // TODO Make reactive (maybe)?
+	assert(patient !== undefined);
 	const begin = datetime;
 	const end = isDone
 		? doneDatetime
@@ -50,7 +52,7 @@ export const event = (
 		description: patient.phone,
 		begin,
 		end,
-		isCancelled,
+		isCancelled: Boolean(isCancelled),
 		isNoShow,
 		uri: `/consultation/${_id}`,
 	};

@@ -31,7 +31,7 @@ const DocumentsForPatientStatic = ({
 					<DocumentCard
 						key={document._id}
 						document={document}
-						PatientChip={null}
+						PatientChip={undefined}
 						defaultExpanded={i === 0 && page === 1}
 					/>
 				))}

@@ -137,7 +137,7 @@ const splitOn = function* (separator: RegExp, string: string) {
 		if (match === null) break;
 		// const [left, right] = match.indices[0];
 		const left = match.index;
-		const right = left + match[0].length;
+		const right = left + match[0]!.length;
 		if (left !== lastIndex) {
 			yield string.slice(lastIndex, left);
 		}

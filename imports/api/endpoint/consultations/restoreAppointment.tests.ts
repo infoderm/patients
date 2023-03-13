@@ -65,7 +65,9 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		const {begin, end} = await Appointments.findOneAsync(appointmentId);
+		const appointment = await Appointments.findOneAsync(appointmentId);
+
+		const {begin, end} = appointment!;
 
 		await invoke(appointmentsBeginConsultation, {userId}, [appointmentId]);
 

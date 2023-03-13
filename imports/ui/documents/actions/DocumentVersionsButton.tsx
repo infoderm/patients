@@ -29,8 +29,8 @@ const DocumentVersionsButton = ({
 			color="primary"
 			component={Link}
 			to={`/document/versions/${myEncodeURIComponent(
-				identifier,
-			)}/${myEncodeURIComponent(reference)}`}
+				identifier!,
+			)}/${myEncodeURIComponent(reference!)}`}
 			{...rest}
 		>
 			{versions.length} versions

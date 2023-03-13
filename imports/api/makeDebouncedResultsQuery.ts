@@ -15,7 +15,7 @@ const makeDebouncedResultsQuery =
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>
 	(selector: Selector<T>, options: Options<T>, deps: DependencyList) => {
-		const lastValue = useRef(init);
+		const lastValue = useRef<U[]>(init);
 
 		const isLoading = useSubscription(publication, selector, options);
 

@@ -4,7 +4,7 @@
 
 const detectTextEncoding = async (
 	array: Uint8Array,
-): Promise<null | string> => {
+): Promise<string | undefined> => {
 	const chardet = await import('chardet');
 	// Const utfLabel = chardet.detect(array).toLowerCase();
 	// const encoding = utfLabelToEncoding[utfLabel] || utfLabel;

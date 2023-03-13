@@ -21,7 +21,7 @@ export default define({
 	async run(document: DirtyDocument) {
 		const entries = sanitize(document);
 
-		const result = [];
+		const result: string[] = [];
 
 		for await (const entry of entries) {
 			if (entry.source.length >= LENGTH_THRESHOLD) {

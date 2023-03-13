@@ -23,7 +23,7 @@ const makeObservedQuerySubscription = <T, U = T>(
 			...query,
 			owner: this.userId,
 		};
-		observe = {
+		const callbacks: ObserveOptions = {
 			added: true,
 			removed: true,
 			...observe,
@@ -34,7 +34,7 @@ const makeObservedQuerySubscription = <T, U = T>(
 			options,
 			observe,
 		});
-		const results = [];
+		const results: T[] = [];
 		let initializing = true;
 
 		const stop = () => {
@@ -43,13 +43,13 @@ const makeObservedQuerySubscription = <T, U = T>(
 
 		const observers: ObserveChangesCallbacks<T> = {
 			added(_id, fields) {
-				if (initializing) results.push({_id, ...fields});
-				else if (observe.added) stop();
+				if (initializing) results.push({_id, ...fields} as unknown as T);
+				else if (callbacks.added) stop();
 			},
 		};
 
-		if (observe.removed) observers.removed = stop;
-		if (observe.changed) observers.changed = stop;
+		if (callbacks.removed) observers.removed = stop;
+		if (callbacks.changed) observers.changed = stop;
 
 		const handle = QueriedCollection.find(query, options).observeChanges(
 			observers,

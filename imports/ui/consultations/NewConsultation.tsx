@@ -15,7 +15,7 @@ type Params = {
 
 const NewConsultation = () => {
 	const params = useParams<Params>();
-	const patientId = myDecodeURIComponent(params.id);
+	const patientId = myDecodeURIComponent(params.id)!;
 	const {loading, bookNumber} = useBookPrefill();
 
 	if (loading) return <Loading />;

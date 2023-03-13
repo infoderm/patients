@@ -121,7 +121,7 @@ const NewPatientForm = () => {
 	const [niss, setNiss] = useState('');
 	const [firstname, setFirstname] = useState('');
 	const [lastname, setLastname] = useState('');
-	const [error, setError] = useState(null);
+	const [error, setError] = useState<string | null>(null);
 	const [birthdate, setBirthdate] = useState<Date | null>(null);
 	const [sex, setSex] = useState('');
 	const [noshow, setNoshow] = useState(0);

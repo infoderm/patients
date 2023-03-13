@@ -17,7 +17,7 @@ const Box = styled(MuiBox)({
 	display: 'inline',
 });
 
-const getTopFromsize = (size: number | string) => {
+const getTopFromsize = (size: number) => {
 	switch (size) {
 		case 40: {
 			return -8;
@@ -57,7 +57,7 @@ const getProgressSizeFromButtonSize = (size: string) => {
 	}
 };
 
-const Progress = styled(CircularProgress)(({size}) => ({
+const Progress = styled(CircularProgress)(({size}: {size: number}) => ({
 	position: 'absolute',
 	top: getTopFromsize(size),
 	left: 0,
@@ -82,7 +82,7 @@ const LoadingIconButton = React.forwardRef(
 				<IconButton
 					ref={ref}
 					component={component}
-					disabled={disabled || loading}
+					disabled={loading || disabled}
 					size={size}
 					{...rest}
 				/>

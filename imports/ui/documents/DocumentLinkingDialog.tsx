@@ -37,7 +37,7 @@ const DocumentLinkingDialog = ({
 	const linkThisDocument = async (event) => {
 		event.preventDefault();
 		const documentId = document._id;
-		const patientId = patients[0]._id;
+		const patientId = patients[0]!._id;
 		try {
 			await call(link, documentId, patientId);
 			console.log(`Document #${documentId} linked to patient #${patientId}.`);

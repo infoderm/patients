@@ -33,12 +33,10 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 };
 
 type Changes<T> = {
-	$set?: Partial<T> | undefined;
-	$unset?:
-		| {
-				[K in keyof T]?: boolean;
-		  }
-		| undefined;
+	$set?: Partial<T>;
+	$unset?: {
+		[K in keyof T]?: boolean;
+	};
 };
 
 export const simulateUpdate = <T extends {}>(
@@ -114,7 +112,7 @@ const fromEntries = <K extends string | number | symbol, V>(
 
 export const makeSanitize =
 	<T, U>(sanitizeUpdate: SanitizeUpdate<T, U>) =>
-	(fields: T): Changes<U> => {
+	(fields: T) => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
 			$set: fromEntries(

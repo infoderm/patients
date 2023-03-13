@@ -88,7 +88,7 @@ const useAttachmentsForPatients = ($in) => {
 		if (meta?.attachedToConsultations) {
 			for (const parentId of meta.attachedToConsultations) {
 				if (consultationMap.has(parentId)) {
-					const {patientId, datetime} = consultationMap.get(parentId);
+					const {patientId, datetime} = consultationMap.get(parentId)!;
 					results.push({
 						parentCollection: 'consultations',
 						parentId,

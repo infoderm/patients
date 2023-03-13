@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {type ReactNode} from 'react';
 import {type UseComboboxReturnValue} from 'downshift';
 
 import SearchBoxInternalsContainer from './SearchBoxInternalsContainer';
@@ -12,7 +12,7 @@ type SearchBoxWithSuggestionsInternalsProps<Item> = {
 	expands?: boolean;
 	loading: boolean;
 	placeholder?: string;
-	icon?: React.ReactNode;
+	icon?: ReactNode;
 	suggestions: Item[];
 	itemToKey: (item: Item) => React.Key;
 	itemToString: (item: Item) => string;

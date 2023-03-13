@@ -20,7 +20,7 @@ export function monthly(year: number, month: number, weekOptions: WeekOptions) {
 	const lastDayOfMonth = startOfDay(endOfMonth(firstDayOfMonth));
 	const begin = startOfWeek(firstDayOfMonth, weekOptions); // Inclusive
 	const end = addDays(startOfDay(endOfWeek(lastDayOfMonth, weekOptions)), 1); // Non-inclusive
-	return [begin, end];
+	return [begin, end] as const;
 }
 
 export function weekly(year: number, week: number, weekOptions: WeekOptions) {
@@ -32,7 +32,7 @@ export function weekly(year: number, week: number, weekOptions: WeekOptions) {
 	const lastDayOfWeek = startOfDay(endOfWeek(someDayOfWeek, weekOptions));
 	const begin = startOfWeek(someDayOfWeek, weekOptions); // Inclusive
 	const end = addDays(lastDayOfWeek, 1); // Non-inclusive
-	return [begin, end];
+	return [begin, end] as const;
 }
 
 export default {

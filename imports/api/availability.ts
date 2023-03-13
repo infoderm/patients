@@ -16,6 +16,7 @@ import {
 	beginningOfTime,
 	endOfTime,
 	someDateAtGivenDayOfWeek,
+	type WeekDay,
 	WEEK_MODULO,
 } from '../lib/datetime';
 import add from '../lib/interval/add';
@@ -118,15 +119,15 @@ const getDatetimePartsInTimeZone = (timeZone: string, datetime: Date) => {
 	const parts = dtfWeek(timeZone)
 		.formatToParts(datetime)
 		.filter(({type}) => type !== 'literal');
-	let day: number;
-	let hours: number;
-	let minutes: number;
-	let seconds: number;
-	let milliseconds: number;
+	let day: WeekDay = 0;
+	let hours = 0;
+	let minutes = 0;
+	let seconds = 0;
+	let milliseconds = 0;
 	for (const {type, value} of parts) {
 		switch (type) {
 			case 'weekday': {
-				day = WEEKDAYS_MAP[value];
+				day = WEEKDAYS_MAP[value]!;
 				break;
 			}
 
@@ -321,16 +322,16 @@ export const initialSlot = (owner: string) => ({
 	owner,
 });
 
-const simplify = (
-	slots: Array<[Date, Date, number]>,
-): Array<[Date, Date, number]> => {
+type Slot = [Date, Date, number];
+
+const simplify = (slots: Slot[]): Slot[] => {
 	assert(slots.length >= 2);
 	// merge with preceding and succeeding slots if weights became equal
-	const [beginFirst, endFirst, weightFirst] = slots[0];
-	const [beginSecond, endSecond, weightSecond] = slots[1];
+	const [beginFirst, endFirst, weightFirst] = slots[0]!;
+	const [beginSecond, endSecond, weightSecond] = slots[1]!;
 	const [beginNextToLast, endNextToLast, weightNextToLast] =
-		slots[slots.length - 2];
-	const [beginLast, endLast, weightLast] = slots[slots.length - 1];
+		slots[slots.length - 2]!;
+	const [beginLast, endLast, weightLast] = slots[slots.length - 1]!;
 	assert(isSameDatetime(endFirst, beginSecond));
 	assert(isSameDatetime(endNextToLast, beginLast));
 	if (weightFirst === weightSecond) {
@@ -420,7 +421,7 @@ export const insertHook = async (
 	);
 
 	const toDelete = _intersected.map((x) => x._id);
-	const _toInsert = [];
+	const _toInsert: Slot[] = [];
 
 	for (const slot of intersected) {
 		for (const newSlot of add(
@@ -449,7 +450,9 @@ export const insertHook = async (
 
 	assert(_toInsert.length >= 3);
 
-	assert(isContiguous(isSameDatetime, _toInsert));
+	assert(
+		isContiguous(isSameDatetime, _toInsert as unknown as Array<[Date, Date]>),
+	);
 
 	const toInsert = simplify(_toInsert);
 
@@ -457,11 +460,11 @@ export const insertHook = async (
 		isContiguous(isSameDatetime, toInsert as unknown as Array<[Date, Date]>),
 	);
 
-	assert(isSameDatetime(toInsert[0][0], _toInsert[0][0]));
+	assert(isSameDatetime(toInsert[0]![0], _toInsert[0]![0]));
 	assert(
 		isSameDatetime(
-			toInsert[toInsert.length - 1][1],
-			_toInsert[_toInsert.length - 1][1],
+			toInsert[toInsert.length - 1]![1],
+			_toInsert[_toInsert.length - 1]![1],
 		),
 	);
 

@@ -77,9 +77,10 @@ const PatientHeader = ({patientId}: Props) => {
 				<TextField
 					readOnly
 					label="Birth date"
-					value={
-						eidDisplayBirthdate(patient.birthdate, localizeBirthdate) ?? ''
-					}
+					value={eidDisplayBirthdate(
+						patient.birthdate ?? '',
+						localizeBirthdate,
+					)}
 					InputLabelProps={{
 						shrink: true,
 					}}

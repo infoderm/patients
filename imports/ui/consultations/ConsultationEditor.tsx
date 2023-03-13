@@ -260,18 +260,19 @@ const reducer = (state: State, action: Action) => {
 	}
 };
 
-type LoaderProps = {
-	loading: boolean;
-	found: boolean;
-	consultation: ConsultationEditorFields;
-};
+type LoaderProps =
+	| {loading: true; found: any; consultation: any}
+	| {loading: false; found: false; consultation: any}
+	| {loading: false; found: true; consultation: ConsultationEditorFields};
 
-const Loader = ({loading, found, consultation}: LoaderProps) => {
-	if (loading) return <Loading />;
+const Loader = (props: LoaderProps) => {
+	if (props.loading) return <Loading />;
 
-	if (!found) {
+	if (!props.found) {
 		return <NoContent>Consultation not found.</NoContent>;
 	}
+
+	const {consultation} = props;
 
 	if (!consultation.isDone) return <Loading />;
 

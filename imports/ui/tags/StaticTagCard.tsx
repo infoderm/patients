@@ -88,8 +88,8 @@ export type StaticTagCardProps = {
 	avatar: {};
 
 	subheader: string;
-	content?: JSX.Element;
-	actions?: JSX.Element;
+	content?: JSX.Element | null;
+	actions?: JSX.Element | null;
 
 	RenamingDialog?: React.ElementType;
 	DeletionDialog?: React.ElementType;
@@ -193,6 +193,7 @@ const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(
 						</CardActions>
 					)}
 				</CardDetails>
+				{/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
 				<CardMedia>{abbr || displayName.slice(0, 1)}</CardMedia>
 			</Card>
 		);

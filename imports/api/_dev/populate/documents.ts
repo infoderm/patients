@@ -17,7 +17,7 @@ export const newDocument = async (invocation, extra?) => {
 	const [_id] = await invoke(insertDocument, invocation, [
 		newDocumentFormData(extra),
 	]);
-	return _id;
+	return _id!;
 };
 
 export const exampleMedidocReport = {

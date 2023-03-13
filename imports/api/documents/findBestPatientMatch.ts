@@ -42,7 +42,7 @@ async function findBestPatientMatch(db: TransactionDriver, owner, entry) {
 
 			case 1: {
 				// If exactly 1 patient matches
-				return matches[0]._id;
+				return matches[0]!._id;
 			}
 
 			default: {

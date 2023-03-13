@@ -148,7 +148,7 @@ const where = Match.Where;
 
 const sanitizeUpdate = function* (
 	fields: Partial<PatientFields>,
-): IterableIterator<Entry<PatientFields & PatientComputedFields>> {
+): IterableIterator<Entry<Partial<PatientFields & PatientComputedFields>>> {
 	yield* yieldKey(fields, 'niss', String, trimString);
 	yield* yieldKey(fields, 'firstname', String, trimString);
 	yield* yieldKey(fields, 'lastname', String, trimString);
@@ -183,7 +183,6 @@ const sanitizeUpdate = function* (
 
 			return true;
 		}),
-		(deathdateModifiedAt: Date | null) => deathdateModifiedAt ?? undefined,
 	);
 
 	yield* yieldResettableKey(
@@ -199,7 +198,6 @@ const sanitizeUpdate = function* (
 
 			return true;
 		}),
-		(deathdate: Date | null) => deathdate ?? undefined,
 	);
 
 	yield* yieldKey(fields, 'antecedents', String, trimString);
@@ -236,11 +234,16 @@ const computedFields = makeComputedFields(computedFieldsGenerator);
 export const computeUpdate = makeComputeUpdate(computedFields);
 
 function mergePatients(oldPatients: PatientFields[]): PatientFields {
+	const allergies: PatientTag[] = [];
+	const doctors: PatientTag[] = [];
+	const insurances: PatientTag[] = [];
+	const noshow = 0;
+
 	const newPatient = {
-		allergies: [],
-		doctors: [],
-		insurances: [],
-		noshow: 0,
+		allergies,
+		doctors,
+		insurances,
+		noshow,
 	};
 
 	for (const oldPatient of oldPatients) {
