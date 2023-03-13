@@ -6,9 +6,12 @@ import {Attachments} from '../../collection/attachments';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
+import EndpointError from '../EndpointError';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: '/patients/attach',
+	authentication: AuthenticationLoggedIn,
 	validate(patientId: string, uploadId: string) {
 		check(patientId, String);
 		check(uploadId, String);
@@ -23,7 +26,7 @@ export default define({
 			owner: this.userId,
 		});
 		if (patient === null) {
-			throw new Meteor.Error('not-found', 'patient not found');
+			throw new EndpointError('not-found', 'patient not found');
 		}
 
 		const result = await db.updateOne(
@@ -35,7 +38,7 @@ export default define({
 		);
 
 		if (result.matchedCount === 0) {
-			throw new Meteor.Error('not-found', 'attachment not found');
+			throw new EndpointError('not-found', 'attachment not found');
 		}
 
 		if (result.matchedCount >= 2) {

@@ -11,9 +11,11 @@ import {Consultations} from '../../collection/consultations';
 import {books} from '../../books';
 
 import define from '../define';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'books.interval.csv',
+	authentication: AuthenticationLoggedIn,
 	validate(
 		begin: Date,
 		end: Date,

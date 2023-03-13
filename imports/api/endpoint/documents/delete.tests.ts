@@ -17,7 +17,7 @@ server(__filename, () => {
 		const documentId = await newDocument({userId});
 		assert.equal(await Documents.find().countAsync(), 1);
 		await throws(
-			async () => invoke(documentDelete, {userId: undefined}, [documentId]),
+			async () => invoke(documentDelete, {userId: undefined!}, [documentId]),
 			/not-authorized/,
 		);
 		assert.equal(await Documents.find().countAsync(), 1);

@@ -9,9 +9,11 @@ import {Attachments} from '../../collection/attachments';
 import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: '/api/patients/remove',
+	authentication: AuthenticationLoggedIn,
 	validate(patientId: string) {
 		check(patientId, String);
 	},

@@ -44,7 +44,7 @@ server(__filename, () => {
 		const value = 123_819_832;
 
 		return throws(
-			async () => invoke(update, {userId: undefined}, [key, value]),
+			async () => invoke(update, {userId: undefined!}, [key, value]),
 			/not-authorized/,
 		);
 	});
@@ -59,7 +59,7 @@ server(__filename, () => {
 		await invoke(update, {userId}, [key, value]);
 
 		return throws(
-			async () => invoke(update, {userId: undefined}, [key, updated]),
+			async () => invoke(update, {userId: undefined!}, [key, updated]),
 			/not-authorized/,
 		);
 	});

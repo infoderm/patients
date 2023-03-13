@@ -20,7 +20,7 @@ server(__filename, () => {
 	it('cannot insert a document when not logged in', async () => {
 		await throws(
 			async () =>
-				invoke(insert, {userId: undefined}, [
+				invoke(insert, {userId: undefined!}, [
 					{
 						array: new Uint8Array(0),
 					},

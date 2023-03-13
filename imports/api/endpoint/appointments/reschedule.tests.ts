@@ -14,6 +14,7 @@ import {slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 import {dropIds, findOneOrThrow, server, throws} from '../../../_test/fixtures';
 import invoke from '../invoke';
+import {type AuthenticatedContext} from '../Context';
 import appointmentsReschedule from './reschedule';
 
 const expected = ({owner, begin, end}) => [
@@ -42,7 +43,11 @@ server(__filename, () => {
 		const updated = newAppointmentFormData();
 
 		await throws(
-			async () => invoke(appointmentsReschedule, {}, [appointmentId, updated]),
+			async () =>
+				invoke(appointmentsReschedule, {} as AuthenticatedContext, [
+					appointmentId,
+					updated,
+				]),
 			/not-authorized/,
 		);
 

@@ -7,9 +7,11 @@ import {Appointments} from '../../collection/appointments';
 import {noShows, type State} from '../../collection/noShows';
 
 import define from '../define';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'patient.noShows',
+	authentication: AuthenticationLoggedIn,
 	handle(patientId: string) {
 		check(patientId, String);
 

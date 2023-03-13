@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Patients} from '../../collection/patients';
 import {computeUpdate, patients} from '../../patients';
@@ -10,6 +11,7 @@ const {sanitize, updateIndex, updateTags} = patients;
 
 export default define({
 	name: '/api/patients/insert',
+	authentication: AuthenticationLoggedIn,
 	validate(patient: any) {
 		check(patient, Object);
 	},

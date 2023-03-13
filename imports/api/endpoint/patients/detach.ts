@@ -5,9 +5,11 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: '/patients/detach',
+	authentication: AuthenticationLoggedIn,
 	validate(patientId: string, uploadId: string) {
 		check(patientId, String);
 		check(uploadId, String);

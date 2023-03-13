@@ -55,7 +55,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(restoreAppointment, {userId: undefined}, [appointmentId]),
+				invoke(restoreAppointment, {userId: undefined!}, [appointmentId]),
 			/not-authorized/,
 		);
 	});

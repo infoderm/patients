@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
 import {type DirtyDocument, documents} from '../../documents';
@@ -6,6 +7,7 @@ import findBestPatientMatch from '../../documents/findBestPatientMatch';
 import executeTransaction from '../../transaction/executeTransaction';
 
 import define from '../define';
+import EndpointError from '../EndpointError';
 
 const {sanitize, updateLastVersionFlags} = documents;
 
@@ -15,6 +17,7 @@ const LENGTH_THRESHOLD = Math.floor(SIZE_16_MB / 8);
 
 export default define({
 	name: 'documents.insert',
+	authentication: AuthenticationLoggedIn,
 	validate(document: any) {
 		check(document, Object);
 	},
@@ -25,7 +28,7 @@ export default define({
 
 		for await (const entry of entries) {
 			if (entry.source.length >= LENGTH_THRESHOLD) {
-				throw new Meteor.Error('file-size-too-large');
+				throw new EndpointError('file-size-too-large');
 			}
 
 			// TODO split to new invoked method

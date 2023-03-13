@@ -3,6 +3,7 @@ import {type Subscription} from 'meteor/meteor';
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
 import type Collection from './Collection';
+import {AuthenticationLoggedIn} from './Authentication';
 
 export const countPublicationName = (QueriedCollection, {values}) =>
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;
@@ -120,6 +121,7 @@ export const publishCount = (QueriedCollection, options) => {
 	options = getCountOptions(options);
 	return define({
 		name: countPublicationName(QueriedCollection, options),
+		authentication: AuthenticationLoggedIn,
 		handle: countPublication(QueriedCollection, options),
 	});
 };

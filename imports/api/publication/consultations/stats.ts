@@ -1,9 +1,11 @@
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {stats} from '../../collection/consultations/stats';
 import {setupConsultationsStatsPublication} from '../../consultations';
 import define from '../define';
 
 export default define({
 	name: stats,
+	authentication: AuthenticationLoggedIn,
 	handle(query) {
 		const collection = stats;
 

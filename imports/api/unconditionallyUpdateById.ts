@@ -7,7 +7,7 @@ import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './transaction/Filter';
 import type Collection from './Collection';
 import type Modifier from './Modifier';
-import AuthenticatedContext from './endpoint/AuthenticatedContext';
+import {type AuthenticatedContext} from './endpoint/Context';
 
 type OpReturnValue<T> = Promise<Modifier<T>> | Modifier<T>;
 

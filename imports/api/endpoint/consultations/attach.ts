@@ -5,9 +5,12 @@ import {Attachments} from '../../collection/attachments';
 
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
+import EndpointError from '../EndpointError';
 
 export default define({
 	name: '/consultations/attach',
+	authentication: AuthenticationLoggedIn,
 	validate(consultationId: string, uploadId: string) {
 		check(consultationId, String);
 		check(uploadId, String);
@@ -22,7 +25,7 @@ export default define({
 			owner: this.userId,
 		});
 		if (consultation === null) {
-			throw new Meteor.Error('not-found', 'consultation not found');
+			throw new EndpointError('not-found', 'consultation not found');
 		}
 
 		const result = await db.updateOne(
@@ -34,7 +37,7 @@ export default define({
 		);
 
 		if (result.matchedCount === 0) {
-			throw new Meteor.Error('not-found', 'attachment not found');
+			throw new EndpointError('not-found', 'attachment not found');
 		}
 
 		if (result.matchedCount >= 2) {

@@ -1,3 +1,4 @@
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,
 	Consultations,
@@ -8,6 +9,7 @@ import define from '../define';
 
 export default define({
 	name: 'consultations',
+	authentication: AuthenticationLoggedIn,
 	cursor(filter: Filter<ConsultationDocument> = {}) {
 		return Consultations.find({
 			isDone: true,

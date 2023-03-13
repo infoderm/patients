@@ -74,7 +74,7 @@ server(__filename, () => {
 		await invoke(uploadsDelete, {userId}, [uploadId]);
 
 		await throws(
-			async () => invoke(uploadsRestore, {userId: undefined}, [uploadId]),
+			async () => invoke(uploadsRestore, {userId: undefined!}, [uploadId]),
 			/not-authorized/,
 		);
 

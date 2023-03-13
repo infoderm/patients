@@ -60,7 +60,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(appointmentsBeginConsultation, {userId: undefined}, [
+				invoke(appointmentsBeginConsultation, {userId: undefined!}, [
 					appointmentId,
 				]),
 			/not-authorized/,

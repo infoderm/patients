@@ -1,7 +1,7 @@
 import {check} from 'meteor/check';
 import {Settings} from '../../collection/settings';
 import define from '../define';
-import { AuthenticationLoggedIn } from '../../Authentication';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'setting',

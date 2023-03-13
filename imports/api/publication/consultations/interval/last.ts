@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../../Authentication';
 import {
 	type ConsultationDocument,
 	Consultations,
@@ -9,6 +10,7 @@ import define from '../../define';
 
 export default define({
 	name: 'consultations.interval.last',
+	authentication: AuthenticationLoggedIn,
 	cursor(from: Date, to: Date, filter?: Filter<ConsultationDocument>) {
 		check(from, Date);
 		check(to, Date);

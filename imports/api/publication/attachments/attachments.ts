@@ -1,3 +1,4 @@
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type AttachmentDocument,
 	Attachments,
@@ -10,6 +11,7 @@ import define from '../define';
 
 export default define({
 	name: 'attachments',
+	authentication: AuthenticationLoggedIn,
 	cursor(
 		filter: Filter<AttachmentDocument>,
 		options?: Options<AttachmentDocument>,

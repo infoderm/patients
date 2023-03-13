@@ -8,6 +8,7 @@ import type Options from './Options';
 import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
+import {AuthenticationLoggedIn} from './Authentication';
 
 const makeFilteredCollection = <T extends {}, U extends {} = T>(
 	collection: Collection<T, U>,
@@ -17,6 +18,7 @@ const makeFilteredCollection = <T extends {}, U extends {} = T>(
 ) => {
 	const publication = define({
 		name,
+		authentication: AuthenticationLoggedIn,
 		handle(publicationFilter?: Filter<T>, publicationOptions?: Options<T>) {
 			const selector = {
 				...filterSelector,

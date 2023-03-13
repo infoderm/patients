@@ -144,7 +144,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(patientsDetach, {userId: undefined}, [patientId, uploadId]),
+				invoke(patientsDetach, {userId: undefined!}, [patientId, uploadId]),
 			/not-authorized/,
 		);
 	});

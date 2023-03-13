@@ -1,25 +1,35 @@
 import React, {useMemo} from 'react';
 
 import type Args from '../../api/Args';
+import {type Authentication} from '../../api/Authentication';
 import type Endpoint from '../../api/endpoint/Endpoint';
+import type Serializable from '../../api/Serializable';
 import useApply from '../action/useApply';
 import useIsMounted from '../hooks/useIsMounted';
 import ConfirmationDialog, {
 	type ConfirmationDialogProps,
 } from './ConfirmationDialog';
 
-type EndpointCallConfirmationDialogProps<A extends Args, T> = {
-	endpoint: Endpoint<A, T>;
+type EndpointCallConfirmationDialogProps<
+	A extends Args,
+	R extends Serializable,
+	Auth extends Authentication,
+> = {
+	endpoint: Endpoint<A, R, Auth>;
 	args: A;
 	onClose: () => void;
 } & Omit<ConfirmationDialogProps, 'pending' | 'onCancel' | 'onConfirm'>;
 
-const EndpointCallConfirmationDialog = <A extends Args, T>({
+const EndpointCallConfirmationDialog = <
+	A extends Args,
+	R extends Serializable,
+	Auth extends Authentication,
+>({
 	endpoint,
 	args,
 	onClose,
 	...rest
-}: EndpointCallConfirmationDialogProps<A, T>) => {
+}: EndpointCallConfirmationDialogProps<A, R, Auth>) => {
 	const [apply, {pending}] = useApply();
 
 	const isMounted = useIsMounted();

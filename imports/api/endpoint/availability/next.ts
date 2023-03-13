@@ -15,9 +15,11 @@ import {
 } from '../../availability';
 import {WEEK_MODULO} from '../../../lib/datetime';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'availability.next',
+	authentication: AuthenticationLoggedIn,
 	validate(after: Date, duration: Duration, constraints: Constraint[]) {
 		check(after, Date);
 		check(duration, Number);

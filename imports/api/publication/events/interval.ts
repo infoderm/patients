@@ -1,9 +1,11 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {beginsInInterval, publishEvents} from '../../events';
 import define from '../define';
 
 export default define({
 	name: 'events.interval',
+	authentication: AuthenticationLoggedIn,
 	handle(begin: Date, end: Date) {
 		check(begin, Date);
 		check(end, Date);

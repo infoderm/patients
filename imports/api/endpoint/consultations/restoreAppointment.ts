@@ -12,9 +12,11 @@ import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'consultations.restoreAppointment',
+	authentication: AuthenticationLoggedIn,
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},

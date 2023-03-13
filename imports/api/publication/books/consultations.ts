@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 import {books} from '../../books';
 import {
 	type ConsultationDocument,
@@ -9,6 +10,7 @@ import define from '../define';
 
 export default define({
 	name: books.options.parentPublication,
+	authentication: AuthenticationLoggedIn,
 	cursor(name: string, options: Options<ConsultationDocument> = {}) {
 		check(name, String);
 

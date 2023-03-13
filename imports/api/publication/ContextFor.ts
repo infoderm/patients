@@ -1,11 +1,18 @@
-import Authentication, {AuthenticationDangerousNone, AuthenticationLoggedIn} from "../Authentication";
-import {AuthenticatedContext, UnauthenticatedContext} from "./Context";
+import {
+	type Authentication,
+	type AuthenticationDangerousNone,
+	type AuthenticationLoggedIn,
+} from '../Authentication';
+import {
+	type AuthenticatedContext,
+	type UnauthenticatedContext,
+} from './Context';
 
 type ContextFor<A extends Authentication> =
 	A extends AuthenticationDangerousNone
 		? UnauthenticatedContext
 		: A extends AuthenticationLoggedIn
-			? AuthenticatedContext
-				: never;
+		? AuthenticatedContext
+		: never;
 
 export default ContextFor;

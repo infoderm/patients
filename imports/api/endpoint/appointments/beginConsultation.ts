@@ -17,9 +17,11 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 export default define({
 	name: 'appointments.beginConsultation',
+	authentication: AuthenticationLoggedIn,
 	validate(consultationId: string) {
 		check(consultationId, String);
 	},

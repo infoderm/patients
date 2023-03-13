@@ -6,15 +6,20 @@ import {sum} from '@iterable-iterator/reduce';
 
 import authorized from '../authorized';
 import type Args from '../Args';
+import {type Authentication} from '../Authentication';
 import type Params from './Params';
 import type Publication from './Publication';
-import Authentication from '../Authentication';
 
 // TODO early branch out
 const exactlyOne = (array: any[]) =>
 	sum(map((x: any) => (x ? 1 : 0), array)) === 1;
 
-const define = <A extends Args, T, U = T, Auth extends Authentication = Authentication>({
+const define = <
+	A extends Args,
+	T,
+	U = T,
+	Auth extends Authentication = Authentication,
+>({
 	name,
 	authentication,
 	...rest

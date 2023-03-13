@@ -30,7 +30,7 @@ server(__filename, () => {
 
 		return throws(
 			async () =>
-				invoke(update, {userId: undefined}, [consultationId, newFields]),
+				invoke(update, {userId: undefined!}, [consultationId, newFields]),
 			/not-authorized/,
 		);
 	});

@@ -3,27 +3,30 @@ import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionS
 import executeTransaction from '../transaction/executeTransaction';
 import type Args from '../Args';
 import type Serializable from '../Serializable';
+import {type Authentication} from '../Authentication';
 import type Params from './Params';
 import type Endpoint from './Endpoint';
 import invoke from './invoke';
 import type Transaction from './Transaction';
 import type Executor from './Executor';
 import type Simulator from './Simulator';
-import Context from './Context';
-import Authentication from '../Authentication';
-import ContextFor from './ContextFor';
+import {type Context} from './Context';
+import type ContextFor from './ContextFor';
 
-const define = <A extends Args, R extends Serializable, Auth extends Authentication = Authentication>({
-		testOnly,
-		authentication,
-		name,
-		validate,
-		run,
-		simulate,
-		transaction,
-		options,
-	}
-	: Params<A, R, Auth>): Endpoint<A, R, Auth> => {
+const define = <
+	A extends Args,
+	R extends Serializable,
+	Auth extends Authentication = Authentication,
+>({
+	testOnly,
+	authentication,
+	name,
+	validate,
+	run,
+	simulate,
+	transaction,
+	options,
+}: Params<A, R, Auth>): Endpoint<A, R, Auth> => {
 	const executor =
 		(Meteor.isServer ? run : simulate ?? run) ?? wrapTransaction(transaction!);
 

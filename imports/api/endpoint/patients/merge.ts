@@ -10,11 +10,13 @@ import {computeUpdate, patients} from '../../patients';
 
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 const {sanitize, updateIndex} = patients;
 
 export default define({
 	name: '/patients/merge',
+	authentication: AuthenticationLoggedIn,
 	validate(
 		oldPatientIds: string[],
 		consultationIds: string[],

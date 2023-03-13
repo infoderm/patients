@@ -1,15 +1,18 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Patients} from '../../collection/patients';
 import {computeUpdate, patients} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
+import EndpointError from '../EndpointError';
 
 const {sanitize, updateIndex, updateTags} = patients;
 
 export default define({
 	name: '/api/patients/update',
+	authentication: AuthenticationLoggedIn,
 	validate(patientId: string, newfields: any) {
 		check(patientId, String);
 		check(newfields, Object);
@@ -23,7 +26,7 @@ export default define({
 		});
 
 		if (patient === null) {
-			throw new Meteor.Error('not-found');
+			throw new EndpointError('not-found');
 		}
 
 		const changes = sanitize(newfields);

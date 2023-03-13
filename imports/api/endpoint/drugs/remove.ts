@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Drugs} from '../../collection/drugs';
 
@@ -6,6 +7,7 @@ import define from '../define';
 
 export default define({
 	name: 'drugs.remove',
+	authentication: AuthenticationLoggedIn,
 	validate(drugId: string) {
 		check(drugId, String);
 	},
