@@ -155,7 +155,7 @@ const GenericStaticPatientCard = ({
 
 	const firstname = patient.firstname || '?';
 	const lastname = patient.lastname || '?';
-	const sex = patient.sex || 'N';
+	const sex = patient.sex ?? 'N';
 
 	const isDead = patient.deathdateModifiedAt instanceof Date;
 

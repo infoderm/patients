@@ -67,7 +67,7 @@ const FixedFab = React.forwardRef(
 					<Fab
 						ref={ref}
 						component={component}
-						disabled={disabled || pending}
+						disabled={Boolean(disabled) || pending}
 						{...rest}
 					/>
 					{pending && <Progress size={68} />}
