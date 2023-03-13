@@ -48,7 +48,7 @@ export default class MongoTransactionExecutionDriver
 		return Collection.rawCollection().findOne(
 			filter,
 			this._makeOptions(options),
-		) as unknown as Promise<null | T>;
+		) as Promise<null | T>;
 	}
 
 	find<T, U = T>(Collection: Collection<T, U>, filter, options?) {

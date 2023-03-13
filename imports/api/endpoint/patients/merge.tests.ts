@@ -45,7 +45,10 @@ server(__filename, () => {
 		});
 
 		// create an irrelevant consultation
-		await newConsultation(invocation, {patientId: patientCId});
+		await newConsultation(invocation, {
+			patientId: patientCId,
+			datetime: new Date(),
+		});
 
 		const documentAId = await newDocument(invocation, {
 			patientId: patientAId,

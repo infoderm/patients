@@ -51,7 +51,10 @@ server(__filename, () => {
 
 		await newConsultation({userId}, {patientId: patientAId});
 		await newAppointment({userId}, {patient: {_id: patientAId}});
-		await newConsultation({userId}, {patientId: patientBId});
+		await newConsultation(
+			{userId},
+			{patientId: patientBId, datetime: new Date()},
+		);
 
 		assert.equal(await Patients.find().countAsync(), 2);
 		assert.equal(await Consultations.find().countAsync(), 3);

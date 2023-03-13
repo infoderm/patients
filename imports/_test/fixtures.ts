@@ -158,10 +158,7 @@ export const create = (template, extra) => {
 	}
 
 	return Object.fromEntries(
-		(extra === undefined || extra === undefined
-			? []
-			: Object.entries(extra)
-		).concat(
+		(extra === undefined ? [] : Object.entries(extra)).concat(
 			Object.entries(template).map(([key, value]) => [
 				key,
 				create(value, extra?.[key]),
@@ -172,7 +169,7 @@ export const create = (template, extra) => {
 
 export const findOneOrThrow = async <T, U = T>(
 	collection: Collection<T, U>,
-	selector?: string | Selector<T>,
+	selector: string | Selector<T> = {},
 ) => {
 	const result = await collection.findOneAsync(selector);
 	if (result === undefined) {
