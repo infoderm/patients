@@ -18,7 +18,6 @@ type Endpoint<
 	C extends ContextFor<Auth> = ContextFor<Auth>,
 > = {
 	readonly name: string;
-	// readonly schema: A extends InferArgs<infer S> ? S : never;
 	readonly schema: ArgsSchema;
 	readonly options?: Options<R>;
 	readonly authentication: Auth;
