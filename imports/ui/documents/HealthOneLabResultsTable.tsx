@@ -145,9 +145,8 @@ const HealthOneLabResultsTable = ({
 							break;
 						}
 
-						default: {
-							throw new Error('Should never happen');
-						}
+						default:
+						// No default
 					}
 			}
 		}
