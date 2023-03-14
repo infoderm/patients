@@ -97,7 +97,7 @@
     "lru-cache": "^7.17.0",
     "medidoc": "1.1.0",
     "meteor-node-stubs": "^1.2.5",
-    "notistack": "^2.0.8",
+    "notistack": "^3.0.0",
     "papaparse": "^5.3.2",
     "pdfjs-dist": "~3.1.81",
     "qrcode.react": "^3.1.0",
