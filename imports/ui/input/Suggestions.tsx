@@ -65,7 +65,7 @@ const Suggestions = React.forwardRef(
 		ref: React.Ref<HTMLDivElement>,
 	) => {
 		const createItemSuggestion = createNewItem && !error && inputValue;
-		const open = hide || (!suggestions?.length && !createItemSuggestion);
+		const open = !hide && Boolean(suggestions?.length || createItemSuggestion);
 		return (
 			<Root ref={ref} open={open}>
 				<UnorderedList {...rest}>
