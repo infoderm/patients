@@ -13,11 +13,11 @@ export const publicationSchema = schema.tuple([
 		.object({
 			/* TODO */
 		})
-		.optional(),
+		.nullable(),
 ]);
 
 const pageQuery = <T, U>(collection: Collection<T, U>) =>
-	function (selector: Selector<T>, options?: Options<T>) {
+	function (selector: Selector<T>, options: Options<T> | null) {
 		const query: Query<T> = {selector, options};
 		selector = {...query.selector, owner: this.userId};
 		options = sanitizeOptions(query.options);
@@ -32,7 +32,7 @@ const pageQuery = <T, U>(collection: Collection<T, U>) =>
 			};
 		}
 
-		return collection.find(selector, options);
+		return collection.find(selector, options ?? undefined);
 	};
 
 export default pageQuery;

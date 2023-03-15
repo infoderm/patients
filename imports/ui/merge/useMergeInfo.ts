@@ -81,14 +81,14 @@ const useMergeInfo = (toMerge: string[]): MergeInfo => {
 		{
 			patientId: {$in: toMerge},
 		},
-		undefined,
+		null,
 	);
 	const documentsLoading = useSubscription(
 		documentsPub,
 		{
 			patientId: {$in: toMerge},
 		},
-		undefined,
+		null,
 	);
 	const attachmentsLoading = useSubscription(
 		attachmentsPub,
