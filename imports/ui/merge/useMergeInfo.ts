@@ -74,7 +74,7 @@ const useMergeInfo = (toMerge: string[]): MergeInfo => {
 	const patientsLoading = useSubscription(
 		patientsPub,
 		{_id: {$in: toMerge}},
-		undefined,
+		null,
 	);
 	const consultationsLoading = useSubscription(
 		consultationsPub,
@@ -95,7 +95,7 @@ const useMergeInfo = (toMerge: string[]): MergeInfo => {
 		{
 			'meta.attachedToPatients': {$in: toMerge},
 		},
-		undefined,
+		null,
 	);
 
 	const loading =

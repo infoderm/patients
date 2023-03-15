@@ -21,17 +21,17 @@ export default define({
 			.object({
 				/* TODO Options<AttachmentDocument> */
 			})
-			.optional(),
+			.nullable(),
 	]),
 	cursor(
 		filter: Filter<AttachmentDocument>,
-		options?: Options<AttachmentDocument>,
+		options: Options<AttachmentDocument> | null,
 	) {
 		const selector = {
 			...filter,
 			userId: this.userId,
 		} as Selector<AttachmentDocument>;
 
-		return Attachments.find(selector, options);
+		return Attachments.find(selector, options ?? undefined);
 	},
 });
