@@ -1,26 +1,44 @@
 import {type Subscription} from 'meteor/meteor';
 
 import schema from '../lib/schema';
+import type Optional from '../lib/types/Optional';
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
 import type Collection from './Collection';
 import {AuthenticationLoggedIn} from './Authentication';
+import type Filter from './transaction/Filter';
+import type Selector from './Selector';
 
-export const countPublicationName = (QueriedCollection, {values}) =>
+export const countPublicationName = <T, U = T>(
+	QueriedCollection: Collection<T, U>,
+	{values}: {values: string[]},
+) =>
+	// @ts-expect-error Accessing private property Collection._name.
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;
 
-export const countPublicationKey = (QueriedCollection, {values}, query) =>
+export const countPublicationKey = <T, U = T>(
+	QueriedCollection: Collection<T, U>,
+	{values}: {values: string[]},
+	query?: Filter<T> | null,
+) =>
+	// @ts-expect-error Accessing private property Collection._name.
 	`${QueriedCollection._name}-${values.join('/')}-${JSON.stringify(
 		query ?? {},
 	)}`;
 
-type CountOptions = {
+type CountOptions<T> = {
 	fields: string[];
-	discretize: (x: object) => Iterable<[string, string | number]>;
+	discretize: (x: T) => Iterable<[string, string | number]>;
 	values: string[];
 };
 
-export const getCountOptions = (options): CountOptions =>
+type InputCountOptions<T> =
+	| string
+	| Optional<CountOptions<T>, 'discretize' | 'values'>;
+
+export const getCountOptions = <T>(
+	options: InputCountOptions<T>,
+): CountOptions<T> =>
 	typeof options === 'string'
 		? getCountOptions({fields: [options]})
 		: {
@@ -31,12 +49,12 @@ export const getCountOptions = (options): CountOptions =>
 
 const countPublication = <T, U = T>(
 	QueriedCollection: Collection<T, U>,
-	{fields, discretize, values}: CountOptions,
+	{fields, discretize, values}: CountOptions<T>,
 ) =>
-	function (this: Subscription, query) {
+	function (this: Subscription, filter: Filter<T> | null) {
 		const collection = countCollection;
-		const key = countPublicationKey(QueriedCollection, {values}, query);
-		const selector = {...query, owner: this.userId};
+		const key = countPublicationKey(QueriedCollection, {values}, filter);
+		const selector = {...filter, owner: this.userId} as Selector<T>;
 		const options = {
 			fields: Object.fromEntries(fields.map((field) => [field, 1])),
 		};
@@ -118,15 +136,20 @@ const countPublication = <T, U = T>(
 		});
 	};
 
-export const publishCount = (QueriedCollection, options) => {
-	options = getCountOptions(options);
+export const publishCount = <T, U = T>(
+	QueriedCollection: Collection<T, U>,
+	inputOptions: InputCountOptions<T>,
+) => {
+	const options = getCountOptions(inputOptions);
 	return define({
 		name: countPublicationName(QueriedCollection, options),
 		authentication: AuthenticationLoggedIn,
 		schema: schema.tuple([
-			schema.object({
-				/* TODO */
-			}),
+			schema
+				.object({
+					/* TODO */
+				})
+				.nullable(),
 		]),
 		handle: countPublication(QueriedCollection, options),
 	});

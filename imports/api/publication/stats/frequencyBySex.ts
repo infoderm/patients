@@ -30,9 +30,9 @@ export default define({
 			.object({
 				/* TODO */
 			})
-			.optional(),
+			.nullable(),
 	]),
-	handle(filter?: Filter<ConsultationDocument>) {
+	handle(filter: Filter<ConsultationDocument> | null) {
 		const collection = countCollection;
 		const key = frequencySexKey(filter);
 		const selector = {

@@ -3,6 +3,9 @@ import useSubscription from '../../api/publication/useSubscription';
 import useItem from '../../api/publication/useItem';
 
 import {countPublicationName, countPublicationKey} from '../../api/stats';
+import type Collection from '../../api/Collection';
+import type Publication from '../../api/publication/Publication';
+import type Filter from '../../api/transaction/Filter';
 
 type Result<T> = {
 	loading: boolean;
@@ -10,17 +13,19 @@ type Result<T> = {
 	count?: T;
 };
 
-const makeHistogram =
-	<T>(QueriedCollection, values) =>
-	(query?: object): Result<T> => {
-		const name = countPublicationName(QueriedCollection, {values});
-		const publication = {name};
+const makeHistogram = <C, T = any, U = T>(
+	QueriedCollection: Collection<T, U>,
+	values: string[],
+) => {
+	const name = countPublicationName(QueriedCollection, {values});
+	const publication: Publication<[Filter<T> | null]> = {name};
+	return (query?: Filter<T>): Result<C> => {
 		const key = countPublicationKey(QueriedCollection, {values}, query);
 
-		const isLoading = useSubscription(publication, query);
+		const isLoading = useSubscription(publication, query ?? null);
 		const loading = isLoading();
 
-		const results: PollResult<T> | undefined = useItem(
+		const results: PollResult<C> | undefined = useItem(
 			loading ? null : Count,
 			{_id: key},
 			undefined,
@@ -33,5 +38,6 @@ const makeHistogram =
 			count: results?.count,
 		};
 	};
+};
 
 export default makeHistogram;

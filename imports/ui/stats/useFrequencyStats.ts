@@ -18,7 +18,7 @@ type Result = {
 const useFrequencyStats = (filter?: Filter<ConsultationDocument>): Result => {
 	const key = frequencySexKey(filter);
 
-	const isLoading = useSubscription(publication, filter);
+	const isLoading = useSubscription(publication, filter ?? null);
 	const loading = isLoading();
 
 	const results = useItem(loading ? null : Count, {_id: key}, undefined, [
