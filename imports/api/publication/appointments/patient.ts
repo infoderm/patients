@@ -18,16 +18,16 @@ export default define({
 			.object({
 				/* TODO Options<AppointmentDocument> */
 			})
-			.optional(),
+			.nullable(),
 	]),
-	cursor(patientId, options?: Options<AppointmentDocument>) {
+	cursor(patientId, options: Options<AppointmentDocument> | null) {
 		return Appointments.find(
 			{
 				owner: this.userId,
 				isDone: false,
 				patientId,
 			},
-			options,
+			options ?? undefined,
 		);
 	},
 });

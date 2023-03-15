@@ -15,9 +15,9 @@ export default define({
 			.object({
 				/* TODO */
 			})
-			.optional(),
+			.nullable(),
 	]),
-	cursor(_id, options?: Options<PatientDocument>) {
-		return Patients.find({owner: this.userId, _id}, options);
+	cursor(_id, options: Options<PatientDocument> | null) {
+		return Patients.find({owner: this.userId, _id}, options ?? undefined);
 	},
 });

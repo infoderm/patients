@@ -16,15 +16,15 @@ export default define({
 			.object({
 				/* TODO Options<ConsultationDocument> */
 			})
-			.optional(),
+			.nullable(),
 	]),
-	cursor(_id, options?: Options<ConsultationDocument>) {
+	cursor(_id, options: Options<ConsultationDocument> | null) {
 		return Consultations.find(
 			{
 				owner: this.userId,
 				_id,
 			},
-			options,
+			options ?? undefined,
 		);
 	},
 });
