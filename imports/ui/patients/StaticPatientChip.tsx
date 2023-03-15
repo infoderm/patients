@@ -49,20 +49,25 @@ const Chip = styled(MuiChip, {
 		  }),
 }));
 
+type Patient = {
+	_id: string;
+	firstname?: string;
+	lastname?: string;
+	photo?: string;
+};
+
 type Props = {
 	className?: string;
 	style?: React.CSSProperties;
 	loading?: boolean;
 	found?: boolean;
-	patient: {
-		_id: string;
-		firstname?: string;
-		lastname?: string;
-		photo?: string;
-	};
+	patient: Patient;
 	onClick?: () => void;
 	onDelete?: () => void;
 };
+
+const displayName = ({firstname, lastname}: Patient) =>
+	[lastname, firstname].filter(Boolean).join(' ') || 'Unknown';
 
 const StaticPatientChip = React.forwardRef(
 	(
@@ -102,11 +107,9 @@ const StaticPatientChip = React.forwardRef(
 						? patient._id
 						: !found
 						? willBeCreated
-							? [patient.lastname, patient.firstname, '(new)']
-									.filter(Boolean)
-									.join(' ')
+							? `${displayName(patient)} (new)`
 							: `Not found`
-						: `${patient.lastname} ${patient.firstname}`
+						: displayName(patient)
 				}
 				loading={loading}
 				found={found}
