@@ -31,7 +31,6 @@ type RootFilterOperators<TSchema> = {
 		$diacriticSensitive?: boolean;
 	};
 	$where?: string | ((this: TSchema) => boolean);
-	$comment?: string | Document;
 } & Document;
 
 type FilterOperators<TValue> = {
