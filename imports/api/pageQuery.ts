@@ -17,10 +17,13 @@ export const publicationSchema = schema.tuple([
 		.nullable(),
 ]);
 
-const pageQuery = <T extends Document, U = T>(collection: Collection<T, U>) =>
+const pageQuery = <T extends Document, U = T>(
+	collection: Collection<T, U>,
+	filter?: Selector<T>,
+) =>
 	function (selector: Selector<T>, options: Options<T> | null) {
 		const query: Query<T> = {selector, options};
-		selector = {...query.selector, owner: this.userId};
+		selector = {...query.selector, ...filter, owner: this.userId};
 		options = sanitizeOptions(query.options);
 
 		if (options?.skip) {
