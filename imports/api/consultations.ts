@@ -15,8 +15,8 @@ import {
 } from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
 import type TransactionDriver from './transaction/TransactionDriver';
-import type Filter from './transaction/Filter';
-import type Options from './Options';
+import type Filter from './QueryFilter';
+import type Options from './QueryOptions';
 import {
 	type Entry,
 	makeSanitize,
@@ -26,7 +26,7 @@ import {
 	yieldResettableKey,
 } from './update';
 import findOneSync from './publication/findOneSync';
-import type Selector from './Selector';
+import type Selector from './QuerySelector';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;

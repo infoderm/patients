@@ -1,9 +1,8 @@
 import {type ClientSession} from 'mongodb';
 import type Collection from '../Collection';
+import type Filter from '../QueryFilter';
 import {type Options, type UpdateResult} from './TransactionDriver';
 import type TransactionDriver from './TransactionDriver';
-
-import type Filter from './Filter';
 
 export default class MongoTransactionExecutionDriver
 	implements TransactionDriver

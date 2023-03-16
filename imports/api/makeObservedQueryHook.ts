@@ -9,8 +9,8 @@ import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 import type GenericQueryHook from './GenericQueryHook';
 import findOneSync from './publication/findOneSync';
-import type Selector from './Selector';
-import type Options from './Options';
+import type Selector from './QuerySelector';
+import type Options from './QueryOptions';
 import type SubscriptionHandle from './publication/SubscriptionHandle';
 import {type ObserveOptions} from './makeObservedQueryPublication';
 

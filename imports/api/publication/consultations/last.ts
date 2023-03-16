@@ -4,8 +4,8 @@ import {
 	type ConsultationDocument,
 	Consultations,
 } from '../../collection/consultations';
-import type Selector from '../../Selector';
-import type Filter from '../../transaction/Filter';
+import type Selector from '../../QuerySelector';
+import type Filter from '../../QueryFilter';
 import define from '../define';
 
 export default define({

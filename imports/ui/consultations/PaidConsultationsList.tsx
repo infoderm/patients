@@ -10,7 +10,7 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import {capitalized} from '../../api/string';
 import Center from '../grid/Center';
 import YearJumper from '../navigation/YearJumper';
-import type Filter from '../../api/transaction/Filter';
+import type Filter from '../../api/QueryFilter';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import FixedFab from '../button/FixedFab';
 import ConsultationsStatsCard from './ConsultationsStatsCard';

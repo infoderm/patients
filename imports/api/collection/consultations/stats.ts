@@ -1,5 +1,5 @@
 import Collection from '../../Collection';
-import type Selector from '../../Selector';
+import type Selector from '../../QuerySelector';
 import {collection, type ConsultationDocument} from '../consultations';
 
 export const key = (query: Selector<ConsultationDocument>) =>

@@ -3,7 +3,7 @@ import useSubscription from '../../api/publication/useSubscription';
 import useItem from '../../api/publication/useItem';
 import publication from '../../api/publication/consultations/stats';
 import {type ConsultationDocument} from '../../api/collection/consultations';
-import type Selector from '../../api/Selector';
+import type Selector from '../../api/QuerySelector';
 
 const useConsultationsStats = (query: Selector<ConsultationDocument>) => {
 	const isLoading = useSubscription(publication, query);

@@ -1,8 +1,8 @@
 import schema from '../lib/schema';
 import type Collection from './Collection';
 import type Query from './Query';
-import type Selector from './Selector';
-import type Options from './Options';
+import type Selector from './QuerySelector';
+import type Options from './QueryOptions';
 import sanitizeOptions from './sanitizeOptions';
 
 export const publicationSchema = schema.tuple([

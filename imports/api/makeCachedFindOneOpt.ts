@@ -4,8 +4,8 @@ import {type Meteor} from 'meteor/meteor';
 import useRandom from '../ui/hooks/useRandom';
 import type Publication from './publication/Publication';
 import subscribe, {type SubscriptionError} from './publication/subscribe';
-import type Options from './Options';
-import type Selector from './Selector';
+import type Options from './QueryOptions';
+import type Selector from './QuerySelector';
 import type Collection from './Collection';
 
 type LiveQueryHandle = Meteor.LiveQueryHandle;

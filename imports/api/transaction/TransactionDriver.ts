@@ -8,7 +8,7 @@ import {
 } from 'mongodb';
 
 import type Collection from '../Collection';
-import type Filter from './Filter';
+import type Filter from '../QueryFilter';
 
 export type ObjectId = string;
 

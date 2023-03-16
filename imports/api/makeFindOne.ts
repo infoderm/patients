@@ -3,8 +3,8 @@ import type Publication from './publication/Publication';
 import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
 import type Collection from './Collection';
-import type Selector from './Selector';
-import type Options from './Options';
+import type Selector from './QuerySelector';
+import type Options from './QueryOptions';
 
 type ReturnValue<U, I> =
 	| {loading: boolean; found: false; fields: I & Partial<U>}

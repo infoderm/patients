@@ -6,7 +6,7 @@ import mergeFields from '../../api/query/mergeFields';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 import type Projection from '../../api/Projection';
-import type Selector from '../../api/Selector';
+import type Selector from '../../api/QuerySelector';
 
 const DEBOUNCE_OPTIONS = {leading: false};
 // TODO this does not work because we do not render on an empty input

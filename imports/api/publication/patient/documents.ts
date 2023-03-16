@@ -1,7 +1,7 @@
 import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {type DocumentDocument, Documents} from '../../collection/documents';
-import type Options from '../../Options';
+import type Options from '../../QueryOptions';
 import define from '../define';
 
 export default define({

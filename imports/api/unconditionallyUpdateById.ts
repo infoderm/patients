@@ -3,7 +3,7 @@ import {Meteor} from 'meteor/meteor';
 import type Args from './Args';
 
 import type TransactionDriver from './transaction/TransactionDriver';
-import type Filter from './transaction/Filter';
+import type Filter from './QueryFilter';
 import type Collection from './Collection';
 import type Modifier from './Modifier';
 import {type AuthenticatedContext} from './endpoint/Context';

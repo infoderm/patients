@@ -8,7 +8,7 @@ import mergeFields from '../../api/query/mergeFields';
 import {normalizeSearch} from '../../api/string';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
-import type Options from '../../api/Options';
+import type Options from '../../api/QueryOptions';
 import {type PatientCacheItem} from '../../api/collection/patients/search/cache';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 

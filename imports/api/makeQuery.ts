@@ -5,8 +5,8 @@ import useSubscription from './publication/useSubscription';
 import useCursor from './publication/useCursor';
 
 import type Collection from './Collection';
-import type Selector from './Selector';
-import type Options from './Options';
+import type Selector from './QuerySelector';
+import type Options from './QueryOptions';
 
 const makeQuery =
 	<T, U>(

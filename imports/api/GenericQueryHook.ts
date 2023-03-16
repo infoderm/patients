@@ -1,6 +1,6 @@
 import {type DependencyList} from 'react';
-import type Options from './Options';
-import type Selector from './Selector';
+import type Options from './QueryOptions';
+import type Selector from './QuerySelector';
 
 type GenericQueryHookReturnType<R> = {
 	loading?: boolean;

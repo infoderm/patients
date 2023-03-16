@@ -4,9 +4,9 @@ import {
 	type AttachmentDocument,
 	Attachments,
 } from '../../collection/attachments';
-import type Options from '../../Options';
-import type Selector from '../../Selector';
-import type Filter from '../../transaction/Filter';
+import type Options from '../../QueryOptions';
+import type Selector from '../../QuerySelector';
+import type Filter from '../../QueryFilter';
 
 import define from '../define';
 

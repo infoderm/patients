@@ -3,7 +3,7 @@ import {findLastConsultationInIntervalSync} from '../../api/consultations';
 import useSubscription from '../../api/publication/useSubscription';
 import useReactive from '../../api/publication/useReactive';
 import last from '../../api/publication/consultations/interval/last';
-import type Filter from '../../api/transaction/Filter';
+import type Filter from '../../api/QueryFilter';
 
 import {type ConsultationDocument} from '../../api/collection/consultations';
 

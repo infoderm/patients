@@ -1,8 +1,8 @@
 import schema from '../lib/schema';
 import type Collection from './Collection';
 import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
-import type Options from './Options';
-import type Selector from './Selector';
+import type Options from './QueryOptions';
+import type Selector from './QuerySelector';
 
 export type ObserveOptions = {
 	added?: boolean;

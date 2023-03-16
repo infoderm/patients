@@ -10,9 +10,9 @@ import intersectsInterval from '../../api/interval/intersectsInterval';
 import useSubscription from '../../api/publication/useSubscription';
 import useCursor from '../../api/publication/useCursor';
 import intersects from '../../api/publication/availability/intersects';
-import type Filter from '../../api/transaction/Filter';
-import type Options from '../../api/Options';
-import type Selector from '../../api/Selector';
+import type Filter from '../../api/QueryFilter';
+import type Options from '../../api/QueryOptions';
+import type Selector from '../../api/QuerySelector';
 
 const useAvailability = (
 	begin: Date,

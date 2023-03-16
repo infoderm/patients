@@ -10,7 +10,7 @@ import FixedFab from '../button/FixedFab';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import YearJumper from '../navigation/YearJumper';
-import type Filter from '../../api/transaction/Filter';
+import type Filter from '../../api/QueryFilter';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import ConsultationsPager from './ConsultationsPager';
 

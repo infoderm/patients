@@ -33,10 +33,10 @@ import type TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
 import type Publication from './publication/Publication';
 import type TransactionDriver from './transaction/TransactionDriver';
-import type Filter from './transaction/Filter';
+import type Filter from './QueryFilter';
 import Collection from './Collection';
-import type Selector from './Selector';
-import type Options from './Options';
+import type Selector from './QuerySelector';
+import type Options from './QueryOptions';
 import type Modifier from './Modifier';
 import {AuthenticationLoggedIn} from './Authentication';
 

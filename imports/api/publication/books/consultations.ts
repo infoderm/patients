@@ -5,7 +5,7 @@ import {
 	type ConsultationDocument,
 	Consultations,
 } from '../../collection/consultations';
-import type Options from '../../Options';
+import type Options from '../../QueryOptions';
 import define from '../define';
 
 export default define({

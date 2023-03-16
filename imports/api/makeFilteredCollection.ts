@@ -2,9 +2,9 @@ import {type DependencyList} from 'react';
 
 import schema from '../lib/schema';
 import Collection from './Collection';
-import type Filter from './transaction/Filter';
-import type Selector from './Selector';
-import type Options from './Options';
+import type Filter from './QueryFilter';
+import type Selector from './QuerySelector';
+import type Options from './QueryOptions';
 
 import define from './publication/define';
 import useCursor from './publication/useCursor';

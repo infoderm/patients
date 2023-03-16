@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import type TransactionDriver from './transaction/TransactionDriver';
 
 import type Collection from './Collection';
-import type Filter from './transaction/Filter';
+import type Filter from './QueryFilter';
 import {type AuthenticatedContext} from './endpoint/Context';
 
 type Base = {

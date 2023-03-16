@@ -6,8 +6,8 @@ import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
 import type Collection from './Collection';
 import {AuthenticationLoggedIn} from './Authentication';
-import type Filter from './transaction/Filter';
-import type Selector from './Selector';
+import type Filter from './QueryFilter';
+import type Selector from './QuerySelector';
 
 export const countPublicationName = <T, U = T>(
 	QueriedCollection: Collection<T, U>,

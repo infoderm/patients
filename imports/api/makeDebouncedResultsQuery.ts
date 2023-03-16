@@ -3,8 +3,8 @@ import {type DependencyList, useEffect, useRef} from 'react';
 import type Publication from './publication/Publication';
 import useSubscription from './publication/useSubscription';
 import useCursor from './publication/useCursor';
-import type Options from './Options';
-import type Selector from './Selector';
+import type Options from './QueryOptions';
+import type Selector from './QuerySelector';
 import type Collection from './Collection';
 
 const init = [];

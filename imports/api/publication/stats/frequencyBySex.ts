@@ -6,8 +6,8 @@ import {
 } from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 import {countCollection, type PollResult} from '../../collection/stats';
-import type Selector from '../../Selector';
-import type Filter from '../../transaction/Filter';
+import type Selector from '../../QuerySelector';
+import type Filter from '../../QueryFilter';
 import define from '../define';
 
 export const frequencySexKey = (query) =>

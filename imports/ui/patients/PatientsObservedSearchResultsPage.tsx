@@ -12,7 +12,7 @@ import mergeFields from '../../api/query/mergeFields';
 
 import Refresh from '../navigation/Refresh';
 import {type PatientCacheResult} from '../../api/collection/patients/search/cache';
-import type Selector from '../../api/Selector';
+import type Selector from '../../api/QuerySelector';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';

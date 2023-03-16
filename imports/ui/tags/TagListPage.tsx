@@ -1,8 +1,8 @@
 import React from 'react';
 
 import type GenericQueryHook from '../../api/GenericQueryHook';
-import type Options from '../../api/Options';
-import type Selector from '../../api/Selector';
+import type Options from '../../api/QueryOptions';
+import type Selector from '../../api/QuerySelector';
 import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';

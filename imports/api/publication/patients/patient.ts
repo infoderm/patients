@@ -2,7 +2,7 @@ import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {type PatientDocument, Patients} from '../../collection/patients';
-import type Options from '../../Options';
+import type Options from '../../QueryOptions';
 
 import define from '../define';
 

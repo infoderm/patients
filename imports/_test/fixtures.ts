@@ -12,7 +12,7 @@ import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
 import reset from '../api/endpoint/_dev/reset';
 import type Collection from '../api/Collection';
-import type Selector from '../api/Selector';
+import type Selector from '../api/QuerySelector';
 
 export const randomUserId = () => Random.id();
 export const randomPassword = () => Random.id();

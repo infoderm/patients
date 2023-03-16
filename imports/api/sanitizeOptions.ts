@@ -1,4 +1,4 @@
-import type Options from './Options';
+import type Options from './QueryOptions';
 
 const sanitizeOptions = <T>(options: Options<T> | null): Options<T> | null => {
 	if (options === null) return null;

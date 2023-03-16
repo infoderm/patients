@@ -29,7 +29,7 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 import type GenericQueryHook from '../../api/GenericQueryHook';
 import RenameButton from '../button/RenameButton';
-import type Selector from '../../api/Selector';
+import type Selector from '../../api/QuerySelector';
 
 type Props<T> = {
 	open: boolean;

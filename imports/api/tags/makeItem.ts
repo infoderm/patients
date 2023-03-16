@@ -1,7 +1,7 @@
 import {type DependencyList} from 'react';
 
 import type Collection from '../Collection';
-import type Selector from '../Selector';
+import type Selector from '../QuerySelector';
 
 import useSubscription from '../publication/useSubscription';
 import useItem from '../publication/useItem';

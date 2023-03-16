@@ -5,7 +5,7 @@ import {
 	type AttachmentDocument,
 	Attachments,
 } from '../../collection/attachments';
-import type Options from '../../Options';
+import type Options from '../../QueryOptions';
 
 import define from '../define';
 

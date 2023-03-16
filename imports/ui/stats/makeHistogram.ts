@@ -5,7 +5,7 @@ import useItem from '../../api/publication/useItem';
 import {countPublicationName, countPublicationKey} from '../../api/stats';
 import type Collection from '../../api/Collection';
 import type Publication from '../../api/publication/Publication';
-import type Filter from '../../api/transaction/Filter';
+import type Filter from '../../api/QueryFilter';
 
 type Result<T> = {
 	loading: boolean;
