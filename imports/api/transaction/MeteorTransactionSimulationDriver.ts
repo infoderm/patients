@@ -1,6 +1,7 @@
 import {type InferIdType} from 'mongodb';
 
 import type Collection from '../Collection';
+import type Document from '../Document';
 import type TransactionDriver from './TransactionDriver';
 
 export default class MeteorTransactionSimulationDriver
@@ -10,7 +11,11 @@ export default class MeteorTransactionSimulationDriver
 		return null;
 	}
 
-	async insertOne<T, U = T>(Collection: Collection<T, U>, doc, options?) {
+	async insertOne<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		doc,
+		options?,
+	) {
 		const insertedId = (await Collection.insertAsync(
 			doc,
 			this._makeOptions(options),
@@ -22,7 +27,11 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
+	async insertMany<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		docs,
+		options?,
+	) {
 		const insertedIds: Array<InferIdType<T>> = [];
 		for (const doc of docs) {
 			// eslint-disable-next-line no-await-in-loop
@@ -37,7 +46,11 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	async findOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async findOne<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		const found = await Collection.findOneAsync(
 			filter,
 			this._makeOptions(options),
@@ -45,15 +58,27 @@ export default class MeteorTransactionSimulationDriver
 		return found ?? null;
 	}
 
-	find<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	find<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		return Collection.find(filter, this._makeOptions(options));
 	}
 
-	async fetch<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async fetch<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		return this.find<T, U>(Collection, filter, options).fetchAsync();
 	}
 
-	async deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async deleteOne<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		options = this._makeOptions(options);
 		if (filter._id === undefined) {
 			const found = await this.findOne(Collection, filter, options);
@@ -73,7 +98,11 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	async deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async deleteMany<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		const deletedCount = await Collection.removeAsync(
 			filter,
 			this._makeOptions(options),
@@ -84,7 +113,7 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	async updateOne<T, U = T>(
+	async updateOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,
 		update,
@@ -129,7 +158,7 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	async updateMany<T, U = T>(
+	async updateMany<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,
 		update,
@@ -168,7 +197,7 @@ export default class MeteorTransactionSimulationDriver
 		};
 	}
 
-	async distinct<T, U = T>(
+	async distinct<T extends Document, U = T>(
 		_Collection: Collection<T, U>,
 		_key,
 		_filter?,

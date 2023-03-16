@@ -1,5 +1,6 @@
 import schema from '../lib/schema';
 import type Collection from './Collection';
+import type Document from './Document';
 import type Query from './Query';
 import type Selector from './QuerySelector';
 import type Options from './QueryOptions';
@@ -16,7 +17,7 @@ export const publicationSchema = schema.tuple([
 		.nullable(),
 ]);
 
-const pageQuery = <T, U>(collection: Collection<T, U>) =>
+const pageQuery = <T extends Document, U = T>(collection: Collection<T, U>) =>
 	function (selector: Selector<T>, options: Options<T> | null) {
 		const query: Query<T> = {selector, options};
 		selector = {...query.selector, owner: this.userId};

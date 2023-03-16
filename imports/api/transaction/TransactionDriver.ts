@@ -8,6 +8,7 @@ import {
 } from 'mongodb';
 
 import type Collection from '../Collection';
+import type Document from '../Document';
 import type Filter from '../QueryFilter';
 
 export type ObjectId = string;
@@ -26,54 +27,54 @@ export type Options = Record<string, any>;
 type TransactionDriver = {
 	session: ClientSession | null;
 	// TODO template depends on Collection document type
-	insertOne: <T, U = T>(
+	insertOne: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		doc: any,
 		options?: Options,
 	) => Promise<InsertOneResult<T>>;
-	insertMany: <T, U = T>(
+	insertMany: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		docs: any[],
 		options?: Options,
 	) => Promise<InsertManyResult<T>>;
-	findOne: <T, U = T>(
+	findOne: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
 	) => Promise<null | T>;
-	find: <T, U = T>(
+	find: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
 	) => any; // TODO cursor type
-	fetch: <T, U = T>(
+	fetch: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
 	) => Promise<Array<WithId<T>>>;
-	deleteOne: <T, U = T>(
+	deleteOne: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
 	) => Promise<DeleteResult>;
-	deleteMany: <T, U = T>(
+	deleteMany: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		options?: Options,
 	) => Promise<DeleteResult>;
-	updateOne: <T, U = T>(
+	updateOne: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		update: any,
 		options?: Options,
 	) => Promise<UpdateResult>;
-	updateMany: <T, U = T>(
+	updateMany: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		update: any,
 		options?: Options,
 	) => Promise<UpdateResult>;
-	distinct: <T, U = T>(
+	distinct: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		key: string,
 		filter?: Filter<T>,

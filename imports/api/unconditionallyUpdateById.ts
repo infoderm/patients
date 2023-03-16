@@ -5,6 +5,7 @@ import type Args from './Args';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './QueryFilter';
 import type Collection from './Collection';
+import type Document from './Document';
 import type Modifier from './Modifier';
 import {type AuthenticatedContext} from './endpoint/Context';
 
@@ -18,7 +19,7 @@ type OpFunction<A extends Args, T> = (
 
 type Op<A extends Args, T> = OpFunction<A, T> | Modifier<T>;
 
-const unconditionallyUpdateById = <A extends Args, T, U>(
+const unconditionallyUpdateById = <A extends Args, T extends Document, U = T>(
 	collection: Collection<T, U>,
 	op: Op<A, T>,
 	ownerKey = 'owner',

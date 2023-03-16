@@ -1,5 +1,6 @@
 import {type ClientSession} from 'mongodb';
 import type Collection from '../Collection';
+import type Document from '../Document';
 import type Filter from '../QueryFilter';
 import {type Options, type UpdateResult} from './TransactionDriver';
 import type TransactionDriver from './TransactionDriver';
@@ -17,7 +18,7 @@ export default class MongoTransactionExecutionDriver
 		return this.#session;
 	}
 
-	async insertOne<T, U = T>(
+	async insertOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		doc,
 		options?: Options,
@@ -30,7 +31,11 @@ export default class MongoTransactionExecutionDriver
 		);
 	}
 
-	async insertMany<T, U = T>(Collection: Collection<T, U>, docs, options?) {
+	async insertMany<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		docs,
+		options?,
+	) {
 		return Collection.rawCollection().insertMany(
 			// TODO skip _id creation if it already exists
 			// @ts-expect-error _makeNewID is a private method
@@ -39,7 +44,7 @@ export default class MongoTransactionExecutionDriver
 		);
 	}
 
-	async findOne<T, U = T>(
+	async findOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,
 		options?: Options,
@@ -50,29 +55,45 @@ export default class MongoTransactionExecutionDriver
 		) as Promise<null | T>;
 	}
 
-	find<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	find<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		return Collection.rawCollection().find(filter, this._makeOptions(options));
 	}
 
-	async fetch<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async fetch<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		return this.find<T, U>(Collection, filter, options).toArray();
 	}
 
-	async deleteOne<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async deleteOne<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		return Collection.rawCollection().deleteOne(
 			filter,
 			this._makeOptions(options),
 		);
 	}
 
-	async deleteMany<T, U = T>(Collection: Collection<T, U>, filter, options?) {
+	async deleteMany<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		options?,
+	) {
 		return Collection.rawCollection().deleteMany(
 			filter,
 			this._makeOptions(options),
 		);
 	}
 
-	async updateOne<T, U = T>(
+	async updateOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,
 		update,
@@ -85,7 +106,7 @@ export default class MongoTransactionExecutionDriver
 		) as unknown as Promise<UpdateResult>;
 	}
 
-	async updateMany<T, U = T>(
+	async updateMany<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,
 		update,
@@ -98,7 +119,7 @@ export default class MongoTransactionExecutionDriver
 		) as Promise<UpdateResult>;
 	}
 
-	async distinct<T, U = T>(
+	async distinct<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		key,
 		filter?,
@@ -115,7 +136,7 @@ export default class MongoTransactionExecutionDriver
 		return {session: this.#session, ...options};
 	}
 
-	private _makeUpdate<T, U = T>(
+	private _makeUpdate<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		update: any,

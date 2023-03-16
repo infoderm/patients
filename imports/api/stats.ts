@@ -5,18 +5,19 @@ import type Optional from '../lib/types/Optional';
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
 import type Collection from './Collection';
+import type Document from './Document';
 import {AuthenticationLoggedIn} from './Authentication';
 import type Filter from './QueryFilter';
 import type Selector from './QuerySelector';
 
-export const countPublicationName = <T, U = T>(
+export const countPublicationName = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{values}: {values: string[]},
 ) =>
 	// @ts-expect-error Accessing private property Collection._name.
 	`${countCollection}.${QueriedCollection._name}-${values.join('/')}`;
 
-export const countPublicationKey = <T, U = T>(
+export const countPublicationKey = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{values}: {values: string[]},
 	query?: Filter<T> | null,
@@ -47,7 +48,7 @@ export const getCountOptions = <T>(
 				...options,
 		  };
 
-const countPublication = <T, U = T>(
+const countPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{fields, discretize, values}: CountOptions<T>,
 ) =>
@@ -136,7 +137,7 @@ const countPublication = <T, U = T>(
 		});
 	};
 
-export const publishCount = <T, U = T>(
+export const publishCount = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	inputOptions: InputCountOptions<T>,
 ) => {

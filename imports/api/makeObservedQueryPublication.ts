@@ -1,5 +1,6 @@
 import schema from '../lib/schema';
 import type Collection from './Collection';
+import type Document from './Document';
 import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
 import type Options from './QueryOptions';
 import type Selector from './QuerySelector';
@@ -30,7 +31,7 @@ export const publicationSchema = schema.tuple([
 		.nullable(),
 ]);
 
-const makeObservedQueryPublication = <T, U = T>(
+const makeObservedQueryPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>

@@ -6,11 +6,12 @@ import useCursor from './publication/useCursor';
 import type Options from './QueryOptions';
 import type Selector from './QuerySelector';
 import type Collection from './Collection';
+import type Document from './Document';
 
 const init = [];
 
 const makeDebouncedResultsQuery =
-	<T, U>(
+	<T extends Document, U = T>(
 		collection: Collection<T, U>,
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>

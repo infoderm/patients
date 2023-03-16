@@ -7,6 +7,7 @@ import subscribe, {type SubscriptionError} from './publication/subscribe';
 import type Options from './QueryOptions';
 import type Selector from './QuerySelector';
 import type Collection from './Collection';
+import type Document from './Document';
 
 type LiveQueryHandle = Meteor.LiveQueryHandle;
 
@@ -15,7 +16,7 @@ type LiveQueryHandle = Meteor.LiveQueryHandle;
  * parameters on the same page.
  */
 const makeCachedFindOneOpt =
-	<T, U>(
+	<T extends Document, U = T>(
 		collection: Collection<T, U>,
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>

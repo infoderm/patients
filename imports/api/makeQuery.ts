@@ -5,11 +5,12 @@ import useSubscription from './publication/useSubscription';
 import useCursor from './publication/useCursor';
 
 import type Collection from './Collection';
+import type Document from './Document';
 import type Selector from './QuerySelector';
 import type Options from './QueryOptions';
 
 const makeQuery =
-	<T, U>(
+	<T extends Document, U = T>(
 		collection: Collection<T, U>,
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>

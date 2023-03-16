@@ -4,6 +4,7 @@ import useItem from '../../api/publication/useItem';
 
 import {countPublicationName, countPublicationKey} from '../../api/stats';
 import type Collection from '../../api/Collection';
+import type Document from '../../api/Document';
 import type Publication from '../../api/publication/Publication';
 import type Filter from '../../api/QueryFilter';
 
@@ -13,7 +14,7 @@ type Result<T> = {
 	count?: T;
 };
 
-const makeHistogram = <C, T = any, U = T>(
+const makeHistogram = <C, T extends Document = any, U = T>(
 	QueriedCollection: Collection<T, U>,
 	values: string[],
 ) => {

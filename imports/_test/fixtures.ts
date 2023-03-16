@@ -12,6 +12,7 @@ import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
 import reset from '../api/endpoint/_dev/reset';
 import type Collection from '../api/Collection';
+import type Document from '../api/Document';
 import type Selector from '../api/QuerySelector';
 
 export const randomUserId = () => Random.id();
@@ -167,7 +168,7 @@ export const create = (template, extra) => {
 	);
 };
 
-export const findOneOrThrow = async <T, U = T>(
+export const findOneOrThrow = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
 	selector: string | Selector<T> = {},
 ) => {

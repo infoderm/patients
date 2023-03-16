@@ -1,5 +1,6 @@
 import {type WithId} from 'mongodb';
 import type Collection from '../Collection';
+import type Document from '../Document';
 import type Filter from '../QueryFilter';
 import snapshotTransaction from './snapshotTransaction';
 import type MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
@@ -9,7 +10,7 @@ type ForEachAsyncCallback<T> = (
 	item: T,
 ) => Promise<any>;
 
-const forEachAsync = async <T, U = T>(
+const forEachAsync = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
 	filter: Filter<T>,
 	fn: ForEachAsyncCallback<WithId<T>>,

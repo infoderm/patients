@@ -3,6 +3,7 @@ import type Publication from './publication/Publication';
 import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
 import type Collection from './Collection';
+import type Document from './Document';
 import type Selector from './QuerySelector';
 import type Options from './QueryOptions';
 
@@ -11,7 +12,7 @@ type ReturnValue<U, I> =
 	| {loading: boolean; found: true; fields: I & U};
 
 const makeFindOne =
-	<T, U = T>(
+	<T extends Document, U = T>(
 		collection: Collection<T, U>,
 		publication: Publication<[Selector<T>, Options<T>]>,
 	) =>

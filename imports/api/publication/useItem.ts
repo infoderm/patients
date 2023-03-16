@@ -1,13 +1,14 @@
 import {type DependencyList} from 'react';
 
 import type Collection from '../Collection';
+import type Document from '../Document';
 import type Selector from '../QuerySelector';
 import type Options from '../QueryOptions';
 
 import useReactive from './useReactive';
 import findOneSync from './findOneSync';
 
-const useItem = <T, U = T>(
+const useItem = <T extends Document, U = T>(
 	collection: Collection<T, U> | null,
 	selector: Selector<T>,
 	options: Options<T> | undefined,
