@@ -8,8 +8,8 @@ import type Transaction from './Transaction';
 /**
  * See https://forums.meteor.com/t/solved-transactions-with-mongodb-meteor-methods/48677.
  */
-const executeTransaction = async (
-	transaction: Transaction,
+const executeTransaction = async <R>(
+	transaction: Transaction<R>,
 	transactionOptions?: TransactionOptions,
 	sessionOptions?: ClientSessionOptions,
 ) => {

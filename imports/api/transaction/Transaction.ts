@@ -1,4 +1,4 @@
 import type MongoTransactionExecutionDriver from './MongoTransactionExecutionDriver';
 
-type Transaction = (db: MongoTransactionExecutionDriver) => Promise<any>;
+type Transaction<R> = (db: MongoTransactionExecutionDriver) => Promise<R>;
 export default Transaction;
