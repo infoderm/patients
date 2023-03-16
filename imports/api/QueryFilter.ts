@@ -53,7 +53,7 @@ type FilterOperators<TValue> = {
 	 * including documents where the field value is null.
 	 */
 	$exists?: boolean;
-	$type?: BSONType | BSONTypeAlias;
+	$type?: BSONTypeOrAlias[] | BSONTypeOrAlias;
 	// Evaluation
 	$expr?: Record<string, any>;
 	$jsonSchema?: Record<string, any>;
@@ -107,6 +107,7 @@ const BSONType = Object.freeze({
 	maxKey: 127,
 } as const);
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-type BSONType = (typeof BSONType)[keyof typeof BSONType];
 type BSONTypeAlias = keyof typeof BSONType;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+type BSONType = (typeof BSONType)[BSONTypeAlias];
+type BSONTypeOrAlias = BSONType | BSONTypeAlias;
