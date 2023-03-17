@@ -2,21 +2,19 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
 import invoke from '../invoke';
 import {Consultations} from '../../collection/consultations';
 import {Books} from '../../collection/books';
 import {books} from '../../books';
 import {type NormalizedLine} from '../../string';
-import {findOneOrThrow, server} from '../../../_test/fixtures';
+import {findOneOrThrow, randomUserId, server} from '../../../_test/fixtures';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 import bookRename from './rename';
 
 server(__filename, () => {
 	it('renaming a book updates its consultation', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 
@@ -49,7 +47,7 @@ server(__filename, () => {
 	});
 
 	it('renaming a book updates its consultations', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 
@@ -103,7 +101,7 @@ server(__filename, () => {
 	});
 
 	it('renaming a book updates its consultations only', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 		const patientXId = await newPatient({userId: `${userId}x`});

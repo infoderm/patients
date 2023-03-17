@@ -2,9 +2,7 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
-import {server, throws} from '../../../_test/fixtures';
+import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import {Patients} from '../../collection/patients';
 import {Consultations} from '../../collection/consultations';
@@ -19,7 +17,7 @@ import patientsRemove from './remove';
 
 server(__filename, () => {
 	it('can delete own patient', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const invocation = {userId};
 
@@ -31,7 +29,7 @@ server(__filename, () => {
 	});
 
 	it("cannot delete someone else's patient", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
 
@@ -44,7 +42,7 @@ server(__filename, () => {
 	});
 
 	it('deletes associated consultations and appointments', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 		const patientBId = await newPatient({userId});

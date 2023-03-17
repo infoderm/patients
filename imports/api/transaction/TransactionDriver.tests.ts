@@ -2,9 +2,7 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
-import {dropId, dropIds, server} from '../../_test/fixtures';
+import {dropId, dropIds, randomId, server} from '../../_test/fixtures';
 import Collection from '../Collection';
 import TestingTransactionDriver from './TestingTransactionDriver';
 import executeTransaction from './executeTransaction';
@@ -43,9 +41,9 @@ server(__filename, () => {
 	});
 
 	it2('insertMany', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		const result = await db.insertMany(Tests, [{x}, {y}, {z}]);
 		assert.deepInclude(result, {
@@ -59,10 +57,10 @@ server(__filename, () => {
 	});
 
 	it2('findOne', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
-		const w = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		const w = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		await db.insertOne(Tests, {x});
 		await db.insertOne(Tests, {y});
@@ -77,9 +75,9 @@ server(__filename, () => {
 	});
 
 	it2('fetch', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		await db.insertOne(Tests, {x});
 		await db.insertOne(Tests, {y});
@@ -91,10 +89,10 @@ server(__filename, () => {
 	});
 
 	it2('deleteOne', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
-		const w = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		const w = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		await db.insertOne(Tests, {x});
 		await db.insertOne(Tests, {y});
@@ -128,10 +126,10 @@ server(__filename, () => {
 	});
 
 	it2('deleteMany', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
-		const w = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		const w = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		await db.insertOne(Tests, {x});
 		await db.insertOne(Tests, {y});
@@ -160,10 +158,10 @@ server(__filename, () => {
 	});
 
 	it2('updateOne', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
-		const w = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		const w = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		await db.insertOne(Tests, {x});
 		await db.insertOne(Tests, {y});
@@ -189,9 +187,9 @@ server(__filename, () => {
 	});
 
 	it2('updateOne [upsert]', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		const result = await db.updateOne(Tests, {x}, {$set: {y}}, {upsert: true});
 		const {_id} = await Tests.findOneAsync();
@@ -226,10 +224,10 @@ server(__filename, () => {
 	});
 
 	it2('updateMany', (db) => async () => {
-		const x = Random.id();
-		const y = Random.id();
-		const z = Random.id();
-		const w = Random.id();
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		const w = randomId();
 		assert.equal(await Tests.find().countAsync(), 0);
 		await db.insertOne(Tests, {x});
 		await db.insertOne(Tests, {y});

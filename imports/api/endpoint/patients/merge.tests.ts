@@ -2,9 +2,7 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
-import {server, setLike} from '../../../_test/fixtures';
+import {randomUserId, server, setLike} from '../../../_test/fixtures';
 
 import {Patients} from '../../collection/patients';
 import {Consultations} from '../../collection/consultations';
@@ -26,7 +24,7 @@ import patientsAttach from './attach';
 
 server(__filename, () => {
 	it('can merge two patients', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 		const invocation = {userId};
 
 		const patientAId = await newPatient({userId});
