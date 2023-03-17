@@ -6,7 +6,7 @@ import {assert} from 'chai';
 import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
-import {settings, get} from '../../settings';
+import {defaults, get} from '../../settings';
 import update from './update';
 
 server(__filename, () => {
@@ -16,7 +16,7 @@ server(__filename, () => {
 		const key = 'x';
 		const value = 123_819_832;
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 
 		await invoke(update, {userId}, [key, value]);
 
@@ -72,6 +72,6 @@ server(__filename, () => {
 
 		await invoke(update, {userId}, [key, value]);
 
-		assert.equal(get(`${userId}x`, key), settings.defaults[key]);
+		assert.equal(get(`${userId}x`, key), defaults[key]);
 	});
 });

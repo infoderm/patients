@@ -7,8 +7,8 @@ import define from './publication/define';
 import type Collection from './Collection';
 import type Document from './Document';
 import {AuthenticationLoggedIn} from './Authentication';
-import type Filter from './QueryFilter';
-import type Selector from './QuerySelector';
+import type Selector from './query/Selector';
+import type UserFilter from './query/UserFilter';
 
 export const countPublicationName = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
@@ -20,7 +20,7 @@ export const countPublicationName = <T extends Document, U = T>(
 export const countPublicationKey = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{values}: {values: string[]},
-	query?: Filter<T> | null,
+	query?: UserFilter<T> | null,
 ) =>
 	// @ts-expect-error Accessing private property Collection._name.
 	`${QueriedCollection._name}-${values.join('/')}-${JSON.stringify(
@@ -52,7 +52,7 @@ const countPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{fields, discretize, values}: CountOptions<T>,
 ) =>
-	function (this: Subscription, filter: Filter<T> | null) {
+	function (this: Subscription, filter: UserFilter<T> | null) {
 		const collection = countCollection;
 		const key = countPublicationKey(QueriedCollection, {values}, filter);
 		const selector = {...filter, owner: this.userId} as Selector<T>;
@@ -137,21 +137,16 @@ const countPublication = <T extends Document, U = T>(
 		});
 	};
 
-export const publishCount = <T extends Document, U = T>(
-	QueriedCollection: Collection<T, U>,
-	inputOptions: InputCountOptions<T>,
+export const publishCount = <S extends schema.ZodTypeAny, U = schema.infer<S>>(
+	QueriedCollection: Collection<schema.infer<S>, U>,
+	tSchema: S,
+	inputOptions: InputCountOptions<schema.infer<S>>,
 ) => {
 	const options = getCountOptions(inputOptions);
 	return define({
 		name: countPublicationName(QueriedCollection, options),
 		authentication: AuthenticationLoggedIn,
-		schema: schema.tuple([
-			schema
-				.object({
-					/* TODO */
-				})
-				.nullable(),
-		]),
+		schema: schema.tuple([tSchema.nullable()]),
 		handle: countPublication(QueriedCollection, options),
 	});
 };

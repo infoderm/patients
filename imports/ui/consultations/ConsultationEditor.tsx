@@ -30,6 +30,7 @@ import updateConsultation from '../../api/endpoint/consultations/update';
 import usePrompt from '../navigation/usePrompt';
 import {books} from '../../api/books';
 import {documentDiff} from '../../api/update';
+import {parseNonNegativeIntegerStrictOrNull} from '../../api/string';
 import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm, {defaultState, type State} from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
@@ -208,7 +209,7 @@ const reducer = (state: State, action: Action) => {
 				inBookNumberError: false,
 				inBookNumberDisabled: true,
 				syncInBookNumber: false,
-				dirty: true,
+				dirty: state.dirty || state.inBookNumberString !== '',
 			};
 		}
 
@@ -372,7 +373,7 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 	const handleSave = async (event) => {
 		event.preventDefault();
 
-		const updatedConsultationDocument = {
+		const updatedConsultationDocument = removeUndefined({
 			patientId,
 			datetime,
 			reason,
@@ -384,11 +385,11 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 
 			currency,
 			payment_method,
-			price: Number.parseInt(priceString, 10),
-			paid: Number.parseInt(paidString, 10),
+			price: parseNonNegativeIntegerStrictOrNull(priceString),
+			paid: parseNonNegativeIntegerStrictOrNull(paidString),
 			book,
-			inBookNumber: Number.parseInt(inBookNumberString, 10),
-		};
+			inBookNumber: parseNonNegativeIntegerStrictOrNull(inBookNumberString),
+		});
 
 		if (
 			priceWarning &&

@@ -1,8 +1,8 @@
 import React from 'react';
 
 import type GenericQueryHook from '../../api/GenericQueryHook';
-import type Options from '../../api/QueryOptions';
-import type Selector from '../../api/QuerySelector';
+import {type Sort} from '../../api/query/sort';
+import type UserFilter from '../../api/query/UserFilter';
 import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 
 import useRandom from '../hooks/useRandom';
@@ -14,39 +14,34 @@ import Refresh from '../navigation/Refresh';
 
 import TagGrid from './TagGrid';
 
-export type TagListPageProps<T> = {
+export type TagListPageProps<T extends TagNameFields & TagMetadata> = {
 	Card: React.ElementType;
 	page?: number;
 	perpage?: number;
 
-	query?: Selector<T>;
-	sort?: {};
+	filter?: UserFilter<T>;
+	sort?: Sort<T>;
 
 	useTags: GenericQueryHook<T>;
 };
 
 const TagListPage = <T extends TagNameFields & TagMetadata>({
 	useTags,
-	query = {},
-	sort = {name: 1},
+	filter = {},
+	sort = {name: 1} as Sort<T>,
 	page = 1,
 	perpage = 10,
 	Card,
 }: TagListPageProps<T>) => {
 	const [key, refresh] = useRandom();
-	const deps = [
-		JSON.stringify(query),
-		JSON.stringify(sort),
-		page,
-		perpage,
-		key,
-	];
-	const options: Options<T> = {
+	const query = {
+		filter,
 		sort,
 		skip: (page - 1) * perpage,
 		limit: perpage,
 	};
-	const {loading, dirty, results: tags} = useTags(query, options, deps);
+	const deps = [JSON.stringify(query), page, perpage, key];
+	const {loading, dirty, results: tags} = useTags(query, deps);
 
 	const style = {
 		transition: 'opacity 200ms ease-out',

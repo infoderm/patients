@@ -1,5 +1,6 @@
 import assert from 'assert';
 import deburr from 'lodash.deburr';
+import mem from 'mem';
 
 import {all, min} from '@iterable-iterator/reduce';
 import {list} from '@iterable-iterator/list';
@@ -13,17 +14,35 @@ import {len as byLength} from '@total-order/key';
 import {combinations} from '@combinatorics/n-combinations';
 import {product} from '@set-theory/cartesian-product';
 import escapeStringRegexp from 'escape-string-regexp';
+import schema from '../lib/schema';
 
 export {default as escapeStringRegexp} from 'escape-string-regexp';
 
-export type FormattedLineInput = string & {__brand: 'FORMATTED-LINE-INPUT'};
-export type FormattedLine = string & {__brand: 'FORMATTED-LINE'};
-export type TransliteratedLineInput = string & {
-	__brand: 'TRANSLITERATED-LINE-INPUT';
-};
-export type TransliteratedLine = string & {__brand: 'TRANSLITERATED-LINE'};
-export type NormalizedLineInput = string & {__brand: 'NORMALIZED-LINE-INPUT'};
-export type NormalizedLine = string & {__brand: 'NORMALIZED-LINE'};
+export const formattedLineInputSchema = schema
+	.string()
+	.brand<'FORMATTED-LINE-INPUT'>();
+export type FormattedLineInput = schema.infer<typeof formattedLineInputSchema>;
+export const formattedLineSchema = schema.string().brand<'FORMATTED-LINE'>();
+export type FormattedLine = schema.infer<typeof formattedLineSchema>;
+export const transliteratedLineInputSchema = schema
+	.string()
+	.brand<'TRANSLITERATED-LINE-INPUT'>();
+export type TransliteratedLineInput = schema.infer<
+	typeof transliteratedLineInputSchema
+>;
+
+export const transliteratedLineSchema = schema
+	.string()
+	.brand<'TRANSLITERATED-LINE'>();
+export type TransliteratedLine = schema.infer<typeof transliteratedLineSchema>;
+export const normalizedLineInputSchema = schema
+	.string()
+	.brand<'NORMALIZED-LINE-INPUT'>();
+export type NormalizedLineInput = schema.infer<
+	typeof normalizedLineInputSchema
+>;
+export const normalizedLineSchema = schema.string().brand<'NORMALIZED-LINE'>();
+export type NormalizedLine = schema.infer<typeof normalizedLineSchema>;
 
 export const normalizeWhiteSpace = (string: string) =>
 	string.replace(/\s+/g, ' ');
@@ -208,7 +227,7 @@ export const keepUnique = <T>(...iterables: Array<Iterable<T>>) => [
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
-const _isPositiveIntegerStrict_regex = (base: number) => {
+const _isPositiveIntegerStrict_regex = mem((base: number) => {
 	assert(base >= 2 && base <= 36);
 	const maxDigit = Math.min(base, 10) - 1;
 	const alphaRange = base <= 10 ? '' : `a-${alphabet[base - 10 - 1]}`;
@@ -217,13 +236,19 @@ const _isPositiveIntegerStrict_regex = (base: number) => {
 	const nonZeroLimb = `[1-${maxDigit}${alphaRanges}]`;
 	const regex = `^${nonZeroLimb}${limb}*$`;
 	return new RegExp(regex);
-};
+});
 
 const isZeroStrict = (string: string) => string === '0';
 
 const isNonNegativeIntegerStrict = (string: string, base: number) => {
 	if (base < 2 || base > 36) return false;
 	if (isZeroStrict(string)) return true;
+	const regex = _isPositiveIntegerStrict_regex(base);
+	return regex.test(string);
+};
+
+const isPositiveIntegerStrict = (string: string, base: number) => {
+	if (base < 2 || base > 36) return false;
 	const regex = _isPositiveIntegerStrict_regex(base);
 	return regex.test(string);
 };
@@ -254,6 +279,48 @@ export const parseNonNegativeIntegerStrictOrUndefined = (
 	base?: number,
 ) => {
 	return parseNonNegativeIntegerStrictOrDefault(string, base, undefined);
+};
+
+export const parseNonNegativeIntegerStrictOrNull = (
+	string: string,
+	base?: number,
+) => {
+	return parseNonNegativeIntegerStrictOrDefault(string, base, null);
+};
+
+export const parsePositiveIntegerStrict = (string: string, base = 10) =>
+	isPositiveIntegerStrict(string, base)
+		? Number.parseInt(string, base)
+		: Number.NaN;
+
+export const parsePositiveIntegerStrictOrDefault = <T>(
+	string: string,
+	base?: number,
+	dflt?: T,
+) => {
+	const parsed = parsePositiveIntegerStrict(string, base);
+	return Number.isNaN(parsed) ? dflt : parsed;
+};
+
+export const parsePositiveIntegerStrictOrString = (
+	string: string,
+	base?: number,
+) => {
+	return parsePositiveIntegerStrictOrDefault(string, base, string);
+};
+
+export const parsePositiveIntegerStrictOrUndefined = (
+	string: string,
+	base?: number,
+) => {
+	return parsePositiveIntegerStrictOrDefault(string, base, undefined);
+};
+
+export const parsePositiveIntegerStrictOrNull = (
+	string: string,
+	base?: number,
+) => {
+	return parsePositiveIntegerStrictOrDefault(string, base, null);
 };
 
 export const parseUint32StrictOrString = (string: string, base?: number) => {

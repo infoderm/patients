@@ -7,7 +7,7 @@ import publication, {
 } from '../../api/publication/stats/frequencyBySex';
 import useItem from '../../api/publication/useItem';
 import useSubscription from '../../api/publication/useSubscription';
-import type Filter from '../../api/QueryFilter';
+import type Filter from '../../api/query/Filter';
 
 type Result = {
 	loading: boolean;

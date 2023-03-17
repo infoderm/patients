@@ -1,6 +1,5 @@
 import {type DependencyList} from 'react';
-import type Options from './QueryOptions';
-import type Selector from './QuerySelector';
+import type UserQuery from './query/UserQuery';
 
 type GenericQueryHookReturnType<R> = {
 	loading?: boolean;
@@ -8,9 +7,8 @@ type GenericQueryHookReturnType<R> = {
 	results: R[];
 };
 
-type GenericQueryHook<R, T = R> = (
-	query: Selector<T>,
-	options: Options<T>,
+type GenericQueryHook<R> = (
+	query: UserQuery<R>,
 	deps: DependencyList,
 ) => GenericQueryHookReturnType<R>;
 

@@ -32,7 +32,7 @@ const BookDetails = ({year, book, page, defaultPerpage = 100}: Props) => {
 				},
 			}}
 			useParents={useConsultationsUnpaged}
-			selector={books.selector(name)}
+			filter={books.filter(name)}
 			sort={{datetime: 1}}
 			page={page}
 			perpage={perpage}

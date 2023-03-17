@@ -8,7 +8,7 @@ export default define({
 	name: 'events.intersects',
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([schema.date(), schema.date()]),
-	handle(begin: Date, end: Date) {
+	handle(begin, end) {
 		if (isAfter(begin, end)) throw new Error('begin is after end');
 
 		const query = {

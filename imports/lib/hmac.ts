@@ -2,24 +2,31 @@ import assert from 'assert';
 // @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 import promisify from './async/promisify';
+import schema from './schema';
 
-type SUPPORTED_HASH_ALGOS = 'sha256';
-type SUPPORTED_KEY_ENCODING = 'base64';
-type SUPPORTED_INPUT_ENCODING = 'utf8';
-type SUPPORTED_DOCUMENT_ENCODING = 'json';
-type SUPPORTED_SIGNATURE_ENCODING = 'base64';
+const SUPPORTED_HASH_ALGO = 'sha256' as const;
+const SUPPORTED_KEY_ENCODING = 'base64' as const;
+const SUPPORTED_INPUT_ENCODING = 'utf8' as const;
+const SUPPORTED_DOCUMENT_ENCODING = 'json' as const;
+const SUPPORTED_SIGNATURE_ENCODING = 'base64' as const;
 
-export type HMACConfig = {
-	hashAlgo: SUPPORTED_HASH_ALGOS;
-	keyEncoding: SUPPORTED_KEY_ENCODING;
-	inputEncoding: SUPPORTED_INPUT_ENCODING;
-	documentEncoding: SUPPORTED_DOCUMENT_ENCODING;
-	signatureEncoding: SUPPORTED_SIGNATURE_ENCODING;
-};
+export const hmacConfig = schema
+	.object({
+		hashAlgo: schema.literal(SUPPORTED_HASH_ALGO),
+		keyEncoding: schema.literal(SUPPORTED_KEY_ENCODING),
+		inputEncoding: schema.literal(SUPPORTED_INPUT_ENCODING),
+		documentEncoding: schema.literal(SUPPORTED_DOCUMENT_ENCODING),
+		signatureEncoding: schema.literal(SUPPORTED_SIGNATURE_ENCODING),
+	})
+	.strict();
 
-export type Document = {
-	hmac: HMACConfig;
-};
+export type HMACConfig = schema.infer<typeof hmacConfig>;
+
+export const document = schema.object({
+	hmac: hmacConfig,
+});
+
+export type Document = schema.infer<typeof document>;
 
 type Key = string;
 type Signature = string;

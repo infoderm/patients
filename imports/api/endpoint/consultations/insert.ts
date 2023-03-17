@@ -1,8 +1,8 @@
 import assert from 'assert';
 
 import {
-	type ConsultationFields,
 	Consultations,
+	consultationFields,
 } from '../../collection/consultations';
 
 import {computeUpdate, consultations} from '../../consultations';
@@ -15,20 +15,17 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import schema from '../../../lib/schema';
+import {documentUpdate} from '../../DocumentUpdate';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.insert',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.object({
-			/* TODO ConsultationFields */
-		}),
-	]),
+	schema: schema.tuple([documentUpdate(consultationFields)]),
 	async transaction(db: TransactionDriver, consultation) {
 		const owner = this.userId;
-		const changes = sanitize(consultation as ConsultationFields);
+		const changes = sanitize(consultation);
 		const {$set, $unset, newState} = await computeUpdate(
 			db,
 			owner,

@@ -8,7 +8,7 @@ import define from '../define';
 export default define({
 	name: 'settings.update',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([schema.string(), schema.any()]),
+	schema: schema.tuple([schema.string(), schema.any(/* TODO */)]),
 	async run(key, value) {
 		// const updatedAt = new Date();
 		const owner = this.userId;

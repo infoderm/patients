@@ -98,10 +98,12 @@ const ReactiveAttachmentsGallery = ({
 	attachmentsInfo,
 }: ReactiveAttachmentsGalleryProps) => {
 	const attachmentsId = attachmentsInfo.map((x) => x.attachmentId);
-	const query = {_id: {$in: attachmentsId}};
-	const options = {sort: {'meta.createdAt': -1}};
-	const deps = [JSON.stringify(query), JSON.stringify(options)];
-	const {loading, results: attachments} = useAttachments(query, options, deps);
+	const query = {
+		filter: {_id: {$in: attachmentsId}},
+		sort: {'meta.createdAt': -1} as const,
+	};
+	const deps = [JSON.stringify(query)];
+	const {loading, results: attachments} = useAttachments(query, deps);
 
 	const attachmentsInfoMap = new Map(
 		attachmentsInfo.map((x) => [x.attachmentId, x]),

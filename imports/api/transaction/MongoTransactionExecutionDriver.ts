@@ -1,7 +1,7 @@
 import {type ClientSession} from 'mongodb';
 import type Collection from '../Collection';
 import type Document from '../Document';
-import type Filter from '../QueryFilter';
+import type Filter from '../query/Filter';
 import {type Options, type UpdateResult} from './TransactionDriver';
 import type TransactionDriver from './TransactionDriver';
 

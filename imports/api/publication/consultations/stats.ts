@@ -1,24 +1,26 @@
 import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
+import {
+	consultationDocument,
+	type ConsultationDocument,
+} from '../../collection/consultations';
 import {stats} from '../../collection/consultations/stats';
 import {setupConsultationsStatsPublication} from '../../consultations';
+import type UserFilter from '../../query/UserFilter';
+import {userFilter} from '../../query/UserFilter';
 import define from '../define';
 
 export default define({
 	name: stats,
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.object({
-			/* TODO Filter<T> */
-		}),
-	]),
-	handle(query) {
+	schema: schema.tuple([userFilter(consultationDocument)]),
+	handle(filter: UserFilter<ConsultationDocument>) {
 		const collection = stats;
 
 		const handle = setupConsultationsStatsPublication.call(
 			this,
 			collection,
-			query,
+			filter,
 		);
 		this.ready();
 

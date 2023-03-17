@@ -7,7 +7,7 @@ export default define({
 	name: 'events.interval',
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([schema.date(), schema.date()]),
-	handle(begin: Date, end: Date) {
+	handle(begin, end) {
 		const query = {
 			...beginsInInterval(begin, end),
 			owner: this.userId,

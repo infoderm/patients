@@ -3,10 +3,11 @@ import React, {useState} from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import {type SettingKey} from '../../api/settings';
 import {useSetting} from './hooks';
 
 type Props = {
-	setting: string;
+	setting: SettingKey;
 };
 
 const SettingResetButton = ({setting}: Props) => {

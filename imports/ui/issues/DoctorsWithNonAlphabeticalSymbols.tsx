@@ -5,10 +5,10 @@ import TagGrid from '../tags/TagGrid';
 import StaticDoctorCard from '../doctors/StaticDoctorCard';
 
 const DoctorsWithNonAlphabeticalSymbols = (props) => {
-	const query = {containsNonAlphabetical: true};
-	const options = {};
-	const deps = [];
-	const {loading, results: tags} = useDoctors(query, options, deps);
+	const query = {
+		filter: {containsNonAlphabetical: true},
+	};
+	const {loading, results: tags} = useDoctors(query, []);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;

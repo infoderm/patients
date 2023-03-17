@@ -13,7 +13,7 @@ import call from '../api/endpoint/call';
 import reset from '../api/endpoint/_dev/reset';
 import type Collection from '../api/Collection';
 import type Document from '../api/Document';
-import type Selector from '../api/QuerySelector';
+import type Selector from '../api/query/Selector';
 
 export const randomId = () => Random.id();
 export const randomUserId = () => Random.id();

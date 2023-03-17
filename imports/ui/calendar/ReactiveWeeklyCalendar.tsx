@@ -190,7 +190,7 @@ const ReactiveWeeklyCalendar = ({
 	const {loading: loadingAppointmentDuration, value: appointmentDuration} =
 		useSetting('appointment-duration');
 	const initDuration =
-		appointmentDuration.length > 0 ? appointmentDuration[0] : 0;
+		appointmentDuration.length > 0 ? appointmentDuration[0]! : 0;
 	const [duration, setDuration] = useStateWithInitOverride<number>(
 		initDuration,
 		[appointmentDuration],

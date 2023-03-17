@@ -9,7 +9,7 @@ const useUpcomingAppointmentsForPatient = (
 ) => {
 	const earlyMorning = startOfToday();
 
-	const query = {
+	const filter = {
 		patientId,
 		isDone: false,
 		isCancelled: {$ne: true},
@@ -18,22 +18,23 @@ const useUpcomingAppointmentsForPatient = (
 		},
 	};
 
-	const mergedOptions = {
+	const query = {
+		filter,
 		sort: {
 			datetime: 1,
-		},
+		} as const,
 		limit,
-		fields: {
+		projection: {
 			patientId: 1,
 			isDone: 1,
 			isCancelled: 1,
 			datetime: 1,
-		},
+		} as const,
 	};
 
-	const deps = [JSON.stringify(query), limit];
+	const deps = [JSON.stringify(filter), limit];
 
-	return useConsultationsAndAppointments(query, mergedOptions, deps) as {
+	return useConsultationsAndAppointments(query, deps) as {
 		loading: boolean;
 		results: AppointmentDocument[];
 	};

@@ -21,18 +21,21 @@ const invoke = async <
 		throw new EndpointError('not-authorized');
 	}
 
+	let parsedArgs: A;
+
 	try {
 		endpoint.schema.parse(args);
+		parsedArgs = args; // TODO Use parsed value once it does not reorder object keys.
 	} catch (error: unknown) {
-		console.debug({name: endpoint.name, error});
+		console.debug({endpoint: endpoint.name, args, error});
 		throw new EndpointError('schema validation of endpoint args failed');
 	}
 
 	if (endpoint.validate) {
-		Reflect.apply(endpoint.validate, invocation, args);
+		Reflect.apply(endpoint.validate, invocation, parsedArgs);
 	}
 
-	return Reflect.apply(endpoint.run, invocation, args);
+	return Reflect.apply(endpoint.run, invocation, parsedArgs);
 };
 
 export default invoke;

@@ -49,7 +49,7 @@ export const event = (
 		owner,
 		calendar: isDone ? 'consultations' : 'appointments',
 		title: `${patient.lastname} ${patient.firstname}`,
-		description: patient.phone,
+		description: patient.phone ?? '',
 		begin,
 		end,
 		isCancelled: Boolean(isCancelled),

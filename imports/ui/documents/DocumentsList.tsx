@@ -12,16 +12,17 @@ type Props = {
 };
 
 const DocumentsList = ({page = 1, perpage = 10}: Props) => {
-	const options = {
-		sort: {createdAt: -1},
-		fields: StaticDocumentList.projection,
+	const query = {
+		filter: {},
+		sort: {createdAt: -1} as const,
+		projection: StaticDocumentList.projection,
 		skip: (page - 1) * perpage,
 		limit: perpage,
 	};
 
 	const deps = [page, perpage];
 
-	const {loading, results: documents} = useDocuments({}, options, deps);
+	const {loading, results: documents} = useDocuments(query, deps);
 
 	return (
 		<>

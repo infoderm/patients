@@ -36,7 +36,7 @@ import useNoShowsForPatient from '../../api/useNoShowsForPatient';
 
 import {
 	type PatientDocument,
-	type Email,
+	type PatientEmail,
 	type PatientTag,
 } from '../../api/collection/patients';
 
@@ -751,7 +751,7 @@ const PatientPersonalInformationStatic = (
 											height: '100%',
 										},
 									}}
-									value={(patient.email ?? []) as Email[]}
+									value={(patient.email ?? []) as PatientEmail[]}
 									placeholder={placeholder}
 									onChange={update('email')}
 								/>

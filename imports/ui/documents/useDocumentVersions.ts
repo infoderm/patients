@@ -6,19 +6,23 @@ import find from '../../api/publication/documents/find';
 const useDocumentVersions = (document) => {
 	const {parsed, identifier, reference} = document;
 
-	const query = {identifier, reference};
-	const options = {
-		sort: {status: 1, datetime: -1},
-		fields: {identifier: 1, reference: 1, status: 1, datetime: 1},
-	};
+	const filter = {identifier, reference};
 
-	const deps = [JSON.stringify(query), JSON.stringify(options)];
+	const sort = {status: 1, datetime: -1} as const;
+	const fields = {identifier: 1, reference: 1, status: 1, datetime: 1} as const;
+	const options = {fields, sort};
 
-	const isLoading = useSubscription(parsed ? find : null, query, options);
+	const deps = [JSON.stringify(filter), JSON.stringify(options)];
+
+	const isLoading = useSubscription(parsed ? find : null, {
+		filter,
+		projection: fields,
+		sort,
+	});
 	const loading = isLoading();
 
 	const fetchedVersions = useCursor(
-		() => (parsed ? Documents.find(query, options) : null),
+		() => (parsed ? Documents.find(filter, options) : null),
 		deps,
 	);
 

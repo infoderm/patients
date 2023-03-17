@@ -1,10 +1,9 @@
-import {check} from 'meteor/check';
-
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
 import {increasing, decreasing} from '@total-order/date';
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
+import schema from '../lib/schema';
 import {books} from './books';
 
 import {
@@ -15,8 +14,8 @@ import {
 } from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
 import type TransactionDriver from './transaction/TransactionDriver';
-import type Filter from './QueryFilter';
-import type Options from './QueryOptions';
+import type Filter from './query/Filter';
+import type Options from './query/Options';
 import {
 	type Entry,
 	makeSanitize,
@@ -24,9 +23,12 @@ import {
 	makeComputeUpdate,
 	yieldKey,
 	yieldResettableKey,
+	type UpdateEntry,
 } from './update';
 import findOneSync from './publication/findOneSync';
-import type Selector from './QuerySelector';
+import type Selector from './query/Selector';
+import {type AuthenticatedContext} from './publication/Context';
+import {type DocumentUpdate} from './DocumentUpdate';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -122,17 +124,18 @@ export const filterBookPrefill = () => ({
 	},
 });
 
-export function setupConsultationsStatsPublication<T>(
+export function setupConsultationsStatsPublication(
+	this: AuthenticatedContext,
 	collectionName: string,
-	query: Filter<T>,
+	filter: Filter<ConsultationDocument>,
 ) {
 	// Generate unique key depending on parameters
-	const key = statsKey(query);
+	const key = statsKey(filter);
 	const selector = {
-		...query,
+		...filter,
 		isDone: true,
 		owner: this.userId,
-	};
+	} as Selector<ConsultationDocument>;
 	const options = {fields: {_id: 1, price: 1, datetime: 1}};
 
 	const minHeap = new PairingHeap(increasing);
@@ -206,57 +209,64 @@ export function setupConsultationsStatsPublication<T>(
 const trimString = (value: any) => value?.trim();
 
 const sanitizeUpdate = function* (
-	fields: ConsultationFields,
-): IterableIterator<Entry<ConsultationFields & ConsultationComputedFields>> {
-	yield* yieldKey(fields, 'patientId', String);
+	fields: DocumentUpdate<ConsultationFields>,
+): IterableIterator<
+	UpdateEntry<ConsultationFields & ConsultationComputedFields>
+> {
+	yield* yieldKey(fields, 'patientId', schema.string());
 
 	if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
-		const {datetime} = fields;
-		check(datetime, Date);
+		const datetime = schema.date().parse(fields.datetime);
 		yield ['datetime', datetime];
 		yield ['realDatetime', datetime];
 		yield ['begin', datetime];
 	}
 
-	yield* yieldResettableKey(fields, 'reason', String, trimString);
-	yield* yieldResettableKey(fields, 'done', String, trimString);
-	yield* yieldResettableKey(fields, 'todo', String, trimString);
-	yield* yieldResettableKey(fields, 'treatment', String, trimString);
-	yield* yieldResettableKey(fields, 'next', String, trimString);
-	yield* yieldResettableKey(fields, 'more', String, trimString);
+	yield* yieldKey(fields, 'reason', schema.string(), trimString);
+	yield* yieldResettableKey(fields, 'done', schema.string(), trimString);
+	yield* yieldResettableKey(fields, 'todo', schema.string(), trimString);
+	yield* yieldResettableKey(fields, 'treatment', schema.string(), trimString);
+	yield* yieldResettableKey(fields, 'next', schema.string(), trimString);
+	yield* yieldResettableKey(fields, 'more', schema.string(), trimString);
 
 	yield* yieldResettableKey(
 		fields,
 		'currency',
-		String,
-		(currency: string | undefined) => currency?.trim().toUpperCase(),
+		schema.string(),
+		(currency: string | undefined | null) => currency?.trim().toUpperCase(),
 	);
 	yield* yieldResettableKey(
 		fields,
 		'book',
-		String,
-		(book: string | undefined) => books.sanitize(book ?? ''),
+		schema.string(),
+		(book: string | undefined | null) => books.sanitize(book ?? ''),
 	);
-	yield* yieldResettableKey(fields, 'payment_method', String, (x) => x);
+	yield* yieldResettableKey(
+		fields,
+		'payment_method',
+		schema.string(),
+		(x) => x,
+	);
 
 	yield* yieldResettableKey(
 		fields,
 		'price',
-		Number,
-		(price: number | undefined) =>
+		schema.number(),
+		(price: number | undefined | null) =>
 			Number.isFinite(price) ? price! : undefined,
 	);
 	yield* yieldResettableKey(
 		fields,
 		'paid',
-		Number,
-		(paid: number | undefined) => (Number.isFinite(paid) ? paid! : undefined),
+		schema.number(),
+		(paid: number | undefined | null) =>
+			Number.isFinite(paid) ? paid! : undefined,
 	);
 	yield* yieldResettableKey(
 		fields,
 		'inBookNumber',
-		Number,
-		(inBookNumber: number | undefined) =>
+		schema.number(),
+		(inBookNumber: number | undefined | null) =>
 			Number.isInteger(inBookNumber) && inBookNumber! >= 1
 				? inBookNumber
 				: undefined,

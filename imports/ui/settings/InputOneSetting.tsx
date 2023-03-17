@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
+import {type SettingKey} from '../../api/settings';
 import {useSetting} from './hooks';
 
 type Outcome = {
@@ -12,23 +13,23 @@ type Outcome = {
 	//  0 wrong input (no sync, no update)
 };
 
-type Props = {
+type Props<K extends SettingKey> = {
 	className?: string;
 	title?: string;
 	label?: string;
-	setting: string;
+	setting: K;
 	sanitize?: (inputValue: string) => any;
 	validate?: (x: any) => Outcome;
 };
 
-const InputOneSetting = ({
+const InputOneSetting = <K extends SettingKey>({
 	className,
 	setting,
 	sanitize = (x) => x,
 	validate = () => ({outcome: 1}),
 	label,
 	title,
-}: Props) => {
+}: Props<K>) => {
 	const {loading, value, setValue} = useSetting(setting);
 
 	const [error, setError] = useState(false);

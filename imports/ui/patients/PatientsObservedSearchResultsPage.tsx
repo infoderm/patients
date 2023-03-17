@@ -11,8 +11,8 @@ import {normalizeSearch} from '../../api/string';
 import mergeFields from '../../api/query/mergeFields';
 
 import Refresh from '../navigation/Refresh';
-import {type PatientCacheResult} from '../../api/collection/patients/search/cache';
-import type Selector from '../../api/QuerySelector';
+import type UserFilter from '../../api/query/UserFilter';
+import {type PatientSearchIndexDocument} from '../../api/collection/patients/search';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
@@ -39,7 +39,7 @@ const PatientsObservedSearchResultsPage = ({
 	const [showDead, setShowDead] = useState(false);
 	const $search = normalizeSearch(query);
 
-	const selector: Selector<PatientCacheResult> = {
+	const filter: UserFilter<PatientSearchIndexDocument> = {
 		$text: {$search},
 		deathdateModifiedAt: showDead ? undefined : {$not: {$type: 'date'}},
 	};
@@ -53,25 +53,32 @@ const PatientsObservedSearchResultsPage = ({
 		birthdate: 1,
 		sex: 1,
 		niss: 1,
-	};
-	const fields = mergeFields(
-		Object.fromEntries(Object.keys(sort).map((key) => [key, 1])),
+	} as const;
+
+	const projection = mergeFields<PatientSearchIndexDocument>(
+		sort,
 		StaticPatientsList.projection,
 		// We fetch the picture through a dedicated subscription to get live
 		// updates while avoiding double loading on init.
+		// Additionally, the photo is not available in the search index.
+		// @ts-expect-error This is intentional because StaticPatientsList.projection
+		// contains key 'photo'.
 		{photo: 0},
 	);
-	const options = {
-		fields,
+
+	const concreteQuery = {
+		filter,
+		projection,
 		sort,
 		skip: (page - 1) * perpage,
 		limit: perpage,
 	};
 
+	const deps = [$search, showDead, page, perpage, refreshKey];
+
 	const {loading, results, dirty} = useAdvancedObservedPatients(
-		selector,
-		options,
-		[$search, showDead, page, perpage, refreshKey],
+		concreteQuery,
+		deps,
 	);
 
 	return (

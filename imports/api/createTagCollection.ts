@@ -1,5 +1,4 @@
 import {Meteor} from 'meteor/meteor';
-import {check} from 'meteor/check';
 
 import schema from '../lib/schema';
 import mergeOptions from './query/mergeOptions';
@@ -12,7 +11,7 @@ import makeObservedQueryPublication, {
 } from './makeObservedQueryPublication';
 import pageQuery, {
 	publicationSchema as pageQueryPublicationSchema,
-} from './pageQuery';
+} from './query/pageQuery';
 
 import defineEndpoint from './endpoint/define';
 import definePublication from './publication/define';
@@ -33,12 +32,15 @@ import type TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
 import type Publication from './publication/Publication';
 import type TransactionDriver from './transaction/TransactionDriver';
-import type Filter from './QueryFilter';
+import type Filter from './query/Filter';
 import Collection from './Collection';
-import type Selector from './QuerySelector';
-import type Options from './QueryOptions';
+import type Selector from './query/Selector';
 import type Modifier from './Modifier';
 import {AuthenticationLoggedIn} from './Authentication';
+import type UserQuery from './query/UserQuery';
+import type UserFilter from './query/UserFilter';
+import type Options from './query/Options';
+import type Projection from './query/Projection';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -75,11 +77,12 @@ type TagCollectionOptions<
 	P extends {[key: string]: any; owner: string},
 > = {
 	Collection: Collection<T>;
+	tagDocumentSchema: schema.ZodType<T>;
 	collection: string;
 	publication: string;
 	singlePublication: string;
 	Parent: Collection<P>;
-	parentPublication: Publication<[Selector<P>, Options<P>]>;
+	parentPublication: Publication<[UserQuery<P>]>;
 	key: string;
 };
 
@@ -95,6 +98,7 @@ const createTagCollection = <
 ) => {
 	const {
 		Collection: tagsCollection,
+		tagDocumentSchema,
 		collection,
 		publication,
 		singlePublication,
@@ -116,22 +120,25 @@ const createTagCollection = <
 	const _publication = definePublication({
 		name: publication,
 		authentication: AuthenticationLoggedIn,
-		schema: pageQueryPublicationSchema,
-		cursor: pageQuery(tagsCollection),
+		schema: pageQueryPublicationSchema(tagDocumentSchema),
+		cursor: pageQuery(
+			tagsCollection,
+			({userId}) => ({owner: userId} as Filter<T>),
+		),
 	});
 
-	const useTags = makeQuery(tagsCollection, _publication);
+	const useTags = makeQuery<T>(tagsCollection, _publication);
 	const useCachedTag = makeCachedFindOne(tagsCollection, _publication);
 
 	const _cachePublication = definePublication({
 		name: cachePublication,
 		authentication: AuthenticationLoggedIn,
-		schema: makeObservedQueryPublicationSchema,
+		schema: makeObservedQueryPublicationSchema(tagDocumentSchema),
 		handle: makeObservedQueryPublication(tagsCollection, cacheCollection),
 	});
 
 	// TODO rename to useObservedTags
-	const useTagsFind = makeObservedQueryHook(TagsCache, _cachePublication);
+	const useTagsFind = makeObservedQueryHook<T>(TagsCache, _cachePublication);
 
 	const _singlePublication = definePublication({
 		name: singlePublication,
@@ -147,24 +154,26 @@ const createTagCollection = <
 
 	const useTag = makeItem(tagsCollection, _singlePublication);
 
-	const useTaggedDocuments = (name: string, options) => {
-		const selector = {[key]: {$elemMatch: {name}}} as Selector<P>;
+	const useTaggedDocuments = (name: string, options: Options<P>) => {
+		const filter = {[key]: {$elemMatch: {name}}} as UserFilter<P>;
 
-		const mergedOptions = mergeOptions(options, {
+		const {fields: projection, ...rest} = mergeOptions(options, {
 			fields: {
 				[key]: 1,
 			},
 		});
 
-		const isLoading = useSubscription(
-			parentPublication,
-			selector,
-			mergedOptions,
-		);
+		const query = {
+			filter,
+			projection: projection as Projection<P>,
+			...rest,
+		};
+
+		const isLoading = useSubscription(parentPublication, query);
 		const loading = isLoading();
 
 		const results = useCursor(
-			() => Parent.find(selector, options),
+			() => Parent.find(filter as Selector<P>, options),
 			[name, JSON.stringify(options)],
 		);
 
@@ -349,8 +358,8 @@ const createTagCollection = <
 		},
 
 		async add(db: TransactionDriver, owner: string, rawDisplayName: string) {
-			check(owner, String);
-			check(rawDisplayName, String);
+			schema.string().parse(owner);
+			schema.string().parse(rawDisplayName);
 
 			const fields = {
 				...sanitize(rawDisplayName),
@@ -371,8 +380,8 @@ const createTagCollection = <
 		},
 
 		async remove(db: TransactionDriver, owner: string, name: NormalizedLine) {
-			check(owner, String);
-			check(name, String);
+			schema.string().parse(owner);
+			schema.string().parse(name);
 
 			const selector = {
 				owner,

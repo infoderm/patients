@@ -8,3 +8,5 @@ export type InsuranceFields = TagNameFields;
 
 export const collection = 'insurances';
 export const Insurances = new Collection<InsuranceDocument>(collection);
+
+export {tagDocument as insuranceDocument} from '../tags/TagDocument';

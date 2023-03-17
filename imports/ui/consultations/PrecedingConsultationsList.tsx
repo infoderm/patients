@@ -8,16 +8,17 @@ import ConsultationsList from './ConsultationsList';
 
 const PrecedingConsultationsList = ({consultation}) => {
 	const query = {
-		patientId: consultation.patientId,
-		datetime: {
-			$lt: consultation.datetime,
+		filter: {
+			patientId: consultation.patientId,
+			datetime: {
+				$lt: consultation.datetime,
+			},
 		},
+		sort: {datetime: -1} as const,
 	};
-	const options = {sort: {datetime: -1}};
 	const deps = [JSON.stringify(query)];
 	const {loading, results: consultations} = useConsultationsUnpaged(
 		query,
-		options,
 		deps,
 	);
 

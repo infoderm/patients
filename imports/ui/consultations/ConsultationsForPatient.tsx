@@ -14,11 +14,14 @@ type Props = {
 };
 
 const ConsultationsForPatient = ({patientId}: Props) => {
-	const options = {fields: {_id: 1}};
+	const query = {
+		filter: {_id: patientId},
+		projection: {_id: 1},
+	} as const;
 
 	const deps = [patientId];
 
-	const {loading, found} = usePatient({}, patientId, options, deps);
+	const {loading, found} = usePatient({}, query, deps);
 
 	if (loading) {
 		return <Loading />;
@@ -28,7 +31,7 @@ const ConsultationsForPatient = ({patientId}: Props) => {
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	const query = {
+	const filter = {
 		patientId,
 		isDone: true,
 	};
@@ -39,7 +42,7 @@ const ConsultationsForPatient = ({patientId}: Props) => {
 		<>
 			<ConsultationsPager
 				defaultExpandedFirst
-				query={query}
+				filter={filter}
 				sort={sort}
 				perpage={5}
 			/>

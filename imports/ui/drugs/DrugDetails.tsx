@@ -35,8 +35,7 @@ const DrugDetails = () => {
 		{
 			_id: drugId,
 		},
-		drugId,
-		{},
+		{filter: {_id: drugId}},
 		[drugId],
 	);
 

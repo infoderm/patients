@@ -16,8 +16,8 @@ type StaticPatientCardProps = {
 >;
 
 const StaticPatientCard = (props: StaticPatientCardProps) => {
-	const firstname = props.patient.firstname || '?';
-	const lastname = props.patient.lastname || '?';
+	const firstname = props.patient.firstname! || '?';
+	const lastname = props.patient.lastname! || '?';
 	const ariaLabel = `${firstname} ${lastname}`;
 	return (
 		<GenericStaticPatientCard

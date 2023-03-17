@@ -40,17 +40,17 @@ const BooksList = ({
 
 	const perpage = defaultPerpage;
 
-	const query = {fiscalYear: year};
+	const concreteFilter = {fiscalYear: year};
 
 	const initialBegin = new Date(year, 0, 1);
 
-	const sort = {fiscalYear: 1, bookNumber: sortingOrder};
+	const sort = {fiscalYear: 1, bookNumber: sortingOrder} as const;
 
 	const list = (
 		<TagList
 			perpage={perpage}
 			Card={BookCard}
-			query={query}
+			filter={concreteFilter}
 			sort={sort}
 			useTags={useBooks}
 		/>
@@ -82,7 +82,7 @@ const BooksList = ({
 				col={5}
 				tooltip="Toggle sorting order"
 				onClick={async () => {
-					await setSortingOrder(-sortingOrder);
+					await setSortingOrder(-sortingOrder as -1 | 1);
 				}}
 			>
 				<SwapVertIcon />

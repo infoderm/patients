@@ -13,27 +13,27 @@ import TagList from './TagList';
 type Props = {
 	type?: string;
 	filter?: string;
-} & Omit<PropsOf<typeof TagList>, 'query'>;
+} & Omit<PropsOf<typeof TagList>, 'filter'>;
 
 const TagNamePrefixFilteredList = ({
 	type = undefined,
-	filter = undefined,
+	filter: prefix = undefined,
 	...rest
 }: Props) => {
 	if (type !== undefined && type !== 'prefix') return <NoMatch />;
 
-	const query = filter
-		? {name: {$regex: `^${escapeStringRegexp(filter)}`, $options: 'i'}}
+	const filter = prefix
+		? {name: {$regex: `^${escapeStringRegexp(prefix)}`, $options: 'i'}}
 		: {};
 
-	const list = <TagList query={query} {...rest} />;
+	const list = <TagList filter={filter} {...rest} />;
 
 	return (
 		<div>
 			<AlphabetJumper
-				current={filter}
+				current={prefix}
 				toURL={(x) =>
-					`${filter ? '../' : ''}query/prefix/${myEncodeURIComponent(x)}`
+					`${prefix ? '../' : ''}query/prefix/${myEncodeURIComponent(x)}`
 				}
 			/>
 			<Routes>

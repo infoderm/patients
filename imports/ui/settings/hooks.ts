@@ -1,6 +1,6 @@
 import {useCallback} from 'react';
 import {Settings} from '../../api/collection/settings';
-import {settings as _settings} from '../../api/settings';
+import {type UserSettings, type SettingKey, defaults} from '../../api/settings';
 import useSubscription from '../../api/publication/useSubscription';
 import useReactive from '../../api/publication/useReactive';
 import findOneSync from '../../api/publication/findOneSync';
@@ -12,11 +12,14 @@ import useUserId from '../users/useUserId';
 import useLoggingOut from '../users/useLoggingOut';
 import useLoggingIn from '../users/useLoggingIn';
 
-const {defaults} = _settings;
+const useSettingSubscription = <K extends SettingKey>(key: K) =>
+	useSubscription(byKey, key);
 
-const useSettingSubscription = (key: string) => useSubscription(byKey, key);
-
-const get = (_loading: boolean, _userId: string | null, key: string) => {
+const get = <K extends SettingKey>(
+	_loading: boolean,
+	_userId: string | null,
+	key: K,
+): UserSettings[K] => {
 	const item = findOneSync(Settings, {key});
 	return item === undefined ? defaults[key] : item.value;
 };
@@ -28,11 +31,11 @@ const defaultFilter = () => 'default';
 const userFilter = (userId: string) => `user-${userId}`;
 const userOrDefaultFilter = (userId: string | null) =>
 	userId === null ? defaultFilter() : userFilter(userId);
-const getWithBrowserCache = (
+const getWithBrowserCache = <K extends SettingKey>(
 	loading: boolean,
 	userId: string | null,
-	key: string,
-) => {
+	key: K,
+): UserSettings[K] => {
 	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
 	// + clear own cache on logout?!
 	// + clear other's cache on login
@@ -69,7 +72,10 @@ const getWithBrowserCache = (
 	return item.value;
 };
 
-export const setSetting = async (key: string, newValue: any) => {
+export const setSetting = async <K extends SettingKey>(
+	key: K,
+	newValue: UserSettings[K],
+) => {
 	try {
 		await call(update, key, newValue);
 		console.debug('Setting', key, 'updated to', newValue);
@@ -78,7 +84,7 @@ export const setSetting = async (key: string, newValue: any) => {
 	}
 };
 
-export const resetSetting = async (key: string) => {
+export const resetSetting = async <K extends SettingKey>(key: K) => {
 	try {
 		await call(reset, key);
 		console.debug('Setting', key, 'reset');
@@ -87,7 +93,10 @@ export const resetSetting = async (key: string) => {
 	}
 };
 
-export const useSetting = (key: string, getFn: typeof get = get) => {
+export const useSetting = <K extends SettingKey>(
+	key: K,
+	getFn: typeof get = get,
+) => {
 	const userId = useUserId();
 	const loggingIn = useLoggingIn();
 	const loggingOut = useLoggingOut();
@@ -97,16 +106,16 @@ export const useSetting = (key: string, getFn: typeof get = get) => {
 	const loading = loggingIn || loggingOut || loadingSetting;
 
 	const value = useReactive(
-		() => getFn(loading, userId, key),
+		() => getFn<K>(loading, userId, key),
 		[getFn, loading, userId, key],
 	);
 
 	const setValue = useCallback(
-		async (newValue: any) => setSetting(key, newValue),
+		async (newValue: UserSettings[K]) => setSetting<K>(key, newValue),
 		[key],
 	);
 
-	const resetValue = useCallback(async () => resetSetting(key), [key]);
+	const resetValue = useCallback(async () => resetSetting<K>(key), [key]);
 
 	return {
 		loading: loadingSetting,
@@ -116,8 +125,8 @@ export const useSetting = (key: string, getFn: typeof get = get) => {
 	};
 };
 
-export const useSettingCached = (key: string) =>
-	useSetting(key, getWithBrowserCache);
+export const useSettingCached = <K extends SettingKey>(key: K) =>
+	useSetting<K>(key, getWithBrowserCache);
 
 export const settings = {
 	defaults,

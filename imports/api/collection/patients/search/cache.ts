@@ -1,27 +1,14 @@
 import Collection from '../../../Collection';
-import type CacheItem from '../../../CacheItem';
-import {type SexAllowed} from '../../patients';
+import type schema from '../../../../lib/schema';
+import {cacheItem} from '../../../CacheItem';
+import {patientSearchIndexDocument} from '../search';
 
 export const indexObservedQueryCacheCollection =
 	'patients.index.cache.collection';
 
-export type PatientCacheResult = {
-	_id: string;
-	firstnameWords: string[];
-	lastnameWords: string[];
-	innerTrigrams: string[];
-	outerTrigrams: string[];
-	niss: string;
-	firstname: string;
-	lastname: string;
-	birthdate: string;
-	deathdateModifiedAt?: Date;
-	lastModifiedAt: Date;
-	sex: SexAllowed;
-	owner: string;
-};
+export const patientCacheItem = cacheItem(patientSearchIndexDocument);
 
-export type PatientCacheItem = CacheItem<PatientCacheResult>;
+export type PatientCacheItem = schema.infer<typeof patientCacheItem>;
 
 export const PatientsSearchIndexCache = new Collection<PatientCacheItem>(
 	indexObservedQueryCacheCollection,

@@ -18,8 +18,6 @@ export const newConsultationFormData = makeTemplate({
 	price: () => faker.datatype.number(150),
 	paid: () => 0,
 	book: () => `${faker.datatype.number(100)}`,
-
-	isDone: () => true,
 });
 
 export const newConsultation = async (invocation, extra?) => {

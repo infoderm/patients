@@ -1,7 +1,11 @@
 import {Patients} from './collection/patients';
 import createTagCollection from './createTagCollection';
 
-import {Insurances, collection} from './collection/insurances';
+import {
+	Insurances,
+	collection,
+	insuranceDocument,
+} from './collection/insurances';
 import patients from './publication/patients/patients';
 
 const {
@@ -16,6 +20,8 @@ const {
 	renameEndpoint: renameInsurance,
 } = createTagCollection({
 	Collection: Insurances,
+	// @ts-expect-error current limitation of zod. See https://github.com/colinhacks/zod/issues/2076
+	tagDocumentSchema: insuranceDocument,
 	collection,
 	publication: 'insurances',
 	singlePublication: 'insurance',

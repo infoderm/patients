@@ -1,19 +1,30 @@
-import {type FormattedLine, type NormalizedLine} from '../string';
+import schema from '../../lib/schema';
+import {formattedLineSchema, normalizedLineSchema} from '../string';
 
-export type TagNameFields = {
-	displayName?: FormattedLine;
-	name: NormalizedLine;
-};
+export const tagNameFields = schema.object({
+	displayName: formattedLineSchema.optional(),
+	name: normalizedLineSchema,
+});
 
-export type TagComputedFields = {
-	containsNonAlphabetical: boolean;
-};
+export type TagNameFields = schema.infer<typeof tagNameFields>;
 
-export type TagMetadata = {
-	_id: string;
-	owner: string;
-};
+export const tagComputedFields = schema.object({
+	containsNonAlphabetical: schema.boolean(),
+});
 
-type TagDocument = TagNameFields & TagComputedFields & TagMetadata;
+export type TagComputedFields = schema.infer<typeof tagComputedFields>;
+
+export const tagMetadata = schema.object({
+	_id: schema.string(),
+	owner: schema.string(),
+});
+
+export type TagMetadata = schema.infer<typeof tagMetadata>;
+
+export const tagDocument = tagNameFields
+	.merge(tagComputedFields)
+	.merge(tagMetadata);
+
+type TagDocument = schema.infer<typeof tagDocument>;
 
 export default TagDocument;

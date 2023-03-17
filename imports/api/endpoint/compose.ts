@@ -21,15 +21,18 @@ const compose = async <
 	// TODO will need to check authorized here if we ever compose endpoints
 	// with different authorization levels
 
+	let parsedArgs: A;
+
 	try {
 		endpoint.schema.parse(args);
+		parsedArgs = args; // TODO Use parsed value once it does not reorder object keys.
 	} catch (error: unknown) {
-		console.debug({name: endpoint.name, error});
+		console.debug({endpoint: endpoint.name, args, error});
 		throw new EndpointError('schema validation of endpoint args failed');
 	}
 
 	if (endpoint.validate) {
-		Reflect.apply(endpoint.validate, invocation, args);
+		Reflect.apply(endpoint.validate, invocation, parsedArgs);
 	}
 
 	if (!endpoint.transaction) {
@@ -38,7 +41,7 @@ const compose = async <
 		);
 	}
 
-	return Reflect.apply(endpoint.transaction, invocation, [db, ...args]);
+	return Reflect.apply(endpoint.transaction, invocation, [db, ...parsedArgs]);
 };
 
 export default compose;

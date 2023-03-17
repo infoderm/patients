@@ -9,7 +9,7 @@ import {
 
 import type Collection from '../Collection';
 import type Document from '../Document';
-import type Filter from '../QueryFilter';
+import type Filter from '../query/Filter';
 
 export type ObjectId = string;
 

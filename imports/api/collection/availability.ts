@@ -1,20 +1,30 @@
+import schema from '../../lib/schema';
 import Collection from '../Collection';
 
-export type SlotFields = {
-	begin: Date;
-	end: Date;
-	weekShiftedBegin: number;
-	weekShiftedEnd: number;
-	measure: number;
-	weight: number;
-};
+export const slotFields = schema
+	.object({
+		begin: schema.date(),
+		end: schema.date(),
+		weekShiftedBegin: schema.number(),
+		weekShiftedEnd: schema.number(),
+		measure: schema.number(),
+		weight: schema.number(),
+	})
+	.strict();
 
-export type SlotMetadata = {
-	_id: string;
-	owner: string;
-};
+export type SlotFields = schema.infer<typeof slotFields>;
 
-export type SlotDocument = SlotFields & SlotMetadata;
+export const slotMetadata = schema
+	.object({
+		_id: schema.string(),
+		owner: schema.string(),
+	})
+	.strict();
+
+export type SlotMetadata = schema.infer<typeof slotMetadata>;
+
+export const slotDocument = slotFields.merge(slotMetadata);
+export type SlotDocument = schema.infer<typeof slotDocument>;
 
 const availabilityCollectionName = 'availability';
 export const Availability = new Collection<SlotDocument>(

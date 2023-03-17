@@ -2,7 +2,7 @@ import {type PatientDocument} from '../collection/patients';
 import eidParseBirthdate from '../eidParseBirthdate';
 
 const virtualFields = (patient: PatientDocument) => {
-	const birthdate = eidParseBirthdate(patient.birthdate);
+	const birthdate = eidParseBirthdate(patient.birthdate ?? '');
 	const deathdateModifiedAt = patient.deathdateModifiedAt ?? undefined;
 	const deathdateLegal = patient.deathdate ?? undefined;
 	const deathdate = deathdateLegal ?? deathdateModifiedAt;

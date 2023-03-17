@@ -1,7 +1,7 @@
 import {Patients} from './collection/patients';
 import createTagCollection from './createTagCollection';
 
-import {Allergies, collection} from './collection/allergies';
+import {Allergies, allergyDocument, collection} from './collection/allergies';
 import patients from './publication/patients/patients';
 
 const {
@@ -16,6 +16,8 @@ const {
 	renameEndpoint: renameAllergy,
 } = createTagCollection({
 	Collection: Allergies,
+	// @ts-expect-error current limitation of zod. See https://github.com/colinhacks/zod/issues/2076
+	tagDocumentSchema: allergyDocument,
 	collection,
 	publication: 'allergies',
 	singlePublication: 'allergy',

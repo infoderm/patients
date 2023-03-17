@@ -1,33 +1,28 @@
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 
-/**
- * useConsultationsForPatient.
- *
- * @param {string} patientId
- * @param {{limit: number}} options
- * @return {{loading: boolean, results: array}}
- */
-const useConsultationsForPatient = (patientId, {limit}) => {
+const useConsultationsForPatient = (
+	patientId: string,
+	{limit}: {limit: number},
+) => {
 	const query = {
-		patientId,
-		isDone: true,
-	};
-
-	const options = {
+		filter: {
+			patientId,
+			isDone: true,
+		},
 		sort: {
 			datetime: -1,
-		},
+		} as const,
 		limit,
-		fields: {
+		projection: {
 			patientId: 1,
 			isDone: 1,
 			datetime: 1,
-		},
+		} as const,
 	};
 
 	const deps = [patientId, limit];
 
-	return useConsultationsAndAppointments(query, options, deps);
+	return useConsultationsAndAppointments(query, deps);
 };
 
 export default useConsultationsForPatient;

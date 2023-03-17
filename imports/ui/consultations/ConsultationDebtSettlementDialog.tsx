@@ -35,16 +35,15 @@ const ConsultationDebtSettlementDialog = ({
 
 	const owed = price - paid;
 
-	const options = {fields: ConsultationDebtSettlementDialog.projection};
+	const query = {
+		filter: {_id: patientId},
+		projection: ConsultationDebtSettlementDialog.projection,
+	};
 	const deps = [
 		patientId,
 		JSON.stringify(ConsultationDebtSettlementDialog.projection),
 	];
-	const {
-		loading,
-		found,
-		fields: patient,
-	} = usePatient({}, patientId, options, deps);
+	const {loading, found, fields: patient} = usePatient({}, query, deps);
 
 	const currencyFormat = useCurrencyFormat(currency);
 
@@ -115,6 +114,6 @@ const ConsultationDebtSettlementDialog = ({
 ConsultationDebtSettlementDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
+} as const;
 
 export default withLazyOpening(ConsultationDebtSettlementDialog);

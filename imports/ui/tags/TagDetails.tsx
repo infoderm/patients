@@ -44,9 +44,9 @@ type Props<T> = {
 	listProps?: {};
 
 	useParents: GenericQueryHook<T>;
-	selector: {};
+	filter: {};
 	sort: {};
-	fields?: {};
+	projection?: {};
 	page: number;
 	perpage: number;
 };
@@ -60,13 +60,14 @@ const TagDetails = <T,>(props: Props<T>) => {
 		page,
 		perpage,
 		name,
-		selector,
+		filter,
 		sort,
-		fields,
+		projection,
 	} = props;
 
-	const options = {
-		fields,
+	const query = {
+		filter,
+		projection,
 		sort,
 		skip: (page - 1) * perpage,
 		limit: perpage,
@@ -77,7 +78,7 @@ const TagDetails = <T,>(props: Props<T>) => {
 		setRefreshKey(Math.random());
 	};
 
-	const {loading, results, dirty} = useParents(selector, options, [
+	const {loading, results, dirty} = useParents(query, [
 		name,
 		page,
 		perpage,

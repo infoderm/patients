@@ -129,7 +129,7 @@ const projection = {
 	sex: 1,
 	niss: 1,
 	photo: 1,
-};
+} as const;
 
 type Projection = typeof projection;
 
@@ -153,8 +153,8 @@ const GenericStaticPatientCard = ({
 
 	const {birthdate, photo, niss, score} = patient;
 
-	const firstname = patient.firstname || '?';
-	const lastname = patient.lastname || '?';
+	const firstname = patient.firstname! || '?';
+	const lastname = patient.lastname! || '?';
 	const sex = patient.sex ?? 'N';
 
 	const isDead = patient.deathdateModifiedAt instanceof Date;
@@ -182,11 +182,11 @@ const GenericStaticPatientCard = ({
 						</Avatar>
 					}
 					title={`${lastname.toUpperCase()} ${firstname}`}
-					subheader={eidDisplayBirthdate(birthdate, localizeBirthdate)}
+					subheader={eidDisplayBirthdate(birthdate ?? '', localizeBirthdate)}
 				/>
 				<CardContent className={classes.content} />
 				<CardActions disableSpacing className={classes.actions}>
-					<Chip style={nnStyle} label={niss || '?'} />
+					<Chip style={nnStyle} label={niss! || '?'} />
 					{showScore && score && (
 						<Chip
 							className={classes.scoreChip}

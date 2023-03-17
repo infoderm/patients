@@ -9,8 +9,6 @@ import '../../../imports/api/publication/appointments/patient';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/attachments/attachments';
 // eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/attachments/attachment';
-// eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/availability/intersects';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/books/consultations';
@@ -20,8 +18,6 @@ import '../../../imports/api/publication/books/find';
 import '../../../imports/api/publication/books/observe';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/consultationsAndAppointments/find';
-// eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/consultations/findOne';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/consultations/find';
 // eslint-disable-next-line import/no-unassigned-import
@@ -36,8 +32,6 @@ import '../../../imports/api/publication/consultations/stats';
 import '../../../imports/api/publication/documents/findOne';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/documents/find';
-// eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/drugs/findOne';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/drugs/find';
 // eslint-disable-next-line import/no-unassigned-import
@@ -56,8 +50,6 @@ import '../../../imports/api/publication/patient/noShows';
 import '../../../imports/api/publication/patients/observe';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/patients/patients';
-// eslint-disable-next-line import/no-unassigned-import
-import '../../../imports/api/publication/patients/patient';
 // eslint-disable-next-line import/no-unassigned-import
 import '../../../imports/api/publication/patients/search';
 // eslint-disable-next-line import/no-unassigned-import

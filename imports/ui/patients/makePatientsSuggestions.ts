@@ -8,8 +8,8 @@ import mergeFields from '../../api/query/mergeFields';
 import {normalizeSearch} from '../../api/string';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
-import type Options from '../../api/QueryOptions';
-import {type PatientCacheItem} from '../../api/collection/patients/search/cache';
+import type Options from '../../api/query/Options';
+import {type PatientSearchIndexDocument} from '../../api/collection/patients/search';
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 
 const DEBOUNCE_OPTIONS = {leading: false};
@@ -17,7 +17,7 @@ const DEBOUNCE_OPTIONS = {leading: false};
 
 const makePatientsSuggestions = (
 	set: Array<{_id: string}> = [],
-	userOptions?: Options<PatientCacheItem>,
+	userOptions?: Options<PatientSearchIndexDocument>,
 ) => {
 	const $nin = list(map((x) => x._id, set));
 	return (searchString: string) => {
@@ -30,7 +30,7 @@ const makePatientsSuggestions = (
 		const $search = normalizeSearch(debouncedSearchString);
 		const limit = userOptions?.limit ?? 5;
 
-		const query = {$text: {$search}, _id: {$nin}};
+		const filter = {$text: {$search}, _id: {$nin}};
 
 		const sort = {
 			score: {$meta: 'textScore'},
@@ -40,8 +40,8 @@ const makePatientsSuggestions = (
 			birthdate: 1,
 			sex: 1,
 			niss: 1,
-		};
-		const fields = mergeFields(
+		} as const;
+		const projection = mergeFields<PatientSearchIndexDocument>(
 			sort,
 			{
 				_id: 1,
@@ -51,8 +51,9 @@ const makePatientsSuggestions = (
 			userOptions?.fields,
 		);
 
-		const options = {
-			fields,
+		const query = {
+			filter,
+			projection,
 			sort,
 			skip: 0,
 			limit,
@@ -60,15 +61,10 @@ const makePatientsSuggestions = (
 
 		const deps = [
 			JSON.stringify(query),
-			JSON.stringify(options),
 			// refreshKey,
 		];
 
-		const {loading, ...rest} = useAdvancedObservedPatients(
-			query,
-			options,
-			deps,
-		);
+		const {loading, ...rest} = useAdvancedObservedPatients(query, deps);
 
 		return {
 			loading: Boolean(loading) || isPending(),

@@ -10,7 +10,7 @@ import FixedFab from '../button/FixedFab';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import YearJumper from '../navigation/YearJumper';
-import type Filter from '../../api/QueryFilter';
+import type UserFilter from '../../api/query/UserFilter';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import ConsultationsPager from './ConsultationsPager';
 
@@ -33,7 +33,7 @@ const UnpaidConsultationsList = ({year}: Props) => {
 	if (showWire) displayedPaymentMethods.push('wire');
 	if (showThirdParty) displayedPaymentMethods.push('third-party');
 
-	const query: Filter<ConsultationDocument> = {
+	const filter: UserFilter<ConsultationDocument> = {
 		isDone: true,
 		unpaid: true,
 		datetime: {
@@ -43,7 +43,7 @@ const UnpaidConsultationsList = ({year}: Props) => {
 	};
 
 	if (displayedPaymentMethods.length > 0) {
-		query.payment_method = {$in: displayedPaymentMethods};
+		filter.payment_method = {$in: displayedPaymentMethods};
 	}
 
 	const sort = {datetime: 1};
@@ -54,7 +54,7 @@ const UnpaidConsultationsList = ({year}: Props) => {
 		<div>
 			<YearJumper current={year} toURL={toURL} />
 			<ConsultationsPager
-				query={query}
+				filter={filter}
 				sort={sort}
 				itemProps={{
 					showPrice: true,

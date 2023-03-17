@@ -4,8 +4,10 @@ import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type AppointmentDocument,
 	Appointments,
+	appointmentDocument,
 } from '../../collection/appointments';
-import type Options from '../../QueryOptions';
+import type Options from '../../query/Options';
+import {options} from '../../query/Options';
 
 import define from '../define';
 
@@ -14,11 +16,7 @@ export default define({
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([
 		schema.string(),
-		schema
-			.object({
-				/* TODO Options<AppointmentDocument> */
-			})
-			.nullable(),
+		options(appointmentDocument).nullable(),
 	]),
 	cursor(patientId, options: Options<AppointmentDocument> | null) {
 		return Appointments.find(

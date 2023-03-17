@@ -10,7 +10,7 @@ import type ModuloWeekInterval from './ModuloWeekInterval';
 import useTimeSlotToString from './useTimeSlotToString';
 import timeSlotFromString from './timeSlotFromString';
 
-const KEY = 'work-schedule';
+const KEY = 'work-schedule' as const;
 
 const slotToInterval = ({
 	beginModuloWeek,

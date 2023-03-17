@@ -21,15 +21,10 @@ type Props = {
 
 const PatientHeader = ({patientId}: Props) => {
 	const init = {_id: patientId};
-	const query = patientId;
-	const options = {};
+	const query = {filter: {_id: patientId}};
 	const deps = [patientId];
 
-	const {
-		loading,
-		found,
-		fields: patient,
-	} = useCachedPatient(init, query, options, deps);
+	const {loading, found, fields: patient} = useCachedPatient(init, query, deps);
 
 	const localizeBirthdate = useDateFormat('PPP');
 

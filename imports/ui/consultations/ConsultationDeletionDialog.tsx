@@ -32,16 +32,18 @@ type Props = {
 };
 
 const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
-	const options = {fields: ConsultationDeletionDialog.projection};
-	const deps = [
-		consultation.patientId,
-		JSON.stringify(ConsultationDeletionDialog.projection),
-	];
 	const {
 		loading,
 		found,
 		fields: patient,
-	} = usePatient({}, consultation.patientId, options, deps);
+	} = usePatient(
+		{},
+		{
+			filter: {_id: consultation.patientId},
+			projection: ConsultationDeletionDialog.projection,
+		},
+		[consultation.patientId],
+	);
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [call, {pending}] = useCall();
@@ -120,6 +122,6 @@ const ConsultationDeletionDialog = ({open, onClose, consultation}: Props) => {
 ConsultationDeletionDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
+} as const;
 
 export default withLazyOpening(ConsultationDeletionDialog);

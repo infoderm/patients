@@ -14,18 +14,15 @@ type Props = {
 const ReactivePatientChip = React.forwardRef(
 	({patient, ...rest}: Props, ref) => {
 		const patientId = patient._id;
-		const options = {fields: StaticPatientChipProjection};
 
-		const deps = [
-			patientId,
-			JSON.stringify(patient),
-			JSON.stringify(StaticPatientChipProjection),
-		];
+		const deps = [JSON.stringify(patient), patientId];
 
 		const {loading, found, fields} = usePatient(
 			patient,
-			patientId,
-			options,
+			{
+				filter: {_id: patientId},
+				projection: StaticPatientChipProjection,
+			},
 			deps,
 		);
 

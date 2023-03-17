@@ -1,10 +1,37 @@
+import {type PaletteMode} from '@mui/material';
 import {indigo, pink} from '@mui/material/colors';
+import {type AvailableLocale} from '../i18n/availableLocales';
+import {type FirstWeekContainsDate} from '../i18n/datetime';
 
-import {ALL_WEEK_DAYS} from '../lib/datetime';
+import {ALL_WEEK_DAYS, type WeekDay} from '../lib/datetime';
+import type ModuloWeekInterval from '../ui/settings/ModuloWeekInterval';
 import {Settings} from './collection/settings';
 import findOneSync from './publication/findOneSync';
 
-export const defaults: Record<string, any> = {
+export type UserSettings = {
+	'theme-palette-mode': PaletteMode;
+	'theme-palette-primary': (typeof indigo)[500];
+	'theme-palette-secondary': typeof pink.A400;
+	'navigation-drawer-is-open': 'open' | 'closed';
+	'books-sorting-order': -1 | 1;
+	currency: 'EUR';
+	lang: 'navigator' | AvailableLocale;
+	'appointment-duration': number[];
+	'appointment-cancellation-reason': string[];
+	'work-schedule': ModuloWeekInterval[];
+	'agenda-slot-click-sets-initial-time': 'off' | 'begin';
+	'important-strings': string[];
+	'week-starts-on': 'locale' | WeekDay;
+	'first-week-contains-date': 'locale' | FirstWeekContainsDate;
+	'text-transform': 'none' | 'uppercase';
+	iban: string;
+	'account-holder': string;
+	'displayed-week-days': WeekDay[];
+};
+
+export type SettingKey = keyof UserSettings;
+
+export const defaults: UserSettings = {
 	'theme-palette-mode': 'light',
 	'theme-palette-primary': indigo[500],
 	'theme-palette-secondary': pink.A400,
@@ -23,10 +50,6 @@ export const defaults: Record<string, any> = {
 	iban: '',
 	'account-holder': '',
 	'displayed-week-days': [...ALL_WEEK_DAYS],
-};
-
-export const settings = {
-	defaults,
 };
 
 export function get(owner: string, key: string) {

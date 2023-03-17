@@ -6,17 +6,18 @@ import useCursor from './publication/useCursor';
 
 import type Collection from './Collection';
 import type Document from './Document';
-import type Selector from './QuerySelector';
-import type Options from './QueryOptions';
+import type UserQuery from './query/UserQuery';
+import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 
 const makeQuery =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[Selector<T>, Options<T>]>,
+		publication: Publication<[UserQuery<T>]>,
 	) =>
-	(selector: Selector<T>, options: Options<T>, deps: DependencyList) => {
-		const isLoading = useSubscription(publication, selector, options);
+	(query: UserQuery<T>, deps: DependencyList) => {
+		const isLoading = useSubscription(publication, query);
 		const loading = isLoading();
+		const [selector, options] = queryToSelectorOptionsPair(query);
 		const results = useCursor(() => collection.find(selector, options), deps);
 		return {loading, results};
 	};

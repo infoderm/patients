@@ -7,3 +7,5 @@ export type DoctorFields = TagNameFields;
 
 export const collection = 'doctors';
 export const Doctors = new Collection<DoctorDocument>(collection);
+
+export {tagDocument as doctorDocument} from '../tags/TagDocument';

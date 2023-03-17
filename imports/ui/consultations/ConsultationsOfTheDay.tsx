@@ -69,12 +69,14 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		};
 	}, [day]);
 
-	const query = {datetime: {$gte: day, $lt: nextDay}};
-	const options = {sort: {datetime: 1}};
+	const filter = {datetime: {$gte: day, $lt: nextDay}};
+	const query = {
+		filter,
+		sort: {datetime: 1} as const,
+	};
 	const deps = [Number(day)];
 	const {loading, results: consultations} = useConsultationsAndAppointments(
 		query,
-		options,
 		deps,
 	);
 

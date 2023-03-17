@@ -10,10 +10,10 @@ import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';
 import overlapsInterval from '../../interval/overlapsInterval';
 import {Availability, type SlotDocument} from '../../collection/availability';
 import {
-	type Constraint,
-	type Duration,
 	initialSlot,
 	overlapsAfterDate,
+	duration,
+	constraint,
 } from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
@@ -21,17 +21,8 @@ import {AuthenticationLoggedIn} from '../../Authentication';
 export default define({
 	name: 'availability.next',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.date(),
-		schema.number(),
-		schema.array(schema.tuple([schema.number(), schema.number()])),
-	]),
-	async transaction(
-		db: TransactionDriver,
-		after: Date,
-		duration: Duration,
-		inputConstraints: Constraint[],
-	) {
+	schema: schema.tuple([schema.date(), duration, schema.array(constraint)]),
+	async transaction(db: TransactionDriver, after, duration, inputConstraints) {
 		const constraints = inputConstraints.filter(
 			([left, right]) => right - left >= duration,
 		);
@@ -111,7 +102,7 @@ export default define({
 
 		return firstContainedAndOverlapping;
 	},
-	simulate(_after: Date, _duration: Duration, _constraints: Constraint[]) {
+	simulate(_after, _duration, _constraints) {
 		return undefined;
 	},
 });

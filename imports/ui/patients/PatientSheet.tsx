@@ -182,7 +182,7 @@ const PatientSheet = ({
 									chipProps={{
 										avatar: <Avatar>Al</Avatar>,
 									}}
-									value={patient.allergies || []}
+									value={patient.allergies ?? []}
 								/>
 							</Grid>
 
@@ -224,7 +224,7 @@ const PatientSheet = ({
 									chipProps={{
 										avatar: <Avatar>Dr</Avatar>,
 									}}
-									value={patient.doctors || []}
+									value={patient.doctors ?? []}
 								/>
 							</Grid>
 							<Grid item xs={12} md={4}>
@@ -240,7 +240,7 @@ const PatientSheet = ({
 									chipProps={{
 										avatar: <Avatar>In</Avatar>,
 									}}
-									value={patient.insurances || []}
+									value={patient.insurances ?? []}
 								/>
 							</Grid>
 

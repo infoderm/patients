@@ -1,90 +1,110 @@
-import {Match} from 'meteor/check';
+import schema from '../../lib/schema';
 import Collection from '../Collection';
-import {type FormattedLine, type NormalizedLine} from '../string';
-
-const maybe = Match.Maybe;
+import {formattedLineSchema, normalizedLineSchema} from '../string';
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
-export const SEX_ALLOWED = [undefined, '', 'male', 'female', 'other'];
-export type SexAllowed = (typeof SEX_ALLOWED)[number];
 
-export const PatientTagShape = {
-	displayName: String,
-	name: String,
-	comment: maybe(String),
-};
+export const patientSex = schema.union([
+	schema.undefined(),
+	schema.literal(''),
+	schema.literal('male'),
+	schema.literal('female'),
+	schema.literal('other'),
+]);
 
-export type PatientTag = {
-	displayName: FormattedLine;
-	name: NormalizedLine;
-	comment?: string;
-};
+export type PatientSex = schema.infer<typeof patientSex>;
 
-export type PatientIdFields = {
-	niss: string;
-	firstname: string;
-	lastname: string;
-	birthdate: string;
-	sex: SexAllowed;
-	photo: string;
+export const SEX_ALLOWED: PatientSex[] = [
+	undefined,
+	'',
+	'male',
+	'female',
+	'other',
+];
 
-	municipality: string;
-	streetandnumber: string;
-	zip: string;
-};
+export const patientTag = schema.object({
+	displayName: formattedLineSchema,
+	name: normalizedLineSchema,
+	comment: schema.string().optional(),
+});
 
-export const PatientEmailShape = {
-	address: String,
-	local: String,
-	domain: String,
-	name: maybe(String),
-};
+export type PatientTag = schema.infer<typeof patientTag>;
 
-export type Email = {
-	name?: string;
-	address: string;
-	local: string;
-	domain: string;
-};
+export const patientIdFields = schema.object({
+	niss: schema.string(),
+	firstname: schema.string(),
+	lastname: schema.string(),
+	birthdate: schema.string(),
+	sex: patientSex,
+	photo: schema.string(),
 
-export type PatientTagFields = {
-	allergies: PatientTag[];
-	doctors: PatientTag[];
-	insurances: PatientTag[];
-};
+	municipality: schema.string(),
+	streetandnumber: schema.string(),
+	zip: schema.string(),
+});
 
-type PatientPersonalInformationFields = {
-	deathdateModifiedAt?: Date;
-	deathdate?: Date;
-	phone: string;
+export type PatientIdFields = schema.infer<typeof patientIdFields>;
 
-	antecedents: string;
-	ongoing: string;
-	about: string;
+export const patientEmail = schema.object({
+	name: schema.string().optional(),
+	address: schema.string(),
+	local: schema.string(),
+	domain: schema.string(),
+});
 
-	email?: Email[];
+export type PatientEmail = schema.infer<typeof patientEmail>;
 
-	noshow?: number;
-	createdForAppointment?: boolean;
-};
+export const patientTagFields = schema.object({
+	allergies: schema.array(patientTag).optional(),
+	doctors: schema.array(patientTag).optional(),
+	insurances: schema.array(patientTag).optional(),
+});
 
-export type PatientFields = PatientIdFields &
-	PatientPersonalInformationFields &
-	PatientTagFields;
+export type PatientTagFields = schema.infer<typeof patientTagFields>;
 
-export type PatientComputedFields = {
-	normalizedName: string;
-};
+const patientPersonalInformationFields = schema.object({
+	deathdateModifiedAt: schema.date().optional(),
+	deathdate: schema.date().optional(),
+	phone: schema.string().optional(),
 
-type PatientMetadata = {
-	_id: string;
-	owner: string;
-	createdAt: Date;
-};
+	antecedents: schema.string().optional(),
+	ongoing: schema.string().optional(),
+	about: schema.string().optional(),
 
-export type PatientDocument = PatientFields &
-	PatientComputedFields &
-	PatientMetadata;
+	email: patientEmail.optional(),
+
+	noshow: schema.number().optional(), // TODO Should be .int()
+	createdForAppointment: schema.boolean().optional(),
+});
+
+export type PatientPersonalInformationFields = schema.infer<
+	typeof patientPersonalInformationFields
+>;
+
+export const patientFields = patientIdFields
+	.partial()
+	.merge(patientPersonalInformationFields)
+	.merge(patientTagFields);
+export type PatientFields = schema.infer<typeof patientFields>;
+
+export const patientComputedFields = schema.object({
+	normalizedName: schema.string(),
+});
+
+export type PatientComputedFields = schema.infer<typeof patientComputedFields>;
+
+const patientMetadata = schema.object({
+	_id: schema.string(),
+	owner: schema.string(),
+	createdAt: schema.date(),
+});
+
+export type PatientMetadata = schema.infer<typeof patientMetadata>;
+
+export const patientDocument = patientFields
+	.merge(patientComputedFields)
+	.merge(patientMetadata);
+export type PatientDocument = schema.infer<typeof patientDocument>;
 
 const collection = 'patients';
 export const Patients = new Collection<PatientDocument>(collection);

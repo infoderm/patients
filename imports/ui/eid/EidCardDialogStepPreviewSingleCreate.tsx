@@ -72,7 +72,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 		sex: '',
 		photo: '',
 		...$set,
-	};
+	} as const;
 
 	return (
 		<>

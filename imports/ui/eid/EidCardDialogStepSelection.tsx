@@ -56,10 +56,10 @@ const DEFAULT_FIELDS = {
 };
 
 const usePatientsNnSearch = ({niss: nn = ''}) => {
-	const query = {niss: nn};
+	const filter = {niss: nn};
 	const limit = DEFAULT_LIMIT;
 	const sort = {}; // TODO sort by something !== niss
-	const fields = mergeFields(
+	const projection = mergeFields(
 		{
 			_id: 1,
 			niss: 1,
@@ -67,19 +67,22 @@ const usePatientsNnSearch = ({niss: nn = ''}) => {
 		sort,
 		DEFAULT_FIELDS,
 	);
-	const options = {
-		fields,
+	const query = {
+		filter,
+		projection,
 		sort,
+		skip: 0,
 		limit,
 	};
-	return useObservedPatients(query, options, [nn]);
+	const deps = [nn];
+	return useObservedPatients(query, deps);
 };
 
 const usePatientsNormalizedNameSearch = ({normalizedName}) => {
-	const query = {normalizedName};
+	const filter = {normalizedName};
 	const limit = DEFAULT_LIMIT;
 	const sort = {}; // TODO sort by something !== normalizedName
-	const fields = mergeFields(
+	const projection = mergeFields(
 		{
 			_id: 1,
 			normalizedName: 1,
@@ -87,12 +90,15 @@ const usePatientsNormalizedNameSearch = ({normalizedName}) => {
 		sort,
 		DEFAULT_FIELDS,
 	);
-	const options = {
-		fields,
+	const query = {
+		filter,
+		projection,
 		sort,
+		skip: 0,
 		limit,
 	};
-	return useObservedPatients(query, options, [normalizedName]);
+	const deps = [normalizedName];
+	return useObservedPatients(query, deps);
 };
 
 const useStyles = makeStyles()((theme) => ({

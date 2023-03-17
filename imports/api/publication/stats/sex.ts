@@ -1,4 +1,4 @@
-import {Patients} from '../../collection/patients';
+import {patientDocument, Patients} from '../../collection/patients';
 import {publishCount} from '../../stats';
 
-export default publishCount(Patients, 'sex');
+export default publishCount(Patients, patientDocument, 'sex');

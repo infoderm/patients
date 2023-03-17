@@ -1,4 +1,5 @@
 import React from 'react';
+import tuple from '../../lib/types/tuple';
 
 import SelectOneSetting from './SelectOneSetting';
 
@@ -7,7 +8,7 @@ type Props = {
 };
 
 const NavigationDrawerIsOpenSetting = ({className}: Props) => {
-	const options = ['open', 'closed'];
+	const options = tuple('open' as const, 'closed' as const);
 
 	return (
 		<SelectOneSetting

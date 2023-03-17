@@ -1,8 +1,8 @@
 import assert from 'assert';
 import type Collection from '../Collection';
 import type Document from '../Document';
-import type Options from '../QueryOptions';
-import type Selector from '../QuerySelector';
+import type Options from '../query/Options';
+import type Selector from '../query/Selector';
 
 import fetchSync from './fetchSync';
 

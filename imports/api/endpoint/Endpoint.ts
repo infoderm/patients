@@ -1,8 +1,7 @@
 import type Serializable from '../Serializable';
 import type Args from '../Args';
 import {type Authentication} from '../Authentication';
-import type ArgsSchema from '../ArgsSchema';
-// import type InferArgs from '../InferArgs';
+import type ArgsSchemaFor from '../ArgsSchemaFor';
 
 import type Options from './Options';
 import type Executor from './Executor';
@@ -16,9 +15,10 @@ type Endpoint<
 	R extends Serializable,
 	Auth extends Authentication = Authentication,
 	C extends ContextFor<Auth> = ContextFor<Auth>,
+	S extends ArgsSchemaFor<A> = ArgsSchemaFor<A>,
 > = {
 	readonly name: string;
-	readonly schema: ArgsSchema;
+	readonly schema: S;
 	readonly options?: Options<R>;
 	readonly authentication: Auth;
 	readonly validate?: Validator<C, A>;

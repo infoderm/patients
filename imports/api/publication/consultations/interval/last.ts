@@ -3,9 +3,11 @@ import {AuthenticationLoggedIn} from '../../../Authentication';
 import {
 	type ConsultationDocument,
 	Consultations,
+	consultationDocument,
 } from '../../../collection/consultations';
-import type Selector from '../../../QuerySelector';
-import type Filter from '../../../QueryFilter';
+import type Selector from '../../../query/Selector';
+import type UserFilter from '../../../query/UserFilter';
+import {userFilter} from '../../../query/UserFilter';
 import define from '../../define';
 
 export default define({
@@ -14,13 +16,9 @@ export default define({
 	schema: schema.tuple([
 		schema.date(),
 		schema.date(),
-		schema
-			.object({
-				/* Filter<ConsultationDocument> */
-			})
-			.nullable(),
+		userFilter(consultationDocument).nullable(),
 	]),
-	cursor(from, to, filter: Filter<ConsultationDocument> | null) {
+	cursor(from, to, filter: UserFilter<ConsultationDocument> | null) {
 		return Consultations.find(
 			{
 				isDone: true,

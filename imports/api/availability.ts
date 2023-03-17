@@ -11,6 +11,8 @@ import getMinutes from 'date-fns/getMinutes';
 import getSeconds from 'date-fns/getSeconds';
 import getMilliseconds from 'date-fns/getMilliseconds';
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
+
+import schema from '../lib/schema';
 import {
 	ALL_WEEK_DAYS,
 	beginningOfTime,
@@ -33,8 +35,10 @@ import {
 } from './collection/availability';
 import type TransactionDriver from './transaction/TransactionDriver';
 
-export type Constraint = [number, number];
-export type Duration = number;
+export const constraint = schema.tuple([schema.number(), schema.number()]);
+export type Constraint = schema.infer<typeof constraint>;
+export const duration = schema.number();
+export type Duration = schema.infer<typeof duration>;
 
 const intervalsOverlap = (
 	x0: number,

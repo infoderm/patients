@@ -3,12 +3,14 @@ import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,
 	Consultations,
+	consultationDocument,
 } from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 import {countCollection, type PollResult} from '../../collection/stats';
-import type Selector from '../../QuerySelector';
-import type Filter from '../../QueryFilter';
+import type Selector from '../../query/Selector';
 import define from '../define';
+import type UserFilter from '../../query/UserFilter';
+import {userFilter} from '../../query/UserFilter';
 
 export const frequencySexKey = (query) =>
 	`frequencySex-${JSON.stringify(query ?? {})}`;
@@ -25,14 +27,8 @@ export type GenderCount = {
 export default define({
 	name: frequencySexPublication,
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema
-			.object({
-				/* TODO */
-			})
-			.nullable(),
-	]),
-	handle(filter: Filter<ConsultationDocument> | null) {
+	schema: schema.tuple([userFilter(consultationDocument).nullable()]),
+	handle(filter: UserFilter<ConsultationDocument> | null) {
 		const collection = countCollection;
 		const key = frequencySexKey(filter);
 		const selector = {
