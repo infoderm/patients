@@ -2,12 +2,15 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
 import {Allergies} from '../../collection/allergies';
 import {newAllergy} from '../../_dev/populate/allergies';
 
-import {findOneOrThrow, server, throws} from '../../../_test/fixtures';
+import {
+	findOneOrThrow,
+	randomUserId,
+	server,
+	throws,
+} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
 import {type AuthenticatedContext} from '../Context';
@@ -15,7 +18,7 @@ import changeAllergyColor from './changeColor';
 
 server(__filename, () => {
 	it('can change color of allergy', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
 
@@ -36,7 +39,7 @@ server(__filename, () => {
 	});
 
 	it('cannot change color of allergy if not logged in', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
 
@@ -65,7 +68,7 @@ server(__filename, () => {
 	});
 
 	it('cannot change color of allergy of other user', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
 

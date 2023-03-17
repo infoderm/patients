@@ -15,6 +15,7 @@ import type Collection from '../api/Collection';
 import type Document from '../api/Document';
 import type Selector from '../api/QuerySelector';
 
+export const randomId = () => Random.id();
 export const randomUserId = () => Random.id();
 export const randomPassword = () => Random.id();
 

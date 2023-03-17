@@ -2,8 +2,6 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
 import {Appointments} from '../../collection/appointments';
 import {Availability} from '../../collection/availability';
 import {
@@ -12,7 +10,13 @@ import {
 } from '../../_dev/populate/appointments';
 import {slot} from '../../availability';
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
-import {dropIds, findOneOrThrow, server, throws} from '../../../_test/fixtures';
+import {
+	dropIds,
+	findOneOrThrow,
+	randomUserId,
+	server,
+	throws,
+} from '../../../_test/fixtures';
 import invoke from '../invoke';
 import {type AuthenticatedContext} from '../Context';
 import appointmentsReschedule from './reschedule';
@@ -34,7 +38,7 @@ const expected = ({owner, begin, end}) => [
 
 server(__filename, () => {
 	it('does not work without being logged in', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
@@ -57,7 +61,7 @@ server(__filename, () => {
 	});
 
 	it("cannot reschedule other user's appointments", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
@@ -80,7 +84,7 @@ server(__filename, () => {
 	});
 
 	it('updates availability', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 

@@ -2,12 +2,11 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
 import {
 	dropId,
 	dropIds,
 	findOneOrThrow,
+	randomUserId,
 	server,
 	throws,
 } from '../../../_test/fixtures';
@@ -25,7 +24,7 @@ import appointmentsCancel from './cancel';
 
 server(__filename, () => {
 	it('can cancel appointment', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
@@ -42,7 +41,7 @@ server(__filename, () => {
 	});
 
 	it("cannot cancel other user's consultation", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 
@@ -58,7 +57,7 @@ server(__filename, () => {
 	});
 
 	it('restores availability', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
 

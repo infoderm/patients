@@ -2,9 +2,7 @@
 import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
-import {Random} from 'meteor/random';
-
-import {server, throws} from '../../../_test/fixtures';
+import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import {Consultations} from '../../collection/consultations';
 
@@ -16,7 +14,7 @@ import consultationsTransfer from './transfer';
 
 server(__filename, () => {
 	it('can transfer consultation', async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 		const patientBId = await newPatient({userId});
@@ -48,7 +46,7 @@ server(__filename, () => {
 	});
 
 	it("cannot transfer other user's consultation", async () => {
-		const userId = Random.id();
+		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
 		const patientBId = await newPatient({userId});
