@@ -2,33 +2,29 @@ import React from 'react';
 
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-
-const PREFIX = 'HealthOneReportContents';
-
-const classes = {
-	container: `${PREFIX}-container`,
-	paper: `${PREFIX}-paper`,
-};
+import {type ParsedDocumentDocument} from '../../api/collection/documents';
 
 const Root = styled('div')(({theme}) => ({
-	[`&.${classes.container}`]: {
-		maxWidth: 1200,
-		margin: '0 auto',
-		marginTop: theme.spacing(3),
-		textAlign: 'center',
-	},
-
-	[`& .${classes.paper}`]: {
-		display: 'inline-block',
-		whiteSpace: 'pre-wrap',
-		padding: theme.spacing(3),
-	},
+	maxWidth: 1200,
+	margin: '0 auto',
+	marginTop: theme.spacing(3),
+	textAlign: 'center',
 }));
 
-const HealthOneReportContents = ({document}) => {
+const StyledPaper = styled(Paper)(({theme}) => ({
+	display: 'inline-block',
+	whiteSpace: 'pre-wrap',
+	padding: theme.spacing(3),
+}));
+
+type Props = {
+	document: ParsedDocumentDocument;
+};
+
+const HealthOneReportContents = ({document}: Props) => {
 	return (
-		<Root className={classes.container}>
-			<Paper className={classes.paper}>{document.text.join('\n').trim()}</Paper>
+		<Root>
+			<StyledPaper>{document.text.join('\n').trim()}</StyledPaper>
 		</Root>
 	);
 };

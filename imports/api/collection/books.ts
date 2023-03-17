@@ -1,21 +1,32 @@
+import schema from '../../lib/schema';
 import Collection from '../Collection';
-import {type NormalizedLine} from '../string';
+import {normalizedLineSchema} from '../string';
 
-export type BookFields = {
-	name: NormalizedLine;
-};
+export const bookFields = schema.object({
+	name: normalizedLineSchema,
+});
 
-type BookComputedFields = {
-	fiscalYear: number | string;
-	bookNumber: number | string;
-};
+export type BookFields = schema.infer<typeof bookFields>;
 
-type BookMetadata = {
-	_id: string;
-	owner: string;
-};
+export const bookComputedFields = schema.object({
+	fiscalYear: schema.union([schema.number(), schema.string()]),
+	bookNumber: schema.union([schema.number(), schema.string()]),
+});
 
-export type BookDocument = BookFields & BookComputedFields & BookMetadata;
+export type BookComputedFields = schema.infer<typeof bookComputedFields>;
+
+export const bookMetadata = schema.object({
+	_id: schema.string(),
+	owner: schema.string(),
+});
+
+export type BookMetadata = schema.infer<typeof bookMetadata>;
+
+export const bookDocument = bookFields
+	.merge(bookComputedFields)
+	.merge(bookMetadata);
+
+export type BookDocument = schema.infer<typeof bookDocument>;
 
 export const collection = 'books';
 export const Books = new Collection<BookDocument>(collection);

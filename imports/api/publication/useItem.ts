@@ -2,8 +2,8 @@ import {type DependencyList} from 'react';
 
 import type Collection from '../Collection';
 import type Document from '../Document';
-import type Selector from '../QuerySelector';
-import type Options from '../QueryOptions';
+import type Selector from '../query/Selector';
+import type Options from '../query/Options';
 
 import useReactive from './useReactive';
 import findOneSync from './findOneSync';

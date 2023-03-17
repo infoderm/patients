@@ -1,9 +1,10 @@
 import React from 'react';
+import tuple from '../../lib/types/tuple';
 
 import SelectOneSetting from './SelectOneSetting';
 
 const TextTransformSetting = ({className}) => {
-	const options = ['none', 'uppercase'];
+	const options = tuple('none' as const, 'uppercase' as const);
 
 	return (
 		<SelectOneSetting

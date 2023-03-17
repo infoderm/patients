@@ -18,7 +18,7 @@ const FirstWeekContainsDateSetting = ({className}) => {
 
 	const POSITIONS = useDaysPositions(positions);
 
-	const optionToString = (x: string) =>
+	const optionToString = (x: string | number) =>
 		x === 'locale'
 			? `${POSITIONS[firstWeekContainsDate]} (same as locale)`
 			: POSITIONS[x];

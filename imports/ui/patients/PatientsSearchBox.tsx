@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {patients} from '../../api/patients';
 
 import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions';
-import {type PatientCacheResult} from '../../api/collection/patients/search/cache';
+import {type PatientSearchIndexDocument} from '../../api/collection/patients/search';
 import usePatientsSuggestions from './usePatientsSuggestions';
 
 const PREFIX = 'PatientsSearchBox';
@@ -30,7 +30,7 @@ const PatientsSearchBox = ({className}) => {
 	const handleChange = ({
 		selectedItem = null,
 	}: {
-		selectedItem?: PatientCacheResult | null;
+		selectedItem?: PatientSearchIndexDocument | null;
 	}) => {
 		if (selectedItem) {
 			navigate(`/patient/${selectedItem._id}`);

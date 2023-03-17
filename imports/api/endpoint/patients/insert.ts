@@ -1,7 +1,7 @@
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import schema from '../../../lib/schema';
-import {Patients} from '../../collection/patients';
+import {patientFields, Patients} from '../../collection/patients';
 import {computeUpdate, patients} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
@@ -12,7 +12,7 @@ const {sanitize, updateIndex, updateTags} = patients;
 export default define({
 	name: '/api/patients/insert',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([schema.object({})]),
+	schema: schema.tuple([patientFields.strict()]),
 	async transaction(db: TransactionDriver, patient) {
 		const owner = this.userId;
 		const changes = sanitize(patient);
@@ -35,7 +35,7 @@ export default define({
 
 		return patientId;
 	},
-	simulate(_patient: any) {
+	simulate(_patient) {
 		return undefined;
 	},
 });

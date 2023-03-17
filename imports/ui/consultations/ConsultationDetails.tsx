@@ -3,7 +3,7 @@ import {useParams} from 'react-router-dom';
 import {myDecodeURIComponent} from '../../lib/uri';
 
 import StaticConsultationDetails from './StaticConsultationDetails';
-import useConsultation from './useConsultation';
+import useConsultationOrAppointment from './useConsultationOrAppointment';
 
 type Params = {
 	id: string;
@@ -11,15 +11,20 @@ type Params = {
 
 const ConsultationDetails = () => {
 	const params = useParams<Params>();
-	const init = {};
-	const query = myDecodeURIComponent(params.id)!;
-	const options = {fields: StaticConsultationDetails.projection};
-	const deps = [query, JSON.stringify(StaticConsultationDetails.projection)];
+	const consultationId = myDecodeURIComponent(params.id)!;
+
 	const {
 		loading,
 		found,
 		fields: consultation,
-	} = useConsultation(init, query, options, deps);
+	} = useConsultationOrAppointment(
+		{},
+		{
+			filter: {_id: consultationId},
+			projection: StaticConsultationDetails.projection,
+		},
+		[consultationId],
+	);
 
 	return (
 		// @ts-expect-error Too complex to make it work.

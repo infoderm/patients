@@ -5,7 +5,7 @@ import StaticAttachmentLink from './StaticAttachmentLink';
 
 const ReactiveAttachmentLink = ({attachmentId, ...rest}) => {
 	const _id = attachmentId;
-	const {loading, found, fields} = useAttachment({_id}, _id, undefined, [_id]);
+	const {loading, found, fields} = useAttachment({_id}, {filter: {_id}}, [_id]);
 	return (
 		<StaticAttachmentLink
 			attachmentId={attachmentId}

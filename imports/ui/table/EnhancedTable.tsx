@@ -11,8 +11,6 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 
-import mergeFields from '../../api/query/mergeFields';
-
 import remove from '../../api/endpoint/drugs/remove';
 import call from '../../api/endpoint/call';
 
@@ -20,28 +18,18 @@ import useDrugs from '../drugs/useDrugs';
 import EnhancedTableHead, {type Order} from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedToolbar';
 
-const PREFIX = 'EnhancedTable';
-
-const classes = {
-	root: `${PREFIX}-root`,
-	table: `${PREFIX}-table`,
-	tableWrapper: `${PREFIX}-tableWrapper`,
-};
-
 const StyledPaper = styled(Paper)(({theme}) => ({
-	[`&.${classes.root}`]: {
-		width: '100%',
-		marginTop: theme.spacing(3),
-	},
-
-	[`& .${classes.table}`]: {
-		minWidth: 800,
-	},
-
-	[`& .${classes.tableWrapper}`]: {
-		overflowX: 'auto',
-	},
+	width: '100%',
+	marginTop: theme.spacing(3),
 }));
+
+const StyledTable = styled(Table)({
+	minWidth: 800,
+});
+
+const Wrapper = styled('div')({
+	overflowX: 'auto',
+});
 
 function sortRows<T>(data: T[], order: Order, orderBy: string) {
 	return order === 'desc'
@@ -58,20 +46,18 @@ const EnhancedTable = ({query}: Props) => {
 
 	// TODO correctly use pagination
 	const limit = 20;
-	const sort = {score: {$meta: 'textScore'}};
-	// mergeFields below is a temporary type hack to
-	// hide the fact that score is not 0/1.
-	const fields = mergeFields(sort);
+	const sort = {score: {$meta: 'textScore'}} as const;
+	const projection = sort;
 
-	const selector = {$text: {$search: query}};
-	const options = {
-		fields,
+	const concreteQuery = {
+		filter: {$text: {$search: query}},
+		projection,
 		sort,
 		limit,
 	};
-	const deps = [JSON.stringify(selector), JSON.stringify(options)];
+	const deps = [JSON.stringify(concreteQuery)];
 
-	const {results: drugs} = useDrugs(selector, options, deps);
+	const {results: drugs} = useDrugs(concreteQuery, deps);
 
 	const [order, setOrder] = useState<Order>('asc');
 	const [orderBy, setOrderBy] = useState('mppcv');
@@ -130,13 +116,13 @@ const EnhancedTable = ({query}: Props) => {
 		rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
 	return (
-		<StyledPaper className={classes.root}>
+		<StyledPaper>
 			<EnhancedTableToolbar
 				numSelected={selected.size}
 				onDelete={handleDelete}
 			/>
-			<div className={classes.tableWrapper}>
-				<Table className={classes.table}>
+			<Wrapper>
+				<StyledTable>
 					<EnhancedTableHead
 						numSelected={selected.size}
 						order={order}
@@ -198,8 +184,8 @@ const EnhancedTable = ({query}: Props) => {
 							/>
 						</TableRow>
 					</TableFooter>
-				</Table>
-			</div>
+				</StyledTable>
+			</Wrapper>
 		</StyledPaper>
 	);
 };

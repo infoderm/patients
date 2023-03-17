@@ -13,35 +13,37 @@ const order = key(iterable(decreasing), function* (x: AttachmentInfo) {
 });
 
 const useAttachmentsForPatients = ($in) => {
-	const cQuery = {
+	const cFilter = {
 		patientId: {$in},
 	};
 
-	const cOptions = {
-		fields: {
-			datetime: 1,
-			patientId: 1,
-		},
+	const cProjection = {
+		datetime: 1,
+		patientId: 1,
+	} as const;
+
+	const cQuery = {
+		filter: cFilter,
+		projection: cProjection,
 	};
 
 	const cDeps = $in;
 
 	const {loading: loadingConsultations, results: consultations} =
-		useConsultationsAndAppointments(cQuery, cOptions, cDeps);
+		useConsultationsAndAppointments(cQuery, cDeps);
 
 	// console.debug({cQuery, cOptions, cDeps, loadingConsultations, consultations});
 
 	const consultationId = {$in: consultations.map((x) => x._id)};
 
 	const query = {
-		$or: [
-			{'meta.attachedToPatients': {$in}},
-			{'meta.attachedToConsultations': consultationId},
-		],
-	};
-
-	const options = {
-		fields: {
+		filter: {
+			$or: [
+				{'meta.attachedToPatients': {$in}},
+				{'meta.attachedToConsultations': consultationId},
+			],
+		},
+		projection: {
 			meta: 1,
 			// The following does not work because subsequent subscriptions
 			// will not fetch additional meta subdocument fields.
@@ -49,14 +51,13 @@ const useAttachmentsForPatients = ($in) => {
 			// 'meta.attachedToConsultations': 1
 			// 'meta.lastModified': 1,
 			// 'meta.createdAt': 1
-		},
+		} as const,
 	};
 
 	const deps = [JSON.stringify(query)];
 
 	const {loading: loadingAttachments, results: attachments} = useAttachments(
 		query,
-		options,
 		deps,
 	);
 

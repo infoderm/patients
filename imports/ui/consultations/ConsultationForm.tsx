@@ -23,29 +23,35 @@ import {books, useBooksFind} from '../../api/books';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import CurrencyAmountInput from '../input/CurrencyAmountInput';
+import {parsePositiveIntegerStrictOrUndefined} from '../../api/string';
 
-const PREFIX = 'ConsultationForm';
+const useInBookNumberCollides = (
+	consultationId: string | undefined,
+	bookName: string,
+	inBookNumberString: string,
+) => {
+	const inBookNumber =
+		parsePositiveIntegerStrictOrUndefined(inBookNumberString);
 
-const classes = {
-	multiline: `${PREFIX}-multiline`,
-	form: `${PREFIX}-form`,
-	hidden: `${PREFIX}-hidden`,
+	const {loading, result} = useBookStats(
+		inBookNumber === undefined ? undefined : bookName,
+		{
+			_id: consultationId && {$ne: consultationId},
+			inBookNumber,
+		},
+	);
+
+	return !loading && result !== undefined && result.count >= 1;
 };
 
 const StyledPaper = styled(Paper)(({theme}) => ({
-	[`&.${classes.form}`]: {
-		padding: theme.spacing(3),
-	},
+	padding: theme.spacing(3),
+}));
 
-	[`& .${classes.multiline}`]: {
-		margin: theme.spacing(1),
-		overflow: 'auto',
-		width: `calc(100% - ${theme.spacing(2)})`,
-	},
-
-	[`& .${classes.hidden}`]: {
-		display: 'none',
-	},
+const TextArea = styled(TextField)(({theme}) => ({
+	margin: theme.spacing(1),
+	overflow: 'auto',
+	width: `calc(100% - ${theme.spacing(2)})`,
 }));
 
 const defaultDate = '1970-01-01';
@@ -147,100 +153,85 @@ const ConsultationForm = ({consultation, update}: Props) => {
 			books.MAX_CONSULTATIONS + (_id && initialBookName === bookName ? 1 : 0) &&
 		books.isReal(bookName);
 
-	const inBookNumber = Number.parseInt(inBookNumberString, 10) ?? undefined;
-
-	const {
-		loading: loadingInBookNumberCollisions,
-		result: inBookNumberCollisions,
-	} = useBookStats(bookName, {
-		_id: _id && {$nin: [_id]},
-		inBookNumber,
-	});
-
-	const inBookNumberCollides =
-		!loadingInBookNumberCollisions &&
-		inBookNumberCollisions !== undefined &&
-		inBookNumberCollisions.count >= 1;
+	const inBookNumberCollides = useInBookNumberCollides(
+		_id,
+		bookName,
+		inBookNumberString,
+	);
 
 	const consultationYear = getYear(datetime);
 
 	return (
-		<StyledPaper className={classes.form}>
+		<StyledPaper>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
-					<TextField
+					<TextArea
 						multiline
 						readOnly={!update}
 						autoFocus={Boolean(update)}
 						label="Motif de la visite"
 						placeholder="Motif de la visite"
 						rows={4}
-						className={classes.multiline}
 						value={reason}
 						margin="normal"
 						onChange={update?.('reason')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<TextField
+					<TextArea
 						multiline
 						readOnly={!update}
 						label="Examens déjà réalisés"
 						placeholder="Examens déjà réalisés"
 						rows={4}
-						className={classes.multiline}
 						value={done}
 						margin="normal"
 						onChange={update?.('done')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<TextField
+					<TextArea
 						multiline
 						readOnly={!update}
 						label="Examens à réaliser"
 						placeholder="Examens à réaliser"
 						rows={4}
-						className={classes.multiline}
 						value={todo}
 						margin="normal"
 						onChange={update?.('todo')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<TextField
+					<TextArea
 						multiline
 						readOnly={!update}
 						label="Traitement"
 						placeholder="Traitement"
 						rows={4}
-						className={classes.multiline}
 						value={treatment}
 						margin="normal"
 						onChange={update?.('treatment')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<TextField
+					<TextArea
 						multiline
 						readOnly={!update}
 						label="À revoir"
 						placeholder="À revoir"
 						rows={4}
-						className={classes.multiline}
 						value={next}
 						margin="normal"
 						onChange={update?.('next')}
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<TextField
+					<TextArea
 						multiline
 						readOnly={!update}
 						label="Autres remarques"
 						placeholder="Write some additional information about the consultation here"
 						rows={4}
-						className={classes.multiline}
 						value={more}
 						margin="normal"
 						onChange={update?.('more')}
@@ -288,7 +279,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								<InputAdornment position="end">
 									<IconButton
 										size="large"
-										className={priceWarning ? undefined : classes.hidden}
+										sx={priceWarning ? undefined : {display: 'none'}}
 									>
 										<WarningIcon />
 									</IconButton>

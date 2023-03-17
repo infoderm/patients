@@ -1,5 +1,3 @@
-import {check, Match} from 'meteor/check';
-
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
 import {_chain} from '@iterable-iterator/chain';
@@ -7,15 +5,16 @@ import {take} from '@iterable-iterator/slice';
 import {filter} from '@iterable-iterator/filter';
 
 import isValid from 'date-fns/isValid';
+import schema from '../lib/schema';
 import {
 	type PatientFields,
 	type PatientComputedFields,
-	SEX_ALLOWED,
-	PatientEmailShape,
-	PatientTagShape,
+	patientEmail,
+	patientTag,
 	type PatientTag,
 	type PatientDocument,
 	type PatientTagFields,
+	patientSex,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -39,12 +38,14 @@ import type TransactionDriver from './transaction/TransactionDriver';
 import {names as tagNames} from './createTagCollection';
 import {
 	type Entry,
+	type UpdateEntry,
 	makeComputedFields,
 	makeComputeUpdate,
 	makeSanitize,
 	yieldKey,
 	yieldResettableKey,
 } from './update';
+import {type DocumentUpdate} from './DocumentUpdate';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -144,78 +145,87 @@ const sanitizePatientTag = ({
 
 const trimString = (value: any) => value?.trim();
 const sanitizePatientTags = (tags) => list(map(sanitizePatientTag, tags));
-const where = Match.Where;
 
 const sanitizeUpdate = function* (
-	fields: Partial<PatientFields>,
-): IterableIterator<Entry<Partial<PatientFields & PatientComputedFields>>> {
-	yield* yieldKey(fields, 'niss', String, trimString);
-	yield* yieldKey(fields, 'firstname', String, trimString);
-	yield* yieldKey(fields, 'lastname', String, trimString);
-	yield* yieldKey(fields, 'birthdate', String, trimString);
-	yield* yieldKey(
-		fields,
-		'sex',
-		where((sex) => {
-			if (!SEX_ALLOWED.includes(sex))
-				throw new Error(
-					`Wrong sex for patient (${sex}). Must be one of ${JSON.stringify(
-						SEX_ALLOWED,
-					)}`,
-				);
-			return true;
-		}),
-	);
-	yield* yieldKey(fields, 'photo', String, (photo) =>
+	fields: DocumentUpdate<PatientFields>,
+): IterableIterator<UpdateEntry<PatientFields & PatientComputedFields>> {
+	yield* yieldKey(fields, 'niss', schema.string(), trimString);
+	yield* yieldKey(fields, 'firstname', schema.string(), trimString);
+	yield* yieldKey(fields, 'lastname', schema.string(), trimString);
+	yield* yieldKey(fields, 'birthdate', schema.string(), trimString);
+	yield* yieldResettableKey(fields, 'sex', patientSex);
+	yield* yieldKey(fields, 'photo', schema.string(), (photo) =>
 		photo?.replace(/\n/g, ''),
 	);
 
 	yield* yieldResettableKey(
 		fields,
 		'deathdateModifiedAt',
-		where((deathdateModifiedAt) => {
-			if (deathdateModifiedAt !== null) {
-				check(deathdateModifiedAt, Date);
-				if (!isValid(deathdateModifiedAt)) {
-					throw new Error('Invalid date given for field `deathdateModifiedAt`');
-				}
-			}
-
-			return true;
-		}),
+		schema
+			.date()
+			.optional()
+			.refine(
+				(deathdateModifiedAt) => {
+					return (
+						deathdateModifiedAt === undefined || isValid(deathdateModifiedAt)
+					);
+				},
+				{
+					message: 'Date for field `deathdateModifiedAt` must be valid.',
+				},
+			),
 	);
 
 	yield* yieldResettableKey(
 		fields,
 		'deathdate',
-		where((deathdate) => {
-			if (deathdate !== null) {
-				check(deathdate, Date);
-				if (!isValid(deathdate)) {
-					throw new Error('Invalid date given for field `deathdate`');
-				}
-			}
-
-			return true;
-		}),
+		schema
+			.date()
+			.optional()
+			.refine(
+				(deathdate) => {
+					return deathdate === undefined || isValid(deathdate);
+				},
+				{
+					message: 'Date for field `deathdate` must be valid.',
+				},
+			),
 	);
 
-	yield* yieldKey(fields, 'antecedents', String, trimString);
-	yield* yieldKey(fields, 'ongoing', String, trimString);
-	yield* yieldKey(fields, 'about', String, trimString);
+	yield* yieldKey(fields, 'antecedents', schema.string(), trimString);
+	yield* yieldKey(fields, 'ongoing', schema.string(), trimString);
+	yield* yieldKey(fields, 'about', schema.string(), trimString);
 
-	yield* yieldKey(fields, 'municipality', String, trimString);
-	yield* yieldKey(fields, 'streetandnumber', String, trimString);
-	yield* yieldKey(fields, 'zip', String, trimString);
-	yield* yieldKey(fields, 'phone', String, trimString);
-	yield* yieldKey(fields, 'email', [PatientEmailShape]);
+	yield* yieldKey(fields, 'municipality', schema.string(), trimString);
+	yield* yieldKey(fields, 'streetandnumber', schema.string(), trimString);
+	yield* yieldKey(fields, 'zip', schema.string(), trimString);
+	yield* yieldKey(fields, 'phone', schema.string(), trimString);
+	yield* yieldKey(fields, 'email', patientEmail);
 
-	yield* yieldKey(fields, 'insurances', [PatientTagShape], sanitizePatientTags);
-	yield* yieldKey(fields, 'doctors', [PatientTagShape], sanitizePatientTags);
-	yield* yieldKey(fields, 'allergies', [PatientTagShape], sanitizePatientTags);
+	yield* yieldKey(
+		fields,
+		'insurances',
+		// @ts-expect-error current limitation of zod. See https://github.com/colinhacks/zod/issues/2076
+		schema.array(patientTag),
+		sanitizePatientTags,
+	);
+	yield* yieldKey(
+		fields,
+		'doctors',
+		// @ts-expect-error current limitation of zod. See https://github.com/colinhacks/zod/issues/2076
+		schema.array(patientTag),
+		sanitizePatientTags,
+	);
+	yield* yieldKey(
+		fields,
+		'allergies',
+		// @ts-expect-error current limitation of zod. See https://github.com/colinhacks/zod/issues/2076
+		schema.array(patientTag),
+		sanitizePatientTags,
+	);
 
-	yield* yieldKey(fields, 'noshow', Match.Integer);
-	yield* yieldKey(fields, 'createdForAppointment', Boolean);
+	yield* yieldKey(fields, 'noshow', schema.number().int());
+	yield* yieldKey(fields, 'createdForAppointment', schema.boolean());
 };
 
 export const sanitize = makeSanitize(sanitizeUpdate);

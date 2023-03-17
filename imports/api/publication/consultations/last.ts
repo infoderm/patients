@@ -3,22 +3,18 @@ import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,
 	Consultations,
+	consultationDocument,
 } from '../../collection/consultations';
-import type Selector from '../../QuerySelector';
-import type Filter from '../../QueryFilter';
+import type Selector from '../../query/Selector';
 import define from '../define';
+import type UserFilter from '../../query/UserFilter';
+import {userFilter} from '../../query/UserFilter';
 
 export default define({
 	name: 'consultations.last',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema
-			.object({
-				/* Filter<ConsultationDocument> */
-			})
-			.nullable(),
-	]),
-	cursor(filter: Filter<ConsultationDocument> | null) {
+	schema: schema.tuple([userFilter(consultationDocument).nullable()]),
+	cursor(filter: UserFilter<ConsultationDocument> | null) {
 		return Consultations.find(
 			{
 				isDone: true,

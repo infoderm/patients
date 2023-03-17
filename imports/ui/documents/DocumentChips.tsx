@@ -208,6 +208,6 @@ DocumentChips.projection = {
 	decoded: 0,
 	results: 0,
 	text: 0,
-};
+} as const;
 
 export default DocumentChips;

@@ -18,8 +18,10 @@ type Props = Omit<
 const AttachmentsForPatient = ({patientId, ...rest}: Props) => {
 	const {loading: loadingPatient, found: foundPatient} = usePatient(
 		{},
-		patientId,
-		{fields: {_id: 1}},
+		{
+			filter: {_id: patientId},
+			projection: {_id: 1},
+		},
 		[patientId],
 	);
 

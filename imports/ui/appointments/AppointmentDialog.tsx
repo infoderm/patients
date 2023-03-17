@@ -62,11 +62,13 @@ const Multiline = styled(TextField)({
 const usePhone = (patientList) => {
 	const patientId = patientList.length === 1 ? patientList[0]._id : '?';
 
-	const options = {fields: {phone: 1}};
+	const deps = [patientId];
 
-	const deps = [patientId, JSON.stringify(options)];
-
-	const {found, fields: patient} = usePatient({}, patientId, options, deps);
+	const {found, fields: patient} = usePatient(
+		{},
+		{filter: {_id: patientId}, projection: {phone: 1}},
+		deps,
+	);
 
 	const initPhone = found ? patient.phone : '';
 
@@ -128,10 +130,11 @@ const AppointmentDialog = ({
 		!noInitialTime && isValid(initialDatetime),
 	);
 	const [duration, setDuration] = useStateWithInitOverride<number>(
-		appointmentDuration.includes(initialAppointment?.duration)
+		// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+		appointmentDuration.includes(initialAppointment?.duration!)
 			? initialAppointment!.duration
 			: appointmentDuration.length > 0
-			? appointmentDuration[0]
+			? appointmentDuration[0]!
 			: 0,
 		[initialAppointment, appointmentDuration],
 	);
@@ -207,7 +210,7 @@ const AppointmentDialog = ({
 			const args: AppointmentUpdate = {
 				datetime,
 				duration,
-				patient: patientList[0],
+				patient: patientList[0]!,
 				phone,
 				reason,
 			};

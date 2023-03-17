@@ -1,10 +1,15 @@
 import React from 'react';
 
-import InputManySetting from './InputManySetting';
+import InputManySetting, {type InputManySettingProps} from './InputManySetting';
 
-const KEY = 'appointment-cancellation-reason';
+const KEY = 'appointment-cancellation-reason' as const;
 
-const AppointmentCancellationReasonSetting = (props) => (
+const AppointmentCancellationReasonSetting = (
+	props: Omit<
+		InputManySettingProps<typeof KEY>,
+		'title' | 'label' | 'setting' | 'placeholder' | 'inputTransform'
+	>,
+) => (
 	<InputManySetting
 		title="Appointment cancellation reasons"
 		label="Reasons"

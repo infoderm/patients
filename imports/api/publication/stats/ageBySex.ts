@@ -1,7 +1,7 @@
 import startOfToday from 'date-fns/startOfToday';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import {publishCount} from '../../stats';
-import {Patients} from '../../collection/patients';
+import {patientDocument, Patients} from '../../collection/patients';
 import eidParseBirthdate from '../../eidParseBirthdate';
 
 const sexToString = (sex) => {
@@ -20,7 +20,7 @@ const sexToString = (sex) => {
 	}
 };
 
-export default publishCount(Patients, {
+export default publishCount(Patients, patientDocument, {
 	fields: ['birthdate', 'sex'],
 	discretize({birthdate, sex}) {
 		if (!birthdate)

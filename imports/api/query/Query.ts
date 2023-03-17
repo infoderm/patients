@@ -1,5 +1,5 @@
-import type Options from './QueryOptions';
-import type Selector from './QuerySelector';
+import type Options from './Options';
+import type Selector from './Selector';
 
 type Query<T> = {
 	selector: Selector<T>;

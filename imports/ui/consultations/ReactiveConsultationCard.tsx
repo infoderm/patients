@@ -7,18 +7,17 @@ import StaticConsultationCard from './StaticConsultationCard';
 type Props = Omit<PropsOf<typeof StaticConsultationCard>, 'attachments'>;
 
 const ReactiveConsultationCard = ({consultation, ...rest}: Props) => {
-	const query = {'meta.attachedToConsultations': consultation._id};
-
-	const options = {
-		fields: {
+	const query = {
+		filter: {'meta.attachedToConsultations': consultation._id},
+		projection: {
 			_id: 1,
 			'meta.attachedToConsultations': 1,
-		},
+		} as const,
 	};
 
 	const deps = [consultation._id];
 
-	const {results: attachments} = useAttachments(query, options, deps);
+	const {results: attachments} = useAttachments(query, deps);
 
 	return (
 		<StaticConsultationCard

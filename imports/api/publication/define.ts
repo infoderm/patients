@@ -40,16 +40,23 @@ const define = <
 						return;
 					}
 
+					let parsedArgs: A;
+
 					try {
 						schema.parse(args);
+						parsedArgs = args as A; // TODO Use parsed value once it does not reorder object keys.
 					} catch (error: unknown) {
-						console.debug({name, error});
+						console.debug({
+							publication: name,
+							args: JSON.stringify(args),
+							error,
+						});
 						throw new PublicationError(
 							'schema validation of publication args failed',
 						);
 					}
 
-					return Reflect.apply(fn, this, args);
+					return Reflect.apply(fn, this, parsedArgs);
 				});
 				break;
 			}

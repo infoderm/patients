@@ -1,4 +1,4 @@
-import {Patients} from '../../collection/patients';
+import {patientFields, Patients} from '../../collection/patients';
 import {PatientsSearchIndex} from '../../collection/patients/search';
 import {Consultations} from '../../collection/consultations';
 import {Documents} from '../../collection/documents';
@@ -21,9 +21,7 @@ export default define({
 		schema.array(schema.string()),
 		schema.array(schema.string()),
 		schema.array(schema.string()),
-		schema.object({
-			/* TODO Should be PatientFields */
-		}),
+		patientFields.strict(),
 	]),
 	async transaction(
 		db: TransactionDriver,

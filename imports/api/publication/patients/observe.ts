@@ -1,5 +1,5 @@
 import {AuthenticationLoggedIn} from '../../Authentication';
-import {Patients} from '../../collection/patients';
+import {patientDocument, Patients} from '../../collection/patients';
 import {cacheCollection} from '../../collection/patients/cache';
 
 import makeObservedQueryPublication, {
@@ -10,6 +10,6 @@ import define from '../define';
 export default define({
 	name: 'patients.find.observe',
 	authentication: AuthenticationLoggedIn,
-	schema: publicationSchema,
+	schema: publicationSchema(patientDocument),
 	handle: makeObservedQueryPublication(Patients, cacheCollection),
 });

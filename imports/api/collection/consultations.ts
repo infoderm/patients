@@ -1,50 +1,67 @@
+import schema from '../../lib/schema';
 import Collection from '../Collection';
 
-export type ConsultationFields = {
-	patientId: string;
-	datetime: Date;
-	scheduledDatetime?: Date;
-	realDatetime?: Date;
-	begin: Date;
-	duration?: number;
-	reason: string;
-	done?: string;
-	todo?: string;
-	treatment?: string;
-	next?: string;
-	more?: string;
+export const consultationFields = schema
+	.object({
+		patientId: schema.string(),
+		datetime: schema.date(),
+		scheduledDatetime: schema.date().optional(),
+		realDatetime: schema.date().optional(),
+		duration: schema.number().optional(),
+		reason: schema.string(),
+		done: schema.string().optional(),
+		todo: schema.string().optional(),
+		treatment: schema.string().optional(),
+		next: schema.string().optional(),
+		more: schema.string().optional(),
 
-	currency?: string;
-	price?: number;
-	paid?: number;
-	unpaid?: boolean;
-	book?: string;
-	inBookNumber?: number;
-	payment_method?: string;
-	isDone: boolean;
-	isCancelled?: boolean;
-	cancellationDatetime?: Date;
-	cancellationReason?: string;
-	cancellationExplanation?: string;
+		currency: schema.string().optional(),
+		price: schema.number().int().gte(0).optional(),
+		paid: schema.number().int().gte(0).optional(),
+		unpaid: schema.boolean().optional(),
+		book: schema.string().optional(),
+		inBookNumber: schema.number().int().gte(1).optional(),
+		payment_method: schema.string().optional(),
+		isCancelled: schema.boolean().optional(),
+		cancellationDatetime: schema.date().optional(),
+		cancellationReason: schema.string().optional(),
+		cancellationExplanation: schema.string().optional(),
 
-	attachments?: string[];
-};
+		attachments: schema.array(schema.string()).optional(),
+	})
+	.strict();
 
-export type ConsultationComputedFields = {
-	doneDatetime?: Date;
-	end: Date;
-};
+export type ConsultationFields = schema.infer<typeof consultationFields>;
 
-export type ConsultationMetadata = {
-	_id: string;
-	owner: string;
-	createdAt: Date;
-	lastModifiedAt: Date;
-};
+export const consultationComputedFields = schema
+	.object({
+		isDone: schema.boolean(),
+		doneDatetime: schema.date().optional(),
+		begin: schema.date(),
+		end: schema.date(),
+	})
+	.strict();
 
-export type ConsultationDocument = ConsultationFields &
-	ConsultationComputedFields &
-	ConsultationMetadata;
+export type ConsultationComputedFields = schema.infer<
+	typeof consultationComputedFields
+>;
+
+export const consultationMetadata = schema
+	.object({
+		_id: schema.string(),
+		owner: schema.string(),
+		createdAt: schema.date(),
+		lastModifiedAt: schema.date(),
+	})
+	.strict();
+
+export type ConsultationMetadata = schema.infer<typeof consultationMetadata>;
+
+export const consultationDocument = consultationFields
+	.merge(consultationComputedFields)
+	.merge(consultationMetadata);
+
+export type ConsultationDocument = schema.infer<typeof consultationDocument>;
 
 export const collection = 'consultations';
 

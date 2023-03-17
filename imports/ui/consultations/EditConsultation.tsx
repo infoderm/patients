@@ -11,16 +11,13 @@ type Params = {
 
 const EditConsultation = () => {
 	const params = useParams<Params>();
-	const init = {};
-	const query = myDecodeURIComponent(params.id)!;
-	const options = {};
-	const deps = [query];
+	const consultationId = myDecodeURIComponent(params.id)!;
 
 	const {
 		loading,
 		found,
 		fields: consultation,
-	} = useConsultation(init, query, options, deps);
+	} = useConsultation({}, {filter: {_id: consultationId}}, [consultationId]);
 
 	return (
 		// @ts-expect-error Too complicated to make it work.

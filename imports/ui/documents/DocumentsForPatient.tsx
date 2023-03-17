@@ -28,19 +28,18 @@ const DocumentsForPatient = ({
 	...rest
 }: Props) => {
 	const query = {
-		patientId,
-		deleted: false,
-		lastVersion: true,
-	};
-	const options = {
-		sort: {datetime: -1},
+		filter: {
+			patientId,
+			deleted: false,
+			lastVersion: true,
+		},
+		sort: {datetime: -1} as const,
 		skip: (page - 1) * perpage,
 		limit: perpage,
 	};
 	const deps = [patientId, page, perpage];
 	const {loading: loadingDocuments, results: documents} = useDocuments(
 		query,
-		options,
 		deps,
 	);
 

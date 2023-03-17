@@ -1,10 +1,11 @@
-import {Patients} from './collection/patients';
-import {Consultations} from './collection/consultations';
-import {Documents} from './collection/documents';
+import {patientDocument, Patients} from './collection/patients';
+import {consultationDocument, Consultations} from './collection/consultations';
+import {documentDocument, Documents} from './collection/documents';
 import makeFilteredCollection from './makeFilteredCollection';
 
 export const usePatientsMissingABirthdate = makeFilteredCollection(
 	Patients,
+	patientDocument,
 	{
 		$or: [{birthdate: null!}, {birthdate: ''}],
 	},
@@ -14,6 +15,7 @@ export const usePatientsMissingABirthdate = makeFilteredCollection(
 
 export const usePatientsMissingAGender = makeFilteredCollection(
 	Patients,
+	patientDocument,
 	{
 		$or: [{sex: null!}, {sex: ''}],
 	},
@@ -23,6 +25,7 @@ export const usePatientsMissingAGender = makeFilteredCollection(
 
 export const useConsultationsMissingABook = makeFilteredCollection(
 	Consultations,
+	consultationDocument,
 	{
 		isDone: true,
 		$or: [{book: null!}, {book: ''}],
@@ -34,6 +37,7 @@ export const useConsultationsMissingABook = makeFilteredCollection(
 export const useConsultationsWithPriceZeroNotInBookZero =
 	makeFilteredCollection(
 		Consultations,
+		consultationDocument,
 		{
 			isDone: true,
 			price: 0,
@@ -45,6 +49,7 @@ export const useConsultationsWithPriceZeroNotInBookZero =
 
 export const useConsultationsMissingPaymentData = makeFilteredCollection(
 	Consultations,
+	consultationDocument,
 	{
 		isDone: true,
 		datetime: {$gte: new Date(2020, 0, 1)},
@@ -84,6 +89,7 @@ export const useConsultationsMissingPaymentData = makeFilteredCollection(
 
 export const useUnlinkedDocuments = makeFilteredCollection(
 	Documents,
+	documentDocument,
 	{
 		patientId: null!,
 	},
@@ -93,6 +99,7 @@ export const useUnlinkedDocuments = makeFilteredCollection(
 
 export const useMangledDocuments = makeFilteredCollection(
 	Documents,
+	documentDocument,
 	{
 		encoding: null!,
 	},
@@ -102,6 +109,7 @@ export const useMangledDocuments = makeFilteredCollection(
 
 export const useUnparsedDocuments = makeFilteredCollection(
 	Documents,
+	documentDocument,
 	{
 		parsed: false,
 	},

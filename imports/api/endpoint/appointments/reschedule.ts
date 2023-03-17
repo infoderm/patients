@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import {Appointments} from '../../collection/appointments';
-import {sanitizeAppointmentUpdate} from '../../appointments';
+import {appointmentUpdate, sanitizeAppointmentUpdate} from '../../appointments';
 
 import define from '../define';
 
@@ -10,7 +10,7 @@ import {type ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
-import schema from '../../../lib/schema';
+import schema, {partial} from '../../../lib/schema';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import createPatientForAppointment from './createPatient';
@@ -18,7 +18,7 @@ import createPatientForAppointment from './createPatient';
 export default define({
 	name: 'appointments.reschedule',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([schema.string(), schema.object({})]),
+	schema: schema.tuple([schema.string(), partial(appointmentUpdate)]),
 	async transaction(db: TransactionDriver, appointmentId, appointment) {
 		const owner = this.userId;
 		const existing = await db.findOne(Appointments, {
@@ -90,7 +90,7 @@ export default define({
 			patientId: $set.patientId ?? existing.patientId,
 		};
 	},
-	simulate(_appointmentId: string, _appointment: any) {
+	simulate(_appointmentId, _appointment) {
 		return undefined;
 	},
 });

@@ -4,8 +4,8 @@ import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
 import type Collection from './Collection';
 import type Document from './Document';
-import type Selector from './QuerySelector';
-import type Options from './QueryOptions';
+import type UserQuery from './query/UserQuery';
+import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 
 type ReturnValue<U, I> =
 	| {loading: boolean; found: false; fields: I & Partial<U>}
@@ -14,25 +14,21 @@ type ReturnValue<U, I> =
 const makeFindOne =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[Selector<T>, Options<T>]>,
+		publication: Publication<[UserQuery<T>]>,
 	) =>
 	<I extends Partial<U>>(
 		init: I,
-		selector: Selector<T> | string,
-		options: Options<T> | undefined,
+		query: UserQuery<T>,
 		deps: DependencyList,
 	): ReturnValue<U, I> => {
-		const isLoading = useSubscription(publication, selector, options);
+		const isLoading = useSubscription(publication, query);
 		const loading = isLoading();
 
-		const upToDate = useItem<T, U>(
-			loading ? null : collection,
-			typeof selector === 'string'
-				? ({_id: selector} as Selector<T>)
-				: selector,
-			options,
-			[loading, ...deps],
-		);
+		const [selector, options] = queryToSelectorOptionsPair(query);
+		const upToDate = useItem(loading ? null : collection, selector, options, [
+			loading,
+			...deps,
+		]);
 
 		const found = Boolean(upToDate);
 

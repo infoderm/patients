@@ -39,7 +39,6 @@ const ConsultationAppointmentRestorationDialog = ({
 	onClose,
 	consultation,
 }: Props) => {
-	const options = {fields: ConsultationAppointmentRestorationDialog.projection};
 	const deps = [
 		consultation.patientId,
 		JSON.stringify(ConsultationAppointmentRestorationDialog.projection),
@@ -48,7 +47,14 @@ const ConsultationAppointmentRestorationDialog = ({
 		loading,
 		found,
 		fields: patient,
-	} = usePatient({}, consultation.patientId, options, deps);
+	} = usePatient(
+		{},
+		{
+			filter: {_id: consultation.patientId},
+			projection: ConsultationAppointmentRestorationDialog.projection,
+		},
+		deps,
+	);
 
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [call, {pending}] = useCall();
@@ -133,6 +139,6 @@ const ConsultationAppointmentRestorationDialog = ({
 ConsultationAppointmentRestorationDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
+} as const;
 
 export default withLazyOpening(ConsultationAppointmentRestorationDialog);

@@ -30,21 +30,8 @@ const appointmentDiffGen = function* (
 	}
 
 	if (update.patient._id !== appointment.patientId) {
-		yield [
-			'patient',
-			{
-				_id: update.patient._id,
-			},
-		];
+		yield ['patient', update.patient];
 		if (update.patient._id === '?') {
-			yield [
-				'patient',
-				{
-					_id: update.patient._id,
-					firstname: update.patient.firstname,
-					lastname: update.patient.lastname,
-				},
-			];
 			yield ['phone', update.phone];
 		}
 	}

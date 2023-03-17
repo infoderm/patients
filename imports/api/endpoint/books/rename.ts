@@ -38,7 +38,7 @@ export default define({
 		const newBookId = await books.add(db, this.userId, newName);
 
 		const query = {
-			...books.selector(oldName),
+			...books.filter(oldName),
 			owner: this.userId,
 			isDone: true,
 		};

@@ -4,40 +4,43 @@ import Typography from '@mui/material/Typography';
 import SetPicker from '../input/SetPicker';
 
 import type PropsOf from '../../lib/types/PropsOf';
+import {type SettingKey, type UserSettings} from '../../api/settings';
 import {useSetting} from './hooks';
 
-type BaseProps = {
-	className?: string;
-	setting: string;
-	makeSuggestions?: (
-		value: any[],
-	) => (x: string) => {loading?: boolean; results: any[]};
-	title: string;
-	label?: string;
-	placeholder?: string;
-	itemToKey?: (x: any) => any;
-	itemToString?: (x: any) => any;
-	sort?: (items: any[]) => any[];
-};
+type BaseProps<K extends SettingKey> = UserSettings[K] extends Array<infer V>
+	? {
+			className?: string;
+			setting: K;
+			makeSuggestions?: (
+				value: UserSettings[K],
+			) => (x: string) => {loading?: boolean; results: UserSettings[K]};
+			title: string;
+			label?: string;
+			placeholder?: string;
+			itemToKey?: (x: V) => string;
+			itemToString?: (x: V) => string;
+			sort?: (items: UserSettings[K]) => UserSettings[K];
+	  }
+	: never;
 
-type Props = BaseProps &
+export type InputManySettingProps<K extends SettingKey> = BaseProps<K> &
 	Omit<
 		PropsOf<typeof SetPicker>,
 		'onChange' | 'value' | 'useSuggestions' | 'itemToKey' | 'itemToString'
 	>;
 
-const identity = (x) => x;
+const identity = <T,>(x: T) => x;
 
-const InputManySetting = ({
+const InputManySetting = <K extends SettingKey>({
 	className = undefined,
 	setting,
-	makeSuggestions = () => () => ({results: []}),
+	makeSuggestions = () => () => ({results: [] as unknown as UserSettings[K]}),
 	label = undefined,
 	placeholder = undefined,
 	title,
 	sort = undefined,
 	...rest
-}: Props) => {
+}: InputManySettingProps<K>) => {
 	const {loading, value, setValue} = useSetting(setting);
 
 	const onChange = useMemo(
@@ -66,7 +69,7 @@ const InputManySetting = ({
 					label,
 					margin: 'normal',
 				}}
-				value={sortedValue}
+				value={sortedValue as unknown[]}
 				placeholder={loading ? 'loading...' : placeholder}
 				onChange={onChange}
 				{...rest}

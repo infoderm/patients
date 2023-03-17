@@ -6,7 +6,7 @@ import {assert} from 'chai';
 import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
-import {settings, get} from '../../settings';
+import {defaults, get} from '../../settings';
 import update from './update';
 import reset from './reset';
 
@@ -17,7 +17,7 @@ server(__filename, () => {
 		const key = 'currency';
 		const value = 123_819_832;
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 
 		await invoke(update, {userId}, [key, value]);
 
@@ -25,7 +25,7 @@ server(__filename, () => {
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 	});
 
 	it('is idempotent', async () => {
@@ -34,11 +34,11 @@ server(__filename, () => {
 		const key = 'x';
 		const value = 123_819_832;
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 
 		await invoke(update, {userId}, [key, value]);
 
@@ -46,11 +46,11 @@ server(__filename, () => {
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), settings.defaults[key]);
+		assert.equal(get(userId, key), defaults[key]);
 	});
 
 	it('cannot reset a setting if not logged in', async () => {

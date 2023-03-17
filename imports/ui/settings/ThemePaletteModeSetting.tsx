@@ -1,4 +1,5 @@
 import React from 'react';
+import tuple from '../../lib/types/tuple';
 
 import SelectOneSetting from './SelectOneSetting';
 
@@ -7,7 +8,7 @@ type Props = {
 };
 
 const ThemePaletteModeSetting = ({className}: Props) => {
-	const options = ['light', 'dark'];
+	const options = tuple('light' as const, 'dark' as const);
 
 	return (
 		<SelectOneSetting

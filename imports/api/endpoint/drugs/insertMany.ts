@@ -1,7 +1,7 @@
 import {AuthenticationLoggedIn} from '../../Authentication';
 import schema from '../../../lib/schema';
 
-import {Drugs} from '../../collection/drugs';
+import {drugDocument, Drugs} from '../../collection/drugs';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
@@ -9,7 +9,7 @@ import define from '../define';
 export default define({
 	name: 'drugs.insertMany',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([schema.array(schema.object({}))]),
+	schema: schema.tuple([schema.array(drugDocument.passthrough(/* TODO */))]),
 	async transaction(db: TransactionDriver, drugs) {
 		const createdAt = new Date();
 		const owner = this.userId;

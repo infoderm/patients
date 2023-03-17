@@ -2,7 +2,7 @@ import {findLastConsultationSync} from '../../api/consultations';
 import useSubscription from '../../api/publication/useSubscription';
 import useReactive from '../../api/publication/useReactive';
 import last from '../../api/publication/consultations/last';
-import type Filter from '../../api/QueryFilter';
+import type Filter from '../../api/query/Filter';
 
 import {type ConsultationDocument} from '../../api/collection/consultations';
 

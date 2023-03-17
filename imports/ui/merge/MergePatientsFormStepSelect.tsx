@@ -23,9 +23,11 @@ import makePatientsSuggestions from '../patients/makePatientsSuggestions';
 import usePatient from '../patients/usePatient';
 
 const Suggestion = ({item: patient}) => {
-	const {fields} = usePatient(patient, patient._id, {fields: {photo: 1}}, [
-		patient._id,
-	]);
+	const {fields} = usePatient(
+		patient,
+		{filter: {_id: patient._id}, projection: {photo: 1}},
+		[patient._id],
+	);
 
 	const patientName = `${patient.lastname} ${patient.firstname}`;
 

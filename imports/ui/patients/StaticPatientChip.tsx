@@ -129,4 +129,4 @@ export const projection = {
 	firstname: 1,
 	lastname: 1,
 	photo: 1,
-};
+} as const;

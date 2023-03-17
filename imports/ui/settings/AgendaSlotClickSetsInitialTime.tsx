@@ -1,4 +1,5 @@
 import React from 'react';
+import tuple from '../../lib/types/tuple';
 
 import SelectOneSetting from './SelectOneSetting';
 
@@ -7,7 +8,7 @@ type Props = {
 };
 
 const AgendaSlotClickSetsInitialTime = ({className}: Props) => {
-	const options = ['off', 'begin'];
+	const options = tuple('off' as const, 'begin' as const);
 
 	return (
 		<SelectOneSetting

@@ -19,9 +19,11 @@ const DocumentsForPatientPage = ({
 	perpage = 5,
 	...rest
 }: Props) => {
-	const {loading, found} = usePatient({}, patientId, {fields: {_id: 1}}, [
-		patientId,
-	]);
+	const query = {
+		filter: {_id: patientId},
+		projection: {_id: 1},
+	} as const;
+	const {loading, found} = usePatient({}, query, [patientId]);
 	return (
 		<DocumentsForPatient
 			patientId={patientId}

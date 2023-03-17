@@ -20,18 +20,18 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const patientId = consultation.patientId;
 
 	const init = {};
-	const query = patientId;
-	const options = {
-		fields: {
+	const query = {
+		filter: {_id: patientId},
+		projection: {
 			niss: 1,
 			firstname: 1,
 			lastname: 1,
 			photo: 1,
 		},
-	};
+	} as const;
 	const deps = [query];
 
-	const {loading, fields: patient} = usePatient(init, query, options, deps);
+	const {loading, fields: patient} = usePatient(init, query, deps);
 
 	const localizedDateTimeMask = useDateTimeMask();
 

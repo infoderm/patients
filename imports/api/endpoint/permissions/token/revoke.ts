@@ -9,7 +9,7 @@ export default define({
 	name: 'permissions.token.revoke',
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([schema.string()]),
-	async run(_id: string) {
+	async run(_id) {
 		const nRemoved = await PermissionTokens.removeAsync({
 			_id,
 			owner: this.userId,

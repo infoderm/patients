@@ -1,8 +1,7 @@
-import {check} from 'meteor/check';
-
 import dateParseISO from 'date-fns/parseISO';
 import addYears from 'date-fns/addYears';
 
+import schema from '../lib/schema';
 import makeQuery from './makeQuery';
 import makeObservedQueryHook from './makeObservedQueryHook';
 import {
@@ -40,8 +39,8 @@ export const books = {
 		name: string,
 		verbatim = false,
 	) {
-		check(owner, String);
-		check(name, String);
+		schema.string().parse(owner);
+		schema.string().parse(name);
 
 		const normalizedName = verbatim ? (name as NormalizedLine) : sanitize(name);
 
@@ -63,8 +62,8 @@ export const books = {
 	},
 
 	async remove(db: TransactionDriver, owner: string, name: string) {
-		check(owner, String);
-		check(name, String);
+		schema.string().parse(owner);
+		schema.string().parse(name);
 
 		const normalizedName = sanitize(name);
 
@@ -103,7 +102,7 @@ export const books = {
 		return [book, begin, end];
 	},
 
-	selector(name: string) {
+	filter(name: string) {
 		const [book, begin, end] = books.range(name);
 
 		return {

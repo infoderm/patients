@@ -84,7 +84,10 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 
 	const owed = price - paid;
 
-	const options = {fields: ConsultationPaymentDialog.projection};
+	const query = {
+		filter: {_id: consultation.patientId},
+		projection: ConsultationPaymentDialog.projection,
+	};
 	const deps = [
 		consultation.patientId,
 		JSON.stringify(ConsultationPaymentDialog.projection),
@@ -93,7 +96,7 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 		loading: loadingPatient,
 		found,
 		fields: patient,
-	} = usePatient({}, consultation.patientId, options, deps);
+	} = usePatient({}, query, deps);
 
 	const loading = loadingAccountHolder || loadingIban || loadingPatient;
 
@@ -167,6 +170,6 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 ConsultationPaymentDialog.projection = {
 	firstname: 1,
 	lastname: 1,
-};
+} as const;
 
 export default withLazyOpening(ConsultationPaymentDialog);

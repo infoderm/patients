@@ -13,15 +13,13 @@ const AppointmentFromPatientIdDialog = ({
 	patientId,
 	...rest
 }: AppointmentFromPatientIdDialogProps) => {
-	const options = {fields: {firstname: 1, lastname: 1, phone: 1}};
-
-	const deps = [patientId, JSON.stringify(options.fields)];
-
 	const {loading, found, fields} = usePatient(
 		{_id: patientId},
-		patientId,
-		options,
-		deps,
+		{
+			filter: {_id: patientId},
+			projection: {firstname: 1, lastname: 1, phone: 1},
+		},
+		[patientId],
 	);
 
 	const patient = loading

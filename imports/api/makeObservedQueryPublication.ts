@@ -2,47 +2,35 @@ import schema from '../lib/schema';
 import type Collection from './Collection';
 import type Document from './Document';
 import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
-import type Options from './QueryOptions';
-import type Selector from './QuerySelector';
+import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
+import type UserQuery from './query/UserQuery';
+import {userQuery} from './query/UserQuery';
 
-export type ObserveOptions = {
-	added?: boolean;
-	removed?: boolean;
-	changed?: boolean;
-};
+const observeOptions = schema
+	.object({
+		added: schema.boolean().optional(),
+		removed: schema.boolean().optional(),
+		changed: schema.boolean().optional(),
+	})
+	.strict();
 
-export const publicationSchema = schema.tuple([
-	schema.string(),
-	schema.object({
-		/* TODO */
-	}),
-	schema.object({
-		/* TODO */
-	}),
-	schema
-		.record(
-			schema.union([
-				schema.literal('added'),
-				schema.literal('removed'),
-				schema.literal('changed'),
-			]),
-			schema.boolean(),
-		)
-		.nullable(),
-]);
+export type ObserveOptions = schema.infer<typeof observeOptions>;
+
+export const publicationSchema = <S extends schema.ZodTypeAny>(tSchema: S) =>
+	schema.tuple([
+		schema.string(),
+		userQuery(tSchema),
+		observeOptions.nullable(),
+	]);
 
 const makeObservedQueryPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
-	function (
-		key: string,
-		query: Selector<T>,
-		options: Options<T>,
-		observe: ObserveOptions | null,
-	) {
-		query = {
-			...query,
+	function (key: string, query: UserQuery<T>, observe: ObserveOptions | null) {
+		let [selector, options] = queryToSelectorOptionsPair(query);
+		selector = {
+			...selector,
 			owner: this.userId,
 		};
 		const callbacks: ObserveOptions = {
@@ -52,7 +40,7 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		};
 		const uid = JSON.stringify({
 			key,
-			query,
+			selector,
 			options,
 			observe,
 		});
@@ -73,7 +61,7 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		if (callbacks.removed) observers.removed = stop;
 		if (callbacks.changed) observers.changed = stop;
 
-		const handle = QueriedCollection.find(query, options).observeChanges(
+		const handle = QueriedCollection.find(selector, options).observeChanges(
 			observers,
 		);
 

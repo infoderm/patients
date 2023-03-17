@@ -8,7 +8,7 @@ type Params = {
 };
 
 type Props = {
-	List: React.ElementType;
+	List: React.ElementType<Params>;
 };
 
 const TagListRoute = ({List}: Props) => {

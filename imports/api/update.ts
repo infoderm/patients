@@ -1,5 +1,6 @@
-import {check} from 'meteor/check';
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
+import type schema from '../lib/schema';
+import {type DocumentUpdate} from './DocumentUpdate';
 import type TransactionDriver from './transaction/TransactionDriver';
 
 const id = <T>(x: T): T => x;
@@ -8,26 +9,33 @@ export type Entry<T> = {
 	[K in keyof T]: [K, T[K]];
 }[keyof T];
 
+export type UpdateEntry<T> = {
+	[K in keyof T]: [K, T[K] | null];
+}[keyof T];
+
 export const yieldKey = function* <T, K extends keyof T>(
 	fields: T,
 	key: K,
-	type,
-	transform: (x: T[K]) => T[K] = id<T[K]>,
-): IterableIterator<[K, T[K]]> {
+	type: schema.ZodType<Exclude<T[K], undefined | null>>,
+	transform: (
+		x: Exclude<T[K], undefined | null>,
+	) => Exclude<T[K], undefined | null> = id<Exclude<T[K], undefined | null>>,
+): IterableIterator<[K, Exclude<T[K], undefined | null>]> {
 	if (Object.prototype.hasOwnProperty.call(fields, key)) {
-		check(fields[key], type);
-		yield [key, transform(fields[key])];
+		const value = fields[key] as Exclude<T[K], undefined | null>;
+		type.parse(value);
+		yield [key, transform(value)];
 	}
 };
 
 export const yieldResettableKey = function* <T, K extends keyof T>(
 	fields: T,
 	key: K,
-	type,
+	type: schema.ZodType<T[K]>,
 	transform: (x: T[K]) => T[K] = id<T[K]>,
 ): IterableIterator<[K, T[K]]> {
 	if (Object.prototype.hasOwnProperty.call(fields, key)) {
-		if (fields[key] !== undefined) check(fields[key], type);
+		type.nullable().optional().parse(fields[key]);
 		yield [key, transform(fields[key])];
 	}
 };
@@ -101,7 +109,9 @@ export const makeComputeUpdate =
 		};
 	};
 
-type SanitizeUpdate<T, U> = (fields: T) => IterableIterator<Entry<U>>;
+type SanitizeUpdate<T, U> = (
+	fields: DocumentUpdate<T>,
+) => IterableIterator<UpdateEntry<U>>;
 
 const fromEntries = <K extends string | number | symbol, V>(
 	entries: Array<[K, V]>,
@@ -112,15 +122,15 @@ const fromEntries = <K extends string | number | symbol, V>(
 
 export const makeSanitize =
 	<T, U>(sanitizeUpdate: SanitizeUpdate<T, U>) =>
-	(fields: T) => {
+	(fields: DocumentUpdate<T>) => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
 			$set: fromEntries(
-				update.filter(([, value]) => value !== undefined),
+				update.filter(([, value]) => value !== undefined && value !== null),
 			) as Partial<U>,
 			$unset: fromEntries(
 				update
-					.filter(([, value]) => value === undefined)
+					.filter(([, value]) => value === undefined || value === null)
 					.map(([key]) => [key, true]),
 			),
 		};

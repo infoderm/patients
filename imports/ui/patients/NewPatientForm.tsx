@@ -27,7 +27,11 @@ import {useSnackbar} from 'notistack';
 import isValid from 'date-fns/isValid';
 import dateFormat from 'date-fns/format';
 
-import {BIRTHDATE_FORMAT} from '../../api/collection/patients';
+import {
+	BIRTHDATE_FORMAT,
+	patientSex,
+	type PatientSex,
+} from '../../api/collection/patients';
 
 import patientsInsert from '../../api/endpoint/patients/insert';
 import call from '../../api/endpoint/call';
@@ -62,7 +66,7 @@ type OnSubmitProps = {
 	firstname: string;
 	lastname: string;
 	birthdate: Date | null;
-	sex: string;
+	sex: PatientSex;
 	noshow: number;
 };
 
@@ -123,7 +127,7 @@ const NewPatientForm = () => {
 	const [lastname, setLastname] = useState('');
 	const [error, setError] = useState<string | null>(null);
 	const [birthdate, setBirthdate] = useState<Date | null>(null);
-	const [sex, setSex] = useState('');
+	const [sex, setSex] = useState<PatientSex>('');
 	const [noshow, setNoshow] = useState(0);
 
 	const birthdatePickerProps = useBirthdatePickerProps();
@@ -180,7 +184,7 @@ const NewPatientForm = () => {
 											id: 'sex-input',
 										}}
 										onChange={(e) => {
-											setSex(e.target.value);
+											setSex(patientSex.parse(e.target.value));
 										}}
 									>
 										<MenuItem value="">

@@ -1,5 +1,5 @@
 // Import { Binary } from 'meteor/mongo';
-import {check} from 'meteor/check';
+import schema from '../lib/schema';
 
 import {Documents} from './collection/documents';
 import decodeText from './documents/decodeText';
@@ -26,20 +26,24 @@ const detectFormat = (string: string): string | undefined => {
 	return matches.length === 1 ? matches[0] : undefined;
 };
 
-export type DirtyDocument = {
-	patientId?: string;
-	format?: string;
-	array: Uint8Array;
-};
+export const dirtyDocument = schema
+	.object({
+		patientId: schema.string().optional(),
+		format: schema.string().optional(),
+		array: schema.instanceof(Uint8Array),
+	})
+	.strict();
+
+export type DirtyDocument = schema.infer<typeof dirtyDocument>;
 
 async function* sanitize({
 	patientId,
 	format: formatHint,
 	array,
 }: DirtyDocument) {
-	if (patientId !== undefined) check(patientId, String);
-	if (formatHint !== undefined) check(formatHint, String);
-	check(array, Uint8Array);
+	schema.string().optional().parse(patientId);
+	schema.string().optional().parse(formatHint);
+	schema.instanceof(Uint8Array).parse(array);
 
 	console.debug('Starting to sanitize', {length: array.length});
 

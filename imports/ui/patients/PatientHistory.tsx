@@ -237,9 +237,9 @@ const PatientHistory = ({patientId}: PatientHistoryProps) => {
 		fields: patient,
 	} = usePatient(
 		{_id: patientId},
-		patientId,
 		{
-			fields: {
+			filter: {_id: patientId},
+			projection: {
 				photo: 0,
 			},
 		},
@@ -250,20 +250,16 @@ const PatientHistory = ({patientId}: PatientHistoryProps) => {
 	const loadMore = useCallback(() => {
 		setLimit((previous) => previous + perpage);
 	}, [setLimit]);
-	const query = {patientId};
-	const options = {
+	const query = {
+		filter: {patientId},
 		sort: {
 			begin: -1,
-		},
+		} as const,
 		limit,
 	};
 	const deps = [patientId, limit];
 
-	const {loading, results} = useConsultationsAndAppointments(
-		query,
-		options,
-		deps,
-	);
+	const {loading, results} = useConsultationsAndAppointments(query, deps);
 
 	const dateFormat = useDateFormat();
 	const importantStringsDict = useImportantStringsDict();

@@ -47,9 +47,9 @@ const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {
 		fields: currentPatient,
 	} = usePatient(
 		{_id: patientId},
-		patientId,
 		{
-			fields: {
+			filter: {_id: patientId},
+			projection: {
 				lastname: 1,
 			},
 		},

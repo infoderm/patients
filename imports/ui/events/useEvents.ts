@@ -7,8 +7,8 @@ import {beginsInInterval} from '../../api/events';
 import useSubscription from '../../api/publication/useSubscription';
 import useCursor from '../../api/publication/useCursor';
 import interval from '../../api/publication/events/interval';
-import type Selector from '../../api/QuerySelector';
-import type Options from '../../api/QueryOptions';
+import type Selector from '../../api/query/Selector';
+import type Options from '../../api/query/Options';
 
 const useEvents = (
 	begin: Date,

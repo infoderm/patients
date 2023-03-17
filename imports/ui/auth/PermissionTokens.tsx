@@ -30,7 +30,7 @@ type Props = {
 };
 
 const PermissionTokens = ({className}: Props) => {
-	const {results} = usePermissionTokens({}, {}, []);
+	const {results} = usePermissionTokens({filter: {}}, []);
 	return (
 		<Root className={className}>
 			<Typography variant="h4">

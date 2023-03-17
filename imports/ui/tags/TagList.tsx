@@ -5,7 +5,10 @@ import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
 import TagListPage, {type TagListPageProps} from './TagListPage';
 
-type TagListProps<T> = Omit<TagListPageProps<T>, 'page'>;
+type TagListProps<T extends TagNameFields & TagMetadata> = Omit<
+	TagListPageProps<T>,
+	'page'
+>;
 
 const TagList = <T extends TagNameFields & TagMetadata>(
 	props: TagListProps<T>,

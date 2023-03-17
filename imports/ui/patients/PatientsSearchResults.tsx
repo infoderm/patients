@@ -9,6 +9,8 @@ import find from '../../api/endpoint/patients/find';
 import {myDecodeURIComponent} from '../../lib/uri';
 import mergeFields from '../../api/query/mergeFields';
 
+import {type PatientDocument} from '../../api/collection/patients';
+import type Options from '../../api/query/Options';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
@@ -35,15 +37,15 @@ const PatientsSearchResults = ({
 	const [loading, setLoading] = useState(true);
 	const [patients, setPatients] = useState<Array<{_id: string}>>([]);
 
-	const $search = myDecodeURIComponent(params.query);
+	const $search = myDecodeURIComponent(params.query) ?? '';
 
 	useEffect(() => {
 		const selector = {$text: {$search}};
 
 		const sort = {
 			score: {$meta: 'textScore'},
-		};
-		const fields = mergeFields(
+		} as const;
+		const fields = mergeFields<PatientDocument>(
 			sort,
 			StaticPatientsList.projection,
 			// We fetch the picture through a dedicated subscription to get live
@@ -55,7 +57,7 @@ const PatientsSearchResults = ({
 			sort,
 			skip: (page - 1) * perpage,
 			limit: perpage,
-		};
+		} as Options<PatientDocument>;
 
 		setLoading(true);
 		let cancelled = false;

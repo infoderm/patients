@@ -1,30 +1,50 @@
-import {type ConsultationMetadata} from './consultations';
+import schema from '../../lib/schema';
+import {consultationMetadata} from './consultations';
 
 export {Consultations as Appointments} from './consultations';
 
-export type AppointmentFields = {
-	patientId: string;
-	datetime: Date;
-	scheduledDatetime: Date;
-	duration: number;
-	begin: Date;
-	reason: string;
+export const appointmentFields = schema
+	.object({
+		patientId: schema.string(),
+		datetime: schema.date(),
+		scheduledDatetime: schema.date(),
+		begin: schema.date(),
+		duration: schema.number(),
+		reason: schema.string(),
 
-	isDone: boolean;
-};
+		isDone: schema.boolean(),
+	})
+	.strict();
 
-type AppointmentCancellationFields = {
-	isCancelled?: boolean;
-	cancellationDatetime?: Date;
-	cancellationReason?: string;
-	cancellationExplanation?: string;
-};
+export type AppointmentFields = schema.infer<typeof appointmentFields>;
 
-export type AppointmentComputedFields = {
-	end: Date;
-};
+export const appointmentCancellationFields = schema
+	.object({
+		isCancelled: schema.boolean(),
+		cancellationDatetime: schema.date(),
+		cancellationReason: schema.string(),
+		cancellationExplanation: schema.string(),
+	})
+	.strict()
+	.partial();
 
-export type AppointmentDocument = AppointmentFields &
-	AppointmentCancellationFields &
-	AppointmentComputedFields &
-	ConsultationMetadata;
+export type AppointmentCancellationFields = schema.infer<
+	typeof appointmentCancellationFields
+>;
+
+export const appointmentComputedFields = schema
+	.object({
+		end: schema.date(),
+	})
+	.strict();
+
+export type AppointmentComputedFields = schema.infer<
+	typeof appointmentComputedFields
+>;
+
+export const appointmentDocument = appointmentFields
+	.merge(appointmentCancellationFields)
+	.merge(appointmentComputedFields)
+	.merge(consultationMetadata);
+
+export type AppointmentDocument = schema.infer<typeof appointmentDocument>;

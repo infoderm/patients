@@ -1,10 +1,7 @@
 import assert from 'assert';
 import {Appointments} from '../../collection/appointments';
 import {Patients} from '../../collection/patients';
-import {
-	type AppointmentUpdate,
-	sanitizeAppointmentUpdate,
-} from '../../appointments';
+import {sanitizeAppointmentUpdate, appointmentUpdate} from '../../appointments';
 import {availability} from '../../availability';
 
 import type TransactionDriver from '../../transaction/TransactionDriver';
@@ -19,22 +16,8 @@ import createPatientForAppointment from './createPatient';
 export default define({
 	name: 'appointments.schedule',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.object({
-			patient: schema
-				.object({
-					_id: schema.string(),
-					firstname: schema.string().optional(),
-					lastname: schema.string().optional(),
-				})
-				.optional(),
-			phone: schema.string().optional(),
-			datetime: schema.date(),
-			duration: schema.number(),
-			reason: schema.string(),
-		}),
-	]),
-	async transaction(db: TransactionDriver, appointment: AppointmentUpdate) {
+	schema: schema.tuple([appointmentUpdate]),
+	async transaction(db: TransactionDriver, appointment) {
 		const {
 			createPatient,
 			consultationUpdate: {$set, $unset},
@@ -80,7 +63,7 @@ export default define({
 			patientId: $set.patientId,
 		};
 	},
-	simulate(_appointment: any) {
+	simulate(_appointment) {
 		return undefined;
 	},
 });

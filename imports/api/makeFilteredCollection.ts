@@ -2,45 +2,43 @@ import {type DependencyList} from 'react';
 
 import schema from '../lib/schema';
 import Collection from './Collection';
-import type Filter from './QueryFilter';
-import type Selector from './QuerySelector';
-import type Options from './QueryOptions';
+import type Selector from './query/Selector';
+import type Options from './query/Options';
 
 import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
 import {AuthenticationLoggedIn} from './Authentication';
+import type UserFilter from './query/UserFilter';
+import {userFilter} from './query/UserFilter';
+import {options} from './query/Options';
 
-const makeFilteredCollection = <T extends {}, U extends {} = T>(
-	collection: Collection<T, U>,
-	filterSelector: Selector<T> | undefined,
-	filterOptions: Options<T> | undefined,
+const makeFilteredCollection = <
+	S extends schema.ZodTypeAny,
+	U = schema.infer<S>,
+>(
+	collection: Collection<schema.infer<S>, U>,
+	tSchema: S,
+	filterSelector: Selector<schema.infer<S>> | undefined,
+	filterOptions: Options<schema.infer<S>> | undefined,
 	name: string,
 ) => {
 	const publication = define({
 		name,
 		authentication: AuthenticationLoggedIn,
 		schema: schema.tuple([
-			schema
-				.object({
-					/* TODO Filter<T> */
-				})
-				.nullable(),
-			schema
-				.object({
-					/* TODO Options<T> */
-				})
-				.nullable(),
+			userFilter(tSchema).nullable(),
+			options(tSchema).nullable(),
 		]),
 		handle(
-			publicationFilter: Filter<T> | null,
-			publicationOptions: Options<T> | null,
+			publicationFilter: UserFilter<schema.infer<S>> | null,
+			publicationOptions: Options<schema.infer<S>> | null,
 		) {
 			const selector = {
 				...filterSelector,
 				...publicationFilter,
 				owner: this.userId,
-			} as Selector<T>;
+			} as Selector<schema.infer<S>>;
 
 			const options = {
 				...filterOptions,
@@ -70,11 +68,11 @@ const makeFilteredCollection = <T extends {}, U extends {} = T>(
 		},
 	});
 
-	const Filtered = new Collection<T, U>(name);
+	const Filtered = new Collection<schema.infer<S>, U>(name);
 
 	return (
-		hookSelector: Selector<T> = {},
-		options: Options<T> | undefined = undefined,
+		hookSelector: Selector<schema.infer<S>> = {},
+		options: Options<schema.infer<S>> | undefined = undefined,
 		deps: DependencyList = [],
 	) => {
 		const isLoading = useSubscription(publication, null, options ?? null);

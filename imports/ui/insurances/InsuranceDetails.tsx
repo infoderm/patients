@@ -22,9 +22,9 @@ const InsuranceDetails = ({name, page = 1, perpage = 10}: Props) => {
 			name={name}
 			List={PagedPatientsList}
 			useParents={useObservedPatients}
-			selector={{insurances: {$elemMatch: {name}}}}
+			filter={{insurances: {$elemMatch: {name}}}}
 			sort={{lastname: 1}}
-			fields={PagedPatientsList.projection}
+			projection={PagedPatientsList.projection}
 			page={page}
 			perpage={perpage}
 		/>

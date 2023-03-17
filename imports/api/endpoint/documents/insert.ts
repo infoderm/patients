@@ -2,7 +2,7 @@ import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Documents} from '../../collection/documents';
-import {type DirtyDocument, documents} from '../../documents';
+import {documents, dirtyDocument} from '../../documents';
 import findBestPatientMatch from '../../documents/findBestPatientMatch';
 import executeTransaction from '../../transaction/executeTransaction';
 
@@ -18,13 +18,9 @@ const LENGTH_THRESHOLD = Math.floor(SIZE_16_MB / 8);
 export default define({
 	name: 'documents.insert',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.object({
-			/* TODO DirtyDocument */
-		}),
-	]),
+	schema: schema.tuple([dirtyDocument]),
 	async run(document) {
-		const entries = sanitize(document as DirtyDocument);
+		const entries = sanitize(document);
 
 		const result: string[] = [];
 

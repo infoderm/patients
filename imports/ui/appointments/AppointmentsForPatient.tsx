@@ -22,11 +22,11 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 	const [showCancelled, setShowCancelled] = useState(true);
 	const [showNoShow, setShowNoShow] = useState(true);
 
-	const options = {fields: {_id: 1}};
-
-	const deps = [patientId];
-
-	const {loading, found} = usePatient({}, patientId, options, deps);
+	const {loading, found} = usePatient(
+		{},
+		{filter: {_id: patientId}, projection: {_id: 1}},
+		[patientId],
+	);
 
 	if (loading) {
 		return <Loading />;
@@ -50,7 +50,7 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 		},
 	];
 
-	const query = {
+	const filter = {
 		patientId,
 		isDone: false,
 		$or,
@@ -76,7 +76,7 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 		<>
 			<ConsultationsPager
 				defaultExpandedFirst
-				query={query}
+				filter={filter}
 				sort={sort}
 				perpage={5}
 			/>

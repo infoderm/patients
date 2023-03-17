@@ -13,6 +13,7 @@ import createBucket from '../backend/gridfs/createBucket';
 import createObjectId from '../backend/gridfs/createObjectId';
 import streamToBuffer from '../lib/stream/streamToBuffer';
 import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
+import schema from '../lib/schema';
 import fetchSync from './publication/fetchSync';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
@@ -106,14 +107,16 @@ const thumbify = async <T>(
 	return cacheResult(upload, transform, source, size);
 };
 
-export type MetadataType = {
-	createdAt?: Date;
-	lastModified?: Date;
-	gridFsFileId?: string;
-	isDeleted?: boolean;
-	attachedToPatients?: string[];
-	attachedToConsultations?: string[];
-};
+export const meta = schema.object({
+	createdAt: schema.date().optional(),
+	lastModified: schema.date().optional(),
+	gridFsFileId: schema.string().optional(),
+	isDeleted: schema.boolean().optional(),
+	attachedToPatients: schema.array(schema.string()).optional(),
+	attachedToConsultations: schema.array(schema.string()).optional(),
+});
+
+export type MetadataType = schema.infer<typeof meta>;
 
 const getId = (upload: FileObj<MetadataType>, version: string) => {
 	const {gridFsFileId} = upload.versions[version]?.meta ?? {};

@@ -1,15 +1,15 @@
 import React from 'react';
+import availableCurrencies, {
+	type AvailableCurrency,
+	currencyDescriptions,
+} from '../../i18n/availableCurrencies';
 
 import SelectOneSetting from './SelectOneSetting';
 
 const CurrencySetting = ({className}) => {
-	const CURRENCIES = {
-		EUR: '€',
-	};
-
-	const options = [...Object.keys(CURRENCIES)];
-
-	const optionToString = (option) => CURRENCIES[option];
+	const options = [...availableCurrencies];
+	const optionToString = (option: AvailableCurrency) =>
+		currencyDescriptions[option];
 
 	return (
 		<SelectOneSetting

@@ -1,7 +1,7 @@
 import {
-	type ConsultationFields,
 	Consultations,
 	type ConsultationDocument,
+	consultationFields,
 } from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 
@@ -15,18 +15,14 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import schema from '../../../lib/schema';
+import {documentUpdate} from '../../DocumentUpdate';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.update',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.string(),
-		schema.object({
-			/* TODO ConsultationFields */
-		}),
-	]),
+	schema: schema.tuple([schema.string(), documentUpdate(consultationFields)]),
 	async transaction(db: TransactionDriver, consultationId, newfields) {
 		const owner = this.userId;
 		const existing = await db.findOne(Consultations, {
@@ -37,7 +33,7 @@ export default define({
 			throw new Meteor.Error('not-found');
 		}
 
-		const changes = sanitize(newfields as ConsultationFields);
+		const changes = sanitize(newfields);
 		const {$set, $unset, newState} = await computeUpdate(
 			db,
 			owner,
@@ -89,7 +85,7 @@ export default define({
 
 		return db.updateOne(Consultations, {_id: consultationId}, modifier);
 	},
-	simulate(_consultationId: string, _newfields: any) {
+	simulate(_consultationId, _newfields) {
 		return undefined;
 	},
 });

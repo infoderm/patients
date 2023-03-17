@@ -4,22 +4,19 @@ import {books} from '../../books';
 import {
 	type ConsultationDocument,
 	Consultations,
+	consultationDocument,
 } from '../../collection/consultations';
-import type Options from '../../QueryOptions';
+import type Options from '../../query/Options';
+import {options} from '../../query/Options';
 import define from '../define';
 
 export default define({
 	name: books.options.parentPublication,
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([
-		schema.string(),
-		schema.object({
-			/* TODO Options<ConsultationDocument> */
-		}),
-	]),
+	schema: schema.tuple([schema.string(), options(consultationDocument)]),
 	cursor(name, options: Options<ConsultationDocument> = {}) {
 		const query = {
-			...books.selector(name),
+			...books.filter(name),
 			owner: this.userId,
 			isDone: true,
 		};

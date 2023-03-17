@@ -10,7 +10,7 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import {capitalized} from '../../api/string';
 import Center from '../grid/Center';
 import YearJumper from '../navigation/YearJumper';
-import type Filter from '../../api/QueryFilter';
+import type Filter from '../../api/query/Filter';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import FixedFab from '../button/FixedFab';
 import ConsultationsStatsCard from './ConsultationsStatsCard';
@@ -26,7 +26,7 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 	const begin = new Date(`${year}-01-01`);
 	const end = new Date(`${year + 1}-01-01`);
 
-	const query: Filter<ConsultationDocument> = {
+	const filter: Filter<ConsultationDocument> = {
 		isDone: true,
 		datetime: {
 			$gte: begin,
@@ -34,8 +34,8 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 		},
 	};
 
-	if (payment_method) query.payment_method = payment_method;
-	if (!showBookZero) query.book = {$ne: '0'};
+	if (payment_method) filter.payment_method = payment_method;
+	if (!showBookZero) filter.book = {$ne: '0'};
 
 	const sort = {datetime: -1};
 
@@ -67,7 +67,7 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 			>
 				<Center>
 					<ConsultationsStatsCard
-						query={query}
+						query={filter}
 						title={title}
 						abbr={abbr}
 						avatar={avatar}
@@ -75,7 +75,7 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 				</Center>
 			</div>
 			<ConsultationsPager
-				query={query}
+				filter={filter}
 				sort={sort}
 				itemProps={{
 					showPrice: true,

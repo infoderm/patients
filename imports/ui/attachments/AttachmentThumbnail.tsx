@@ -23,7 +23,7 @@ const AttachmentThumbnail = ({
 		loading,
 		found,
 		fields: attachment,
-	} = useAttachment({}, attachmentId, undefined, [attachmentId]);
+	} = useAttachment({}, {filter: {_id: attachmentId}}, [attachmentId]);
 	const src = found
 		? thumb(attachment, {
 				minWidth: width,

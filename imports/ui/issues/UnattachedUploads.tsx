@@ -5,14 +5,15 @@ import AttachmentsGrid from '../attachments/AttachmentsGrid';
 
 const UnattachedUploads = (props) => {
 	const query = {
-		$and: [
-			{'meta.attachedToPatients': {$not: {$gt: ''}}},
-			{'meta.attachedToConsultations': {$not: {$gt: ''}}},
-		],
+		filter: {
+			$and: [
+				{'meta.attachedToPatients': {$not: {$gt: ''}}},
+				{'meta.attachedToConsultations': {$not: {$gt: ''}}},
+			],
+		},
 	};
-	const options = {};
 
-	const {loading, results: attachments} = useAttachments(query, options, []);
+	const {loading, results: attachments} = useAttachments(query, []);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;
