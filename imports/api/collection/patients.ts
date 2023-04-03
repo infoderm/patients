@@ -71,7 +71,7 @@ const patientPersonalInformationFields = schema.object({
 	ongoing: schema.string().optional(),
 	about: schema.string().optional(),
 
-	email: patientEmail.optional(),
+	email: schema.array(patientEmail).optional(),
 
 	noshow: schema.number().optional(), // TODO Should be .int()
 	createdForAppointment: schema.boolean().optional(),
