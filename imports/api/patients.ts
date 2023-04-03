@@ -200,7 +200,7 @@ const sanitizeUpdate = function* (
 	yield* yieldKey(fields, 'streetandnumber', schema.string(), trimString);
 	yield* yieldKey(fields, 'zip', schema.string(), trimString);
 	yield* yieldKey(fields, 'phone', schema.string(), trimString);
-	yield* yieldKey(fields, 'email', patientEmail);
+	yield* yieldKey(fields, 'email', schema.array(patientEmail));
 
 	yield* yieldKey(
 		fields,
