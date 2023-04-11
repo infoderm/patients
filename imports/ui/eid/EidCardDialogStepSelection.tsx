@@ -31,7 +31,10 @@ import CancelButton from '../button/CancelButton';
 
 import mergeFields from '../../api/query/mergeFields';
 
-import {type PatientIdFields} from '../../api/collection/patients';
+import {
+	type PatientDocument,
+	type PatientIdFields,
+} from '../../api/collection/patients';
 import {patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
@@ -48,12 +51,11 @@ import PatientsGrid from '../patients/PatientsGrid';
 
 const DEFAULT_LIMIT = 3;
 const DEFAULT_FIELDS = {
-	// @ts-expect-error TODO Find a different solution to deduplicate queries. GraphQL?
 	...SelectablePatientCard.projection,
 	// We fetch the picture through a dedicated subscription to get live
 	// updates while avoiding double loading on init.
 	photo: 0,
-};
+} as const;
 
 const usePatientsNnSearch = ({niss: nn = ''}) => {
 	const filter = {niss: nn};
@@ -82,7 +84,7 @@ const usePatientsNormalizedNameSearch = ({normalizedName}) => {
 	const filter = {normalizedName};
 	const limit = DEFAULT_LIMIT;
 	const sort = {}; // TODO sort by something !== normalizedName
-	const projection = mergeFields(
+	const projection = mergeFields<PatientDocument>(
 		{
 			_id: 1,
 			normalizedName: 1,
