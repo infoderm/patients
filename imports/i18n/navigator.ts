@@ -1,7 +1,7 @@
 import {useSyncExternalStore} from 'react';
 import {defaults} from '../api/settings';
 import windowEventSubscription from '../ui/hooks/windowEventSubscription';
-import availableLocales, {type AvailableLocale} from './availableLocales';
+import {bestMatch} from './availableLocales';
 
 export const navigatorLanguagesGetSnapshot = () => navigator.languages;
 export const navigatorLanguagesSubscribe =
@@ -15,9 +15,8 @@ export const useNavigatorLanguages = () =>
 
 export const navigatorLocale = (navigatorLanguages: readonly string[]) => {
 	return (
-		navigatorLanguages.find((key) =>
-			availableLocales.has(key as AvailableLocale),
-		) ?? defaults.lang
+		navigatorLanguages.map(bestMatch).find((l) => l !== undefined) ??
+		defaults.lang
 	);
 };
 
