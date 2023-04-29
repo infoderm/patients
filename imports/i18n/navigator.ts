@@ -1,33 +1,27 @@
-import {useEffect, useState} from 'react';
+import {useSyncExternalStore} from 'react';
 import {defaults} from '../api/settings';
+import windowEventSubscription from '../ui/hooks/windowEventSubscription';
 import availableLocales, {type AvailableLocale} from './availableLocales';
 
-export const navigatorLocale = () => {
+export const navigatorLanguagesGetSnapshot = () => navigator.languages;
+export const navigatorLanguagesSubscribe =
+	windowEventSubscription('languagechange');
+
+export const useNavigatorLanguages = () =>
+	useSyncExternalStore(
+		navigatorLanguagesSubscribe,
+		navigatorLanguagesGetSnapshot,
+	);
+
+export const navigatorLocale = (navigatorLanguages: readonly string[]) => {
 	return (
-		navigator.languages.find((key) =>
+		navigatorLanguages.find((key) =>
 			availableLocales.has(key as AvailableLocale),
 		) ?? defaults.lang
 	);
 };
 
 export const useNavigatorLocale = () => {
-	const [state, setState] = useState(navigatorLocale());
-
-	useEffect(() => {
-		const handleEvent = () => {
-			setState(navigatorLocale());
-		};
-
-		window.addEventListener('languagechange', handleEvent);
-
-		// NOTE Simulate synthetic event in case any event occurred before we
-		// could subscribe.
-		handleEvent();
-
-		return () => {
-			window.removeEventListener('languagechange', handleEvent);
-		};
-	}, []);
-
-	return state;
+	const navigatorLanguages = useNavigatorLanguages();
+	return navigatorLocale(navigatorLanguages);
 };
