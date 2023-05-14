@@ -446,11 +446,11 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 			/>
 			<Main container spacing={3}>
 				{compare && (
-					<Grid item xs={6}>
+					<Grid item xs={12} lg={6} xl={4}>
 						<PrecedingConsultationsList consultation={consultation} />
 					</Grid>
 				)}
-				<Grid item xs={compare ? 6 : 12}>
+				<Grid item xs={12} lg={compare ? 6 : 12} xl={compare ? 8 : 12}>
 					<ConsultationForm consultation={state} update={update} />
 				</Grid>
 			</Main>

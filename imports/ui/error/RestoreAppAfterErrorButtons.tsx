@@ -8,23 +8,14 @@ import RotateRightIcon from '@mui/icons-material/RotateRight';
 import HomeIcon from '@mui/icons-material/Home';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
-const PREFIX = 'RestoreAppAfterErrorButtons';
+const Buttons = styled('div')({
+	textAlign: 'center',
+	paddingBottom: '2em',
+});
 
-const classes = {
-	buttons: `${PREFIX}-buttons`,
-	button: `${PREFIX}-button`,
-};
-
-const Buttons = styled('div')(() => ({
-	[`&.${classes.buttons}`]: {
-		textAlign: 'center',
-		paddingBottom: '2em',
-	},
-
-	[`& .${classes.button}`]: {
-		margin: '1em',
-	},
-}));
+const StyledButton = styled(Button)({
+	margin: '1em',
+});
 
 type RestoreAppAfterErrorButtonsProps = {
 	retry: () => void;
@@ -50,44 +41,40 @@ const RestoreAppAfterErrorButtons = ({
 	};
 
 	return (
-		<Buttons className={classes.buttons}>
-			<Button
-				className={classes.button}
+		<Buttons>
+			<StyledButton
 				variant="contained"
 				color="primary"
 				endIcon={<RotateRightIcon />}
 				onClick={retry}
 			>
 				Re-render current route
-			</Button>
-			<Button
-				className={classes.button}
+			</StyledButton>
+			<StyledButton
 				variant="contained"
 				color="secondary"
 				endIcon={<RefreshIcon />}
 				onClick={reloadRoute}
 			>
 				Reload current route
-			</Button>
+			</StyledButton>
 			<br />
-			<Button
-				className={classes.button}
+			<StyledButton
 				variant="contained"
 				color="primary"
 				endIcon={<HomeIcon />}
 				onClick={goBackHome}
 			>
 				Render home page
-			</Button>
-			<Button
-				className={classes.button}
+			</StyledButton>
+			<StyledButton
 				variant="contained"
 				color="secondary"
 				endIcon={<PowerSettingsNewIcon />}
 				onClick={reloadApp}
 			>
 				Reload entire App
-			</Button>
+			</StyledButton>
 		</Buttons>
 	);
 };

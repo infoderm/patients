@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
-import makeStyles from '../styles/makeStyles';
+import {styled} from '@mui/material/styles';
 import TextField from '../input/TextField';
 
 import {useSetting} from '../settings/hooks';
@@ -15,34 +15,32 @@ import CurrencyAmountInput from '../input/CurrencyAmountInput';
 
 import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 
-const useStyles = makeStyles()((theme) => ({
-	container: {
-		height: '100%',
-	},
-	paper: {
-		width: 800,
-		height: 500,
-	},
-	form: {
-		padding: theme.spacing(3),
-	},
-	qrcodeWrap: {
-		display: 'table',
-		backgroundColor: '#ccc',
-		width: 500,
-		height: 500,
-	},
-	qrcode: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		textAlign: 'center',
-	},
-	title: {
-		margin: theme.spacing(2),
-	},
-	textField: {
-		margin: theme.spacing(3),
-	},
+const QRCodeWrap = styled(Grid)({
+	display: 'table',
+	backgroundColor: '#fff',
+	padding: '1em',
+});
+
+const QRCode = styled(SEPAPaymentQRCode)({
+	display: 'table-cell',
+	verticalAlign: 'middle',
+	textAlign: 'center',
+});
+
+const Container = styled(Grid)({
+	height: '100%',
+});
+
+const StyledPaper = styled(Paper)({
+	minWidth: 800,
+});
+
+const Title = styled(Typography)(({theme}) => ({
+	margin: theme.spacing(2),
+}));
+
+const TextFieldWrap = styled('div')(({theme}) => ({
+	margin: theme.spacing(3),
 }));
 
 type Data = {
@@ -64,8 +62,6 @@ const SEPAPaymentDetailsStatic = ({
 	iban,
 	currency,
 }: SEPAPaymentDetailsStaticProps) => {
-	const {classes} = useStyles();
-
 	const defaultReference = format(startOfToday(), 'yyyy-MM-dd');
 
 	const [amount, setAmount] = useState(0.01);
@@ -95,44 +91,37 @@ const SEPAPaymentDetailsStatic = ({
 	};
 
 	return (
-		<Grid
-			container
-			className={classes.container}
-			justifyContent="center"
-			alignItems="center"
-		>
+		<Container container justifyContent="center" alignItems="center">
 			<Grid item>
-				<Paper className={classes.paper}>
+				<StyledPaper>
 					<Grid container>
 						<Grid item xs>
-							<Typography variant="h3" className={classes.title}>
-								SEPA Wire
-							</Typography>
-							<div className={classes.textField}>
+							<Title variant="h3">SEPA Wire</Title>
+							<TextFieldWrap>
 								<TextField
 									readOnly
 									label="Account Holder"
 									value={accountHolder}
 									InputLabelProps={{shrink: true}}
 								/>
-							</div>
-							<div className={classes.textField}>
+							</TextFieldWrap>
+							<TextFieldWrap>
 								<TextField
 									readOnly
 									label="IBAN"
 									value={iban}
 									InputLabelProps={{shrink: true}}
 								/>
-							</div>
-							<div className={classes.textField}>
+							</TextFieldWrap>
+							<TextFieldWrap>
 								<TextField
 									readOnly
 									label="Currency"
 									value={currency}
 									InputLabelProps={{shrink: true}}
 								/>
-							</div>
-							<div className={classes.textField}>
+							</TextFieldWrap>
+							<TextFieldWrap>
 								<TextField
 									label="Amount"
 									value={amountString}
@@ -143,8 +132,8 @@ const SEPAPaymentDetailsStatic = ({
 									}}
 									onChange={handleAmountChange}
 								/>
-							</div>
-							<div className={classes.textField}>
+							</TextFieldWrap>
+							<TextFieldWrap>
 								<TextField
 									label="Reference"
 									value={unstructuredReference}
@@ -152,19 +141,15 @@ const SEPAPaymentDetailsStatic = ({
 										setUnstructuredReference(e.target.value);
 									}}
 								/>
-							</div>
+							</TextFieldWrap>
 						</Grid>
-						<Grid item className={classes.qrcodeWrap}>
-							<SEPAPaymentQRCode
-								className={classes.qrcode}
-								data={data}
-								codeProps={codeProps}
-							/>
-						</Grid>
+						<QRCodeWrap item>
+							<QRCode data={data} codeProps={codeProps} />
+						</QRCodeWrap>
 					</Grid>
-				</Paper>
+				</StyledPaper>
 			</Grid>
-		</Grid>
+		</Container>
 	);
 };
 

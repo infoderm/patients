@@ -44,7 +44,7 @@ const classes = {
 	avatarIssues: `${PREFIX}-avatarIssues`,
 };
 
-const StyledAccordionDetails = styled(AccordionDetails)(() => ({
+const StyledAccordionDetails = styled(AccordionDetails)({
 	[`&.${classes.details}`]: {
 		position: 'relative',
 	},
@@ -70,7 +70,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(() => ({
 		backgroundColor: red[100],
 		color: red[600],
 	},
-}));
+});
 
 function paymentMethodString(payment_method) {
 	switch (payment_method) {

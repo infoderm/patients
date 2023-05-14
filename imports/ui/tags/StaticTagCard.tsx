@@ -10,6 +10,7 @@ import MuiCardContent from '@mui/material/CardContent';
 import MuiCardActions from '@mui/material/CardActions';
 import MuiCardMedia from '@mui/material/CardMedia';
 
+import {emphasize} from '../../lib/color';
 import useIsMounted from '../hooks/useIsMounted';
 import DeleteButton from '../button/DeleteButton';
 import RenameButton from '../button/RenameButton';
@@ -36,17 +37,24 @@ const UnstyledLinkedCardHeader = ({to, ...rest}) => {
 	return <MuiCardHeader component={Link} to={to} {...rest} />;
 };
 
-const LinkedCardHeader = styled(UnstyledLinkedCardHeader)({
+const LinkedCardHeader = styled(UnstyledLinkedCardHeader)(({theme}) => ({
 	flex: 1,
-	'& > div': {
+	'& > .MuiCardHeader-content': {
 		minWidth: 0,
 		'& > span': {
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
 			textOverflow: 'ellipsis',
+			'&.MuiCardHeader-title': {
+				fontWeight: 'bold',
+				color: theme.palette.primary.main,
+				'&:hover': {
+					textDecoration: 'underline',
+				},
+			},
 		},
 	},
-});
+}));
 
 const CardContent = styled(MuiCardContent)({
 	flex: '1 0 auto',
@@ -57,15 +65,15 @@ const CardActions = styled(MuiCardActions)(({theme}) => ({
 	paddingLeft: theme.spacing(2),
 }));
 
-const CardMedia = styled(MuiCardMedia)({
+const CardMedia = styled(MuiCardMedia)(({theme}) => ({
 	display: 'flex',
 	fontSize: '4rem',
 	width: 140,
 	alignItems: 'center',
 	justifyContent: 'center',
-	color: '#fff',
-	backgroundColor: '#999',
-});
+	color: theme.palette.getContrastText(theme.palette.background.paper),
+	backgroundColor: emphasize(theme.palette.background.paper, 0.1),
+}));
 
 const Veil = styled('div')({
 	position: 'absolute',

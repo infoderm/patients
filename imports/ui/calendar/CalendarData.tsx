@@ -18,6 +18,7 @@ import {useDateFormat} from '../../i18n/datetime';
 
 import {ALL_WEEK_DAYS, generateDays, type WeekDay} from '../../lib/datetime';
 import type CSSObject from '../styles/CSSObject';
+import color, {hoverColor} from '../../lib/color';
 import type Event from './Event';
 import EventFragment from './EventFragment';
 
@@ -364,7 +365,7 @@ type MakeGridStylesOptions = {
 
 const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 	(
-		_theme,
+		theme,
 		{
 			displayWeekNumbers,
 			nrows,
@@ -393,7 +394,7 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				gridGap: '1px',
 			},
 			columnHeader: {
-				backgroundColor: '#fff',
+				backgroundColor: theme.palette.background.paper,
 				fontWeight: 'bold',
 				textAlign: 'center',
 				color: '#aaa',
@@ -402,7 +403,7 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				gridRowEnd: `span ${headerHeight}`,
 			},
 			corner: {
-				backgroundColor: '#fff',
+				backgroundColor: theme.palette.background.paper,
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${headerHeight}`,
 			},
@@ -418,20 +419,37 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				textAlign: 'center',
 				gridColumnEnd: 'span 1',
 				gridRowEnd: 'span 1',
+				'& > a': {
+					fontWeight: 'bold',
+					color: theme.palette.primary.main,
+					'&:hover': {
+						textDecoration: 'underline',
+					},
+				},
 			},
 			weekNumber: {
-				backgroundColor: '#fff',
+				backgroundColor: theme.palette.background.paper,
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${maxLines}`,
 				paddingTop: '5px',
 				textAlign: 'center',
+				'& > a': {
+					fontWeight: 'bold',
+					color: theme.palette.primary.main,
+					'&:hover': {
+						textDecoration: 'underline',
+					},
+				},
 			},
 			dayBox: {
-				backgroundColor: '#fff',
+				backgroundColor: theme.palette.background.paper,
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${maxLines}`,
 				'&:hover': {
-					backgroundColor: '#f5f5f5',
+					backgroundColor: hoverColor(
+						theme,
+						color(theme.palette.background.paper),
+					).toRgbString(),
 				},
 			},
 			slot: {

@@ -17,7 +17,7 @@ const classes = {
 	results: `${PREFIX}-results`,
 };
 
-const Root = styled('div')(() => ({
+const Root = styled('div')({
 	[`&.${classes.root}`]: {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
@@ -30,7 +30,7 @@ const Root = styled('div')(() => ({
 	[`& .${classes.results}`]: {
 		padding: '1em 0',
 	},
-}));
+});
 
 type Params = {
 	query: string;

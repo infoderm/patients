@@ -21,6 +21,7 @@ import isValid from 'date-fns/isValid';
 import Button from '@mui/material/Button';
 
 import {parseOneAddress, type ParsedMailbox} from 'email-addresses';
+import {styled} from '@mui/material/styles';
 import makeStyles from '../styles/makeStyles';
 
 import TextField from '../input/TextField';
@@ -58,6 +59,7 @@ import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
 import useDialog from '../modal/useDialog';
+import {emphasize} from '../../lib/color';
 import PatientDeletionDialog from './PatientDeletionDialog';
 import usePatientPersonalInformationReducer from './usePatientPersonalInformationReducer';
 import PatientPersonalInformationButtonsStatic from './PatientPersonalInformationButtonsStatic';
@@ -76,8 +78,8 @@ const useStyles = makeStyles()((theme) => ({
 		height: 200,
 		alignItems: 'center',
 		justifyContent: 'center',
-		color: '#fff',
-		backgroundColor: '#999',
+		color: theme.palette.getContrastText(theme.palette.background.paper),
+		backgroundColor: emphasize(theme.palette.background.paper, 0.1),
 		verticalAlign: 'top',
 		marginBottom: theme.spacing(2),
 	},
@@ -93,7 +95,7 @@ const useStyles = makeStyles()((theme) => ({
 	formControl: {
 		overflow: 'auto',
 		'& input, & div': {
-			color: 'black !important',
+			color: `${theme.palette.text.primary} !important`,
 		},
 	},
 	setPicker: {
@@ -103,18 +105,16 @@ const useStyles = makeStyles()((theme) => ({
 		height: '100%',
 		overflow: 'auto',
 		'& textarea': {
-			color: 'black !important',
+			color: `${theme.palette.text.primary} !important`,
 		},
 	},
-	button: {
-		margin: theme.spacing(1),
-	},
-	problem: {
-		color: 'red',
-	},
 	noShowsAdornment: {
-		color: '#999',
+		color: theme.palette.text.secondary,
 	},
+}));
+
+const ProblemText = styled(Typography)(({theme}) => ({
+	color: theme.palette.error.main,
 }));
 
 const tagToKey = (x) => x.name;
@@ -347,9 +347,7 @@ const PatientPersonalInformationStatic = (
 						/>
 					)}
 					{!totalNoShow ? null : (
-						<Typography className={classes.problem} variant="h4">
-							PVPP = {totalNoShow}
-						</Typography>
+						<ProblemText variant="h4">PVPP = {totalNoShow}</ProblemText>
 					)}
 				</Grid>
 				<Grid item sm={8} md={10}>

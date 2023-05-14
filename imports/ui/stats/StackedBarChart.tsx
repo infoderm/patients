@@ -83,14 +83,6 @@ const StackedBarChart = ({width, height, margin, data, color}: Props) => {
 	return (
 		<>
 			<svg width={width} height={height}>
-				<rect
-					x={0}
-					y={0}
-					width={width}
-					height={height}
-					fill="#eaedff"
-					rx={14}
-				/>
 				<Grid
 					top={margin.top}
 					left={margin.left}

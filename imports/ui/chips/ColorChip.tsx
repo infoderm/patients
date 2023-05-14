@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {styled, darken} from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 
 import Chip, {type ChipProps} from '@mui/material/Chip';
 
-import {colord} from 'colord';
+import color, {focusColor, hoverColor, textColor} from '../../lib/color';
 
 type Props<C extends React.ElementType> = Omit<ChipProps<C>, 'color'> & {
 	color: string;
@@ -16,19 +16,19 @@ const ColorChip = styled(
 			<Chip ref={ref} component={component} {...rest} />
 		),
 	),
-)(({color}) => {
-	const backgroundColor = color;
-	const foregroundColor = color
-		? colord(color).isLight()
-			? '#111'
-			: '#ddd'
-		: undefined;
-	return {
-		backgroundColor,
-		color: foregroundColor,
-		'&:hover, &:focus': {
-			backgroundColor: backgroundColor && darken(backgroundColor, 0.1),
-		},
-	};
-});
+)(({theme, color: backgroundColor}) => ({
+	backgroundColor,
+	color:
+		backgroundColor && textColor(theme, color(backgroundColor)).toRgbString(),
+	'&:hover': {
+		backgroundColor:
+			backgroundColor &&
+			hoverColor(theme, color(backgroundColor)).toRgbString(),
+	},
+	'&:focus': {
+		backgroundColor:
+			backgroundColor &&
+			focusColor(theme, color(backgroundColor)).toRgbString(),
+	},
+}));
 export default ColorChip;

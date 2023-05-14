@@ -9,7 +9,7 @@ const classes = {
 	pre: `${PREFIX}-pre`,
 };
 
-const Details = styled('details')(() => ({
+const Details = styled('details')({
 	[`&.${classes.details}`]: {
 		padding: '1em',
 	},
@@ -28,7 +28,7 @@ const Details = styled('details')(() => ({
 		borderRadius: '.5em',
 		textTransform: 'initial',
 	},
-}));
+});
 
 type ErrorLogProps = {
 	error: Error;
