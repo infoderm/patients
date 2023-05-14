@@ -10,6 +10,7 @@ import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 
+import {emphasize} from '../../lib/color';
 import {useDateFormatRange} from '../../i18n/datetime';
 
 import useConsultationsStats from './useConsultationsStats';
@@ -65,8 +66,8 @@ const StyledCard = styled(Card)(({theme}) => ({
 		height: 200,
 		alignItems: 'center',
 		justifyContent: 'center',
-		color: '#fff',
-		backgroundColor: '#999',
+		color: theme.palette.getContrastText(theme.palette.background.paper),
+		backgroundColor: emphasize(theme.palette.background.paper, 0.1),
 		flex: 'none',
 	},
 

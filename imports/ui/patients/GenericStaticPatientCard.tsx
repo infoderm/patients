@@ -14,6 +14,7 @@ import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import {blue, pink, red, yellow} from '@mui/material/colors';
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 
+import {emphasize} from '../../lib/color';
 import pngDataURL from '../../lib/png/dataURL';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
@@ -81,8 +82,8 @@ const StyledCard = styled(Card)(({theme}) => ({
 		fontSize: '4rem',
 		alignItems: 'center',
 		justifyContent: 'center',
-		color: '#fff',
-		backgroundColor: '#999',
+		color: theme.palette.getContrastText(theme.palette.background.paper),
+		backgroundColor: emphasize(theme.palette.background.paper, 0.1),
 	},
 
 	[`& .${classes.photo}`]: {

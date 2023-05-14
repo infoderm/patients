@@ -5,7 +5,8 @@ import Avatar from '@mui/material/Avatar';
 
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 
-import {colord} from 'colord';
+import color from '../../../../lib/color';
+
 import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
 
@@ -44,7 +45,7 @@ const ColorPicker = ({
 				}
 				style={{
 					backgroundColor: value,
-					color: colord(value).isLight() ? '#111' : '#ddd',
+					color: color(value).isLight() ? '#111' : '#ddd',
 				}}
 				label={value}
 				onClick={

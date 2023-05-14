@@ -8,6 +8,7 @@ import type PropsOf from '../../lib/types/PropsOf';
 
 import virtualFields from '../../api/consultations/virtualFields';
 
+import color from '../../lib/color';
 import StaticConsultationCardSummary from './StaticConsultationCardSummary';
 import StaticConsultationCardDetails from './StaticConsultationCardDetails';
 import StaticConsultationCardActions from './StaticConsultationCardActions';
@@ -27,12 +28,12 @@ const additionalProps = new Set<number | string | Symbol>([
 ]);
 const shouldForwardProp = (prop) => !additionalProps.has(prop);
 const Accordion = styled(MuiAccordion, {shouldForwardProp})<AdditionalProps>(
-	({loading, deleted, isAppointment, didNotOrWillNotHappen}) => ({
+	({theme, loading, deleted, isAppointment, didNotOrWillNotHappen}) => ({
 		transition: 'opacity 500ms ease-out',
 		backgroundColor: didNotOrWillNotHappen
-			? '#ccc'
+			? color(theme.palette.background.paper).mix('#ccc', 0.12).toRgbString()
 			: isAppointment
-			? '#FFF5D6'
+			? color(theme.palette.background.paper).mix('#ff0', 0.12).toRgbString()
 			: undefined,
 		opacity: loading ? 0.7 : deleted ? 0.4 : 1,
 	}),

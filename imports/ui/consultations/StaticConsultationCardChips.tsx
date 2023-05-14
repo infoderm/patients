@@ -6,6 +6,7 @@ import MuiChip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 
 import MoneyIcon from '@mui/icons-material/Money';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AttachmentIcon from '@mui/icons-material/Attachment';
@@ -48,12 +49,12 @@ const styles: any = ({
 		color: '#e8e9c9',
 	}),
 	...(isDebt && {
-		backgroundColor: '#f88',
-		color: '#fff',
+		backgroundColor: theme.palette.error.main,
+		color: theme.palette.error.contrastText,
 	}),
 	...(didNotOrWillNotHappen && {
-		backgroundColor: '#ff7961',
-		color: '#fff',
+		backgroundColor: theme.palette.error.light,
+		color: theme.palette.error.contrastText,
 	}),
 	...(bold && {
 		fontWeight: 'bold',
@@ -187,7 +188,18 @@ const StaticConsultationCardChips = ({
 					label={currencyFormat(price!)}
 				/>
 			)}
-			{owes && <Chip bold isDebt label={`Doit ${currencyFormat(owed)}`} />}
+			{owes && (
+				<Chip
+					bold
+					isDebt
+					avatar={
+						<Avatar>
+							<MoneyOffIcon />
+						</Avatar>
+					}
+					label={currencyFormat(owed)}
+				/>
+			)}
 		</Chips>
 	);
 };

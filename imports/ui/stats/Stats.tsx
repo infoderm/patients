@@ -10,34 +10,25 @@ import Sex from './Sex';
 import Age from './Age';
 import Frequency from './Frequency';
 
-const PREFIX = 'Stats';
+const CardCenteredContent = styled(CardContent)({
+	textAlign: 'center',
+});
 
-const classes = {
-	content: `${PREFIX}-content`,
-	chart: `${PREFIX}-chart`,
-};
-
-const StyledGrid = styled(Grid)(() => ({
-	[`& .${classes.content}`]: {
-		textAlign: 'center',
-	},
-
-	[`& .${classes.chart}`]: {
-		position: 'relative',
-		display: 'inline-block',
-	},
-}));
+const ChartWrap = styled('div')({
+	position: 'relative',
+	display: 'inline-block',
+});
 
 const Chart = ({title, subheader, children, ...rest}) => {
 	return (
-		<StyledGrid item {...rest}>
+		<Grid item {...rest}>
 			<Card>
 				<CardHeader title={title} subheader={subheader} />
-				<CardContent className={classes.content}>
-					<div className={classes.chart}>{children}</div>
-				</CardContent>
+				<CardCenteredContent>
+					<ChartWrap>{children}</ChartWrap>
+				</CardCenteredContent>
 			</Card>
-		</StyledGrid>
+		</Grid>
 	);
 };
 

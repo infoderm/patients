@@ -7,23 +7,14 @@ import CableIcon from '@mui/icons-material/Cable';
 import useStatus from '../users/useStatus';
 import reconnect from '../../api/connection/reconnect';
 
-const PREFIX = 'ReconnectAfterNetworkErrorButtons';
+const Buttons = styled('div')({
+	textAlign: 'center',
+	paddingBottom: '2em',
+});
 
-const classes = {
-	buttons: `${PREFIX}-buttons`,
-	button: `${PREFIX}-button`,
-};
-
-const Buttons = styled('div')(() => ({
-	[`&.${classes.buttons}`]: {
-		textAlign: 'center',
-		paddingBottom: '2em',
-	},
-
-	[`& .${classes.button}`]: {
-		margin: '1em',
-	},
-}));
+const Button = styled(LoadingButton)({
+	margin: '1em',
+});
 
 const ReconnectAfterNetworkErrorButtons = () => {
 	const {status} = useStatus();
@@ -32,9 +23,8 @@ const ReconnectAfterNetworkErrorButtons = () => {
 	const connected = status === 'connected';
 
 	return (
-		<Buttons className={classes.buttons}>
-			<LoadingButton
-				className={classes.button}
+		<Buttons>
+			<Button
 				variant="contained"
 				endIcon={<CableIcon />}
 				loading={connecting}
@@ -43,7 +33,7 @@ const ReconnectAfterNetworkErrorButtons = () => {
 				onClick={reconnect}
 			>
 				{connected ? 'Connected' : 'Reconnect'}
-			</LoadingButton>
+			</Button>
 		</Buttons>
 	);
 };

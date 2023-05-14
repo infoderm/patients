@@ -13,8 +13,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import CloseIcon from '@mui/icons-material/Close';
-import makeStyles from '../styles/makeStyles';
 
+import {styled} from '@mui/material/styles';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 
 import {onlyASCII} from '../../api/string';
@@ -31,35 +31,54 @@ const SIZE_CODE = 256;
 const SIZE_PROGRESS = 128;
 const THICKNESS_PROGRESS = 3.6;
 
-const useStyles = makeStyles()({
-	code: {},
-	codeContainer: {
-		position: 'relative',
-		display: 'block',
-		height: SIZE_CODE,
-	},
-	codeProgress: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		fontSize: '2rem',
-		zIndex: 1,
-	},
-	codeWrap: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
+const CodeContainer = styled('div')({
+	position: 'relative',
+	display: 'block',
+	height: SIZE_CODE,
+});
+
+const CodeProgress = styled('div')({
+	position: 'absolute',
+	top: 0,
+	bottom: 0,
+	left: 0,
+	right: 0,
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	fontSize: '2rem',
+	zIndex: 1,
+});
+
+type CodeWrapAdditionalProps = {
+	loading: boolean;
+	found: boolean;
+};
+
+const codeWrapAdditionalProps = new Set<number | string | Symbol>([
+	'loading',
+	'found',
+]);
+const codeWrapShouldForwardProp = (prop) => !codeWrapAdditionalProps.has(prop);
+const CodeWrap = styled('div', {
+	shouldForwardProp: codeWrapShouldForwardProp,
+})<CodeWrapAdditionalProps>(({loading, found}) => ({
+	transition: 'opacity 200ms ease-out',
+	opacity: loading ? 0.4 : found ? 1 : 0.2,
+	position: 'absolute',
+	top: 0,
+	bottom: 0,
+	left: 0,
+	right: 0,
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+}));
+
+const CodePadding = styled('div')({
+	display: 'flex',
+	padding: '1em',
+	backgroundColor: '#fff',
 });
 
 type Props = {
@@ -69,8 +88,6 @@ type Props = {
 };
 
 const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
-	const {classes} = useStyles();
-
 	const {loading: loadingAccountHolder, value: accountHolder} =
 		useSetting('account-holder');
 	const {loading: loadingIban, value: iban} = useSetting('iban');
@@ -114,7 +131,6 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 	};
 
 	const codeProps = {
-		className: classes.code,
 		level: 'H',
 		size: SIZE_CODE,
 	};
@@ -122,11 +138,6 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 	const patientIdentifier = found
 		? `${patient.firstname} ${patient.lastname}`
 		: `#${consultation.patientId}`;
-
-	const codeStyle = {
-		transition: 'opacity 200ms ease-out',
-		opacity: loading ? 0.4 : found ? 1 : 0.2,
-	};
 
 	return (
 		<Dialog open={open} onClose={onClose}>
@@ -141,8 +152,9 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 					<b>owes {currencyFormat(owed)}</b> for this consultation. This is the
 					amount that is programmed for this payment.
 				</DialogContentText>
-				<div className={classes.codeContainer}>
-					<div className={classes.codeProgress}>
+				<br />
+				<CodeContainer>
+					<CodeProgress>
 						{loadingPatient ? (
 							<CircularProgress
 								disableShrink
@@ -152,11 +164,13 @@ const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {
 						) : (
 							!found && 'PATIENT NOT FOUND'
 						)}
-					</div>
-					<div className={classes.codeWrap} style={codeStyle}>
-						<SEPAPaymentQRCode data={data} codeProps={codeProps} />
-					</div>
-				</div>
+					</CodeProgress>
+					<CodeWrap loading={loading} found={found}>
+						<CodePadding>
+							<SEPAPaymentQRCode data={data} codeProps={codeProps} />
+						</CodePadding>
+					</CodeWrap>
+				</CodeContainer>
 			</DialogContent>
 			<DialogActions>
 				<Button color="primary" endIcon={<CloseIcon />} onClick={onClose}>

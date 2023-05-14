@@ -27,6 +27,7 @@ import PatientWasBornIcon from '@mui/icons-material/Celebration';
 
 import parseISO from 'date-fns/parseISO';
 import isValid from 'date-fns/isValid';
+import Tooltip from '@mui/material/Tooltip';
 import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
 import consultationVirtualFields from '../../api/consultations/virtualFields';
 
@@ -105,7 +106,7 @@ const MaybeDeathItem = ({loading, found, patient}) => {
 				variant="body2"
 				color="text.secondary"
 			>
-				{dateFormat(deathdate!, 'PPPPpp')}
+				<DateTimeString dateFormat={dateFormat} datetime={deathdate!} />
 			</TimelineOppositeContent>
 			<TimelineSeparator>
 				<TimelineDot>
@@ -177,6 +178,12 @@ const description = (item, importantStringsDict) => {
 		: item.cancellationExplanation;
 };
 
+const DateTimeString = ({dateFormat, datetime}) => (
+	<Tooltip title={dateFormat(datetime, 'PPPPpppp')}>
+		<span>{dateFormat(datetime, 'PPPPp')}</span>
+	</Tooltip>
+);
+
 const ConsultationItem = ({item, dateFormat, importantStringsDict}) => {
 	const {isDone, isCancelled} = item;
 
@@ -190,7 +197,7 @@ const ConsultationItem = ({item, dateFormat, importantStringsDict}) => {
 				variant="body2"
 				color="text.secondary"
 			>
-				{dateFormat(item.datetime, 'PPPPpp')}
+				<DateTimeString dateFormat={dateFormat} datetime={item.datetime} />
 			</TimelineOppositeContent>
 			<TimelineSeparator>
 				<TimelineConnector />
@@ -210,7 +217,10 @@ const ConsultationItem = ({item, dateFormat, importantStringsDict}) => {
 				{isCancelled && (
 					<Typography>
 						{item.cancellationReason}{' '}
-						{dateFormat(item.cancellationDatetime, 'PPPPpp')}
+						<DateTimeString
+							dateFormat={dateFormat}
+							datetime={item.cancellationDatetime}
+						/>
 						<br />
 						Explanation: {item.cancellationExplanation || 'unknown'}
 					</Typography>
@@ -310,9 +320,14 @@ const PatientHistory = ({patientId}: PatientHistoryProps) => {
 					variant="body2"
 					color="text.secondary"
 				>
-					{loadingPatient
-						? 'Loading...'
-						: dateFormat(patient.createdAt, 'PPPPpp')}
+					{loadingPatient ? (
+						'Loading...'
+					) : (
+						<DateTimeString
+							dateFormat={dateFormat}
+							datetime={patient.createdAt}
+						/>
+					)}
 				</TimelineOppositeContent>
 				<TimelineSeparator>
 					<TimelineConnector />
