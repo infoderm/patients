@@ -6,7 +6,6 @@ import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 
 export const Subheader = styled(Grid)(({theme}) => ({
-	backgroundColor: 'white',
 	position: 'fixed',
 	top: '76px',
 	paddingTop: '0.4em',
@@ -14,8 +13,11 @@ export const Subheader = styled(Grid)(({theme}) => ({
 	zIndex: 10,
 	marginLeft: '-24px',
 	marginRight: '-24px',
+	backgroundColor: theme.palette.mode === 'light' ? 'white' : 'black',
 	boxShadow:
-		'0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
+		theme.palette.mode === 'light'
+			? '0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)'
+			: '0px 2px 4px -1px rgba(255, 255, 255, 0.2),0px 4px 5px 0px rgba(255, 255, 255, 0.14),0px 1px 10px 0px rgba(255, 255, 255, 0.12)',
 }));
 
 const avatarStyles = {
