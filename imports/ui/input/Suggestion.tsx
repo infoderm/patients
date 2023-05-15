@@ -5,18 +5,10 @@ import ListItemText from '@mui/material/ListItemText';
 import {styled} from '@mui/material/styles';
 import Keyboard from '../accessibility/Keyboard';
 
-const PREFIX = 'Suggestion';
-
-const classes = {
-	text: `${PREFIX}-text`,
-};
-
-const StyledMenuItem = styled(MenuItem)(({theme}) => ({
-	[`& .${classes.text}`]: {
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		marginRight: theme.spacing(1),
-	},
+export const SuggestionItemText = styled(ListItemText)(({theme}) => ({
+	overflow: 'hidden',
+	textOverflow: 'ellipsis',
+	marginRight: theme.spacing(1),
 }));
 
 type SuggestionProps<Item> = {
@@ -47,7 +39,7 @@ const Suggestion = React.forwardRef(
 		const isSelected = selectedItems.map(itemToKey).includes(itemToKey(item));
 
 		return (
-			<StyledMenuItem
+			<MenuItem
 				ref={ref}
 				{...rest}
 				selected={isHighlighted}
@@ -59,13 +51,11 @@ const Suggestion = React.forwardRef(
 					<Item item={item} />
 				) : (
 					<>
-						<ListItemText className={classes.text}>
-							{itemToString(item)}
-						</ListItemText>
+						<SuggestionItemText>{itemToString(item)}</SuggestionItemText>
 						{isHighlighted ? <Keyboard>Enter</Keyboard> : null}
 					</>
 				)}
-			</StyledMenuItem>
+			</MenuItem>
 		);
 	},
 );
