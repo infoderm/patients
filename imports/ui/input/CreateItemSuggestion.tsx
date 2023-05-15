@@ -4,32 +4,14 @@ import {styled} from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Keyboard from '../accessibility/Keyboard';
+import {SuggestionItemText} from './Suggestion';
 
-const PREFIX = 'NewItemSuggestion';
-
-const classes = {
-	root: `${PREFIX}-root`,
-	value: `${PREFIX}-value`,
-	text: `${PREFIX}-text`,
-};
-
-const StyledMenuItem = styled(MenuItem)(({theme}) => ({
-	[`&.${classes.root}`]: {
-		backgroundColor: '#ddd',
-	},
-	[`& .${classes.value}`]: {
-		backgroundColor: 'yellow',
-		padding: '0px 3px',
-		borderRadius: 2,
-	},
-	[`& .${classes.text}`]: {
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		marginRight: theme.spacing(1),
-	},
-}));
+const CreateItemSuggestionValue = styled('span')({
+	backgroundColor: 'rgba(255 255 0 / 0.6)',
+	padding: '0px 3px',
+	borderRadius: 2,
+});
 
 type NewItemSuggestionProps = {
 	inputValue?: string;
@@ -43,15 +25,16 @@ const CreateItemSuggestion = React.forwardRef(
 		ref: React.Ref<HTMLLIElement>,
 	) => {
 		return (
-			<StyledMenuItem ref={ref} className={classes.root} onClick={onClick}>
+			<MenuItem ref={ref} onClick={onClick}>
 				<ListItemIcon>
 					<AddIcon fontSize="small" />
 				</ListItemIcon>
-				<ListItemText className={classes.text}>
-					Create <span className={classes.value}>{inputValue}</span>
-				</ListItemText>
+				<SuggestionItemText>
+					Create{' '}
+					<CreateItemSuggestionValue>{inputValue}</CreateItemSuggestionValue>
+				</SuggestionItemText>
 				{highlightedIndex === -1 ? <Keyboard>Enter</Keyboard> : null}
-			</StyledMenuItem>
+			</MenuItem>
 		);
 	},
 );
