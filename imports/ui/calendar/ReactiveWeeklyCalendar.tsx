@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {type SnackbarOrigin, useSnackbar} from 'notistack';
 
-import {styled} from '@mui/material/styles';
+import {styled, useTheme} from '@mui/material/styles';
 
 import Collapse from '@mui/material/Collapse';
 import Grid from '@mui/material/Grid';
@@ -71,6 +71,7 @@ import call from '../../api/endpoint/call';
 import type ModuloWeekInterval from '../settings/ModuloWeekInterval';
 import ColorChip from '../chips/ColorChip';
 import {type Constraint} from '../../api/availability';
+import color from '../../lib/color';
 import Header from './Header';
 import DayHeader from './DayHeader';
 import StaticWeeklyCalendar from './StaticWeeklyCalendar';
@@ -184,6 +185,7 @@ const ReactiveWeeklyCalendar = ({
 	...rest
 }: Props) => {
 	const isMounted = useIsMounted();
+	const theme = useTheme();
 	const {enqueueSnackbar} = useSnackbar();
 	const [cancel, setCancel] = useState<null | (() => void)>(null);
 	const pending = cancel !== null;
@@ -485,7 +487,13 @@ const ReactiveWeeklyCalendar = ({
 										<ListItem key={label}>
 											<ColorChip
 												label={label}
-												color={isSelected ? '#a5f8ad' : undefined}
+												color={
+													isSelected
+														? color(theme.palette.background.paper)
+																.mix('#a5f8ad', 0.5)
+																.toRgbString()
+														: undefined
+												}
 												icon={
 													isSelected ? (
 														<CheckCircleOutlineIcon />

@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 
 import Paper from '@mui/material/Paper';
+import {grey} from '@mui/material/colors';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import getMonth from 'date-fns/getMonth';
@@ -13,6 +14,7 @@ import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
+import {useTheme} from '@mui/material/styles';
 import makeStyles from '../styles/makeStyles';
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -265,6 +267,7 @@ const CalendarDataGrid = ({
 	weekOptions,
 	onSlotClick,
 }: CalendarDataGridProps) => {
+	const theme = useTheme();
 	return (
 		<Paper>
 			<div className={classes.header}>
@@ -311,6 +314,7 @@ const CalendarDataGrid = ({
 					.map((props, key) => (
 						<EventFragment
 							key={key}
+							theme={theme}
 							className={cx(classes.slot, {
 								[classes[`slot${props.slots}`]!]: true,
 								[classes[`day${props.day}slot${props.slot}`]!]: true,
@@ -390,14 +394,14 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				gridTemplateColumns,
 				gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
 				lineHeight: `calc(2*${lineHeight})`,
-				backgroundColor: '#aaa',
+				backgroundColor: grey[500],
 				gridGap: '1px',
 			},
 			columnHeader: {
 				backgroundColor: theme.palette.background.paper,
 				fontWeight: 'bold',
 				textAlign: 'center',
-				color: '#aaa',
+				color: grey[500],
 				padding: '5px 5px',
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${headerHeight}`,
@@ -411,7 +415,7 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				display: 'grid',
 				gridTemplateColumns,
 				gridTemplateRows: `repeat(${nrows * maxLines}, ${lineHeight})`,
-				backgroundColor: '#aaa',
+				backgroundColor: grey[500],
 				gridGap: '1px',
 			},
 			dayHeader: {
