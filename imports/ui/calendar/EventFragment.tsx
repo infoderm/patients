@@ -5,27 +5,33 @@ import {Link} from 'react-router-dom';
 import dateFormat from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import isBefore from 'date-fns/isBefore';
+import {grey} from '@mui/material/colors';
+import {type Theme} from '@mui/material/styles';
 import Tooltip from '../accessibility/Tooltip';
+import color from '../../lib/color';
 
-const eventBackgroundColor = ({begin, calendar, isCancelled}) => {
-	if (isCancelled) return '#ff7961';
+const themedColor = (theme: Theme, tint: string) =>
+	color(theme.palette.background.paper).mix(tint, 0.5).toRgbString();
+
+const eventBackgroundColor = (theme: Theme, {begin, calendar, isCancelled}) => {
+	if (isCancelled) return themedColor(theme, '#ff7961');
 	const today = startOfToday();
 	const isPast = isBefore(begin, today); // TODO make reactive?
 	switch (calendar) {
 		case 'appointments': {
-			return isPast ? '#ccc' : '#fff5d6';
+			return themedColor(theme, isPast ? grey[400] : '#eea');
 		}
 
 		case 'consultations': {
-			return '#757de8';
+			return themedColor(theme, '#757de8');
 		}
 
 		case 'availability': {
-			return '#a5f8ad';
+			return themedColor(theme, '#a5f8ad');
 		}
 
 		default: {
-			return '#eee';
+			return themedColor(theme, grey[200]);
 		}
 	}
 };
@@ -40,15 +46,29 @@ const LinkFragment = ({className, title, uri, style, eventProps}) => (
 	</Tooltip>
 );
 
-const AppointmentFragment = ({event, className, eventProps}) => {
+type EventFragmentProps = {
+	className: string;
+	theme: Theme;
+	event: any;
+	eventProps: any;
+};
+
+const AppointmentFragment = ({
+	theme,
+	event,
+	className,
+	eventProps,
+}: EventFragmentProps) => {
 	const time = `${dateFormat(event.begin, 'HH:mm')}-${dateFormat(
 		event.end,
 		'HH:mm',
 	)}`;
 	const repr = `${time} ${event.title}`;
+	const backgroundColor = eventBackgroundColor(theme, event);
+	const textColor = theme.palette.getContrastText(backgroundColor);
 	const style = {
-		backgroundColor: eventBackgroundColor(event),
-		color: '#111',
+		backgroundColor,
+		color: textColor,
 	};
 	return (
 		<LinkFragment
@@ -61,12 +81,19 @@ const AppointmentFragment = ({event, className, eventProps}) => {
 	);
 };
 
-const ConsultationFragment = ({event, className, eventProps}) => {
+const ConsultationFragment = ({
+	theme,
+	event,
+	className,
+	eventProps,
+}: EventFragmentProps) => {
 	const time = dateFormat(event.begin, 'HH:mm');
 	const repr = `${time} ${event.title}`;
+	const backgroundColor = eventBackgroundColor(theme, event);
+	const textColor = theme.palette.getContrastText(backgroundColor);
 	const style = {
-		backgroundColor: eventBackgroundColor(event),
-		color: '#111',
+		backgroundColor,
+		color: textColor,
 	};
 	return (
 		<LinkFragment
@@ -79,15 +106,22 @@ const ConsultationFragment = ({event, className, eventProps}) => {
 	);
 };
 
-const AvailabilityFragment = ({event, className, eventProps}) => {
+const AvailabilityFragment = ({
+	theme,
+	event,
+	className,
+	eventProps,
+}: EventFragmentProps) => {
+	const backgroundColor = eventBackgroundColor(theme, event);
+	const textColor = theme.palette.getContrastText(backgroundColor);
 	const style = {
 		display: 'inline-flex',
 		alignItems: 'center',
 		justifyContent: 'center',
 		fontWeight: 'bold',
 		cursor: event.onClick && 'pointer',
-		backgroundColor: eventBackgroundColor(event),
-		color: '#111',
+		backgroundColor,
+		color: textColor,
 	};
 	const time = `${dateFormat(event.begin, 'HH:mm')} - ${dateFormat(
 		event.end,
@@ -113,13 +147,31 @@ const AvailabilityFragment = ({event, className, eventProps}) => {
 	);
 };
 
-type Props = {
-	className: string;
-	event: any;
-	eventProps: any;
+const GenericFragment = ({
+	theme,
+	className,
+	event,
+	eventProps,
+}: EventFragmentProps) => {
+	const backgroundColor = eventBackgroundColor(theme, event);
+	const textColor = theme.palette.getContrastText(backgroundColor);
+	const style = {
+		backgroundColor,
+		color: textColor,
+	};
+
+	return (
+		<LinkFragment
+			title={event.calendar}
+			className={className}
+			uri={event.uri}
+			style={style}
+			eventProps={eventProps}
+		/>
+	);
 };
 
-const EventFragment = (props: Props) => {
+const EventFragment = (props: EventFragmentProps) => {
 	switch (props.event.calendar) {
 		case 'consultations': {
 			return <ConsultationFragment {...props} />;
@@ -138,26 +190,9 @@ const EventFragment = (props: Props) => {
 		}
 
 		default: {
-			break;
+			return <GenericFragment {...props} />;
 		}
 	}
-
-	const {className, event, eventProps} = props;
-
-	const style = {
-		backgroundColor: eventBackgroundColor(event),
-		color: '#111',
-	};
-
-	return (
-		<LinkFragment
-			title={props.event.calendar}
-			className={className}
-			uri={event.uri}
-			style={style}
-			eventProps={eventProps}
-		/>
-	);
 };
 
 export default EventFragment;
