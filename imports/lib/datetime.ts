@@ -59,5 +59,5 @@ export const someDateAtGivenDayOfWeek = (i: number): Date => {
 };
 
 export const someDateAtGivenPositionOfYear = (i: number): Date => {
-	return new Date(1970, 0, i - 1);
+	return new Date(1970, 0, i);
 };
