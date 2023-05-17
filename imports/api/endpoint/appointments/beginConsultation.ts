@@ -17,6 +17,7 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import schema from '../../../lib/schema';
+import {books} from '../../books';
 
 export default define({
 	name: 'appointments.beginConsultation',
@@ -32,17 +33,20 @@ export default define({
 				isDone: oldIsDone,
 				isCancelled: oldIsCancelled,
 			} = existing;
-			const lastConsultationOfThisYear = await findLastConsultationInInterval(
-				db,
-				thisYearsInterval(),
-				{
+			const lastRealBookConsultationOfThisYear =
+				await findLastConsultationInInterval(db, thisYearsInterval(), {
 					...filterBookPrefill(),
 					owner,
-				},
-			);
-			const book = lastConsultationOfThisYear?.book;
-			const inBookNumber = (lastConsultationOfThisYear?.inBookNumber ?? 0) + 1;
+				});
+			const book = lastRealBookConsultationOfThisYear?.book ?? '1';
+			const inBookNumber =
+				(lastRealBookConsultationOfThisYear?.inBookNumber ?? 0) + 1;
 			const realDatetime = new Date();
+
+			if (book === '1' && inBookNumber === 1) {
+				await books.add(db, owner, books.name(realDatetime, book));
+			}
+
 			const modifier = {
 				$set: {
 					datetime: realDatetime,
