@@ -15,6 +15,8 @@ import CurrencyAmountInput from '../input/CurrencyAmountInput';
 
 import SEPAPaymentQRCode from './SEPAPaymentQRCode';
 
+const size = 500;
+
 const QRCodeWrap = styled(Grid)({
 	display: 'table',
 	backgroundColor: '#fff',
@@ -25,6 +27,8 @@ const QRCode = styled(SEPAPaymentQRCode)({
 	display: 'table-cell',
 	verticalAlign: 'middle',
 	textAlign: 'center',
+	width: size,
+	height: size,
 });
 
 const Container = styled(Grid)({
@@ -32,7 +36,7 @@ const Container = styled(Grid)({
 });
 
 const StyledPaper = styled(Paper)({
-	minWidth: 800,
+	minWidth: size + 300,
 });
 
 const Title = styled(Typography)(({theme}) => ({
@@ -87,7 +91,7 @@ const SEPAPaymentDetailsStatic = ({
 
 	const codeProps = {
 		level: 'H',
-		size: 500,
+		size,
 	};
 
 	return (
