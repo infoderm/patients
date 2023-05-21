@@ -292,7 +292,7 @@ const AppointmentDialog = ({
 								/>
 							)}
 							label="Time"
-							value={unserializeTime(time)}
+							value={time === '' ? null : unserializeTime(time)}
 							onChange={(pickedDatetime) => {
 								if (isValid(pickedDatetime)) {
 									setTime(serializeTime(pickedDatetime!));
