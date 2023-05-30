@@ -119,7 +119,9 @@ const routes = express();
 
 routes.set('trust proxy', process.env.HTTP_FORWARDED_COUNT);
 
-routes.use(rateLimiter);
+if (Meteor.isProduction) {
+	routes.use(rateLimiter);
+}
 
 routes.get(`/appointments/:token/${filename}`, async (req, res, _next) => {
 	const {token} = req.params;
