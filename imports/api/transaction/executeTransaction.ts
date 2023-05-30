@@ -1,4 +1,3 @@
-import {Meteor} from 'meteor/meteor';
 import {MongoInternals} from 'meteor/mongo';
 import {type ClientSessionOptions, type TransactionOptions} from 'mongodb';
 
@@ -28,9 +27,10 @@ const executeTransaction = async <R>(
 		}, transactionOptions);
 	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : 'unknown error';
+		console.debug('Database Transaction Failed:');
 		console.debug(message);
 		console.debug({error});
-		throw new Meteor.Error('Database Transaction Failed', message);
+		throw error;
 	} finally {
 		// No need to await this Promise, this is just used to free-up
 		// resources.
