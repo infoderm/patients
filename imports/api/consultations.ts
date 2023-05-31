@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
 import {increasing, decreasing} from '@total-order/date';
 
@@ -301,6 +302,11 @@ const computedFieldsGenerator = async function* (
 			yield ['doneDatetime', now];
 			yield ['end', now];
 		}
+	} else if (state.doneDatetime === undefined) {
+		assert(state.begin !== undefined);
+		assert(state.end === undefined);
+		yield ['doneDatetime', state.begin];
+		yield ['end', state.begin];
 	}
 
 	// Update unpaid
