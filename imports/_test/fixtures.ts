@@ -13,6 +13,7 @@ import reset from '../api/endpoint/_dev/reset';
 import type Collection from '../api/Collection';
 import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
+import appIsReady from '../app/isReady';
 
 export {
 	default as randomId,
@@ -109,9 +110,19 @@ export const server = (title, fn) => {
 			await invoke(reset, {userId: null}, []);
 		};
 
-		const prepare = cleanup;
+		const prepare = async () => {
+			if (Meteor.isAppTest) {
+				await appIsReady();
+			}
 
-		describe(title, () => {
+			await cleanup();
+		};
+
+		describe(title, function () {
+			if (Meteor.isAppTest) {
+				this.timeout(10_000);
+			}
+
 			beforeEach(prepare);
 			fn();
 			afterEach(cleanup);
