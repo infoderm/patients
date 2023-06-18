@@ -8,6 +8,9 @@ import {Accounts} from 'meteor/accounts-base';
 import addMilliseconds from 'date-fns/addMilliseconds';
 
 import isValid from 'date-fns/isValid';
+
+import db from '../imports/backend/mongodb/db';
+
 import forEachAsync from '../imports/api/transaction/forEachAsync';
 import snapshotTransaction from '../imports/api/transaction/snapshotTransaction';
 import {Settings} from '../imports/api/collection/settings';
@@ -74,32 +77,39 @@ Meteor.startup(async () => {
 	];
 
 	// Check that all ids are strings
-	for (const collection of collections) {
-		// eslint-disable-next-line no-await-in-loop
-		await forEachAsync(
-			collection,
-			{_id: {$not: {$type: 'string'}}},
-			async (_db, {_id}) => {
-				if (typeof _id !== 'string') {
-					const hex = _id.toHexString();
-					throw new Error(
-						`Document ${hex} of ${
-							collection.rawCollection().collectionName
-						} has an _id that is not a string.`,
-					);
-				}
-			},
-		);
-	}
+	await Promise.all(
+		collections.map(async (collection) =>
+			forEachAsync(
+				collection,
+				{_id: {$not: {$type: 'string'}}},
+				async (_db, {_id}) => {
+					if (typeof _id !== 'string') {
+						const hex = _id.toHexString();
+						throw new Error(
+							`Document ${hex} of ${
+								collection.rawCollection().collectionName
+							} has an _id that is not a string.`,
+						);
+					}
+				},
+			),
+		),
+	);
 
-	// Drop all indexes (if the collection is not empty)
-	for (const collection of collections) {
-		// eslint-disable-next-line no-await-in-loop
-		if ((await collection.rawCollection().findOne({})) !== null) {
-			// eslint-disable-next-line no-await-in-loop
-			await collection.rawCollection().dropIndexes();
-		}
-	}
+	const instantiatedCollections = await db().collections();
+	const instantiatedCollectionsNames = new Set(
+		instantiatedCollections.map((collection) => collection.collectionName),
+	);
+
+	// Drop all indexes (if the collection exists)
+	await Promise.all(
+		collections.map(async (collection) => {
+			const rawCollection = collection.rawCollection();
+			if (instantiatedCollectionsNames.has(rawCollection.collectionName)) {
+				await rawCollection.dropIndexes();
+			}
+		}),
+	);
 
 	// Delete all generated book entries
 	await Books.rawCollection().deleteMany({});
