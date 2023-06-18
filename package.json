@@ -275,7 +275,7 @@
       {
         "files": [
           "imports/api/**/*.mock.{js,jsx,ts,tsx}",
-          "server/**/*.tests.{js,jsx,ts,tsx}",
+          "server/**/*.{app-,}tests.{js,jsx,ts,tsx}",
           "imports/**/*.tests.{js,jsx,ts,tsx}",
           "imports/test/**/*.{js,jsx,ts,tsx}",
           "test/**/*.app-tests.{js,jsx,ts,tsx}"
