@@ -17,6 +17,7 @@ import {ICS_CALENDAR_READ} from '../../../imports/api/permissions/codes';
 import {event} from '../../../imports/api/events';
 import {getWeekStartsOn} from '../../../imports/i18n/datetime';
 
+import absoluteURL from '../../../imports/app/absoluteURL';
 import rateLimiter from './rateLimiter';
 
 const cache = new Map(); // TODO allow to clear cache / use LRU cache
@@ -94,7 +95,7 @@ const response = async (token, IPAddress, query, res) => {
 				lastModified: fields.lastModifiedAt,
 				summary: title,
 				status: isCancelled ? ICalEventStatus.CANCELLED : null,
-				url: Meteor.absoluteUrl(path),
+				url: absoluteURL(path),
 			});
 		});
 
