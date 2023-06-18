@@ -47,6 +47,7 @@ import '../imports/api/endpoint/_register/enabled';
 import {names} from '../imports/api/createTagCollection';
 import type TagDocument from '../imports/api/tags/TagDocument';
 import type Collection from '../imports/api/Collection';
+import {setDone as setMigrationsStatusDone} from '../imports/migrations/status';
 import ics from './api/ics/index';
 
 if (Meteor.isTest || Meteor.isAppTest) {
@@ -956,4 +957,6 @@ Meteor.startup(async () => {
 	);
 
 	console.timeEnd('migrations');
+
+	setMigrationsStatusDone();
 });
