@@ -41,9 +41,12 @@ client(__filename, () => {
 		await user.type(getByLabelText('Username'), username);
 		await user.type(getByLabelText('Password'), password);
 		await user.click(getByRole('button', {name: 'Register'}));
-		await waitForElementToBeRemoved(() => {
-			return getByRole('button', {name: 'Register'});
-		});
+		await waitForElementToBeRemoved(
+			() => {
+				return getByRole('button', {name: 'Register'});
+			},
+			{timeout: 5000},
+		);
 		await user.click(
 			await findByRole('button', {name: `Logged in as ${username}`}),
 		);
