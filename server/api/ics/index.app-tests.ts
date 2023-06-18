@@ -10,6 +10,8 @@ import setMilliseconds from 'date-fns/setMilliseconds';
 import subWeeks from 'date-fns/subWeeks';
 
 import {zip} from '@iterable-iterator/zip';
+import {map} from '@iterable-iterator/map';
+import {range} from '@iterable-iterator/range';
 import {prop} from '@total-order/key';
 import {decreasing} from '@total-order/date';
 
@@ -155,10 +157,12 @@ server(__filename, () => {
 			datetime: now,
 		});
 
-		for (let i = 0; i < 10; ++i) {
-			// eslint-disable-next-line no-await-in-loop
-			await newConsultation(invocation, {patientId, datetime: now});
-		}
+		await Promise.all(
+			map(
+				async () => newConsultation(invocation, {patientId, datetime: now}),
+				range(10),
+			),
+		);
 
 		const appointmentAId = await newAppointment(invocation, {
 			patient: {_id: patientId},
@@ -261,13 +265,16 @@ server(__filename, () => {
 			datetime: now,
 		});
 
-		for (let i = 0; i < 10; ++i) {
-			// eslint-disable-next-line no-await-in-loop
-			await newAppointment(invocation, {
-				patient: {_id: patientId},
-				datetime: now,
-			});
-		}
+		await Promise.all(
+			map(
+				async () =>
+					newAppointment(invocation, {
+						patient: {_id: patientId},
+						datetime: now,
+					}),
+				range(10),
+			),
+		);
 
 		const {insertedId: consultationAId} = await newConsultation(invocation, {
 			patientId,
