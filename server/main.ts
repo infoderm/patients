@@ -558,6 +558,12 @@ Meteor.startup(async () => {
 		},
 	);
 
+	// NOTE For initial universe insertion (and also some edge case range
+	// queries in the case of .end).
+	await createSimpleUniqueIndex(Availability, 'begin');
+	await createSimpleUniqueIndex(Availability, 'end');
+
+	// NOTE For range queries.
 	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
@@ -569,16 +575,7 @@ Meteor.startup(async () => {
 		},
 	);
 
-	await Availability.rawCollection().createIndex(
-		{
-			owner: 1,
-			end: 1,
-		},
-		{
-			background: true,
-		},
-	);
-
+	// NOTE For sorted/ranged queries on weight.
 	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
@@ -591,6 +588,7 @@ Meteor.startup(async () => {
 		},
 	);
 
+	// NOTE For sorted/ranged queries on weight.
 	await Availability.rawCollection().createIndex(
 		{
 			owner: 1,
