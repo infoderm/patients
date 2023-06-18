@@ -3,7 +3,6 @@ import 'regenerator-runtime/runtime.js';
 
 import {assert, expect} from 'chai';
 
-import {Random} from 'meteor/random';
 import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
@@ -15,9 +14,11 @@ import type Collection from '../api/Collection';
 import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 
-export const randomId = () => Random.id();
-export const randomUserId = () => Random.id();
-export const randomPassword = () => Random.id();
+export {
+	default as randomId,
+	default as randomUserId,
+	default as randomPassword,
+} from '../api/randomId';
 
 let resolving = 0;
 
