@@ -33,7 +33,8 @@ import {Consultations} from '../../../imports/api/collection/consultations';
 import {newAppointment} from '../../../imports/api/_dev/populate/appointments';
 import appointmentsBeginConsultation from '../../../imports/api/endpoint/appointments/beginConsultation';
 import consultationsRestoreAppointment from '../../../imports/api/endpoint/consultations/restoreAppointment';
-import app from './index';
+
+const app = absoluteURL('api/ics');
 
 const getEvents = (jCal: any) =>
 	new Component(jCal)
