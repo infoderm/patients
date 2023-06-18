@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'regenerator-runtime/runtime.js';
-import {Meteor} from 'meteor/meteor';
 import {assert} from 'chai';
 import request from 'supertest';
 
@@ -17,6 +16,8 @@ import {decreasing} from '@total-order/date';
 import {randomUserId, server} from '../../../imports/_test/fixtures';
 import {newPatient} from '../../../imports/api/_dev/populate/patients';
 import {newConsultation} from '../../../imports/api/_dev/populate/consultations';
+
+import absoluteURL from '../../../imports/app/absoluteURL';
 
 import invoke from '../../../imports/api/endpoint/invoke';
 
@@ -238,7 +239,7 @@ server(__filename, () => {
 			);
 			assert.equal(
 				event._firstProp('url'),
-				Meteor.absoluteUrl(`/consultation/${appointment._id}`),
+				absoluteURL(`/consultation/${appointment._id}`),
 			);
 		}
 	});
@@ -380,7 +381,7 @@ server(__filename, () => {
 			);
 			assert.equal(
 				event._firstProp('url'),
-				Meteor.absoluteUrl(`/consultation/${consultation._id}`),
+				absoluteURL(`/consultation/${consultation._id}`),
 			);
 		}
 	});
