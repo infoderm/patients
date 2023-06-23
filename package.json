@@ -113,7 +113,7 @@
     "react-spring": "^9.7.0",
     "regenerator-runtime": "^0.13.11",
     "sepa-payment-qr-code": "^2.0.0",
-    "sharp": "^0.31.3",
+    "sharp": "^0.32.0",
     "sort-keys": "^5.0.0",
     "tss-react": "^4.6.1",
     "use-debounce": "^9.0.3",
