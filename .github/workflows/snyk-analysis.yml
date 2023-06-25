@@ -37,3 +37,14 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: snyk.sarif
+
+      - name: Parse SARIF report 📃
+        run: |
+          echo VULNERABILITIES="$(< snyk.sarif jq "[.runs[] | .results | length] | add")" >> $GITHUB_ENV
+
+      - name: Fail if PR and Snyk reported vulnerabilities 💥
+        if: github.event_name == 'pull_request' && env.VULNERABILITIES >= 1
+        uses: actions/github-script@v6
+        with:
+          script: |
+              core.setFailed('Failing job because Snyk reported ${{ env.VULNERABILITIES }} vulnerabilities and we are a PR.')
