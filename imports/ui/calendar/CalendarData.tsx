@@ -15,12 +15,14 @@ import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
 import {enumerate} from '@iterable-iterator/zip';
 import {useTheme} from '@mui/material/styles';
+
 import makeStyles from '../styles/makeStyles';
 import {useDateFormat} from '../../i18n/datetime';
 
 import {ALL_WEEK_DAYS, generateDays, type WeekDay} from '../../lib/datetime';
 import type CSSObject from '../styles/CSSObject';
 import color, {hoverColor} from '../../lib/color';
+
 import type Event from './Event';
 import EventFragment from './EventFragment';
 

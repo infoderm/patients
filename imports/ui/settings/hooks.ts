@@ -1,4 +1,5 @@
 import {useCallback} from 'react';
+
 import {Settings} from '../../api/collection/settings';
 import {type UserSettings, type SettingKey, defaults} from '../../api/settings';
 import useSubscription from '../../api/publication/useSubscription';

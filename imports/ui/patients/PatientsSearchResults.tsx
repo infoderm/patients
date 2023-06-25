@@ -11,6 +11,7 @@ import mergeFields from '../../api/query/mergeFields';
 
 import {type PatientDocument} from '../../api/collection/patients';
 import type Options from '../../api/query/Options';
+
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 

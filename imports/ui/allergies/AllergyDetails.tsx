@@ -6,6 +6,7 @@ import useObservedPatients from '../patients/useObservedPatients';
 import PagedPatientsList from '../patients/PagedPatientsList';
 
 import {useAllergy} from '../../api/allergies';
+
 import StaticAllergyCard from './StaticAllergyCard';
 
 type Props = {

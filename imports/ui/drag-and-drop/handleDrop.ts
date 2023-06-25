@@ -1,4 +1,5 @@
 import {type useNavigate} from 'react-router-dom';
+
 import insertPatient from '../../api/patients/insertPatient';
 import insertDrugs from '../../api/drugs/insertDrugs';
 import insertDocument from '../../api/documents/insertDocument';

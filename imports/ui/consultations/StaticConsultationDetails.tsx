@@ -6,6 +6,7 @@ import NoContent from '../navigation/NoContent';
 
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 import {type ConsultationDocument} from '../../api/collection/consultations';
+
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 const Root = styled('div')(({theme}) => ({

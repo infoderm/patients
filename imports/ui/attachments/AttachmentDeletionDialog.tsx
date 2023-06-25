@@ -12,6 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 
 import LoadingButton from '@mui/lab/LoadingButton';
+
 import {normalizedLine} from '../../api/string';
 
 import type Endpoint from '../../api/endpoint/Endpoint';
@@ -25,6 +26,7 @@ import useIsMounted from '../hooks/useIsMounted';
 import CancelButton from '../button/CancelButton';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
+
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const Thumbnail = styled(AttachmentThumbnail)({

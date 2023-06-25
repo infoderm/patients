@@ -1,5 +1,7 @@
 import assert from 'assert';
+
 import {cloneElement} from 'react';
+
 import {DEFAULT_APPEND, DEFAULT_REMOVE, DEFAULT_REPLACE} from './DialogOptions';
 
 const DEFAULT_OPTIONS = {

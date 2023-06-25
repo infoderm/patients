@@ -7,6 +7,7 @@ import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import RadioButtonUncheckedOutlinedIcon from '@mui/icons-material/RadioButtonUncheckedOutlined';
 
 import type PropsOf from '../../lib/types/PropsOf';
+
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 type Props = {

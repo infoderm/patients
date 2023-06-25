@@ -2,6 +2,7 @@ import React from 'react';
 
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+
 import {type ParsedDocumentDocument} from '../../api/collection/documents';
 
 const Root = styled('div')(({theme}) => ({

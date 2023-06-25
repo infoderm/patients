@@ -2,10 +2,12 @@ import React from 'react';
 import {styled} from '@mui/material/styles';
 
 import {useParams} from 'react-router-dom';
+
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 
 import {myDecodeURIComponent} from '../../lib/uri';
+
 import useDrug from './useDrug';
 
 const PREFIX = 'DrugDetails';

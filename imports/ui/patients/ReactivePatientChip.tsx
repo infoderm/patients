@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type PropsOf from '../../lib/types/PropsOf';
+
 import StaticPatientChip, {
 	projection as StaticPatientChipProjection,
 } from './StaticPatientChip';

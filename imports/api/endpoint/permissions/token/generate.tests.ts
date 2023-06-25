@@ -11,6 +11,7 @@ import {
 } from '../../../permissions/token';
 
 import invoke from '../../invoke';
+
 import generate from './generate';
 
 server(__filename, () => {

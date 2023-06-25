@@ -4,6 +4,7 @@ import {type ChipProps} from '@mui/material/Chip';
 
 import {useAllergy} from '../../api/allergies';
 import {type PatientTag} from '../../api/collection/patients';
+
 import StaticAllergyChip from './StaticAllergyChip';
 
 type Tweaks = {

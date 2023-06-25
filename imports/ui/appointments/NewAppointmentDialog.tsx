@@ -1,4 +1,5 @@
 import React from 'react';
+
 import schedule from '../../api/endpoint/appointments/schedule';
 
 import type PropsOf from '../../lib/types/PropsOf';

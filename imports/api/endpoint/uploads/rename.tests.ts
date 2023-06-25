@@ -9,6 +9,7 @@ import {Attachments} from '../../collection/attachments';
 import {newUpload} from '../../_dev/populate/uploads';
 
 import invoke from '../invoke';
+
 import rename from './rename';
 
 server(__filename, () => {

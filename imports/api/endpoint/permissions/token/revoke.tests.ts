@@ -5,6 +5,7 @@ import {randomUserId, server, throws} from '../../../../_test/fixtures';
 import {decode, getPermissionsForToken} from '../../../permissions/token';
 
 import invoke from '../../invoke';
+
 import generate from './generate';
 import revoke from './revoke';
 

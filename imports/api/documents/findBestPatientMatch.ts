@@ -1,4 +1,5 @@
 import {Meteor} from 'meteor/meteor';
+
 import {Patients} from '../collection/patients';
 import {patients} from '../patients';
 import type TransactionDriver from '../transaction/TransactionDriver';

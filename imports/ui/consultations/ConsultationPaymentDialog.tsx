@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import React from 'react';
 
 import dateFormat from 'date-fns/format';
@@ -15,6 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
 
 import {styled} from '@mui/material/styles';
+
 import {type ConsultationDocument} from '../../api/collection/consultations';
 
 import {onlyASCII} from '../../api/string';

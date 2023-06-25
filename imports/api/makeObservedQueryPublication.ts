@@ -1,4 +1,5 @@
 import schema from '../lib/schema';
+
 import type Collection from './Collection';
 import type Document from './Document';
 import type ObserveChangesCallbacks from './ObserveChangesCallbacks';

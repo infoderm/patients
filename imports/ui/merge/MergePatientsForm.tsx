@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
 import {type PatientDocument} from '../../api/collection/patients';
+
 import MergePatientsFormStepSelect from './MergePatientsFormStepSelect';
 import MergePatientsFormStepPrepare from './MergePatientsFormStepPrepare';
 

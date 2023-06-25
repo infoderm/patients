@@ -5,6 +5,7 @@ import {type BSONRegExp} from 'bson';
 import schema from '../../lib/schema';
 import type Document from '../Document';
 import {document} from '../Document'; // TODO Replace this
+
 import type WithId from './WithId';
 import {
 	fieldSpecifiers,

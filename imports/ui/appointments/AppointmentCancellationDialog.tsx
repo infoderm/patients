@@ -18,6 +18,7 @@ import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 
 import LoadingButton from '@mui/lab/LoadingButton';
+
 import {useSetting} from '../settings/hooks';
 import withLazyOpening from '../modal/withLazyOpening';
 import cancel from '../../api/endpoint/appointments/cancel';

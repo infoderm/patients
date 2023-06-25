@@ -11,6 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Grid from '@mui/material/Grid';
+
 import patientsRemove from '../../api/endpoint/patients/remove';
 
 import {normalizedLine} from '../../api/string';
@@ -25,6 +26,7 @@ import ConfirmationTextField, {
 } from '../input/ConfirmationTextField';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
+
 import StaticPatientCard from './StaticPatientCard';
 import type CardPatientProjection from './CardPatientProjection';
 

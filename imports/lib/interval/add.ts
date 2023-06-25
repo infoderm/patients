@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import intersection from './intersection';
 import isEmpty from './isEmpty';
 

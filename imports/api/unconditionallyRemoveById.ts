@@ -1,4 +1,5 @@
 import {Meteor} from 'meteor/meteor';
+
 import type TransactionDriver from './transaction/TransactionDriver';
 
 import type Collection from './Collection';

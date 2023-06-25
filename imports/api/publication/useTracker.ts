@@ -11,6 +11,7 @@ import {useEffect, useMemo, type DependencyList} from 'react';
 import areDeepEqual from 'react-fast-compare';
 
 import useUniqueObject from '../../ui/hooks/useUniqueObject';
+
 import Cursor from './Cursor';
 
 // Warns if data is a Cursor or a POJO containing a Cursor.

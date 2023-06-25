@@ -12,6 +12,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import dateFormat from 'date-fns/format';
+
 import UnstyledLinkChip from '../chips/LinkChip';
 
 import {useDateFormat} from '../../i18n/datetime';

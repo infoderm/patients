@@ -3,9 +3,11 @@ import {Meteor} from 'meteor/meteor';
 import React, {useState} from 'react';
 
 import {useSnackbar} from 'notistack';
+
 import createUserWithPassword from '../../api/user/createUserWithPassword';
 
 import debounceSnackbar from '../snackbar/debounceSnackbar';
+
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {

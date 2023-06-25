@@ -1,4 +1,5 @@
 import removeUndefined from '../../lib/object/removeUndefined';
+
 import type Selector from './Selector';
 import type Options from './Options';
 import type UserQuery from './UserQuery';

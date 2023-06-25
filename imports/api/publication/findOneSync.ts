@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import type Collection from '../Collection';
 import type Document from '../Document';
 import type Options from '../query/Options';

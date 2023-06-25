@@ -3,6 +3,7 @@ import React from 'react';
 import List from '@mui/material/List';
 
 import {type DocumentDocument} from '../../api/collection/documents';
+
 import DocumentListItem from './DocumentListItem';
 
 type Props = {

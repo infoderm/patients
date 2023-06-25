@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import UndoIcon from '@mui/icons-material/Undo';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+
 import FixedFab from '../button/FixedFab';
 
 import call from '../../api/endpoint/call';
@@ -21,6 +22,7 @@ import AttachFileButton from '../attachments/AttachFileButton';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
 
 import {documentDiff} from '../../api/update';
+
 import {type reducer} from './usePatientPersonalInformationReducer';
 
 type PatientPersonalInformationButtonsStaticProps = {

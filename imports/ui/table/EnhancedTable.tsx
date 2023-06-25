@@ -15,6 +15,7 @@ import remove from '../../api/endpoint/drugs/remove';
 import call from '../../api/endpoint/call';
 
 import useDrugs from '../drugs/useDrugs';
+
 import EnhancedTableHead, {type Order} from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedToolbar';
 

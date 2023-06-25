@@ -10,6 +10,7 @@ import {type NormalizedLine} from '../../string';
 import {findOneOrThrow, randomUserId, server} from '../../../_test/fixtures';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
+
 import bookRename from './rename';
 
 server(__filename, () => {

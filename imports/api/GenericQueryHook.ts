@@ -1,4 +1,5 @@
 import {type DependencyList} from 'react';
+
 import type UserQuery from './query/UserQuery';
 
 type GenericQueryHookReturnType<R> = {

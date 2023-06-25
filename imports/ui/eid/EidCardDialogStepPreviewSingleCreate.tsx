@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import React from 'react';
 
 import DialogTitle from '@mui/material/DialogTitle';
@@ -21,6 +22,7 @@ import ConfirmationDialog from '../modal/ConfirmationDialog';
 
 import GenericStaticPatientCard from '../patients/GenericStaticPatientCard';
 import useCall from '../action/useCall';
+
 import type EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const EidCardDialogStepPreviewSingleCreate = ({

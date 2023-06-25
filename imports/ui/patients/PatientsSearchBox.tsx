@@ -7,6 +7,7 @@ import {patients} from '../../api/patients';
 
 import SearchBoxWithSuggestions from '../input/SearchBoxWithSuggestions';
 import {type PatientSearchIndexDocument} from '../../api/collection/patients/search';
+
 import usePatientsSuggestions from './usePatientsSuggestions';
 
 const PREFIX = 'PatientsSearchBox';

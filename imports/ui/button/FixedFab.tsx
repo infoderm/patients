@@ -5,6 +5,7 @@ import Fab, {type FabProps} from '@mui/material/Fab';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import addTooltip from '../accessibility/addTooltip';
+
 import FixedFabAnimation from './FixedFabAnimation';
 
 type Options = {

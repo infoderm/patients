@@ -28,6 +28,7 @@ import PatientWasBornIcon from '@mui/icons-material/Celebration';
 import parseISO from 'date-fns/parseISO';
 import isValid from 'date-fns/isValid';
 import Tooltip from '@mui/material/Tooltip';
+
 import {useDateFormat, useDateFormatAge} from '../../i18n/datetime';
 import consultationVirtualFields from '../../api/consultations/virtualFields';
 
@@ -39,6 +40,7 @@ import colorizeText from '../text/colorizeText';
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
 import patientVirtualFields from '../../api/patients/virtualFields';
 import NoContent from '../navigation/NoContent';
+
 import usePatient from './usePatient';
 
 type PatientHistoryProps = {

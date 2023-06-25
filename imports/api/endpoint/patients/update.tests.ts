@@ -13,6 +13,7 @@ import {Insurances} from '../../collection/insurances';
 import {newPatient} from '../../_dev/populate/patients';
 import invoke from '../invoke';
 import {type FormattedLine, type NormalizedLine} from '../../string';
+
 import update from './update';
 
 server(__filename, () => {

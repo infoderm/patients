@@ -14,6 +14,7 @@ import {
 import useEvents from '../events/useEvents';
 
 import type PropsOf from '../../lib/types/PropsOf';
+
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';
 import {monthly} from './ranges';

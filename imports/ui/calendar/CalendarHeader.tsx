@@ -5,6 +5,7 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ViewWeekIcon from '@mui/icons-material/ViewWeek';
 import EventIcon from '@mui/icons-material/Event';
+
 import Header from './Header';
 
 type CalendarHeaderProps = {

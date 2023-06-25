@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import {Meteor} from 'meteor/meteor';
 
 import {map} from '@iterable-iterator/map';
@@ -8,6 +9,7 @@ import authorized from '../authorized';
 import {type Authentication} from '../Authentication';
 import type InferArgs from '../InferArgs';
 import type ArgsSchema from '../ArgsSchema';
+
 import type Params from './Params';
 import type Publication from './Publication';
 import PublicationError from './PublicationError';

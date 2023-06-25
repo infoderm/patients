@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-unassigned-import
 import './polyfill';
+
 import {Meteor} from 'meteor/meteor';
 import {WebApp} from 'meteor/webapp';
 import {Accounts} from 'meteor/accounts-base';
@@ -14,6 +15,7 @@ import '../imports/api/endpoint/_register/enabled';
 
 import atStartup from '../imports/app/atStartup';
 import scheduleAllMigrations from '../imports/migrations/scheduleAll';
+
 import ics from './api/ics/index';
 
 if (Meteor.isTest || Meteor.isAppTest) {

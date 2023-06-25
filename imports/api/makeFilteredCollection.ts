@@ -1,6 +1,7 @@
 import {type DependencyList} from 'react';
 
 import schema from '../lib/schema';
+
 import Collection from './Collection';
 import type Selector from './query/Selector';
 import type Options from './query/Options';

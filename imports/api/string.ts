@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import deburr from 'lodash.deburr';
 import mem from 'mem';
 
@@ -14,6 +15,7 @@ import {len as byLength} from '@total-order/key';
 import {combinations} from '@combinatorics/n-combinations';
 import {product} from '@set-theory/cartesian-product';
 import escapeStringRegexp from 'escape-string-regexp';
+
 import schema from '../lib/schema';
 
 export {default as escapeStringRegexp} from 'escape-string-regexp';

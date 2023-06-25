@@ -1,4 +1,5 @@
 import {type Binary} from 'bson';
+
 import schema from '../../lib/schema';
 
 type BitwiseFilter =

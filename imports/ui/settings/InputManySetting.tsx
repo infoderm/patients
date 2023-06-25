@@ -1,10 +1,12 @@
 import React, {useMemo} from 'react';
 
 import Typography from '@mui/material/Typography';
+
 import SetPicker from '../input/SetPicker';
 
 import type PropsOf from '../../lib/types/PropsOf';
 import {type SettingKey, type UserSettings} from '../../api/settings';
+
 import {useSetting} from './hooks';
 
 type BaseProps<K extends SettingKey> = UserSettings[K] extends Array<infer V>

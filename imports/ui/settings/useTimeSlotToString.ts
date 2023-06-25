@@ -1,10 +1,12 @@
 import {useCallback} from 'react';
+
 import {
 	useDateFormat,
 	useDaysOfWeek,
 	type WeekStartsOn,
 } from '../../i18n/datetime';
 import {units as durationUnits} from '../../api/duration';
+
 import type ModuloWeekInterval from './ModuloWeekInterval';
 
 type Interval = {

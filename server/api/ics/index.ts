@@ -1,4 +1,5 @@
 import process from 'process';
+
 import {Meteor} from 'meteor/meteor';
 import express from 'express';
 import ical, {ICalEventStatus} from 'ical-generator';
@@ -18,6 +19,7 @@ import {event} from '../../../imports/api/events';
 import {getWeekStartsOn} from '../../../imports/i18n/datetime';
 
 import absoluteURL from '../../../imports/app/absoluteURL';
+
 import rateLimiter from './rateLimiter';
 
 const cache = new Map(); // TODO allow to clear cache / use LRU cache

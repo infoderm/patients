@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import React from 'react';
 
 import DialogTitle from '@mui/material/DialogTitle';
@@ -30,6 +31,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import {red, green} from '@mui/material/colors';
 
 import LoadingButton from '@mui/lab/LoadingButton';
+
 import diff from '../../lib/lcs/diff';
 import pngDataURL from '../../lib/png/dataURL';
 
@@ -45,6 +47,7 @@ import PatientsGrid from '../patients/PatientsGrid';
 import usePatient from '../patients/usePatient';
 
 import useCall from '../action/useCall';
+
 import type EidCardDialogStepPreviewSingleProps from './EidCardDialogStepPreviewSingleProps';
 
 const computeDifferences = function* (state, changes) {

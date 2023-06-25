@@ -5,6 +5,7 @@ import {chain} from '@iterable-iterator/chain';
 
 import {useDaysNames, useLocaleWeekStartsOn} from '../../i18n/datetime';
 import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
+
 import SelectOneSetting from './SelectOneSetting';
 
 const days = ALL_WEEK_DAYS;

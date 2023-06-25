@@ -6,6 +6,7 @@ import debounce from 'debounce';
 
 import ColorPicker from '../input/ColorPicker';
 import {type SettingKey, type UserSettings} from '../../api/settings';
+
 import {useSetting} from './hooks';
 import SettingResetButton from './SettingResetButton';
 

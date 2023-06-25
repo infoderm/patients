@@ -1,4 +1,5 @@
 import sortKeys from 'sort-keys';
+
 import Collection from '../../Collection';
 import type Filter from '../../query/Filter';
 import {collection, type ConsultationDocument} from '../consultations';

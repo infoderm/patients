@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 
 import schema from '../lib/schema';
+
 import mergeOptions from './query/mergeOptions';
 
 import makeQuery from './makeQuery';

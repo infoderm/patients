@@ -1,4 +1,5 @@
 import schema from '../../lib/schema';
+
 import {consultationMetadata} from './consultations';
 
 export {Consultations as Appointments} from './consultations';

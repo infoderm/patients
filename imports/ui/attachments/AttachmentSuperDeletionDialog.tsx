@@ -12,6 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import LoadingButton from '@mui/lab/LoadingButton';
+
 import {Uploads} from '../../api/uploads';
 import {normalizedLine} from '../../api/string';
 
@@ -24,6 +25,7 @@ import ConfirmationTextField, {
 import withLazyOpening from '../modal/withLazyOpening';
 import useIsMounted from '../hooks/useIsMounted';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
+
 import AttachmentThumbnail from './AttachmentThumbnail';
 
 const Thumbnail = styled(AttachmentThumbnail)({

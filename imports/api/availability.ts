@@ -24,6 +24,7 @@ import {
 import add from '../lib/interval/add';
 import isEmpty from '../lib/interval/isEmpty';
 import isContiguous from '../lib/interval/isContiguous';
+
 import {units} from './duration';
 
 import intersectsOrTouchesInterval from './interval/intersectsOrTouchesInterval';

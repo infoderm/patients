@@ -12,6 +12,7 @@ import {groupby} from '@iterable-iterator/group';
 import Loading from '../navigation/Loading';
 
 import makeStyles from '../styles/makeStyles';
+
 import useAttachments from './useAttachments';
 import type AttachmentInfo from './AttachmentInfo';
 import AttachmentsGrid from './AttachmentsGrid';

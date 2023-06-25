@@ -1,6 +1,7 @@
 // @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 import {type Readable} from 'stream';
+
 import {
 	type Canvas,
 	type JpegConfig,
@@ -12,6 +13,7 @@ import {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
 import {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
 import {cache as lru, type IndexedDBPersistedLRUCache} from '../cache/lru';
+
 import {fetchPDF} from './pdf';
 
 let cache: IndexedDBPersistedLRUCache<string, string>;

@@ -1,5 +1,6 @@
 import startOfToday from 'date-fns/startOfToday';
 import intervalToDuration from 'date-fns/intervalToDuration';
+
 import {publishCount} from '../../stats';
 import {patientDocument, Patients} from '../../collection/patients';
 import eidParseBirthdate from '../../eidParseBirthdate';

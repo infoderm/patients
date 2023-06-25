@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import {Appointments} from '../../collection/appointments';
 import {Patients} from '../../collection/patients';
 import {sanitizeAppointmentUpdate, appointmentUpdate} from '../../appointments';
@@ -11,6 +12,7 @@ import define from '../define';
 import compose from '../compose';
 
 import {AuthenticationLoggedIn} from '../../Authentication';
+
 import createPatientForAppointment from './createPatient';
 
 export default define({

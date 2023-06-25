@@ -13,6 +13,7 @@ import {slot} from '../../availability';
 
 import invoke from '../invoke';
 import appointmentsBeginConsultation from '../appointments/beginConsultation';
+
 import restoreAppointment from './restoreAppointment';
 
 server(__filename, () => {

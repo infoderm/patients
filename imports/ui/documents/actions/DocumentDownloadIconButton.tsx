@@ -5,6 +5,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import LoadingIconButton from '../../button/LoadingIconButton';
 import type PropsOf from '../../../lib/types/PropsOf';
 import {type DocumentDocument} from '../../../api/collection/documents';
+
 import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 
 type DocumentDownloadIconButtonProps = Omit<

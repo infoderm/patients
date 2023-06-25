@@ -1,4 +1,5 @@
 import {useSettingCached} from '../ui/settings/hooks';
+
 import {useNavigatorLocale} from './navigator';
 
 const useLocale = (): string => {

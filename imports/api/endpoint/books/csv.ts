@@ -82,10 +82,10 @@ export default define({
 		for (const i of range(maxRows)) {
 			const line: string[] = [];
 			for (const bookSlug of header) {
-				if (data[bookSlug]?.[i] !== undefined) {
-					line.push(data[bookSlug][i]);
-				} else {
+				if (data[bookSlug]?.[i] === undefined) {
 					line.push('');
+				} else {
+					line.push(data[bookSlug][i]);
 				}
 			}
 

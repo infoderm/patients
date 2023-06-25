@@ -4,6 +4,7 @@ import {useAllergiesFind} from '../../api/allergies';
 
 import type PropsOf from '../../lib/types/PropsOf';
 import TagNamePrefixFilteredList from '../tags/TagNamePrefixFilteredList';
+
 import ReactiveAllergyCard from './ReactiveAllergyCard';
 
 type Props = Omit<

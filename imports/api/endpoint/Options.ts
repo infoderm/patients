@@ -1,4 +1,5 @@
 import {type Meteor} from 'meteor/meteor';
+
 import type Serializable from '../Serializable';
 
 type Options<Result extends Serializable> = {

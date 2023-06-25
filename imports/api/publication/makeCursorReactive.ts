@@ -1,4 +1,5 @@
 import {Tracker} from 'meteor/tracker';
+
 import type Cursor from './Cursor';
 
 type Events = {

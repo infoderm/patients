@@ -1,5 +1,7 @@
 import React from 'react';
+
 import type PropsOf from '../../lib/types/PropsOf';
+
 import Tooltip from './Tooltip';
 
 type Props<C> = PropsOf<C> & {tooltip?: string};

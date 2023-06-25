@@ -29,6 +29,7 @@ import EditAppointmentDialog from '../appointments/EditAppointmentDialog';
 import call from '../../api/endpoint/call';
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
 import {type AppointmentDocument} from '../../api/collection/appointments';
+
 import ConsultationPaymentDialog from './ConsultationPaymentDialog';
 import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog';
 import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';

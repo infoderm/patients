@@ -1,4 +1,5 @@
 import {xml2json} from 'xml-js';
+
 import {type PatientIdFields} from './collection/patients';
 
 const eidParseXML = (xmlString: string): PatientIdFields => {

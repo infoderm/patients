@@ -12,6 +12,7 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import YearJumper from '../navigation/YearJumper';
 import type UserFilter from '../../api/query/UserFilter';
 import {type ConsultationDocument} from '../../api/collection/consultations';
+
 import ConsultationsPager from './ConsultationsPager';
 
 type Props = {

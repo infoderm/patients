@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import {green} from '@mui/material/colors';
 
 import debounce from 'debounce';
+
 import StaticTagCard from '../tags/StaticTagCard';
 
 import StaticPatientChip, {
@@ -21,6 +22,7 @@ import ColorPicker from '../input/ColorPicker';
 
 import {myEncodeURIComponent} from '../../lib/uri';
 import changeColor from '../../api/endpoint/allergies/changeColor';
+
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';
 

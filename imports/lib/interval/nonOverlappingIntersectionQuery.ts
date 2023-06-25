@@ -1,4 +1,5 @@
 import {increasing} from '@total-order/primitive';
+
 import nonOverlappingIntersection from './nonOverlappingIntersection';
 
 const beginKey = (interval) => interval[0];

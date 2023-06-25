@@ -6,6 +6,7 @@ import SetPicker from '../input/SetPicker';
 
 import type PropsOf from '../../lib/types/PropsOf';
 import type Optional from '../../lib/types/Optional';
+
 import ReactivePatientChip from './ReactivePatientChip';
 import usePatientsSuggestions from './usePatientsSuggestions';
 

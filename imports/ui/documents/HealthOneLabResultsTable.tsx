@@ -7,11 +7,13 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+
 import makeStyles from '../styles/makeStyles';
 import {
 	type DocumentDocument,
 	type DocumentResult,
 } from '../../api/collection/documents';
+
 import DocumentToolbar from './DocumentToolbar';
 
 const useStyles = makeStyles()((theme) => ({

@@ -1,5 +1,6 @@
 import type Collection from '../Collection';
 import type Document from '../Document';
+
 import type TransactionDriver from './TransactionDriver';
 
 type TransactionExecutor = (txn: (db: TransactionDriver) => any) => any;

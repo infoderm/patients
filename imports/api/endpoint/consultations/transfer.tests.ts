@@ -10,6 +10,7 @@ import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 
 import invoke from '../invoke';
+
 import consultationsTransfer from './transfer';
 
 server(__filename, () => {

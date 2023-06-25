@@ -4,6 +4,7 @@ import Paginator from '../navigation/Paginator';
 import Refresh from '../navigation/Refresh';
 
 import {type PatientDocument} from '../../api/collection/patients';
+
 import ReactivePatientCard from './ReactivePatientCard';
 import PatientsPage from './PatientsPage';
 

@@ -14,6 +14,7 @@ import {
 
 import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
 import {mod} from '../../lib/arithmetic';
+
 import InputManySetting from './InputManySetting';
 
 const KEY = 'displayed-week-days';

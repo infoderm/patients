@@ -1,4 +1,5 @@
 import React from 'react';
+
 import StaticPatientCard from './StaticPatientCard';
 
 import useCachedPatient from './useCachedPatient';

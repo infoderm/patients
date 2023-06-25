@@ -20,6 +20,7 @@ import {newAppointment} from '../../_dev/populate/appointments';
 import {initialSlot, slot} from '../../availability';
 
 import invoke from '../invoke';
+
 import appointmentsCancel from './cancel';
 
 server(__filename, () => {

@@ -2,6 +2,7 @@ import {type Authentication} from '../Authentication';
 
 import type ArgsSchema from '../ArgsSchema';
 import type InferArgs from '../InferArgs';
+
 import type Cursor from './Cursor';
 import type ContextFor from './ContextFor';
 

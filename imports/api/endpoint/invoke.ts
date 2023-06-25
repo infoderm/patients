@@ -3,6 +3,7 @@ import {type Authentication} from '../Authentication';
 import type Serializable from '../Serializable';
 
 import type Args from '../Args';
+
 import type ContextFor from './ContextFor';
 import type Endpoint from './Endpoint';
 import EndpointError from './EndpointError';

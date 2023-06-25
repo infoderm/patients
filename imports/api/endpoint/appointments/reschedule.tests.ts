@@ -19,6 +19,7 @@ import {
 } from '../../../_test/fixtures';
 import invoke from '../invoke';
 import {type AuthenticatedContext} from '../Context';
+
 import appointmentsReschedule from './reschedule';
 
 const expected = ({owner, begin, end}) => [

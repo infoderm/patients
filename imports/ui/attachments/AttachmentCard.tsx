@@ -24,6 +24,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 
 import CardActionArea from '@mui/material/CardActionArea';
+
 import {type AttachmentDocument} from '../../api/collection/attachments';
 
 import {link} from '../../api/attachments';
@@ -31,6 +32,7 @@ import patientsDetach from '../../api/endpoint/patients/detach';
 import consultationsDetach from '../../api/endpoint/consultations/detach';
 
 import useUniqueId from '../hooks/useUniqueId';
+
 import AttachmentThumbnail from './AttachmentThumbnail';
 import AttachmentEditionDialog from './AttachmentEditionDialog';
 import AttachmentLinkingDialog from './AttachmentLinkingDialog';

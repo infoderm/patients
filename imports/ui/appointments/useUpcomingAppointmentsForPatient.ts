@@ -1,4 +1,5 @@
 import startOfToday from 'date-fns/startOfToday';
+
 import {type AppointmentDocument} from '../../api/collection/appointments';
 
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';

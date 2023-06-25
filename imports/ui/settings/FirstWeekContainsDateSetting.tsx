@@ -8,6 +8,7 @@ import {
 	useDaysPositions,
 	useLocaleFirstWeekContainsDate,
 } from '../../i18n/datetime';
+
 import SelectOneSetting from './SelectOneSetting';
 
 const positions = list(range(1, 8));

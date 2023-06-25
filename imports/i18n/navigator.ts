@@ -1,6 +1,8 @@
 import {useSyncExternalStore} from 'react';
+
 import {defaults} from '../api/settings';
 import windowEventSubscription from '../ui/hooks/windowEventSubscription';
+
 import {bestMatch} from './availableLocales';
 
 export const navigatorLanguagesGetSnapshot = () => navigator.languages;

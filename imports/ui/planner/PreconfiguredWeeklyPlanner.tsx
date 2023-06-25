@@ -1,5 +1,7 @@
 import React from 'react';
+
 import type PropsOf from '../../lib/types/PropsOf';
+
 import WeeklyPlanner from './WeeklyPlanner';
 
 type Props = PropsOf<typeof WeeklyPlanner>;

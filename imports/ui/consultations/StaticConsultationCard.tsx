@@ -9,6 +9,7 @@ import type PropsOf from '../../lib/types/PropsOf';
 import virtualFields from '../../api/consultations/virtualFields';
 
 import color from '../../lib/color';
+
 import StaticConsultationCardSummary from './StaticConsultationCardSummary';
 import StaticConsultationCardDetails from './StaticConsultationCardDetails';
 import StaticConsultationCardActions from './StaticConsultationCardActions';

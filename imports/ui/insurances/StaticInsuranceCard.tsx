@@ -15,6 +15,7 @@ import StaticPatientChip, {
 import {useInsuranceStats, usePatientsInsuredBy} from '../../api/insurances';
 import {myEncodeURIComponent} from '../../lib/uri';
 import {type TagNameFields} from '../../api/tags/TagDocument';
+
 import InsuranceDeletionDialog from './InsuranceDeletionDialog';
 import InsuranceRenamingDialog from './InsuranceRenamingDialog';
 

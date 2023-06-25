@@ -13,6 +13,7 @@ import YearJumper from '../navigation/YearJumper';
 import type Filter from '../../api/query/Filter';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import FixedFab from '../button/FixedFab';
+
 import ConsultationsStatsCard from './ConsultationsStatsCard';
 import ConsultationsPager from './ConsultationsPager';
 

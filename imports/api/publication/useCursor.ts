@@ -1,5 +1,6 @@
 import {type DependencyList} from 'react';
 import {useFind} from 'meteor/react-meteor-data';
+
 import type Cursor from './Cursor';
 
 const useCursor = <T, U = T>(

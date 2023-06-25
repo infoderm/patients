@@ -29,6 +29,7 @@ import useCall from '../action/useCall';
 
 import patientsUpdate from '../../api/endpoint/patients/update';
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
+
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 type Props = {

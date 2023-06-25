@@ -3,6 +3,7 @@ import _apply from '../_apply';
 import type Args from '../Args';
 import type Serializable from '../Serializable';
 import {type Authentication} from '../Authentication';
+
 import type Endpoint from './Endpoint';
 
 const call = async <

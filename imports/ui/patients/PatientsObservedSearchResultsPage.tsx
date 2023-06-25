@@ -13,6 +13,7 @@ import mergeFields from '../../api/query/mergeFields';
 import Refresh from '../navigation/Refresh';
 import type UserFilter from '../../api/query/UserFilter';
 import {type PatientSearchIndexDocument} from '../../api/collection/patients/search';
+
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';

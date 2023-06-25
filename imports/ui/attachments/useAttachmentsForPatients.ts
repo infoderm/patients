@@ -3,6 +3,7 @@ import {decreasing} from '@total-order/primitive';
 import {iterable} from '@total-order/iter';
 
 import useConsultationsAndAppointments from '../consultations/useConsultationsAndAppointments';
+
 import useAttachments from './useAttachments';
 import type AttachmentInfo from './AttachmentInfo';
 

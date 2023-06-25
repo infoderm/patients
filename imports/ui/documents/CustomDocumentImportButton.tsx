@@ -8,6 +8,7 @@ import {map} from '@iterable-iterator/map';
 
 import insertDocument from '../../api/documents/insertDocument';
 import debounceSnackbar from '../snackbar/debounceSnackbar';
+
 import GenericDocumentImportButton from './GenericDocumentImportButton';
 
 const CustomDocumentImportButton = (props) => {

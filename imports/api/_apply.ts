@@ -1,6 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import {DDP} from 'meteor/ddp';
+
 import promisify from '../lib/async/promisify';
+
 import type Options from './endpoint/Options';
 import type Args from './Args';
 import type Serializable from './Serializable';

@@ -2,6 +2,7 @@ import fs from 'fs'; // Required to read files initially uploaded via Meteor-Fil
 // @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 import {Readable} from 'stream';
+
 import {Meteor} from 'meteor/meteor';
 import {type FileObj, FilesCollection} from 'meteor/ostrio:files';
 import MemoryLRU from 'lru-cache';
@@ -14,6 +15,7 @@ import createObjectId from '../backend/gridfs/createObjectId';
 import streamToBuffer from '../lib/stream/streamToBuffer';
 import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 import schema from '../lib/schema';
+
 import fetchSync from './publication/fetchSync';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;

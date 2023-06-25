@@ -28,6 +28,7 @@ import FixedFab from '../button/FixedFab';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import {useDateFormat} from '../../i18n/datetime';
+
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 import ConsultationsList from './ConsultationsList';
 

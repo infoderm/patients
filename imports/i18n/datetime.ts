@@ -19,6 +19,7 @@ import {
 	someDateAtGivenPositionOfYear,
 	type WeekDay,
 } from '../lib/datetime';
+
 import useLocaleKey from './useLocale';
 
 const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {

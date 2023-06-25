@@ -1,6 +1,7 @@
 import {chain} from '@iterable-iterator/chain';
 
 import schema from '../../lib/schema';
+
 import {fieldSpecifiers} from './dotNotation';
 
 type Projection<T> = {

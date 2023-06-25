@@ -1,5 +1,7 @@
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
+
 import type schema from '../lib/schema';
+
 import {type DocumentUpdate} from './DocumentUpdate';
 import type TransactionDriver from './transaction/TransactionDriver';
 

@@ -1,4 +1,5 @@
 import isAfter from 'date-fns/isAfter';
+
 import {
 	Availability,
 	slotFields,

@@ -7,6 +7,7 @@ import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import invoke from '../invoke';
 import {defaults, get} from '../../settings';
+
 import update from './update';
 import reset from './reset';
 

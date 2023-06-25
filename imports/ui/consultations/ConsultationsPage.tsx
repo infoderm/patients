@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import type UserFilter from '../../api/query/UserFilter';
 import type PropsOf from '../../lib/types/PropsOf';

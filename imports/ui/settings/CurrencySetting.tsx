@@ -1,4 +1,5 @@
 import React from 'react';
+
 import availableCurrencies, {
 	type AvailableCurrency,
 	currencyDescriptions,

@@ -1,4 +1,5 @@
 import {waitForElementToBeRemoved} from '@testing-library/dom';
+
 import {
 	client,
 	historyBack,

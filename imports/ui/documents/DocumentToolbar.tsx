@@ -6,6 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import PrintIcon from '@mui/icons-material/Print';
 
 import {styled} from '@mui/material/styles';
+
 import LoadingIconButton from '../button/LoadingIconButton';
 import {saveHTMLElementAsPDF} from '../../lib/pdf/pdf';
 

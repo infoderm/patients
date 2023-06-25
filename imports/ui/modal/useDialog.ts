@@ -1,4 +1,5 @@
 import {useContext, useMemo} from 'react';
+
 import dialog, {type ComponentExecutor, type Options} from './dialog';
 import ModalContext from './ModalContext';
 

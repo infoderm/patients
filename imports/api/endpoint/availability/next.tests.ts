@@ -8,6 +8,7 @@ import {map} from '@iterable-iterator/map';
 import {sorted} from '@iterable-iterator/sorted';
 
 import startOfDay from 'date-fns/startOfDay';
+
 import {
 	beginningOfTime,
 	endOfTime,
@@ -24,6 +25,7 @@ import cancelAppointment from '../appointments/cancel';
 import invoke from '../invoke';
 import timeSlotFromString from '../../../ui/settings/timeSlotFromString';
 import type ModuloWeekInterval from '../../../ui/settings/ModuloWeekInterval';
+
 import next from './next';
 
 const bookSlot = async (userId, begin, end) => {

@@ -15,9 +15,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 import DefaultChip from '@mui/material/Chip';
+
 import makeStyles from '../styles/makeStyles';
 
 import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
+
 import TextField from './TextField';
 
 import Suggestions from './Suggestions';

@@ -4,7 +4,9 @@ import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
 import {type UseComboboxGetItemPropsOptions} from 'downshift';
+
 import type PropsOf from '../../lib/types/PropsOf';
+
 import Suggestion from './Suggestion';
 import CreateItemSuggestion from './CreateItemSuggestion';
 

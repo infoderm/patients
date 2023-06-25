@@ -22,6 +22,7 @@ import Button from '@mui/material/Button';
 
 import {parseOneAddress, type ParsedMailbox} from 'email-addresses';
 import {styled} from '@mui/material/styles';
+
 import makeStyles from '../styles/makeStyles';
 
 import TextField from '../input/TextField';
@@ -60,6 +61,7 @@ import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
 import useDialog from '../modal/useDialog';
 import {emphasize} from '../../lib/color';
+
 import PatientDeletionDialog from './PatientDeletionDialog';
 import usePatientPersonalInformationReducer from './usePatientPersonalInformationReducer';
 import PatientPersonalInformationButtonsStatic from './PatientPersonalInformationButtonsStatic';

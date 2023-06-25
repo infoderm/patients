@@ -2,6 +2,7 @@ import {type Subscription} from 'meteor/meteor';
 
 import schema from '../lib/schema';
 import type Optional from '../lib/types/Optional';
+
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
 import type Collection from './Collection';

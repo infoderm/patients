@@ -1,10 +1,12 @@
 import assert from 'assert';
+
 import {PairingHeap} from '@heap-data-structure/pairing-heap';
 import {increasing, decreasing} from '@total-order/date';
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
 import schema from '../lib/schema';
+
 import {books} from './books';
 
 import {

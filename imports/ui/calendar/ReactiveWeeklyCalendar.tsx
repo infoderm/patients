@@ -72,6 +72,7 @@ import type ModuloWeekInterval from '../settings/ModuloWeekInterval';
 import ColorChip from '../chips/ColorChip';
 import {type Constraint} from '../../api/availability';
 import color from '../../lib/color';
+
 import Header from './Header';
 import DayHeader from './DayHeader';
 import StaticWeeklyCalendar from './StaticWeeklyCalendar';

@@ -11,6 +11,7 @@ import {newPatient} from '../../_dev/populate/patients';
 import {newUpload} from '../../_dev/populate/uploads';
 
 import invoke from '../invoke';
+
 import patientsAttach from './attach';
 import patientsDetach from './detach';
 

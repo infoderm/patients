@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import AssistantIcon from '@mui/icons-material/Assistant';
 
 import type PropsOf from '../../lib/types/PropsOf';
+
 import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';
 
 type ExtraProps<B> = {

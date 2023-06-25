@@ -215,6 +215,20 @@
       "n/file-extension-in-import": "off",
       "import/no-anonymous-default-export": "off",
       "import/no-extraneous-dependencies": "off",
+      "import/order": [
+        "error",
+        {
+        "groups": [
+          "builtin",
+          "external",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always-and-inside-groups",
+        "warnOnUnassignedImports": true
+        }
+      ],
       "unicorn/filename-case": "off",
       "unicorn/no-array-for-each": "off",
       "unicorn/prefer-logical-operator-over-ternary": "off",

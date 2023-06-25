@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
 import {type SettingKey} from '../../api/settings';
+
 import {useSetting} from './hooks';
 
 type Outcome = {

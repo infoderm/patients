@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import React from 'react';
 
 import withLazyOpening from '../modal/withLazyOpening';
@@ -7,6 +8,7 @@ import useCall from '../action/useCall';
 import {type AppointmentDocument} from '../../api/collection/appointments';
 import {type AppointmentUpdate} from '../../api/appointments';
 import {type Entry} from '../../api/update';
+
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
 type Props = {

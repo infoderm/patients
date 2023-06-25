@@ -10,6 +10,7 @@ import {normalizeSearch} from '../../api/string';
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
 import type Options from '../../api/query/Options';
 import {type PatientSearchIndexDocument} from '../../api/collection/patients/search';
+
 import useAdvancedObservedPatients from './useAdvancedObservedPatients';
 
 const DEBOUNCE_OPTIONS = {leading: false};

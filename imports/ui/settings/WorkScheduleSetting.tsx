@@ -4,6 +4,7 @@ import {map} from '@iterable-iterator/map';
 import {sorted} from '@iterable-iterator/sorted';
 
 import simplifyUnion from '../../lib/interval/simplifyUnion';
+
 import InputManySetting from './InputManySetting';
 import useWorkScheduleSort, {weekSlotsCyclicOrder} from './useWorkScheduleSort';
 import type ModuloWeekInterval from './ModuloWeekInterval';

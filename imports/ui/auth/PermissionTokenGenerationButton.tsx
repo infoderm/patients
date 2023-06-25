@@ -6,6 +6,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 import {useSnackbar} from 'notistack';
 import IconButton from '@mui/material/IconButton';
+
 import call from '../../api/endpoint/call';
 import generate from '../../api/endpoint/permissions/token/generate';
 import useSaveTextToClipboardAndNotify from '../input/useSaveTextToClipboardAndNotify';

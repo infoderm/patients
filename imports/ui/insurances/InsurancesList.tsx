@@ -4,6 +4,7 @@ import {useInsurancesFind} from '../../api/insurances';
 
 import type PropsOf from '../../lib/types/PropsOf';
 import TagNamePrefixFilteredList from '../tags/TagNamePrefixFilteredList';
+
 import ReactiveInsuranceCard from './ReactiveInsuranceCard';
 
 type Props = Omit<

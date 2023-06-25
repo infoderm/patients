@@ -5,6 +5,7 @@ import NoContent from '../navigation/NoContent';
 
 import type PropsOf from '../../lib/types/PropsOf';
 import Paginator from '../navigation/Paginator';
+
 import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 

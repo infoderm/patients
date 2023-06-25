@@ -1,4 +1,5 @@
 import isAfter from 'date-fns/isAfter';
+
 import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {intersectsInterval, publishEvents} from '../../events';

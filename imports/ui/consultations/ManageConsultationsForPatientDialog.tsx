@@ -29,6 +29,7 @@ import beginConsultation from '../../api/endpoint/appointments/beginConsultation
 import type PropsOf from '../../lib/types/PropsOf';
 import {type AppointmentDocument} from '../../api/collection/appointments';
 import {type ConsultationDocument} from '../../api/collection/consultations';
+
 import useConsultationsForPatient from './useConsultationsForPatient';
 
 const PREFIX = 'ManageConsultationsForPatientDialog';

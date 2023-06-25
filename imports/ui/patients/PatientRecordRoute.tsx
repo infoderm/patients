@@ -1,6 +1,8 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
+
 import {myDecodeURIComponent} from '../../lib/uri';
+
 import PatientRecord from './PatientRecord';
 
 type Params = {

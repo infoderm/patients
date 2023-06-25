@@ -7,6 +7,7 @@ import startOfToday from 'date-fns/startOfToday';
 import isBefore from 'date-fns/isBefore';
 import {grey} from '@mui/material/colors';
 import {type Theme} from '@mui/material/styles';
+
 import Tooltip from '../accessibility/Tooltip';
 import color from '../../lib/color';
 

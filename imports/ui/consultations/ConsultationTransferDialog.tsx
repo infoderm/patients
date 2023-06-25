@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LinearProgress from '@mui/material/LinearProgress';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LoadingButton from '@mui/lab/LoadingButton';
+
 import DialogWithVisibleOverflow from '../modal/DialogWithVisibleOverflow';
 
 import withLazyOpening from '../modal/withLazyOpening';
@@ -27,6 +28,7 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import transfer from '../../api/endpoint/consultations/transfer';
 import CancelButton from '../button/CancelButton';
 import useCall from '../action/useCall';
+
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 type Props = {

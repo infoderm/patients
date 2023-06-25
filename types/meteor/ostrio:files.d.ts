@@ -1,6 +1,7 @@
 declare module 'meteor/ostrio:files' {
 	import {type Buffer} from 'buffer';
 	import type * as http from 'http';
+
 	import {type Meteor} from 'meteor/meteor';
 	import {Mongo} from 'meteor/mongo';
 	import {type ReactiveVar} from 'meteor/reactive-var';

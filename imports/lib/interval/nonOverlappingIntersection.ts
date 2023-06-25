@@ -1,5 +1,6 @@
 import {iter} from '@iterable-iterator/iter';
 import {next, StopIteration} from '@iterable-iterator/next';
+
 import intersection from './intersection';
 import isEmpty from './isEmpty';
 

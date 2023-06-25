@@ -12,6 +12,7 @@ import Chip from '@mui/material/Chip';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
 import {blue, pink, red, yellow} from '@mui/material/colors';
+
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 
 import {emphasize} from '../../lib/color';

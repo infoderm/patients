@@ -2,6 +2,7 @@ import {type DependencyList, useState, useEffect} from 'react';
 import {type Meteor} from 'meteor/meteor';
 
 import useRandom from '../ui/hooks/useRandom';
+
 import type Publication from './publication/Publication';
 import subscribe, {type SubscriptionError} from './publication/subscribe';
 import type Options from './query/Options';

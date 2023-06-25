@@ -8,6 +8,7 @@ import {escapeStringRegexp} from '../../api/string';
 
 import AlphabetJumper from '../navigation/AlphabetJumper';
 import NoMatch from '../navigation/NoMatch';
+
 import TagList from './TagList';
 
 type Props = {

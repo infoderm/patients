@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import IconButton, {type IconButtonProps} from '@mui/material/IconButton';
 import MuiBox from '@mui/material/Box';
+
 import addTooltip from '../accessibility/addTooltip';
 
 type LoadingIconButtonExtraProps = {

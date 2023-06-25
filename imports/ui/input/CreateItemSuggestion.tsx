@@ -4,7 +4,9 @@ import {styled} from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import ListItemIcon from '@mui/material/ListItemIcon';
+
 import Keyboard from '../accessibility/Keyboard';
+
 import {SuggestionItemText} from './Suggestion';
 
 const CreateItemSuggestionValue = styled('span')({

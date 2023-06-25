@@ -1,6 +1,7 @@
 import {chain} from '@iterable-iterator/chain';
 
 import schema from '../../lib/schema';
+
 import {fieldSpecifiers, type FieldSpecifiers} from './dotNotation';
 import type WithId from './WithId';
 

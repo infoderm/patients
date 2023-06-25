@@ -10,6 +10,7 @@ import FixedFab from '../button/FixedFab';
 
 import NewAppointmentDialog from '../appointments/NewAppointmentDialog';
 import type PropsOf from '../../lib/types/PropsOf';
+
 import usePlannerContextState from './usePlannerContextState';
 import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialogState';
 

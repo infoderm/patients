@@ -3,6 +3,7 @@ import React from 'react';
 import usePatient from '../patients/usePatient';
 
 import type PropsOf from '../../lib/types/PropsOf';
+
 import DocumentsForPatient from './DocumentsForPatient';
 
 type Props = {

@@ -6,6 +6,7 @@ import {assert, expect} from 'chai';
 import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
+
 import logout from '../api/user/logout';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';

@@ -8,6 +8,7 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 import color from '../../../../lib/color';
 
 import {DEFAULT_CONVERTER, converters} from '../transformers';
+
 import PickerDialog from './PickerDialog';
 
 type Props = {

@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+
 import availableLocales, {
 	localeDescriptions,
 } from '../../i18n/availableLocales';

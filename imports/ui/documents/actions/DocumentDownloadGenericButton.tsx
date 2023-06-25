@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 
 import {useSnackbar} from 'notistack';
+
 import type PropsOf from '../../../lib/types/PropsOf';
 import {type DocumentDocument} from '../../../api/collection/documents';
+
 import downloadDocument from './downloadDocument';
 
 type ExtraProps = {

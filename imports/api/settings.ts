@@ -1,10 +1,12 @@
 import {type PaletteMode} from '@mui/material';
 import {indigo, pink} from '@mui/material/colors';
+
 import {type AvailableLocale} from '../i18n/availableLocales';
 import {type FirstWeekContainsDate} from '../i18n/datetime';
 
 import {ALL_WEEK_DAYS, type WeekDay} from '../lib/datetime';
 import type ModuloWeekInterval from '../ui/settings/ModuloWeekInterval';
+
 import {Settings} from './collection/settings';
 import findOneSync from './publication/findOneSync';
 

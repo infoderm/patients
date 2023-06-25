@@ -3,6 +3,7 @@ import React from 'react';
 import MenuItem, {type MenuItemProps} from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import {styled} from '@mui/material/styles';
+
 import Keyboard from '../accessibility/Keyboard';
 
 export const SuggestionItemText = styled(ListItemText)(({theme}) => ({
