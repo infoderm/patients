@@ -219,15 +219,15 @@
       "import/order": [
         "error",
         {
-        "groups": [
-          "builtin",
-          "external",
-          "parent",
-          "sibling",
-          "index"
-        ],
-        "newlines-between": "always-and-inside-groups",
-        "warnOnUnassignedImports": true
+          "groups": [
+            "builtin",
+            "external",
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "newlines-between": "always-and-inside-groups",
+          "warnOnUnassignedImports": true
         }
       ],
       "unicorn/filename-case": "off",
