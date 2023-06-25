@@ -43,7 +43,7 @@ export const thisYearsInterval = (): [Date, Date] => {
 export const generateDays = function* (
 	begin: Date,
 	end: Date,
-	displayedWeekDays: Set<number> = new Set(ALL_WEEK_DAYS),
+	displayedWeekDays = new Set<number>(ALL_WEEK_DAYS),
 ): IterableIterator<Date> {
 	let current = begin;
 	while (current < end) {

@@ -179,7 +179,7 @@ export const Uploads = new FilesCollection<MetadataType>({
 					},
 				},
 			)
-			.then((result) => {
+			.then(async (result) => {
 				return result.matchedCount === 0
 					? this.collection.rawCollection().updateOne(
 							{_id: upload._id},

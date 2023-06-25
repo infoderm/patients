@@ -62,7 +62,7 @@ const BooksList = ({
 			<YearJumper
 				current={year}
 				toURL={(x: number) =>
-					`${year !== undefined ? '../' : ''}query/year/${x}`
+					`${year === undefined ? '' : '../'}query/year/${x}`
 				}
 			/>
 			<Routes>

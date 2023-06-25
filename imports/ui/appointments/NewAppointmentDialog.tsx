@@ -8,14 +8,14 @@ import useCall from '../action/useCall';
 import AppointmentDialog from './AppointmentDialog';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
-const NewAppointmentDialog = (
-	props:
-		| Omit<PropsOf<typeof AppointmentDialog>, 'onSubmit' | 'pending'>
-		| Omit<
-				PropsOf<typeof AppointmentFromPatientIdDialog>,
-				'onSubmit' | 'pending'
-		  >,
-) => {
+type IgnoredProps = 'onSubmit' | 'pending';
+
+type Props =
+	| Omit<PropsOf<typeof AppointmentDialog>, IgnoredProps>
+	// eslint-disable-next-line @typescript-eslint/no-duplicate-type-constituents
+	| Omit<PropsOf<typeof AppointmentFromPatientIdDialog>, IgnoredProps>;
+
+const NewAppointmentDialog = (props: Props) => {
 	const [call, {pending}] = useCall();
 	const onSubmit = async (args) => {
 		console.debug('onSubmit', args);

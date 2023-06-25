@@ -33,15 +33,15 @@ const PatientHeader = ({patientId}: Props) => {
 	return (
 		<Subheader container spacing={3}>
 			<Grid item>
-				{!patient.photo ? (
-					<SubheaderAvatar>
-						<FaceIcon />
-					</SubheaderAvatar>
-				) : (
+				{patient.photo ? (
 					<SubheaderAvatar
 						alt={`${patient.firstname} ${patient.lastname}`}
 						src={pngDataURL(patient.photo)}
 					/>
+				) : (
+					<SubheaderAvatar>
+						<FaceIcon />
+					</SubheaderAvatar>
 				)}
 			</Grid>
 			<Grid item xs={2}>

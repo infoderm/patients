@@ -83,7 +83,7 @@ type DayProps = {
 function* generateDaysProps(
 	begin: Date,
 	end: Date,
-	displayedWeekDays: Set<number> = new Set(ALL_WEEK_DAYS),
+	displayedWeekDays = new Set<number>(ALL_WEEK_DAYS),
 ): IterableIterator<DayProps> {
 	const rowSize = displayedWeekDays.size;
 	const days = generateDays(begin, end, displayedWeekDays);

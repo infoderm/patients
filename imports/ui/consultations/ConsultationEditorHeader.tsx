@@ -42,16 +42,16 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	return (
 		<Subheader container spacing={3}>
 			<Grid item>
-				{!patient.photo ? (
-					<LinkedSubheaderAvatar to={`/patient/${patientId}`}>
-						<FaceIcon />
-					</LinkedSubheaderAvatar>
-				) : (
+				{patient.photo ? (
 					<LinkedSubheaderAvatar
 						alt={`${patient.firstname} ${patient.lastname}`}
 						src={pngDataURL(patient.photo)}
 						to={`/patient/${patientId}`}
 					/>
+				) : (
+					<LinkedSubheaderAvatar to={`/patient/${patientId}`}>
+						<FaceIcon />
+					</LinkedSubheaderAvatar>
 				)}
 			</Grid>
 			<Grid item xs={2}>

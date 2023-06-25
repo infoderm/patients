@@ -206,7 +206,7 @@ const PatientPersonalInformationStatic = (
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	const placeholder = !editing ? '?' : 'Write some information here';
+	const placeholder = editing ? 'Write some information here' : '?';
 
 	const minRows = 8;
 	const maxRows = 100;
