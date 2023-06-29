@@ -149,7 +149,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "8.0.3",
     "ical.js": "1.5.0",
-    "lint-staged": "13.2.2",
+    "lint-staged": "13.2.3",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
     "mup": "1.5.10",
