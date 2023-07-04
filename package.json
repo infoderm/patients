@@ -121,7 +121,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.22.5",
+    "@babel/eslint-parser": "7.22.6",
     "@babel/plugin-syntax-jsx": "7.22.5",
     "@faker-js/faker": "8.0.2",
     "@fontsource/roboto": "5.0.4",
