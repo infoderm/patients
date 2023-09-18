@@ -1,4 +1,4 @@
-import Collection from '../Collection';
+import define from './define';
 
 export type PollResult<T> = {
 	total: number;
@@ -6,4 +6,4 @@ export type PollResult<T> = {
 };
 
 export const countCollection = 'stats.count';
-export const Count = new Collection<PollResult<any>>(countCollection);
+export const Count = define<PollResult<any>>(countCollection);

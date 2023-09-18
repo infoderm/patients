@@ -1,7 +1,8 @@
-import Collection from '../Collection';
-
 import {hmacConfig} from '../../lib/hmac';
+
 import schema from '../../lib/schema';
+
+import define from './define';
 
 export const permissionTokenFields = schema.object({
 	userId: schema.array(schema.string()).optional(),
@@ -42,6 +43,4 @@ export type PermissionTokenDocument = schema.infer<
 >;
 
 const collection = 'permissionTokens';
-export const PermissionTokens = new Collection<PermissionTokenDocument>(
-	collection,
-);
+export const PermissionTokens = define<PermissionTokenDocument>(collection);

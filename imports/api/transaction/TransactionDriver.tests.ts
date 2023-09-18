@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
 import {dropId, dropIds, randomId, server} from '../../_test/fixtures';
-import Collection from '../Collection';
+import defineCollection from '../collection/define';
 
 import TestingTransactionDriver from './TestingTransactionDriver';
 import executeTransaction from './executeTransaction';
@@ -20,12 +20,15 @@ server(__filename, () => {
 		return txn(db);
 	});
 
-	const it2 = (title, unit: (db: TransactionDriver) => () => Promise<any>) => {
+	const it2 = (
+		title: string,
+		unit: (db: TransactionDriver) => () => Promise<any>,
+	) => {
 		it(`${title} (Mongo transaction execution)`, unit(MongoDriver));
 		it(`${title} (Meteor transaction simulation)`, unit(MeteorDriver));
 	};
 
-	const Tests = new Collection<any>('test-8h9e8w89hf98239');
+	const Tests = defineCollection<any>('test-8h9e8w89hf98239');
 
 	it2('insertOne', (db) => async () => {
 		assert.equal(await Tests.find().countAsync(), 0);

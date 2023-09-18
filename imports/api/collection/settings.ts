@@ -1,4 +1,4 @@
-import Collection from '../Collection';
+import define from './define';
 
 type SettingDocument = {
 	owner: string;
@@ -6,4 +6,4 @@ type SettingDocument = {
 	value: any;
 };
 
-export const Settings = new Collection<SettingDocument>('settings');
+export const Settings = define<SettingDocument>('settings');

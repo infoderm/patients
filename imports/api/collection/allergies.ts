@@ -1,7 +1,8 @@
 import schema from '../../lib/schema';
-import Collection from '../Collection';
 
 import {tagDocument} from '../tags/TagDocument';
+
+import define from './define';
 
 export const allergyDocument = tagDocument.merge(
 	schema.object({
@@ -12,4 +13,4 @@ export const allergyDocument = tagDocument.merge(
 export type AllergyDocument = schema.infer<typeof allergyDocument>;
 
 export const collection = 'allergies';
-export const Allergies = new Collection<AllergyDocument>(collection);
+export const Allergies = define<AllergyDocument>(collection);

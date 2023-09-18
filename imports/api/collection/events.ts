@@ -1,4 +1,4 @@
-import Collection from '../Collection';
+import define from './define';
 
 export type EventDocument = {
 	owner: string;
@@ -13,4 +13,4 @@ export type EventDocument = {
 };
 
 export const events = 'events';
-export const Events = new Collection<EventDocument>(events);
+export const Events = define<EventDocument>(events);

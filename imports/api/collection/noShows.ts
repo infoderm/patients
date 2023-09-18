@@ -1,8 +1,8 @@
-import Collection from '../Collection';
+import define from './define';
 
 export type State = {
 	count: number;
 };
 
 export const noShows = 'noShows';
-export const NoShows = new Collection<State>(noShows);
+export const NoShows = define<State>(noShows);
