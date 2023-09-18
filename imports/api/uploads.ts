@@ -17,6 +17,7 @@ import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 import schema from '../lib/schema';
 
 import fetchSync from './publication/fetchSync';
+import defineCollection from './collection/define';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
 
@@ -145,8 +146,12 @@ const getReadStreamPromise = (
 		: Promise.resolve(bucket.openDownloadStream(gfsId));
 };
 
+const _preCollection = defineCollection('__pre_uploads');
+const collection = defineCollection<FileObj<MetadataType>>('uploads');
 export const Uploads = new FilesCollection<MetadataType>({
-	collectionName: 'uploads',
+	// @ts-expect-error No part of public API.
+	_preCollection,
+	collection,
 	downloadRoute: '/cdn/storage',
 	allowClientCode: true,
 	onBeforeUpload(file) {
@@ -330,7 +335,3 @@ export const Uploads = new FilesCollection<MetadataType>({
 		});
 	},
 });
-
-if (Meteor.isServer) {
-	Uploads.denyClient();
-}

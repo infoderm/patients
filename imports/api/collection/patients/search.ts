@@ -1,5 +1,5 @@
 import schema from '../../../lib/schema';
-import Collection from '../../Collection';
+import define from '../define';
 import {patientSex} from '../patients';
 
 export const patientSearchIndexDocument = schema.object({
@@ -23,6 +23,5 @@ export type PatientSearchIndexDocument = schema.infer<
 >;
 
 export const indexCollection = 'patients.index.collection';
-export const PatientsSearchIndex = new Collection<PatientSearchIndexDocument>(
-	indexCollection,
-);
+export const PatientsSearchIndex =
+	define<PatientSearchIndexDocument>(indexCollection);

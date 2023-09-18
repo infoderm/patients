@@ -1,6 +1,7 @@
 import schema from '../../lib/schema';
-import Collection from '../Collection';
 import {normalizedLineSchema} from '../string';
+
+import define from './define';
 
 export const bookFields = schema.object({
 	name: normalizedLineSchema,
@@ -29,4 +30,4 @@ export const bookDocument = bookFields
 export type BookDocument = schema.infer<typeof bookDocument>;
 
 export const collection = 'books';
-export const Books = new Collection<BookDocument>(collection);
+export const Books = define<BookDocument>(collection);

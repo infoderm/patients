@@ -1,5 +1,6 @@
 import schema from '../../lib/schema';
-import Collection from '../Collection';
+
+import define from './define';
 
 export const drugDocument = schema.object({
 	_id: schema.string(),
@@ -12,4 +13,4 @@ export const drugDocument = schema.object({
 
 export type DrugDocument = schema.infer<typeof drugDocument>;
 
-export const Drugs = new Collection<DrugDocument>('drugs');
+export const Drugs = define<DrugDocument>('drugs');

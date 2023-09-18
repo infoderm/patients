@@ -2,10 +2,11 @@ import {type DependencyList} from 'react';
 
 import schema from '../lib/schema';
 
-import Collection from './Collection';
+import type Collection from './Collection';
 import type Selector from './query/Selector';
 import type Options from './query/Options';
 
+import defineCollection from './collection/define';
 import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
@@ -69,7 +70,7 @@ const makeFilteredCollection = <
 		},
 	});
 
-	const Filtered = new Collection<schema.infer<S>, U>(name);
+	const Filtered = defineCollection<schema.infer<S>, U>(name);
 
 	return (
 		hookSelector: Selector<schema.infer<S>> = {},

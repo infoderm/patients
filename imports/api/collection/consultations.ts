@@ -1,5 +1,6 @@
 import schema from '../../lib/schema';
-import Collection from '../Collection';
+
+import define from './define';
 
 export const consultationFields = schema
 	.object({
@@ -65,4 +66,4 @@ export type ConsultationDocument = schema.infer<typeof consultationDocument>;
 
 export const collection = 'consultations';
 
-export const Consultations = new Collection<ConsultationDocument>(collection);
+export const Consultations = define<ConsultationDocument>(collection);

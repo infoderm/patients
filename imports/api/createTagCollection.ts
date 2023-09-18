@@ -14,6 +14,7 @@ import pageQuery, {
 	publicationSchema as pageQueryPublicationSchema,
 } from './query/pageQuery';
 
+import defineCollection from './collection/define';
 import defineEndpoint from './endpoint/define';
 import definePublication from './publication/define';
 import useCursor from './publication/useCursor';
@@ -34,7 +35,7 @@ import makeItem from './tags/makeItem';
 import type Publication from './publication/Publication';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './query/Filter';
-import Collection from './Collection';
+import type Collection from './Collection';
 import type Selector from './query/Selector';
 import type Modifier from './Modifier';
 import {AuthenticationLoggedIn} from './Authentication';
@@ -114,9 +115,9 @@ const createTagCollection = <
 	const cacheCollection = collection + FIND_CACHE_SUFFIX;
 	const cachePublication = collection + FIND_OBSERVE_SUFFIX;
 
-	const Stats = new Collection<TagStats>(stats);
+	const Stats = defineCollection<TagStats>(stats);
 
-	const TagsCache = new Collection<CacheItem<T>>(cacheCollection);
+	const TagsCache = defineCollection<CacheItem<T>>(cacheCollection);
 
 	const _publication = definePublication({
 		name: publication,

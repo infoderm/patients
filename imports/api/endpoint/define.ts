@@ -55,15 +55,27 @@ const define = <
 		console.warn(`Publishing test-only method '${name}'.`);
 	}
 
-	Meteor.methods({
-		async [name](...args: any[]) {
-			return invoke(
-				endpoint,
-				this as unknown as ContextFor<Auth>,
-				args as InferArgs<S>,
-			);
-		},
-	});
+	try {
+		Meteor.methods({
+			async [name](...args: any[]) {
+				return invoke(
+					endpoint,
+					this as unknown as ContextFor<Auth>,
+					args as InferArgs<S>,
+				);
+			},
+		});
+	} catch (error) {
+		if (
+			(Meteor.isTest || Meteor.isAppTest) &&
+			error instanceof Error &&
+			error.message === `A method named '${name}' is already defined`
+		) {
+			console.warn(error.message);
+		} else {
+			throw error;
+		}
+	}
 
 	return endpoint;
 };

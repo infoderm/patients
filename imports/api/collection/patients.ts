@@ -1,6 +1,7 @@
 import schema from '../../lib/schema';
-import Collection from '../Collection';
 import {formattedLineSchema, normalizedLineSchema} from '../string';
+
+import define from './define';
 
 export const BIRTHDATE_FORMAT = 'yyyy-MM-dd';
 
@@ -107,4 +108,4 @@ export const patientDocument = patientFields
 export type PatientDocument = schema.infer<typeof patientDocument>;
 
 const collection = 'patients';
-export const Patients = new Collection<PatientDocument>(collection);
+export const Patients = define<PatientDocument>(collection);

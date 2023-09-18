@@ -1,5 +1,6 @@
 import schema from '../../lib/schema';
-import Collection from '../Collection';
+
+import define from './define';
 
 export const slotFields = schema
 	.object({
@@ -27,6 +28,4 @@ export const slotDocument = slotFields.merge(slotMetadata);
 export type SlotDocument = schema.infer<typeof slotDocument>;
 
 const availabilityCollectionName = 'availability';
-export const Availability = new Collection<SlotDocument>(
-	availabilityCollectionName,
-);
+export const Availability = define<SlotDocument>(availabilityCollectionName);
