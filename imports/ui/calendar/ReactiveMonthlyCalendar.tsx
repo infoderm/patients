@@ -20,10 +20,10 @@ import StaticMonthlyCalendar from './StaticMonthlyCalendar';
 import {monthly} from './ranges';
 
 type Props = {
-	year: number;
-	month: number;
-	showCancelledEvents?: boolean;
-	showNoShowEvents?: boolean;
+	readonly year: number;
+	readonly month: number;
+	readonly showCancelledEvents?: boolean;
+	readonly showNoShowEvents?: boolean;
 } & Omit<
 	PropsOf<typeof StaticMonthlyCalendar>,
 	'next' | 'prev' | 'weekly' | 'weekOptions' | 'DayHeader' | 'events'

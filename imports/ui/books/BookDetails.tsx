@@ -10,10 +10,10 @@ import PagedConsultationsList from '../consultations/PagedConsultationsList';
 import useConsultationsUnpaged from '../consultations/useConsultationsUnpaged';
 
 type Props = {
-	year: string;
-	book: string;
-	page: number;
-	defaultPerpage?: number;
+	readonly year: string;
+	readonly book: string;
+	readonly page: number;
+	readonly defaultPerpage?: number;
 };
 
 const BookDetails = ({year, book, page, defaultPerpage = 100}: Props) => {

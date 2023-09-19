@@ -9,11 +9,11 @@ import type PropsOf from '../../lib/types/PropsOf';
 import colorizeText from '../text/colorizeText';
 
 type ReadOnlyColorizedTextAreaProps = {
-	className?: string;
-	label?: string;
-	maxRows?: number;
-	dict: null | ((piece: string) => boolean);
-	value: string;
+	readonly className?: string;
+	readonly label?: string;
+	readonly maxRows?: number;
+	readonly dict: null | ((piece: string) => boolean);
+	readonly value: string;
 };
 
 const ReadOnlyColorizedTextArea = ({
@@ -43,11 +43,11 @@ const ReadOnlyColorizedTextArea = ({
 
 type ColorizedTextareaProps = ReadOnlyColorizedTextAreaProps &
 	PropsOf<typeof TextField> & {
-		readOnly: boolean;
-		placeholder?: string;
-		rows?: number;
-		margin?: 'none' | 'dense' | 'normal';
-		onChange?: (e: any) => void;
+		readonly readOnly: boolean;
+		readonly placeholder?: string;
+		readonly rows?: number;
+		readonly margin?: 'none' | 'dense' | 'normal';
+		readonly onChange?: (e: any) => void;
 	};
 
 const ColorizedTextarea = ({

@@ -18,16 +18,16 @@ const Root = styled('div')(({theme}) => ({
 }));
 
 type SelectionProps<Item, ChipProps> = {
-	Chip: React.ElementType;
-	chipProps: ((item: Item, index: number) => ChipProps) | ChipProps;
-	selectedItems: Item[];
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => React.ReactNode;
-	getSelectedItemProps: (
+	readonly Chip: React.ElementType;
+	readonly chipProps: ((item: Item, index: number) => ChipProps) | ChipProps;
+	readonly selectedItems: Item[];
+	readonly itemToKey: (item: Item) => React.Key;
+	readonly itemToString: (item: Item) => React.ReactNode;
+	readonly getSelectedItemProps: (
 		options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
 	) => any;
-	readOnly: boolean;
-	removeSelectedItem: (item: Item) => void | Promise<void>;
+	readonly readOnly: boolean;
+	readonly removeSelectedItem: (item: Item) => void | Promise<void>;
 };
 
 const Selection = React.memo(

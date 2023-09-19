@@ -8,7 +8,7 @@ import {type PatientTag} from '../../api/collection/patients';
 import StaticAllergyChip from './StaticAllergyChip';
 
 type Tweaks = {
-	item: PatientTag;
+	readonly item: PatientTag;
 };
 
 type ReactiveAllergyChipProps = ChipProps & Tweaks;

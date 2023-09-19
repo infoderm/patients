@@ -6,8 +6,8 @@ import {
 	Appointments,
 	appointmentDocument,
 } from '../../collection/appointments';
-import type Options from '../../query/Options';
 import {options} from '../../query/Options';
+import type Options from '../../query/Options';
 
 import define from '../define';
 

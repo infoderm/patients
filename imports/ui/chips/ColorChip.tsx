@@ -7,7 +7,7 @@ import Chip, {type ChipProps} from '@mui/material/Chip';
 import color, {focusColor, hoverColor, textColor} from '../../lib/color';
 
 type Props<C extends React.ElementType> = Omit<ChipProps<C>, 'color'> & {
-	color: string;
+	readonly color: string;
 };
 
 const ColorChip = styled(

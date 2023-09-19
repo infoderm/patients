@@ -11,7 +11,7 @@ import useDocumentVersions from '../useDocumentVersions';
 import {type DocumentDocument} from '../../../api/collection/documents';
 
 type DocumentVersionsButtonProps = {
-	document: DocumentDocument;
+	readonly document: DocumentDocument;
 } & Omit<ButtonProps<typeof Link>, 'component' | 'to'>;
 
 const DocumentVersionsButton = ({

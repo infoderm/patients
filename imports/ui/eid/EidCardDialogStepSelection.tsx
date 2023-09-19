@@ -126,12 +126,12 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 type Props = {
-	titleId?: string;
-	onClose: () => void;
-	onNext: () => void;
-	eidInfo: PatientIdFields;
-	selected: Set<string>;
-	setSelected: (selection: Set<string>) => void;
+	readonly titleId?: string;
+	readonly onClose: () => void;
+	readonly onNext: () => void;
+	readonly eidInfo: PatientIdFields;
+	readonly selected: Set<string>;
+	readonly setSelected: (selection: Set<string>) => void;
 };
 
 const EidCardDialogStepSelection = ({

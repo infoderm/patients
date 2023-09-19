@@ -12,8 +12,8 @@ import NoMatch from '../navigation/NoMatch';
 import TagList from './TagList';
 
 type Props = {
-	type?: string;
-	filter?: string;
+	readonly type?: string;
+	readonly filter?: string;
 } & Omit<PropsOf<typeof TagList>, 'filter'>;
 
 const TagNamePrefixFilteredList = ({

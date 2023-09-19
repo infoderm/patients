@@ -30,9 +30,9 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	consultation: ConsultationDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly consultation: ConsultationDocument;
 };
 
 const ConsultationAppointmentRestorationDialog = ({

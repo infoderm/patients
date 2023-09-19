@@ -3,7 +3,7 @@ import React from 'react';
 import SelectColorSetting from './SelectColorSetting';
 
 type Props = {
-	className?: string;
+	readonly className?: string;
 };
 
 const ThemePaletteModeSetting = ({className}: Props) => {

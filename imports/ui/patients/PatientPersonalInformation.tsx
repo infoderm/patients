@@ -8,7 +8,7 @@ import PatientPersonalInformationStatic from './PatientPersonalInformationStatic
 import usePatient from './usePatient';
 
 type PatientPersonalInformationProps = {
-	patientId: string;
+	readonly patientId: string;
 };
 
 const PatientPersonalInformation = ({

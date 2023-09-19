@@ -9,9 +9,9 @@ import EndpointCallConfirmationDialog from '../modal/EndpointCallConfirmationDia
 import withLazyOpening from '../modal/withLazyOpening';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	document: {_id: string};
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly document: {_id: string};
 };
 
 const DocumentUnlinkingDialog = ({open, onClose, document}: Props) => {

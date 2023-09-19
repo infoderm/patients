@@ -7,10 +7,10 @@ import AttachmentsGallery from './AttachmentsGallery';
 import type AttachmentInfo from './AttachmentInfo';
 
 type Props = {
-	patientId: string;
-	attachmentsInfo: AttachmentInfo[];
-	page?: number;
-	perpage?: number;
+	readonly patientId: string;
+	readonly attachmentsInfo: AttachmentInfo[];
+	readonly page?: number;
+	readonly perpage?: number;
 } & ComponentPropsWithoutRef<'div'>;
 
 const AttachmentsForPatientPage = ({

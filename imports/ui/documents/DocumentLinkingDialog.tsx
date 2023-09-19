@@ -18,10 +18,10 @@ import CancelButton from '../button/CancelButton';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	document: {_id: string};
-	existingLink?: {_id: string};
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly document: {_id: string};
+	readonly existingLink?: {_id: string};
 };
 
 const DocumentLinkingDialog = ({

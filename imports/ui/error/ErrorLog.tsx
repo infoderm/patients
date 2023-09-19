@@ -31,8 +31,8 @@ const Details = styled('details')({
 });
 
 type ErrorLogProps = {
-	error: Error;
-	errorInfo: ErrorInfo;
+	readonly error: Error;
+	readonly errorInfo: ErrorInfo;
 };
 
 const ErrorLog = ({error, errorInfo}: ErrorLogProps) => {

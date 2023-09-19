@@ -7,8 +7,8 @@ import type PropsOf from '../../lib/types/PropsOf';
 import {type TagNameFields, type TagMetadata} from '../../api/tags/TagDocument';
 
 type TagGridProps = {
-	Card: React.ElementType;
-	tags: Array<TagNameFields & TagMetadata>;
+	readonly Card: React.ElementType;
+	readonly tags: Array<TagNameFields & TagMetadata>;
 } & PropsOf<typeof Grid>;
 
 const TagGrid = ({Card, tags, ...rest}: TagGridProps) => (

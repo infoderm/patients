@@ -33,9 +33,9 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	patient: PatientDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly patient: PatientDocument;
 };
 
 const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {

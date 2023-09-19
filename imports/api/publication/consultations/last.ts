@@ -7,8 +7,8 @@ import {
 } from '../../collection/consultations';
 import type Selector from '../../query/Selector';
 import define from '../define';
-import type UserFilter from '../../query/UserFilter';
 import {userFilter} from '../../query/UserFilter';
+import type UserFilter from '../../query/UserFilter';
 
 export default define({
 	name: 'consultations.last',

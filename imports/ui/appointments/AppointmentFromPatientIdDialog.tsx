@@ -7,7 +7,7 @@ import type PropsOf from '../../lib/types/PropsOf';
 import AppointmentDialog from './AppointmentDialog';
 
 type AppointmentFromPatientIdDialogProps = {
-	patientId: string;
+	readonly patientId: string;
 } & Omit<PropsOf<typeof AppointmentDialog>, 'initialPatient'>;
 
 const AppointmentFromPatientIdDialog = ({

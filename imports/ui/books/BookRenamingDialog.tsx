@@ -8,10 +8,10 @@ import {books, useBooksFind} from '../../api/books';
 import {type BookDocument} from '../../api/collection/books';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	onRename: () => void;
-	tag: BookDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly onRename: () => void;
+	readonly tag: BookDocument;
 };
 
 const BookRenamingDialog = ({open, onClose, onRename, tag}: Props) => {

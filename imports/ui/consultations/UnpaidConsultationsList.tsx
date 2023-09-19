@@ -16,7 +16,7 @@ import {type ConsultationDocument} from '../../api/collection/consultations';
 import ConsultationsPager from './ConsultationsPager';
 
 type Props = {
-	year: number;
+	readonly year: number;
 };
 
 const UnpaidConsultationsList = ({year}: Props) => {

@@ -25,9 +25,9 @@ import cancel from '../../api/endpoint/appointments/cancel';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	appointment: any;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly appointment: any;
 };
 
 const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {

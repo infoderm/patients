@@ -16,8 +16,8 @@ import MergePatientsConfirmationDialog from './MergePatientsConfirmationDialog';
 import useMergeInfo, {type MergeInfo} from './useMergeInfo';
 
 type StaticMergePatientsFormStepPrepareProps = {
-	toMerge: string[];
-	onPrevStep?: () => void;
+	readonly toMerge: string[];
+	readonly onPrevStep?: () => void;
 } & MergeInfo;
 
 const StaticMergePatientsFormStepPrepare = ({

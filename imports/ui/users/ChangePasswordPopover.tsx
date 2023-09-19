@@ -11,9 +11,9 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {
-	id: string;
-	anchorEl?: HTMLElement | null;
-	handleClose: () => void;
+	readonly id: string;
+	readonly anchorEl?: HTMLElement | null;
+	readonly handleClose: () => void;
 };
 
 const ChangePasswordPopover = ({id, anchorEl, handleClose}: Props) => {

@@ -6,12 +6,12 @@ import CalendarHeader from './CalendarHeader';
 import MonthlyCalendarData from './MonthlyCalendarData';
 
 type Props = {
-	className?: string;
-	title?: string;
-	next: () => void;
-	prev: () => void;
-	weekly: () => void;
-	navigationRole?: 'button' | 'link';
+	readonly className?: string;
+	readonly title?: string;
+	readonly next: () => void;
+	readonly prev: () => void;
+	readonly weekly: () => void;
+	readonly navigationRole?: 'button' | 'link';
 } & PropsOf<typeof MonthlyCalendarData>;
 
 const StaticMonthlyCalendar = ({

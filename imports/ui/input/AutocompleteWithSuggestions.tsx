@@ -9,11 +9,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import type PropsOf from '../../lib/types/PropsOf';
 
 type BaseProps = {
-	itemToString?: (x: any) => any;
-	useSuggestions: (x: string) => {loading: boolean; results: any[]};
-	inputValue: string;
-	TextFieldProps?: any;
-	InputProps?: any;
+	readonly itemToString?: (x: any) => any;
+	readonly useSuggestions: (x: string) => {loading: boolean; results: any[]};
+	readonly inputValue: string;
+	readonly TextFieldProps?: any;
+	readonly InputProps?: any;
 };
 
 type Props = BaseProps &

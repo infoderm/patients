@@ -9,8 +9,8 @@ const Root = styled('div')({
 });
 
 type Props = {
-	className?: string;
-	children: any;
+	readonly className?: string;
+	readonly children: any;
 };
 
 const SearchBoxInternalsInputContainer = React.forwardRef<any, Props>(

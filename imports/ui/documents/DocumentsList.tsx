@@ -7,8 +7,8 @@ import StaticDocumentList from './StaticDocumentList';
 import CustomDocumentImportButton from './CustomDocumentImportButton';
 
 type Props = {
-	page?: number;
-	perpage?: number;
+	readonly page?: number;
+	readonly perpage?: number;
 };
 
 const DocumentsList = ({page = 1, perpage = 10}: Props) => {

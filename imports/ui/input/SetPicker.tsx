@@ -32,10 +32,10 @@ const useToggleButtonStyles = makeStyles()({
 });
 
 type ToggleButtonProps = {
-	isOpen: boolean;
-	readOnly: boolean;
-	hasSuggestions: boolean;
-	getToggleButtonProps: (
+	readonly isOpen: boolean;
+	readonly readOnly: boolean;
+	readonly hasSuggestions: boolean;
+	readonly getToggleButtonProps: (
 		options?: UseComboboxGetToggleButtonPropsOptions,
 	) => any;
 };
@@ -78,26 +78,29 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 type SetPickerProps<Item, ChipProps> = {
-	className?: string;
-	Chip?: React.ElementType;
-	chipProps?: ((item: Item, index: number) => ChipProps) | ChipProps;
-	withoutToggle?: boolean;
-	value: Item[];
-	readOnly?: boolean;
-	useSuggestions: (inputValue: string) => {loading?: boolean; results: any[]};
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => React.ReactNode;
-	Item?: React.ElementType;
-	inputTransform?: (inputValue: string) => string;
-	inputValidation?: InputValidation;
-	onChange?: (event: any) => void | Promise<void>;
-	createNewItem?: (inputValue: string) => Item | undefined;
-	maxCount?: number;
-	multiset?: boolean;
-	TextFieldProps?: any;
-	InputProps?: any;
-	inputProps?: any;
-	placeholder?: string;
+	readonly className?: string;
+	readonly Chip?: React.ElementType;
+	readonly chipProps?: ((item: Item, index: number) => ChipProps) | ChipProps;
+	readonly withoutToggle?: boolean;
+	readonly value: Item[];
+	readonly readOnly?: boolean;
+	readonly useSuggestions: (inputValue: string) => {
+		loading?: boolean;
+		results: any[];
+	};
+	readonly itemToKey: (item: Item) => React.Key;
+	readonly itemToString: (item: Item) => React.ReactNode;
+	readonly Item?: React.ElementType;
+	readonly inputTransform?: (inputValue: string) => string;
+	readonly inputValidation?: InputValidation;
+	readonly onChange?: (event: any) => void | Promise<void>;
+	readonly createNewItem?: (inputValue: string) => Item | undefined;
+	readonly maxCount?: number;
+	readonly multiset?: boolean;
+	readonly TextFieldProps?: any;
+	readonly InputProps?: any;
+	readonly inputProps?: any;
+	readonly placeholder?: string;
 };
 
 const comboboxStateReducer = (state, {type, changes}) => {

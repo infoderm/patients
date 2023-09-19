@@ -12,9 +12,9 @@ import {type Entry} from '../../api/update';
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	appointment: AppointmentDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly appointment: AppointmentDocument;
 };
 
 const appointmentDiffGen = function* (

@@ -10,12 +10,12 @@ import NoContent from '../navigation/NoContent';
 import ConsultationsList from './ConsultationsList';
 
 type PagedConsultationsListProps = {
-	page: number;
-	perpage: number;
-	items: any[];
-	loading?: boolean;
-	dirty?: boolean;
-	refresh?: () => void;
+	readonly page: number;
+	readonly perpage: number;
+	readonly items: any[];
+	readonly loading?: boolean;
+	readonly dirty?: boolean;
+	readonly refresh?: () => void;
 } & PropsOf<typeof ConsultationsList>;
 
 const PagedConsultationsList = ({

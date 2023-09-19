@@ -10,9 +10,9 @@ import {useInsurance} from '../../api/insurances';
 import StaticInsuranceCard from './StaticInsuranceCard';
 
 type Props = {
-	name: string;
-	page?: number;
-	perpage?: number;
+	readonly name: string;
+	readonly page?: number;
+	readonly perpage?: number;
 };
 
 const InsuranceDetails = ({name, page = 1, perpage = 10}: Props) => {

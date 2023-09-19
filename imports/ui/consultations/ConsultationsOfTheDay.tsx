@@ -46,7 +46,7 @@ const Root = styled('div')(({theme}) => ({
 }));
 
 type Props = {
-	day: Date;
+	readonly day: Date;
 };
 
 const ConsultationsOfTheDay = ({day}: Props) => {

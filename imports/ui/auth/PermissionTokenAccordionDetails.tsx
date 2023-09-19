@@ -5,7 +5,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import {type PermissionTokenDocument} from '../../api/collection/permissionTokens';
 
 type Props = {
-	item: PermissionTokenDocument;
+	readonly item: PermissionTokenDocument;
 };
 
 const PermissionTokenAccordionDetails = ({item}: Props) => (

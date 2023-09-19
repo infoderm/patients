@@ -6,10 +6,10 @@ import {monthly} from './ranges';
 import CalendarData from './CalendarData';
 
 type Props = {
-	year: number;
-	month: number;
-	weekOptions: {};
-	maxLines?: number;
+	readonly year: number;
+	readonly month: number;
+	readonly weekOptions: {};
+	readonly maxLines?: number;
 } & Omit<PropsOf<typeof CalendarData>, 'maxLines' | 'begin' | 'end'>;
 
 const MonthlyCalendarData = ({

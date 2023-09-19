@@ -54,9 +54,9 @@ const StaticAllergyCard = React.forwardRef<any, StaticAllergyCardProps>(
 );
 
 type LoadedTagCardProps = {
-	loading: boolean;
-	found: boolean;
-	item: AllergyDocument;
+	readonly loading: boolean;
+	readonly found: boolean;
+	readonly item: AllergyDocument;
 };
 
 const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(

@@ -9,8 +9,8 @@ import {Patients} from '../../collection/patients';
 import {countCollection, type PollResult} from '../../collection/stats';
 import type Selector from '../../query/Selector';
 import define from '../define';
-import type UserFilter from '../../query/UserFilter';
 import {userFilter} from '../../query/UserFilter';
+import type UserFilter from '../../query/UserFilter';
 
 export const frequencySexKey = (query) =>
 	`frequencySex-${JSON.stringify(query ?? {})}`;

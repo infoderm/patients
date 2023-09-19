@@ -7,9 +7,9 @@ import StaticPatientCard from './StaticPatientCard';
 import type CardPatientProjection from './CardPatientProjection';
 
 type PatientPageProps<C, T = CardPatientProjection<C> & {_id: string}> = {
-	patients: T[];
-	Card?: React.ElementType;
-	NewCard?: React.ElementType;
+	readonly patients: T[];
+	readonly Card?: React.ElementType;
+	readonly NewCard?: React.ElementType;
 };
 
 const PatientsPage = ({

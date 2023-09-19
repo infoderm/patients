@@ -20,11 +20,11 @@ type Margin = {
 };
 
 type Props = {
-	width: number;
-	height: number;
-	margin?: Margin;
-	data: any[];
-	color: any;
+	readonly width: number;
+	readonly height: number;
+	readonly margin?: Margin;
+	readonly data: any[];
+	readonly color: any;
 };
 
 const StackedBarChart = ({width, height, margin, data, color}: Props) => {

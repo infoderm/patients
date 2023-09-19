@@ -9,11 +9,11 @@ import ReactivePatientCard from './ReactivePatientCard';
 import PatientsPage from './PatientsPage';
 
 type Props = {
-	loading: boolean;
-	perpage: number;
-	items: PatientDocument[];
-	refresh?: () => void;
-	dirty?: boolean;
+	readonly loading: boolean;
+	readonly perpage: number;
+	readonly items: PatientDocument[];
+	readonly refresh?: () => void;
+	readonly dirty?: boolean;
 };
 
 const PagedPatientsList = ({

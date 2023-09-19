@@ -13,9 +13,9 @@ import {
 	type FieldSpecifiers,
 	type PropertyType,
 } from './dotNotation';
+import {bsonType} from './BSONType';
 import type BSONType from './BSONType';
 import type BitwiseFilter from './BitwiseFilter';
-import {bsonType} from './BSONType';
 import {bitwiseFilter} from './BitwiseFilter';
 
 type RootFilterOperators<TSchema> = {

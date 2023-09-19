@@ -9,9 +9,9 @@ import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 import useAttachment from './useAttachment';
 
 type AttachmentThumbnailProps = {
-	attachmentId: string;
-	height: number;
-	width?: number;
+	readonly attachmentId: string;
+	readonly height: number;
+	readonly width?: number;
 } & Omit<PropsOf<typeof AnimatedCardMedia>, 'loading' | 'image'>;
 
 const AttachmentThumbnail = ({

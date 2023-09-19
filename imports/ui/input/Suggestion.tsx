@@ -13,13 +13,13 @@ export const SuggestionItemText = styled(ListItemText)(({theme}) => ({
 }));
 
 type SuggestionProps<Item> = {
-	highlightedIndex: number;
-	index: number;
-	item: Item;
-	selectedItems: Item[];
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => React.ReactNode;
-	Item?: React.ElementType;
+	readonly highlightedIndex: number;
+	readonly index: number;
+	readonly item: Item;
+	readonly selectedItems: Item[];
+	readonly itemToKey: (item: Item) => React.Key;
+	readonly itemToString: (item: Item) => React.ReactNode;
+	readonly Item?: React.ElementType;
 } & Omit<MenuItemProps, 'ref'>;
 
 const Suggestion = React.forwardRef(

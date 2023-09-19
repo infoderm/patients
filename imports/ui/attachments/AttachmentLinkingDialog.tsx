@@ -18,10 +18,10 @@ import CancelButton from '../button/CancelButton';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	attachment: {_id: string};
-	existingLink?: {_id: string};
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly attachment: {_id: string};
+	readonly existingLink?: {_id: string};
 };
 
 const AttachmentLinkingDialog = ({

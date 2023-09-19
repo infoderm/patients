@@ -24,7 +24,7 @@ const BookAvatar = styled(Avatar)({
 });
 
 type Props = {
-	item: {
+	readonly item: {
 		name: string;
 	};
 };

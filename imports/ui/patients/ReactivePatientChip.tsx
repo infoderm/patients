@@ -9,7 +9,7 @@ import StaticPatientChip, {
 import usePatient from './usePatient';
 
 type Props = {
-	patient: {_id: string};
+	readonly patient: {_id: string};
 } & PropsOf<typeof StaticPatientChip>;
 
 const ReactivePatientChip = React.forwardRef(

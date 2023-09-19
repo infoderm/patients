@@ -15,12 +15,12 @@ type Outcome = {
 };
 
 type Props<K extends SettingKey> = {
-	className?: string;
-	title?: string;
-	label?: string;
-	setting: K;
-	sanitize?: (inputValue: string) => any;
-	validate?: (x: any) => Outcome;
+	readonly className?: string;
+	readonly title?: string;
+	readonly label?: string;
+	readonly setting: K;
+	readonly sanitize?: (inputValue: string) => any;
+	readonly validate?: (x: any) => Outcome;
 };
 
 const InputOneSetting = <K extends SettingKey>({

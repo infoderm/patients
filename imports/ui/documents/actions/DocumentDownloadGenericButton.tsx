@@ -8,10 +8,10 @@ import {type DocumentDocument} from '../../../api/collection/documents';
 import downloadDocument from './downloadDocument';
 
 type ExtraProps = {
-	document: DocumentDocument;
-	component: React.ElementType;
-	children: React.ReactNode;
-	size?: string;
+	readonly document: DocumentDocument;
+	readonly component: React.ElementType;
+	readonly children: React.ReactNode;
+	readonly size?: string;
 };
 
 const DocumentDownloadGenericButton = ({

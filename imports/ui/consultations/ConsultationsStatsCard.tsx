@@ -91,13 +91,13 @@ const StyledCard = styled(Card)(({theme}) => ({
 }));
 
 type Props = {
-	query: {};
+	readonly query: {};
 
-	title: string;
-	avatar: string;
-	url?: string;
-	actions?: (item: {}) => React.ReactNode;
-	abbr: string;
+	readonly title: string;
+	readonly avatar: string;
+	readonly url?: string;
+	readonly actions?: (item: {}) => React.ReactNode;
+	readonly abbr: string;
 };
 
 const ConsultationsStatsCard = ({

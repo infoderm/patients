@@ -48,10 +48,10 @@ const LinkFragment = ({className, title, uri, style, eventProps}) => (
 );
 
 type EventFragmentProps = {
-	className: string;
-	theme: Theme;
-	event: any;
-	eventProps: any;
+	readonly className: string;
+	readonly theme: Theme;
+	readonly event: any;
+	readonly eventProps: any;
 };
 
 const AppointmentFragment = ({

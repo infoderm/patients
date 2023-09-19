@@ -9,9 +9,9 @@ import EndpointCallConfirmationDialog from '../modal/EndpointCallConfirmationDia
 import withLazyOpening from '../modal/withLazyOpening';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	appointment: {_id: string};
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly appointment: {_id: string};
 };
 
 const AppointmentDeletionDialog = ({open, onClose, appointment}: Props) => (

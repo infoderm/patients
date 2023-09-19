@@ -6,8 +6,8 @@ import {
 } from '../../collection/consultations';
 import {stats} from '../../collection/consultations/stats';
 import {setupConsultationsStatsPublication} from '../../consultations';
-import type UserFilter from '../../query/UserFilter';
 import {userFilter} from '../../query/UserFilter';
+import type UserFilter from '../../query/UserFilter';
 import define from '../define';
 
 export default define({

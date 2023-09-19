@@ -13,7 +13,7 @@ import useSaveTextToClipboardAndNotify from '../input/useSaveTextToClipboardAndN
 import {ICS_CALENDAR_READ} from '../../api/permissions/codes';
 
 type Props = {
-	className?: string;
+	readonly className?: string;
 };
 
 const PermissionTokenGenerationButton = ({className}: Props) => {

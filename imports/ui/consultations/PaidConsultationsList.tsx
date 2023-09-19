@@ -18,8 +18,8 @@ import ConsultationsStatsCard from './ConsultationsStatsCard';
 import ConsultationsPager from './ConsultationsPager';
 
 type Props = {
-	year: number;
-	payment_method?: string;
+	readonly year: number;
+	readonly payment_method?: string;
 };
 
 const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {

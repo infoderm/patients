@@ -6,8 +6,8 @@ import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentDeletionDialog from '../DocumentDeletionDialog';
 
 type DocumentDownloadGenericButtonAdditionalProps = {
-	document: DocumentDocument;
-	component: React.ElementType;
+	readonly document: DocumentDocument;
+	readonly component: React.ElementType;
 };
 
 const DocumentDownloadGenericButton = ({

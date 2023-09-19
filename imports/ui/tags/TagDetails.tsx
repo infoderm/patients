@@ -32,23 +32,23 @@ const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
 };
 
 type Props<T> = {
-	Card?: React.ElementType;
+	readonly Card?: React.ElementType;
 
-	useItem?: (
+	readonly useItem?: (
 		name: string,
 		deps: DependencyList,
 	) => {loading: boolean; item?: unknown};
-	name: string;
+	readonly name: string;
 
-	List: React.ElementType;
-	listProps?: {};
+	readonly List: React.ElementType;
+	readonly listProps?: {};
 
-	useParents: GenericQueryHook<T>;
-	filter: {};
-	sort: {};
-	projection?: {};
-	page: number;
-	perpage: number;
+	readonly useParents: GenericQueryHook<T>;
+	readonly filter: {};
+	readonly sort: {};
+	readonly projection?: {};
+	readonly page: number;
+	readonly perpage: number;
 };
 
 const TagDetails = <T,>(props: Props<T>) => {

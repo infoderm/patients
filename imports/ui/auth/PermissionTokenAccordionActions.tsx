@@ -7,7 +7,7 @@ import {type PermissionTokenDocument} from '../../api/collection/permissionToken
 import PermissionTokenRevocationButton from './PermissionTokenRevocationButton';
 
 type Props = {
-	item: PermissionTokenDocument;
+	readonly item: PermissionTokenDocument;
 };
 
 const PermissionTokenAccordionActions = ({item}: Props) => (

@@ -25,13 +25,13 @@ import useCall from '../action/useCall';
 import {type TagMetadata, type TagNameFields} from '../../api/tags/TagDocument';
 
 type Props<T> = {
-	open: boolean;
-	onClose: () => void;
-	title: string;
-	endpoint: Endpoint<[string], any>;
-	tag: T;
-	nameKey?: string;
-	nameKeyTitle?: string;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly title: string;
+	readonly endpoint: Endpoint<[string], any>;
+	readonly tag: T;
+	readonly nameKey?: string;
+	readonly nameKeyTitle?: string;
 };
 
 const TagDeletionDialog = <T extends TagMetadata & TagNameFields>({

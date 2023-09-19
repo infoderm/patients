@@ -12,10 +12,10 @@ import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
 
 type Props = {
-	defaultValue: string;
-	onChange: (color: string) => void;
-	convert?: keyof typeof converters;
-	readOnly?: boolean;
+	readonly defaultValue: string;
+	readonly onChange: (color: string) => void;
+	readonly convert?: keyof typeof converters;
+	readonly readOnly?: boolean;
 };
 
 const ColorPicker = ({

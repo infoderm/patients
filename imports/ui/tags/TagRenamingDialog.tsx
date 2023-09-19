@@ -33,18 +33,18 @@ import RenameButton from '../button/RenameButton';
 import type Selector from '../../api/query/Selector';
 
 type Props<T> = {
-	open: boolean;
-	onClose: () => void;
-	onRename: (name: string) => void;
-	title: string;
-	useTagsFind?: GenericQueryHook<T>;
-	suggestionFilter?: Selector<T>;
-	endpoint: Endpoint<[string, string], any>;
-	tag: T;
-	nameKey?: string;
-	nameKeyTitle?: string;
-	nameFormat?: (tag: T, name: string) => string;
-	inputFormat?: (input: string) => string;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly onRename: (name: string) => void;
+	readonly title: string;
+	readonly useTagsFind?: GenericQueryHook<T>;
+	readonly suggestionFilter?: Selector<T>;
+	readonly endpoint: Endpoint<[string, string], any>;
+	readonly tag: T;
+	readonly nameKey?: string;
+	readonly nameKeyTitle?: string;
+	readonly nameFormat?: (tag: T, name: string) => string;
+	readonly inputFormat?: (input: string) => string;
 };
 
 const defaultUseTagsFind = () => ({results: []});

@@ -25,9 +25,9 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 type StaticAttachmentsGalleryProps = {
-	loading: boolean;
-	attachmentsInfo: Map<string, AttachmentInfo>;
-	attachments: Array<{_id: string}>;
+	readonly loading: boolean;
+	readonly attachmentsInfo: Map<string, AttachmentInfo>;
+	readonly attachments: Array<{_id: string}>;
 };
 
 const StaticAttachmentsGallery = ({
@@ -92,7 +92,7 @@ const StaticAttachmentsGallery = ({
 };
 
 type ReactiveAttachmentsGalleryProps = {
-	attachmentsInfo: AttachmentInfo[];
+	readonly attachmentsInfo: AttachmentInfo[];
 };
 
 const ReactiveAttachmentsGallery = ({

@@ -13,9 +13,9 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	document: any;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly document: any;
 };
 
 const DocumentSuperDeletionDialog = ({open, onClose, document}: Props) => {

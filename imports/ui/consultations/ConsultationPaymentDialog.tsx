@@ -84,9 +84,9 @@ const CodePadding = styled('div')({
 });
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	consultation: ConsultationDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly consultation: ConsultationDocument;
 };
 
 const ConsultationPaymentDialog = ({open, onClose, consultation}: Props) => {

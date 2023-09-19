@@ -48,10 +48,10 @@ const Suggestion = ({item: patient}) => {
 };
 
 type Props = {
-	selection: PatientDocument[];
-	setSelection: (selection: PatientDocument[]) => void;
-	label?: string;
-	placeholder?: string;
+	readonly selection: PatientDocument[];
+	readonly setSelection: (selection: PatientDocument[]) => void;
+	readonly label?: string;
+	readonly placeholder?: string;
 };
 
 const MergePatientsFormStepSelect = ({

@@ -15,19 +15,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
 export type ConfirmationDialogProps = {
-	open?: boolean;
-	loading?: boolean;
-	pending?: boolean;
-	onCancel: EventHandler;
-	onConfirm: EventHandler;
-	title: string;
-	text: string | JSX.Element;
-	cancel: string;
-	confirm: string;
-	CancelIcon?: ElementType;
-	ConfirmIcon?: ElementType;
-	cancelColor?: ButtonProps['color'];
-	confirmColor?: ButtonProps['color'];
+	readonly open?: boolean;
+	readonly loading?: boolean;
+	readonly pending?: boolean;
+	readonly onCancel: EventHandler;
+	readonly onConfirm: EventHandler;
+	readonly title: string;
+	readonly text: string | JSX.Element;
+	readonly cancel: string;
+	readonly confirm: string;
+	readonly CancelIcon?: ElementType;
+	readonly ConfirmIcon?: ElementType;
+	readonly cancelColor?: ButtonProps['color'];
+	readonly confirmColor?: ButtonProps['color'];
 };
 
 const ConfirmationDialog = ({

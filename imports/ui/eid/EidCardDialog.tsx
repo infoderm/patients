@@ -12,10 +12,10 @@ import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
 type Props = {
-	navigate: ReturnType<typeof useNavigate>;
-	eidInfo: PatientIdFields;
-	open: boolean;
-	onClose: () => void;
+	readonly navigate: ReturnType<typeof useNavigate>;
+	readonly eidInfo: PatientIdFields;
+	readonly open: boolean;
+	readonly onClose: () => void;
 };
 
 const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {

@@ -32,8 +32,8 @@ const useStyles = makeStyles()({
 
 type Options = {
 	[key: string]: any;
-	callback: (data: any) => Promise<void>;
-	className?: string;
+	readonly callback: (data: any) => Promise<void>;
+	readonly className?: string;
 };
 
 const WholeWindowDropZone = ({callback, className, ...rest}: Options) => {

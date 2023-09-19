@@ -4,8 +4,8 @@ import type Collection from './Collection';
 import type Document from './Document';
 import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
 import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
-import type UserQuery from './query/UserQuery';
 import {userQuery} from './query/UserQuery';
+import type UserQuery from './query/UserQuery';
 
 const observeOptions = schema
 	.object({

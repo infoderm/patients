@@ -10,7 +10,7 @@ import PermissionTokenAccordionDetails from './PermissionTokenAccordionDetails';
 import PermissionTokenAccordionSummary from './PermissionTokenAccordionSummary';
 
 type Props = {
-	item: PermissionTokenDocument;
+	readonly item: PermissionTokenDocument;
 };
 
 const PermissionTokenAccordion = ({item}: Props) => (

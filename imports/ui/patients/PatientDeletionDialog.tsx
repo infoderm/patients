@@ -35,9 +35,9 @@ const SecondaryAvatar = styled(Avatar)({
 });
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	patient: PatientDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly patient: PatientDocument;
 };
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {

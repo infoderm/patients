@@ -7,7 +7,7 @@ import InputBase from '@mui/material/InputBase';
 import type PropsOf from '../../lib/types/PropsOf';
 
 type Props = {
-	expands?: boolean;
+	readonly expands?: boolean;
 } & PropsOf<typeof InputBase>;
 
 const StyledInputBase = styled(InputBase, {

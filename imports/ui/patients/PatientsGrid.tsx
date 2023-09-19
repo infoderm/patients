@@ -6,11 +6,11 @@ import StaticPatientCard from './StaticPatientCard';
 import type CardPatientProjection from './CardPatientProjection';
 
 type PatientsGridProps<C, T = CardPatientProjection<C> & {_id: string}> = {
-	patients: T[];
-	Card?: React.ElementType;
-	CardProps?: {};
-	getCardProps?: (patient: T) => {};
-	selected?: Set<string>;
+	readonly patients: T[];
+	readonly Card?: React.ElementType;
+	readonly CardProps?: {};
+	readonly getCardProps?: (patient: T) => {};
+	readonly selected?: Set<string>;
 };
 
 const PatientsGrid = ({

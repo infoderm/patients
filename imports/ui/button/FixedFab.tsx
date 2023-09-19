@@ -31,10 +31,10 @@ export const computeFixedFabStyle = ({
 });
 
 type FixedFabExtraProps = {
-	col?: number;
-	row?: number;
-	visible?: boolean;
-	pending?: boolean;
+	readonly col?: number;
+	readonly row?: number;
+	readonly visible?: boolean;
+	readonly pending?: boolean;
 };
 
 const Progress = styled(CircularProgress)({

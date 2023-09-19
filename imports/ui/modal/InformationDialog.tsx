@@ -10,12 +10,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 type Props = {
-	open?: boolean;
-	onClose: () => void;
-	title: string;
-	text: string | JSX.Element;
-	close: string;
-	CloseIcon: React.ElementType;
+	readonly open?: boolean;
+	readonly onClose: () => void;
+	readonly title: string;
+	readonly text: string | JSX.Element;
+	readonly close: string;
+	readonly CloseIcon: React.ElementType;
 };
 
 const InformationDialog = ({

@@ -16,9 +16,9 @@ type EndpointCallConfirmationDialogProps<
 	R extends Serializable,
 	Auth extends Authentication,
 > = {
-	endpoint: Endpoint<A, R, Auth>;
-	args: A;
-	onClose: () => void;
+	readonly endpoint: Endpoint<A, R, Auth>;
+	readonly args: A;
+	readonly onClose: () => void;
 } & Omit<ConfirmationDialogProps, 'pending' | 'onCancel' | 'onConfirm'>;
 
 const EndpointCallConfirmationDialog = <

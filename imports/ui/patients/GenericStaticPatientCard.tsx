@@ -136,11 +136,11 @@ const projection = {
 type Projection = typeof projection;
 
 type GenericStaticPatientCardProps = {
-	patient: Pick<PatientDocument, keyof Projection> & {score?: number};
-	loading?: boolean;
-	found?: boolean;
-	highlightNn?: boolean | string;
-	showScore?: boolean;
+	readonly patient: Pick<PatientDocument, keyof Projection> & {score?: number};
+	readonly loading?: boolean;
+	readonly found?: boolean;
+	readonly highlightNn?: boolean | string;
+	readonly showScore?: boolean;
 } & PropsOf<typeof StyledCard>;
 
 const GenericStaticPatientCard = ({

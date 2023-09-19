@@ -19,9 +19,9 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	attachment: {_id: string; name: string};
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly attachment: {_id: string; name: string};
 };
 
 const AttachmentEditionDialog = ({open, onClose, attachment}: Props) => {

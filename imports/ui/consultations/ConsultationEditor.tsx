@@ -314,7 +314,7 @@ const useInBookNumberEffect = (
 };
 
 type ConsultationEditorProps = {
-	consultation: ConsultationEditorFields;
+	readonly consultation: ConsultationEditorFields;
 };
 
 const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {

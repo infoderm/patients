@@ -5,7 +5,7 @@ import tuple from '../../lib/types/tuple';
 import SelectOneSetting from './SelectOneSetting';
 
 type Props = {
-	className?: string;
+	readonly className?: string;
 };
 
 const NavigationDrawerIsOpenSetting = ({className}: Props) => {

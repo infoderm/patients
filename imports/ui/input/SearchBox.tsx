@@ -8,8 +8,8 @@ import SearchBoxInternalsAdornment from './SearchBoxInternalsAdornment';
 import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 
 type Props = {
-	className?: string;
-	icon: React.ReactNode;
+	readonly className?: string;
+	readonly icon: React.ReactNode;
 } & PropsOf<typeof SearchBoxInternalsInput>;
 
 const SearchBox = ({className, icon, ...rest}: Props) => (

@@ -16,13 +16,13 @@ import useCall from '../action/useCall';
 import {type PatientFields} from '../../api/collection/patients';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	toCreate: PatientFields;
-	consultationsToAttach: string[];
-	attachmentsToAttach: string[];
-	documentsToAttach: string[];
-	toDelete: string[];
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly toCreate: PatientFields;
+	readonly consultationsToAttach: string[];
+	readonly attachmentsToAttach: string[];
+	readonly documentsToAttach: string[];
+	readonly toDelete: string[];
 };
 
 const MergePatientsConfirmationDialog = ({

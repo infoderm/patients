@@ -7,8 +7,8 @@ import type PropsOf from '../../lib/types/PropsOf';
 import DocumentsForPatient from './DocumentsForPatient';
 
 type Props = {
-	page?: number;
-	perpage?: number;
+	readonly page?: number;
+	readonly perpage?: number;
 } & Omit<
 	PropsOf<typeof DocumentsForPatient>,
 	'page' | 'perpage' | 'documents' | 'loading' | 'found'

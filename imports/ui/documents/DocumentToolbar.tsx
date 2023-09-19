@@ -35,7 +35,7 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
 }));
 
 type DocumentToolbarProps = {
-	printSource: HTMLElement | null;
+	readonly printSource: HTMLElement | null;
 };
 
 const DocumentToolbar = ({printSource}: DocumentToolbarProps) => {
