@@ -5,7 +5,7 @@ import {Readable} from 'stream';
 
 import {Meteor} from 'meteor/meteor';
 import {type FileObj, FilesCollection} from 'meteor/ostrio:files';
-import MemoryLRU from 'lru-cache';
+import {LRUCache as MemoryLRU} from 'lru-cache';
 
 import {all} from '@iterable-iterator/reduce';
 import {map} from '@iterable-iterator/map';
