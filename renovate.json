@@ -19,9 +19,15 @@
         "healthone",
         "idb",
         "medidoc",
+        "mem",
         "mup",
+        "pdfjs-dist",
+        "puppeteer",
+        "react-router-dom",
+        "react-spring",
         "total-order",
-        "typescript"
+        "typescript",
+        "xo"
       ],
       "matchPackagePrefixes": [
         "@combinatorics/",
