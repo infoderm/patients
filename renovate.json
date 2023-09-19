@@ -16,26 +16,10 @@
         "@types/mocha",
         "@types/node",
         "faker",
-        "healthone",
-        "idb",
-        "medidoc",
-        "mem",
         "mup",
-        "pdfjs-dist",
-        "puppeteer",
-        "react-router-dom",
-        "react-spring",
-        "total-order",
-        "typescript",
-        "xo"
+        "typescript"
       ],
       "matchPackagePrefixes": [
-        "@combinatorics/",
-        "@total-order/",
-        "@set-theory/",
-        "@iterable-iterator/",
-        "@heap-data-structure/",
-        "@functional-abstraction/"
       ],
       "enabled": false
     }
