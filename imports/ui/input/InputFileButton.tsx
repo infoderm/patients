@@ -18,8 +18,8 @@ type ComponentWithoutCollidingProps<C> = PropsOf<C> extends
 	: C;
 
 type OwnProps<C> = {
-	onChange: (event: any) => void;
-	Button?: ComponentWithoutCollidingProps<C>;
+	readonly onChange: (event: any) => void;
+	readonly Button?: ComponentWithoutCollidingProps<C>;
 };
 
 type Props<C> = PropsOf<C> & OwnProps<C>;

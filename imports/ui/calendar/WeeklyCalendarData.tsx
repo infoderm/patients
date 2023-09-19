@@ -6,10 +6,10 @@ import {weekly} from './ranges';
 import CalendarData from './CalendarData';
 
 type Props = {
-	year: number;
-	week: number;
-	weekOptions: {};
-	maxLines?: number;
+	readonly year: number;
+	readonly week: number;
+	readonly weekOptions: {};
+	readonly maxLines?: number;
 } & Omit<PropsOf<typeof CalendarData>, 'maxLines' | 'begin' | 'end'>;
 
 const WeeklyCalendarData = ({

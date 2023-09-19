@@ -7,9 +7,9 @@ import type PropsOf from '../../lib/types/PropsOf';
 import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';
 
 type ExtraProps<B> = {
-	Button: B;
-	patientId: string;
-	children: React.ReactNode;
+	readonly Button: B;
+	readonly patientId: string;
+	readonly children: React.ReactNode;
 };
 
 const ManageConsultationsForPatientButton = React.forwardRef(

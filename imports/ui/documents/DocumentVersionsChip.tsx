@@ -21,7 +21,7 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 type DocumentVersionsChipProps = {
-	document: DocumentDocument;
+	readonly document: DocumentDocument;
 } & Omit<ChipProps<typeof Link>, 'component' | 'to'>;
 
 const DocumentVersionsChip = ({

@@ -23,9 +23,9 @@ const Root = styled('div')({
 });
 
 type AnimatedCardMediaProps = {
-	loading: boolean;
-	image: string;
-	placeholder?: React.ReactNode;
+	readonly loading: boolean;
+	readonly image: string;
+	readonly placeholder?: React.ReactNode;
 } & Omit<CardMediaProps<typeof animated.div>, 'placeholder'>;
 
 const AnimatedCardMedia = ({

@@ -7,7 +7,7 @@ import {type PermissionTokenDocument} from '../../api/collection/permissionToken
 import {useDateFormatRelative} from '../../i18n/datetime';
 
 type Props = {
-	item: PermissionTokenDocument;
+	readonly item: PermissionTokenDocument;
 };
 
 const PermissionTokenAccordionSummary = ({item}: Props) => {

@@ -9,8 +9,8 @@ import {type AttachmentDocument} from '../../api/collection/attachments';
 import AttachmentCard, {type AttachmentInfo} from './AttachmentCard';
 
 type AttachmentsGridProps = {
-	attachments: AttachmentDocument[];
-	attachmentsInfo?: Map<string, AttachmentInfo>;
+	readonly attachments: AttachmentDocument[];
+	readonly attachmentsInfo?: Map<string, AttachmentInfo>;
 } & PropsOf<typeof Grid>;
 
 const AttachmentsGrid = ({

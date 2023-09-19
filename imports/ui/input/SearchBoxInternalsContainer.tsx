@@ -10,8 +10,8 @@ const Root = styled('div')(({theme}) => ({
 }));
 
 type Props = {
-	className?: string;
-	children: any;
+	readonly className?: string;
+	readonly children: any;
 };
 
 export default function SearchBoxInternalsContainer({

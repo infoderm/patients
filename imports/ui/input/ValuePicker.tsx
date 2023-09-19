@@ -8,18 +8,18 @@ import MenuItem from '@mui/material/MenuItem';
 import useUniqueId from '../hooks/useUniqueId';
 
 type Props<T> = {
-	options: T[];
-	optionToString?: (option: T) => string;
-	pairToKey?: (option: T, index: number) => React.Key;
+	readonly options: T[];
+	readonly optionToString?: (option: T) => string;
+	readonly pairToKey?: (option: T, index: number) => React.Key;
 
 	// Select
-	readOnly?: boolean;
-	label?: ReactNode;
-	value?: T;
-	onChange?: (e: SelectChangeEvent<T>) => void;
+	readonly readOnly?: boolean;
+	readonly label?: ReactNode;
+	readonly value?: T;
+	readonly onChange?: (e: SelectChangeEvent<T>) => void;
 
 	// input
-	name?: string;
+	readonly name?: string;
 };
 
 const ValuePicker = <T extends {}>({

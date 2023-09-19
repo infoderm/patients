@@ -44,7 +44,7 @@ import NoContent from '../navigation/NoContent';
 import usePatient from './usePatient';
 
 type PatientHistoryProps = {
-	patientId: string;
+	readonly patientId: string;
 };
 
 const Dot = ({_id, isDone, isCancelled, isNoShow, isRemote}) => {

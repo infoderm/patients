@@ -8,7 +8,7 @@ import {type SettingKey} from '../../api/settings';
 import {useSetting} from './hooks';
 
 type Props = {
-	setting: SettingKey;
+	readonly setting: SettingKey;
 };
 
 const SettingResetButton = ({setting}: Props) => {

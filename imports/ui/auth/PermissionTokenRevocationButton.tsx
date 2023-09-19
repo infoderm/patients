@@ -9,7 +9,7 @@ import {type PermissionTokenDocument} from '../../api/collection/permissionToken
 import useIsMounted from '../hooks/useIsMounted';
 
 type Props = {
-	item: PermissionTokenDocument;
+	readonly item: PermissionTokenDocument;
 };
 
 const PermissionTokenRevocationButton = ({item}: Props) => {

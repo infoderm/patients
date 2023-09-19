@@ -5,8 +5,8 @@ import {Route, Routes} from 'react-router-dom';
 import type PropsOf from '../../lib/types/PropsOf';
 
 type Props = {
-	paths: string[];
-	element: JSX.Element;
+	readonly paths: string[];
+	readonly element: JSX.Element;
 };
 
 const Branches = ({paths, element}: Props) => (

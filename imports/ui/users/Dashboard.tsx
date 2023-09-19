@@ -42,7 +42,7 @@ const Logout = () => {
 };
 
 type OfflineOnlineToggleProps = {
-	onSuccess: () => void;
+	readonly onSuccess: () => void;
 };
 
 const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
@@ -85,10 +85,10 @@ const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 };
 
 type OptionsPopoverProps = {
-	id: string;
-	anchorEl?: HTMLElement | null;
-	handleClose: () => void;
-	changeMode: (mode: string) => void;
+	readonly id: string;
+	readonly anchorEl?: HTMLElement | null;
+	readonly handleClose: () => void;
+	readonly changeMode: (mode: string) => void;
 };
 
 const OptionsPopover = ({

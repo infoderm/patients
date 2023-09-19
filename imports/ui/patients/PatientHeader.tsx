@@ -16,7 +16,7 @@ import CopiableTextField from '../input/CopiableTextField';
 import useCachedPatient from './useCachedPatient';
 
 type Props = {
-	patientId: string;
+	readonly patientId: string;
 };
 
 const PatientHeader = ({patientId}: Props) => {

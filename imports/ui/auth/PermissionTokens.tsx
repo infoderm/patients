@@ -26,7 +26,7 @@ const Root = styled('div')(({theme}) => ({
 }));
 
 type Props = {
-	className?: string;
+	readonly className?: string;
 };
 
 const PermissionTokens = ({className}: Props) => {

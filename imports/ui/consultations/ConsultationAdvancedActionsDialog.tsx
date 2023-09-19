@@ -33,8 +33,8 @@ const SecondaryAvatar = styled(Avatar)({
 });
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
+	readonly open: boolean;
+	readonly onClose: () => void;
 } & Omit<
 	PropsOf<typeof StaticConsultationCardChips>,
 	'showDate' | 'showTime' | 'showPrice' | 'PatientChip'

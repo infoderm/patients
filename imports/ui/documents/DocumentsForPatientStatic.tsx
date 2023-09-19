@@ -8,9 +8,9 @@ import NoContent from '../navigation/NoContent';
 import DocumentCard from './DocumentCard';
 
 type Props = {
-	loading: boolean;
-	documents: DocumentDocument[];
-	page: number;
+	readonly loading: boolean;
+	readonly documents: DocumentDocument[];
+	readonly page: number;
 } & ComponentPropsWithoutRef<'div'>;
 
 const DocumentsForPatientStatic = ({

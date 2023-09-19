@@ -22,18 +22,18 @@ const MenuItemText = styled('span')({
 });
 
 type SearchBoxInternalsSuggestionsProps<Item> = {
-	isOpen: boolean;
-	loading: boolean;
-	suggestions: Item[];
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => string;
-	getMenuProps: (
+	readonly isOpen: boolean;
+	readonly loading: boolean;
+	readonly suggestions: Item[];
+	readonly itemToKey: (item: Item) => React.Key;
+	readonly itemToString: (item: Item) => string;
+	readonly getMenuProps: (
 		options?: UseComboboxGetMenuPropsOptions,
 		otherOptions?: GetPropsCommonOptions,
 	) => any;
-	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
-	highlightedIndex?: number;
-	selectedItem: Item | null;
+	readonly getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
+	readonly highlightedIndex?: number;
+	readonly selectedItem: Item | null;
 };
 
 const SearchBoxInternalsSuggestions = <Item,>({

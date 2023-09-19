@@ -244,17 +244,17 @@ type CalendarDataGridClasses = {
 };
 
 type CalendarDataGridProps = {
-	DayHeader: React.ElementType;
-	WeekNumber?: React.ElementType;
-	classes: CalendarDataGridClasses;
-	cx: any;
-	rowSize: number;
-	days: DayProps[];
-	events: EventProps[];
-	mores: MoreProps[];
-	weekOptions?: {};
-	onSlotClick?: () => void;
-	onEventClick?: () => void;
+	readonly DayHeader: React.ElementType;
+	readonly WeekNumber?: React.ElementType;
+	readonly classes: CalendarDataGridClasses;
+	readonly cx: any;
+	readonly rowSize: number;
+	readonly days: DayProps[];
+	readonly events: EventProps[];
+	readonly mores: MoreProps[];
+	readonly weekOptions?: {};
+	readonly onSlotClick?: () => void;
+	readonly onEventClick?: () => void;
 };
 
 const CalendarDataGrid = ({
@@ -342,20 +342,20 @@ const CalendarDataGrid = ({
 };
 
 type CalendarDataProps = {
-	begin: Date;
-	end: Date;
-	events: Event[];
-	skipIdle?: boolean;
-	maxLines: number;
-	minEventDuration?: number;
-	dayBegins?: string;
-	weekOptions?: {};
-	DayHeader: React.ElementType;
-	WeekNumber?: React.ElementType;
-	lineHeight?: string;
-	displayedWeekDays?: readonly WeekDay[];
-	onSlotClick?: () => void;
-	onEventClick?: () => void;
+	readonly begin: Date;
+	readonly end: Date;
+	readonly events: Event[];
+	readonly skipIdle?: boolean;
+	readonly maxLines: number;
+	readonly minEventDuration?: number;
+	readonly dayBegins?: string;
+	readonly weekOptions?: {};
+	readonly DayHeader: React.ElementType;
+	readonly WeekNumber?: React.ElementType;
+	readonly lineHeight?: string;
+	readonly displayedWeekDays?: readonly WeekDay[];
+	readonly onSlotClick?: () => void;
+	readonly onEventClick?: () => void;
 };
 
 type MakeGridStylesOptions = {

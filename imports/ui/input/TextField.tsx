@@ -18,7 +18,7 @@ const useStyles = makeStyles()({
 });
 
 type AddedProps = {
-	readOnly?: boolean;
+	readonly readOnly?: boolean;
 };
 
 type Props = MuiTextFieldProps & AddedProps;

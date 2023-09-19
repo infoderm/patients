@@ -15,14 +15,14 @@ import Refresh from '../navigation/Refresh';
 import TagGrid from './TagGrid';
 
 export type TagListPageProps<T extends TagNameFields & TagMetadata> = {
-	Card: React.ElementType;
-	page?: number;
-	perpage?: number;
+	readonly Card: React.ElementType;
+	readonly page?: number;
+	readonly perpage?: number;
 
-	filter?: UserFilter<T>;
-	sort?: Sort<T>;
+	readonly filter?: UserFilter<T>;
+	readonly sort?: Sort<T>;
 
-	useTags: GenericQueryHook<T>;
+	readonly useTags: GenericQueryHook<T>;
 };
 
 const TagListPage = <T extends TagNameFields & TagMetadata>({

@@ -5,9 +5,9 @@ import NoContent from '../navigation/NoContent';
 import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
 
 type Props = {
-	patientId: string;
-	appointments: Array<{_id: string}>;
-	page: number;
+	readonly patientId: string;
+	readonly appointments: Array<{_id: string}>;
+	readonly page: number;
 };
 
 const AppointmentsForPatientStatic = ({

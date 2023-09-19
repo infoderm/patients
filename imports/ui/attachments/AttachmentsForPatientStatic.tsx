@@ -12,7 +12,7 @@ import AttachFileButton from './AttachFileButton';
 import AttachmentsForPatientPager from './AttachmentsForPatientPager';
 
 type Props = {
-	patientId: string;
+	readonly patientId: string;
 	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 } & PropsOf<typeof AttachmentsForPatientPager>;
 

@@ -9,7 +9,7 @@ type Params = {
 };
 
 type Props = {
-	List: React.ElementType<Params>;
+	readonly List: React.ElementType<Params>;
 };
 
 const TagListRoute = ({List}: Props) => {

@@ -20,8 +20,8 @@ const classes = {
 };
 
 type Props = {
-	onDelete: () => void;
-	numSelected: number;
+	readonly onDelete: () => void;
+	readonly numSelected: number;
 };
 
 const EnhancedTableToolbar = ({onDelete, numSelected}: Props) => {

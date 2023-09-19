@@ -1,8 +1,8 @@
 import React, {type ErrorInfo} from 'react';
 
 type GenericErrorBoundaryProps = {
-	component: React.ElementType;
-	children: React.ReactNode;
+	readonly component: React.ElementType;
+	readonly children: React.ReactNode;
 };
 
 export default class GenericErrorBoundary extends React.Component<GenericErrorBoundaryProps> {

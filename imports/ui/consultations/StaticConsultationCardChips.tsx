@@ -93,19 +93,19 @@ function paymentMethodIcon(payment_method) {
 }
 
 type StaticConsultationCardChipsProps = {
-	isNoShow: boolean;
-	patient?: {_id: string} | PatientDocument;
-	consultation: ConsultationDocument;
-	PatientChip?: React.ElementType;
-	showDate?: boolean;
-	showTime?: boolean;
-	showPrice?: boolean;
-	loadingPatient?: boolean;
-	missingPaymentData: boolean;
-	didNotOrWillNotHappen: boolean;
-	owes: boolean;
-	owed: number;
-	attachments: any[];
+	readonly isNoShow: boolean;
+	readonly patient?: {_id: string} | PatientDocument;
+	readonly consultation: ConsultationDocument;
+	readonly PatientChip?: React.ElementType;
+	readonly showDate?: boolean;
+	readonly showTime?: boolean;
+	readonly showPrice?: boolean;
+	readonly loadingPatient?: boolean;
+	readonly missingPaymentData: boolean;
+	readonly didNotOrWillNotHappen: boolean;
+	readonly owes: boolean;
+	readonly owed: number;
+	readonly attachments: any[];
 };
 
 const StaticConsultationCardChips = ({

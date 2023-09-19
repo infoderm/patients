@@ -15,7 +15,7 @@ import ConsultationsPager from '../consultations/ConsultationsPager';
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 
 type Props = {
-	patientId: string;
+	readonly patientId: string;
 };
 
 const AppointmentsForPatient = ({patientId}: Props) => {

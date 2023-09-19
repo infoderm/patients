@@ -41,10 +41,10 @@ const Accordion = styled(MuiAccordion, {shouldForwardProp})<AdditionalProps>(
 );
 
 type StaticConsultationCardProps = {
-	consultation: any;
-	loading?: boolean;
-	found?: boolean;
-	defaultExpanded?: boolean;
+	readonly consultation: any;
+	readonly loading?: boolean;
+	readonly found?: boolean;
+	readonly defaultExpanded?: boolean;
 } & Omit<
 	PropsOf<typeof StaticConsultationCardSummary> &
 		PropsOf<typeof StaticConsultationCardActions> &

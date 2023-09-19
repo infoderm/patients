@@ -32,9 +32,9 @@ import useCall from '../action/useCall';
 import StaticConsultationCardChips from './StaticConsultationCardChips';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	consultation: any;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly consultation: any;
 };
 
 const ConsultationTransferDialog = ({open, onClose, consultation}: Props) => {

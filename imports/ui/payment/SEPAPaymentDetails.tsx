@@ -57,9 +57,9 @@ type Data = {
 };
 
 type SEPAPaymentDetailsStaticProps = {
-	accountHolder: string;
-	iban: string;
-	currency: string;
+	readonly accountHolder: string;
+	readonly iban: string;
+	readonly currency: string;
 };
 
 const SEPAPaymentDetailsStatic = ({

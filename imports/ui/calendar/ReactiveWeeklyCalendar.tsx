@@ -159,10 +159,10 @@ const toProps = (
 };
 
 type Props = {
-	year: number;
-	week: number;
-	showCancelledEvents?: boolean;
-	showNoShowEvents?: boolean;
+	readonly year: number;
+	readonly week: number;
+	readonly showCancelledEvents?: boolean;
+	readonly showNoShowEvents?: boolean;
 } & Omit<
 	PropsOf<typeof StaticWeeklyCalendar>,
 	'next' | 'prev' | 'monthly' | 'weekOptions' | 'DayHeader' | 'events'

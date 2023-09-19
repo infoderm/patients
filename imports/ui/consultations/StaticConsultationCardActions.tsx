@@ -35,11 +35,11 @@ import ConsultationDebtSettlementDialog from './ConsultationDebtSettlementDialog
 import ConsultationAdvancedActionsDialog from './ConsultationAdvancedActionsDialog';
 
 type Props = {
-	found?: boolean;
-	attachAction?: boolean;
-	editAction?: boolean;
-	moreAction?: boolean;
-	owes: boolean;
+	readonly found?: boolean;
+	readonly attachAction?: boolean;
+	readonly editAction?: boolean;
+	readonly moreAction?: boolean;
+	readonly owes: boolean;
 } & Omit<PropsOf<typeof ConsultationAdvancedActionsDialog>, 'open' | 'onClose'>;
 
 const StaticConsultationCardActions = ({

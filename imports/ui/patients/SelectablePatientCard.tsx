@@ -11,10 +11,10 @@ import type PropsOf from '../../lib/types/PropsOf';
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 type Props = {
-	patient: {_id: string};
-	onClick: (patient: {_id: string}) => void;
-	selected?: boolean | undefined;
-	Card?: React.ElementType;
+	readonly patient: {_id: string};
+	readonly onClick: (patient: {_id: string}) => void;
+	readonly selected?: boolean | undefined;
+	readonly Card?: React.ElementType;
 };
 
 const ClickableArea = styled(ButtonBase, {

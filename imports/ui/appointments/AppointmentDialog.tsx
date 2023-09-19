@@ -86,14 +86,14 @@ const unserializeTime = (time: string) =>
 const isEqual = (a, b) => a === b;
 
 type AppointmentDialogProps = {
-	open: boolean;
-	pending: boolean;
-	onClose: () => void;
-	onSubmit: (args: AppointmentUpdate) => Promise<{_id: string}>;
-	initialDatetime: Date;
-	noInitialTime?: boolean;
-	initialAppointment?: AppointmentDocument;
-	initialPatient?: {
+	readonly open: boolean;
+	readonly pending: boolean;
+	readonly onClose: () => void;
+	readonly onSubmit: (args: AppointmentUpdate) => Promise<{_id: string}>;
+	readonly initialDatetime: Date;
+	readonly noInitialTime?: boolean;
+	readonly initialAppointment?: AppointmentDocument;
+	readonly initialPatient?: {
 		_id: string;
 		firstname: string;
 		lastname: string;

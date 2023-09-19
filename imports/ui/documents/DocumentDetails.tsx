@@ -11,9 +11,9 @@ import DocumentCard from './DocumentCard';
 import useDocument from './useDocument';
 
 type StaticDocumentDetailsProps = {
-	documentId: DocumentId;
-	loading: boolean;
-	document: any;
+	readonly documentId: DocumentId;
+	readonly loading: boolean;
+	readonly document: any;
 };
 
 const StaticDocumentDetails = ({

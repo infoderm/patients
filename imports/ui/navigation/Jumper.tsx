@@ -24,7 +24,7 @@ type Item<K> = {
 };
 
 type Props<K> = {
-	items: Array<Item<K>>;
+	readonly items: Array<Item<K>>;
 };
 
 const Jumper = <K extends Key>({items}: Props<K>) => {

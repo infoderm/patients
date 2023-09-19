@@ -6,8 +6,8 @@ import {
 	consultationDocument,
 } from '../../../collection/consultations';
 import type Selector from '../../../query/Selector';
-import type UserFilter from '../../../query/UserFilter';
 import {userFilter} from '../../../query/UserFilter';
+import type UserFilter from '../../../query/UserFilter';
 import define from '../../define';
 
 export default define({

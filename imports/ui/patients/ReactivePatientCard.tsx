@@ -5,10 +5,10 @@ import StaticPatientCard from './StaticPatientCard';
 import useCachedPatient from './useCachedPatient';
 
 type Props = {
-	patient: {
+	readonly patient: {
 		_id: string;
 	};
-	Card?: React.ElementType;
+	readonly Card?: React.ElementType;
 };
 
 const ReactivePatientCard = ({

@@ -2,9 +2,9 @@ import React from 'react';
 import {ChromePicker, type Color, type ColorChangeHandler} from 'react-color';
 
 type Props = {
-	value: Color;
-	onChange: ColorChangeHandler;
-	onClick: () => void;
+	readonly value: Color;
+	readonly onChange: ColorChangeHandler;
+	readonly onClick: () => void;
 };
 
 const PickerDialog = ({value, onClick, onChange}: Props) => (

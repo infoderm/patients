@@ -10,11 +10,11 @@ import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
 
 type Props = {
-	patientId: string;
-	loading: boolean;
-	found: boolean;
-	page?: number;
-	perpage?: number;
+	readonly patientId: string;
+	readonly loading: boolean;
+	readonly found: boolean;
+	readonly page?: number;
+	readonly perpage?: number;
 } & Omit<
 	PropsOf<typeof DocumentsForPatientStatic>,
 	'page' | 'perpage' | 'documents'

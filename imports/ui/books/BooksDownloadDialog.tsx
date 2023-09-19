@@ -35,11 +35,11 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import useCall from '../action/useCall';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	initialBegin: Date;
-	initialEnd?: Date;
-	initialAdvancedFunctionality?: boolean;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly initialBegin: Date;
+	readonly initialEnd?: Date;
+	readonly initialAdvancedFunctionality?: boolean;
 };
 
 const BooksDownloadDialog = ({

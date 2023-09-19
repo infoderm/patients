@@ -19,9 +19,9 @@ import BookCard from './BookCard';
 import BooksDownloadDialog from './BooksDownloadDialog';
 
 type Props = {
-	type?: string;
-	filter?: string;
-	defaultPerpage?: number;
+	readonly type?: string;
+	readonly filter?: string;
+	readonly defaultPerpage?: number;
 };
 
 const BooksList = ({

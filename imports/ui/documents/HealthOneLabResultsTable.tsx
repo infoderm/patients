@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 type HealthOneLabResultsTableProps = {
-	document: DocumentDocument;
+	readonly document: DocumentDocument;
 };
 
 const HealthOneLabResultsTable = ({

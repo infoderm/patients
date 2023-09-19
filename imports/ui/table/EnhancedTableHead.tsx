@@ -17,12 +17,12 @@ const columnData = [
 export type Order = 'asc' | 'desc';
 
 type Props = {
-	numSelected: number;
-	onRequestSort: (e: any, property: string) => void;
-	onSelectAllClick: (e: any, checked: boolean) => void;
-	order: Order;
-	orderBy: string;
-	rowCount: number;
+	readonly numSelected: number;
+	readonly onRequestSort: (e: any, property: string) => void;
+	readonly onSelectAllClick: (e: any, checked: boolean) => void;
+	readonly order: Order;
+	readonly orderBy: string;
+	readonly rowCount: number;
 };
 
 const EnhancedTableHead = ({

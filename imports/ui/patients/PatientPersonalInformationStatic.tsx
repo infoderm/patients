@@ -162,8 +162,8 @@ const openUpdateTagCommentDialog = ({
 		: undefined;
 
 type PatientPersonalInformationStaticProps = {
-	patient: PatientDocument;
-	loading?: boolean;
+	readonly patient: PatientDocument;
+	readonly loading?: boolean;
 };
 
 const noSuggestions = () => ({results: []});

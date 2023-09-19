@@ -4,7 +4,7 @@ import type PropsOf from '../../lib/types/PropsOf';
 
 import Tooltip from './Tooltip';
 
-type Props<C> = PropsOf<C> & {tooltip?: string};
+type Props<C> = PropsOf<C> & {readonly tooltip?: string};
 type Transform<C> = (props: PropsOf<C>, tooltip: string) => string;
 
 const addTooltip = (

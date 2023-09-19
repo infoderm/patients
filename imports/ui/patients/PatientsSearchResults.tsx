@@ -21,8 +21,8 @@ type Params = {
 };
 
 type Props = {
-	defaultPage?: number;
-	defaultPerpage?: number;
+	readonly defaultPage?: number;
+	readonly defaultPerpage?: number;
 };
 
 const PatientsSearchResults = ({

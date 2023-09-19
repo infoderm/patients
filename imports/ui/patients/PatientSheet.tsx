@@ -103,10 +103,10 @@ const SmallMultilineReadOnlyTextField = (props) => (
 );
 
 type Props = {
-	patient: PatientFields;
-	consultations: ConsultationDocument[];
-	attachments: AttachmentDocument[];
-	documents: DocumentDocument[];
+	readonly patient: PatientFields;
+	readonly consultations: ConsultationDocument[];
+	readonly attachments: AttachmentDocument[];
+	readonly documents: DocumentDocument[];
 };
 
 const PatientSheet = ({

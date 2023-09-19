@@ -6,10 +6,10 @@ import ErrorBoundary from './ErrorBoundary';
 import Main from './Main';
 
 type Props = {
-	loading: boolean;
-	loggingIn: boolean;
-	loggingOut: boolean;
-	currentUser: any;
+	readonly loading: boolean;
+	readonly loggingIn: boolean;
+	readonly loggingOut: boolean;
+	readonly currentUser: any;
 };
 
 const Child = ({loading, loggingIn, loggingOut, currentUser}: Props) => {

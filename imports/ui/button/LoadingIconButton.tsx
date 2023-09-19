@@ -9,8 +9,8 @@ import MuiBox from '@mui/material/Box';
 import addTooltip from '../accessibility/addTooltip';
 
 type LoadingIconButtonExtraProps = {
-	loading?: boolean;
-	size?: 'medium' | 'large' | 'small';
+	readonly loading?: boolean;
+	readonly size?: 'medium' | 'large' | 'small';
 };
 
 const Box = styled(MuiBox)({

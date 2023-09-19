@@ -20,16 +20,16 @@ import {formattedLineInput} from '../../api/string';
 type EventHandler = MouseEventHandler<HTMLButtonElement>;
 
 export type ConfirmationDialogProps = {
-	open?: boolean;
-	pending?: boolean;
-	onCancel: EventHandler;
-	onConfirm: (value: string) => void;
-	text: string | JSX.Element;
-	CancelIcon?: ElementType;
-	ConfirmIcon?: ElementType;
-	cancelColor?: ButtonProps['color'];
-	confirmColor?: ButtonProps['color'];
-	initialValue: string;
+	readonly open?: boolean;
+	readonly pending?: boolean;
+	readonly onCancel: EventHandler;
+	readonly onConfirm: (value: string) => void;
+	readonly text: string | JSX.Element;
+	readonly CancelIcon?: ElementType;
+	readonly ConfirmIcon?: ElementType;
+	readonly cancelColor?: ButtonProps['color'];
+	readonly confirmColor?: ButtonProps['color'];
+	readonly initialValue: string;
 };
 
 const emptyInput = formattedLineInput('');

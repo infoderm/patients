@@ -54,8 +54,8 @@ const List = styled(MuiList)({
 });
 
 type Props = {
-	VersionsButton?: React.ElementType;
-	defaultExpanded?: boolean;
+	readonly VersionsButton?: React.ElementType;
+	readonly defaultExpanded?: boolean;
 } & PropsOf<typeof DocumentChips>;
 
 const DocumentCard = ({

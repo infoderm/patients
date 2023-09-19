@@ -5,8 +5,8 @@ import Grid from '@mui/material/Grid';
 import type PropsOf from '../../lib/types/PropsOf';
 
 type PatientGridItemProps<T> = {
-	Card: React.ElementType;
-	patient?: T;
+	readonly Card: React.ElementType;
+	readonly patient?: T;
 };
 
 const PatientGridItem = <T,>({

@@ -91,7 +91,7 @@ function paymentMethodString(payment_method) {
 }
 
 type ConsultationsCardListItemBaseProps = {
-	avatar: React.ReactNode;
+	readonly avatar: React.ReactNode;
 } & PropsOf<typeof ListItemText>;
 
 const ConsultationsCardListItemBase = ({
@@ -117,7 +117,7 @@ const ConsultationsCardListItemBase = ({
 );
 
 type ConsultationsCardListItemProps = {
-	Icon: React.ElementType;
+	readonly Icon: React.ElementType;
 } & Omit<PropsOf<typeof ConsultationsCardListItemBase>, 'avatar'>;
 
 const ConsultationsCardListItem = ({
@@ -135,11 +135,11 @@ const ConsultationsCardListItem = ({
 );
 
 type StaticConsultationCardDetailsProps = {
-	deleted: boolean;
-	missingPaymentData: boolean;
-	isNoShow: boolean;
-	consultation: ConsultationDocument;
-	attachments: AttachmentDocument[];
+	readonly deleted: boolean;
+	readonly missingPaymentData: boolean;
+	readonly isNoShow: boolean;
+	readonly consultation: ConsultationDocument;
+	readonly attachments: AttachmentDocument[];
 };
 
 const StaticConsultationCardDetails = (

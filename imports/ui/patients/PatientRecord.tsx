@@ -52,7 +52,7 @@ const PatientRecordTabs = () => {
 };
 
 type Props = {
-	patientId: string;
+	readonly patientId: string;
 };
 
 const PatientRecord = ({patientId}: Props) => {

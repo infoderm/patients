@@ -16,9 +16,9 @@ const CreateItemSuggestionValue = styled('span')({
 });
 
 type NewItemSuggestionProps = {
-	inputValue?: string;
-	highlightedIndex?: number;
-	onClick?: () => void;
+	readonly inputValue?: string;
+	readonly highlightedIndex?: number;
+	readonly onClick?: () => void;
 };
 
 const CreateItemSuggestion = React.forwardRef(

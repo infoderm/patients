@@ -15,12 +15,12 @@ type StaticPatientsListProps<
 	C,
 	T = CardPatientProjection<C> & {_id: string},
 > = {
-	className?: string;
-	page: number;
-	perpage: number;
-	loading?: boolean;
-	patients: T[];
-	Card?: React.ElementType;
+	readonly className?: string;
+	readonly page: number;
+	readonly perpage: number;
+	readonly loading?: boolean;
+	readonly patients: T[];
+	readonly Card?: React.ElementType;
 };
 
 const StaticPatientsList = ({

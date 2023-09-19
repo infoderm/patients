@@ -57,13 +57,13 @@ type Patient = {
 };
 
 type Props = {
-	className?: string;
-	style?: React.CSSProperties;
-	loading?: boolean;
-	found?: boolean;
-	patient: Patient;
-	onClick?: () => void;
-	onDelete?: () => void;
+	readonly className?: string;
+	readonly style?: React.CSSProperties;
+	readonly loading?: boolean;
+	readonly found?: boolean;
+	readonly patient: Patient;
+	readonly onClick?: () => void;
+	readonly onDelete?: () => void;
 };
 
 const displayName = ({firstname, lastname}: Patient) =>

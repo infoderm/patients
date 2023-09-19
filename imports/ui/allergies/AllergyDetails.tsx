@@ -10,9 +10,9 @@ import {useAllergy} from '../../api/allergies';
 import StaticAllergyCard from './StaticAllergyCard';
 
 type Props = {
-	name: string;
-	page?: number;
-	perpage?: number;
+	readonly name: string;
+	readonly page?: number;
+	readonly perpage?: number;
 };
 
 const AllergyDetails = ({name, page = 1, perpage = 10}: Props) => {

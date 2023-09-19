@@ -11,7 +11,7 @@ import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 type DocumentDownloadIconButtonProps = Omit<
 	PropsOf<typeof LoadingIconButton>,
 	'loading' | 'onClick' | 'children'
-> & {document: DocumentDocument};
+> & {readonly document: DocumentDocument};
 
 const DocumentDownloadIconButton = (props: DocumentDownloadIconButtonProps) => (
 	<DocumentDownloadGenericButton

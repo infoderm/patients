@@ -26,11 +26,11 @@ import {documentDiff} from '../../api/update';
 import {type reducer} from './usePatientPersonalInformationReducer';
 
 type PatientPersonalInformationButtonsStaticProps = {
-	dirty: boolean;
-	editing: boolean;
-	dispatch: Dispatch<ReducerAction<typeof reducer>>;
-	patient: PatientDocument;
-	patientInit: PatientDocument;
+	readonly dirty: boolean;
+	readonly editing: boolean;
+	readonly dispatch: Dispatch<ReducerAction<typeof reducer>>;
+	readonly patient: PatientDocument;
+	readonly patientInit: PatientDocument;
 };
 
 const PatientPersonalInformationButtonsStatic = ({

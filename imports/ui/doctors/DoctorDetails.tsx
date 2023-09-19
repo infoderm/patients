@@ -10,9 +10,9 @@ import {useDoctor} from '../../api/doctors';
 import StaticDoctorCard from './StaticDoctorCard';
 
 type Props = {
-	name: string;
-	page?: number;
-	perpage?: number;
+	readonly name: string;
+	readonly page?: number;
+	readonly perpage?: number;
 };
 
 const DoctorDetails = ({name, page = 1, perpage = 10}: Props) => {

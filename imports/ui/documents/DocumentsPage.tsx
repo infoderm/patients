@@ -7,8 +7,8 @@ import {type DocumentDocument} from '../../api/collection/documents';
 import DocumentListItem from './DocumentListItem';
 
 type Props = {
-	loading?: boolean;
-	documents: DocumentDocument[];
+	readonly loading?: boolean;
+	readonly documents: DocumentDocument[];
 };
 
 const DocumentsPage = ({loading = false, documents}: Props) => {

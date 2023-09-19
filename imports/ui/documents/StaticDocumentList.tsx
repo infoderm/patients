@@ -9,10 +9,10 @@ import Paginator from '../navigation/Paginator';
 import DocumentsPage from './DocumentsPage';
 
 type Props = {
-	page: number;
-	perpage: number;
-	loading?: boolean;
-	documents: DocumentDocument[];
+	readonly page: number;
+	readonly perpage: number;
+	readonly loading?: boolean;
+	readonly documents: DocumentDocument[];
 };
 
 const StaticDocumentList = ({

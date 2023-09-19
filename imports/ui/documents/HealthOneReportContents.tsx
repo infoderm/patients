@@ -19,7 +19,7 @@ const StyledPaper = styled(Paper)(({theme}) => ({
 }));
 
 type Props = {
-	document: ParsedDocumentDocument;
+	readonly document: ParsedDocumentDocument;
 };
 
 const HealthOneReportContents = ({document}: Props) => {

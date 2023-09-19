@@ -15,8 +15,8 @@ import usePlannerContextState from './usePlannerContextState';
 import usePlannerNewAppointmentDialogState from './usePlannerNewAppointmentDialogState';
 
 type Props<C extends React.ElementType> = {
-	Calendar: C;
-	CalendarProps: PropsOf<C>;
+	readonly Calendar: C;
+	readonly CalendarProps: PropsOf<C>;
 };
 
 const Planner = <C extends React.ElementType>({

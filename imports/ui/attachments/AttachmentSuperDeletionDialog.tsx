@@ -33,9 +33,9 @@ const Thumbnail = styled(AttachmentThumbnail)({
 });
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	attachment: {_id: string; name: string};
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly attachment: {_id: string; name: string};
 };
 
 const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {

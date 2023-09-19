@@ -9,7 +9,7 @@ import type CardPatientProjection from './CardPatientProjection';
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 type StaticPatientCardProps = {
-	patient: CardPatientProjection<typeof GenericStaticPatientCard> & {
+	readonly patient: CardPatientProjection<typeof GenericStaticPatientCard> & {
 		_id: string;
 	};
 } & Omit<

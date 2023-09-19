@@ -4,6 +4,7 @@ import schema from '../lib/schema';
 
 import type Collection from './Collection';
 import type Selector from './query/Selector';
+import {options} from './query/Options';
 import type Options from './query/Options';
 
 import defineCollection from './collection/define';
@@ -11,9 +12,8 @@ import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
 import {AuthenticationLoggedIn} from './Authentication';
-import type UserFilter from './query/UserFilter';
 import {userFilter} from './query/UserFilter';
-import {options} from './query/Options';
+import type UserFilter from './query/UserFilter';
 
 const makeFilteredCollection = <
 	S extends schema.ZodTypeAny,

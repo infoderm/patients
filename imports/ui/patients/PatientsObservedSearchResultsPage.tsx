@@ -19,11 +19,11 @@ import StaticPatientsList from './StaticPatientsList';
 import ReactivePatientCard from './ReactivePatientCard';
 
 type Props = {
-	query: string;
-	page?: number;
-	perpage?: number;
-	refresh?: () => void;
-	refreshKey?: number | string;
+	readonly query: string;
+	readonly page?: number;
+	readonly perpage?: number;
+	readonly refresh?: () => void;
+	readonly refreshKey?: number | string;
 } & Omit<
 	PropsOf<typeof StaticPatientsList>,
 	'page' | 'perpage' | 'loading' | 'patients' | 'root' | 'Card'

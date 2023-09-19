@@ -7,9 +7,15 @@ import {
 	type PatientDocument,
 	type PatientFields,
 } from '../../api/collection/patients';
-import {Consultations} from '../../api/collection/consultations';
-import {Attachments} from '../../api/collection/attachments';
-import {Documents} from '../../api/collection/documents';
+import {
+	Consultations,
+	type ConsultationDocument,
+} from '../../api/collection/consultations';
+import {
+	Attachments,
+	type AttachmentDocument,
+} from '../../api/collection/attachments';
+import {Documents, type DocumentDocument} from '../../api/collection/documents';
 
 import {patients} from '../../api/patients';
 
@@ -20,10 +26,6 @@ import patientsPub from '../../api/publication/patients/patients';
 import consultationsPub from '../../api/publication/consultationsAndAppointments/find';
 import attachmentsPub from '../../api/publication/attachments/attachments';
 import documentsPub from '../../api/publication/documents/find';
-
-import {type ConsultationDocument} from '../../api/collection/consultations';
-import {type DocumentDocument} from '../../api/collection/documents';
-import {type AttachmentDocument} from '../../api/collection/attachments';
 
 const index = <T>(keys: (item: T) => Iterable<string>, items: Iterable<T>) => {
 	const table = {};

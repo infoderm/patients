@@ -39,7 +39,7 @@ function sortRows<T>(data: T[], order: Order, orderBy: string) {
 }
 
 type Props = {
-	query: string;
+	readonly query: string;
 };
 
 const EnhancedTable = ({query}: Props) => {

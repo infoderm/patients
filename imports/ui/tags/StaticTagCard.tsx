@@ -89,19 +89,19 @@ const Veil = styled('div')({
 });
 
 export type StaticTagCardProps = {
-	loading: boolean;
-	found: boolean;
-	tag: {name: string; displayName?: string};
-	url: (name: string) => string;
-	avatar: {};
+	readonly loading: boolean;
+	readonly found: boolean;
+	readonly tag: {name: string; displayName?: string};
+	readonly url: (name: string) => string;
+	readonly avatar: {};
 
-	subheader: string;
-	content?: JSX.Element | null;
-	actions?: JSX.Element | null;
+	readonly subheader: string;
+	readonly content?: JSX.Element | null;
+	readonly actions?: JSX.Element | null;
 
-	RenamingDialog?: React.ElementType;
-	DeletionDialog?: React.ElementType;
-	abbr?: string;
+	readonly RenamingDialog?: React.ElementType;
+	readonly DeletionDialog?: React.ElementType;
+	readonly abbr?: string;
 };
 
 const StaticTagCard = React.forwardRef<any, StaticTagCardProps>(

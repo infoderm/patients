@@ -1,10 +1,10 @@
 import schema from '../../lib/schema';
 
 import sort, {type Sort} from './sort';
-import type Projection from './Projection';
 import {projection} from './Projection';
-import type UserFilter from './UserFilter';
+import type Projection from './Projection';
 import {userFilter} from './UserFilter';
+import type UserFilter from './UserFilter';
 
 type UserQuery<T> = {
 	filter: UserFilter<T>;

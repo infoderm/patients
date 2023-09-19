@@ -31,9 +31,9 @@ import StaticPatientCard from './StaticPatientCard';
 import type CardPatientProjection from './CardPatientProjection';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	patient: CardPatientProjection<typeof StaticPatientCard>;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly patient: CardPatientProjection<typeof StaticPatientCard>;
 };
 
 const PatientDeletionDialog = ({open, onClose, patient}: Props) => {

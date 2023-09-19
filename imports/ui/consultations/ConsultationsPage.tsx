@@ -8,13 +8,13 @@ import PagedConsultationsList from './PagedConsultationsList';
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 
 type Props = {
-	url?: string;
-	page?: number;
-	perpage?: number;
+	readonly url?: string;
+	readonly page?: number;
+	readonly perpage?: number;
 
-	filter?: UserFilter<ConsultationDocument>;
-	sort: object;
-	defaultExpandedFirst?: boolean;
+	readonly filter?: UserFilter<ConsultationDocument>;
+	readonly sort: object;
+	readonly defaultExpandedFirst?: boolean;
 } & Omit<PropsOf<typeof PagedConsultationsList>, 'page' | 'perpage' | 'items'>;
 
 const ConsultationsPage = ({

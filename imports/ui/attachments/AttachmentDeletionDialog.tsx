@@ -34,11 +34,11 @@ const Thumbnail = styled(AttachmentThumbnail)({
 });
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	itemId: string;
-	attachment: {_id: string; name: string};
-	endpoint: Endpoint<[string, string], any>;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly itemId: string;
+	readonly attachment: {_id: string; name: string};
+	readonly endpoint: Endpoint<[string, string], any>;
 };
 
 const AttachmentDeletionDialog = ({

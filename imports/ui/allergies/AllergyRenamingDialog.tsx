@@ -7,10 +7,10 @@ import type TagDocument from '../../api/tags/TagDocument';
 import {formattedLineInput} from '../../api/string';
 
 type Props = {
-	open: boolean;
-	onClose: () => void;
-	onRename: () => void;
-	tag: TagDocument;
+	readonly open: boolean;
+	readonly onClose: () => void;
+	readonly onRename: () => void;
+	readonly tag: TagDocument;
 };
 
 const AllergyRenamingDialog = ({open, onClose, onRename, tag}: Props) => {

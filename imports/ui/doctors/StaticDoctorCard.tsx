@@ -33,9 +33,9 @@ const GreyPatientChip = styled(StaticPatientChip)(({theme}) => ({
 }));
 
 type LoadedTagCardProps = {
-	loading: boolean;
-	found: boolean;
-	item: TagNameFields;
+	readonly loading: boolean;
+	readonly found: boolean;
+	readonly item: TagNameFields;
 };
 
 const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
@@ -83,9 +83,9 @@ const LoadedTagCard = ({loading, found, item}: LoadedTagCardProps) => {
 };
 
 type StaticDoctorCardProps = {
-	item?: TagNameFields;
-	loading?: boolean;
-	found?: boolean;
+	readonly item?: TagNameFields;
+	readonly loading?: boolean;
+	readonly found?: boolean;
 };
 
 const StaticDoctorCard = ({

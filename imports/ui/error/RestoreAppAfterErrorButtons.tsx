@@ -18,7 +18,7 @@ const StyledButton = styled(Button)({
 });
 
 type RestoreAppAfterErrorButtonsProps = {
-	retry: () => void;
+	readonly retry: () => void;
 };
 
 const RestoreAppAfterErrorButtons = ({

@@ -10,7 +10,7 @@ import DocumentDownloadGenericButton from './DocumentDownloadGenericButton';
 type DocumentDownloadButtonProps = Omit<
 	LoadingButtonProps,
 	'loading' | 'onClick' | 'children'
-> & {document: DocumentDocument};
+> & {readonly document: DocumentDocument};
 
 const DocumentDownloadButton = (props: DocumentDownloadButtonProps) => (
 	<DocumentDownloadGenericButton

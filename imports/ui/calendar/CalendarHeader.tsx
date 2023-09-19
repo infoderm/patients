@@ -9,13 +9,13 @@ import EventIcon from '@mui/icons-material/Event';
 import Header from './Header';
 
 type CalendarHeaderProps = {
-	title?: string;
-	next?: () => void;
-	prev?: () => void;
-	weekly?: () => void;
-	monthly?: () => void;
-	navigationRole?: 'button' | 'link';
-	actions?: React.ReactNode[];
+	readonly title?: string;
+	readonly next?: () => void;
+	readonly prev?: () => void;
+	readonly weekly?: () => void;
+	readonly monthly?: () => void;
+	readonly navigationRole?: 'button' | 'link';
+	readonly actions?: React.ReactNode[];
 };
 
 const CalendarHeader = ({

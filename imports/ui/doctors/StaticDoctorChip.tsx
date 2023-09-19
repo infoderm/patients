@@ -9,7 +9,7 @@ import {myEncodeURIComponent} from '../../lib/uri';
 import {type DoctorFields} from '../../api/collection/doctors';
 
 type AddedProps = {
-	item: DoctorFields;
+	readonly item: DoctorFields;
 };
 
 type StaticDoctorChipProps<C extends React.ElementType> = ChipProps<C> &

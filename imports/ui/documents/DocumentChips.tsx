@@ -78,9 +78,9 @@ const Chip = styled(MuiChip, {
 }));
 
 type Props = {
-	document: DocumentDocument;
-	PatientChip?: React.ElementType;
-	VersionsChip?: React.ElementType;
+	readonly document: DocumentDocument;
+	readonly PatientChip?: React.ElementType;
+	readonly VersionsChip?: React.ElementType;
 };
 
 const DocumentChips = ({

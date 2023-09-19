@@ -7,8 +7,8 @@ import type PropsOf from '../../lib/types/PropsOf';
 import {useReactNumberFormatOptionsForCurrency} from '../../i18n/currency';
 
 type Props = {
-	currency: string;
-	onChange: (e: any) => void;
+	readonly currency: string;
+	readonly onChange: (e: any) => void;
 } & PropsOf<typeof NumericFormat>;
 
 const CurrencyAmountInput = React.forwardRef<any, Props>(

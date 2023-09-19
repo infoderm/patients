@@ -20,8 +20,8 @@ const Title = styled(Typography)({
 });
 
 type CalendarHeaderProps = {
-	title?: string;
-	actions?: React.ReactNode[];
+	readonly title?: string;
+	readonly actions?: React.ReactNode[];
 };
 
 const CalendarHeader = ({title, actions}: CalendarHeaderProps) => {

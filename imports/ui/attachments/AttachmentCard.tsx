@@ -144,8 +144,8 @@ export type AttachmentInfo = {
 };
 
 type Props = {
-	attachment: AttachmentDocument;
-	info?: AttachmentInfo;
+	readonly attachment: AttachmentDocument;
+	readonly info?: AttachmentInfo;
 };
 
 const AttachmentCard = ({attachment, info}: Props) => {

@@ -11,12 +11,12 @@ import {type SettingKey, type UserSettings} from '../../api/settings';
 import {useSetting} from './hooks';
 
 type Props<K extends SettingKey> = {
-	className?: string;
-	title?: string;
-	label?: string;
-	setting: K;
-	options: Array<UserSettings[K]>;
-	optionToString?: (option: UserSettings[K]) => string;
+	readonly className?: string;
+	readonly title?: string;
+	readonly label?: string;
+	readonly setting: K;
+	readonly options: Array<UserSettings[K]>;
+	readonly optionToString?: (option: UserSettings[K]) => string;
 };
 
 const SelectOneSetting = <K extends SettingKey>({

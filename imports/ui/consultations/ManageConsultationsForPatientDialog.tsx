@@ -49,9 +49,9 @@ const formatDatetime = (datetime: Date) => {
 };
 
 type Props = {
-	onClose: () => void;
-	open: boolean;
-	patientId: string;
+	readonly onClose: () => void;
+	readonly open: boolean;
+	readonly patientId: string;
 };
 
 type BeginConsultationItemProps = PropsOf<typeof ListItemButton> & {

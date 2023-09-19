@@ -60,7 +60,7 @@ export const useConfirmationTextFieldState = (
 };
 
 type ConfirmationTextFieldAdditionalProps = {
-	onAutoFill: () => void;
+	readonly onAutoFill: () => void;
 };
 
 const ConfirmationTextField = ({

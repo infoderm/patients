@@ -5,8 +5,8 @@ import {
 	Consultations,
 	consultationDocument,
 } from '../../collection/consultations';
-import type Options from '../../query/Options';
 import {options} from '../../query/Options';
+import type Options from '../../query/Options';
 import define from '../define';
 
 export default define({

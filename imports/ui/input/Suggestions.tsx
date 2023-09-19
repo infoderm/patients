@@ -11,25 +11,25 @@ import Suggestion from './Suggestion';
 import CreateItemSuggestion from './CreateItemSuggestion';
 
 type SuggestionsProps<Item> = {
-	className?: string;
-	hide?: boolean;
-	loading?: boolean;
-	suggestions: Item[];
-	highlightedIndex?: number;
-	createNewItem?: () => void;
-	inputValue: string;
-	error?: boolean;
-	selectedItems: Item[];
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => React.ReactNode;
-	getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
-	Item?: React.ElementType;
+	readonly className?: string;
+	readonly hide?: boolean;
+	readonly loading?: boolean;
+	readonly suggestions: Item[];
+	readonly highlightedIndex?: number;
+	readonly createNewItem?: () => void;
+	readonly inputValue: string;
+	readonly error?: boolean;
+	readonly selectedItems: Item[];
+	readonly itemToKey: (item: Item) => React.Key;
+	readonly itemToString: (item: Item) => React.ReactNode;
+	readonly getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any;
+	readonly Item?: React.ElementType;
 };
 
 const Root = styled(
 	React.forwardRef(
 		(
-			{open, ...rest}: PropsOf<typeof Paper> & {open: boolean},
+			{open, ...rest}: PropsOf<typeof Paper> & {readonly open: boolean},
 			ref: React.Ref<HTMLDivElement>,
 		) => <Paper ref={ref} square {...rest} />,
 	),

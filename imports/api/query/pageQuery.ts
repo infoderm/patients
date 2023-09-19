@@ -4,10 +4,10 @@ import type Collection from '../Collection';
 import type Document from '../Document';
 import {type AuthenticatedContext} from '../publication/Context';
 
+import {userQuery} from './UserQuery';
 import type UserQuery from './UserQuery';
 import type Filter from './Filter';
 import type Selector from './Selector';
-import {userQuery} from './UserQuery';
 import type Options from './Options';
 
 export const publicationSchema = <S extends schema.ZodTypeAny>(

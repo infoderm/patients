@@ -39,7 +39,7 @@ const ListItem = styled(UnstyledListItem, {
 }));
 
 type Props = {
-	loading?: boolean;
+	readonly loading?: boolean;
 } & PropsOf<typeof DocumentChips>;
 
 const DocumentListItem = ({loading = false, document, ...rest}: Props) => {

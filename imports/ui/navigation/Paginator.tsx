@@ -8,12 +8,12 @@ import Prev from './Prev';
 import Next from './Next';
 
 type Props = {
-	root: string;
-	page?: number;
-	firstPage?: number;
-	end?: boolean;
-	disabled?: boolean;
-	loading?: boolean;
+	readonly root: string;
+	readonly page?: number;
+	readonly firstPage?: number;
+	readonly end?: boolean;
+	readonly disabled?: boolean;
+	readonly loading?: boolean;
 };
 
 const PaginatorBase = ({

@@ -102,8 +102,8 @@ export type State = Omit<
 };
 
 type Props = {
-	consultation: State;
-	update?: (
+	readonly consultation: State;
+	readonly update?: (
 		key: string,
 		transform?: (x: any) => any,
 	) => (event: {target: {value: any}}) => void;

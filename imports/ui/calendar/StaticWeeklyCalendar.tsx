@@ -6,13 +6,13 @@ import CalendarHeader from './CalendarHeader';
 import WeeklyCalendarData from './WeeklyCalendarData';
 
 type Props = {
-	className?: string;
-	title?: string;
-	next: () => void;
-	prev: () => void;
-	monthly: () => void;
-	actions?: React.ReactNode[];
-	navigationRole?: 'button' | 'link';
+	readonly className?: string;
+	readonly title?: string;
+	readonly next: () => void;
+	readonly prev: () => void;
+	readonly monthly: () => void;
+	readonly actions?: React.ReactNode[];
+	readonly navigationRole?: 'button' | 'link';
 } & PropsOf<typeof WeeklyCalendarData>;
 
 const StaticWeeklyCalendar = ({

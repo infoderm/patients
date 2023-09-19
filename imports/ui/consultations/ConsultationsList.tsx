@@ -3,11 +3,11 @@ import React from 'react';
 import ReactiveConsultationCard from './ReactiveConsultationCard';
 
 type ConsultationsListProps = {
-	className?: string;
-	loading?: boolean;
-	items: any[];
-	itemProps?: object;
-	defaultExpandedFirst?: boolean;
+	readonly className?: string;
+	readonly loading?: boolean;
+	readonly items: any[];
+	readonly itemProps?: object;
+	readonly defaultExpandedFirst?: boolean;
 };
 
 const ConsultationsList = ({

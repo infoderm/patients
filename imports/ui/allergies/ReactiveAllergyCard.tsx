@@ -6,7 +6,7 @@ import {type TagNameFields} from '../../api/tags/TagDocument';
 import StaticAllergyCard from './StaticAllergyCard';
 
 type Props = {
-	item: TagNameFields;
+	readonly item: TagNameFields;
 };
 
 const ReactiveAllergyCard = ({item}: Props) => {

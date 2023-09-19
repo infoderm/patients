@@ -8,14 +8,14 @@ import SearchBoxInternalsInput from './SearchBoxInternalsInput';
 import SearchBoxInternalsSuggestions from './SearchBoxInternalsSuggestions';
 
 type SearchBoxWithSuggestionsInternalsProps<Item> = {
-	className?: string;
-	expands?: boolean;
-	loading: boolean;
-	placeholder?: string;
-	icon?: ReactNode;
-	suggestions: Item[];
-	itemToKey: (item: Item) => React.Key;
-	itemToString: (item: Item) => string;
+	readonly className?: string;
+	readonly expands?: boolean;
+	readonly loading: boolean;
+	readonly placeholder?: string;
+	readonly icon?: ReactNode;
+	readonly suggestions: Item[];
+	readonly itemToKey: (item: Item) => React.Key;
+	readonly itemToString: (item: Item) => string;
 } & UseComboboxReturnValue<Item>;
 
 const SearchBoxWithSuggestionsInternals = <Item,>({
