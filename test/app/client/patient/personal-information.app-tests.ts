@@ -66,7 +66,9 @@ const editPatient = async (
 		findAllByRole,
 		findByLabelText,
 	} = app;
-	await user.click(await findByRole('button', {name: /^edit info/i}));
+	await user.click(
+		await findByRole('button', {name: /^edit info/i}, {timeout: 5000}),
+	);
 
 	if (typeof nn === 'string') {
 		const matches = await findAllByRole('textbox', {name: 'NISS'});

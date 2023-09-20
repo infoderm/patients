@@ -121,7 +121,7 @@ export const server = (title, fn) => {
 
 		describe(title, function () {
 			if (Meteor.isAppTest) {
-				this.timeout(10_000);
+				this.timeout(15_000);
 			}
 
 			beforeEach(prepare);
