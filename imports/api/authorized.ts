@@ -1,3 +1,5 @@
+import isTest from '../app/isTest';
+
 import {
 	type Authentication,
 	AuthenticationDangerousNone,
@@ -14,10 +16,15 @@ const authorized = (
 			return typeof invocation.userId === 'string' && invocation.userId !== '';
 		}
 
+		// @ts-expect-error We allow a fallthrough here so that this gets pruned in
+		// production build.
 		case AuthenticationDangerousNone: {
-			return true;
+			if (isTest()) {
+				return true;
+			}
 		}
 
+		// eslint-disable-next-line no-fallthrough
 		default: {
 			return false;
 		}
