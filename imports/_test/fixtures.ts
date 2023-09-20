@@ -15,6 +15,7 @@ import type Collection from '../api/Collection';
 import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
+import isAppTest from '../app/isAppTest';
 
 export {
 	default as randomId,
@@ -112,7 +113,7 @@ export const server = (title, fn) => {
 		};
 
 		const prepare = async () => {
-			if (Meteor.isAppTest) {
+			if (isAppTest()) {
 				await appIsReady();
 			}
 
@@ -120,7 +121,7 @@ export const server = (title, fn) => {
 		};
 
 		describe(title, function () {
-			if (Meteor.isAppTest) {
+			if (isAppTest()) {
 				this.timeout(15_000);
 			}
 
