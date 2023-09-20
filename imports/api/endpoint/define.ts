@@ -1,5 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 
+import isTest from '../../app/isTest';
+
 import MeteorTransactionSimulationDriver from '../transaction/MeteorTransactionSimulationDriver';
 import executeTransaction from '../transaction/executeTransaction';
 
@@ -47,7 +49,7 @@ const define = <
 	};
 
 	if (testOnly) {
-		if (!Meteor.isTest && !Meteor.isAppTest) {
+		if (!isTest()) {
 			// NOTE Do not publish endpoint if not testing.
 			return endpoint;
 		}
