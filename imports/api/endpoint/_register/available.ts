@@ -1,7 +1,4 @@
 // eslint-disable-next-line import/no-unassigned-import
-import '../_dev/reset';
-
-// eslint-disable-next-line import/no-unassigned-import
 import '../allergies/changeColor';
 
 // eslint-disable-next-line import/no-unassigned-import
