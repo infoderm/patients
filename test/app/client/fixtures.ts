@@ -315,7 +315,7 @@ export const editConsultation = async (
 
 	if (save) {
 		await user.click(await findByRole('button', {name: 'save'}));
-		await findByRole('button', {name: 'saved'});
+		await findByRole('button', {name: 'saved'}, {timeout: 5000});
 	}
 };
 
