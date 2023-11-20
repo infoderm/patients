@@ -149,6 +149,24 @@ export const makeRegExpIndex = (patterns: Iterable<string>) => {
 	};
 };
 
+export const makeRegExpPrefixIndex = (
+	patterns: Iterable<string>,
+	transform: (x: string) => string,
+) => {
+	// TODO Try this with a trie.
+	const needles = list(map(transform, patterns));
+	if (needles.length === 0) return null;
+	const {minLength} = patternsStatistics(needles);
+	// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+	const s = '^' + list(map(escapeStringRegexp, needles)).join('|^');
+	const re = new RegExp(s);
+	return (query: string) => {
+		if (query.length < minLength) return false;
+		const haystack = transform(query);
+		return re.test(haystack);
+	};
+};
+
 const splitOn = function* (separator: RegExp, string: string) {
 	assert(separator.flags === '');
 	const re = new RegExp(separator.source, 'g');
