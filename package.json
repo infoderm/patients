@@ -96,7 +96,7 @@
     "lodash.omit": "^4.5.0",
     "lru-cache": "^10.0.1",
     "medidoc": "1.1.0",
-    "mem": "^8.1.1",
+    "mem": "^9.0.0",
     "meteor-node-stubs": "^1.2.5",
     "notistack": "^3.0.1",
     "papaparse": "^5.4.1",
