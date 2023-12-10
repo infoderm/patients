@@ -156,7 +156,7 @@
     "npm-check-updates": "16.14.11",
     "postinstall": "0.8.0",
     "puppeteer": "19.11.1",
-    "rrule": "2.7.2",
+    "rrule": "2.8.1",
     "simpl-schema": "3.4.1",
     "supertest": "6.3.3",
     "total-order": "3.0.1",
