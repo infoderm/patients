@@ -7,11 +7,8 @@ import {DateTimePicker} from '@mui/x-date-pickers';
 
 import pngDataURL from '../../lib/png/dataURL';
 
-import {useDateTimeMask} from '../../i18n/datetime';
-
 import {LinkedSubheaderAvatar, Subheader} from '../Subheader';
 
-import TextField from '../input/TextField';
 import CopiableTextField from '../input/CopiableTextField';
 
 import usePatient from '../patients/usePatient';
@@ -32,8 +29,6 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 	const deps = [query];
 
 	const {loading, fields: patient} = usePatient(init, query, deps);
-
-	const localizedDateTimeMask = useDateTimeMask();
 
 	const {datetime, doneDatetime} = state;
 
@@ -80,12 +75,13 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			</Grid>
 			<Grid item xs={2}>
 				<DateTimePicker
-					mask={localizedDateTimeMask}
 					value={datetime}
 					label="Begin"
-					renderInput={(props) => (
-						<TextField {...props} InputLabelProps={{shrink: true}} />
-					)}
+					slotProps={{
+						textField: {
+							InputLabelProps: {shrink: true},
+						},
+					}}
 					onChange={(value) => {
 						update('datetime')({target: {value}});
 					}}
@@ -94,12 +90,13 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			<Grid item xs={2}>
 				<DateTimePicker
 					disabled
-					mask={localizedDateTimeMask}
 					value={doneDatetime}
 					label="End"
-					renderInput={(props) => (
-						<TextField {...props} InputLabelProps={{shrink: true}} />
-					)}
+					slotProps={{
+						textField: {
+							InputLabelProps: {shrink: true},
+						},
+					}}
 					onChange={(value) => {
 						update('doneDatetime')({target: {value}});
 					}}

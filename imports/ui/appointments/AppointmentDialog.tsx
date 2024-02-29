@@ -31,8 +31,6 @@ import TextField from '../input/TextField';
 
 import CancelButton from '../button/CancelButton';
 
-import {useDateMask} from '../../i18n/datetime';
-
 import {msToString} from '../../api/duration';
 
 import {type AppointmentDocument} from '../../api/collection/appointments';
@@ -153,8 +151,6 @@ const AppointmentDialog = ({
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
-	const localizedDateMask = useDateMask();
-
 	const datetime = unserializeDatetime(date, time);
 	const appointmentIsInThePast = isBefore(
 		unserializeDate(date),
@@ -257,21 +253,17 @@ const AppointmentDialog = ({
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
 						<DatePicker
-							mask={localizedDateMask}
 							value={unserializeDate(date)}
 							label="Date"
-							renderInput={(props) => (
-								<TextField
-									{...props}
-									InputLabelProps={{shrink: true}}
-									error={!validDate || displayAppointmentIsInThePast}
-									helperText={
-										displayAppointmentIsInThePast
-											? 'Date dans le passé!'
-											: undefined
-									}
-								/>
-							)}
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validDate || displayAppointmentIsInThePast,
+									helperText: displayAppointmentIsInThePast
+										? 'Date dans le passé!'
+										: undefined,
+								},
+							}}
 							onChange={(pickedDatetime) => {
 								if (isValid(pickedDatetime)) {
 									setDate(serializeDate(pickedDatetime!));
@@ -284,13 +276,12 @@ const AppointmentDialog = ({
 					</Grid>
 					<Grid item xs={4}>
 						<TimePicker
-							renderInput={(props) => (
-								<TextField
-									{...props}
-									InputLabelProps={{shrink: true}}
-									error={!validTime}
-								/>
-							)}
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validTime,
+								},
+							}}
 							label="Time"
 							value={time === '' ? null : unserializeTime(time)}
 							onChange={(pickedDatetime) => {

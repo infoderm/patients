@@ -10,11 +10,7 @@ import {SnackbarProvider} from 'notistack';
 
 import CssBaseline from '@mui/material/CssBaseline';
 
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-
-import {useLocale} from '../i18n/datetime';
-
+import DateTimeLocalizationProvider from './i18n/DateTimeLocalizationProvider';
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
 import ModalProvider from './modal/ModelProvider';
 import ErrorBoundary from './ErrorBoundary';
@@ -29,12 +25,11 @@ export const muiCache = createCache({
 });
 
 const App = () => {
-	const locale = useLocale();
 	const theme = useUserTheme();
 
 	return (
 		<BrowserRouter>
-			<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
+			<DateTimeLocalizationProvider>
 				<CacheProvider value={muiCache}>
 					<ThemeProvider theme={theme}>
 						<ModalProvider>
@@ -51,7 +46,7 @@ const App = () => {
 						</ModalProvider>
 					</ThemeProvider>
 				</CacheProvider>
-			</LocalizationProvider>
+			</DateTimeLocalizationProvider>
 		</BrowserRouter>
 	);
 };

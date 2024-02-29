@@ -26,7 +26,7 @@ const scheduleAppointmentForPatient = async (
 		id: patientId,
 	});
 
-	const {user, findByRole, queryByRole, findAllByRole} = app;
+	const {user, findByRole, findByLabelText, queryByRole, findAllByRole} = app;
 	await user.click(await findByRole('button', {name: /^more actions/i}));
 
 	await navigateTo(
@@ -45,7 +45,12 @@ const scheduleAppointmentForPatient = async (
 	console.debug(`Set time to ${time}`);
 	await fillIn(app, await findByRole('textbox', {name: 'Time'}), time);
 	console.debug('Set duration to 30m');
-	await user.click(await findByRole('button', {name: '15m'}));
+	// await user.click(await findByRole('button', {name: '15m'}));
+	// NOTE: using workaround found at
+	// SEE: https://github.com/testing-library/react-testing-library/issues/1248#issuecomment-1838053869
+	await user.click(
+		await findByLabelText('15m', {selector: '[role="combobox"]'}),
+	);
 	await user.click(await findByRole('option', {name: '30m'}, {timeout: 5000}));
 	console.debug('Click on Schedule');
 	await user.click(await findByRole('button', {name: 'Schedule'}));
@@ -106,6 +111,7 @@ client(__filename, () => {
 			user,
 			userWithoutPointerEventsCheck,
 			findByRole,
+			findByText,
 			getByRole,
 			queryByRole,
 		} = app;
@@ -125,10 +131,19 @@ client(__filename, () => {
 
 		console.debug('Set cancellation reason');
 		console.debug('Open cancellation reason choice menu');
+		// await user.click(
+		// await findByRole(
+		// 'combobox',
+		// {name: 'Please choose a reason for the cancellation (required)'},
+		// {timeout: 5000},
+		// ),
+		// );
+		// NOTE: using workaround found at
+		// SEE: https://github.com/testing-library/react-testing-library/issues/1248#issuecomment-1838053869
 		await user.click(
-			await findByRole(
-				'button',
-				{name: 'Please choose a reason for the cancellation (required)'},
+			await findByText(
+				'Please choose a reason for the cancellation (required)',
+				{selector: '[role="combobox"]'},
 				{timeout: 5000},
 			),
 		);

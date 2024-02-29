@@ -124,7 +124,9 @@ const BooksDownloadDialog = ({
 						<>
 							<Grid item xs={6}>
 								<DatePicker
-									renderInput={(props) => <TextField fullWidth {...props} />}
+									slotProps={{
+										textField: {fullWidth: true},
+									}}
 									label="Begin"
 									value={begin}
 									onChange={(date) => {
@@ -134,7 +136,9 @@ const BooksDownloadDialog = ({
 							</Grid>
 							<Grid item xs={6}>
 								<DatePicker
-									renderInput={(props) => <TextField fullWidth {...props} />}
+									slotProps={{
+										textField: {fullWidth: true},
+									}}
 									label="End"
 									value={end}
 									onChange={(date) => {
@@ -179,7 +183,9 @@ const BooksDownloadDialog = ({
 					) : (
 						<Grid item xs={12}>
 							<DatePicker
-								renderInput={(props) => <TextField fullWidth {...props} />}
+								slotProps={{
+									textField: {fullWidth: true},
+								}}
 								views={['year']}
 								label="Year"
 								value={begin}

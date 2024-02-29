@@ -330,13 +330,12 @@ const PatientPersonalInformationStatic = (
 							{...birthdatePickerProps}
 							label="Death date"
 							value={deathdateLegal ?? null}
-							renderInput={(props) => (
-								<TextField
-									margin="normal"
-									InputLabelProps={{shrink: true}}
-									{...props}
-								/>
-							)}
+							slotProps={{
+								textField: {
+									margin: 'normal',
+									InputLabelProps: {shrink: true},
+								},
+							}}
 							onChange={(date) => {
 								if (isValid(date)) {
 									dispatch({
@@ -415,13 +414,12 @@ const PatientPersonalInformationStatic = (
 											label="Birth date"
 											value={_birthdate}
 											disabled={!editing}
-											renderInput={(props) => (
-												<TextField
-													margin="normal"
-													InputLabelProps={{shrink: true}}
-													{...props}
-												/>
-											)}
+											slotProps={{
+												textField: {
+													margin: 'normal',
+													InputLabelProps: {shrink: true},
+												},
+											}}
 											onChange={(date) => {
 												if (isValid(date)) {
 													dispatch({
