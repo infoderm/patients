@@ -51,24 +51,27 @@ const useTrackerClientImpl = <T = any>(
 ): T => {
 	const [iteration, forceUpdate] = useUniqueObject();
 
-	const data = useMemo(() => {
-		let data: T = shouldNeverBeReturned as T;
+	const data = useMemo(
+		() => {
+			let data: T = shouldNeverBeReturned as T;
 
-		// Use Tracker.nonreactive in case we are inside a Tracker Computation.
-		// This can happen if someone calls `ReactDOM.render` inside a Computation.
-		// In that case, we want to opt out of the normal behavior of nested
-		// Computations, where if the outer one is invalidated or stopped,
-		// it stops the inner one.
+			// Use Tracker.nonreactive in case we are inside a Tracker Computation.
+			// This can happen if someone calls `ReactDOM.render` inside a Computation.
+			// In that case, we want to opt out of the normal behavior of nested
+			// Computations, where if the outer one is invalidated or stopped,
+			// it stops the inner one.
 
-		Tracker.nonreactive(() =>
-			Tracker.autorun((c: Tracker.Computation) => {
-				assert(c.firstRun);
-				data = reactiveFn(c);
-			}),
-		).stop();
+			Tracker.nonreactive(() =>
+				Tracker.autorun((c: Tracker.Computation) => {
+					assert(c.firstRun);
+					data = reactiveFn(c);
+				}),
+			).stop();
 
-		return data;
-	}, deps && [iteration, ...deps]);
+			return data;
+		},
+		deps === undefined ? [] : [iteration, ...deps],
+	);
 
 	useEffect(() => {
 		let prevData = data;

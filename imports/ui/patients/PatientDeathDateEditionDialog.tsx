@@ -13,7 +13,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
@@ -113,13 +112,12 @@ const PatientDeathDateEditionDialog = ({open, onClose, patient}: Props) => {
 							{...birthdatePickerProps}
 							disabled={!isDead || pending}
 							label="Death date"
-							renderInput={(props) => (
-								<TextField
-									margin="normal"
-									InputLabelProps={{shrink: true}}
-									{...props}
-								/>
-							)}
+							slotProps={{
+								textField: {
+									margin: 'normal',
+									InputLabelProps: {shrink: true},
+								},
+							}}
 							value={isDead ? deathdateLegal ?? null : null}
 							onChange={(date) => {
 								if (isValid(date)) {

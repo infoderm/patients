@@ -201,14 +201,13 @@ const NewPatientForm = () => {
 									{...birthdatePickerProps}
 									label="Birthdate"
 									value={birthdate}
-									renderInput={(props) => (
-										<TextField
-											{...props}
-											fullWidth
-											helperText={error}
-											InputLabelProps={{shrink: true}}
-										/>
-									)}
+									slotProps={{
+										textField: {
+											fullWidth: true,
+											helperText: error,
+											InputLabelProps: {shrink: true},
+										},
+									}}
 									onChange={(pickedDatetime) => {
 										setBirthdate(pickedDatetime);
 									}}
