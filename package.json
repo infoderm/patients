@@ -34,7 +34,7 @@
   "dependencies": {
     "@async-iterable-iterator/async-iterable-to-array": "0.0.1",
     "@babel/runtime": "^7.22.15",
-    "@combinatorics/n-combinations": "^0.1.1",
+    "@combinatorics/n-combinations": "^1.0.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@functional-abstraction/operator": "^3.0.0",
