@@ -51,7 +51,7 @@
     "@iterable-iterator/reduce": "^1.0.0",
     "@iterable-iterator/slice": "^1.0.0",
     "@iterable-iterator/sorted": "^1.0.0",
-    "@iterable-iterator/window": "^0.0.3",
+    "@iterable-iterator/window": "^1.0.0",
     "@iterable-iterator/zip": "^1.0.0",
     "@mui/icons-material": "^5.15.11",
     "@mui/lab": "^5.0.0-alpha.166",
