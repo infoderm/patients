@@ -42,7 +42,7 @@
     "@iterable-iterator/cardinality": "^4.0.0",
     "@iterable-iterator/chain": "^2.0.0",
     "@iterable-iterator/filter": "^1.0.0",
-    "@iterable-iterator/group": "^0.0.1",
+    "@iterable-iterator/group": "^1.0.0",
     "@iterable-iterator/iter": "^1.0.0",
     "@iterable-iterator/list": "^1.0.0",
     "@iterable-iterator/map": "^1.0.0",
