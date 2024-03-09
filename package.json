@@ -49,7 +49,7 @@
     "@iterable-iterator/next": "^2.0.0",
     "@iterable-iterator/range": "^1.0.0",
     "@iterable-iterator/reduce": "^1.0.0",
-    "@iterable-iterator/slice": "^0.0.1",
+    "@iterable-iterator/slice": "^1.0.0",
     "@iterable-iterator/sorted": "^1.0.0",
     "@iterable-iterator/window": "^0.0.3",
     "@iterable-iterator/zip": "^0.0.2",
