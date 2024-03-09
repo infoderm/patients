@@ -60,7 +60,7 @@
     "@set-theory/cartesian-product": "^2.0.0",
     "@total-order/date": "^1.0.0",
     "@total-order/iter": "^1.0.0",
-    "@total-order/key": "^0.0.1",
+    "@total-order/key": "^1.0.0",
     "@total-order/primitive": "^1.0.0",
     "@visx/axis": "^3.3.0",
     "@visx/event": "^3.3.0",
