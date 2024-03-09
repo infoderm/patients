@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache ~/.cache/puppeteer 🎭
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-puppeteer
         env:
           cache-name: cache-puppeteer
@@ -57,7 +57,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache ~/.cache/puppeteer 🎭
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-puppeteer
         env:
           cache-name: cache-puppeteer
