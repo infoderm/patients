@@ -159,7 +159,7 @@
     "rrule": "2.8.1",
     "simpl-schema": "3.4.6",
     "supertest": "6.3.4",
-    "total-order": "3.0.1",
+    "total-order": "4.0.1",
     "typescript": "~4.9.5",
     "xo": "0.54.2"
   },
