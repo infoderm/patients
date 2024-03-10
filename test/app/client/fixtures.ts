@@ -6,7 +6,7 @@ import {
 	type queries,
 	type BoundFunctions,
 } from '@testing-library/dom';
-import userEvent, {PointerEventsCheckLevel} from '@testing-library/user-event';
+import {userEvent, PointerEventsCheckLevel} from '@testing-library/user-event';
 
 configure({
 	asyncUtilTimeout: 2000,
