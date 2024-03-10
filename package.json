@@ -116,7 +116,7 @@
     "sharp": "^0.33.0",
     "sort-keys": "^5.0.0",
     "tss-react": "^4.9.1",
-    "use-debounce": "^9.0.4",
+    "use-debounce": "^10.0.0",
     "xml-js": "^1.6.11",
     "zod": "^3.22.2"
   },
