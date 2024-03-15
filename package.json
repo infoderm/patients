@@ -145,7 +145,7 @@
     "dayjs": "1.11.10",
     "emoji-favicon-cli": "3.0.1",
     "eslint-config-xo-react": "0.27.0",
-    "eslint-plugin-react": "7.34.0",
+    "eslint-plugin-react": "7.34.1",
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "8.0.3",
     "ical.js": "1.5.0",
