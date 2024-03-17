@@ -123,6 +123,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "7.23.10",
     "@babel/plugin-syntax-jsx": "7.23.3",
+    "@commitlint/cli": "^19.2.0",
     "@faker-js/faker": "8.4.1",
     "@fontsource/roboto": "5.0.12",
     "@testing-library/dom": "9.3.4",
@@ -183,6 +184,7 @@
     "install-hooks": "husky install",
     "postinstall": "postinstall && npm run favicon",
     "precommit": "lint-staged",
+    "commit-msg": "commitlint --config commitlint.config.ts --edit",
     "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
     "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
     "tsc": "tsc",
