@@ -269,7 +269,7 @@ function mergePatients(oldPatients: PatientFields[]): PatientFields {
 		// Currently assuming that merge only needs to happen when
 		// someone forgot their ID card the first time.
 		// When that is the case, list entry with ID card last in the UI.
-		// This is not done automatically for the moment.
+		// This is not done automatically at the moment.
 		replaceOne('niss');
 		replaceOne('firstname');
 		replaceOne('lastname');
