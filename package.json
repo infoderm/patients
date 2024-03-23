@@ -56,7 +56,7 @@
     "@mui/icons-material": "^5.15.11",
     "@mui/lab": "^5.0.0-alpha.166",
     "@mui/material": "^5.15.11",
-    "@mui/x-date-pickers": "^6.19.6",
+    "@mui/x-date-pickers": "^7.0.0",
     "@set-theory/cartesian-product": "^2.0.0",
     "@total-order/date": "^1.0.0",
     "@total-order/iter": "^1.0.0",
