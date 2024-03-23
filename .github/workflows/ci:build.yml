@@ -30,4 +30,4 @@ jobs:
           key: build
 
       - name: Build 🏗️
-        run: meteor build ../dist
+        run: meteor npm run build -- ../dist
