@@ -15,7 +15,15 @@ jobs:
 
   build:
     name: Continuous integration (build)
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+        architecture:
+          - os.linux.x86_64
+
+    runs-on: ${{ matrix.platform }}
+
     timeout-minutes: 15
     steps:
       - name: Checkout 🛎️
@@ -30,4 +38,4 @@ jobs:
           key: build
 
       - name: Build 🏗️
-        run: meteor npm run build -- ../dist
+        run: meteor npm run build -- ../dist --architecture ${{ matrix.architecture }}
