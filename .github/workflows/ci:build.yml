@@ -80,10 +80,45 @@ jobs:
           path: dist
 
       - uses: actions/setup-node@v4
+        if: ${{ !contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
         with:
           node-version: ${{ needs.build.outputs.node-version }}
 
+      - name: Install nvm
+        if: ${{ contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+          export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+          echo "NVM_DIR=$NVM_DIR" >> "$GITHUB_ENV"
+
+      - name: Install Meteor-specific Node version to nvm
+        if: ${{ contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+        env:
+          NODE_VERSION: ${{ needs.build.outputs.node-version }}
+          NVM_DIR: ${{ env.NVM_DIR }}
+        run: |
+          export NODE_INSTALL_PATH="${NVM_DIR}/versions/node/v${NODE_VERSION}"
+          curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz" | tar xzf - -C /tmp/
+          mkdir -p "${NODE_INSTALL_PATH}"
+          rm -r "${NODE_INSTALL_PATH}"
+          mv "/tmp/node-v${NODE_VERSION}-linux-x64" "${NODE_INSTALL_PATH}"
+
+      - name: Use Meteor-specific Node version via nvm
+        if: ${{ contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+        env:
+          NODE_VERSION: ${{ needs.build.outputs.node-version }}
+          NVM_DIR: ${{ env.NVM_DIR }}
+        run: |
+          [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+          nvm use "${NODE_VERSION}"
+          nvm alias default "${NODE_VERSION}"
+          echo \
+          "NODE_PATH=$(dirname $(nvm which $(node --version)))" \
+          >> "$GITHUB_ENV"
+
       - name: Node WIP
+        env:
+          NODE_PATH: ${{ env.NODE_PATH }}
         run: node --version
 
       - name: Dist WIP
