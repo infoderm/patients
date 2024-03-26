@@ -49,13 +49,18 @@ jobs:
           key: build
 
       - name: Build 🏗️
-        run: meteor npm run build -- ./dist --architecture ${{ matrix.architecture }}
+        run: |
+          meteor npm run build -- ./dist --directory --architecture ${{ matrix.architecture }} --server-only
+
+      - name: Compress build 🧶
+        run: |
+          tar czf dist.tar.gz --directory dist/bundle .
 
       - name: Archive build 💽
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: artifacts
+          path: dist.tar.gz
           retention-days: 1
 
 
@@ -67,6 +72,8 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
+        architecture:
+          - linux-x64
 
     runs-on: ${{ matrix.platform }}
 
@@ -76,50 +83,93 @@ jobs:
       - name: Load build 💽
         uses: actions/download-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: artifacts
+          path: artifacts
 
       - uses: actions/setup-node@v4
-        if: ${{ !contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+        id: setup-node
         with:
           node-version: ${{ needs.build.outputs.node-version }}
+        continue-on-error: true
 
       - name: Install nvm
-        if: ${{ contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+        if: ${{ steps.setup-node.outcome != 'success' }}
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-          export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-          echo "NVM_DIR=$NVM_DIR" >> "$GITHUB_ENV"
+          export NVM_DIR="${HOME}/.nvm"
+          echo "NVM_DIR=${NVM_DIR}" >> "$GITHUB_ENV"
 
-      - name: Install Meteor-specific Node version to nvm
-        if: ${{ contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+      - name: Install Meteor-specific Node version via nvm
+        if: ${{ steps.setup-node.outcome != 'success' }}
         env:
+          ARCH: ${{ matrix.architecture }}
           NODE_VERSION: ${{ needs.build.outputs.node-version }}
           NVM_DIR: ${{ env.NVM_DIR }}
         run: |
           export NODE_INSTALL_PATH="${NVM_DIR}/versions/node/v${NODE_VERSION}"
-          curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz" | tar xzf - -C /tmp/
+          curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-${ARCH}.tar.gz" | tar xzf - -C /tmp/
           mkdir -p "${NODE_INSTALL_PATH}"
           rm -r "${NODE_INSTALL_PATH}"
-          mv "/tmp/node-v${NODE_VERSION}-linux-x64" "${NODE_INSTALL_PATH}"
+          mv "/tmp/node-v${NODE_VERSION}-${ARCH}" "${NODE_INSTALL_PATH}"
 
       - name: Use Meteor-specific Node version via nvm
-        if: ${{ contains(fromJSON('["14.21.4"]'), needs.build.outputs.node-version) }}
+        if: ${{ steps.setup-node.outcome != 'success' }}
         env:
           NODE_VERSION: ${{ needs.build.outputs.node-version }}
           NVM_DIR: ${{ env.NVM_DIR }}
         run: |
-          [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+          source "${NVM_DIR}/nvm.sh"
           nvm use "${NODE_VERSION}"
-          nvm alias default "${NODE_VERSION}"
-          echo \
-          "NODE_PATH=$(dirname $(nvm which $(node --version)))" \
-          >> "$GITHUB_ENV"
+          export NODE_PATH="$(dirname $(nvm which $(node --version)))"
+          echo "${NODE_PATH}" >> "$GITHUB_PATH"
 
-      - name: Node WIP
+      - name: Inflate build 🧥
+        run: |
+          mkdir -p dist
+          tar xzf artifacts/dist.tar.gz --directory dist
+
+      - name: Inspect build
+        run: |
+          ls -la dist
+
+      - name: Inspect build
+        run: |
+          cat dist/README
+
+      - name: Inspect build
+        run: |
+          ls -la dist/server
+
+      - name: Inspect build
+        run: |
+          cat dist/star.json
+
+      - name: Inspect build
+        run: |
+          ls -la dist/programs
+
+      - name: Inspect build
+        run: |
+          ls -la dist/programs/server
+
+      - name: Check node version
+        run: |
+          diff dist/.node_version.txt <(node --version)
+          diff <(jq -r .nodeVersion dist/star.json) <(node --version | tail -c +2)
+
+      - name: Check npm version
+        run: | # Patch sometimes does not match
+          diff <(npm --version | cut -d. -f-2) <(jq -r .npmVersion dist/star.json | cut -d. -f-2)
+
+      - name: Install dependencies
+        run: |
+          cd dist/programs/server
+          npm install
+
+      - name: Run server
         env:
-          NODE_PATH: ${{ env.NODE_PATH }}
-        run: node --version
-
-      - name: Dist WIP
-        run: ls -la dist
+          ROOT_URL: http://localhost
+          PORT: 3000
+        run: |
+          cd dist
+          node main.js
