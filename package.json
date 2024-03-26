@@ -162,7 +162,7 @@
     "supertest": "6.3.4",
     "total-order": "4.0.1",
     "typescript": "~4.9.5",
-    "xo": "0.54.2"
+    "xo": "0.58.0"
   },
   "postinstall": {
     "@fontsource/roboto/300.css": "copy public/@fontsource/roboto/",
