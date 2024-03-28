@@ -15,8 +15,20 @@ jobs:
 
   build:
     name: Continuous integration (build)
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+        architecture:
+          - os.linux.x86_64
+
+    runs-on: ${{ matrix.platform }}
+
     timeout-minutes: 15
+
+    outputs:
+      node-version: ${{ steps.meteor-node.outputs.version }}
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -24,10 +36,116 @@ jobs:
       - name: Install 💾
         uses: meteor-actions/install@v3
 
+      - name: Get Meteor's Node version
+        id: meteor-node
+        run: |
+          echo \
+          "version=$(meteor node --version | tail -c +2)" \
+          >> "$GITHUB_OUTPUT"
+
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v3
         with:
           key: build
 
       - name: Build 🏗️
-        run: meteor build ../dist
+        run: |
+          meteor npm run build -- ./dist --directory --architecture ${{ matrix.architecture }} --server-only
+
+      - name: Compress build 🧶
+        run: |
+          tar czf dist.tar.gz --directory dist/bundle .
+
+      - name: Archive build 💽
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: dist.tar.gz
+          retention-days: 1
+
+
+  test:
+    needs:
+      - build
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+        architecture:
+          - linux-x64
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 1
+
+    steps:
+      - name: Load build 💽
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts
+          path: artifacts
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          path: repo
+
+      - uses: ./repo/.github/actions/meteor-setup-node
+        with:
+          node-version: ${{ needs.build.outputs.node-version }}
+
+      - name: Remove checked out repo
+        run: |
+          rm -rf repo
+
+      - name: Inflate build 🧥
+        run: |
+          mkdir -p dist
+          tar xzf artifacts/dist.tar.gz --directory dist
+
+      - name: Inspect build
+        run: |
+          ls -la dist
+
+      - name: Inspect build
+        run: |
+          cat dist/README
+
+      - name: Inspect build
+        run: |
+          ls -la dist/server
+
+      - name: Inspect build
+        run: |
+          cat dist/star.json
+
+      - name: Inspect build
+        run: |
+          ls -la dist/programs
+
+      - name: Inspect build
+        run: |
+          ls -la dist/programs/server
+
+      - name: Check node version
+        run: |
+          diff dist/.node_version.txt <(node --version)
+          diff <(jq -r .nodeVersion dist/star.json) <(node --version | tail -c +2)
+
+      - name: Check npm version
+        run: | # Patch sometimes does not match
+          diff <(npm --version | cut -d. -f-2) <(jq -r .npmVersion dist/star.json | cut -d. -f-2)
+
+      - name: Install dependencies
+        run: |
+          cd dist/programs/server
+          npm install
+
+      - name: Run server
+        env:
+          ROOT_URL: http://localhost
+          PORT: 3000
+        run: |
+          cd dist
+          node main.js
