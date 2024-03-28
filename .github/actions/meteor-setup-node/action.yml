@@ -1,0 +1,50 @@
+name: "meteor-actions/setup-node"
+description: "Set up Meteor's Node.js"
+inputs:
+  node-version:
+    description: 'The Node.js version to use'
+    required: true
+  nvm-version:
+    description: 'The version of nvm to use in case actions/setup-node fails'
+    default: 'v0.39.7'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      id: setup-node
+      with:
+        node-version: ${{ inputs.node-version }}
+      continue-on-error: true
+
+    - name: Install nvm
+      if: ${{ steps.setup-node.outcome != 'success' }}
+      run: |
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${{ inputs.nvm-version }}/install.sh | bash
+        export NVM_DIR="${HOME}/.nvm"
+        echo "NVM_DIR=${NVM_DIR}" >> "$GITHUB_ENV"
+
+    - name: Install Meteor-specific Node version via nvm
+      if: ${{ steps.setup-node.outcome != 'success' }}
+      env:
+        ARCH: ${{ matrix.architecture }}
+        NODE_VERSION: ${{ inputs.node-version }}
+        NVM_DIR: ${{ env.NVM_DIR }}
+      run: |
+        export NODE_INSTALL_PATH="${NVM_DIR}/versions/node/v${NODE_VERSION}"
+        curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-${ARCH}.tar.gz" | tar xzf - -C /tmp/
+        mkdir -p "${NODE_INSTALL_PATH}"
+        rm -r "${NODE_INSTALL_PATH}"
+        mv "/tmp/node-v${NODE_VERSION}-${ARCH}" "${NODE_INSTALL_PATH}"
+
+    - name: Use Meteor-specific Node version via nvm
+      if: ${{ steps.setup-node.outcome != 'success' }}
+      env:
+        NODE_VERSION: ${{ inputs.node-version }}
+        NVM_DIR: ${{ env.NVM_DIR }}
+      run: |
+        source "${NVM_DIR}/nvm.sh"
+        nvm use "${NODE_VERSION}"
+        export NODE_PATH="$(dirname $(nvm which $(node --version)))"
+        echo "${NODE_PATH}" >> "$GITHUB_PATH"
+
