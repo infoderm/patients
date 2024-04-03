@@ -17,9 +17,11 @@ import scheduleAllMigrations from '../imports/migrations/scheduleAll';
 import './publication/_register/enabled';
 
 import ics from './api/ics/index';
+import healthcheck from './api/healthcheck/index';
 
-// DECLARE ALL ENABLED ICS ENDPOINTS
+// DECLARE ALL ENABLED HTTP ENDPOINTS
 WebApp.connectHandlers.use('/api/ics', ics);
+WebApp.connectHandlers.use('/api/healthcheck', healthcheck);
 
 if (isTest()) {
 	// @ts-expect-error Missing from type definitions.
