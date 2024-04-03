@@ -1,6 +1,5 @@
 import process from 'process';
 
-import {Meteor} from 'meteor/meteor';
 import express from 'express';
 import ical, {ICalEventStatus} from 'ical-generator';
 
@@ -19,6 +18,7 @@ import {event} from '../../../imports/api/events';
 import {getWeekStartsOn} from '../../../imports/i18n/datetime';
 
 import absoluteURL from '../../../imports/app/absoluteURL';
+import isProduction from '../../../imports/app/isProduction';
 
 import rateLimiter from './rateLimiter';
 
@@ -122,7 +122,7 @@ const routes = express();
 
 routes.set('trust proxy', process.env.HTTP_FORWARDED_COUNT);
 
-if (Meteor.isProduction) {
+if (isProduction()) {
 	routes.use(rateLimiter);
 }
 
