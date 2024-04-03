@@ -20,6 +20,8 @@ import {getWeekStartsOn} from '../../../imports/i18n/datetime';
 import absoluteURL from '../../../imports/app/absoluteURL';
 import isProduction from '../../../imports/app/isProduction';
 
+import {pipe} from '../rateLimit';
+
 import rateLimiter from './rateLimiter';
 
 const cache = new Map(); // TODO allow to clear cache / use LRU cache
@@ -123,7 +125,7 @@ const routes = express();
 routes.set('trust proxy', process.env.HTTP_FORWARDED_COUNT);
 
 if (isProduction()) {
-	routes.use(rateLimiter);
+	routes.use(pipe(rateLimiter));
 }
 
 routes.get(`/appointments/:token/${filename}`, async (req, res, _next) => {
