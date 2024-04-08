@@ -58,3 +58,153 @@ jobs:
           push: true
           tags: ${{ steps.meta-server.outputs.tags }}
           labels: ${{ steps.meta-server.outputs.labels }}
+
+
+  test:
+    needs:
+      - build
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 2
+
+    steps:
+      - name: Log in to GitHub Packages registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+
+      - name: Create a network to connect the app to the database
+        run: |
+          docker network create patient-network
+
+      - name: Start MongoDB container
+        env:
+          MONGO_VERSION: '5.0'
+        run: |
+          echo 'dbpath=/data/db' > "${GITHUB_WORKSPACE}/mongodb.conf"
+          echo 'replSet=meteor' >> "${GITHUB_WORKSPACE}/mongodb.conf"
+          mkdir -p "${GITHUB_WORKSPACE}/data/db"
+          docker container run \
+            --detach \
+            --restart unless-stopped \
+            --network patient-network \
+            --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
+            --volume "${GITHUB_WORKSPACE}/mongodb.conf":/mongodb.conf \
+            --log-opt max-size=100m \
+            --log-opt max-file=7 \
+            --name mongodb \
+            "mongo:${MONGO_VERSION}" mongod -f /mongodb.conf
+          sleep 5
+          docker exec mongodb mongo --eval \
+            'try {var c = rs.config();} catch (e){} if (c && c.members[0].host === "mongodb:27017") { c.members[0].host = "mongodb:27017"; rs.reconfig(c);  } else { rs.initiate({_id: "meteor", members: [{_id: 0, host: "mongodb:27017"}]}) }'
+
+      - name: Run server
+        env:
+          ROOT_URL: http://localhost
+          MONGO_URL: mongodb://mongodb:27017/meteor
+          PORT: 3000
+        run: |
+          docker container run \
+            --detach \
+            --network patient-network \
+            --publish "${PORT}:${PORT}" \
+            --env "ROOT_URL=${ROOT_URL}" \
+            --env "MONGO_URL=${MONGO_URL}" \
+            --env "PORT=${PORT}" \
+            --name server \
+            ${{ fromJSON(needs.build.outputs.server-image).tags[0] }}
+
+      - name: Retrieve server container IP address
+        id: server-container-ip-address
+        run: |
+          echo \
+          "address=$(docker container inspect --format '{{ range.NetworkSettings.Networks }}{{ .IPAddress }}{{ end }}' server)" \
+          >> "$GITHUB_OUTPUT"
+
+      - name: Wait for server container 3000 port to be available
+        run: |
+          timeout 60 bash -c \
+           'until nc -z -v -w5 ${{ steps.server-container-ip-address.outputs.address }} 3000 ; do sleep 1; done'
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Show mongodb container logs
+        if: always()
+        run: |
+          docker container logs --timestamps mongodb
+
+      - name: Show server container logs
+        if: always()
+        run: |
+          docker container logs --timestamps server
+
+      - name: Run healthcheck
+        run: |
+          timeout 60 bash -c \
+            'curl -f http://${{ steps.server-container-ip-address.outputs.address }}:3000/api/healthcheck'
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Show mongodb container logs
+        if: always()
+        run: |
+          docker container logs --timestamps mongodb
+
+      - name: Show server container logs
+        if: always()
+        run: |
+          docker container logs --timestamps server
+
+      - name: Stop Server container
+        run: |
+          docker container stop server
+
+      - name: Stop MongoDB container
+        run: |
+          docker container stop mongodb
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Show mongodb container logs
+        if: always()
+        run: |
+          docker container logs --timestamps mongodb
+
+      - name: Show server container logs
+        if: always()
+        run: |
+          docker container logs --timestamps server
+
+      - name: Remove Server container
+        run: |
+          docker container rm server
+
+      - name: Remove MongoDB container
+        run: |
+          docker container rm mongodb
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Delete network
+        run: |
+          docker network rm patient-network
