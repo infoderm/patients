@@ -54,3 +54,14 @@ jobs:
             --directory \
             --server-only \
             --architecture ${{ matrix.architecture }}
+
+      - name: Compress build 🧶
+        run: |
+          tar czf dist.tar.gz --directory ../dist/bundle .
+
+      - name: Archive build 💽
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: dist.tar.gz
+          retention-days: 1
