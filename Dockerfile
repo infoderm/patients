@@ -85,4 +85,7 @@ ENV \
   MONGO_URL="mongodb://127.0.0.1:27017/meteor"
 
 
-CMD ["node", "dist/main.js"]
+CMD [ \
+  "node", \
+  "dist/main.js" \
+]
