@@ -25,12 +25,23 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     timeout-minutes: 15
+
+    outputs:
+      node-version: ${{ steps.meteor-node.outputs.version }}
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
       - name: Install 💾
         uses: meteor-actions/install@v3
+
+      - name: Get Meteor's Node version
+        id: meteor-node
+        run: |
+          echo \
+          "version=$(meteor node --version | tail -c +2)" \
+          >> "$GITHUB_OUTPUT"
 
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v3
