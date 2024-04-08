@@ -43,7 +43,7 @@ function ask () {
 
 }
 
-while ! npm run commit-msg -- "$1" ; do
+while ! npm run git:hooks:commit-msg -- "$1" ; do
 	if [ -t 1 ] && ask 'There was an error. Do you wish to amend your commit message?' Y ; then
 		${GIT_EDITOR:-$EDITOR} "$1" < /dev/tty
 	else

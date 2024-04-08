@@ -13,8 +13,8 @@ concurrency:
 
 jobs:
 
-  test:
-    name: Continuous integration (tests)
+  test-unit:
+    name: Continuous integration (unit tests)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -38,20 +38,20 @@ jobs:
         with:
           key: test
 
-      - name: Tests 🔬
-        run: meteor npm run ci:test
+      - name: Run unit tests 🔬
+        run: meteor npm run test:unit
 
       - name: Publish coverage report 📰
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          flags: test
+          flags: test-unit
           directory: ./.coverage/
           fail_ci_if_error: true
 
-  test-app:
-    name: Continuous integration (app tests)
+  test-e2e:
+    name: Continuous integration (end-to-end tests)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -73,16 +73,16 @@ jobs:
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v3
         with:
-          key: test-app
+          key: test-e2e
 
-      - name: App Tests 🕹️
-        run: meteor npm run ci:test -- --full-app
+      - name: Run end-to-end tests 🕹️
+        run: meteor npm run test:e2e
 
       - name: Publish coverage report 📰
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          flags: test-app
+          flags: test-e2e
           directory: ./.coverage/
           fail_ci_if_error: true
