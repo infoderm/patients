@@ -90,7 +90,7 @@ RUN cd dist/bundle/programs/server && \
 
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot
 
-COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
+COPY --from=build --chown=nonroot:nonroot /home/build/node /home/nonroot/node
 COPY --from=build --chown=nonroot:nonroot /home/build/dist/bundle /home/nonroot/dist
 COPY --chown=nonroot:nonroot [ \
   "./scripts/healthcheck.cjs", \
