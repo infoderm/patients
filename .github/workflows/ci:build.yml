@@ -49,4 +49,6 @@ jobs:
           key: build
 
       - name: Build 🏗️
-        run: meteor npm run build -- ../dist --architecture ${{ matrix.architecture }}
+        run: |
+          meteor npm run build -- ../dist \
+            --architecture ${{ matrix.architecture }}
