@@ -87,6 +87,15 @@ jobs:
             scripts/ensure-replica-set.js
           sparse-checkout-cone-mode: false
 
+      - name: Get server image URL
+        id: server-image-url
+        env:
+          IMAGE_METADATA: ${{ needs.build.outputs.server-image }}
+        run: |
+          IMAGE_URL="$(echo "${IMAGE_METADATA}" | jq -r 'first(.tags[] | select(test(":sha-[0-9a-f]{40}$")))')"
+          echo "url=${IMAGE_URL}" >> $GITHUB_OUTPUT
+          test -n "${IMAGE_URL}"
+
       - name: Log in to GitHub Packages registry
         uses: docker/login-action@v3
         with:
@@ -139,7 +148,7 @@ jobs:
             --env "MONGO_URL=${MONGO_URL}" \
             --env "PORT=${PORT}" \
             --name server \
-            ${{ fromJSON(needs.build.outputs.server-image).tags[0] }}
+            ${{ steps.server-image-url.outputs.url }}
 
       - name: Retrieve server container IP address
         id: server-container-ip-address
