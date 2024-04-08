@@ -62,11 +62,11 @@ files before each commit.
 To lint source files we use [`xo`](https://github.com/xojs/xo) with
 configuration inside `package.json`. You can run the linter with
 
-    meteor npm run lint
+    meteor npm run check:lint
 
 You can attempt to autofix some errors with
 
-    meteor npm run lint-and-fix
+    meteor npm run fix:lint
 
 ## :ballot_box_with_check: Type checker
 
@@ -74,11 +74,11 @@ The entire code base is checked for type errors with `tsc`, the
 [TypeScript](https://www.typescriptlang.org) compiler. You can run the type
 checker with
 
-    meteor npm run tsc
+    meteor npm run check:types
 
 To run it in watch mode during development use
 
-    meteor npm run tsc:watch
+    meteor npm run check:types:watch
 
 ## :microscope: Tests
 
