@@ -97,6 +97,10 @@ FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot
 
 COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
 COPY --from=build --chown=nonroot:nonroot /home/build/dist/bundle /home/nonroot/dist
+COPY --chown=nonroot:nonroot [ \
+  "./scripts/healthcheck.cjs", \
+  "/home/nonroot/scripts/" \
+]
 
 ENV PATH="/home/nonroot/node/bin"
 
@@ -107,6 +111,17 @@ ENV \
   PORT="3000" \
   MONGO_URL="mongodb://127.0.0.1:27017/meteor"
 
+HEALTHCHECK \
+  --interval=21s \
+  --timeout=3s \
+  --start-period=15s \
+  --start-interval=5s \
+  --retries=2 \
+  CMD [ \
+    "node", \
+    "scripts/healthcheck.cjs", \
+    "http://localhost:3000/api/healthcheck" \
+  ]
 
 CMD [ \
   "node", \
