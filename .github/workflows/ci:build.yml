@@ -51,5 +51,6 @@ jobs:
       - name: Build 🏗️
         run: |
           meteor npm run build -- ../dist \
+            --directory \
             --server-only \
             --architecture ${{ matrix.architecture }}
