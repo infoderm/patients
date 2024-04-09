@@ -185,7 +185,7 @@
     "install-hooks": "husky install",
     "postinstall": "postinstall && npm run favicon",
     "precommit": "lint-staged",
-    "commit-msg": "npm run check:commit-msg --edit",
+    "commit-msg": "npm run check:commit-msg -- --edit",
     "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
     "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
     "tsc": "tsc",
