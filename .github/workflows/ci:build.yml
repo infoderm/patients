@@ -68,6 +68,8 @@ jobs:
 
 
   test:
+    name: Continuous integration (build test)
+
     needs:
       - build
 

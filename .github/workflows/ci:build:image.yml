@@ -61,6 +61,8 @@ jobs:
 
 
   test:
+    name: Continuous integration (build image test)
+
     needs:
       - build
 
