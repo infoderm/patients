@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   CodeQL-Build:
+    name: Continuous integration (CodeQL)
 
     runs-on: ubuntu-latest
     timeout-minutes: 10

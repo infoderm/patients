@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   security:
+    name: Continuous integration (Snyk)
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
