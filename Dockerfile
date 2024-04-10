@@ -93,22 +93,16 @@ RUN cd dist/bundle/programs/server && \
 RUN find . -maxdepth 3
 
 
-FROM $IMAGE_BASE
+FROM gcr.io/distroless/cc-debian11
 
-RUN useradd --create-home --shell /bin/bash --uid 1000 --user-group app
-
-COPY --from=build /home/app/dist/bundle /home/app/dist/
-COPY --from=build /home/app/node/bin /home/app/node/bin/
-
-RUN chown -R app:app /home/app/
+COPY --from=build /etc/passwd /etc/passwd
+COPY --from=build --chown=app:app /home/app/dist/bundle /home/app/dist/
+COPY --from=build --chown=app:app /home/app/node/bin /home/app/node/bin/
 
 USER app
 WORKDIR /home/app
 
-RUN ls -la dist
-RUN ls -la node/bin
-
-ENV PATH="/home/app/node/bin:${PATH}"
+ENV PATH="/home/app/node/bin"
 
 EXPOSE 3000
 
