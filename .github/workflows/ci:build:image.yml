@@ -78,7 +78,7 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
 
-    timeout-minutes: 2
+    timeout-minutes: 3
 
     steps:
       - name: Log in to GitHub Packages registry
