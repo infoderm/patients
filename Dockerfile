@@ -97,6 +97,7 @@ COPY --chown=nonroot:nonroot [ \
   "/home/nonroot/scripts/" \
 ]
 
+ENV NODE_PATH="/home/nonroot/node/lib/node_modules"
 ENV PATH="/home/nonroot/node/bin"
 
 EXPOSE 3000
