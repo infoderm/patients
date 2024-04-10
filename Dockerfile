@@ -1,9 +1,9 @@
-ARG IMAGE_BASE=debian:11-slim
+ARG DEBIAN_VERSION=11
 
 
 # NOTE Build stage
 
-FROM $IMAGE_BASE AS build
+FROM debian:${DEBIAN_VERSION}-slim AS build
 
 
 # NOTE Install build tools
@@ -93,7 +93,7 @@ RUN cd dist/bundle/programs/server && \
 RUN find . -maxdepth 3
 
 
-FROM gcr.io/distroless/cc-debian11
+FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}
 
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build --chown=app:app /home/app/dist/bundle /home/app/dist
