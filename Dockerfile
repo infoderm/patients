@@ -1,4 +1,4 @@
-ARG IMAGE_BASE=debian:bullseye-slim
+ARG IMAGE_BASE=debian:11-slim
 
 
 # NOTE Build stage
