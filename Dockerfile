@@ -95,14 +95,13 @@ RUN find . -maxdepth 3
 
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}
 
-COPY --from=build /etc/passwd /etc/passwd
-COPY --from=build --chown=app:app /home/app/node/bin/node /home/app/node/bin/node
-COPY --from=build --chown=app:app /home/app/dist/bundle /home/app/dist
+COPY --from=build --chown=nonroot:nonroot /home/app/node/bin/node /home/nonroot/node/bin/node
+COPY --from=build --chown=nonroot:nonroot /home/app/dist/bundle /home/nonroot/dist
 
-USER app
-WORKDIR /home/app
+USER nonroot
+WORKDIR /home/nonroot
 
-ENV PATH="/home/app/node/bin"
+ENV PATH="/home/nonroot/node/bin"
 
 EXPOSE 3000
 
