@@ -15,28 +15,28 @@ RUN apt-get update && \
 
 # NOTE Create $USER and its $HOME
 
-RUN useradd --create-home --shell /bin/bash --uid 1000 --user-group app
-RUN chown -R app:app /home/app/
+RUN useradd --create-home --shell /bin/bash --uid 1000 --user-group build
+RUN chown -R build:build /home/build/
 
 
 # NOTE Switch to $USER and $HOME
 
-USER app
-WORKDIR /home/app
+USER build
+WORKDIR /home/build
 
 
 # NOTE Install the correct version of Meteor
 
-COPY --chown=app:app [ \
+COPY --chown=build:build [ \
   "./.meteor/release", \
-  "/home/app/src/.meteor/" \
+  "/home/build/src/.meteor/" \
 ]
 
 RUN echo "export METEOR_LOCAL_RELEASE=$(sed -n 's/^METEOR@\([0-9][0-9]*.*\)$/\1/p' src/.meteor/release)" >> ./.env
 RUN . ./.env; echo "export METEOR_EXECUTABLE_VERSION=${METEOR_LOCAL_RELEASE}" >> ./.env
 RUN . ./.env; curl "https://install.meteor.com?release=${METEOR_EXECUTABLE_VERSION}" | sh
 
-ENV PATH="/home/app/.meteor:${PATH}"
+ENV PATH="/home/build/.meteor:${PATH}"
 
 
 # NOTE Install the correct version of Node
@@ -46,7 +46,7 @@ RUN echo "export NPM_VERSION=$(meteor npm --version)" >> ./.env
 
 ENV \
   NODE_ARCH="linux-x64" \
-  NODE_INSTALL_PATH="/home/app/node"
+  NODE_INSTALL_PATH="/home/build/node"
 
 RUN . ./.env; \
   mkdir -p "${NODE_INSTALL_PATH}" && \
@@ -59,10 +59,10 @@ RUN . ./.env; \
 ENV \
   PUPPETEER_SKIP_DOWNLOAD="true"
 
-COPY --chown=app:app [ \
+COPY --chown=build:build [ \
   "./package.json", \
   "./package-lock.json", \
-  "/home/app/src/" \
+  "/home/build/src/" \
 ]
 
 RUN cd src && \
@@ -71,14 +71,14 @@ RUN cd src && \
 
 # NOTE Build app from sources
 
-COPY --chown=app:app ./types /home/app/src/types
-COPY --chown=app:app ./imports /home/app/src/imports
-COPY --chown=app:app ./server /home/app/src/server
-COPY --chown=app:app ./client /home/app/src/client
-COPY --chown=app:app ./.meteor /home/app/src/.meteor
-COPY --chown=app:app [ \
+COPY --chown=build:build ./types /home/build/src/types
+COPY --chown=build:build ./imports /home/build/src/imports
+COPY --chown=build:build ./server /home/build/src/server
+COPY --chown=build:build ./client /home/build/src/client
+COPY --chown=build:build ./.meteor /home/build/src/.meteor
+COPY --chown=build:build [ \
   "./tsconfig.json", \
-  "/home/app/src/" \
+  "/home/build/src/" \
 ]
 
 RUN cd src && \
@@ -95,8 +95,8 @@ RUN find . -maxdepth 3
 
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}
 
-COPY --from=build --chown=nonroot:nonroot /home/app/node/bin/node /home/nonroot/node/bin/node
-COPY --from=build --chown=nonroot:nonroot /home/app/dist/bundle /home/nonroot/dist
+COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
+COPY --from=build --chown=nonroot:nonroot /home/build/dist/bundle /home/nonroot/dist
 
 USER nonroot
 WORKDIR /home/nonroot
