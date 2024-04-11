@@ -96,7 +96,7 @@ RUN find . -maxdepth 3
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}
 
 COPY --from=build /etc/passwd /etc/passwd
-COPY --from=build --chown=app:app /home/app/node/bin /home/app/node/bin
+COPY --from=build --chown=app:app /home/app/node/bin/node /home/app/node/bin/node
 COPY --from=build --chown=app:app /home/app/dist/bundle /home/app/dist
 
 USER app
