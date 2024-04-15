@@ -111,7 +111,7 @@ jobs:
             "mongo:${MONGO_VERSION}" mongod -f /mongodb.conf
           sleep 5
           docker exec mongodb mongo --eval \
-            'try {var c = rs.config();} catch (e){} if (c && c.members[0].host === "mongodb:27017") { c.members[0].host = "mongodb:27017"; rs.reconfig(c);  } else { rs.initiate({_id: "meteor", members: [{_id: 0, host: "mongodb:27017"}]}) }'
+            'try {var c = rs.config();} catch (e){} if (c && c.members[0].host === "127.0.0.1:27017") { c.members[0].host = "mongodb:27017"; rs.reconfig(c);  } else { rs.initiate({_id: "meteor", members: [{_id: 0, host: "mongodb:27017"}]}) }'
 
       - name: Run server
         env:
