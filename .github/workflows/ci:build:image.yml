@@ -96,19 +96,16 @@ jobs:
         env:
           MONGO_VERSION: '5.0'
         run: |
-          echo 'dbpath=/data/db' > "${GITHUB_WORKSPACE}/mongodb.conf"
-          echo 'replSet=meteor' >> "${GITHUB_WORKSPACE}/mongodb.conf"
           mkdir -p "${GITHUB_WORKSPACE}/data/db"
           docker container run \
             --detach \
             --restart unless-stopped \
             --network patient-network \
             --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
-            --volume "${GITHUB_WORKSPACE}/mongodb.conf":/mongodb.conf \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
             --name mongodb \
-            "mongo:${MONGO_VERSION}" mongod -f /mongodb.conf
+            "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
           sleep 5
           docker exec mongodb mongo --eval \
             'try {var c = rs.config();} catch (e){} if (c && c.members[0].host === "127.0.0.1:27017") { c.members[0].host = "mongodb:27017"; rs.reconfig(c);  } else { rs.initiate({_id: "meteor", members: [{_id: 0, host: "mongodb:27017"}]}) }'
