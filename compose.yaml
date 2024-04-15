@@ -1,0 +1,56 @@
+services:
+  patient-web:
+    restart: always
+    build:
+      context: .
+    environment:
+      - ROOT_URL=${ROOT_URL}
+      - PORT=${PORT}
+      - MONGO_URL=${MONGO_URL}
+    depends_on:
+      patient-db:
+        condition: service_healthy
+    networks:
+      - patient-network
+    ports:
+      - "${PORT}:${PORT}"
+
+  patient-db:
+    restart: always
+    image: "mongo:${MONGO_VERSION}"
+    volumes:
+      - patient-data:/data/db
+      - ./scripts/ensure-replica-set.js:/scripts/ensure-replica-set.js
+    networks:
+      - patient-network
+    expose:
+      - 27017
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "7"
+    entrypoint: [
+      "mongod",
+      "--bind_ip", "localhost,patient-db",
+      "--dbpath", "/data/db",
+      "--replSet", "meteor"
+    ]
+    healthcheck:
+      test: [
+        "CMD",
+        "mongo",
+        "--eval", "replSet = 'meteor'; hostname = 'patient-db'",
+        "/scripts/ensure-replica-set.js"
+      ]
+      start_period: 40s
+      start_interval: 2s
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  patient-network:
+
+volumes:
+  patient-data:
