@@ -310,6 +310,15 @@
       },
       {
         "files": [
+          "scripts/ensure-replica-set.js"
+        ],
+        "rules": {
+          "no-var": "off",
+          "no-undef": "off"
+        }
+      },
+      {
+        "files": [
           ".deploy/*/mup.js",
           "lint-staged.config.js"
         ],
