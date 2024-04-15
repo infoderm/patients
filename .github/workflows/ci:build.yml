@@ -89,6 +89,7 @@ jobs:
         with:
           sparse-checkout: |
             scripts/healthcheck.cjs
+            scripts/ensure-replica-set.js
           sparse-checkout-cone-mode: false
 
       - name: Load build 💽
@@ -156,13 +157,15 @@ jobs:
             --restart unless-stopped \
             --publish 27017:27017 \
             --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
+            --volume "${GITHUB_WORKSPACE}/scripts/ensure-replica-set.js":/scripts/ensure-replica-set.js \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
             --name mongodb \
             "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
           sleep 10
-          docker exec mongodb mongo --eval \
-            'try {var c = rs.config();} catch (e){} if (c && c.members[0].host === "127.0.0.1:27017") { c.members[0].host = "127.0.0.1:27017"; rs.reconfig(c);  } else { rs.initiate({_id: "meteor", members: [{_id: 0, host: "127.0.0.1:27017"}]}) }'
+          docker exec mongodb mongo \
+            --eval 'replSet = "meteor"; address = "127.0.0.1"' \
+            /scripts/ensure-replica-set.js
 
       - name: Run server
         id: server

@@ -81,6 +81,12 @@ jobs:
     timeout-minutes: 3
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/ensure-replica-set.js
+          sparse-checkout-cone-mode: false
+
       - name: Log in to GitHub Packages registry
         uses: docker/login-action@v3
         with:
@@ -102,13 +108,15 @@ jobs:
             --restart unless-stopped \
             --network patient-network \
             --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
+            --volume "${GITHUB_WORKSPACE}/scripts/ensure-replica-set.js":/scripts/ensure-replica-set.js \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
             --name mongodb \
             "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
           sleep 5
-          docker exec mongodb mongo --eval \
-            'try {var c = rs.config();} catch (e){} if (c && c.members[0].host === "127.0.0.1:27017") { c.members[0].host = "mongodb:27017"; rs.reconfig(c);  } else { rs.initiate({_id: "meteor", members: [{_id: 0, host: "mongodb:27017"}]}) }'
+          docker exec mongodb mongo \
+            --eval 'replSet = "meteor"; hostname = "mongodb"' \
+            /scripts/ensure-replica-set.js
 
       - name: Run server
         env:
