@@ -41,6 +41,30 @@ jobs:
       - name: Tests 🔬
         run: meteor npm run ci:test
 
+      - name: Archive coverage data 💽
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage
+          path: .coverage
+          retention-days: 1
+
+  test-coverage-upload:
+    name: Continuous integration (upload tests coverage)
+
+    needs:
+      - test
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 1
+
+    steps:
+      - name: Load coverage data 💽
+        uses: actions/download-artifact@v4
+        with:
+          name: test-coverage
+          path: .coverage
+
       - name: Publish coverage report 📰
         uses: codecov/codecov-action@v4
         env:
@@ -77,6 +101,30 @@ jobs:
 
       - name: App Tests 🕹️
         run: meteor npm run ci:test -- --full-app
+
+      - name: Archive coverage data 💽
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-app-coverage
+          path: .coverage
+          retention-days: 1
+
+  test-app-coverage-upload:
+    name: Continuous integration (upload app tests coverage)
+
+    needs:
+      - test-app
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 1
+
+    steps:
+      - name: Load coverage data 💽
+        uses: actions/download-artifact@v4
+        with:
+          name: test-app-coverage
+          path: .coverage
 
       - name: Publish coverage report 📰
         uses: codecov/codecov-action@v4
