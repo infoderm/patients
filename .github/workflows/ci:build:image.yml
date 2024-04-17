@@ -131,6 +131,7 @@ jobs:
           PORT: 3000
         run: |
           docker container run \
+            --init \
             --detach \
             --network patient-network \
             --publish "${PORT}:${PORT}" \
