@@ -1,6 +1,7 @@
 services:
   patient-web:
     restart: always
+    init: true
     build:
       context: .
     environment:
