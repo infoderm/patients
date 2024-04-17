@@ -23,8 +23,6 @@ services:
       - ./scripts/ensure-replica-set.js:/scripts/ensure-replica-set.js
     networks:
       - patient-network
-    expose:
-      - 27017
     logging:
       driver: "json-file"
       options:
