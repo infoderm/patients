@@ -30,9 +30,7 @@ services:
       options:
         max-size: "100m"
         max-file: "7"
-    entrypoint: [
-      "mongod",
-      "--bind_ip", "localhost,patient-db",
+    command: [
       "--dbpath", "/data/db",
       "--replSet", "meteor"
     ]
