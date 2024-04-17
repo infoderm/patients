@@ -1,0 +1,4 @@
+services:
+  patient-web:
+    build: !reset null
+    image: ghcr.io/infoderm/patients:${IMAGE_TAG}

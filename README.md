@@ -185,6 +185,16 @@ Install dependencies, custom certificates, and MongoDB on server:
 
     TAG=vYYYY.MM.DD meteor npm run deploy
 
+#### Generate a Docker `compose` configuration
+
+:construction: This is work in progress. :construction:
+
+    ROOT_URL=https://example.local IMAGE_TAG=v1 \
+    docker compose \
+      --env-file .env -f compose.yaml \
+      --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml \
+      config
+
 ## :recycle: Backup & Restore
 
 The current backup system requires `age` and the encryption/decryption key at
