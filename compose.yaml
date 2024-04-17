@@ -29,6 +29,7 @@ services:
         max-size: "100m"
         max-file: "7"
     command: [
+      "--bind_ip", "localhost,patient-db",
       "--dbpath", "/data/db",
       "--replSet", "meteor"
     ]
