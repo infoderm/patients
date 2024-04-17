@@ -88,11 +88,6 @@ RUN cd dist/bundle/programs/server && \
   meteor npm install
 
 
-# NOTE Final log step
-
-RUN find . -maxdepth 3
-
-
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot
 
 COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
