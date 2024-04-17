@@ -160,7 +160,7 @@ jobs:
             --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
-            --health-cmd 'mongo --eval "replSet = \"meteor\"; address = \"127.0.0.1\"" /scripts/assert-replica-set.js' \
+            --health-cmd 'mongo --eval "replSet = \"meteor\"; hostname = \"localhost\"" /scripts/assert-replica-set.js' \
             --health-interval 5s \
             --health-retries 3 \
             --health-timeout 10s \
@@ -177,7 +177,7 @@ jobs:
         id: server
         env:
           ROOT_URL: http://localhost
-          MONGO_URL: mongodb://127.0.0.1:27017/meteor
+          MONGO_URL: mongodb://localhost:27017/meteor
           PORT: 3000
         run: |
           cd dist
@@ -187,7 +187,7 @@ jobs:
       - name: Wait for server port to be available
         run: |
           timeout 60 bash -c \
-           'until nc -z -v -w5 127.0.0.1 3000 ; do sleep 1; done'
+           'until nc -z -v -w5 localhost 3000 ; do sleep 1; done'
 
       - name: Call healthcheck endpoint
         run: |

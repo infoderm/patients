@@ -99,7 +99,7 @@ jobs:
       - name: Wait for web port to be available
         run: |
           timeout 60 bash -c \
-           'until nc -z -v -w5 127.0.0.1 3000 ; do sleep 1; done'
+           'until nc -z -v -w5 localhost 3000 ; do sleep 1; done'
 
       - name: Wait for web container to be healthy
         run: |
