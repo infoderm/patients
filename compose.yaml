@@ -8,6 +8,7 @@ services:
       - ROOT_URL=${ROOT_URL}
       - PORT=${PORT}
       - MONGO_URL=${MONGO_URL}
+      - HTTP_FORWARDED_COUNT=${HTTP_FORWARDED_COUNT}
     depends_on:
       patient-db:
         condition: service_healthy
