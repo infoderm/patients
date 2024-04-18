@@ -89,7 +89,7 @@ jobs:
 
       - name: Start
         run: |
-          docker compose up --detach
+          docker compose up --no-build --detach
 
       - name: Wait for database container to be healthy
         run: |
