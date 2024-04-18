@@ -1,0 +1,81 @@
+name: ci:test:deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  build:
+    name: Continuous integration (test deploy)
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 4
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Wait for image build workflow to succeed
+        uses: ArcticLampyrid/action-wait-for-workflow@v1.0.4
+        with:
+          workflow: ci:build:image.yml
+          sha: ${{ github.sha }}
+
+      - name: Log in to GitHub Packages registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+
+      - name: Start
+        env:
+          ROOT_URL: http://localhost
+          IMAGE_TAG: sha-${{ github.sha }}
+        run: |
+          docker compose \
+            --env-file .env -f compose.yaml \
+            --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml \
+            up --no-build --detach
+
+      - name: Wait for database container to be healthy
+        run: |
+          timeout 60 bash -c \
+           'until docker inspect --format "{{json .State.Health }}" "$(docker compose ps -q patient-db)" | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
+
+      - name: Wait for web port to be available
+        run: |
+          timeout 60 bash -c \
+           'until nc -z -v -w5 127.0.0.1 3000 ; do sleep 1; done'
+
+      - name: Wait for web container to be healthy
+        run: |
+          timeout 60 bash -c \
+           'until docker inspect --format "{{json .State.Health }}" "$(docker compose ps -q patient-web)" | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
+
+      - name: Call healthcheck endpoint
+        run: |
+          timeout 60 bash -c \
+            'curl -f http://localhost:3000/api/healthcheck'
+
+      - name: Run healthcheck script
+        run: |
+          timeout 60 bash -c \
+            'node scripts/healthcheck.cjs http://localhost:3000/api/healthcheck'
+
+      - name: Stop
+        run: |
+          docker compose down
