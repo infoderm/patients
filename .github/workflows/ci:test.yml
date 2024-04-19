@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install 💾
-        uses: meteor-actions/install@v3
+        uses: meteor-actions/install@v5
 
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v3
@@ -92,7 +92,7 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install 💾
-        uses: meteor-actions/install@v3
+        uses: meteor-actions/install@v5
 
       - name: Cache build 💽
         uses: meteor-actions/cache-build@v3
