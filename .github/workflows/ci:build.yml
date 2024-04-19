@@ -44,7 +44,7 @@ jobs:
           >> "$GITHUB_OUTPUT"
 
       - name: Cache build 💽
-        uses: meteor-actions/cache-build@v3
+        uses: meteor-actions/cache-build@v4
         with:
           key: build
 
