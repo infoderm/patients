@@ -34,7 +34,7 @@ jobs:
         uses: meteor-actions/install@v5
 
       - name: Cache build 💽
-        uses: meteor-actions/cache-build@v3
+        uses: meteor-actions/cache-build@v4
         with:
           key: test
 
@@ -95,7 +95,7 @@ jobs:
         uses: meteor-actions/install@v5
 
       - name: Cache build 💽
-        uses: meteor-actions/cache-build@v3
+        uses: meteor-actions/cache-build@v4
         with:
           key: test-app
 
