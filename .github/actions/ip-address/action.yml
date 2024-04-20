@@ -1,0 +1,35 @@
+name: ip-address
+description: >
+  Grabs the IP address of a given container.
+
+inputs:
+
+  container:
+    required: true
+
+outputs:
+
+  address:
+    description: >
+      The input container's IP address.
+    value: ${{ steps.fetch.outputs.address }}
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Retrieve container IP address
+
+      id: fetch
+
+      env:
+        NAME_OR_ID: ${{ inputs.container }}
+
+      shell: bash
+
+      run: |
+        CONTAINER_IP_ADDRESS="$(docker container inspect --format '{{ range.NetworkSettings.Networks }}{{ .IPAddress }}{{ end }}' "${NAME_OR_ID}")"
+        echo "address=${CONTAINER_IP_ADDRESS}" >> "$GITHUB_OUTPUT"
+        test -n "${CONTAINER_IP_ADDRESS}"
