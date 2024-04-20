@@ -87,6 +87,7 @@ jobs:
             scripts/assert-replica-set.js
             .github/actions/is-healthy/action.yml
             .github/actions/is-reachable/action.yml
+            .github/actions/is-running/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Get server image URL
@@ -160,10 +161,11 @@ jobs:
           "address=$(docker container inspect --format '{{ range.NetworkSettings.Networks }}{{ .IPAddress }}{{ end }}' server)" \
           >> "$GITHUB_OUTPUT"
 
-      - name: Wait for server container to be running
-        run: |
-          timeout 60 bash -c \
-           'until docker inspect --format "{{json .State }}" server | jq -e ".Status == \"running\"" ; do sleep 1; done'
+      - name: Wait for container to be running
+        uses: ./.github/actions/is-running
+        with:
+          container: server
+          timeout: 60
 
       - name: Wait for server container port to be available
         uses: ./.github/actions/is-reachable

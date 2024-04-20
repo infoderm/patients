@@ -1,0 +1,35 @@
+name: is-running
+description: >
+  Checks if a given container is running.
+
+inputs:
+
+  container:
+    required: true
+
+  timeout:
+    required: true
+    default: 30
+
+  polling-interval:
+    required: true
+    default: 1
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Wait for container to be healthy
+
+      env:
+        NAME_OR_ID: ${{ inputs.container }}
+        TIMEOUT: ${{ inputs.timeout }}
+        POLLING_INTERVAL: ${{ inputs.polling-interval }}
+
+      shell: bash
+
+      run: |
+        timeout "${TIMEOUT}" bash -c \
+         'until docker inspect --format "{{json .State }}" "${NAME_OR_ID}" | jq -e ".Status == \"running\"" ; do sleep "${POLLING_INTERVAL}"; done'
