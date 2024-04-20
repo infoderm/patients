@@ -97,9 +97,10 @@ jobs:
            'until docker inspect --format "{{json .State.Health }}" "$(docker compose ps -q patient-db)" | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
 
       - name: Wait for web port to be available
-        run: |
-          timeout 60 bash -c \
-           'until nc -z -v -w5 localhost 3000 ; do sleep 1; done'
+        uses: ./.github/actions/is-reachable
+        with:
+          timeout: 60
+          port: 3000
 
       - name: Wait for web container to be healthy
         run: |
