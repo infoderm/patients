@@ -85,6 +85,7 @@ jobs:
         with:
           sparse-checkout: |
             scripts/assert-replica-set.js
+            .github/actions/ip-address/action.yml
             .github/actions/is-healthy/action.yml
             .github/actions/is-reachable/action.yml
             .github/actions/is-running/action.yml
@@ -156,10 +157,9 @@ jobs:
 
       - name: Retrieve server container IP address
         id: server-container-ip-address
-        run: |
-          echo \
-          "address=$(docker container inspect --format '{{ range.NetworkSettings.Networks }}{{ .IPAddress }}{{ end }}' server)" \
-          >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/ip-address
+        with:
+          container: server
 
       - name: Wait for container to be running
         uses: ./.github/actions/is-running
