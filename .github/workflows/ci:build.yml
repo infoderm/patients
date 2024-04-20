@@ -90,6 +90,7 @@ jobs:
           sparse-checkout: |
             scripts/healthcheck.cjs
             scripts/assert-replica-set.js
+            .github/actions/is-reachable/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Load build 💽
@@ -185,9 +186,10 @@ jobs:
           echo "pid=$!" >> "$GITHUB_OUTPUT"
 
       - name: Wait for server port to be available
-        run: |
-          timeout 60 bash -c \
-           'until nc -z -v -w5 localhost 3000 ; do sleep 1; done'
+        uses: ./.github/actions/is-reachable
+        with:
+          timeout: 60
+          port: 3000
 
       - name: Call healthcheck endpoint
         run: |

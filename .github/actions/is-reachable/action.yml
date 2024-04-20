@@ -1,0 +1,55 @@
+name: is-reachable
+description: >
+  Checks if a given host is reachable.
+
+inputs:
+
+  host:
+    required: true
+    default: 'localhost'
+
+  port:
+    required: true
+
+  timeout:
+    required: true
+    default: 5
+
+  max-roundtrip:
+    required: true
+    default: 5
+
+  polling-interval:
+    required: true
+    default: 1
+
+  protocol:
+    required: true
+    default: 'tcp'
+
+  ip-version:
+    required: true
+    default: 'any'
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Wait for host to be reachable
+
+      env:
+        TIMEOUT: ${{ inputs.timeout }}
+        MAX_ROUNDTRIP: ${{ inputs.max-roundtrip }}
+        HOST: ${{ inputs.host }}
+        PORT: ${{ inputs.port }}
+        POLLING_INTERVAL: ${{ inputs.polling-interval }}
+        PROTOCOL_FLAGS: ${{ inputs.protocol == 'udp' && '-u' || '' }}
+        IP_VERSION_FLAGS: ${{ inputs.ip-version == '4' && '-4' || (inputs.ip-version == '6' && '-6' || '') }}
+
+      shell: bash
+
+      run: |
+        timeout "${TIMEOUT}" bash -c \
+         'until nc -z -v -w"${MAX_ROUNDTRIP}" ${IP_VERSION_FLAGS} ${PROTOCOL_FLAGS} "${HOST}" "${PORT}"; do sleep "${POLLING_INTERVAL}"; done'
