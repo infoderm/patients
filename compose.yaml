@@ -22,7 +22,7 @@ services:
     image: "mongo:${MONGO_VERSION}"
     volumes:
       - patient-data:/data/db
-      - ./scripts/ensure-replica-set.js:/scripts/ensure-replica-set.js
+      - ./scripts/assert-replica-set.js:/scripts/assert-replica-set.js
     networks:
       - patient-network
     logging:
@@ -40,7 +40,7 @@ services:
         "CMD",
         "mongo",
         "--eval", "replSet = 'meteor'; hostname = 'patient-db'",
-        "/scripts/ensure-replica-set.js"
+        "/scripts/assert-replica-set.js"
       ]
       start_period: 40s
       start_interval: 2s
