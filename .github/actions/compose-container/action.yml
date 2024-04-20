@@ -1,0 +1,35 @@
+name: compose-container
+description: >
+  Grabs the container of a given docker compose service.
+
+inputs:
+
+  service:
+    required: true
+
+outputs:
+
+  id:
+    description: >
+      The input service's container id.
+    value: ${{ steps.fetch.outputs.id }}
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Retrieve service container id
+
+      id: fetch
+
+      env:
+        SERVICE: ${{ inputs.service }}
+
+      shell: bash
+
+      run: |
+        CONTAINER_ID="$(docker compose ps -q "${SERVICE}")"
+        echo "id=${CONTAINER_ID}" >> "$GITHUB_OUTPUT"
+        test -n "${CONTAINER_ID}"
