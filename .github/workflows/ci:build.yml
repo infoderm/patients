@@ -89,7 +89,7 @@ jobs:
         with:
           sparse-checkout: |
             scripts/healthcheck.cjs
-            scripts/ensure-replica-set.js
+            scripts/assert-replica-set.js
           sparse-checkout-cone-mode: false
 
       - name: Load build 💽
@@ -157,10 +157,10 @@ jobs:
             --restart unless-stopped \
             --publish 27017:27017 \
             --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
-            --volume "${GITHUB_WORKSPACE}/scripts/ensure-replica-set.js":/scripts/ensure-replica-set.js \
+            --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
-            --health-cmd 'mongo --eval "replSet = \"meteor\"; address = \"127.0.0.1\"" /scripts/ensure-replica-set.js' \
+            --health-cmd 'mongo --eval "replSet = \"meteor\"; address = \"127.0.0.1\"" /scripts/assert-replica-set.js' \
             --health-interval 5s \
             --health-retries 3 \
             --health-timeout 10s \

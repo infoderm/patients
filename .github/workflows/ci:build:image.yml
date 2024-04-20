@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            scripts/ensure-replica-set.js
+            scripts/assert-replica-set.js
           sparse-checkout-cone-mode: false
 
       - name: Log in to GitHub Packages registry
@@ -108,10 +108,10 @@ jobs:
             --restart unless-stopped \
             --network patient-network \
             --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
-            --volume "${GITHUB_WORKSPACE}/scripts/ensure-replica-set.js":/scripts/ensure-replica-set.js \
+            --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
-            --health-cmd 'mongo --eval "replSet = \"meteor\"; hostname = \"mongodb\"" /scripts/ensure-replica-set.js' \
+            --health-cmd 'mongo --eval "replSet = \"meteor\"; hostname = \"mongodb\"" /scripts/assert-replica-set.js' \
             --health-interval 5s \
             --health-retries 3 \
             --health-timeout 10s \

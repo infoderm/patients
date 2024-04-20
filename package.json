@@ -310,7 +310,7 @@
       },
       {
         "files": [
-          "scripts/ensure-replica-set.js"
+          "scripts/assert-replica-set.js"
         ],
         "rules": {
           "no-var": "off",
