@@ -85,6 +85,7 @@ jobs:
         with:
           sparse-checkout: |
             scripts/assert-replica-set.js
+            .github/actions/is-healthy/action.yml
             .github/actions/is-reachable/action.yml
           sparse-checkout-cone-mode: false
 
@@ -130,9 +131,10 @@ jobs:
             "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
 
       - name: Wait for MongoDB container to be healthy
-        run: |
-          timeout 60 bash -c \
-           'until docker inspect --format "{{json .State.Health }}" mongodb | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
+        uses: ./.github/actions/is-healthy
+        with:
+          container: mongodb
+          timeout: 60
 
       - name: Run server
         env:
@@ -191,9 +193,10 @@ jobs:
             'curl -f http://${{ steps.server-container-ip-address.outputs.address }}:3000/api/healthcheck'
 
       - name: Wait for container to be healthy
-        run: |
-          timeout 60 bash -c \
-           'until docker inspect --format "{{json .State.Health }}" server | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
+        uses: ./.github/actions/is-healthy
+        with:
+          container: server
+          timeout: 60
 
       - name: Show docker containers
         if: always()

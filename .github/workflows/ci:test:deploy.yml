@@ -51,10 +51,16 @@ jobs:
             --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml \
             up --no-build --detach
 
+      - id: patient-db-container
+        uses: ./.github/actions/compose-container
+        with:
+          service: patient-db
+
       - name: Wait for database container to be healthy
-        run: |
-          timeout 60 bash -c \
-           'until docker inspect --format "{{json .State.Health }}" "$(docker compose ps -q patient-db)" | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
+        uses: ./.github/actions/is-healthy
+        with:
+          container: ${{ steps.patient-db-container.outputs.id }}
+          timeout: 60
 
       - name: Wait for web port to be available
         uses: ./.github/actions/is-reachable
@@ -62,10 +68,16 @@ jobs:
           timeout: 60
           port: 3000
 
+      - id: patient-web-container
+        uses: ./.github/actions/compose-container
+        with:
+          service: patient-web
+
       - name: Wait for web container to be healthy
-        run: |
-          timeout 60 bash -c \
-           'until docker inspect --format "{{json .State.Health }}" "$(docker compose ps -q patient-web)" | jq -e ".Status == \"healthy\"" ; do sleep 1; done'
+        uses: ./.github/actions/is-healthy
+        with:
+          container: ${{ steps.patient-web-container.outputs.id }}
+          timeout: 60
 
       - name: Call healthcheck endpoint
         run: |
