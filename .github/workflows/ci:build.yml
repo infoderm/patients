@@ -92,6 +92,11 @@ jobs:
             scripts/assert-replica-set.js
             .github/actions/is-healthy/action.yml
             .github/actions/is-reachable/action.yml
+            .env
+            storage.yaml
+            .github/actions/compose-container/action.yml
+            .github/actions/database-up/action.yml
+            .github/actions/database-down/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Load build 💽
@@ -150,30 +155,24 @@ jobs:
           npm install
 
       - name: Start MongoDB container
-        env:
-          MONGO_VERSION: '5.0'
-        run: |
-          mkdir -p "${GITHUB_WORKSPACE}/data/db"
-          docker container run \
-            --detach \
-            --restart unless-stopped \
-            --publish 27017:27017 \
-            --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
-            --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
-            --log-opt max-size=100m \
-            --log-opt max-file=7 \
-            --health-cmd 'mongo --eval "replSet = \"meteor\"; hostname = \"localhost\"" /scripts/assert-replica-set.js' \
-            --health-interval 5s \
-            --health-retries 3 \
-            --health-timeout 10s \
-            --health-start-period 40s \
-            --name mongodb \
-            "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
+        uses: ./.github/actions/database-up
+        with:
+          name: mongodb
+          network: host
+          hostname: localhost
+          version: '5.0'
+          replica-set: meteor
+
+      - id: patient-db-container
+        uses: ./.github/actions/compose-container
+        with:
+          compose-file: storage.yaml
+          service: database
 
       - name: Wait for MongoDB container to be healthy
         uses: ./.github/actions/is-healthy
         with:
-          container: mongodb
+          container: ${{ steps.patient-db-container.outputs.id }}
           timeout: 60
 
       - name: Run server
@@ -208,5 +207,4 @@ jobs:
           kill -SIGTERM ${{ steps.server.outputs.pid }}
 
       - name: Stop MongoDB container
-        run: |
-          docker container stop mongodb
+        uses: ./.github/actions/database-down

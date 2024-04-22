@@ -1,0 +1,52 @@
+name: database-up
+description: >
+  Run the database container.
+
+inputs:
+
+  name:
+    default: mongodb
+    required: true
+
+  hostname:
+    required: true
+
+  version:
+    required: true
+
+  replica-set:
+    required: true
+
+  network:
+    required: true
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Run a detached MongoDB container
+
+      id: run
+
+      env:
+        MONGO_VERSION: ${{ inputs.version }}
+        MONGO_REPLICA_SET_NAME: ${{ inputs.replica-set }}
+        MONGO_DB_PATH: /data/db
+        MONGO_HOSTNAME: ${{ inputs.hostname }}
+        MONGO_NAME: ${{ inputs.name }}
+        MONGO_NETWORK: ${{ inputs.network }}
+        COMPOSE_FILE: ${{ inputs.network == 'host' && 'storage.yaml' || '.ci/storage.yaml' }}
+        PUBLISH_FLAGS: ${{ inputs.network == 'host' && '--publish 27017:27017' || '' }}
+
+      shell: bash
+
+      run: |
+        mkdir -p "${GITHUB_WORKSPACE}/${MONGO_DB_PATH}"
+        docker compose -f "${COMPOSE_FILE}" run \
+          --detach \
+          ${PUBLISH_FLAGS} \
+          --volume "${GITHUB_WORKSPACE}/${MONGO_DB_PATH}:${MONGO_DB_PATH}" \
+          --name "${MONGO_NAME}" \
+          database

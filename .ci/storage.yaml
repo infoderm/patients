@@ -1,0 +1,12 @@
+services:
+  database:
+    extends:
+      file: ../storage.yaml
+      service: database
+    networks:
+      - network
+
+networks:
+  network:
+    name: "${MONGO_NETWORK}"
+    external: true

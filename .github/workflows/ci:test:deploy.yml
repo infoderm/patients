@@ -54,6 +54,7 @@ jobs:
       - id: patient-db-container
         uses: ./.github/actions/compose-container
         with:
+          compose-file: compose.yaml
           service: patient-db
 
       - name: Wait for database container to be healthy
@@ -71,6 +72,7 @@ jobs:
       - id: patient-web-container
         uses: ./.github/actions/compose-container
         with:
+          compose-file: compose.yaml
           service: patient-web
 
       - name: Wait for web container to be healthy

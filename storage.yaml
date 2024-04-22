@@ -1,0 +1,28 @@
+services:
+  database:
+    restart: no
+    image: "mongo:${MONGO_VERSION}"
+    volumes:
+      - ./scripts/assert-replica-set.js:/scripts/assert-replica-set.js
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "7"
+    command: [
+      "--bind_ip", "localhost,${MONGO_HOSTNAME}",
+      "--dbpath", "${MONGO_DB_PATH}",
+      "--replSet", "${MONGO_REPLICA_SET_NAME}"
+    ]
+    healthcheck:
+      test: [
+        "CMD",
+        "mongo",
+        "--eval", "replSet = '${MONGO_REPLICA_SET_NAME}'; hostname = '${MONGO_HOSTNAME}'",
+        "/scripts/assert-replica-set.js"
+      ]
+      start_period: 40s
+      start_interval: 2s
+      interval: 1m30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,19 @@
+name: database-down
+description: >
+  Stop the database container.
+
+inputs:
+
+runs:
+
+  using: composite
+
+  steps:
+
+      - name: Stop database service
+        run: |
+          docker compose -f storage.yaml stop database
+
+      - name: Remove database service
+        run: |
+          docker compose -f storage.yaml rm database

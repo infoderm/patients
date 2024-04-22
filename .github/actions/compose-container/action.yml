@@ -4,6 +4,9 @@ description: >
 
 inputs:
 
+  compose-file:
+    required: true
+
   service:
     required: true
 
@@ -25,11 +28,12 @@ runs:
       id: fetch
 
       env:
+        COMPOSE_FILE: ${{ inputs.compose-file }}
         SERVICE: ${{ inputs.service }}
 
       shell: bash
 
       run: |
-        CONTAINER_ID="$(docker compose ps -q "${SERVICE}")"
+        CONTAINER_ID="$(docker compose --env-file '.env' --file "${COMPOSE_FILE}" ps -aq "${SERVICE}")"
         echo "id=${CONTAINER_ID}" >> "$GITHUB_OUTPUT"
         test -n "${CONTAINER_ID}"
