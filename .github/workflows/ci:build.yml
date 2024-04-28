@@ -175,6 +175,11 @@ jobs:
           container: ${{ steps.patient-db-container.outputs.id }}
           timeout: 60
 
+      - name: Show mongodb container logs
+        if: always()
+        run: |
+          docker container logs --timestamps mongodb
+
       - name: Run server
         id: server
         env:
