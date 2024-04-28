@@ -159,7 +159,7 @@ jobs:
         with:
           name: mongodb
           network: host
-          hostname: localhost
+          hostname: mongodb
           version: '5.0'
           replica-set: meteor
 
