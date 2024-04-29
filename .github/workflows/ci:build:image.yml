@@ -85,10 +85,16 @@ jobs:
         with:
           sparse-checkout: |
             scripts/assert-replica-set.js
+            storage.yaml
+            .env
+            .ci/storage.yaml
             .github/actions/ip-address/action.yml
             .github/actions/is-healthy/action.yml
             .github/actions/is-reachable/action.yml
             .github/actions/is-running/action.yml
+            .github/actions/compose-container/action.yml
+            .github/actions/database-up/action.yml
+            .github/actions/database-down/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Get server image URL
@@ -112,30 +118,26 @@ jobs:
           docker network create patient-network
 
       - name: Start MongoDB container
+        uses: ./.github/actions/database-up
+        with:
+          name: mongodb
+          network: patient-network
+          hostname: mongodb
+          version: '5.0'
+          replica-set: meteor
+
+      - id: patient-db-container
+        uses: ./.github/actions/compose-container
         env:
-          MONGO_VERSION: '5.0'
-        run: |
-          mkdir -p "${GITHUB_WORKSPACE}/data/db"
-          docker container run \
-            --detach \
-            --restart unless-stopped \
-            --network patient-network \
-            --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
-            --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
-            --log-opt max-size=100m \
-            --log-opt max-file=7 \
-            --health-cmd 'mongo --eval "replSet = \"meteor\"; hostname = \"mongodb\"" /scripts/assert-replica-set.js' \
-            --health-interval 5s \
-            --health-retries 3 \
-            --health-timeout 10s \
-            --health-start-period 40s \
-            --name mongodb \
-            "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
+          MONGO_NETWORK: patient-network
+        with:
+          compose-file: .ci/storage.yaml
+          service: database
 
       - name: Wait for MongoDB container to be healthy
         uses: ./.github/actions/is-healthy
         with:
-          container: mongodb
+          container: ${{ steps.patient-db-container.outputs.id }}
           timeout: 60
 
       - name: Run server
@@ -242,9 +244,8 @@ jobs:
         run: |
           docker container rm server
 
-      - name: Remove MongoDB container
-        run: |
-          docker container rm mongodb
+      - name: Stop MongoDB container
+        uses: ./.github/actions/database-down
 
       - name: Show docker containers
         if: always()
