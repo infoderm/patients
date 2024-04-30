@@ -121,7 +121,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.24.1",
+    "@babel/eslint-parser": "7.24.5",
     "@babel/plugin-syntax-jsx": "7.24.1",
     "@commitlint/cli": "19.3.0",
     "@faker-js/faker": "8.4.1",
