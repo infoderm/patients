@@ -1,35 +1,50 @@
 {
   "name": "patients",
+  "private": true,
   "meteor": {
     "mainModule": {
       "client": "client/main.tsx",
       "server": "server/main.ts"
     }
   },
-  "babel": {
-    "plugins": [
-      "@babel/plugin-syntax-jsx"
-    ],
-    "env": {
-      "COVERAGE": {
-        "sourceMaps": "both",
-        "plugins": [
-          [
-            "transform-remove-console",
-            {
-              "exclude": [
-                "time",
-                "timeEnd",
-                "log",
-                "error",
-                "warn"
-              ]
-            }
-          ],
-          "istanbul"
-        ]
-      }
-    }
+  "postinstall": {
+    "@fontsource/roboto/300.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/400.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/500.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/700.css": "copy public/@fontsource/roboto/",
+    "@fontsource/roboto/files/*.woff": "copy public/@fontsource/roboto/files/",
+    "@fontsource/roboto/files/*.woff2": "copy public/@fontsource/roboto/files/",
+    "pdfjs-dist/build/pdf.worker.min.js": "copy public/pdfjs-dist/build/",
+    "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/",
+    "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps",
+    "pdfjs-dist/standard_fonts/": "copy public/pdfjs-dist/standard_fonts"
+  },
+  "scripts": {
+    "build": "meteor build",
+    "build-and-upload": "mup deploy --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
+    "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
+    "check:commit-msg": "commitlint --config commitlint.config.ts",
+    "ci:test": "TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_LCOVONLY=1 npm run cover -- --once",
+    "commit-msg": "npm run check:commit-msg -- --edit",
+    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage",
+    "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
+    "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload",
+    "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
+    "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
+    "install-hooks": "husky install",
+    "lint": "xo",
+    "lint-and-fix": "npm run lint -- --fix",
+    "lint-config": "fixpack --dryRun",
+    "lint-config-and-fix": "fixpack || fixpack",
+    "postinstall": "postinstall && npm run favicon",
+    "precommit": "lint-staged",
+    "setup-deploy": "mup setup --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
+    "test": "TZ=Europe/Brussels meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
+    "test:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer npm run test --",
+    "tsc": "tsc",
+    "tsc:watch": "npm run tsc -- --noErrorTruncation --watch",
+    "upgrade": "meteor update && npm run upgrade-deps -- -u && meteor npm install",
+    "upgrade-deps": "meteor node .upgrade/upgrade.js"
   },
   "dependencies": {
     "@async-iterable-iterator/async-iterable-to-array": "0.0.1",
@@ -148,6 +163,7 @@
     "eslint-config-xo-react": "0.27.0",
     "eslint-plugin-react": "7.34.1",
     "eslint-plugin-react-hooks": "4.6.2",
+    "fixpack": "4.0.0",
     "husky": "8.0.3",
     "ical.js": "1.5.0",
     "lint-staged": "14.0.1",
@@ -164,43 +180,30 @@
     "typescript": "~4.9.5",
     "xo": "0.54.2"
   },
-  "postinstall": {
-    "@fontsource/roboto/300.css": "copy public/@fontsource/roboto/",
-    "@fontsource/roboto/400.css": "copy public/@fontsource/roboto/",
-    "@fontsource/roboto/500.css": "copy public/@fontsource/roboto/",
-    "@fontsource/roboto/700.css": "copy public/@fontsource/roboto/",
-    "@fontsource/roboto/files/*.woff": "copy public/@fontsource/roboto/files/",
-    "@fontsource/roboto/files/*.woff2": "copy public/@fontsource/roboto/files/",
-    "pdfjs-dist/build/pdf.worker.min.js": "copy public/pdfjs-dist/build/",
-    "pdfjs-dist/build/pdf.worker.js.map": "copy public/pdfjs-dist/build/",
-    "pdfjs-dist/cmaps/": "copy public/pdfjs-dist/cmaps",
-    "pdfjs-dist/standard_fonts/": "copy public/pdfjs-dist/standard_fonts"
-  },
-  "private": true,
-  "scripts": {
-    "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
-    "check:commit-msg": "commitlint --config commitlint.config.ts",
-    "lint": "xo",
-    "lint-and-fix": "npm run lint -- --fix",
-    "install-hooks": "husky install",
-    "postinstall": "postinstall && npm run favicon",
-    "precommit": "lint-staged",
-    "commit-msg": "npm run check:commit-msg -- --edit",
-    "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
-    "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
-    "tsc": "tsc",
-    "tsc:watch": "npm run tsc -- --noErrorTruncation --watch",
-    "test": "TZ=Europe/Brussels meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
-    "test:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer npm run test --",
-    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage",
-    "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
-    "ci:test": "TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_LCOVONLY=1 npm run cover -- --once",
-    "upgrade-deps": "meteor node .upgrade/upgrade.js",
-    "upgrade": "meteor update && npm run upgrade-deps -- -u && meteor npm install",
-    "setup-deploy": "mup setup --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
-    "build": "meteor build",
-    "build-and-upload": "mup deploy --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
-    "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload"
+  "babel": {
+    "plugins": [
+      "@babel/plugin-syntax-jsx"
+    ],
+    "env": {
+      "COVERAGE": {
+        "sourceMaps": "both",
+        "plugins": [
+          [
+            "transform-remove-console",
+            {
+              "exclude": [
+                "time",
+                "timeEnd",
+                "log",
+                "error",
+                "warn"
+              ]
+            }
+          ],
+          "istanbul"
+        ]
+      }
+    }
   },
   "xo": {
     "parser": "@babel/eslint-parser",
