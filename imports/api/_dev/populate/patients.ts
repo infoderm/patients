@@ -16,11 +16,11 @@ import invoke from '../../endpoint/invoke';
 const AGE_MAX = 130;
 
 export const newPatientFormData = makeTemplate({
-	niss: () => faker.datatype.uuid(),
-	firstname: () => faker.name.firstName(),
-	lastname: () => faker.name.lastName(),
+	niss: () => faker.string.uuid(),
+	firstname: () => faker.person.firstName(),
+	lastname: () => faker.person.lastName(),
 
-	birthdate: () => format(faker.date.past(AGE_MAX), BIRTHDATE_FORMAT),
+	birthdate: () => format(faker.date.past({years: AGE_MAX}), BIRTHDATE_FORMAT),
 	sex: () => faker.helpers.arrayElement(SEX_ALLOWED),
 	photo: () => '', // Could use faker.image.dataUri but this would need to put the format in the database
 	// because current database uses PNG by default and dataUri spits out SVG
@@ -29,9 +29,9 @@ export const newPatientFormData = makeTemplate({
 	ongoing: () => faker.lorem.paragraph(),
 	about: () => faker.lorem.paragraph(),
 
-	municipality: () => faker.address.city(),
-	streetandnumber: () => faker.address.streetAddress(),
-	zip: () => faker.address.zipCode(),
+	municipality: () => faker.location.city(),
+	streetandnumber: () => faker.location.streetAddress(),
+	zip: () => faker.location.zipCode(),
 	phone: () => faker.phone.number(),
 
 	insurances: () =>
@@ -41,17 +41,17 @@ export const newPatientFormData = makeTemplate({
 					displayName: faker.company.name(),
 					name: '',
 				}),
-				range(faker.datatype.number(2)),
+				range(faker.number.int(2)),
 			),
 		),
 	doctors: () =>
 		list(
 			map(
 				() => ({
-					displayName: `${faker.name.lastName()} ${faker.name.firstName()}`,
+					displayName: `${faker.person.lastName()} ${faker.person.firstName()}`,
 					name: '',
 				}),
-				range(faker.datatype.number(2)),
+				range(faker.number.int(2)),
 			),
 		),
 	allergies: () =>
@@ -61,11 +61,11 @@ export const newPatientFormData = makeTemplate({
 					displayName: faker.commerce.product(),
 					name: '',
 				}),
-				range(faker.datatype.number(4)),
+				range(faker.number.int(4)),
 			),
 		),
 
-	noshow: () => faker.datatype.number(3),
+	noshow: () => faker.number.int(3),
 });
 
 export const newPatient = async (invocation, extra?) => {
