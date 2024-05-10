@@ -6,7 +6,7 @@ import insertConsultation from '../../endpoint/consultations/insert';
 import invoke from '../../endpoint/invoke';
 
 export const newConsultationFormData = makeTemplate({
-	datetime: () => faker.date.past(20),
+	datetime: () => faker.date.past({years: 20}),
 	reason: () => faker.lorem.sentence(),
 	done: () => faker.lorem.paragraph(),
 	todo: () => faker.lorem.paragraph(),
@@ -15,9 +15,9 @@ export const newConsultationFormData = makeTemplate({
 	more: () => faker.lorem.paragraph(),
 
 	currency: () => 'EUR',
-	price: () => faker.datatype.number(150),
+	price: () => faker.number.int(150),
 	paid: () => 0,
-	book: () => `${faker.datatype.number(100)}`,
+	book: () => `${faker.number.int(100)}`,
 });
 
 export const newConsultation = async (invocation, extra?) => {
