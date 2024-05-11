@@ -1,5 +1,8 @@
 import {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
 
+export {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
+export {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
+
 export const WORKER_URL = Meteor.isClient
 	? '/pdfjs-dist/build/pdf.worker.min.js'
 	: 'pdfjs-dist/legacy/build/pdf.worker.js';
