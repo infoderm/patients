@@ -9,12 +9,10 @@ import {
 	type PngConfig,
 } from 'canvas/types';
 import addDays from 'date-fns/addDays';
-import {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
-import {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
 import {cache as lru, type IndexedDBPersistedLRUCache} from '../cache/lru';
 
-import {fetchPDF} from './pdf';
+import {type DocumentInitParameters, type PageViewport, fetchPDF} from './pdf';
 
 let cache: IndexedDBPersistedLRUCache<string, string>;
 if (Meteor.isClient) {
