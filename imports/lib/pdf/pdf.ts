@@ -4,8 +4,8 @@ export {type DocumentInitParameters} from 'pdfjs-dist/types/src/display/api';
 export {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
 export const WORKER_URL = Meteor.isClient
-	? '/pdfjs-dist/build/pdf.worker.min.js'
-	: 'pdfjs-dist/legacy/build/pdf.worker.js';
+	? '/pdfjs-dist/build/pdf.worker.min.mjs'
+	: 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 export const CMAP_URL = Meteor.isClient
 	? '/pdfjs-dist/cmaps/'
 	: './npm/node_modules/pdfjs-dist/cmaps/';
@@ -23,12 +23,12 @@ export async function fetchPDF({
 }: DocumentInitParameters) {
 	const pdfjs = Meteor.isClient
 		? await import('pdfjs-dist')
-		: await import('pdfjs-dist/legacy/build/pdf.js');
+		: await import('pdfjs-dist/legacy/build/pdf.mjs');
 
 	if (pdfjs.GlobalWorkerOptions.workerSrc === '') {
 		pdfjs.GlobalWorkerOptions.workerSrc = WORKER_URL;
 		// NOTE For CDN delivery
-		// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+		// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.mjs`;
 	}
 
 	return pdfjs.getDocument({
