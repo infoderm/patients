@@ -15,6 +15,7 @@ export async function fetchPDF({
 	cMapUrl = CMAP_URL,
 	cMapPacked = CMAP_PACKED,
 	standardFontDataUrl = STANDARD_FONT_DATA_URL,
+	isEvalSupported = false,
 	...rest
 }: DocumentInitParameters) {
 	const pdfjs = Meteor.isClient
@@ -27,8 +28,13 @@ export async function fetchPDF({
 		// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 	}
 
-	return pdfjs.getDocument({cMapUrl, cMapPacked, standardFontDataUrl, ...rest})
-		.promise;
+	return pdfjs.getDocument({
+		cMapUrl,
+		cMapPacked,
+		standardFontDataUrl,
+		isEvalSupported,
+		...rest,
+	}).promise;
 }
 
 export async function saveHTMLElementAsPDF(
