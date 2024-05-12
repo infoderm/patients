@@ -1,0 +1,18 @@
+name: install
+description: >
+  Installs Meteor and NPM dependencies.
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Install 💾
+      id: install
+      uses: meteor-actions/install@v6
+
+    - name: Postinstall 🪝
+      if: steps.install.outputs.ran-npm-install-hooks != 'true'
+      shell: bash
+      run: meteor npm run postinstall
