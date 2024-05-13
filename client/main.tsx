@@ -1,5 +1,6 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
+// eslint-disable-next-line import/order, import/no-unassigned-import
+import './polyfill';
+
 import React, {StrictMode} from 'react';
 
 import {Meteor} from 'meteor/meteor';
