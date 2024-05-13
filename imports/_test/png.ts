@@ -1,3 +1,5 @@
+import pngDataURL from '../lib/png/dataURL';
+
 const base64Encoded =
 	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
@@ -6,8 +8,7 @@ export const randomPNGBuffer = async () => {
 	return Buffer.from(base64Encoded, 'base64');
 };
 
-export const randomPNGDataURI = (): string =>
-	`data:image/png;base64,${base64Encoded}`;
+export const randomPNGDataURI = (): string => pngDataURL(base64Encoded);
 
 export const randomPNGResponse = async (): Promise<Response> =>
 	fetch(randomPNGDataURI());
