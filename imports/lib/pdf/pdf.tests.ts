@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
-
 import {client, server} from '../../_test/fixtures';
 import {randomPDFUint8Array} from '../../_test/pdf';
 

@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 import request from 'supertest';
 

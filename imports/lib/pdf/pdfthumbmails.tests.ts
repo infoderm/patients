@@ -1,9 +1,6 @@
 import {Buffer} from 'buffer';
 import {Readable} from 'stream';
 
-// eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
-
 import {assert} from 'chai';
 
 import {client, server, throws} from '../../_test/fixtures';
