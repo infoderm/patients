@@ -1,3 +1,5 @@
+import blobToDataURL from '../lib/blob/blobToDataURL';
+
 const document = `%PDF-1.0
 1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj
@@ -16,4 +18,14 @@ startxref
 
 export const randomPDFUint8Array = (): Uint8Array => {
 	return new TextEncoder().encode(document);
+};
+
+export const randomPDFBlob = (): Blob => {
+	const data = randomPDFUint8Array();
+	return new Blob([data.buffer], {type: 'application/pdf'});
+};
+
+export const randomPDFDataURI = async (): Promise<string> => {
+	const blob = randomPDFBlob();
+	return blobToDataURL(blob);
 };

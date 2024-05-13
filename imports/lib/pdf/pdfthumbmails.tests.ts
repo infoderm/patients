@@ -7,10 +7,9 @@ import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
 import {client, server, throws} from '../../_test/fixtures';
-import {randomPDFUint8Array} from '../../_test/pdf';
+import {randomPDFUint8Array, randomPDFDataURI} from '../../_test/pdf';
 
 import dataURL from '../dataURL';
-import blobToDataURL from '../blob/blobToDataURL';
 
 import {
 	thumbnailDataURL,
@@ -21,9 +20,7 @@ import {
 
 client(__filename, () => {
 	it('thumbnailDataURL should work', async () => {
-		const data = randomPDFUint8Array();
-		const blob = new Blob([data.buffer], {type: 'application/pdf'});
-		const url = await blobToDataURL(blob);
+		const url = await randomPDFDataURI();
 		const result = await thumbnailDataURL(
 			url,
 			{minWidth: 10, minHeight: 10},
@@ -75,9 +72,7 @@ client(__filename, () => {
 
 server(__filename, () => {
 	it('thumbnailDataURL should NOT be implemented', async () => {
-		const data = randomPDFUint8Array();
-		const buffer = Buffer.from(data).toString('base64');
-		const url = dataURL('image/png', buffer);
+		const url = await randomPDFDataURI();
 
 		await throws(
 			async () =>
