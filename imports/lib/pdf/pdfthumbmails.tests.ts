@@ -7,6 +7,7 @@ import 'regenerator-runtime/runtime.js';
 import {assert} from 'chai';
 
 import {client, server, throws} from '../../_test/fixtures';
+import {randomPDFUint8Array} from '../../_test/pdf';
 
 import dataURL from '../dataURL';
 import blobToDataURL from '../blob/blobToDataURL';
@@ -18,25 +19,9 @@ import {
 	thumbnailBuffer,
 } from './pdfthumbnails';
 
-const document = `%PDF-1.0
-1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
-2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj
-3 0 obj<</Type/Page/MediaBox[0 0 3 3]>>endobj
-xref
-0 4
-0000000000 65535 f
-0000000009 00000 n
-0000000052 00000 n
-0000000101 00000 n
-trailer<</Size 4/Root 1 0 R>>
-startxref
-147
-%EOF
-`;
-
 client(__filename, () => {
 	it('thumbnailDataURL should work', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		const blob = new Blob([data.buffer], {type: 'application/pdf'});
 		const url = await blobToDataURL(blob);
 		const result = await thumbnailDataURL(
@@ -52,7 +37,7 @@ client(__filename, () => {
 	});
 
 	it('thumbnailBlob should work', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		const result = await thumbnailBlob(
 			{data},
 			{minWidth: 200, minHeight: 200},
@@ -62,7 +47,7 @@ client(__filename, () => {
 	});
 
 	it('thumbnailBuffer should NOT be implemented', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		await throws(
 			async () =>
 				thumbnailBuffer(
@@ -75,7 +60,7 @@ client(__filename, () => {
 	});
 
 	it('thumbnailStream should NOT be implemented', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		await throws(
 			async () =>
 				thumbnailStream(
@@ -90,7 +75,7 @@ client(__filename, () => {
 
 server(__filename, () => {
 	it('thumbnailDataURL should NOT be implemented', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		const buffer = Buffer.from(data).toString('base64');
 		const url = dataURL('image/png', buffer);
 
@@ -106,7 +91,7 @@ server(__filename, () => {
 	});
 
 	it('thumbnailBlob should work', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 
 		await throws(
 			async () =>
@@ -120,7 +105,7 @@ server(__filename, () => {
 	});
 
 	it('thumbnailBuffer should work', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		const result = await thumbnailBuffer(
 			{data},
 			{minWidth: 200, minHeight: 200},
@@ -130,7 +115,7 @@ server(__filename, () => {
 	});
 
 	it('thumbnailStream should work', async () => {
-		const data = new TextEncoder().encode(document);
+		const data = randomPDFUint8Array();
 		const result = await thumbnailStream(
 			{data},
 			{minWidth: 200, minHeight: 200},
