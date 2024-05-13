@@ -1,2 +1,4 @@
-const dataURL = (base64: string) => `data:image/png;base64,${base64}`;
+import _dataURL from '../dataURL';
+
+const dataURL = (base64: string) => _dataURL('image/png', base64);
 export default dataURL;
