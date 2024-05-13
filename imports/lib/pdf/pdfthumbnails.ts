@@ -161,8 +161,12 @@ export const thumbnailDataURL = async (
 const toBlob = async (
 	canvas: HTMLCanvasElement,
 	{type, quality}: RenderOptions,
-) =>
-	new Promise<Blob>((resolve, reject) => {
+) => {
+	if (Meteor.isServer) {
+		throw new Error('not implemented');
+	}
+
+	return new Promise<Blob>((resolve, reject) => {
 		canvas.toBlob(
 			(blob: Blob | null) => {
 				if (blob === null) {
@@ -175,6 +179,7 @@ const toBlob = async (
 			quality,
 		);
 	});
+};
 
 export const thumbnailBlob = async (
 	document: DocumentInitParameters,
@@ -232,6 +237,10 @@ export const thumbnailBuffer = async (
 	pageOptions: PageOptions,
 	canvasRenderOptions: CanvasRenderOptions,
 ) => {
+	if (Meteor.isClient) {
+		throw new Error('not implemented');
+	}
+
 	const renderContext = await thumbnailRender(document, pageOptions);
 	const canvas = renderContext.canvasContext.canvas as unknown as Canvas;
 	const buffer = await toBuffer(canvas, canvasRenderOptions);
@@ -244,6 +253,10 @@ export const thumbnailStream = async (
 	pageOptions: PageOptions,
 	{type = 'image/png', config}: CanvasRenderOptions,
 ): Promise<Readable> => {
+	if (Meteor.isClient) {
+		throw new Error('not implemented');
+	}
+
 	const renderContext = await thumbnailRender(document, pageOptions);
 	const canvas = renderContext.canvasContext.canvas as unknown as Canvas;
 	let stream: Readable;
