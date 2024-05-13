@@ -2,15 +2,18 @@
 import {type Buffer} from 'buffer';
 import {type Readable} from 'stream';
 
+import addDays from 'date-fns/addDays';
+
+import {cache as lru, type IndexedDBPersistedLRUCache} from '../cache/lru';
+
 import {
 	type Canvas,
 	type JpegConfig,
 	type PdfConfig,
 	type PngConfig,
-} from 'canvas/types';
-import addDays from 'date-fns/addDays';
-
-import {cache as lru, type IndexedDBPersistedLRUCache} from '../cache/lru';
+	createContextIso,
+	destroyContextIso,
+} from '../canvas';
 
 import {type DocumentInitParameters, type PageViewport, fetchPDF} from './pdf';
 
@@ -21,44 +24,6 @@ if (Meteor.isClient) {
 		maxCount: 200,
 	});
 }
-
-type CreateCanvasOptions = {
-	width: number;
-	height: number;
-};
-
-const createCanvasIso = async ({
-	width,
-	height,
-}: CreateCanvasOptions): Promise<HTMLCanvasElement | Canvas> => {
-	if (Meteor.isServer) {
-		const {createCanvas} = await import('canvas');
-		return createCanvas(width, height);
-	}
-
-	const browserCanvas = document.createElement('canvas');
-	browserCanvas.width = width;
-	browserCanvas.height = height;
-	return browserCanvas;
-};
-
-const destroyCanvasIso = (canvas: HTMLCanvasElement | Canvas) => {
-	canvas.width = 0;
-	canvas.height = 0;
-	if (Meteor.isClient) {
-		(canvas as HTMLCanvasElement).remove();
-	}
-};
-
-type CreateContextOptions = {} & CreateCanvasOptions;
-
-const createContextIso = async (
-	options: CreateContextOptions,
-): Promise<CanvasRenderingContext2D> => {
-	return createCanvasIso(options).then(
-		(canvas) => canvas.getContext('2d') as CanvasRenderingContext2D,
-	);
-};
 
 type RenderContext = {
 	canvasContext: CanvasRenderingContext2D;
@@ -91,7 +56,7 @@ const createRenderContextIso = async (
 };
 
 const destroyRenderContextIso = (renderContext: RenderContext) => {
-	destroyCanvasIso(renderContext.canvasContext.canvas);
+	destroyContextIso(renderContext.canvasContext);
 	// @ts-expect-error This is for garbage collection.
 	renderContext.canvasContext = null;
 };
