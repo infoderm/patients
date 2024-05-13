@@ -113,6 +113,8 @@ export const server = (title, fn) => {
 		};
 
 		const prepare = async () => {
+			await import('../../server/polyfill');
+
 			if (isAppTest()) {
 				await appIsReady();
 			}

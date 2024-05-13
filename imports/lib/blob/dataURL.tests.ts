@@ -11,10 +11,6 @@ import blobToDataURL from './blobToDataURL';
 
 isomorphic(__filename, () => {
 	it('should allow to convert back and forth from a dataURL', async () => {
-		if (Meteor.isServer) {
-			await import('../../../server/polyfill/fetch');
-		}
-
 		const url = randomPNGDataURI();
 
 		const blob = await blobFromDataURL(url);
