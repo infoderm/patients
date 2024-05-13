@@ -132,6 +132,11 @@ export const server = (title, fn) => {
 	}
 };
 
+export const isomorphic = (title, fn) => {
+	client(title, fn);
+	server(title, fn);
+};
+
 export const throws = async (
 	fn: () => Promise<any>,
 	expected: string | RegExp,
