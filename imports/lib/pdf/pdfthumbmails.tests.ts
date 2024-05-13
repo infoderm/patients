@@ -5,8 +5,14 @@ import {assert} from 'chai';
 
 import {client, server, throws} from '../../_test/fixtures';
 import {randomPDFUint8Array, randomPDFDataURI} from '../../_test/pdf';
+import {
+	assertEqual as assertEqualImages,
+	whiteRectanglePNG,
+} from '../../_test/image';
 
-import dataURL from '../dataURL';
+import blobFromDataURL from '../blob/blobFromDataURL';
+import blobToBuffer from '../blob/blobToBuffer';
+import streamToBuffer from '../stream/streamToBuffer';
 
 import {
 	thumbnailDataURL,
@@ -15,29 +21,39 @@ import {
 	thumbnailBuffer,
 } from './pdfthumbnails';
 
+const width = 200;
+const height = 200;
+
 client(__filename, () => {
 	it('thumbnailDataURL should work', async () => {
-		const url = await randomPDFDataURI();
-		const result = await thumbnailDataURL(
-			url,
-			{minWidth: 10, minHeight: 10},
+		const pdfDataURL = await randomPDFDataURI();
+		const pngDataURL = await thumbnailDataURL(
+			pdfDataURL,
+			{minWidth: width, minHeight: height},
 			{type: 'image/png'},
 		);
-		const expected = dataURL(
-			'image/png',
-			'iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAAXSURBVBhXY/wPBAxEAMZRhfhCifrBAwDBjyfjq7VgpgAAAABJRU5ErkJggg==',
-		);
-		assert.equal(result, expected);
+
+		assert.typeOf(pngDataURL, 'string');
+
+		const buffer = await blobFromDataURL(pngDataURL).then(blobToBuffer);
+		const expected = await whiteRectanglePNG({width, height});
+
+		await assertEqualImages(buffer, expected);
 	});
 
 	it('thumbnailBlob should work', async () => {
 		const data = randomPDFUint8Array();
-		const result = await thumbnailBlob(
+		const blob = await thumbnailBlob(
 			{data},
-			{minWidth: 200, minHeight: 200},
+			{minWidth: width, minHeight: height},
 			{type: 'image/png'},
 		);
-		assert.instanceOf(result, Blob);
+		assert.instanceOf(blob, Blob);
+
+		const buffer = await blobToBuffer(blob);
+		const expected = await whiteRectanglePNG({width, height});
+
+		await assertEqualImages(buffer, expected);
 	});
 
 	it('thumbnailBuffer should NOT be implemented', async () => {
@@ -46,7 +62,7 @@ client(__filename, () => {
 			async () =>
 				thumbnailBuffer(
 					{data},
-					{minWidth: 200, minHeight: 200},
+					{minWidth: width, minHeight: height},
 					{type: 'image/png'},
 				),
 			/not implemented/i,
@@ -59,7 +75,7 @@ client(__filename, () => {
 			async () =>
 				thumbnailStream(
 					{data},
-					{minWidth: 200, minHeight: 200},
+					{minWidth: width, minHeight: height},
 					{type: 'image/png'},
 				),
 			/not implemented/i,
@@ -75,7 +91,7 @@ server(__filename, () => {
 			async () =>
 				thumbnailDataURL(
 					url,
-					{minWidth: 200, minHeight: 200},
+					{minWidth: width, minHeight: height},
 					{type: 'image/png'},
 				),
 			/not implemented/i,
@@ -89,7 +105,7 @@ server(__filename, () => {
 			async () =>
 				thumbnailBlob(
 					{data},
-					{minWidth: 200, minHeight: 200},
+					{minWidth: width, minHeight: height},
 					{type: 'image/png'},
 				),
 			/not implemented/i,
@@ -98,21 +114,31 @@ server(__filename, () => {
 
 	it('thumbnailBuffer should work', async () => {
 		const data = randomPDFUint8Array();
-		const result = await thumbnailBuffer(
+		const buffer = await thumbnailBuffer(
 			{data},
-			{minWidth: 200, minHeight: 200},
+			{minWidth: width, minHeight: height},
 			{type: 'image/png'},
 		);
-		assert.instanceOf(result, Buffer);
+		assert.instanceOf(buffer, Buffer);
+
+		const expected = await whiteRectanglePNG({width, height});
+
+		await assertEqualImages(buffer, expected);
 	});
 
 	it('thumbnailStream should work', async () => {
 		const data = randomPDFUint8Array();
-		const result = await thumbnailStream(
+		const stream = await thumbnailStream(
 			{data},
-			{minWidth: 200, minHeight: 200},
+			{minWidth: width, minHeight: height},
 			{type: 'image/png'},
 		);
-		assert.instanceOf(result, Readable);
+		assert.instanceOf(stream, Readable);
+
+		const buffer = await streamToBuffer(stream);
+
+		const expected = await whiteRectanglePNG({width, height});
+
+		await assertEqualImages(buffer, expected);
 	});
 });
