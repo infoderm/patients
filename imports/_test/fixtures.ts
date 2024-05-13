@@ -88,6 +88,8 @@ export const client = (title, fn) => {
 		let original;
 
 		const prepare = async () => {
+			await import('../../client/polyfill');
+
 			original = await forgetHistory();
 			await cleanup();
 		};

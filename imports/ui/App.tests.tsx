@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
 import React from 'react';
 import {render, waitForElementToBeRemoved} from '@testing-library/react';
 
