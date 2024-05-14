@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install 💾
-        uses: meteor-actions/install@v5
+        uses: meteor-actions/install@v6
 
       - name: TypeScript check ☑️
         run: meteor npm run tsc
