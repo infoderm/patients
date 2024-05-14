@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install 💾
-        uses: meteor-actions/install@v5
+        uses: meteor-actions/install@v6
 
       - name: Lint last pushed commit 👕
         if: github.event_name == 'push'
