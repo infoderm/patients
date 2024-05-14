@@ -5,6 +5,13 @@
     "mainModule": {
       "client": "client/main.tsx",
       "server": "server/main.ts"
+    },
+    "nodeModules": {
+      "recompile": {
+        "pdfjs-dist": [
+          "server"
+        ]
+      }
     }
   },
   "postinstall": {
