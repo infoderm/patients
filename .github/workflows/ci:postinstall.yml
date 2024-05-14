@@ -1,0 +1,37 @@
+name: ci:postinstall
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  test:
+    name: Continuous integration (test postinstall)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install 💾
+        uses: ./.github/actions/install
+
+      - name: Test that `public/favicon.ico` is there 🤒
+        run: |
+          test -f public/favicon.ico
+
+      - name: Test that `public/@fontsource/roboto` is there 🤖
+        run: |
+          test -d public/@fontsource/roboto
+
+      - name: Test that `public/pdfjs-dist/build` is there 📄
+        run: |
+          test -d public/pdfjs-dist/build
