@@ -10,9 +10,4 @@ runs:
 
     - name: Install 💾
       id: install
-      uses: meteor-actions/install@v6
-
-    - name: Postinstall 🪝
-      if: steps.install.outputs.ran-npm-install-hooks != 'true'
-      shell: bash
-      run: meteor npm run postinstall
+      uses: meteor-actions/install@v7
