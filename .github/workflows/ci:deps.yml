@@ -1,0 +1,28 @@
+name: ci:deps
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  upgrade:
+    name: Continuous integration (upgrade deps)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install 💾
+        uses: ./.github/actions/install
+
+      - name: Upgrade dependencies (regression test) 📦
+        run: meteor npm run upgrade-deps
