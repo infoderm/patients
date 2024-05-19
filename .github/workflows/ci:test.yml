@@ -14,123 +14,64 @@ concurrency:
 jobs:
 
   test:
-    name: Continuous integration (tests)
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+    name: Continuous integration
+    strategy:
 
-      - name: Cache ~/.cache/puppeteer 🎭
-        uses: actions/cache@v4
-        id: cache-puppeteer
-        env:
-          cache-name: cache-puppeteer
-        with:
-          path: ~/.cache/puppeteer
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      matrix:
 
-      - name: Install 💾
-        uses: ./.github/actions/install
+        test-type:
+          - test
+          - test-app
 
-      - name: Cache build 💽
-        uses: meteor-actions/cache-build@v4
-        with:
-          key: test
+        test-target:
+          - client
+          - server
 
-      - name: Tests 🔬
-        run: meteor npm run ci:test
+        include:
 
-      - name: Archive coverage data 💽
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-coverage
-          path: .coverage
-          retention-days: 1
+          - test-target: client
+            test-env: 'TEST_SERVER=0'
 
-  test-coverage-upload:
-    name: Continuous integration (upload tests coverage)
+          - test-target: server
+            test-env: 'TEST_CLIENT=0'
 
-    needs:
-      - test
+          - test-type: test
+            test-flags: '--'
 
-    runs-on: ubuntu-latest
+          - test-type: test-app
+            test-flags: '-- --full-app'
 
-    timeout-minutes: 1
+          - test-target: client
+            test-type: test
+            test-timeout: 20
+            test-icon: 🕹️
+            coverage-flags: client,test
 
-    steps:
-      - name: Load coverage data 💽
-        uses: actions/download-artifact@v4
-        with:
-          name: test-coverage
-          path: .coverage
+          - test-target: client
+            test-type: test-app
+            test-timeout: 20
+            test-icon: 🧑‍💻
+            coverage-flags: client, test-app
 
-      - name: Publish coverage report 📰
-        uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          flags: test
-          directory: ./.coverage/
-          fail_ci_if_error: true
+          - test-target: server
+            test-type: test
+            test-timeout: 20
+            test-icon: 🔬
+            coverage-flags: server,test
 
-  test-app:
-    name: Continuous integration (app tests)
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+          - test-target: server
+            test-type: test-app
+            test-timeout: 20
+            test-icon: 🤖
+            coverage-flags: server, test-app
 
-      - name: Cache ~/.cache/puppeteer 🎭
-        uses: actions/cache@v4
-        id: cache-puppeteer
-        env:
-          cache-name: cache-puppeteer
-        with:
-          path: ~/.cache/puppeteer
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 💾
-        uses: ./.github/actions/install
-
-      - name: Cache build 💽
-        uses: meteor-actions/cache-build@v4
-        with:
-          key: test-app
-
-      - name: App Tests 🕹️
-        run: meteor npm run ci:test -- --full-app
-
-      - name: Archive coverage data 💽
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-app-coverage
-          path: .coverage
-          retention-days: 1
-
-  test-app-coverage-upload:
-    name: Continuous integration (upload app tests coverage)
-
-    needs:
-      - test-app
-
-    runs-on: ubuntu-latest
-
-    timeout-minutes: 1
-
-    steps:
-      - name: Load coverage data 💽
-        uses: actions/download-artifact@v4
-        with:
-          name: test-app-coverage
-          path: .coverage
-
-      - name: Publish coverage report 📰
-        uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          flags: test-app
-          directory: ./.coverage/
-          fail_ci_if_error: true
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+    with:
+      test-target: ${{ matrix.test-target }}
+      test-type: ${{ matrix.test-type }}
+      test-icon: ${{ matrix.test-icon }}
+      test-env: ${{ matrix.test-env }}
+      test-flags: ${{ matrix.test-flags }}
+      test-timeout: ${{ matrix.test-timeout }}
+      coverage-flags: ${{ matrix.coverage-flags }}

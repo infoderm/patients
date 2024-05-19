@@ -1,0 +1,87 @@
+name: test
+
+on:
+  workflow_call:
+    inputs:
+      test-target:
+        type: string
+        required: true
+      test-type:
+        type: string
+        required: true
+      test-icon:
+        type: string
+        required: true
+      test-env:
+        type: string
+        required: true
+      test-flags:
+        type: string
+        required: true
+      test-timeout:
+        type: number
+        required: true
+      coverage-flags:
+        type: string
+        required: true
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.test-timeout }}
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Cache ~/.cache/puppeteer 🎭
+        uses: actions/cache@v4
+        id: cache-puppeteer
+        env:
+          cache-name: cache-puppeteer
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 💾
+        uses: ./.github/actions/install
+
+      - name: Cache build 💽
+        uses: meteor-actions/cache-build@v4
+        with:
+          key: ${{ inputs.test-target }}-${{ inputs.test-type }}
+
+      - name: Tests ${{ inputs.test-icon }}
+        run: ${{ inputs.test-env }} meteor npm run ci:test ${{ inputs.test-flags }}
+
+      - name: Archive coverage data 💽
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.test-target }}-${{ inputs.test-type }}-coverage
+          path: .coverage
+          retention-days: 1
+
+  test-coverage-upload:
+    needs:
+      - test
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 1
+
+    steps:
+      - name: Load coverage data 💽
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.test-target }}-${{ inputs.test-type }}-coverage
+          path: .coverage
+
+      - name: Publish coverage report 📰
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          flags: ${{ inputs.coverage-flags }}
+          directory: ./.coverage/
+          fail_ci_if_error: true
