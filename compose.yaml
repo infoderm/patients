@@ -38,7 +38,7 @@ services:
     healthcheck:
       test: [
         "CMD",
-        "mongo",
+        "mongosh",
         "--eval", "replSet = 'meteor'; hostname = 'patient-db'",
         "/scripts/assert-replica-set.js"
       ]
