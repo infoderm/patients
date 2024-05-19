@@ -124,7 +124,7 @@ jobs:
             --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
             --log-opt max-size=100m \
             --log-opt max-file=7 \
-            --health-cmd 'mongo --eval "replSet = \"meteor\"; hostname = \"mongodb\"" /scripts/assert-replica-set.js' \
+            --health-cmd 'mongosh --eval "replSet = \"meteor\"; hostname = \"mongodb\"" /scripts/assert-replica-set.js' \
             --health-interval 5s \
             --health-retries 3 \
             --health-timeout 10s \
