@@ -1,0 +1,31 @@
+name: ci:lint-yaml
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    name: Continuous integration (lint yaml)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install 💾
+        id: install
+        run: |
+          sudo pip install yamllint==1.35.1
+
+      - name: Lint YAML files 👕
+        run: |
+          yamllint . --strict --format github
