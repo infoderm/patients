@@ -1,0 +1,26 @@
+name: ci:lint-dockerfile
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    name: Continuous integration (lint dockerfile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile 👕
+        run: |
+          npx dockerfilelint ./Dockerfile
