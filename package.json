@@ -5,6 +5,11 @@
     "mainModule": {
       "client": "client/main.tsx",
       "server": "server/main.ts"
+    },
+    "nodeModules": {
+      "recompile": {
+        "pdfjs-dist": true
+      }
     }
   },
   "postinstall": {
@@ -137,8 +142,11 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@babel/core": "7.24.5",
     "@babel/eslint-parser": "7.24.5",
     "@babel/plugin-syntax-jsx": "7.24.1",
+    "@babel/plugin-transform-class-properties": "7.24.1",
+    "@babel/plugin-transform-private-methods": "7.24.1",
     "@commitlint/cli": "19.3.0",
     "@faker-js/faker": "8.4.1",
     "@fontsource/roboto": "5.0.13",
@@ -183,7 +191,9 @@
   },
   "babel": {
     "plugins": [
-      "@babel/plugin-syntax-jsx"
+      "@babel/plugin-syntax-jsx",
+      "@babel/plugin-transform-class-properties",
+      "@babel/plugin-transform-private-methods"
     ],
     "env": {
       "COVERAGE": {
