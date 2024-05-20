@@ -21,6 +21,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
+      - name: Work around https://github.com/hadolint/hadolint/issues/978
+        run: |
+          grep -v '^  --start-interval=' Dockerfile > Dockerfile.patched
+
       - name: Lint Dockerfile 👕
         run: |
-          npx dockerfilelint ./Dockerfile
+          < ./Dockerfile.patched docker run --rm -i -v ./.hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint
