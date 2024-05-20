@@ -28,4 +28,5 @@ jobs:
 
       - name: Lint workflows 👕
         run: |
+          echo "::add-matcher::.github/workflows/matchers/actionlint.json"
           ${{ steps.install.outputs.executable }} -color
