@@ -26,5 +26,7 @@ jobs:
           grep -v '^  --start-interval=' Dockerfile > Dockerfile.patched
 
       - name: Lint Dockerfile 👕
-        run: |
-          < ./Dockerfile.patched docker run --rm -i -v ./.hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint
+        id: lint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./Dockerfile.patched
