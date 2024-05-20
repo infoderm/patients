@@ -97,7 +97,7 @@ jobs:
           IMAGE_METADATA: ${{ needs.build.outputs.server-image }}
         run: |
           IMAGE_URL="$(echo "${IMAGE_METADATA}" | jq -r 'first(.tags[] | select(test(":sha-[0-9a-f]{40}$")))')"
-          echo "url=${IMAGE_URL}" >> $GITHUB_OUTPUT
+          echo "url=${IMAGE_URL}" >> "${GITHUB_OUTPUT}"
           test -n "${IMAGE_URL}"
 
       - name: Log in to GitHub Packages registry
