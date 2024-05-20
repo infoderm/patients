@@ -43,6 +43,8 @@ jobs:
         with:
           path: ~/.cache/puppeteer
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install 💾
         uses: ./.github/actions/install
