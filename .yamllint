@@ -1,0 +1,27 @@
+extends: default
+
+locale: en_US.UTF-8
+
+ignore-from-file:
+  - .gitignore
+
+rules:
+
+  document-start:
+    present: false
+
+  line-length: disable
+
+  truthy:
+    allowed-values:
+      - 'true'
+      - 'false'
+    check-keys: false
+
+  braces:
+    forbid: true
+
+  brackets:
+    forbid: true
+    ignore:
+      - /compose.yaml
