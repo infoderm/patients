@@ -10,7 +10,7 @@ const headersFromRateLimiterRes = (
 	rateLimiter: RateLimiter,
 	rateLimiterRes: RateLimiterRes,
 ) => ({
-	'Retry-After': rateLimiterRes.msBeforeNext / 1000,
+	'Retry-After': Math.ceil(rateLimiterRes.msBeforeNext / 1000),
 	'X-RateLimit-Limit': rateLimiter.points,
 	'X-RateLimit-Remaining': rateLimiterRes.remainingPoints,
 	'X-RateLimit-Reset': addMilliseconds(new Date(), rateLimiterRes.msBeforeNext),
