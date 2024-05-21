@@ -1,9 +1,10 @@
 import addMilliseconds from 'date-fns/addMilliseconds';
-import {type NextFunction, type Request, type Response} from 'express';
 import {
 	type RateLimiterAbstract as RateLimiter,
 	type RateLimiterRes,
 } from 'rate-limiter-flexible';
+
+import {type NextFunction, type Request, type Response} from './route';
 
 const headersFromRateLimiterRes = (
 	rateLimiter: RateLimiter,

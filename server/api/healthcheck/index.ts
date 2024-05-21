@@ -1,15 +1,14 @@
 import process from 'process';
 
-import express from 'express';
-
 import isProduction from '../../../imports/app/isProduction';
 import isReady from '../../../imports/app/isReady';
 
 import {pipe} from '../rateLimit';
+import {createRouter} from '../route';
 
 import rateLimiter from './rateLimiter';
 
-const routes = express();
+const routes = createRouter();
 
 routes.set('trust proxy', process.env.HTTP_FORWARDED_COUNT);
 
