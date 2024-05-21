@@ -1,6 +1,5 @@
 import process from 'process';
 
-import express from 'express';
 import ical, {ICalEventStatus} from 'ical-generator';
 
 import subWeeks from 'date-fns/subWeeks';
@@ -21,6 +20,7 @@ import absoluteURL from '../../../imports/app/absoluteURL';
 import isProduction from '../../../imports/app/isProduction';
 
 import {pipe} from '../rateLimit';
+import {createRouter} from '../route';
 
 import rateLimiter from './rateLimiter';
 
@@ -120,7 +120,7 @@ const response = async (token, IPAddress, query, res) => {
 		.send(body);
 };
 
-const routes = express();
+const routes = createRouter();
 
 routes.set('trust proxy', process.env.HTTP_FORWARDED_COUNT);
 
