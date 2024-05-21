@@ -1,11 +1,20 @@
 import {assert} from 'chai';
 import request from 'supertest';
 
+import dateParse from 'date-fns/parse';
+import addSeconds from 'date-fns/addSeconds';
+import startOfSecond from 'date-fns/startOfSecond';
+
+import {key} from '@total-order/key';
+import {increasing} from '@total-order/primitive';
+
 import {map} from '@iterable-iterator/map';
 import {nrepeat} from '@iterable-iterator/repeat';
 import {list} from '@iterable-iterator/list';
+import {filter} from '@iterable-iterator/filter';
 import {range} from '@iterable-iterator/range';
 import {chain} from '@iterable-iterator/chain';
+import {max} from '@iterable-iterator/reduce';
 
 import {server, setLike} from '../../imports/_test/fixtures';
 import sleep from '../../imports/lib/async/sleep';
@@ -15,6 +24,15 @@ import {createRouter} from './route';
 
 const _repeat = <T>(n: number, fn: () => T): T[] =>
 	list(map(fn, nrepeat(undefined, n)));
+
+const _parseXRateLimitReset = (x: string): Date =>
+	dateParse(
+		x.replace(/ \(.*\)$/, ''),
+		"EEE MMM dd yyyy HH:mm:ss 'GMT'xx",
+		new Date(),
+	);
+
+const _parseRetryAfter = (x: string): number => Number.parseInt(x, 10);
 
 server(__filename, () => {
 	it('should not rate-limit bursts below quota', async () => {
@@ -169,6 +187,53 @@ server(__filename, () => {
 			setLike(map((res) => res.headers['x-ratelimit-limit'], responses)),
 			setLike(_repeat(points + 1, () => `${points}`)),
 		);
+
+		assert.deepEqual(
+			setLike(map((res) => res.headers['x-ratelimit-remaining'], responses)),
+			setLike(map((x) => `${x}`, chain([0], range(points)))),
+		);
+
+		const okResponses = list(filter((res) => res.status === 200, responses));
+
+		assert.deepEqual(
+			setLike(
+				map((res) => _parseRetryAfter(res.headers['retry-after']), okResponses),
+			),
+			setLike(_repeat(points, () => duration)),
+		);
+
+		const firstOkResponse = max(
+			key(increasing, (res) =>
+				Number.parseInt(res.headers['x-ratelimit-remaining'], 10),
+			),
+			filter((res) => res.status === 200, responses),
+		);
+
+		assert.isAtMost(
+			_parseRetryAfter(firstOkResponse.headers['retry-after']),
+			duration,
+		);
+
+		assert.isAtLeast(
+			_parseXRateLimitReset(
+				firstOkResponse.headers['x-ratelimit-reset'],
+			).getTime(),
+			startOfSecond(addSeconds(start, duration)).getTime(),
+		);
+
+		assert.deepEqual(
+			setLike(map((res) => res.headers['x-ratelimit-reset'], responses)),
+			setLike(
+				_repeat(points + 1, () => firstOkResponse.headers['x-ratelimit-reset']),
+			),
+		);
+
+		for (const response of responses) {
+			assert.isAtMost(
+				_parseRetryAfter(response.headers['retry-after']),
+				_parseRetryAfter(firstOkResponse.headers['retry-after']),
+			);
+		}
 	});
 
 	it('should not rate-limit after elapsed duration', async () => {
