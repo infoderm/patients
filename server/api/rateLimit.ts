@@ -30,3 +30,5 @@ export const pipe =
 					.send('Too Many Requests');
 			},
 		);
+
+export {RateLimiterMemory} from 'rate-limiter-flexible';
