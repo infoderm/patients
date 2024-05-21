@@ -1,14 +1,18 @@
 import {assert} from 'chai';
 import request from 'supertest';
 
+import {map} from '@iterable-iterator/map';
+import {nrepeat} from '@iterable-iterator/repeat';
+import {list} from '@iterable-iterator/list';
+
 import {server, setLike} from '../../imports/_test/fixtures';
 import sleep from '../../imports/lib/async/sleep';
 
 import {RateLimiterMemory, pipe} from './rateLimit';
 import {createRouter} from './route';
 
-const _repeat = <T>(n: number, fn: () => T) =>
-	Array.from({length: n}).map(() => fn());
+const _repeat = <T>(n: number, fn: () => T): T[] =>
+	list(map(fn, nrepeat(undefined, n)));
 
 server(__filename, () => {
 	it('should not rate-limit bursts below quota', async () => {
