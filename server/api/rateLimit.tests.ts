@@ -304,7 +304,8 @@ server(__filename, () => {
 				.set('Accept', 'text/html')
 				.expect('Content-Type', 'text/html; charset=utf-8');
 
-		for (const i of range(2)) {
+		for (const i of range(4)) {
+			const isEven = i % 2 === 0;
 			const start = new Date();
 			const isFirst = i === 0;
 			if (!isFirst) {
@@ -320,7 +321,7 @@ server(__filename, () => {
 
 			assert.isAtMost(elapsed, duration * 1000);
 
-			if (isFirst) {
+			if (isEven) {
 				assert.equal(response.status, 200);
 				assert.equal(response.text, 'OK');
 			} else {
