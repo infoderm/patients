@@ -17,6 +17,8 @@ jobs:
     name: Continuous integration
     strategy:
 
+      fail-fast: false
+
       matrix:
 
         test-type:
