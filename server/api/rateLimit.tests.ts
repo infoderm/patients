@@ -4,6 +4,8 @@ import request from 'supertest';
 import {map} from '@iterable-iterator/map';
 import {nrepeat} from '@iterable-iterator/repeat';
 import {list} from '@iterable-iterator/list';
+import {range} from '@iterable-iterator/range';
+import {chain} from '@iterable-iterator/chain';
 
 import {server, setLike} from '../../imports/_test/fixtures';
 import sleep from '../../imports/lib/async/sleep';
@@ -54,7 +56,7 @@ server(__filename, () => {
 
 		assert.isAtMost(elapsed, duration * 1000);
 
-		const bodies = setLike(responses.map((res) => res.text));
+		const bodies = setLike(map((res) => res.text, responses));
 
 		assert.deepEqual(bodies, setLike(_repeat(points, () => 'OK')));
 	});
@@ -100,7 +102,7 @@ server(__filename, () => {
 
 		assert.isAtMost(elapsed, duration * 1000);
 
-		const bodies = setLike(responses.map((res) => res.text));
+		const bodies = setLike(map((res) => res.text, responses));
 
 		assert.deepEqual(bodies, setLike(_repeat(n, () => 'OK')));
 	});
@@ -143,18 +145,29 @@ server(__filename, () => {
 
 		assert.isAtMost(elapsed, duration * 1000);
 
-		const statuses = setLike(responses.map((res) => res.status));
-
 		assert.deepEqual(
-			statuses,
-			setLike(_repeat(points, () => 200).concat([429])),
+			setLike(map((res) => res.status, responses)),
+			setLike(
+				chain(
+					_repeat(points, () => 200),
+					[429],
+				),
+			),
 		);
 
-		const bodies = setLike(responses.map((res) => res.text));
+		assert.deepEqual(
+			setLike(map((res) => res.text, responses)),
+			setLike(
+				chain(
+					_repeat(points, () => 'OK'),
+					['Too Many Requests'],
+				),
+			),
+		);
 
 		assert.deepEqual(
-			bodies,
-			setLike(_repeat(points, () => 'OK').concat(['Too Many Requests'])),
+			setLike(map((res) => res.headers['x-ratelimit-limit'], responses)),
+			setLike(_repeat(points + 1, () => `${points}`)),
 		);
 	});
 
@@ -186,7 +199,7 @@ server(__filename, () => {
 				.expect('Content-Type', 'text/html; charset=utf-8')
 				.expect(200);
 
-		for (let i = 0; i < 2; ++i) {
+		for (const i of range(2)) {
 			const isFirst = i === 0;
 			if (!isFirst) {
 				// eslint-disable-next-line no-await-in-loop
@@ -226,7 +239,7 @@ server(__filename, () => {
 				.set('Accept', 'text/html')
 				.expect('Content-Type', 'text/html; charset=utf-8');
 
-		for (let i = 0; i < 2; ++i) {
+		for (const i of range(2)) {
 			const start = new Date();
 			const isFirst = i === 0;
 			if (!isFirst) {
