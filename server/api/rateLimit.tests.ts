@@ -264,7 +264,7 @@ server(__filename, () => {
 				.expect('Content-Type', 'text/html; charset=utf-8')
 				.expect(200);
 
-		for (const i of range(2)) {
+		for (const i of range(3)) {
 			const isFirst = i === 0;
 			if (!isFirst) {
 				// eslint-disable-next-line no-await-in-loop
@@ -275,7 +275,7 @@ server(__filename, () => {
 			const response = await send();
 			assert.equal(response.text, 'OK');
 		}
-	});
+	}).timeout(3000);
 
 	it('should rate-limit before duration elapsed', async () => {
 		const routes = createRouter();
