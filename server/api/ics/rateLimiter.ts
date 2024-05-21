@@ -1,4 +1,4 @@
-import {RateLimiterMemory} from 'rate-limiter-flexible';
+import {RateLimiterMemory} from '../rateLimit';
 
 const rateLimiter = new RateLimiterMemory({
 	// NOTE key prefix is not necessary since each RateLimiterMemory is backed
