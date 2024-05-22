@@ -42,7 +42,7 @@ server(__filename, () => {
 			consultationAId,
 		);
 
-		assert.equal(updatedBookNumber, newBookNumber);
+		assert.strictEqual(updatedBookNumber, newBookNumber);
 	});
 
 	it('renaming a book updates its consultations', async () => {
@@ -95,7 +95,7 @@ server(__filename, () => {
 		]) {
 			// eslint-disable-next-line no-await-in-loop
 			const {book} = await findOneOrThrow(Consultations, consultationId);
-			assert.equal(book, newBookNumber);
+			assert.strictEqual(book, newBookNumber);
 		}
 	});
 
@@ -177,19 +177,19 @@ server(__filename, () => {
 		]) {
 			// eslint-disable-next-line no-await-in-loop
 			const {book} = await findOneOrThrow(Consultations, consultationId);
-			assert.equal(book, newBookNumber);
+			assert.strictEqual(book, newBookNumber);
 		}
 
 		for (const consultationId of [consultationDId]) {
 			// eslint-disable-next-line no-await-in-loop
 			const {book} = await findOneOrThrow(Consultations, consultationId);
-			assert.equal(book, oldBookNumber);
+			assert.strictEqual(book, oldBookNumber);
 		}
 
 		for (const consultationId of [consultationEId, consultationFId]) {
 			// eslint-disable-next-line no-await-in-loop
 			const {book} = await findOneOrThrow(Consultations, consultationId);
-			assert.equal(book, `${oldBookNumber}x`);
+			assert.strictEqual(book, `${oldBookNumber}x`);
 		}
 	});
 });

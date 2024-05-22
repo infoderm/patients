@@ -65,7 +65,7 @@ server(__filename, () => {
 	it('creates associated patient', async () => {
 		const userId = randomUserId();
 
-		assert.equal(await Patients.findOneAsync(), undefined);
+		assert.strictEqual(await Patients.findOneAsync(), undefined);
 
 		const patientFields = {
 			firstname: 'Jane',

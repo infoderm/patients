@@ -11,7 +11,7 @@ server(__filename, () => {
 	it('works', async () => {
 		const response = await request(app).get(`/`);
 
-		assert.equal(response.status, 200);
-		assert.equal(response.text, 'OK');
+		assert.strictEqual(response.status, 200);
+		assert.strictEqual(response.text, 'OK');
 	});
 });

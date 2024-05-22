@@ -56,8 +56,8 @@ server(__filename, () => {
 			.get(`/appointments/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 422);
-		assert.equal(response.text, '');
+		assert.strictEqual(response.status, 422);
+		assert.strictEqual(response.text, '');
 	});
 
 	it('cannot download past month consultations list with invalid token', async () => {
@@ -67,8 +67,8 @@ server(__filename, () => {
 			.get(`/consultations/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 422);
-		assert.equal(response.text, '');
+		assert.strictEqual(response.status, 422);
+		assert.strictEqual(response.text, '');
 	});
 
 	it('cannot download past month and upcoming appointments list with revoked token', async () => {
@@ -86,8 +86,8 @@ server(__filename, () => {
 			.get(`/appointments/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 404);
-		assert.equal(response.text, '');
+		assert.strictEqual(response.status, 404);
+		assert.strictEqual(response.text, '');
 	});
 
 	it('cannot download past month consultations list with revoked token', async () => {
@@ -105,8 +105,8 @@ server(__filename, () => {
 			.get(`/consultations/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 404);
-		assert.equal(response.text, '');
+		assert.strictEqual(response.status, 404);
+		assert.strictEqual(response.text, '');
 	});
 
 	it('cannot download past month and upcoming appointments list with bad permissions', async () => {
@@ -120,8 +120,8 @@ server(__filename, () => {
 			.get(`/appointments/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 404);
-		assert.equal(response.text, '');
+		assert.strictEqual(response.status, 404);
+		assert.strictEqual(response.text, '');
 	});
 
 	it('cannot download past month consultations list with bad permissions', async () => {
@@ -135,8 +135,8 @@ server(__filename, () => {
 			.get(`/consultations/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 404);
-		assert.equal(response.text, '');
+		assert.strictEqual(response.status, 404);
+		assert.strictEqual(response.text, '');
 	});
 
 	it('can download past month and upcoming appointments list with token', async () => {
@@ -201,20 +201,20 @@ server(__filename, () => {
 			.get(`/appointments/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 200);
+		assert.strictEqual(response.status, 200);
 
 		const calendar = parse(response.text);
 
 		const events = getEvents(calendar);
 
-		assert.equal(events.length, 2);
+		assert.strictEqual(events.length, 2);
 
 		for (const [event, appointment] of zip(
 			events,
 			[appointmentA, appointmentB].sort(prop(decreasing, 'lastModifiedAt')),
 		)) {
-			assert.equal(event.isRecurring(), false);
-			assert.equal(event.description, patient.phone);
+			assert.strictEqual(event.isRecurring(), false);
+			assert.strictEqual(event.description, patient.phone);
 			assert(
 				isSameDatetime(
 					event.startDate.toJSDate(),
@@ -227,7 +227,10 @@ server(__filename, () => {
 					setMilliseconds(appointment.end, 0),
 				),
 			);
-			assert.equal(event.summary, `${patient.lastname} ${patient.firstname}`);
+			assert.strictEqual(
+				event.summary,
+				`${patient.lastname} ${patient.firstname}`,
+			);
 			assert(
 				isSameDatetime(
 					event._firstProp('created').toJSDate(),
@@ -240,7 +243,7 @@ server(__filename, () => {
 					setMilliseconds(appointment.lastModifiedAt, 0),
 				),
 			);
-			assert.equal(
+			assert.strictEqual(
 				event._firstProp('url'),
 				absoluteURL(`/consultation/${appointment._id}`),
 			);
@@ -348,18 +351,18 @@ server(__filename, () => {
 			.get(`/consultations/${token}/events.ics`)
 			.set('Accept', 'text/calendar');
 
-		assert.equal(response.status, 200);
+		assert.strictEqual(response.status, 200);
 
 		const events = getEvents(parse(response.text));
 
-		assert.equal(events.length, 2);
+		assert.strictEqual(events.length, 2);
 
 		for (const [event, consultation] of zip(
 			events,
 			[consultationB, consultationA].sort(prop(decreasing, 'lastModifiedAt')),
 		)) {
-			assert.equal(event.isRecurring(), false);
-			assert.equal(event.description, patient.phone);
+			assert.strictEqual(event.isRecurring(), false);
+			assert.strictEqual(event.description, patient.phone);
 			assert(
 				isSameDatetime(
 					event.startDate.toJSDate(),
@@ -372,7 +375,10 @@ server(__filename, () => {
 					setMilliseconds(consultation.end, 0),
 				),
 			);
-			assert.equal(event.summary, `${patient.lastname} ${patient.firstname}`);
+			assert.strictEqual(
+				event.summary,
+				`${patient.lastname} ${patient.firstname}`,
+			);
 			assert(
 				isSameDatetime(
 					event._firstProp('created').toJSDate(),
@@ -385,7 +391,7 @@ server(__filename, () => {
 					setMilliseconds(consultation.lastModifiedAt, 0),
 				),
 			);
-			assert.equal(
+			assert.strictEqual(
 				event._firstProp('url'),
 				absoluteURL(`/consultation/${consultation._id}`),
 			);

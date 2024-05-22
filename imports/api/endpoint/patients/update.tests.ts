@@ -61,7 +61,7 @@ server(__filename, () => {
 			{allergies, doctors, insurances},
 		]);
 
-		assert.equal(await Patients.find({owner: userId}).countAsync(), 1);
+		assert.strictEqual(await Patients.find({owner: userId}).countAsync(), 1);
 
 		assert.includeDeepMembers(
 			await Allergies.find().mapAsync(({displayName, name}) => ({

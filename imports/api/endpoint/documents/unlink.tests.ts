@@ -24,10 +24,10 @@ server(__filename, () => {
 
 		await invoke(documentsUnlink, {userId}, [documentAId]);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(await Documents.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(await Documents.find().countAsync(), 2);
 
-		assert.equal(
+		assert.strictEqual(
 			await Documents.findOneAsync({
 				patientId: patientAId,
 			}),
@@ -63,17 +63,17 @@ server(__filename, () => {
 
 		await invoke(documentsUnlink, {userId}, [documentBId]);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(await Documents.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(await Documents.find().countAsync(), 2);
 
-		assert.equal(
+		assert.strictEqual(
 			await Documents.findOneAsync({
 				patientId: patientAId,
 			}),
 			undefined,
 		);
 
-		assert.equal(
+		assert.strictEqual(
 			await Documents.findOneAsync({
 				patientId: patientBId,
 			}),
@@ -90,7 +90,7 @@ server(__filename, () => {
 
 		await invoke(documentsUnlink, {userId}, [documentId]);
 
-		assert.equal(
+		assert.strictEqual(
 			await Documents.findOneAsync({
 				patientId: {$exists: true},
 			}),
@@ -99,7 +99,7 @@ server(__filename, () => {
 
 		await invoke(documentsUnlink, {userId}, [documentId]);
 
-		assert.equal(
+		assert.strictEqual(
 			await Documents.findOneAsync({
 				patientId: {$exists: true},
 			}),

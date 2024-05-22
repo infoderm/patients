@@ -28,10 +28,10 @@ server(__filename, () => {
 
 		await invoke(patientsDetach, {userId}, [patientAId, uploadAId]);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientAId,
 			}),
@@ -49,17 +49,17 @@ server(__filename, () => {
 
 		await invoke(patientsDetach, {userId}, [patientBId, uploadBId]);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientAId,
 			}),
 			undefined,
 		);
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientBId,
 			}),
@@ -78,7 +78,7 @@ server(__filename, () => {
 
 		await invoke(patientsDetach, {userId}, [patientId, uploadId]);
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientId,
 			}),
@@ -87,7 +87,7 @@ server(__filename, () => {
 
 		await invoke(patientsDetach, {userId}, [patientId, uploadId]);
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientId,
 			}),

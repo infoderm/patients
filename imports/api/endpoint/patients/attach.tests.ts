@@ -24,8 +24,8 @@ server(__filename, () => {
 		const {_id: uploadAId} = await newUpload({userId});
 		const {_id: uploadBId} = await newUpload({userId});
 
-		assert.equal(await Patients.find().countAsync(), 3);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 3);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 
 		await invoke(patientsAttach, invocation, [patientAId, uploadAId]);
 		await invoke(patientsAttach, invocation, [patientBId, uploadBId]);
@@ -37,8 +37,8 @@ server(__filename, () => {
 		assert.deepNestedInclude(await Attachments.findOneAsync(uploadBId), {
 			'meta.attachedToPatients': [patientBId],
 		});
-		assert.equal(await Patients.find().countAsync(), 3);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 3);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 	});
 
 	it('is idempotent', async () => {
@@ -48,7 +48,7 @@ server(__filename, () => {
 
 		const {_id: uploadId} = await newUpload({userId});
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToPatients': patientId,
 			}),

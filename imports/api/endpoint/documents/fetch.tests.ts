@@ -46,7 +46,7 @@ server(__filename, () => {
 			},
 		]);
 
-		assert.equal(
+		assert.strictEqual(
 			await invoke(documentFetch, {userId}, [documentId!]),
 			exampleMedidocReport.contents,
 		);

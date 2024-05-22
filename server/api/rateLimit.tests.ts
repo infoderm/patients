@@ -273,7 +273,7 @@ server(__filename, () => {
 
 			// eslint-disable-next-line no-await-in-loop
 			const response = await send();
-			assert.equal(response.text, 'OK');
+			assert.strictEqual(response.text, 'OK');
 		}
 	}).timeout(3000);
 
@@ -322,11 +322,11 @@ server(__filename, () => {
 			assert.isAtMost(elapsed, duration * 1000);
 
 			if (isEven) {
-				assert.equal(response.status, 200);
-				assert.equal(response.text, 'OK');
+				assert.strictEqual(response.status, 200);
+				assert.strictEqual(response.text, 'OK');
 			} else {
-				assert.equal(response.status, 429);
-				assert.equal(response.text, 'Too Many Requests');
+				assert.strictEqual(response.status, 429);
+				assert.strictEqual(response.text, 'Too Many Requests');
 			}
 		}
 	});

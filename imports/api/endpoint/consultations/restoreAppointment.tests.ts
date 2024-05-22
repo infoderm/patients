@@ -24,7 +24,7 @@ server(__filename, () => {
 
 		await invoke(restoreAppointment, {userId}, [appointmentId]);
 
-		assert.equal(await Appointments.find({}).countAsync(), 1);
+		assert.strictEqual(await Appointments.find({}).countAsync(), 1);
 
 		assert.deepInclude(await Appointments.findOneAsync({_id: appointmentId}), {
 			isDone: false,

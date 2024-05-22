@@ -15,15 +15,15 @@ server(__filename, () => {
 		const key = 'currency';
 		const value = 123_819_832;
 
-		assert.equal(get(userId, key), defaults[key]);
+		assert.strictEqual(get(userId, key), defaults[key]);
 
 		await invoke(update, {userId}, [key, value]);
 
-		assert.equal(get(userId, key), value);
+		assert.strictEqual(get(userId, key), value);
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), defaults[key]);
+		assert.strictEqual(get(userId, key), defaults[key]);
 	});
 
 	it('is idempotent', async () => {
@@ -32,23 +32,23 @@ server(__filename, () => {
 		const key = 'x';
 		const value = 123_819_832;
 
-		assert.equal(get(userId, key), defaults[key]);
+		assert.strictEqual(get(userId, key), defaults[key]);
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), defaults[key]);
+		assert.strictEqual(get(userId, key), defaults[key]);
 
 		await invoke(update, {userId}, [key, value]);
 
-		assert.equal(get(userId, key), value);
+		assert.strictEqual(get(userId, key), value);
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), defaults[key]);
+		assert.strictEqual(get(userId, key), defaults[key]);
 
 		await invoke(reset, {userId}, [key]);
 
-		assert.equal(get(userId, key), defaults[key]);
+		assert.strictEqual(get(userId, key), defaults[key]);
 	});
 
 	it('cannot reset a setting if not logged in', async () => {
@@ -70,13 +70,13 @@ server(__filename, () => {
 		await invoke(update, {userId}, [key, value]);
 		await invoke(update, {userId: `${userId}x`}, [key, valueX]);
 
-		assert.equal(get(userId, key), value);
-		assert.equal(get(`${userId}x`, key), valueX);
+		assert.strictEqual(get(userId, key), value);
+		assert.strictEqual(get(`${userId}x`, key), valueX);
 
 		await invoke(reset, {userId}, [key]);
-		assert.equal(get(`${userId}x`, key), valueX);
+		assert.strictEqual(get(`${userId}x`, key), valueX);
 
 		await invoke(reset, {userId}, [key]);
-		assert.equal(get(`${userId}x`, key), valueX);
+		assert.strictEqual(get(`${userId}x`, key), valueX);
 	});
 });

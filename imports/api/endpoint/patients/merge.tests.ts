@@ -56,7 +56,7 @@ server(__filename, () => {
 		// create an irrelevant document
 		await newDocument(invocation);
 
-		assert.equal(await Patients.find().countAsync(), 3);
+		assert.strictEqual(await Patients.find().countAsync(), 3);
 
 		const patientA = await Patients.findOneAsync(patientAId);
 		const patientB = await Patients.findOneAsync(patientBId);
@@ -78,14 +78,14 @@ server(__filename, () => {
 
 		const newPatientId = await invoke(patientsMerge, invocation, parameters);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(await Consultations.find().countAsync(), 2);
-		assert.equal(await Attachments.find().countAsync(), 2);
-		assert.equal(await Documents.find().countAsync(), 2);
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(await Consultations.find().countAsync(), 2);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Documents.find().countAsync(), 2);
 
 		const mergedPatient = await Patients.findOneAsync(newPatientId);
 
-		assert.equal(mergedPatient!.firstname, patientB!.firstname);
+		assert.strictEqual(mergedPatient!.firstname, patientB!.firstname);
 
 		const expectedAttachments = setLike(
 			[uploadA, uploadB].map(({meta, ...rest}) => rest),
@@ -103,10 +103,10 @@ server(__filename, () => {
 
 		const consultationA = await Consultations.findOneAsync(consultationAId);
 
-		assert.equal(consultationA!.patientId, newPatientId);
+		assert.strictEqual(consultationA!.patientId, newPatientId);
 
 		documentA = await Documents.findOneAsync(documentA!._id);
 
-		assert.equal(documentA!.patientId, newPatientId);
+		assert.strictEqual(documentA!.patientId, newPatientId);
 	});
 });

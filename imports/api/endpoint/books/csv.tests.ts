@@ -134,7 +134,7 @@ server(__filename, () => {
 			maxRows,
 		]);
 
-		assert.equal(result, expected);
+		assert.strictEqual(result, expected);
 	});
 
 	it('cannot download csv file if not logged in', async () => {

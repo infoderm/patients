@@ -52,7 +52,7 @@ server(__filename, () => {
 
 		const bookName = books.name(datetime, book) as NormalizedLine;
 
-		assert.equal(
+		assert.strictEqual(
 			await Books.findOneAsync({name: bookName, owner: userId}),
 			undefined,
 		);
@@ -77,7 +77,10 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
+		assert.strictEqual(
+			await Availability.find({owner: userId}).countAsync(),
+			0,
+		);
 
 		await newConsultation(
 			{userId},
@@ -86,6 +89,9 @@ server(__filename, () => {
 			},
 		);
 
-		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
+		assert.strictEqual(
+			await Availability.find({owner: userId}).countAsync(),
+			0,
+		);
 	});
 });
