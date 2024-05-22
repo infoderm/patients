@@ -14,6 +14,6 @@ isomorphic(__filename, () => {
 		assert.instanceOf(blob, Blob);
 
 		const result = await blobToDataURL(blob);
-		assert.equal(result, url);
+		assert.strictEqual(result, url);
 	});
 });

@@ -89,7 +89,7 @@ server(__filename, () => {
 
 		const before = await findOneOrThrow(Appointments);
 
-		assert.equal(before._id, appointmentId);
+		assert.strictEqual(before._id, appointmentId);
 		assert.sameDeepMembers(
 			dropIds(await Availability.find().fetchAsync()),
 			expected(before),
@@ -101,7 +101,7 @@ server(__filename, () => {
 
 		const after = await findOneOrThrow(Appointments);
 
-		assert.equal(after._id, appointmentId);
+		assert.strictEqual(after._id, appointmentId);
 		assert.sameDeepMembers(
 			dropIds(await Availability.find().fetchAsync()),
 			expected(after),

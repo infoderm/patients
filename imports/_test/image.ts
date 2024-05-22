@@ -48,7 +48,7 @@ const _xorClient = (
 	b: Uint8ClampedArray,
 ): Uint8ClampedArray => {
 	const n = a.length;
-	assert.equal(b.length, n);
+	assert.strictEqual(b.length, n);
 	const delta = new Uint8ClampedArray(n);
 	for (let i = 0; i < n; ++i) {
 		// eslint-disable-next-line no-bitwise
@@ -97,25 +97,25 @@ const _assertSameDimensions = async (a: Sharp, b: Sharp): Promise<void> => {
 		hasAlpha: bHasAlpha,
 	} = await b.metadata();
 
-	assert.equal(
+	assert.strictEqual(
 		aWidth,
 		bWidth,
 		`Images have different widths: ${aWidth} !== ${bWidth}`,
 	);
 
-	assert.equal(
+	assert.strictEqual(
 		aHeight,
 		bHeight,
 		`Images have different heights: ${aHeight} !== ${bHeight}`,
 	);
 
-	assert.equal(
+	assert.strictEqual(
 		aChannels,
 		bChannels,
 		`Images have different number of channels: ${aChannels} !== ${bChannels}`,
 	);
 
-	assert.equal(
+	assert.strictEqual(
 		aHasAlpha,
 		bHasAlpha,
 		`Images have different alpha channel settings: ${aHasAlpha} !== ${bHasAlpha}`,

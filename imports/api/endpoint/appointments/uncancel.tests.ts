@@ -27,12 +27,15 @@ server(__filename, () => {
 
 		const appointmentId = await newAppointment({userId});
 
-		assert.equal(await Appointments.find({}).countAsync(), 1);
-		assert.equal(await Appointments.find({_id: appointmentId}).countAsync(), 1);
+		assert.strictEqual(await Appointments.find({}).countAsync(), 1);
+		assert.strictEqual(
+			await Appointments.find({_id: appointmentId}).countAsync(),
+			1,
+		);
 
 		await invoke(appointmentsCancel, {userId}, [appointmentId, '', '']);
 
-		assert.equal(await Appointments.find({}).countAsync(), 1);
+		assert.strictEqual(await Appointments.find({}).countAsync(), 1);
 
 		assert.deepInclude(await Appointments.findOneAsync({_id: appointmentId}), {
 			isCancelled: true,
@@ -40,7 +43,7 @@ server(__filename, () => {
 
 		await invoke(appointmentsUncancel, {userId}, [appointmentId]);
 
-		assert.equal(await Appointments.find({}).countAsync(), 1);
+		assert.strictEqual(await Appointments.find({}).countAsync(), 1);
 
 		assert.deepInclude(await Appointments.findOneAsync({_id: appointmentId}), {
 			isCancelled: false,

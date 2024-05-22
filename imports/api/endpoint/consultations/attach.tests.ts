@@ -34,29 +34,29 @@ server(__filename, () => {
 		const {_id: uploadAId} = await newUpload({userId});
 		const {_id: uploadBId} = await newUpload({userId});
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(
 			await Consultations.find({patientId: patientAId}).countAsync(),
 			1,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientBId}).countAsync(),
 			1,
 		);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 
 		await invoke(consultationsAttach, {userId}, [consultationAId, uploadAId]);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(
 			await Consultations.find({patientId: patientAId}).countAsync(),
 			1,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientBId}).countAsync(),
 			1,
 		);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 
 		assert.deepInclude(
 			await Attachments.findOneAsync({
@@ -67,7 +67,7 @@ server(__filename, () => {
 			},
 		);
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationBId,
 			}),
@@ -76,16 +76,16 @@ server(__filename, () => {
 
 		await invoke(consultationsAttach, {userId}, [consultationBId, uploadBId]);
 
-		assert.equal(await Patients.find().countAsync(), 2);
-		assert.equal(
+		assert.strictEqual(await Patients.find().countAsync(), 2);
+		assert.strictEqual(
 			await Consultations.find({patientId: patientAId}).countAsync(),
 			1,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientBId}).countAsync(),
 			1,
 		);
-		assert.equal(await Attachments.find().countAsync(), 2);
+		assert.strictEqual(await Attachments.find().countAsync(), 2);
 
 		assert.deepInclude(
 			await Attachments.findOneAsync({
@@ -118,7 +118,7 @@ server(__filename, () => {
 
 		const {_id: uploadId} = await newUpload({userId});
 
-		assert.equal(
+		assert.strictEqual(
 			await Attachments.findOneAsync({
 				'meta.attachedToConsultations': consultationId,
 			}),

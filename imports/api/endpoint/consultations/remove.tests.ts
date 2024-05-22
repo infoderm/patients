@@ -25,16 +25,16 @@ server(__filename, () => {
 			{patientId},
 		);
 
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({_id: consultationId}).countAsync(),
 			1,
 		);
-		assert.equal(await Consultations.find({patientId}).countAsync(), 1);
+		assert.strictEqual(await Consultations.find({patientId}).countAsync(), 1);
 
 		await invoke(consultationsRemove, {userId}, [consultationId]);
 
-		assert.equal(await Consultations.find({patientId}).countAsync(), 0);
-		assert.equal(
+		assert.strictEqual(await Consultations.find({patientId}).countAsync(), 0);
+		assert.strictEqual(
 			await Consultations.find({_id: consultationId}).countAsync(),
 			0,
 		);
@@ -77,28 +77,28 @@ server(__filename, () => {
 	it("detaches removed consultation's attachments", async () => {
 		const userId = randomUserId();
 
-		assert.equal(await Patients.find({}).countAsync(), 0);
+		assert.strictEqual(await Patients.find({}).countAsync(), 0);
 
 		const patientId = await newPatient({userId});
 
-		assert.equal(await Patients.find({}).countAsync(), 1);
+		assert.strictEqual(await Patients.find({}).countAsync(), 1);
 
-		assert.equal(await Consultations.find({}).countAsync(), 0);
+		assert.strictEqual(await Consultations.find({}).countAsync(), 0);
 
 		const {insertedId: consultationId} = await newConsultation(
 			{userId},
 			{patientId},
 		);
 
-		assert.equal(await Consultations.find({}).countAsync(), 1);
+		assert.strictEqual(await Consultations.find({}).countAsync(), 1);
 
-		assert.equal(await Uploads.collection.find({}).countAsync(), 0);
+		assert.strictEqual(await Uploads.collection.find({}).countAsync(), 0);
 
 		const uploadA = await newUpload({userId});
 		const uploadB = await newUpload({userId});
 
-		assert.equal(await Uploads.collection.find({}).countAsync(), 2);
-		assert.equal(
+		assert.strictEqual(await Uploads.collection.find({}).countAsync(), 2);
+		assert.strictEqual(
 			await Uploads.collection
 				.find({
 					'meta.attachedToConsultations': consultationId,
@@ -106,7 +106,7 @@ server(__filename, () => {
 				.countAsync(),
 			0,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Uploads.collection
 				.find({'meta.attachedToPatients': patientId})
 				.countAsync(),
@@ -116,10 +116,10 @@ server(__filename, () => {
 		await invoke(consultationsAttach, {userId}, [consultationId, uploadA._id]);
 		await invoke(consultationsAttach, {userId}, [consultationId, uploadB._id]);
 
-		assert.equal(await Patients.find({}).countAsync(), 1);
-		assert.equal(await Consultations.find({}).countAsync(), 1);
-		assert.equal(await Uploads.collection.find({}).countAsync(), 2);
-		assert.equal(
+		assert.strictEqual(await Patients.find({}).countAsync(), 1);
+		assert.strictEqual(await Consultations.find({}).countAsync(), 1);
+		assert.strictEqual(await Uploads.collection.find({}).countAsync(), 2);
+		assert.strictEqual(
 			await Uploads.collection
 				.find({
 					'meta.attachedToConsultations': consultationId,
@@ -127,7 +127,7 @@ server(__filename, () => {
 				.countAsync(),
 			2,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Uploads.collection
 				.find({'meta.attachedToPatients': patientId})
 				.countAsync(),
@@ -136,8 +136,8 @@ server(__filename, () => {
 
 		await invoke(consultationsRemove, {userId}, [consultationId]);
 
-		assert.equal(await Uploads.collection.find({}).countAsync(), 2);
-		assert.equal(
+		assert.strictEqual(await Uploads.collection.find({}).countAsync(), 2);
+		assert.strictEqual(
 			await Uploads.collection
 				.find({
 					'meta.attachedToConsultations': consultationId,
@@ -145,13 +145,13 @@ server(__filename, () => {
 				.countAsync(),
 			0,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Uploads.collection
 				.find({'meta.attachedToPatients': patientId})
 				.countAsync(),
 			0,
 		);
-		assert.equal(await Consultations.find({}).countAsync(), 0);
-		assert.equal(await Patients.find({}).countAsync(), 1);
+		assert.strictEqual(await Consultations.find({}).countAsync(), 0);
+		assert.strictEqual(await Patients.find({}).countAsync(), 1);
 	});
 });

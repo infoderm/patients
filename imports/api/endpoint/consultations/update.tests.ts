@@ -79,7 +79,7 @@ server(__filename, () => {
 		const price = 100;
 		const paid = 0;
 
-		assert.equal(await Consultations.findOneAsync(), undefined);
+		assert.strictEqual(await Consultations.findOneAsync(), undefined);
 
 		const {insertedId: consultationId} = await newConsultation(
 			{userId},
@@ -110,19 +110,28 @@ server(__filename, () => {
 
 		const patientId = await newPatient({userId});
 
-		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
+		assert.strictEqual(
+			await Availability.find({owner: userId}).countAsync(),
+			0,
+		);
 
 		const {insertedId: consultationId} = await newConsultation(
 			{userId},
 			{patientId},
 		);
 
-		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
+		assert.strictEqual(
+			await Availability.find({owner: userId}).countAsync(),
+			0,
+		);
 
 		const newFields = newConsultationFormData({patientId});
 
 		await invoke(update, {userId}, [consultationId, newFields]);
 
-		assert.equal(await Availability.find({owner: userId}).countAsync(), 0);
+		assert.strictEqual(
+			await Availability.find({owner: userId}).countAsync(),
+			0,
+		);
 	});
 });

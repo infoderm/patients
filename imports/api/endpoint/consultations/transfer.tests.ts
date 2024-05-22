@@ -23,22 +23,22 @@ server(__filename, () => {
 			{patientId: patientAId},
 		);
 
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientAId}).countAsync(),
 			1,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientBId}).countAsync(),
 			0,
 		);
 
 		await invoke(consultationsTransfer, {userId}, [consultationId, patientBId]);
 
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientAId}).countAsync(),
 			0,
 		);
-		assert.equal(
+		assert.strictEqual(
 			await Consultations.find({patientId: patientBId}).countAsync(),
 			1,
 		);
