@@ -67,7 +67,7 @@ jobs:
             test-icon: 🤖
             coverage-flags: server, test-app
 
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/use-tests.yml
     secrets: inherit
     with:
       test-target: ${{ matrix.test-target }}
