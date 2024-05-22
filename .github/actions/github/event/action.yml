@@ -1,0 +1,80 @@
+name: github/event
+description: >
+  Fetch generic info about GitHub event.
+
+outputs:
+
+  base-sha:
+    description: >
+      The base commit SHA for this event.
+    value: ${{ steps.base.outputs.sha }}
+
+  head-sha:
+    description: >
+      The head commit SHA for this event.
+    value: ${{ steps.head.outputs.sha }}
+
+  merge-base:
+    description: >
+      The merge base commit SHA for this event.
+    value: ${{ steps.merge-base.outputs.sha }}
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Compute BASE_SHA and HEAD_SHA for push event 📜
+      if: github.event_name == 'push'
+      shell: bash
+      run: |
+        BASE_SHA="${{ github.event.before }}"
+        echo "BASE_SHA=${BASE_SHA}" >> "${GITHUB_ENV}"
+        HEAD_SHA="${{ github.event.after }}"
+        echo "HEAD_SHA=${HEAD_SHA}" >> "${GITHUB_ENV}"
+
+    - name: Compute BASE_SHA and HEAD_SHA for pull_request event 📜
+      if: github.event_name == 'pull_request'
+      shell: bash
+      run: |
+        BASE_SHA="${{ github.event.pull_request.base.sha }}"
+        echo "BASE_SHA=${BASE_SHA}" >> "${GITHUB_ENV}"
+        HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+        echo "HEAD_SHA=${HEAD_SHA}" >> "${GITHUB_ENV}"
+
+    - name: Compute BASE_SHA and HEAD_SHA for merge_group event 📜
+      if: github.event_name == 'merge_group'
+      shell: bash
+      run: |
+        BASE_SHA="${{ github.event.merge_group.base_sha }}"
+        echo "BASE_SHA=${BASE_SHA}" >> "${GITHUB_ENV}"
+        HEAD_SHA="${{ github.event.merge_group.head_sha }}"
+        echo "HEAD_SHA=${HEAD_SHA}" >> "${GITHUB_ENV}"
+
+    - name: Output BASE_SHA  🏕️
+      id: base
+      env:
+        BASE_SHA: ${{ env.BASE_SHA }}
+      shell: bash
+      run: |
+        echo "sha=${BASE_SHA}" >> "${GITHUB_OUTPUT}"
+
+    - name: Output HEAD_SHA  🗻
+      id: head
+      env:
+        HEAD_SHA: ${{ env.HEAD_SHA }}
+      shell: bash
+      run: |
+        echo "sha=${HEAD_SHA}" >> "${GITHUB_OUTPUT}"
+
+    - name: Compute MERGE_BASE 🌱
+      id: merge-base
+      env:
+        BASE_SHA: ${{ steps.base.outputs.sha }}
+        HEAD_SHA: ${{ steps.head.outputs.sha }}
+      shell: bash
+      run: |
+        FIRST_NEW_COMMIT="$(git log "${BASE_SHA}..${HEAD_SHA}" --pretty=format:%H | tail -1)"
+        MERGE_BASE="$(git rev-parse "${FIRST_NEW_COMMIT}~")"
+        echo "sha=${MERGE_BASE}" >> "${GITHUB_OUTPUT}"
