@@ -1,0 +1,97 @@
+name: ci:commit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  test:
+    name: Continuous integration (test commit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          # TODO Fetch sparingly with something similar to
+          # https://github.com/rmacklin/fetch-through-merge-base/blob/main/action.yml
+          # Maybe could use commit count (does not exist on merge_group
+          # somehow)
+          # Maybe setting .git/shallow to base first would work in all cases?
+          # See https://stackoverflow.com/a/76573878
+          fetch-depth: 0
+
+      # TODO Make this a reusable action
+      - name: Compute BASE_SHA and HEAD_SHA for push event 📜
+        if: github.event_name == 'push'
+        run: |
+          BASE_SHA="${{ github.event.before }}"
+          echo "BASE_SHA=${BASE_SHA}" >> "${GITHUB_ENV}"
+          HEAD_SHA="${{ github.event.after }}"
+          echo "HEAD_SHA=${HEAD_SHA}" >> "${GITHUB_ENV}"
+
+      - name: Compute BASE_SHA and HEAD_SHA for pull_request event 📜
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          echo "BASE_SHA=${BASE_SHA}" >> "${GITHUB_ENV}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          echo "HEAD_SHA=${HEAD_SHA}" >> "${GITHUB_ENV}"
+
+      - name: Compute BASE_SHA and HEAD_SHA for merge_group event 📜
+        if: github.event_name == 'merge_group'
+        run: |
+          BASE_SHA="${{ github.event.merge_group.base_sha }}"
+          echo "BASE_SHA=${BASE_SHA}" >> "${GITHUB_ENV}"
+          HEAD_SHA="${{ github.event.merge_group.head_sha }}"
+          echo "HEAD_SHA=${HEAD_SHA}" >> "${GITHUB_ENV}"
+
+      - name: Compute MERGE_BASE 🌱
+        id: history
+        env:
+          BASE_SHA: ${{ env.BASE_SHA }}
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+        run: |
+          FIRST_NEW_COMMIT="$(git log "${BASE_SHA}..${HEAD_SHA}" --pretty=format:%H | tail -1)"
+          MERGE_BASE="$(git rev-parse "${FIRST_NEW_COMMIT}~")"
+          echo "merge-base=${MERGE_BASE}" >> "${GITHUB_OUTPUT}"
+
+      - name: Stage MERGE_BASE...HEAD_SHA ⏮️
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          MERGE_BASE: ${{ steps.history.outputs.merge-base }}
+        run: |
+          git reset --hard "${HEAD_SHA}"
+          git reset --soft "${MERGE_BASE}"
+
+      - name: Install 💾
+        uses: ./.github/actions/install
+
+      - name: Install commit hooks 🪝
+        run: |
+          meteor npm run install-hooks
+
+      - name: Configure git 🪛
+        env:
+          SENDER_ID: ${{ github.event.sender.id }}
+          SENDER_USERNAME: ${{ github.event.sender.login }}
+        run: |
+          git config --global user.email "${SENDER_ID}+${SENDER_USERNAME}@users.noreply.github.com"
+          git config --global user.name "${SENDER_USERNAME}"
+
+      - name: Run commit hooks 🔬
+        env:
+          HEAD_SHA: ${{ env.HEAD_SHA }}
+          MERGE_BASE: ${{ steps.history.outputs.merge-base }}
+        run: |
+          MERGE_BASE_SHORT="$(git rev-parse --short "${MERGE_BASE}")"
+          HEAD_SHA_SHORT="$(git rev-parse --short "${HEAD_SHA}")"
+          git commit -m ":construction: progress: Check commit hooks for ${MERGE_BASE_SHORT}...${HEAD_SHA_SHORT}."
