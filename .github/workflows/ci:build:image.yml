@@ -85,10 +85,10 @@ jobs:
         with:
           sparse-checkout: |
             scripts/assert-replica-set.js
-            .github/actions/ip-address/action.yml
-            .github/actions/is-healthy/action.yml
-            .github/actions/is-reachable/action.yml
-            .github/actions/is-running/action.yml
+            .github/actions/docker/container/ip-address/action.yml
+            .github/actions/docker/container/is-healthy/action.yml
+            .github/actions/docker/container/is-running/action.yml
+            .github/actions/network/is-reachable/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Get server image URL
@@ -133,7 +133,7 @@ jobs:
             "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
 
       - name: Wait for MongoDB container to be healthy
-        uses: ./.github/actions/is-healthy
+        uses: ./.github/actions/docker/container/is-healthy
         with:
           container: mongodb
           timeout: 60
@@ -157,18 +157,18 @@ jobs:
 
       - name: Retrieve server container IP address
         id: server-container-ip-address
-        uses: ./.github/actions/ip-address
+        uses: ./.github/actions/docker/container/ip-address
         with:
           container: server
 
       - name: Wait for container to be running
-        uses: ./.github/actions/is-running
+        uses: ./.github/actions/docker/container/is-running
         with:
           container: server
           timeout: 60
 
       - name: Wait for server container port to be available
-        uses: ./.github/actions/is-reachable
+        uses: ./.github/actions/network/is-reachable
         with:
           timeout: 60
           host: ${{ steps.server-container-ip-address.outputs.address }}
@@ -195,7 +195,7 @@ jobs:
             'curl -f http://${{ steps.server-container-ip-address.outputs.address }}:3000/api/healthcheck'
 
       - name: Wait for container to be healthy
-        uses: ./.github/actions/is-healthy
+        uses: ./.github/actions/docker/container/is-healthy
         with:
           container: server
           timeout: 60
