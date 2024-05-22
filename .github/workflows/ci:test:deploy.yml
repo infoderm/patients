@@ -65,29 +65,29 @@ jobs:
             up --no-build --detach
 
       - id: patient-db-container
-        uses: ./.github/actions/compose-container
+        uses: ./.github/actions/docker/compose/container
         with:
           service: patient-db
 
       - name: Wait for database container to be healthy
-        uses: ./.github/actions/is-healthy
+        uses: ./.github/actions/docker/container/is-healthy
         with:
           container: ${{ steps.patient-db-container.outputs.id }}
           timeout: 60
 
       - name: Wait for web port to be available
-        uses: ./.github/actions/is-reachable
+        uses: ./.github/actions/network/is-reachable
         with:
           timeout: 60
           port: 3000
 
       - id: patient-web-container
-        uses: ./.github/actions/compose-container
+        uses: ./.github/actions/docker/compose/container
         with:
           service: patient-web
 
       - name: Wait for web container to be healthy
-        uses: ./.github/actions/is-healthy
+        uses: ./.github/actions/docker/container/is-healthy
         with:
           container: ${{ steps.patient-web-container.outputs.id }}
           timeout: 60

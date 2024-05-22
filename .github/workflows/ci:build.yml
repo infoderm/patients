@@ -90,8 +90,8 @@ jobs:
           sparse-checkout: |
             scripts/healthcheck.cjs
             scripts/assert-replica-set.js
-            .github/actions/is-healthy/action.yml
-            .github/actions/is-reachable/action.yml
+            .github/actions/docker/container/is-healthy/action.yml
+            .github/actions/network/is-reachable/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Load build 💽
@@ -171,7 +171,7 @@ jobs:
             "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
 
       - name: Wait for MongoDB container to be healthy
-        uses: ./.github/actions/is-healthy
+        uses: ./.github/actions/docker/container/is-healthy
         with:
           container: mongodb
           timeout: 60
@@ -188,7 +188,7 @@ jobs:
           echo "pid=$!" >> "$GITHUB_OUTPUT"
 
       - name: Wait for server port to be available
-        uses: ./.github/actions/is-reachable
+        uses: ./.github/actions/network/is-reachable
         with:
           timeout: 60
           port: 3000
