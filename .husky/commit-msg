@@ -1,7 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-function ask () {
+ask() {
 
 	# This is a general-purpose function to ask Yes/No questions in Bash, either
 	# with or without a default answer. It keeps repeating the question until it
