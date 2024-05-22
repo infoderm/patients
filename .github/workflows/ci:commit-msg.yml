@@ -26,17 +26,14 @@ jobs:
       - name: Install 💾
         uses: ./.github/actions/install
 
-      - name: Lint last pushed commit 👕
-        if: github.event_name == 'push'
-        run: |
-          npm run check:commit-msg -- --last --verbose
+      - name: Compute MERGE_BASE and HEAD_SHA 📜
+        id: event
+        uses: ./.github/actions/github/event
 
-      - name: Lint PR commits 👕
-        if: github.event_name == 'pull_request'
-        run: |
-          npm run check:commit-msg -- --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-
-      - name: Lint merge group commits 👕
-        if: github.event_name == 'merge_group'
-        run: |
-          npm run check:commit-msg -- --from ${{ github.event.merge_group.base_sha }} --to ${{ github.event.merge_group.head_sha }} --verbose
+      - name: Lint commits 👕
+        run: >
+          npm run check:commit-msg
+          --
+          --from ${{ steps.event.outputs.merge-base }}
+          --to ${{ steps.event.outputs.head-sha }}
+          --verbose
