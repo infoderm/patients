@@ -1,5 +1,4 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
-// @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 import {Readable} from 'stream';
 
@@ -16,7 +15,6 @@ import streamToBuffer from '../lib/stream/streamToBuffer';
 import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 import schema from '../lib/schema';
 
-import fetchSync from './publication/fetchSync';
 import defineCollection from './collection/define';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
@@ -310,8 +308,9 @@ export const Uploads = new FilesCollection<MetadataType>({
 
 		return true;
 	},
-	onBeforeRemove(cursor) {
-		return all(map((x) => x.userId === this.userId, fetchSync(cursor)));
+	async onBeforeRemove(cursor) {
+		const items = await cursor.fetchAsync();
+		return all(map((x) => x.userId === this.userId, items));
 	},
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {

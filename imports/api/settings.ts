@@ -54,8 +54,8 @@ export const defaults: UserSettings = {
 	'displayed-week-days': [...ALL_WEEK_DAYS],
 };
 
-export function get(owner: string, key: string) {
-	const item = findOneSync(Settings, {owner, key});
+export async function get(owner: string, key: string) {
+	const item = await Settings.findOneAsync({owner, key});
 	if (item === undefined) {
 		return defaults[key];
 	}

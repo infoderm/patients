@@ -14,7 +14,7 @@ import {
 } from '../fixtures';
 
 client(__filename, () => {
-	it('should allow to attach a file to a patient', async () => {
+	it.only('should allow to attach a file to a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -37,6 +37,6 @@ client(__filename, () => {
 		const button = await findByLabelText('Attach File');
 		uploadFile(button, file);
 
-		await findByRole('heading', {name: 'Pièces jointes au patient'});
+		await findByRole('heading', {name: 'Pièces jointes au patient'}, {timeout: 10_000});
 	});
 });

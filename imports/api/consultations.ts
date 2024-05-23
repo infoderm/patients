@@ -127,7 +127,7 @@ export const filterBookPrefill = () => ({
 	},
 });
 
-export function setupConsultationsStatsPublication(
+export async function setupConsultationsStatsPublication(
 	this: AuthenticatedContext,
 	collectionName: string,
 	filter: Filter<ConsultationDocument>,
@@ -158,7 +158,10 @@ export function setupConsultationsStatsPublication(
 	// Until then, we don't want to send a lot of `changed` messages—hence
 	// tracking the `initializing` state.
 	let initializing = true;
-	const handle = Consultations.find(selector, options).observeChanges({
+	const handle = await Consultations.find(
+		selector,
+		options,
+	).observeChangesAsync({
 		added: (_id, {price, datetime}) => {
 			count += 1;
 			if (price) total += price;
