@@ -153,7 +153,7 @@ export const client = (title, fn) => {
 		};
 
 		describe(title, function () {
-			this.timeout(15_000);
+			this.timeout(isAppTest() ? 15_000: 1000);
 			beforeEach(prepare);
 			fn();
 			afterEach(restore);
@@ -176,10 +176,7 @@ export const server = (title, fn) => {
 		};
 
 		describe(title, function () {
-			if (isAppTest()) {
-				this.timeout(10_000);
-			}
-
+			this.timeout(isAppTest() ? 10_000: 1000);
 			beforeEach(prepare);
 			fn();
 			afterEach(cleanup);
