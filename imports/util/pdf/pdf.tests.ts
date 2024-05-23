@@ -14,5 +14,5 @@ server(__filename, () => {
 	it('should work on the server', async () => {
 		const data = randomPDFUint8Array();
 		await fetchPDF({data});
-	}).timeout(5000);
+	}).timeout(2000);
 });
