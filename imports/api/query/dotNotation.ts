@@ -1,7 +1,6 @@
 /**
  * Helper types for dot-notation filter attributes
  */
-// @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 
 import schema, {at, keyof} from '../../util/schema';
