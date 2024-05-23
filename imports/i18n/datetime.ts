@@ -10,7 +10,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import {get as getSetting} from '../api/settings';
+import {getSync as getSetting} from '../api/settings';
 
 import {useSettingCached} from '../ui/settings/hooks';
 import {
