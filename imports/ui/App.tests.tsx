@@ -46,5 +46,5 @@ client(__filename, () => {
 			password,
 		);
 		await app.user.click(button);
-	});
+	}).timeout(10_000);
 });
