@@ -131,7 +131,7 @@ declare module 'meteor/ostrio:files' {
 		onBeforeRemove?: (
 			this: ContextUser,
 			cursor: Mongo.Cursor<FileObj<MetadataType>>,
-		) => boolean;
+		) => Promise<boolean>;
 		onInitiateUpload?: (
 			this: ContextUpload & ContextUser,
 			fileData: FileData<MetadataType>,
