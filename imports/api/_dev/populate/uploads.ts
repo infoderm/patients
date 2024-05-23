@@ -21,24 +21,15 @@ export const newUpload = async (
 			type === 'application/pdf'
 				? await randomPDFBuffer()
 				: await randomPNGBuffer();
-		return new Promise((resolve, reject) => {
-			Uploads.write(
-				buffer,
-				{
-					fileName,
-					type,
-					userId: invocation?.userId,
-				},
-				(writeError, fileRef) => {
-					if (writeError) {
-						reject(writeError);
-					} else {
-						resolve(fileRef);
-					}
-				},
-				true,
-			);
-		});
+		return Uploads.write(
+			buffer,
+			{
+				fileName,
+				type,
+				userId: invocation?.userId,
+			},
+			true,
+		);
 	}
 
 	const file =
