@@ -25,7 +25,7 @@
     "check:commit-msg": "commitlint --config commitlint.config.ts",
     "ci:test": "TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_LCOVONLY=1 npm run cover -- --once",
     "commit-msg": "npm run check:commit-msg -- --edit",
-    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage",
+    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage@4.1.0",
     "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
     "dev": "MONGO_OPLOG_URL=\"\" meteor run -s settings.json -p ${HOST:-localhost}:${PORT:-12345}",
     "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
