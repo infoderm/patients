@@ -1,4 +1,3 @@
-// @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 
 const _views = new WeakMap<Uint8Array, Buffer>();
