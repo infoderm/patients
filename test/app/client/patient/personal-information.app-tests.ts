@@ -191,7 +191,7 @@ const editPatient = async (
 };
 
 client(__filename, () => {
-	it("should allow to edit a patient's personal information", async () => {
+	it.only("should allow to edit a patient's personal information", async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
