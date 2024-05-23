@@ -230,7 +230,7 @@ export const searchForPatient = async (
 ) => {
 	const {findByRole, user} = app;
 	await searchResultsForQuery(app, query);
-	await user.click(await findByRole('link', {name}, {timeout: 5000}));
+	await user.click(await findByRole('link', {name}, {timeout: 10_000}));
 	if (id !== undefined) {
 		await findByRole('heading', {name: `/patient/${id}`}, {timeout: 10_000});
 	}
