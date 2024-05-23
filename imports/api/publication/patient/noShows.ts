@@ -12,7 +12,7 @@ export default define({
 	name: 'patient.noShows',
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([schema.string()]),
-	handle(patientId) {
+	async handle(patientId) {
 		const Collection = Appointments;
 		const collection = noShows;
 		const key = patientId;
@@ -29,18 +29,20 @@ export default define({
 		const state = (): State => ({count});
 
 		let initializing = true;
-		const handle = Collection.find(selector, options).observeChanges({
-			added: (_id, _fields) => {
-				count += 1;
-				if (!initializing) {
+		const handle = await Collection.find(selector, options).observeChangesAsync(
+			{
+				added: (_id, _fields) => {
+					count += 1;
+					if (!initializing) {
+						this.changed(collection, key, state());
+					}
+				},
+				removed: (_id) => {
+					count -= 1;
 					this.changed(collection, key, state());
-				}
+				},
 			},
-			removed: (_id) => {
-				count -= 1;
-				this.changed(collection, key, state());
-			},
-		});
+		);
 
 		initializing = false;
 		this.added(collection, key, state());

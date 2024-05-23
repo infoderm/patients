@@ -32,7 +32,7 @@ const makeFilteredCollection = <
 			userFilter(tSchema).nullable(),
 			options(tSchema).nullable(),
 		]),
-		handle(
+		async handle(
 			publicationFilter: UserFilter<schema.infer<S>> | null,
 			publicationOptions: Options<schema.infer<S>> | null,
 		) {
@@ -49,19 +49,21 @@ const makeFilteredCollection = <
 				limit: 0,
 			};
 
-			const handle = collection.find(selector, options).observeChanges({
-				added: (_id, fields) => {
-					this.added(name, _id, fields);
-				},
+			const handle = await collection
+				.find(selector, options)
+				.observeChangesAsync({
+					added: (_id, fields) => {
+						this.added(name, _id, fields);
+					},
 
-				changed: (_id, fields) => {
-					this.changed(name, _id, fields);
-				},
+					changed: (_id, fields) => {
+						this.changed(name, _id, fields);
+					},
 
-				removed: (_id) => {
-					this.removed(name, _id);
-				},
-			});
+					removed: (_id) => {
+						this.removed(name, _id);
+					},
+				});
 
 			this.onStop(() => {
 				handle.stop();
