@@ -58,8 +58,17 @@ export const defaults: UserSettings = {
 	'consultations-paid-sync': [],
 };
 
-export function get(owner: string, key: string) {
+export function getSync(owner: string, key: string) {
 	const item = findOneSync(Settings, {owner, key});
+	if (item === undefined) {
+		return defaults[key];
+	}
+
+	return item.value;
+}
+
+export async function get(owner: string, key: string) {
+	const item = await Settings.findOneAsync({owner, key});
 	if (item === undefined) {
 		return defaults[key];
 	}
