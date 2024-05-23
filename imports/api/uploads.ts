@@ -1,5 +1,4 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
-// @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 import {Readable} from 'stream';
 
