@@ -28,7 +28,11 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
-	function (key: string, query: UserQuery<T>, observe: ObserveOptions | null) {
+	async function (
+		key: string,
+		query: UserQuery<T>,
+		observe: ObserveOptions | null,
+	) {
 		let [selector, options] = queryToSelectorOptionsPair(query);
 		selector = {
 			...selector,
@@ -62,9 +66,10 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		if (callbacks.removed) observers.removed = stop;
 		if (callbacks.changed) observers.changed = stop;
 
-		const handle = QueriedCollection.find(selector, options).observeChanges(
-			observers,
-		);
+		const handle = await QueriedCollection.find(
+			selector,
+			options,
+		).observeChangesAsync(observers);
 
 		// Instead, we'll send one `added` message right after `observeChanges` has
 		// returned, and mark the subscription as ready.

@@ -59,8 +59,8 @@ export const event = (
 	};
 };
 
-export const publishEvents = function (query, options) {
-	const handle = Consultations.find(query, options).observe({
+export const publishEvents = async function (query, options) {
+	const handle = await Consultations.find(query, options).observeAsync({
 		added: ({_id, ...fields}) => {
 			this.added(events, _id, event(_id, fields));
 		},

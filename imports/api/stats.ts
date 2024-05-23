@@ -53,7 +53,7 @@ const countPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{fields, discretize, values}: CountOptions<T>,
 ) =>
-	function (this: Subscription, filter: UserFilter<T> | null) {
+	async function (this: Subscription, filter: UserFilter<T> | null) {
 		const collection = countCollection;
 		const key = countPublicationKey(QueriedCollection, {values}, filter);
 		const selector = {...filter, owner: this.userId} as Selector<T>;
@@ -96,7 +96,10 @@ const countPublication = <T extends Document, U = T>(
 		};
 
 		let initializing = true;
-		const handle = QueriedCollection.find(selector, options).observeChanges({
+		const handle = await QueriedCollection.find(
+			selector,
+			options,
+		).observeChangesAsync({
 			added: (_id, object) => {
 				total += 1;
 				inc(object);

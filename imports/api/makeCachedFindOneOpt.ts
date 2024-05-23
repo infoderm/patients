@@ -49,23 +49,25 @@ const makeCachedFindOneOpt =
 					if (queryHandle) queryHandle.stop();
 					else reset();
 				},
-				onReady() {
+				async onReady() {
 					console.debug('onReady()');
 					setLoading(false);
-					queryHandle = collection.find(selector, options).observeChanges({
-						added(_id, upToDate) {
-							setFound(true);
-							current = {...init, ...upToDate};
-							setFields(current);
-						},
-						changed(_id, upToDate) {
-							current = {...current, ...upToDate};
-							setFields(current);
-						},
-						removed(_id) {
-							setFound(false);
-						},
-					});
+					queryHandle = await collection
+						.find(selector, options)
+						.observeChangesAsync({
+							added(_id, upToDate) {
+								setFound(true);
+								current = {...init, ...upToDate};
+								setFields(current);
+							},
+							changed(_id, upToDate) {
+								current = {...current, ...upToDate};
+								setFields(current);
+							},
+							removed(_id) {
+								setFound(false);
+							},
+						});
 				},
 			});
 
