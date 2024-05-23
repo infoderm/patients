@@ -16,7 +16,7 @@ import {Patients} from './collection/patients';
 import {type EventDocument, events} from './collection/events';
 import findOneSync from './publication/findOneSync';
 
-export const event = (
+export const event = async (
 	_id: string,
 	{
 		owner,
@@ -28,8 +28,8 @@ export const event = (
 		doneDatetime,
 		createdAt,
 	}: Omit<ConsultationDocument, '_id'>,
-): EventDocument => {
-	const patient = findOneSync(Patients, {_id: patientId}); // TODO Make reactive (maybe)?
+): Promise<EventDocument> => {
+	const patient = await Patients.findOneAsync({_id: patientId}); // TODO Make reactive (maybe)?
 	assert(patient !== undefined);
 	const begin = datetime;
 	const end = isDone
@@ -61,12 +61,12 @@ export const event = (
 
 export const publishEvents = async function (query, options) {
 	const handle = await Consultations.find(query, options).observeAsync({
-		added: ({_id, ...fields}) => {
-			this.added(events, _id, event(_id, fields));
+		added: async ({_id, ...fields}) => {
+			this.added(events, _id, await event(_id, fields));
 		},
 
-		changed: ({_id, ...fields}) => {
-			this.changed(events, _id, event(_id, fields));
+		changed: async ({_id, ...fields}) => {
+			this.changed(events, _id, await event(_id, fields));
 		},
 
 		removed: ({_id}) => {
