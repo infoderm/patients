@@ -14,11 +14,11 @@ server(__filename, () => {
 		const key = 'x';
 		const value = 123_819_832;
 
-		assert.strictEqual(get(userId, key), defaults[key]);
+		assert.strictEqual(await get(userId, key), defaults[key]);
 
 		await invoke(update, {userId}, [key, value]);
 
-		assert.strictEqual(get(userId, key), value);
+		assert.strictEqual(await get(userId, key), value);
 	});
 
 	it('can update a setting', async () => {
@@ -30,11 +30,11 @@ server(__filename, () => {
 
 		await invoke(update, {userId}, [key, value]);
 
-		assert.strictEqual(get(userId, key), value);
+		assert.strictEqual(await get(userId, key), value);
 
 		await invoke(update, {userId}, [key, updated]);
 
-		assert.strictEqual(get(userId, key), updated);
+		assert.strictEqual(await get(userId, key), updated);
 	});
 
 	it('cannot set a setting if not logged in', async () => {
@@ -70,6 +70,6 @@ server(__filename, () => {
 
 		await invoke(update, {userId}, [key, value]);
 
-		assert.strictEqual(get(`${userId}x`, key), defaults[key]);
+		assert.strictEqual(await get(`${userId}x`, key), defaults[key]);
 	});
 });
