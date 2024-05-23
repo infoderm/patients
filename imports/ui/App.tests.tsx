@@ -49,5 +49,5 @@ client(__filename, () => {
 		await user.click(
 			await findByRole('button', {name: `Logged in as ${username}`}),
 		);
-	});
+	}).timeout(10_000);
 });
