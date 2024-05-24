@@ -197,7 +197,7 @@ const editPatient = async (
 };
 
 client(__filename, () => {
-	it.only("should allow to edit a patient's personal information", async () => {
+	it("should allow to edit a patient's personal information", async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -298,5 +298,5 @@ client(__filename, () => {
 		await searchResultsForQuery(app, 'Jane');
 
 		await findByText('F');
-	}).timeout(70_000);
+	}).timeout(60_000);
 });
