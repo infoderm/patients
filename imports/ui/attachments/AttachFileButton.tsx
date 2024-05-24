@@ -11,6 +11,7 @@ import type PropsOf from '../../util/types/PropsOf';
 
 import call from '../../api/endpoint/call';
 import type Endpoint from '../../api/endpoint/Endpoint';
+import randomId from '../../api/randomId';
 import {type MetadataType, Uploads} from '../../api/uploads';
 
 import InputFileButton from '../input/InputFileButton';
@@ -127,8 +128,13 @@ const AttachFileButton = React.forwardRef(
 					meta.lastModified = new Date(file.lastModified);
 				}
 
+				// TODO Figure out a way without this.
+				const _id = randomId();
+
 				const upload = Uploads.insert(
 					{
+						// TODO Figure out a way without this.
+						fileId: _id,
 						file,
 						chunkSize: 'dynamic',
 						meta,
@@ -150,7 +156,8 @@ const AttachFileButton = React.forwardRef(
 				});
 
 				upload.on('end', async (err, fileObject) => {
-					await onEnd(err, fileObject, uploadFileFeedback);
+					// TODO Figure out a way without this.
+					await onEnd(err, {_id, ...fileObject}, uploadFileFeedback);
 				});
 
 				upload.start();
