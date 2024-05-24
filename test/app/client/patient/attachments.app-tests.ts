@@ -9,7 +9,7 @@ import createUserWithPasswordAndLogin from '../../../../imports/api/user/createU
 import {setupApp, navigateTo, createNewPatient, uploadFile} from '../fixtures';
 
 client(__filename, () => {
-	it.only('should allow to attach a file to a patient', async () => {
+	it('should allow to attach a file to a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -32,6 +32,6 @@ client(__filename, () => {
 		const button = await findByLabelText('Attach File');
 		uploadFile(button, file);
 
-		await findByRole('heading', {name: 'Pièces jointes au patient'}, {timeout: 10_000});
+		await findByRole('heading', {name: 'Pièces jointes au patient'});
 	});
 });
