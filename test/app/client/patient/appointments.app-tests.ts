@@ -85,7 +85,7 @@ client(__filename, () => {
 		await scheduleAppointmentForPatient(app, {patientId, firstname, lastname});
 	}).timeout(35_000);
 
-	it.only('should allow to cancel an appointment for a patient', async () => {
+	it('should allow to cancel an appointment for a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -194,7 +194,7 @@ client(__filename, () => {
 		}
 	}).timeout(40_000);
 
-	it.only('should allow to begin a consultation for a patient', async () => {
+	it('should allow to begin a consultation for a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
