@@ -2,10 +2,12 @@ import schema from '../lib/schema';
 
 import type Collection from './Collection';
 import type Document from './Document';
-import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
+import type Filter from './query/Filter';
 import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 import {userQuery} from './query/UserQuery';
 import type UserQuery from './query/UserQuery';
+
+import watch from './watch';
 
 const observeOptions = schema
 	.object({
@@ -28,7 +30,11 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
-	function (key: string, query: UserQuery<T>, observe: ObserveOptions | null) {
+	async function (
+		key: string,
+		query: UserQuery<T>,
+		observe: ObserveOptions | null,
+	) {
 		let [selector, options] = queryToSelectorOptionsPair(query);
 		selector = {
 			...selector,
@@ -45,41 +51,51 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			options,
 			observe,
 		});
-		const results: T[] = [];
-		let initializing = true;
 
 		const stop = () => {
 			this.stop();
 		};
 
-		const observers: ObserveChangesCallbacks<T> = {
-			added(_id, fields) {
-				if (initializing) results.push({_id, ...fields} as unknown as T);
-				else if (callbacks.added) stop();
+		const handle = await watch<T, U>(
+			QueriedCollection,
+			selector as Filter<T>,
+			options,
+			({operationType}) => {
+				switch (operationType) {
+					case 'replace':
+					case 'update': {
+						if (callbacks.changed) stop();
+						break;
+					}
+
+					case 'insert': {
+						if (callbacks.added) stop();
+						break;
+					}
+
+					case 'delete': {
+						if (callbacks.removed) stop();
+						break;
+					}
+
+					default: {
+						stop();
+					}
+				}
 			},
-		};
-
-		if (callbacks.removed) observers.removed = stop;
-		if (callbacks.changed) observers.changed = stop;
-
-		const handle = QueriedCollection.find(selector, options).observeChanges(
-			observers,
 		);
 
-		// Instead, we'll send one `added` message right after `observeChanges` has
-		// returned, and mark the subscription as ready.
-		initializing = false;
+		const results = handle.init;
+
 		this.added(observedQueryCacheCollectionName, uid, {
 			key,
 			results,
 		});
 		this.ready();
 
-		// Stop observing the cursor when the client unsubscribes. Stopping a
-		// subscription automatically takes care of sending the client any `removed`
-		// messages.
-		this.onStop(() => {
-			handle.stop();
+		// NOTE: Stop observing the cursor when the client unsubscribes.
+		this.onStop(async () => {
+			await handle.stop();
 		});
 	};
 
