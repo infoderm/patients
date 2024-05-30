@@ -5,6 +5,7 @@ import {
 	type ClientSessionOptions,
 	type TransactionOptions,
 	type ChangeStreamOptions,
+	type Timestamp,
 } from 'mongodb';
 
 import type Document from './Document';
@@ -38,20 +39,17 @@ const _watchInit = async <T extends Document, U = T>(
 		sessionOptions,
 	);
 
-const _filterToMatch = <T>(filter: Filter<T>) => {
-	return Object.fromEntries(
-		Object.entries(filter).map(([key, value]) => [
-			`fulldocument.${key}`,
-			value,
-		]),
-	);
-};
+const _filterToMatch = <T>(filter: Filter<T>) => ({
+	$and: Object.entries(filter).map(([key, value]) => ({
+		[`fulldocument.${key}`]: value,
+	})),
+});
 
 const _watchStream = <T extends Document, U = T>(
 	collection: Collection<T, U>,
 	filter: Filter<T>,
 	options: Options,
-	startAtOperationTime: any, // TODO
+	startAtOperationTime: Timestamp,
 	changeStreamOptions?: ChangeStreamOptions,
 ) =>
 	collection
