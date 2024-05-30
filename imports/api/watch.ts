@@ -8,6 +8,8 @@ import {
 	type Timestamp,
 } from 'mongodb';
 
+import {isObject} from '@functional-abstraction/type';
+
 import type Document from './Document';
 
 import {type Options} from './transaction/TransactionDriver';
@@ -39,11 +41,21 @@ const _watchInit = async <T extends Document, U = T>(
 		sessionOptions,
 	);
 
-const _filterToMatch = <T>(filter: Filter<T>) => ({
-	$and: Object.entries(filter).map(([key, value]) => ({
-		[`fulldocument.${key}`]: value,
-	})),
-});
+const _filterToMatch = <T>(filter: Filter<T>) =>
+	Object.fromEntries(
+		Object.entries(filter).map(([key, value]) => [
+			key.startsWith('$') ? key : `fullDocument.${key}`,
+			isObject(value) ? _filterToMatch(value as Filter<T>) : value,
+		]),
+	);
+
+const _filterToPipeline = <T>({$text, ...rest}: Filter<T>) =>
+	[
+		$text === undefined ? null : {$match: {$text}},
+		_filterToMatch(rest as Filter<T>),
+	].filter(Boolean);
+
+const _optionsToPipeline = (options: Options) => [{$project: options.project}];
 
 const _watchStream = <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -54,8 +66,10 @@ const _watchStream = <T extends Document, U = T>(
 ) =>
 	collection
 		.rawCollection()
-		.watch([{$match: _filterToMatch(filter)}, {$project: options.project}], {
+		.watch([..._filterToPipeline(filter), ..._optionsToPipeline(options)], {
 			startAtOperationTime,
+			fullDocument: 'whenAvailable',
+			fullDocumentBeforeChange: 'whenAvailable',
 			...changeStreamOptions,
 		});
 
