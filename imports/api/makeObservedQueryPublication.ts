@@ -6,8 +6,7 @@ import type Filter from './query/Filter';
 import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 import {userQuery} from './query/UserQuery';
 import type UserQuery from './query/UserQuery';
-
-import watch from './watch';
+import watch from './query/watch';
 
 const observeOptions = schema
 	.object({
@@ -40,11 +39,11 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			...selector,
 			owner: this.userId,
 		};
-		const callbacks: ObserveOptions = {
-			added: true,
-			removed: true,
-			...observe,
-		};
+		// const callbacks: ObserveOptions = {
+		// added: true,
+		// removed: true,
+		// ...observe,
+		// };
 		const uid = JSON.stringify({
 			key,
 			selector,
@@ -60,28 +59,29 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			QueriedCollection,
 			selector as Filter<T>,
 			options,
-			({operationType}) => {
-				switch (operationType) {
-					case 'replace':
-					case 'update': {
-						if (callbacks.changed) stop();
-						break;
-					}
+			async () => {
+				stop();
+				// switch (operationType) {
+				// case 'replace':
+				// case 'update': {
+				// if (callbacks.changed) stop();
+				// break;
+				// }
 
-					case 'insert': {
-						if (callbacks.added) stop();
-						break;
-					}
+				// case 'insert': {
+				// if (callbacks.added) stop();
+				// break;
+				// }
 
-					case 'delete': {
-						if (callbacks.removed) stop();
-						break;
-					}
+				// case 'delete': {
+				// if (callbacks.removed) stop();
+				// break;
+				// }
 
-					default: {
-						stop();
-					}
-				}
+				// default: {
+				// stop();
+				// }
+				// }
 			},
 		);
 
