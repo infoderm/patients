@@ -1,7 +1,6 @@
 import assert from 'assert';
 
 import {
-	type ChangeStreamDocument,
 	type ClientSessionOptions,
 	type TransactionOptions,
 	type ChangeStreamOptions,
@@ -10,14 +9,14 @@ import {
 
 import {isObject} from '@functional-abstraction/type';
 
-import type Document from './Document';
+import type Collection from '../Collection';
+import type Document from '../Document';
 
-import {type Options} from './transaction/TransactionDriver';
+import {type Options} from '../transaction/TransactionDriver';
+import withSession from '../transaction/withSession';
+import withTransactionDriver from '../transaction/withTransactionDriver';
 
-import type Filter from './query/Filter';
-import type Collection from './Collection';
-import withSession from './transaction/withSession';
-import withTransactionDriver from './transaction/withTransactionDriver';
+import type Filter from './Filter';
 
 const _watchInit = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -49,11 +48,13 @@ const _filterToMatch = <T>(filter: Filter<T>) =>
 		]),
 	);
 
-const _filterToPipeline = <T>({$text, ...rest}: Filter<T>) =>
-	[
-		$text === undefined ? null : {$match: {$text}},
-		_filterToMatch(rest as Filter<T>),
-	].filter(Boolean);
+const _filterToPipeline = <T>({$text, ...rest}: Filter<T>) => {
+	return {
+		pipeline: [_filterToMatch(rest as Filter<T>)].filter(Boolean),
+		// TODO Any occurrence of $text should yield this, not just top-level.
+		isSuperset: $text !== undefined,
+	};
+};
 
 const _optionsToPipeline = (options: Options) => [{$project: options.project}];
 
@@ -63,15 +64,23 @@ const _watchStream = <T extends Document, U = T>(
 	options: Options,
 	startAtOperationTime: Timestamp,
 	changeStreamOptions?: ChangeStreamOptions,
-) =>
-	collection
-		.rawCollection()
-		.watch([..._filterToPipeline(filter), ..._optionsToPipeline(options)], {
-			startAtOperationTime,
-			fullDocument: 'whenAvailable',
-			fullDocumentBeforeChange: 'whenAvailable',
-			...changeStreamOptions,
-		});
+) => {
+	const {pipeline: filterPipeline, isSuperset: filterIsSuperset} =
+		_filterToPipeline(filter);
+
+	const pipeline = [...filterPipeline, ..._optionsToPipeline(options)];
+	const stream = collection.rawCollection().watch(pipeline, {
+		startAtOperationTime,
+		fullDocument: 'whenAvailable',
+		fullDocumentBeforeChange: 'whenAvailable',
+		...changeStreamOptions,
+	});
+
+	return {
+		stream,
+		isSuperset: filterIsSuperset,
+	};
+};
 
 const _watchSetup = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -89,7 +98,7 @@ const _watchSetup = async <T extends Document, U = T>(
 		sessionOptions,
 	);
 
-	const stream = _watchStream(
+	const {stream, isSuperset: streamIsSuperset} = _watchStream(
 		collection,
 		filter,
 		options,
@@ -97,10 +106,10 @@ const _watchSetup = async <T extends Document, U = T>(
 		changeStreamOptions,
 	);
 
-	return {init, stream};
+	return {init, stream, streamIsSuperset};
 };
 
-type OnChange<T extends Document> = (doc: ChangeStreamDocument<T>) => void;
+type OnChange<T extends Document> = (result: T[]) => Promise<void>;
 
 const watch = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -120,7 +129,40 @@ const watch = async <T extends Document, U = T>(
 		sessionOptions,
 	);
 
-	stream.on('change', onChange);
+	let queued = 0;
+	const queue = new Promise((resolve) => {
+		resolve(undefined);
+	});
+	const enqueue = (task) => {
+		// TODO Throttle.
+		if (queued === 0) return;
+		++queued;
+		queue.then(
+			() => {
+				--queued;
+				return task();
+			},
+			(error) => {
+				console.error({error});
+			},
+		);
+	};
+
+	stream.on('change', () => {
+		enqueue(async () => {
+			const {init} = await _watchInit(
+				collection,
+				filter,
+				options,
+				transactionOptions,
+				sessionOptions,
+			);
+
+			await onChange(init);
+		});
+	});
+
+	// TODO stream.on('stop', ???)
 
 	const stop = async () => stream.close();
 
