@@ -288,7 +288,6 @@ const createTagCollection = <
 
 				if (problem !== null) {
 					throw new Error(
-						// eslint-disable-next-line @typescript-eslint/no-base-to-string
 						`Cannot rename ${key} from ${oldname} to ${newname} because parent ${problem._id} already has both.`,
 					);
 				}
