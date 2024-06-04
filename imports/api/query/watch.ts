@@ -40,13 +40,19 @@ const _watchInit = async <T extends Document, U = T>(
 		sessionOptions,
 	);
 
-const _filterToMatch = <T>(filter: Filter<T>) =>
+const _filterToFullDocumentFilter = <T>(filter: Filter<T>) =>
 	Object.fromEntries(
 		Object.entries(filter).map(([key, value]) => [
 			key.startsWith('$') ? key : `fullDocument.${key}`,
-			isObject(value) ? _filterToMatch(value as Filter<T>) : value,
+			isObject(value) ? _filterToFullDocumentFilter(value as Filter<T>) : value,
 		]),
 	);
+
+const _filterToMatch = <T>(filter: Filter<T>) => ({
+	$match: {
+		$and: _filterToFullDocumentFilter(filter),
+	},
+});
 
 const _filterToPipeline = <T>({$text, ...rest}: Filter<T>) => {
 	return {
