@@ -103,7 +103,7 @@
     "healthone": "^6.1.0",
     "history": "^5.3.0",
     "iban": "^0.0.14",
-    "ical-generator": "^4.1.0",
+    "ical-generator": "^7.0.0",
     "iconv-lite": "^0.6.3",
     "idb": "^6.1.5",
     "jspdf": "^2.5.1",
