@@ -8,8 +8,8 @@ declare module 'meteor/diff-sequence' {
 
 	namespace DiffSequence {
 		function diffQueryOrderedChanges<T extends Document>(
-			old_results: T,
-			new_results: T,
+			old_results: T[],
+			new_results: T[],
 			observer: Mongo.ObserveChangesCallbacks<T>,
 			options?: Options<T> | undefined,
 		): void;
