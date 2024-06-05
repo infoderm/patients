@@ -1,8 +1,11 @@
+import {DiffSequence} from 'meteor/diff-sequence';
+
 import schema from '../lib/schema';
 
 import type Collection from './Collection';
 import type Document from './Document';
 import type Filter from './query/Filter';
+import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
 import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 import {userQuery} from './query/UserQuery';
 import type UserQuery from './query/UserQuery';
@@ -10,7 +13,8 @@ import watch from './query/watch';
 
 const observeOptions = schema
 	.object({
-		added: schema.boolean().optional(),
+		addedBefore: schema.boolean().optional(),
+		movedBefore: schema.boolean().optional(),
 		removed: schema.boolean().optional(),
 		changed: schema.boolean().optional(),
 	})
@@ -39,11 +43,14 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			...selector,
 			owner: this.userId,
 		};
-		// const callbacks: ObserveOptions = {
-		// added: true,
-		// removed: true,
-		// ...observe,
-		// };
+
+		const callbacks: ObserveOptions = {
+			addedBefore: true,
+			movedBefore: true,
+			removed: true,
+			...observe,
+		};
+
 		const uid = JSON.stringify({
 			key,
 			selector,
@@ -55,33 +62,33 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			this.stop();
 		};
 
+		// NOTE We only diff ids if we do not care about change events.
+		const diffOptions = callbacks.changed
+			? undefined
+			: {
+					projectionFn: ({_id}) => _id,
+			  };
+
+		const observer: ObserveChangesCallbacks<T> = Object.fromEntries(
+			[
+				callbacks.addedBefore && ['addedBefore', stop],
+				callbacks.movedBefore && ['movedBefore', stop],
+				callbacks.removed && ['removed', stop],
+				callbacks.changed && ['changed', stop],
+			].filter(Boolean),
+		);
+
 		const handle = await watch<T, U>(
 			QueriedCollection,
 			selector as Filter<T>,
 			options,
-			async () => {
-				stop();
-				// switch (operationType) {
-				// case 'replace':
-				// case 'update': {
-				// if (callbacks.changed) stop();
-				// break;
-				// }
-
-				// case 'insert': {
-				// if (callbacks.added) stop();
-				// break;
-				// }
-
-				// case 'delete': {
-				// if (callbacks.removed) stop();
-				// break;
-				// }
-
-				// default: {
-				// stop();
-				// }
-				// }
+			async (init) => {
+				DiffSequence.diffQueryOrderedChanges(
+					handle.init,
+					init,
+					observer,
+					diffOptions,
+				);
 			},
 		);
 
