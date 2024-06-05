@@ -66,24 +66,23 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		const diffOptions = callbacks.changed
 			? undefined
 			: {
-					projectionFn: ({_id}) => _id,
+					// @ts-expect-error TODO
+					projectionFn: ({_id}: T): Partial<T> => ({_id}),
 			  };
 
-		const observer: ObserveChangesCallbacks<T> = Object.fromEntries(
-			[
-				callbacks.addedBefore && ['addedBefore', stop],
-				callbacks.movedBefore && ['movedBefore', stop],
-				callbacks.removed && ['removed', stop],
-				callbacks.changed && ['changed', stop],
-			].filter(Boolean),
-		);
+		const observer: ObserveChangesCallbacks<T> = {};
+
+		if (callbacks.addedBefore) observer.addedBefore = stop;
+		if (callbacks.movedBefore) observer.movedBefore = stop;
+		if (callbacks.removed) observer.removed = stop;
+		if (callbacks.changed) observer.changed = stop;
 
 		const handle = await watch<T, U>(
 			QueriedCollection,
 			selector as Filter<T>,
 			options,
 			async (init) => {
-				DiffSequence.diffQueryOrderedChanges(
+				DiffSequence.diffQueryOrderedChanges<T>(
 					handle.init,
 					init,
 					observer,
