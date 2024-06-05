@@ -40,17 +40,31 @@ const _watchInit = async <T extends Document, U = T>(
 		sessionOptions,
 	);
 
-const _filterToFullDocumentFilter = <T>(filter: Filter<T>) =>
+const _filterToFullDocumentFilter = <T>(
+	operationKey: string,
+	filter: Filter<T>,
+) =>
 	Object.fromEntries(
 		Object.entries(filter).map(([key, value]) => [
-			key.startsWith('$') ? key : `fullDocument.${key}`,
-			isObject(value) ? _filterToFullDocumentFilter(value as Filter<T>) : value,
+			key.startsWith('$') ? key : `${operationKey}.${key}`,
+			isObject(value)
+				? _filterToFullDocumentFilter(operationKey, value as Filter<T>)
+				: value,
 		]),
 	);
 
 const _filterToMatch = <T>(filter: Filter<T>) => ({
 	$match: {
-		$and: _filterToFullDocumentFilter(filter),
+		$or: [
+			_filterToFullDocumentFilter('fullDocument', filter),
+			_filterToFullDocumentFilter('fullDocumentBeforeChange', filter),
+			{
+				$and: [
+					{fullDocument: undefined},
+					{fullDocumentBeforeChange: undefined},
+				],
+			},
+		],
 	},
 });
 
@@ -62,7 +76,8 @@ const _filterToPipeline = <T>({$text, ...rest}: Filter<T>) => {
 	};
 };
 
-const _optionsToPipeline = (options: Options) => [{$project: options.project}];
+const _optionsToPipeline = (options: Options) =>
+	options.project === undefined ? [] : [{$project: options.project}];
 
 const _watchStream = <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -136,22 +151,23 @@ const watch = async <T extends Document, U = T>(
 	);
 
 	let queued = 0;
-	const queue = new Promise((resolve) => {
+	let queue = new Promise((resolve) => {
 		resolve(undefined);
 	});
+	await queue;
+
 	const enqueue = (task) => {
 		// TODO Throttle.
-		if (queued === 0) return;
+		if (queued !== 0) return;
 		++queued;
-		queue.then(
-			() => {
+		queue = queue
+			.then(() => {
 				--queued;
 				return task();
-			},
-			(error) => {
+			})
+			.catch((error) => {
 				console.error({error});
-			},
-		);
+			});
 	};
 
 	stream.on('change', () => {
