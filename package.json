@@ -172,7 +172,7 @@
     "mup": "1.5.10",
     "npm-check-updates": "16.14.20",
     "postinstall": "0.10.3",
-    "puppeteer": "19.11.1",
+    "puppeteer": "22.12.1",
     "rrule": "2.8.1",
     "simpl-schema": "3.4.6",
     "supertest": "7.0.0",
