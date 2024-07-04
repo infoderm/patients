@@ -62,7 +62,7 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			this.stop();
 		};
 
-		// NOTE We only diff ids if we do not care about change events.
+		// NOTE We diff ids only if we do not care about change events.
 		const diffOptions = callbacks.changed
 			? undefined
 			: {
