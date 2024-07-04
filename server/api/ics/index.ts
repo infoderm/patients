@@ -85,8 +85,8 @@ const response = async (token, IPAddress, query, res) => {
 
 		await Consultations.find(selector, {
 			sort: {lastModifiedAt: -1},
-		}).forEachAsync(({_id, ...fields}) => {
-			const {begin, end, title, description, isCancelled, uri} = event(
+		}).forEachAsync(async ({_id, ...fields}) => {
+			const {begin, end, title, description, isCancelled, uri} = await event(
 				_id,
 				fields,
 			);
