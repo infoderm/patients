@@ -18,7 +18,7 @@ import {Patients} from './collection/patients';
 import {type EventDocument, events} from './collection/events';
 
 import {type Options} from './transaction/TransactionDriver';
-import observeChanges from './query/observeChanges';
+import observeSetChanges from './query/observeSetChanges';
 import type Filter from './query/Filter';
 
 export const event = async (
@@ -69,7 +69,7 @@ export const publishEvents = async function (
 	options: Options,
 ) {
 	const docs = new Map();
-	const handle = await observeChanges(Consultations, query, options, {
+	const handle = await observeSetChanges(Consultations, query, options, {
 		added: async (_id, document: Omit<ConsultationDocument, '_id'>) => {
 			docs.set(_id, document);
 			const entry = await event(_id, document);
