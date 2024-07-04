@@ -8,9 +8,24 @@ declare module 'meteor/diff-sequence' {
 
 	namespace DiffSequence {
 		function diffQueryChanges<T extends Document>(
-			ordered: boolean,
+			ordered: true,
 			old_results: T[],
 			new_results: T[],
+			observer: Mongo.ObserveChangesCallbacks<T>,
+			options?: Options<T> | undefined,
+		): void;
+
+		function diffQueryChanges<T extends Document>(
+			ordered: false,
+			old_results: Map<string, T>,
+			new_results: Map<string, T>,
+			observer: Mongo.ObserveChangesCallbacks<T>,
+			options?: Options<T> | undefined,
+		): void;
+
+		function diffQueryUnorderedChanges<T extends Document>(
+			old_results: Map<string, T>,
+			new_results: Map<string, T>,
 			observer: Mongo.ObserveChangesCallbacks<T>,
 			options?: Options<T> | undefined,
 		): void;
