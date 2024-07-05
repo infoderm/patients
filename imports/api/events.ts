@@ -34,6 +34,7 @@ export const event = async (
 		createdAt,
 	}: Omit<ConsultationDocument, '_id'>,
 ): Promise<EventDocument> => {
+	// TODO Maybe some sort of joined view?
 	const patient = await Patients.findOneAsync({_id: patientId}); // TODO Make reactive (maybe)?
 	assert(patient !== undefined);
 	const begin = datetime;
