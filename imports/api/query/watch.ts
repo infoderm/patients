@@ -130,7 +130,7 @@ const _watchSetup = async <T extends Document, U = T>(
 	return {init, stream, streamIsSuperset};
 };
 
-type OnChange<T extends Document> = (result: T[]) => Promise<void>;
+type OnChange<T extends Document> = (result: T[]) => Promise<void> | void;
 
 const watch = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
