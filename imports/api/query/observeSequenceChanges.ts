@@ -17,30 +17,14 @@ const observeSequenceChanges = async <T extends Document, U = T>(
 ) => {
 	let previous: T[] = [];
 
-	// NOTE We diff ids only if we do not care about change events.
-	const diffOptions = observer.changed
-		? undefined
-		: {
-				// @ts-expect-error TODO
-				projectionFn: ({_id}: T): Partial<T> => ({_id}),
-		  };
+	const onChange = (next) => {
+		DiffSequence.diffQueryOrderedChanges<T>(previous, next, observer);
+		previous = next;
+	};
 
-	const {init, stop} = await watch<T, U>(
-		collection,
-		filter,
-		options,
-		async (next) => {
-			DiffSequence.diffQueryOrderedChanges<T>(
-				previous,
-				next,
-				observer,
-				diffOptions,
-			);
-			previous = next;
-		},
-	);
+	const {init, stop} = await watch<T, U>(collection, filter, options, onChange);
 
-	previous = init;
+	onChange(init);
 
 	return {stop};
 };
