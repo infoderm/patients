@@ -26,7 +26,7 @@
     "check:commit-msg": "commitlint --config commitlint.config.ts",
     "ci:test": "TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_LCOVONLY=1 npm run cover -- --once",
     "commit-msg": "npm run check:commit-msg -- --edit",
-    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage@4.1.0",
+    "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test --",
     "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
     "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload",
     "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
