@@ -14,7 +14,6 @@ import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
 
 import {type EventDocument, events} from './collection/events';
-import findOneSync from './publication/findOneSync';
 
 export const event = async (
 	_id: string,

@@ -8,7 +8,6 @@ import {ALL_WEEK_DAYS, type WeekDay} from '../lib/datetime';
 import type ModuloWeekInterval from '../ui/settings/ModuloWeekInterval';
 
 import {Settings} from './collection/settings';
-import findOneSync from './publication/findOneSync';
 
 export type UserSettings = {
 	'theme-palette-mode': PaletteMode;
