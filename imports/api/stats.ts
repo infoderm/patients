@@ -1,7 +1,7 @@
-import {type Subscription} from 'meteor/meteor';
-
 import schema from '../lib/schema';
 import type Optional from '../lib/types/Optional';
+
+import {type Context} from './publication/Context';
 
 import {countCollection, type PollResult} from './collection/stats';
 import define from './publication/define';
@@ -53,7 +53,7 @@ const countPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{fields, discretize, values}: CountOptions<T>,
 ) =>
-	function (this: Subscription, filter: UserFilter<T> | null) {
+	function (this: Context, filter: UserFilter<T> | null) {
 		const collection = countCollection;
 		const key = countPublicationKey(QueriedCollection, {values}, filter);
 		const selector = {...filter, owner: this.userId} as Selector<T>;
