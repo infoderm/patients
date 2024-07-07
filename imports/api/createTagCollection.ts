@@ -43,6 +43,7 @@ import type UserQuery from './query/UserQuery';
 import type UserFilter from './query/UserFilter';
 import type Options from './query/Options';
 import type Projection from './query/Projection';
+import observeSetChanges from './query/observeSetChanges';
 
 export const STATS_SUFFIX = '.stats';
 export const FIND_CACHE_SUFFIX = '.find.cache';
@@ -190,12 +191,12 @@ const createTagCollection = <
 		name: statsPublication,
 		authentication: AuthenticationLoggedIn,
 		schema: schema.tuple([schema.string()]),
-		handle(name) {
+		async handle(name) {
 			const uid = JSON.stringify({name, owner: this.userId});
 			const query = {
 				[key]: {$elemMatch: {name}},
 				owner: this.userId,
-			} as Selector<P>;
+			} as Filter<P>;
 			// We only include relevant fields
 			const options = {fields: {_id: 1, [key]: 1}};
 
@@ -205,22 +206,28 @@ const createTagCollection = <
 			// `observeChanges` only returns after the initial `added` callbacks have run.
 			// Until then, we don't want to send a lot of `changed` messages—hence
 			// tracking the `initializing` state.
-			const handle = Parent.find(query, options).observeChanges({
-				added: () => {
-					count += 1;
+			const handle = await observeSetChanges(
+				Parent,
+				query,
+				options,
+				{
+					added: () => {
+						count += 1;
 
-					if (!initializing) {
+						if (!initializing) {
+							this.changed(stats, uid, {count});
+						}
+					},
+
+					removed: () => {
+						count -= 1;
 						this.changed(stats, uid, {count});
-					}
-				},
+					},
 
-				removed: () => {
-					count -= 1;
-					this.changed(stats, uid, {count});
+					// We don't care about `changed` events.
 				},
-
-				// We don't care about `changed` events.
-			});
+				(_fields) => ({}),
+			);
 
 			// Instead, we'll send one `added` message right after `observeChanges` has
 			// returned, and mark the subscription as ready.
@@ -231,8 +238,8 @@ const createTagCollection = <
 			// Stop observing the cursor when the client unsubscribes. Stopping a
 			// subscription automatically takes care of sending the client any `removed`
 			// messages.
-			this.onStop(() => {
-				handle.stop();
+			this.onStop(async (error?: Error) => {
+				await handle.emit('stop', error);
 			});
 		},
 	});
