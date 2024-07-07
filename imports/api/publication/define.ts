@@ -2,8 +2,8 @@ import assert from 'assert';
 
 import {Meteor} from 'meteor/meteor';
 
-import {map} from '@iterable-iterator/map';
-import {sum} from '@iterable-iterator/reduce';
+import {filter} from '@iterable-iterator/filter';
+import {next} from '@iterable-iterator/next';
 
 import authorized from '../authorized';
 import {type Authentication} from '../Authentication';
@@ -12,11 +12,11 @@ import type ArgsSchema from '../ArgsSchema';
 
 import type Params from './Params';
 import type Publication from './Publication';
-import PublicationError from './PublicationError';
+import type Cursor from './Cursor';
+import publishCursors from './publishCursors';
 
-// TODO early branch out
-const exactlyOne = (array: any[]) =>
-	sum(map((x: any) => (x ? 1 : 0), array)) === 1;
+import PublicationError from './PublicationError';
+import {type Context} from './Context';
 
 const define = <
 	S extends ArgsSchema,
@@ -32,40 +32,78 @@ const define = <
 }: Params<S, T, U, Auth>): Publication<A> => {
 	if (Meteor.isServer) {
 		// @ts-expect-error Ignore this for now.
-		const fns = [rest.cursor, rest.cursors, rest.handle];
-		assert(exactlyOne(fns));
-		for (const fn of fns) {
-			if (fn) {
-				Meteor.publish(name, function (...args) {
-					if (!authorized(authentication, this)) {
-						this.ready();
-						return;
-					}
+		const {cursor, cursors, handle} = rest;
+		const defined = filter(
+			(x: unknown) => x !== undefined,
+			[cursor, cursors, handle],
+		);
+		const callback = next(defined);
+		assert(next(defined, null) === null);
 
-					let parsedArgs: A;
+		const postProcess = _getPostProcess({cursor, cursors, handle}, callback);
 
-					try {
-						schema.parse(args);
-						parsedArgs = args as A; // TODO Use parsed value once it does not reorder object keys.
-					} catch (error: unknown) {
-						console.debug({
-							publication: name,
-							args: JSON.stringify(args),
-							error,
-						});
-						throw new PublicationError(
-							'schema validation of publication args failed',
-						);
-					}
-
-					return Reflect.apply(fn, this, parsedArgs);
-				});
-				break;
+		Meteor.publish(name, async function (...args) {
+			if (!authorized(authentication, this)) {
+				this.ready();
+				return;
 			}
-		}
+
+			const parsedArgs = _parse(name, schema, args);
+
+			const result = await Reflect.apply(callback, this, parsedArgs);
+			return postProcess(this, result);
+		});
 	}
 
 	return {name};
 };
+
+const _getPostProcess = <T>(
+	{cursor, cursors, handle}: Record<string, T>,
+	callback: T,
+) => {
+	switch (callback) {
+		case cursor: {
+			return postProcessCursor;
+		}
+
+		case cursors: {
+			return postProcessCursors;
+		}
+
+		default: {
+			assert(callback === handle);
+			return postProcessHandle;
+		}
+	}
+};
+
+const _parse = <S extends ArgsSchema, A extends InferArgs<S> = InferArgs<S>>(
+	name: string,
+	schema: S,
+	args: unknown[],
+): A => {
+	try {
+		schema.parse(args);
+		return args as A; // TODO Use parsed value once it does not reorder object keys.
+	} catch (error: unknown) {
+		console.debug({
+			publication: name,
+			args: JSON.stringify(args),
+			error,
+		});
+		throw new PublicationError('schema validation of publication args failed');
+	}
+};
+
+const postProcessCursor = async <T extends Document, U = T>(
+	context: Context,
+	cursor: Cursor<T, U>,
+) => publishCursors(context, [cursor]);
+const postProcessCursors = async <T extends Document, U = T>(
+	context: Context,
+	cursors: Array<Cursor<T, U>>,
+) => publishCursors(context, cursors);
+const postProcessHandle = (_context: Context, result: any) => result;
 
 export default define;
