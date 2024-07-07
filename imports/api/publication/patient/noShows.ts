@@ -7,16 +7,17 @@ import {noShows, type State} from '../../collection/noShows';
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import schema from '../../../lib/schema';
+import observeSetChanges from '../../query/observeSetChanges';
 
 export default define({
 	name: 'patient.noShows',
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([schema.string()]),
-	handle(patientId) {
+	async handle(patientId) {
 		const Collection = Appointments;
 		const collection = noShows;
 		const key = patientId;
-		const selector = {
+		const filter = {
 			owner: this.userId,
 			patientId,
 			isDone: false,
@@ -29,23 +30,29 @@ export default define({
 		const state = (): State => ({count});
 
 		let initializing = true;
-		const handle = Collection.find(selector, options).observeChanges({
-			added: (_id, _fields) => {
-				count += 1;
-				if (!initializing) {
+		const handle = await observeSetChanges(
+			Collection,
+			filter,
+			options,
+			{
+				added: (_id, _fields) => {
+					count += 1;
+					if (!initializing) {
+						this.changed(collection, key, state());
+					}
+				},
+				removed: (_id) => {
+					count -= 1;
 					this.changed(collection, key, state());
-				}
+				},
 			},
-			removed: (_id) => {
-				count -= 1;
-				this.changed(collection, key, state());
-			},
-		});
+			{projectionFn: (_fields) => ({})},
+		);
 
 		initializing = false;
 		this.added(collection, key, state());
-		this.onStop(() => {
-			handle.stop();
+		this.onStop(async () => {
+			await handle.emit('stop');
 		});
 		this.ready();
 	},
