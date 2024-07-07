@@ -12,11 +12,22 @@ import type ArgsSchema from '../ArgsSchema';
 
 import type Params from './Params';
 import type Publication from './Publication';
+import Cursor from './Cursor';
+import publishCursors from './publishCursors';
+
 import PublicationError from './PublicationError';
 
 // TODO early branch out
 const exactlyOne = (array: any[]) =>
 	sum(map((x: any) => (x ? 1 : 0), array)) === 1;
+
+const isCursor = <T extends Document, U = T>(
+	value: any,
+): value is Cursor<T, U> => value instanceof Cursor;
+const isCursorArray = <T extends Document, U = T>(
+	value: any,
+): value is Array<Cursor<T, U>> =>
+	Array.isArray(value) && value.every(isCursor);
 
 const define = <
 	S extends ArgsSchema,
@@ -36,7 +47,7 @@ const define = <
 		assert(exactlyOne(fns));
 		for (const fn of fns) {
 			if (fn) {
-				Meteor.publish(name, function (...args) {
+				Meteor.publish(name, async function (...args) {
 					if (!authorized(authentication, this)) {
 						this.ready();
 						return;
@@ -58,7 +69,17 @@ const define = <
 						);
 					}
 
-					return Reflect.apply(fn, this, parsedArgs);
+					const result = await Reflect.apply(fn, this, parsedArgs);
+
+					if (isCursor(result)) {
+						return publishCursors(this, [result]);
+					}
+
+					if (isCursorArray(result)) {
+						return publishCursors(this, result);
+					}
+
+					return result;
 				});
 				break;
 			}
