@@ -32,6 +32,7 @@ import findOneSync from './publication/findOneSync';
 import type Selector from './query/Selector';
 import {type AuthenticatedContext} from './publication/Context';
 import {type DocumentUpdate} from './DocumentUpdate';
+import observeSetChanges from './query/observeSetChanges';
 
 export const DEFAULT_DURATION_IN_MINUTES = 15;
 export const DEFAULT_DURATION_IN_SECONDS = DEFAULT_DURATION_IN_MINUTES * 60;
@@ -127,18 +128,18 @@ export const filterBookPrefill = () => ({
 	},
 });
 
-export function setupConsultationsStatsPublication(
+export async function setupConsultationsStatsPublication(
 	this: AuthenticatedContext,
 	collectionName: string,
 	filter: Filter<ConsultationDocument>,
 ) {
 	// Generate unique key depending on parameters
 	const key = statsKey(filter);
-	const selector = {
+	const scopedFilter = {
 		...filter,
 		isDone: true,
 		owner: this.userId,
-	} as Selector<ConsultationDocument>;
+	} as Filter<ConsultationDocument>;
 	const options = {fields: {_id: 1, price: 1, datetime: 1}};
 
 	const minHeap = new PairingHeap(increasing);
@@ -158,48 +159,53 @@ export function setupConsultationsStatsPublication(
 	// Until then, we don't want to send a lot of `changed` messages—hence
 	// tracking the `initializing` state.
 	let initializing = true;
-	const handle = Consultations.find(selector, options).observeChanges({
-		added: (_id, {price, datetime}) => {
-			count += 1;
-			if (price) total += price;
-			const minRef = minHeap.push(datetime);
-			const maxRef = maxHeap.push(datetime);
-			refs.set(_id, [price, minRef, maxRef]);
+	const handle = await observeSetChanges(
+		Consultations,
+		scopedFilter,
+		options,
+		{
+			added: (_id, {price, datetime}) => {
+				count += 1;
+				if (price) total += price;
+				const minRef = minHeap.push(datetime);
+				const maxRef = maxHeap.push(datetime);
+				refs.set(_id, [price, minRef, maxRef]);
 
-			if (!initializing) {
+				if (!initializing) {
+					this.changed(collectionName, key, state());
+				}
+			},
+
+			changed: (_id, fields) => {
+				const [oldPrice, minRef, maxRef] = refs.get(_id);
+				if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
+					const newPrice = fields.price;
+					if (oldPrice) total -= oldPrice;
+					if (newPrice) total += newPrice;
+					refs.set(_id, [newPrice, minRef, maxRef]);
+				}
+
+				if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
+					const datetime = fields.datetime;
+					minHeap.update(minRef, datetime);
+					maxHeap.update(maxRef, datetime);
+				}
+
 				this.changed(collectionName, key, state());
-			}
+			},
+
+			removed: (_id) => {
+				count -= 1;
+				const [price, minRef, maxRef] = refs.get(_id);
+				if (price) total -= price;
+				minHeap.delete(minRef);
+				maxHeap.delete(maxRef);
+				refs.delete(_id);
+				this.changed(collectionName, key, state());
+			},
 		},
-
-		changed: (_id, fields) => {
-			const [oldPrice, minRef, maxRef] = refs.get(_id);
-			let newPrice: number = oldPrice;
-			if (Object.prototype.hasOwnProperty.call(fields, 'price')) {
-				newPrice = fields.price!;
-				if (oldPrice) total -= oldPrice;
-				if (newPrice) total += newPrice;
-				refs.set(_id, [newPrice, minRef, maxRef]);
-			}
-
-			if (Object.prototype.hasOwnProperty.call(fields, 'datetime')) {
-				const datetime = fields.datetime;
-				minHeap.update(minRef, datetime);
-				maxHeap.update(maxRef, datetime);
-			}
-
-			this.changed(collectionName, key, state());
-		},
-
-		removed: (_id) => {
-			count -= 1;
-			const [price, minRef, maxRef] = refs.get(_id);
-			if (price) total -= price;
-			minHeap.delete(minRef);
-			maxHeap.delete(maxRef);
-			refs.delete(_id);
-			this.changed(collectionName, key, state());
-		},
-	});
+		({price, datetime}) => ({price, datetime}),
+	);
 
 	// Instead, we'll send one `added` message right after `observeChanges` has
 	// returned, and mark the subscription as ready.
