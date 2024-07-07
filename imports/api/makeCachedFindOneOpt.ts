@@ -1,16 +1,15 @@
 import {type DependencyList, useState, useEffect} from 'react';
-import {type Meteor} from 'meteor/meteor';
 
 import useRandom from '../ui/hooks/useRandom';
 
 import type Publication from './publication/Publication';
 import subscribe, {type SubscriptionError} from './publication/subscribe';
 import type Options from './query/Options';
-import type Selector from './query/Selector';
 import type Collection from './Collection';
 import type Document from './Document';
-
-type LiveQueryHandle = Meteor.LiveQueryHandle;
+import observeSetChanges from './query/observeSetChanges';
+import type Filter from './query/Filter';
+import {type WatchHandle} from './query/watch';
 
 /**
  * WARNING: Does not work properly if used multiple times with the same
@@ -19,15 +18,15 @@ type LiveQueryHandle = Meteor.LiveQueryHandle;
 const makeCachedFindOneOpt =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[Selector<T>, Options<T>]>,
+		publication: Publication<[Filter<T>, Options<T>]>,
 	) =>
 	(
 		init: Partial<U>,
-		selector: Selector<T>,
+		filter: Filter<T>,
 		options: Options<T>,
 		deps: DependencyList,
 	) => {
-		console.debug({init, query: selector, options, deps});
+		console.debug({init, query: filter, options, deps});
 
 		const [loading, setLoading] = useState(true);
 		const [found, setFound] = useState(false);
@@ -42,30 +41,36 @@ const makeCachedFindOneOpt =
 			setFields(init);
 			let current = init;
 
-			let queryHandle: LiveQueryHandle;
-			const handle = subscribe(publication, selector, options, {
-				onStop(e: SubscriptionError) {
+			let queryHandle: WatchHandle<T>;
+			let stopped = false;
+			const handle = subscribe(publication, filter, options, {
+				async onStop(e: SubscriptionError) {
 					console.debug('onStop()', {e, queryHandle});
-					if (queryHandle) queryHandle.stop();
+					stopped = true;
+					if (queryHandle !== undefined) await queryHandle.emit('stop');
 					else reset();
 				},
-				onReady() {
+				async onReady() {
 					console.debug('onReady()');
 					setLoading(false);
-					queryHandle = collection.find(selector, options).observeChanges({
+					queryHandle = await observeSetChanges(collection, filter, options, {
 						added(_id, upToDate) {
+							if (stopped) return;
 							setFound(true);
 							current = {...init, ...upToDate};
 							setFields(current);
 						},
 						changed(_id, upToDate) {
+							if (stopped) return;
 							current = {...current, ...upToDate};
 							setFields(current);
 						},
 						removed(_id) {
+							if (stopped) return;
 							setFound(false);
 						},
 					});
+					if (stopped) await queryHandle.emit('stop');
 				},
 			});
 
