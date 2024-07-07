@@ -8,8 +8,9 @@ import define from './publication/define';
 import type Collection from './Collection';
 import type Document from './Document';
 import {AuthenticationLoggedIn} from './Authentication';
-import type Selector from './query/Selector';
 import type UserFilter from './query/UserFilter';
+import observeSetChanges from './query/observeSetChanges';
+import type Filter from './query/Filter';
 
 export const countPublicationName = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
@@ -53,10 +54,10 @@ const countPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	{fields, discretize, values}: CountOptions<T>,
 ) =>
-	function (this: Context, filter: UserFilter<T> | null) {
+	async function (this: Context, filter: UserFilter<T> | null) {
 		const collection = countCollection;
 		const key = countPublicationKey(QueriedCollection, {values}, filter);
-		const selector = {...filter, owner: this.userId} as Selector<T>;
+		const selector = {...filter, owner: this.userId} as Filter<T>;
 		const options = {
 			fields: Object.fromEntries(fields.map((field) => [field, 1])),
 		};
@@ -96,33 +97,38 @@ const countPublication = <T extends Document, U = T>(
 		};
 
 		let initializing = true;
-		const handle = QueriedCollection.find(selector, options).observeChanges({
-			added: (_id, object) => {
-				total += 1;
-				inc(object);
-				refs.set(_id, {...object});
-				if (!initializing) {
+		const handle = await observeSetChanges(
+			QueriedCollection,
+			selector,
+			options,
+			{
+				added: (_id, object) => {
+					total += 1;
+					inc(object);
+					refs.set(_id, {...object});
+					if (!initializing) {
+						this.changed(collection, key, state());
+					}
+				},
+
+				changed: (_id, changes) => {
+					const previousObject = refs.get(_id);
+					dec(previousObject);
+					const newObject = {...previousObject, ...changes};
+					inc(newObject);
+					refs.set(_id, newObject);
 					this.changed(collection, key, state());
-				}
-			},
+				},
 
-			changed: (_id, changes) => {
-				const previousObject = refs.get(_id);
-				dec(previousObject);
-				const newObject = {...previousObject, ...changes};
-				inc(newObject);
-				refs.set(_id, newObject);
-				this.changed(collection, key, state());
+				removed: (_id) => {
+					total -= 1;
+					const previousObject = refs.get(_id);
+					dec(previousObject);
+					refs.delete(_id);
+					this.changed(collection, key, state());
+				},
 			},
-
-			removed: (_id) => {
-				total -= 1;
-				const previousObject = refs.get(_id);
-				dec(previousObject);
-				refs.delete(_id);
-				this.changed(collection, key, state());
-			},
-		});
+		);
 
 		// Instead, we'll send one `added` message right after `observeChanges` has
 		// returned, and mark the subscription as ready.
@@ -133,8 +139,8 @@ const countPublication = <T extends Document, U = T>(
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => {
-			handle.stop();
+		this.onStop(async () => {
+			await handle.stop();
 		});
 	};
 
