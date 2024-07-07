@@ -7,10 +7,11 @@ import {
 } from '../../collection/consultations';
 import {Patients} from '../../collection/patients';
 import {countCollection, type PollResult} from '../../collection/stats';
-import type Selector from '../../query/Selector';
 import define from '../define';
 import {userFilter} from '../../query/UserFilter';
 import type UserFilter from '../../query/UserFilter';
+import observeSetChanges from '../../query/observeSetChanges';
+import type Filter from '../../query/Filter';
 
 export const frequencySexKey = (query) =>
 	`frequencySex-${JSON.stringify(query ?? {})}`;
@@ -28,14 +29,14 @@ export default define({
 	name: frequencySexPublication,
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([userFilter(consultationDocument).nullable()]),
-	handle(filter: UserFilter<ConsultationDocument> | null) {
+	async handle(filter: UserFilter<ConsultationDocument> | null) {
 		const collection = countCollection;
 		const key = frequencySexKey(filter);
 		const selector = {
 			...filter,
 			isDone: true,
 			owner: this.userId,
-		} as Selector<ConsultationDocument>;
+		} as Filter<ConsultationDocument>;
 		const options = {
 			fields: {
 				patientId: 1,
@@ -84,66 +85,76 @@ export default define({
 			}
 		};
 
-		const pHandle = Patients.find(
+		const pHandle = await observeSetChanges(
+			Patients,
 			{owner: this.userId},
 			{fields: {sex: 1}},
-		).observeChanges({
-			added(_id, {sex}) {
-				const sexKey = `${sex}`;
-				pRefs.set(_id, {freq: 0, sex: sexKey});
-				if (count[0][sexKey] === undefined) count[0][sexKey] = 0;
-				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-				count[0][sexKey] += 1;
-				commit();
+			{
+				added(_id, {sex}) {
+					const sexKey = `${sex}`;
+					pRefs.set(_id, {freq: 0, sex: sexKey});
+					if (count[0][sexKey] === undefined) count[0][sexKey] = 0;
+					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+					count[0][sexKey] += 1;
+					commit();
+				},
+				changed(_id, {sex}) {
+					const {freq, sex: prev} = pRefs.get(_id)!;
+					const prevKey = `${prev}`;
+					count[freq]![prevKey] -= 1;
+					const sexKey = `${sex}`;
+					if (count[freq]![sexKey] === undefined) count[freq]![sexKey] = 0;
+					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+					count[freq]![sexKey] += 1;
+					pRefs.set(_id, {freq, sex: sexKey});
+					commit();
+				},
+				removed(_id) {
+					pRefs.delete(_id);
+					// everything should be commited by the consultations observer
+				},
 			},
-			changed(_id, {sex}) {
-				const {freq, sex: prev} = pRefs.get(_id)!;
-				const prevKey = `${prev}`;
-				count[freq]![prevKey] -= 1;
-				const sexKey = `${sex}`;
-				if (count[freq]![sexKey] === undefined) count[freq]![sexKey] = 0;
-				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-				count[freq]![sexKey] += 1;
-				pRefs.set(_id, {freq, sex: sexKey});
-				commit();
+			{
+				projectionFn: ({sex}) => ({sex}),
 			},
-			removed(_id) {
-				pRefs.delete(_id);
-				// everything should be commited by the consultations observer
-			},
-		});
+		);
 
-		const cHandle = Consultations.find(selector, options).observeChanges({
-			added(_id, {patientId}) {
-				if (patientId === undefined)
-					throw new Error(
-						`added: consultation ${_id} is not linked to a patient.`,
-					);
-				total += 1;
-				inc(patientId);
-				refs.set(_id, patientId);
-				commit();
-			},
+		const cHandle = await observeSetChanges(
+			Consultations,
+			selector,
+			options,
+			{
+				added(_id, {patientId}) {
+					if (patientId === undefined)
+						throw new Error(
+							`added: consultation ${_id} is not linked to a patient.`,
+						);
+					total += 1;
+					inc(patientId);
+					refs.set(_id, patientId);
+					commit();
+				},
 
-			// changed: ... // TODO We assume a consultation does not change
-			// patientId. Handle that.
+				// changed: ... // TODO We assume a consultation does not change
+				// patientId. Handle that.
 
-			removed(_id) {
-				total -= 1;
-				const patientId = refs.get(_id)!;
-				dec(patientId);
-				refs.delete(_id);
-				commit();
+				removed(_id) {
+					total -= 1;
+					const patientId = refs.get(_id)!;
+					dec(patientId);
+					refs.delete(_id);
+					commit();
+				},
 			},
-		});
+			{projectionFn: ({patientId}) => ({patientId})},
+		);
 
 		initializing = false;
 		this.added(collection, key, state());
 		this.ready();
 
-		this.onStop(() => {
-			cHandle.stop();
-			pHandle.stop();
+		this.onStop(async () => {
+			await Promise.all([cHandle.emit('stop'), pHandle.emit('stop')]);
 		});
 	},
 });
