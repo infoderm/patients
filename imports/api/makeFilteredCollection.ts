@@ -71,7 +71,7 @@ const makeFilteredCollection = <
 			);
 
 			this.onStop(async () => {
-				await handle.stop();
+				await handle.emit('stop');
 			});
 			this.ready();
 		},

@@ -1,4 +1,4 @@
-import {DiffSequence} from 'meteor/diff-sequence';
+import {type DiffOptions, DiffSequence} from 'meteor/diff-sequence';
 
 import type Collection from '../Collection';
 import type Document from '../Document';
@@ -12,25 +12,35 @@ import watch from './watch';
 const _toSet = <T extends Document>(items: T[]): Map<string, T> =>
 	new Map(items.map((item) => [item._id, item]));
 
+const _makeOnChange = <T extends Document>(
+	observer: ObserveSetChangesCallbacks<T>,
+	diffOptions: DiffOptions<T> | undefined,
+) => {
+	let previous = _toSet<T>([]);
+
+	return (items: T[]) => {
+		const next = _toSet(items);
+		DiffSequence.diffQueryUnorderedChanges<T>(
+			previous,
+			next,
+			observer,
+			diffOptions,
+		);
+		previous = next;
+	};
+};
+
 const observeSetChanges = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
 	filter: Filter<T>,
 	options: Options,
 	observer: ObserveSetChangesCallbacks<T>,
+	diffOptions?: DiffOptions<T>,
 ) => {
-	let previous = _toSet<T>([]);
-
-	const onChange = (items: T[]) => {
-		const next = _toSet(items);
-		DiffSequence.diffQueryUnorderedChanges<T>(previous, next, observer);
-		previous = next;
-	};
-
-	const {init, stop} = await watch<T, U>(collection, filter, options, onChange);
-
-	onChange(init);
-
-	return {stop};
+	const handle = await watch(collection, filter, options);
+	handle.on('change', _makeOnChange(observer, diffOptions));
+	void handle.emit('start');
+	return handle;
 };
 
 export default observeSetChanges;

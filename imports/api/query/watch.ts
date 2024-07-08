@@ -16,6 +16,8 @@ import {type Options} from '../transaction/TransactionDriver';
 import withSession from '../transaction/withSession';
 import withTransactionDriver from '../transaction/withTransactionDriver';
 
+import {type EventEmitter, eventEmitter} from '../../lib/events';
+
 import type Filter from './Filter';
 
 const _watchInit = async <T extends Document, U = T>(
@@ -130,26 +132,7 @@ const _watchSetup = async <T extends Document, U = T>(
 	return {init, stream, streamIsSuperset};
 };
 
-type OnChange<T extends Document> = (result: T[]) => Promise<void> | void;
-
-const watch = async <T extends Document, U = T>(
-	collection: Collection<T, U>,
-	filter: Filter<T>,
-	options: Options,
-	onChange: OnChange<T>,
-	changeStreamOptions?: ChangeStreamOptions,
-	transactionOptions?: TransactionOptions,
-	sessionOptions?: ClientSessionOptions,
-) => {
-	const {init, stream} = await _watchSetup(
-		collection,
-		filter,
-		options,
-		changeStreamOptions,
-		transactionOptions,
-		sessionOptions,
-	);
-
+const _makeQueue = async () => {
 	let queued = 0;
 	let queue = new Promise((resolve) => {
 		resolve(undefined);
@@ -170,6 +153,39 @@ const watch = async <T extends Document, U = T>(
 			});
 	};
 
+	return enqueue;
+};
+
+export type WatchHandle<T> = EventEmitter<{
+	change: T[];
+	start: undefined;
+	stop: undefined;
+}>;
+
+const _watch = async <T extends Document, U = T>(
+	handle: WatchHandle<T>,
+	collection: Collection<T, U>,
+	filter: Filter<T>,
+	options: Options,
+	changeStreamOptions?: ChangeStreamOptions,
+	transactionOptions?: TransactionOptions,
+	sessionOptions?: ClientSessionOptions,
+) => {
+	const {init, stream} = await _watchSetup(
+		collection,
+		filter,
+		options,
+		changeStreamOptions,
+		transactionOptions,
+		sessionOptions,
+	);
+
+	const enqueue = await _makeQueue();
+
+	enqueue(async () => {
+		await handle.emitSerial('change', init);
+	});
+
 	stream.on('change', () => {
 		enqueue(async () => {
 			const {init} = await _watchInit(
@@ -180,15 +196,52 @@ const watch = async <T extends Document, U = T>(
 				sessionOptions,
 			);
 
-			await onChange(init);
+			await handle.emitSerial('change', init);
 		});
 	});
 
 	// TODO stream.on('stop', ???)
-
 	const stop = async () => stream.close();
 
-	return {init, stop};
+	return stop;
+};
+
+const watch = async <T extends Document, U = T>(
+	collection: Collection<T, U>,
+	filter: Filter<T>,
+	options: Options,
+	changeStreamOptions?: ChangeStreamOptions,
+	transactionOptions?: TransactionOptions,
+	sessionOptions?: ClientSessionOptions,
+) => {
+	const handle = eventEmitter<{
+		change: T[];
+		start: undefined;
+		stop: undefined;
+	}>();
+
+	let stopped = false;
+
+	void handle.once('stop').then(() => {
+		stopped = true;
+	});
+
+	handle.on('start', async () => {
+		if (stopped) return;
+		const stop = await _watch<T, U>(
+			handle,
+			collection,
+			filter,
+			options,
+			changeStreamOptions,
+			transactionOptions,
+			sessionOptions,
+		);
+		if (stopped) await stop();
+		else void handle.once('stop').then(stop);
+	});
+
+	return handle;
 };
 
 export default watch;
