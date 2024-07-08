@@ -114,31 +114,40 @@ export default define({
 					// everything should be commited by the consultations observer
 				},
 			},
+			{
+				projectionFn: ({sex}) => ({sex}),
+			},
 		);
 
-		const cHandle = await observeSetChanges(Consultations, selector, options, {
-			added(_id, {patientId}) {
-				if (patientId === undefined)
-					throw new Error(
-						`added: consultation ${_id} is not linked to a patient.`,
-					);
-				total += 1;
-				inc(patientId);
-				refs.set(_id, patientId);
-				commit();
-			},
+		const cHandle = await observeSetChanges(
+			Consultations,
+			selector,
+			options,
+			{
+				added(_id, {patientId}) {
+					if (patientId === undefined)
+						throw new Error(
+							`added: consultation ${_id} is not linked to a patient.`,
+						);
+					total += 1;
+					inc(patientId);
+					refs.set(_id, patientId);
+					commit();
+				},
 
-			// changed: ... // TODO We assume a consultation does not change
-			// patientId. Handle that.
+				// changed: ... // TODO We assume a consultation does not change
+				// patientId. Handle that.
 
-			removed(_id) {
-				total -= 1;
-				const patientId = refs.get(_id)!;
-				dec(patientId);
-				refs.delete(_id);
-				commit();
+				removed(_id) {
+					total -= 1;
+					const patientId = refs.get(_id)!;
+					dec(patientId);
+					refs.delete(_id);
+					commit();
+				},
 			},
-		});
+			{projectionFn: ({patientId}) => ({patientId})},
+		);
 
 		initializing = false;
 		this.added(collection, key, state());
