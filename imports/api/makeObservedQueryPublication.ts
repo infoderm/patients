@@ -10,6 +10,7 @@ import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 import {userQuery} from './query/UserQuery';
 import type UserQuery from './query/UserQuery';
 import watch from './query/watch';
+import {type Context} from './publication/Context';
 
 const observeOptions = schema
 	.object({
@@ -34,6 +35,7 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 	observedQueryCacheCollectionName: string,
 ) =>
 	async function (
+		this: Context,
 		key: string,
 		query: UserQuery<T>,
 		observe: ObserveOptions | null,
@@ -81,27 +83,35 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			QueriedCollection,
 			selector as Filter<T>,
 			options,
+		);
+
+		handle.once('change').then(
 			async (init) => {
-				DiffSequence.diffQueryOrderedChanges<T>(
-					handle.init,
-					init,
-					observer,
-					diffOptions,
-				);
+				handle.on('change', async (next) => {
+					DiffSequence.diffQueryOrderedChanges<T>(
+						init,
+						next,
+						observer,
+						diffOptions,
+					);
+				});
+
+				this.added(observedQueryCacheCollectionName, uid, {
+					key,
+					results: init,
+				});
+				this.ready();
+			},
+			(error: Error) => {
+				this.error(error);
 			},
 		);
 
-		const results = handle.init;
-
-		this.added(observedQueryCacheCollectionName, uid, {
-			key,
-			results,
-		});
-		this.ready();
+		await handle.emit('start');
 
 		// NOTE: Stop observing the cursor when the client unsubscribes.
 		this.onStop(async () => {
-			await handle.stop();
+			await handle.emit('stop');
 		});
 	};
 

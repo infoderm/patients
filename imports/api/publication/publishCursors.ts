@@ -30,7 +30,7 @@ const publishCursors = async <T extends Document, U = T>(
 	return Promise.all(cursors.map(async (cursor) => _pipe(subscription, cursor)))
 		.then((pipes) => {
 			for (const pipe of pipes) {
-				subscription.onStop(async () => pipe.stop());
+				subscription.onStop(async () => pipe.emit('stop'));
 			}
 
 			subscription.ready();

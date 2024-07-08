@@ -46,7 +46,7 @@ export default define({
 		initializing = false;
 		this.added(collection, key, state());
 		this.onStop(async () => {
-			await handle.stop();
+			await handle.emit('stop');
 		});
 		this.ready();
 	},

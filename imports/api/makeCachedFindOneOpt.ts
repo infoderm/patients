@@ -9,7 +9,7 @@ import type Collection from './Collection';
 import type Document from './Document';
 import observeSetChanges from './query/observeSetChanges';
 import type Filter from './query/Filter';
-import type ObserverHandle from './query/ObserverHandle';
+import {type WatchHandle} from './query/watch';
 
 /**
  * WARNING: Does not work properly if used multiple times with the same
@@ -41,13 +41,13 @@ const makeCachedFindOneOpt =
 			setFields(init);
 			let current = init;
 
-			let queryHandle: ObserverHandle;
+			let queryHandle: WatchHandle<T>;
 			let stopped = false;
 			const handle = subscribe(publication, filter, options, {
 				async onStop(e: SubscriptionError) {
 					console.debug('onStop()', {e, queryHandle});
 					stopped = true;
-					if (queryHandle !== undefined) await queryHandle.stop();
+					if (queryHandle !== undefined) await queryHandle.emit('stop');
 					else reset();
 				},
 				async onReady() {
@@ -70,7 +70,7 @@ const makeCachedFindOneOpt =
 							setFound(false);
 						},
 					});
-					if (stopped) await queryHandle.stop();
+					if (stopped) await queryHandle.emit('stop');
 				},
 			});
 

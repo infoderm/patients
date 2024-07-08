@@ -28,7 +28,7 @@ export default define({
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
 		this.onStop(async () => {
-			await handle.stop();
+			await handle.emit('stop');
 		});
 	},
 });
