@@ -182,9 +182,7 @@ const _watch = async <T extends Document, U = T>(
 
 	const enqueue = await _makeQueue();
 
-	enqueue(async () => {
-		await handle.emitSerial('change', init);
-	});
+	await handle.emitSerial('change', init);
 
 	stream.on('change', () => {
 		enqueue(async () => {
