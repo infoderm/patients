@@ -145,7 +145,7 @@ export default define({
 		this.ready();
 
 		this.onStop(async () => {
-			await Promise.all([cHandle.stop(), pHandle.stop()]);
+			await Promise.all([cHandle.emit('stop'), pHandle.emit('stop')]);
 		});
 	},
 });
