@@ -35,7 +35,7 @@ const observeSequenceChanges = async <T extends Document, U = T>(
 ) => {
 	const handle = await watch(collection, filter, options);
 	handle.on('change', _makeOnChange(observer, diffOptions));
-	void handle.emit('start');
+	await handle.emit('start');
 	return handle;
 };
 
