@@ -139,12 +139,12 @@ const _makeQueue = async () => {
 	});
 	await queue;
 
-	const enqueue = (task) => {
+	const enqueue = (task: () => Promise<void> | void) => {
 		// TODO Throttle.
 		if (queued !== 0) return;
 		++queued;
 		queue = queue
-			.then(() => {
+			.then(async () => {
 				--queued;
 				return task();
 			})
