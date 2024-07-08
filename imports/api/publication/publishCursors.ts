@@ -4,6 +4,9 @@ import type Filter from '../query/Filter';
 import type Collection from '../Collection';
 import type Document from '../Document';
 
+import duplicates from '../../lib/iterable-iterator/duplicates';
+import unique from '../../lib/iterable-iterator/unique';
+
 import {type Context} from './Context';
 import type Cursor from './Cursor';
 
@@ -11,21 +14,17 @@ const publishCursors = async <T extends Document, U = T>(
 	subscription: Context,
 	cursors: Array<Cursor<T, U>>,
 ): Promise<void> => {
-	const collections = new Set<string>();
-	for (const collection of cursors.map((cursor) =>
-		cursor._getCollectionName(),
-	)) {
-		// TODO Refactor using duplicates/counter.
-		if (collections.has(collection)) {
-			subscription.error(
-				new Error(
-					`Publish function returned multiple cursors for collection ${collection}`,
-				),
-			);
-			return;
-		}
-
-		collections.add(collection);
+	const collections = cursors.map((cursor) => cursor._getCollectionName());
+	const duplicated = Array.from(unique(duplicates(collections)));
+	if (duplicated.length > 0) {
+		subscription.error(
+			new Error(
+				`Publish function returned multiple cursors for collections in ${JSON.stringify(
+					duplicated,
+				)}`,
+			),
+		);
+		return;
 	}
 
 	return Promise.all(cursors.map(async (cursor) => _pipe(subscription, cursor)))
