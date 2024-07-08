@@ -68,8 +68,7 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		const diffOptions = callbacks.changed
 			? undefined
 			: {
-					// @ts-expect-error TODO
-					projectionFn: ({_id}: T): Partial<T> => ({_id}),
+					projectionFn: (_fields: T) => ({}),
 			  };
 
 		const observer: ObserveChangesCallbacks<T> = {};

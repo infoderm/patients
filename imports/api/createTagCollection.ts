@@ -206,22 +206,28 @@ const createTagCollection = <
 			// `observeChanges` only returns after the initial `added` callbacks have run.
 			// Until then, we don't want to send a lot of `changed` messages—hence
 			// tracking the `initializing` state.
-			const handle = await observeSetChanges(Parent, query, options, {
-				added: () => {
-					count += 1;
+			const handle = await observeSetChanges(
+				Parent,
+				query,
+				options,
+				{
+					added: () => {
+						count += 1;
 
-					if (!initializing) {
+						if (!initializing) {
+							this.changed(stats, uid, {count});
+						}
+					},
+
+					removed: () => {
+						count -= 1;
 						this.changed(stats, uid, {count});
-					}
-				},
+					},
 
-				removed: () => {
-					count -= 1;
-					this.changed(stats, uid, {count});
+					// We don't care about `changed` events.
 				},
-
-				// We don't care about `changed` events.
-			});
+				{projectionFn: (_fields) => ({})},
+			);
 
 			// Instead, we'll send one `added` message right after `observeChanges` has
 			// returned, and mark the subscription as ready.

@@ -30,18 +30,24 @@ export default define({
 		const state = (): State => ({count});
 
 		let initializing = true;
-		const handle = await observeSetChanges(Collection, filter, options, {
-			added: (_id, _fields) => {
-				count += 1;
-				if (!initializing) {
+		const handle = await observeSetChanges(
+			Collection,
+			filter,
+			options,
+			{
+				added: (_id, _fields) => {
+					count += 1;
+					if (!initializing) {
+						this.changed(collection, key, state());
+					}
+				},
+				removed: (_id) => {
+					count -= 1;
 					this.changed(collection, key, state());
-				}
+				},
 			},
-			removed: (_id) => {
-				count -= 1;
-				this.changed(collection, key, state());
-			},
-		});
+			{projectionFn: (_fields) => ({})},
+		);
 
 		initializing = false;
 		this.added(collection, key, state());
