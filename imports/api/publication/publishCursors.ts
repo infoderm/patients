@@ -10,20 +10,28 @@ import unique from '../../lib/iterable-iterator/unique';
 import {type Context} from './Context';
 import type Cursor from './Cursor';
 
+const _assertCursorsCanBeMerged = <T extends Document, U = T>(
+	cursors: Array<Cursor<T, U>>,
+): void => {
+	const collections = cursors.map((cursor) => cursor._getCollectionName());
+	const duplicated = Array.from(unique(duplicates(collections)));
+	if (duplicated.length > 0) {
+		throw new Error(
+			`Publish function returned multiple cursors for collections in ${JSON.stringify(
+				duplicated,
+			)}`,
+		);
+	}
+};
+
 const publishCursors = async <T extends Document, U = T>(
 	subscription: Context,
 	cursors: Array<Cursor<T, U>>,
 ): Promise<void> => {
-	const collections = cursors.map((cursor) => cursor._getCollectionName());
-	const duplicated = Array.from(unique(duplicates(collections)));
-	if (duplicated.length > 0) {
-		subscription.error(
-			new Error(
-				`Publish function returned multiple cursors for collections in ${JSON.stringify(
-					duplicated,
-				)}`,
-			),
-		);
+	try {
+		_assertCursorsCanBeMerged(cursors);
+	} catch (error: unknown) {
+		subscription.error(error as Error);
 		return;
 	}
 
