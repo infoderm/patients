@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {
@@ -25,6 +27,9 @@ export type GenderCount = {
 	undefined?: number;
 };
 
+type Consultation = string;
+type Patient = {consultations: Set<string>; sex: string; removed: boolean};
+
 export default define({
 	name: frequencySexPublication,
 	authentication: AuthenticationLoggedIn,
@@ -43,8 +48,8 @@ export default define({
 			},
 		};
 		let total = 0;
-		const refs = new Map<string, string>();
-		const pRefs = new Map<string, {freq: number; sex: string | undefined}>();
+		const cRefs = new Map<string, Consultation>();
+		const pRefs = new Map<string, Patient>();
 		const count: [GenderCount, ...GenderCount[]] = [{}];
 
 		const state = (): PollResult<GenderCount[]> => ({
@@ -52,30 +57,26 @@ export default define({
 			count,
 		});
 
-		const inc = (patientId: string | undefined) => {
-			if (patientId === undefined || !pRefs.has(patientId))
-				throw new Error(`inc: patientId ${patientId} does not exist`);
-			const patient = pRefs.get(patientId)!;
-			count[patient.freq]![patient.sex ?? 'undefined'] -= 1;
-			patient.freq += 1;
-			if (count[patient.freq] === undefined) count[patient.freq] = {};
-			if (count[patient.freq]![patient.sex ?? 'undefined'] === undefined)
-				count[patient.freq]![patient.sex ?? 'undefined'] = 0;
+		const inc = (patient: Patient) => {
+			total += 1;
+			count[patient.consultations.size]![patient.sex] -= 1;
+			const freq = patient.consultations.size + 1;
+			if (count[freq] === undefined) count[freq] = {};
+			if (count[freq]![patient.sex] === undefined)
+				count[freq]![patient.sex] = 0;
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			count[patient.freq]![patient.sex ?? 'undefined'] += 1;
+			count[freq]![patient.sex] += 1;
 		};
 
-		const dec = (patientId: string | undefined) => {
-			if (patientId === undefined || !pRefs.has(patientId))
-				throw new Error(`dec: patientId ${patientId} does not exist`);
-			const patient = pRefs.get(patientId)!;
-			count[patient.freq]![patient.sex ?? 'undefined'] -= 1;
-			patient.freq -= 1;
-			if (count[patient.freq] === undefined) count[patient.freq] = {};
-			if (count[patient.freq]![patient.sex ?? 'undefined'] === undefined)
-				count[patient.freq]![patient.sex ?? 'undefined'] = 0;
+		const dec = (patient: Patient) => {
+			total -= 1;
+			count[patient.consultations.size]![patient.sex] -= 1;
+			const freq = patient.consultations.size - 1;
+			if (count[freq] === undefined) count[freq] = {};
+			if (count[freq]![patient.sex] === undefined)
+				count[freq]![patient.sex] = 0;
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			count[patient.freq]![patient.sex ?? 'undefined'] += 1;
+			count[freq]![patient.sex] += 1;
 		};
 
 		let initializing = true;
@@ -85,6 +86,34 @@ export default define({
 			}
 		};
 
+		const _ensurePatient = (patientId: string) => {
+			const existing = pRefs.get(patientId);
+			if (existing !== undefined) return existing;
+
+			const removed: Patient = {
+				consultations: new Set(),
+				sex: 'undefined',
+				removed: true,
+			};
+			pRefs.set(patientId, removed);
+			return removed;
+		};
+
+		const addConsultation = (patientId: string, consultationId: string) => {
+			const patient = _ensurePatient(patientId);
+			if (!patient.removed) inc(patient);
+			patient.consultations.add(consultationId);
+			cRefs.set(consultationId, patientId);
+		};
+
+		const removeConsultation = (patientId: string, consultationId: string) => {
+			const patient = pRefs.get(patientId);
+			assert(patient !== undefined);
+			if (!patient.removed) dec(patient);
+			patient.consultations.delete(consultationId);
+			cRefs.delete(consultationId);
+		};
+
 		const pHandle = await observeSetChanges(
 			Patients,
 			{owner: this.userId},
@@ -92,26 +121,47 @@ export default define({
 			{
 				added(_id, {sex}) {
 					const sexKey = `${sex}`;
-					pRefs.set(_id, {freq: 0, sex: sexKey});
-					if (count[0][sexKey] === undefined) count[0][sexKey] = 0;
+					const previous = pRefs.get(_id);
+					assert(previous === undefined || previous.removed);
+					const consultations = previous?.consultations ?? new Set();
+					pRefs.set(_id, {consultations, sex: sexKey, removed: false});
+
+					if (count[consultations.size]![sexKey] === undefined)
+						count[consultations.size]![sexKey] = 0;
 					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-					count[0][sexKey] += 1;
+					count[consultations.size]![sexKey] += 1;
+
+					total += consultations.size;
 					commit();
 				},
 				changed(_id, {sex}) {
-					const {freq, sex: prev} = pRefs.get(_id)!;
+					const {consultations, sex: prev, removed} = pRefs.get(_id)!;
+					assert(!removed);
 					const prevKey = `${prev}`;
+					const freq = consultations.size;
 					count[freq]![prevKey] -= 1;
 					const sexKey = `${sex}`;
 					if (count[freq]![sexKey] === undefined) count[freq]![sexKey] = 0;
 					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 					count[freq]![sexKey] += 1;
-					pRefs.set(_id, {freq, sex: sexKey});
+					pRefs.set(_id, {consultations, sex: sexKey, removed: false});
 					commit();
 				},
 				removed(_id) {
-					pRefs.delete(_id);
-					// everything should be commited by the consultations observer
+					const patient = pRefs.get(_id);
+					assert(patient !== undefined);
+					assert(!patient.removed);
+					const sexKey = patient.sex;
+					if (patient.consultations.size === 0) {
+						count[0]![sexKey] -= 1;
+						pRefs.delete(_id);
+					} else {
+						pRefs.set(_id, {...patient, removed: true});
+						total -= patient.consultations.size;
+						count[patient.consultations.size]![patient.sex] -= 1;
+					}
+
+					commit();
 				},
 			},
 			{
@@ -125,13 +175,8 @@ export default define({
 			options,
 			{
 				added(_id, {patientId}) {
-					if (patientId === undefined)
-						throw new Error(
-							`added: consultation ${_id} is not linked to a patient.`,
-						);
-					total += 1;
-					inc(patientId);
-					refs.set(_id, patientId);
+					assert(patientId !== undefined);
+					addConsultation(patientId, _id);
 					commit();
 				},
 
@@ -139,10 +184,9 @@ export default define({
 				// patientId. Handle that.
 
 				removed(_id) {
-					total -= 1;
-					const patientId = refs.get(_id)!;
-					dec(patientId);
-					refs.delete(_id);
+					const patientId = cRefs.get(_id);
+					assert(patientId !== undefined);
+					removeConsultation(patientId, _id);
 					commit();
 				},
 			},
