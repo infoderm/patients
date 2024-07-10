@@ -7,6 +7,8 @@ import unique from '../../lib/iterable-iterator/unique';
 
 import {getCollection} from '../collection/registry';
 
+import type ObserveSetChangesCallbacks from '../ObserveSetChangesCallbacks';
+
 import {type Context} from './Context';
 import type Cursor from './Cursor';
 
@@ -35,17 +37,26 @@ const publishCursors = async <T extends Document, U = T>(
 		return;
 	}
 
-	return Promise.all(cursors.map(async (cursor) => _pipe(subscription, cursor)))
-		.then((pipes) => {
-			for (const pipe of pipes) {
-				subscription.onStop(async () => pipe.emit('stop'));
-			}
+	return _publishCursors(subscription, cursors);
+};
 
-			subscription.ready();
-		})
-		.catch((error) => {
-			subscription.error(error);
-		});
+const _publishCursors = async <T extends Document, U = T>(
+	subscription: Context,
+	cursors: Array<Cursor<T, U>>,
+): Promise<void> => {
+	try {
+		const pipes = await Promise.all(
+			cursors.map(async (cursor) => _pipe(subscription, cursor)),
+		);
+
+		for (const pipe of pipes) {
+			subscription.onStop(async () => pipe.emit('stop'));
+		}
+
+		subscription.ready();
+	} catch (error: unknown) {
+		subscription.error(error as Error);
+	}
 };
 
 const _pipe = async <T extends Document, U = T>(
@@ -60,17 +71,27 @@ const _pipe = async <T extends Document, U = T>(
 
 	const filter = selector as Filter<T>;
 
-	return observeSetChanges(QueriedCollection, filter, options, {
-		added(id, fields) {
-			subscription.added(collection, id, fields);
-		},
-		changed(id, fields) {
-			subscription.changed(collection, id, fields);
-		},
-		removed(id) {
-			subscription.removed(collection, id);
-		},
-	});
+	return observeSetChanges(
+		QueriedCollection,
+		filter,
+		options,
+		publishCursorObserver(subscription, collection),
+	);
 };
+
+export const publishCursorObserver = <T extends Document>(
+	subscription: Context,
+	collection: string,
+): ObserveSetChangesCallbacks<T> => ({
+	added(id, fields) {
+		subscription.added(collection, id, fields);
+	},
+	changed(id, fields) {
+		subscription.changed(collection, id, fields);
+	},
+	removed(id) {
+		subscription.removed(collection, id);
+	},
+});
 
 export default publishCursors;
