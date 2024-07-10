@@ -16,6 +16,7 @@ import {userFilter} from './query/UserFilter';
 import type UserFilter from './query/UserFilter';
 import observeSetChanges from './query/observeSetChanges';
 import type Filter from './query/Filter';
+import {publishCursorObserver} from './publication/publishCursors';
 
 const makeFilteredCollection = <
 	S extends schema.ZodTypeAny,
@@ -55,19 +56,7 @@ const makeFilteredCollection = <
 				collection,
 				scopedFilter,
 				options,
-				{
-					added: (_id, fields) => {
-						this.added(name, _id, fields);
-					},
-
-					changed: (_id, fields) => {
-						this.changed(name, _id, fields);
-					},
-
-					removed: (_id) => {
-						this.removed(name, _id);
-					},
-				},
+				publishCursorObserver(this, name),
 			);
 
 			this.onStop(async (error?: Error) => {
