@@ -206,6 +206,13 @@ export const dropId = ({_id, ...rest}) => {
 
 export const dropIds = (x) => x.map(dropId);
 
+export const dropOwner = ({owner, ...rest}) => {
+	assert(typeof owner === 'string');
+	return rest;
+};
+
+export const dropOwners = (x) => x.map(dropOwner);
+
 type Created<T> = T extends {[K in keyof T]: T[K]}
 	? {[K in keyof T]: Created<T[K]>}
 	: T extends () => any
