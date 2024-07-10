@@ -13,6 +13,8 @@ import consultationsInsert from '../../api/endpoint/consultations/insert';
 import patientsRemove from '../../api/endpoint/patients/remove';
 import consultationsRemove from '../../api/endpoint/consultations/remove';
 
+import patientsUpdate from '../../api/endpoint/patients/update';
+
 import useFrequencyStats from './useFrequencyStats';
 
 client(__filename, () => {
@@ -285,6 +287,46 @@ client(__filename, () => {
 			loading: false,
 			total: 0,
 			count: [{'': 1}],
+		});
+	});
+
+	it('should handle patient sex update', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		await createUserWithPassword(username, password);
+		await loginWithPassword(username, password);
+
+		const {result} = renderHook(() => useFrequencyStats());
+
+		const patientId = await call(
+			patientsInsert,
+			newPatientFormData({sex: 'male'}),
+		);
+
+		await call(consultationsInsert, newConsultationFormData({patientId}));
+
+		await waitFor(() => {
+			assert.strictEqual(result.current.total, 1);
+		});
+
+		assert.deepEqual(result.current, {
+			loading: false,
+			total: 1,
+			count: [{}, {male: 1}],
+		});
+
+		await call(patientsUpdate, patientId, {sex: 'other'});
+
+		await call(consultationsInsert, newConsultationFormData({patientId}));
+
+		await waitFor(() => {
+			assert.strictEqual(result.current.total, 2);
+		});
+
+		assert.deepEqual(result.current, {
+			loading: false,
+			total: 2,
+			count: [{}, {}, {other: 1}],
 		});
 	});
 });
