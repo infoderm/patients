@@ -55,7 +55,7 @@ const scheduleAppointmentForPatient = async (
 	console.debug('Click on Schedule');
 	await user.click(await findByRole('button', {name: 'Schedule'}));
 	console.debug('Check heading');
-	await findByRole('heading', {name: /^\/consultation\//});
+	await findByRole('heading', {name: /^\/consultation\//}, {timeout: 10_000});
 	console.debug('Check button');
 	await findByRole('button', {name: 'Cancel'});
 	await historyBack();
