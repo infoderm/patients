@@ -174,11 +174,17 @@ export const dropId = ({_id, ...rest}) => {
 
 export const dropIds = (x) => x.map(dropId);
 
-export const create = (template, extra) => {
-	if (typeof template === 'function') return extra ?? template();
+export const create = (template, extra, hasExtra: boolean) => {
+	if (typeof template === 'function') return hasExtra ? extra : template();
 	if (Array.isArray(template)) {
 		return template
-			.map((x, i) => create(x, extra?.[i]))
+			.map((x, i) =>
+				create(
+					x,
+					extra?.[i],
+					Object.prototype.hasOwnProperty.call(extra ?? [], i),
+				),
+			)
 			.concat(extra?.slice(template.length) ?? []);
 	}
 
@@ -186,7 +192,11 @@ export const create = (template, extra) => {
 		(extra === undefined ? [] : Object.entries(extra)).concat(
 			Object.entries(template).map(([key, value]) => [
 				key,
-				create(value, extra?.[key]),
+				create(
+					value,
+					extra?.[key],
+					Object.prototype.hasOwnProperty.call(extra ?? {}, key),
+				),
 			]),
 		),
 	);
@@ -204,4 +214,5 @@ export const findOneOrThrow = async <T extends Document, U = T>(
 	return result!;
 };
 
-export const makeTemplate = (template) => (extra?) => create(template, extra);
+export const makeTemplate = (template) => (extra?) =>
+	create(template, extra, extra !== undefined);
