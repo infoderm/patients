@@ -100,11 +100,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 4,
-			count: [
-				{female: 0, male: 0},
-				{female: 0, male: 0},
-				{female: 1, male: 1},
-			],
+			count: [{}, {}, {female: 1, male: 1}],
 		});
 	});
 
@@ -173,7 +169,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 1,
-			count: [{female: 0, undefined: 1}, {female: 1}],
+			count: [{undefined: 1}, {female: 1}],
 		});
 
 		const {insertedId: consultationAId} = await call(
@@ -192,11 +188,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 3,
-			count: [
-				{female: 0, undefined: 0},
-				{female: 1, undefined: 0},
-				{undefined: 1},
-			],
+			count: [{}, {female: 1}, {undefined: 1}],
 		});
 
 		await call(
@@ -211,11 +203,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 4,
-			count: [
-				{female: 0, undefined: 0},
-				{female: 0, undefined: 0},
-				{female: 1, undefined: 1},
-			],
+			count: [{}, {}, {female: 1, undefined: 1}],
 		});
 
 		await call(patientsRemove, patientAId);
@@ -224,17 +212,13 @@ client(__filename, () => {
 			assert.strictEqual(result.current.total, 2);
 		});
 		await waitFor(() => {
-			assert.deepEqual(result.current.count![0], {female: 0, undefined: 0});
+			assert.deepEqual(result.current.count![0], {});
 		});
 
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 2,
-			count: [
-				{female: 0, undefined: 0},
-				{female: 0, undefined: 0},
-				{female: 0, undefined: 1},
-			],
+			count: [{}, {}, {undefined: 1}],
 		});
 
 		await call(consultationsRemove, consultationAId);
@@ -246,11 +230,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 1,
-			count: [
-				{female: 0, undefined: 0},
-				{female: 0, undefined: 1},
-				{female: 0, undefined: 0},
-			],
+			count: [{}, {undefined: 1}, {}],
 		});
 
 		await call(consultationsRemove, consultationBId);
@@ -262,11 +242,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			total: 0,
-			count: [
-				{female: 0, undefined: 1},
-				{female: 0, undefined: 0},
-				{female: 0, undefined: 0},
-			],
+			count: [{undefined: 1}, {}, {}],
 		});
 	});
 

@@ -28,7 +28,11 @@ export type GenderCount = {
 };
 
 type Consultation = string;
-type Patient = {consultations: Set<string>; sex: string; removed: boolean};
+type Patient = {
+	consultations: Set<string>;
+	sex: keyof GenderCount;
+	removed: boolean;
+};
 
 export default define({
 	name: frequencySexPublication,
@@ -57,26 +61,29 @@ export default define({
 			count,
 		});
 
+		const _erase = (freq: number, sex: keyof GenderCount) => {
+			const {[sex]: current, ...rest} = count[freq]!;
+			assert(current !== undefined);
+			count[freq] = current === 1 ? rest : {[sex]: current - 1, ...rest};
+		};
+
+		const _record = (freq: number, sex: string) => {
+			if (count[freq] === undefined) count[freq] = {};
+			if (count[freq]![sex] === undefined) count[freq]![sex] = 0;
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+			count[freq]![sex] += 1;
+		};
+
 		const inc = (patient: Patient) => {
 			total += 1;
-			count[patient.consultations.size]![patient.sex] -= 1;
-			const freq = patient.consultations.size + 1;
-			if (count[freq] === undefined) count[freq] = {};
-			if (count[freq]![patient.sex] === undefined)
-				count[freq]![patient.sex] = 0;
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			count[freq]![patient.sex] += 1;
+			_erase(patient.consultations.size, patient.sex);
+			_record(patient.consultations.size + 1, patient.sex);
 		};
 
 		const dec = (patient: Patient) => {
 			total -= 1;
-			count[patient.consultations.size]![patient.sex] -= 1;
-			const freq = patient.consultations.size - 1;
-			if (count[freq] === undefined) count[freq] = {};
-			if (count[freq]![patient.sex] === undefined)
-				count[freq]![patient.sex] = 0;
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			count[freq]![patient.sex] += 1;
+			_erase(patient.consultations.size, patient.sex);
+			_record(patient.consultations.size - 1, patient.sex);
 		};
 
 		let initializing = true;
@@ -120,30 +127,24 @@ export default define({
 			{fields: {sex: 1}},
 			{
 				added(_id, {sex}) {
-					const sexKey = `${sex}`;
+					const sexKey: keyof GenderCount = `${sex}`;
 					const previous = pRefs.get(_id);
 					assert(previous === undefined || previous.removed);
 					const consultations = previous?.consultations ?? new Set();
 					pRefs.set(_id, {consultations, sex: sexKey, removed: false});
 
-					if (count[consultations.size]![sexKey] === undefined)
-						count[consultations.size]![sexKey] = 0;
-					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-					count[consultations.size]![sexKey] += 1;
+					_record(consultations.size, sexKey);
 
 					total += consultations.size;
 					commit();
 				},
 				changed(_id, {sex}) {
-					const {consultations, sex: prev, removed} = pRefs.get(_id)!;
+					const {consultations, sex: prevKey, removed} = pRefs.get(_id)!;
 					assert(!removed);
-					const prevKey = `${prev}`;
 					const freq = consultations.size;
-					count[freq]![prevKey] -= 1;
-					const sexKey = `${sex}`;
-					if (count[freq]![sexKey] === undefined) count[freq]![sexKey] = 0;
-					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-					count[freq]![sexKey] += 1;
+					_erase(freq, prevKey);
+					const sexKey: keyof GenderCount = `${sex}`;
+					_record(freq, sexKey);
 					pRefs.set(_id, {consultations, sex: sexKey, removed: false});
 					commit();
 				},
@@ -153,12 +154,12 @@ export default define({
 					assert(!patient.removed);
 					const sexKey = patient.sex;
 					if (patient.consultations.size === 0) {
-						count[0]![sexKey] -= 1;
+						_erase(0, sexKey);
 						pRefs.delete(_id);
 					} else {
 						pRefs.set(_id, {...patient, removed: true});
 						total -= patient.consultations.size;
-						count[patient.consultations.size]![patient.sex] -= 1;
+						_erase(patient.consultations.size, patient.sex);
 					}
 
 					commit();
