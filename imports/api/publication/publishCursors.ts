@@ -1,11 +1,11 @@
-import db from '../../backend/mongodb/db';
 import observeSetChanges from '../query/observeSetChanges';
 import type Filter from '../query/Filter';
-import type Collection from '../Collection';
 import type Document from '../Document';
 
 import duplicates from '../../lib/iterable-iterator/duplicates';
 import unique from '../../lib/iterable-iterator/unique';
+
+import {getCollection} from '../collection/registry';
 
 import {type Context} from './Context';
 import type Cursor from './Cursor';
@@ -53,9 +53,7 @@ const _pipe = async <T extends Document, U = T>(
 	cursor: Cursor<T, U>,
 ) => {
 	const collection = cursor._getCollectionName();
-	const QueriedCollection = db().collection(
-		collection,
-	) as unknown as Collection<T, U>;
+	const QueriedCollection = getCollection<T, U>(collection);
 	const {
 		_cursorDescription: {selector, options},
 	} = cursor;
