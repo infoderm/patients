@@ -9,6 +9,8 @@ import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+// eslint-disable-next-line import/no-unassigned-import
+import '../api/endpoint/_dev/_disableRateLimiting';
 import logout from '../api/user/logout';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
