@@ -3,6 +3,8 @@ import 'regenerator-runtime/runtime.js';
 
 import {assert, expect} from 'chai';
 
+import {Meteor} from 'meteor/meteor';
+
 import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
