@@ -4,13 +4,14 @@ import schema from '../../../lib/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {intersectsInterval, publishEvents} from '../../events';
 import define from '../define';
+import PublicationError from '../PublicationError';
 
 export default define({
 	name: 'events.intersects',
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([schema.date(), schema.date()]),
 	async handle(begin, end) {
-		if (isAfter(begin, end)) throw new Error('begin is after end');
+		if (isAfter(begin, end)) throw new PublicationError('begin is after end');
 
 		const query = {
 			...intersectsInterval(begin, end),
