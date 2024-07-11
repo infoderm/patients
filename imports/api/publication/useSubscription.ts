@@ -15,13 +15,22 @@ const useSubscriptionClient = <A extends Args>(
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
 
-	const deps = [publication, JSON.stringify(args)];
+	const deps = [setLoading, publication, JSON.stringify(args)];
 
 	useEffect(() => {
+		const setNotLoading = () => {
+			setLoading(false);
+		};
+
+		const callbacks = {
+			onReady: setNotLoading,
+			onStop: setNotLoading,
+			onError: setNotLoading,
+		};
+
 		const computation = Tracker.nonreactive(() =>
 			Tracker.autorun(() => {
-				const ready = !publication || subscribe(publication, ...args).ready();
-				setLoading(!ready);
+				if (publication) subscribe(publication, ...args, callbacks);
 			}),
 		);
 
