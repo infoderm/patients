@@ -190,7 +190,7 @@ const createTagCollection = <
 		name: statsPublication,
 		authentication: AuthenticationLoggedIn,
 		schema: schema.tuple([schema.string()]),
-		handle(name) {
+		async handle(name) {
 			const uid = JSON.stringify({name, owner: this.userId});
 			const query = {
 				[key]: {$elemMatch: {name}},
@@ -205,7 +205,7 @@ const createTagCollection = <
 			// `observeChanges` only returns after the initial `added` callbacks have run.
 			// Until then, we don't want to send a lot of `changed` messages—hence
 			// tracking the `initializing` state.
-			const handle = Parent.find(query, options).observeChanges({
+			const handle = await Parent.find(query, options).observeChangesAsync({
 				added: () => {
 					count += 1;
 

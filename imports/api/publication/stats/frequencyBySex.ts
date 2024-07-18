@@ -28,7 +28,7 @@ export default define({
 	name: frequencySexPublication,
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([userFilter(consultationDocument).nullable()]),
-	handle(filter: UserFilter<ConsultationDocument> | null) {
+	async handle(filter: UserFilter<ConsultationDocument> | null) {
 		const collection = countCollection;
 		const key = frequencySexKey(filter);
 		const selector = {
@@ -84,10 +84,10 @@ export default define({
 			}
 		};
 
-		const pHandle = Patients.find(
+		const pHandle = await Patients.find(
 			{owner: this.userId},
 			{fields: {sex: 1}},
-		).observeChanges({
+		).observeChangesAsync({
 			added(_id, {sex}) {
 				const sexKey = `${sex}`;
 				pRefs.set(_id, {freq: 0, sex: sexKey});
@@ -113,7 +113,10 @@ export default define({
 			},
 		});
 
-		const cHandle = Consultations.find(selector, options).observeChanges({
+		const cHandle = await Consultations.find(
+			selector,
+			options,
+		).observeChangesAsync({
 			added(_id, {patientId}) {
 				if (patientId === undefined)
 					throw new Error(
