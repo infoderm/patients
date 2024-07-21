@@ -75,7 +75,10 @@ const makeFilteredCollection = <
 	) => {
 		const isLoading = useSubscription(publication, null, options ?? null);
 		const loading = isLoading();
-		const results = useCursor(() => Filtered.find(hookSelector, options), deps);
+		const {results} = useCursor(
+			() => Filtered.find(hookSelector, options),
+			deps,
+		);
 		return {loading, results};
 	};
 };

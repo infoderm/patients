@@ -100,23 +100,23 @@ const useMergeInfo = (toMerge: string[]): MergeInfo => {
 		documentsLoading() ||
 		attachmentsLoading();
 
-	const fetchedPatients = useCursor(
+	const {results: fetchedPatients} = useCursor(
 		() => Patients.find({_id: {$in: toMerge}}),
 		toMerge,
 	);
 
-	const newConsultations = useCursor(
+	const {results: newConsultations} = useCursor(
 		() =>
 			Consultations.find({patientId: {$in: toMerge}}, {sort: {datetime: -1}}),
 		toMerge,
 	);
 
-	const newDocuments = useCursor(
+	const {results: newDocuments} = useCursor(
 		() => Documents.find({patientId: {$in: toMerge}}, {sort: {createdAt: -1}}),
 		toMerge,
 	);
 
-	const newAttachments = useCursor(
+	const {results: newAttachments} = useCursor(
 		() =>
 			Attachments.find(
 				{'meta.attachedToPatients': {$in: toMerge}},

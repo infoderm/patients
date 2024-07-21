@@ -5,23 +5,25 @@ import useChanged from '../../ui/hooks/useChanged';
 
 import type Args from '../Args';
 
-import subscribe from './subscribe';
 import type Publication from './Publication';
-import type SubscriptionHandle from './SubscriptionHandle';
+import stopSubscription from './stopSubscription';
+import subscribe from './subscribe';
 
 const useSubscriptionClient = <A extends Args>(
 	publication?: Publication<A> | null,
 	...args: A
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
-	const handleRef = useRef<SubscriptionHandle | null>(null);
+	const handleRef = useRef<any>(null);
 
 	const deps = [setLoading, publication, JSON.stringify(args)];
 
 	useEffect(() => {
 		if (!publication) return undefined;
+		const id = {};
+		handleRef.current = id;
 		const setNotLoading = () => {
-			if (handleRef.current === handle) setLoading(false);
+			if (handleRef.current === id) setLoading(false);
 		};
 
 		const callbacks = {
@@ -31,17 +33,16 @@ const useSubscriptionClient = <A extends Args>(
 		};
 
 		const handle = subscribe(publication, ...args, callbacks);
-		handleRef.current = handle;
 
 		// NOTE `setLoading(true)` is called:
 		//   - on first execution,
 		//   - on subsequent executions, if the subscription is not ready yet
 		//     (e.g. double-render in strict mode in development, concurrent mode)
 		//   - when restarting a stopped or errored subscription
-		setLoading(!handle.ready());
+		setLoading(!handle.handle.ready());
 
 		return () => {
-			handle.stop();
+			stopSubscription(handle, 5000);
 		};
 	}, deps);
 

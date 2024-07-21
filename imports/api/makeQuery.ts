@@ -18,7 +18,7 @@ const makeQuery =
 		const isLoading = useSubscription(publication, query);
 		const loading = isLoading();
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const results = useCursor(() => collection.find(selector, options), deps);
+		const {results} = useCursor(() => collection.find(selector, options), deps);
 		return {loading, results};
 	};
 

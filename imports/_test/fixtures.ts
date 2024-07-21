@@ -185,10 +185,39 @@ export const dropOwner = ({owner, ...rest}) => {
 
 export const dropOwners = (x) => x.map(dropOwner);
 
-export const create = (template, extra, hasExtra: boolean) => {
+type Created<T> = T extends {[K in keyof T]: T[K]}
+	? {[K in keyof T]: Created<T[K]>}
+	: T extends () => any
+	? ReturnType<T>
+	: never;
+
+type Extra<T> = T extends any[]
+	? Created<T>
+	: T extends {[K in keyof T]: T[K]}
+	? Partial<Created<T>>
+	: T extends () => any
+	? ReturnType<T>
+	: never;
+
+export function create<T extends () => any>(
+	template: T,
+	extra?: Extra<T>,
+	hasExtra?: boolean,
+): Created<T>;
+export function create<T extends {[K in keyof T]: T[K]}>(
+	template: T,
+	extra?: Extra<T>,
+	hasExtra?: boolean,
+): Created<T>;
+
+export function create<T>(
+	template: T,
+	extra?: Extra<T>,
+	hasExtra?: boolean,
+): Created<T> {
 	if (typeof template === 'function') return hasExtra ? extra : template();
 	if (Array.isArray(template)) {
-		return template
+		return (template as Array<T[keyof T]>)
 			.map((x, i) =>
 				create(
 					x,
@@ -196,22 +225,24 @@ export const create = (template, extra, hasExtra: boolean) => {
 					Object.prototype.hasOwnProperty.call(extra ?? [], i),
 				),
 			)
-			.concat(extra?.slice(template.length) ?? []);
+			.concat(extra?.slice(template.length) ?? []) as Created<T>;
 	}
 
 	return Object.fromEntries(
 		(extra === undefined ? [] : Object.entries(extra)).concat(
-			Object.entries(template).map(([key, value]) => [
-				key,
-				create(
-					value,
-					extra?.[key],
-					Object.prototype.hasOwnProperty.call(extra ?? {}, key),
-				),
-			]),
+			Object.entries(template as {[K in keyof T]: T[K]}).map(
+				<V>([key, value]: [string, V]) => [
+					key,
+					create(
+						value,
+						extra?.[key],
+						Object.prototype.hasOwnProperty.call(extra ?? {}, key),
+					),
+				],
+			),
 		),
-	);
-};
+	) as Created<T>;
+}
 
 export const findOneOrThrow = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
