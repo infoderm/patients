@@ -23,19 +23,22 @@ const makeFindOne =
 		deps: DependencyList,
 	): ReturnValue<U, I> => {
 		const isLoading = useSubscription(publication, query);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const upToDate = useItem(loading ? null : collection, selector, options, [
-			loading,
-			...deps,
-		]);
-
-		const found = Boolean(upToDate);
+		const {
+			loading: loadingResult,
+			found,
+			result: upToDate,
+		} = useItem(collection, selector, options, [loadingSubscription, ...deps]);
 
 		const fields = {...init, ...upToDate};
 
-		return {loading, found, fields} as ReturnValue<U, I>;
+		return {
+			loading: loadingSubscription || loadingResult,
+			found,
+			fields,
+		} as ReturnValue<U, I>;
 	};
 
 export default makeFindOne;

@@ -3,13 +3,15 @@ import {type DependencyList, useState, useEffect} from 'react';
 import useRandom from '../ui/hooks/useRandom';
 
 import type Publication from './publication/Publication';
-import subscribe, {type SubscriptionError} from './publication/subscribe';
+import subscribe from './publication/subscribe';
 import type Options from './query/Options';
 import type Collection from './Collection';
 import type Document from './Document';
 import observeSetChanges from './query/observeSetChanges';
 import type Filter from './query/Filter';
 import {type WatchHandle} from './query/watch';
+import type SubscriptionError from './publication/SubscriptionError';
+import stopSubscription from './publication/stopSubscription';
 
 /**
  * WARNING: Does not work properly if used multiple times with the same
@@ -44,8 +46,8 @@ const makeCachedFindOneOpt =
 			let queryHandle: WatchHandle<T>;
 			let stopped = false;
 			const handle = subscribe(publication, filter, options, {
-				async onStop(e: SubscriptionError) {
-					console.debug('onStop()', {e, queryHandle});
+				async onStop(error?: SubscriptionError) {
+					console.debug('onStop()', {error, queryHandle});
 					stopped = true;
 					if (queryHandle !== undefined) await queryHandle.emit('stop');
 					else reset();
@@ -75,8 +77,7 @@ const makeCachedFindOneOpt =
 			});
 
 			return () => {
-				console.debug('handle.stop()');
-				handle.stop();
+				stopSubscription(handle);
 			};
 		}, [key, ...deps]);
 
