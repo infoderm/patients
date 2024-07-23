@@ -20,7 +20,7 @@ const displayName = ({firstname, lastname}: Patient) =>
 	[lastname, firstname].filter(Boolean).join(' ') || 'Unknown';
 
 client(__filename, () => {
-	it.only('should be possible to render many chips concurrently', async () => {
+	it('should be possible to render many chips concurrently', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
