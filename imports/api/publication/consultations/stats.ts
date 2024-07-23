@@ -27,8 +27,8 @@ export default define({
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(async () => {
-			await handle.emit('stop');
+		this.onStop(async (error?: Error) => {
+			await handle.emit('stop', error);
 		});
 	},
 });

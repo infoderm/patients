@@ -109,8 +109,8 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		await handle.emit('start');
 
 		// NOTE: Stop observing the cursor when the client unsubscribes.
-		this.onStop(async () => {
-			await handle.emit('stop');
+		this.onStop(async (error?: Error) => {
+			await handle.emit('stop', error);
 		});
 	};
 

@@ -50,7 +50,7 @@ const _publishCursors = async <T extends Document, U = T>(
 		);
 
 		for (const pipe of pipes) {
-			subscription.onStop(async () => pipe.emit('stop'));
+			subscription.onStop(async (error?: Error) => pipe.emit('stop', error));
 		}
 
 		subscription.ready();

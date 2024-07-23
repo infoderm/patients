@@ -51,8 +51,8 @@ export default define({
 
 		initializing = false;
 		this.added(collection, key, state());
-		this.onStop(async () => {
-			await handle.emit('stop');
+		this.onStop(async (error?: Error) => {
+			await handle.emit('stop', error);
 		});
 		this.ready();
 	},
