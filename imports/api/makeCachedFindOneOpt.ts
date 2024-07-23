@@ -28,14 +28,10 @@ const makeCachedFindOneOpt =
 		options: Options<T>,
 		deps: DependencyList,
 	) => {
-		console.debug({init, query: filter, options, deps});
-
 		const [loading, setLoading] = useState(true);
 		const [found, setFound] = useState(false);
 		const [fields, setFields] = useState(init);
 		const [key, reset] = useRandom();
-
-		console.debug({loading, found, fields});
 
 		useEffect(() => {
 			setLoading(true);
@@ -47,13 +43,11 @@ const makeCachedFindOneOpt =
 			let stopped = false;
 			const handle = subscribe(publication, filter, options, {
 				async onStop(error?: SubscriptionError) {
-					console.debug('onStop()', {error, queryHandle});
 					stopped = true;
-					if (queryHandle !== undefined) await queryHandle.emit('stop');
+					if (queryHandle !== undefined) await queryHandle.emit('stop', error);
 					else reset();
 				},
 				async onReady() {
-					console.debug('onReady()');
 					setLoading(false);
 					queryHandle = await observeSetChanges(collection, filter, options, {
 						added(_id, upToDate) {
@@ -72,7 +66,7 @@ const makeCachedFindOneOpt =
 							setFound(false);
 						},
 					});
-					if (stopped) await queryHandle.emit('stop');
+					if (stopped) await queryHandle.emit('stop', undefined);
 				},
 			});
 
