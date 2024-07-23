@@ -3,7 +3,9 @@ import assert from 'assert';
 import type Timeout from '../../lib/types/Timeout';
 
 import type SubscriptionHandle from './SubscriptionHandle';
-import subscriptionInternals from './subscriptionInternals';
+import subscriptionInternals, {
+	debugMeteorSubscriptions,
+} from './subscriptionInternals';
 import {get, set} from './subscriptionRegistry';
 
 const _gcQueue = new Map<string, Timeout>();
@@ -26,7 +28,12 @@ const stopSubscription = (
 	if (onReady !== undefined) entry.onReady.delete(onReady);
 	if (onStop !== undefined) {
 		entry.onStop.delete(onStop);
-		onStop();
+		const maybePromise = onStop();
+		if (maybePromise instanceof Promise) {
+			maybePromise.catch((error: unknown) => {
+				console.error({error});
+			});
+		}
 	}
 
 	if (entry.refCount === 0) {
@@ -53,6 +60,7 @@ const stopSubscription = (
 					params: sub.params,
 				});
 				handle.stop();
+				debugMeteorSubscriptions();
 			}
 
 			_gcQueue.delete(sub.id);

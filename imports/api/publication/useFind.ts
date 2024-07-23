@@ -27,7 +27,7 @@ const useFindClient = <T extends Document, U = T>(
 		const init: U[] = [];
 		let handle: Mongo.ObserveHandle;
 
-		void cursor
+		cursor
 			.observeAsync({
 				addedAt(document, atIndex, _before) {
 					if (initializing) {
@@ -85,6 +85,10 @@ const useFindClient = <T extends Document, U = T>(
 				setResults(init);
 				setLoading(false);
 				handle = _handle;
+			})
+			.catch((error: unknown) => {
+				setLoading(false);
+				console.error({error});
 			});
 
 		return () => {

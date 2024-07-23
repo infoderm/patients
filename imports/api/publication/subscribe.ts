@@ -4,7 +4,9 @@ import type Args from '../Args';
 
 import type Publication from './Publication';
 import type SubscriptionHandle from './SubscriptionHandle';
-import subscriptionInternals from './subscriptionInternals';
+import subscriptionInternals, {
+	debugMeteorSubscriptions,
+} from './subscriptionInternals';
 import type SubscriptionCallbacks from './SubscriptionCallbacks';
 import {get, identify, set} from './subscriptionRegistry';
 import type SubscriptionError from './SubscriptionError';
@@ -58,11 +60,35 @@ const subscribe = <A extends Args>(
 		);
 		handle = Meteor.subscribe(name, ...params, {
 			onReady() {
-				for (const callback of onReady) callback();
+				Promise.allSettled(
+					Array.from(onReady).map(async (callback) => callback()),
+				)
+					.then((outcomes) => {
+						for (const outcome of outcomes) {
+							if (outcome.status === 'rejected') {
+								console.error({error: outcome.reason});
+							}
+						}
+					})
+					.catch((error: unknown) => {
+						console.error({error});
+					});
 			},
 			onStop(error: SubscriptionError) {
-				for (const callback of onStop) callback(error);
 				set(key, undefined);
+				Promise.allSettled(
+					Array.from(onStop).map(async (callback) => callback(error)),
+				)
+					.then((outcomes) => {
+						for (const outcome of outcomes) {
+							if (outcome.status === 'rejected') {
+								console.error({error: outcome.reason});
+							}
+						}
+					})
+					.catch((error: unknown) => {
+						console.error({error});
+					});
 			},
 		});
 		set(key, {handle, refCount: 1, onReady, onStop});
@@ -72,7 +98,12 @@ const subscribe = <A extends Args>(
 		const internals = subscriptionInternals(handle);
 		if (callbacks?.onReady !== undefined) {
 			if (internals.ready) {
-				callbacks.onReady();
+				const maybePromise = callbacks.onReady();
+				if (maybePromise instanceof Promise) {
+					maybePromise.catch((error: unknown) => {
+						console.error({error});
+					});
+				}
 			} else {
 				entry.onReady.add(callbacks.onReady);
 			}
@@ -80,6 +111,8 @@ const subscribe = <A extends Args>(
 
 		if (callbacks?.onStop !== undefined) entry.onStop.add(callbacks.onStop);
 	}
+
+	debugMeteorSubscriptions();
 
 	return {key, handle, onReady: callbacks?.onReady, onStop: callbacks?.onStop};
 };
