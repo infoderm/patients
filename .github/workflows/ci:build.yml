@@ -180,7 +180,7 @@ jobs:
       - name: Configure server
         id: configure-server
         run: |
-          echo "settings=$(cat settings.json)" >> "${GITHUB_OUTPUT}"
+          echo "settings=$(tr -d '\r\n' < settings.json)" >> "${GITHUB_OUTPUT}"
 
       - name: Run server
         id: server
