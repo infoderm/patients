@@ -11,12 +11,10 @@ const fetchSync = <T, U = T>(cursor: Cursor<T, U>) => {
 	// fetch is deprecated.
 	const items: U[] = [];
 
-	console.debug({what: 'FETCH'});
 	cursor
 		.observe({
 			addedAt(document, atIndex, _before) {
 				// TODO Use something more efficient.
-				console.debug({what: 'ADDEDAT', atIndex, document});
 				items.splice(atIndex, 0, document);
 			},
 		})

@@ -29,7 +29,6 @@ const ReactivePatientChip = React.forwardRef(
 
 		const props = {...rest, loading, found, patient: fields};
 
-		console.debug({loading, found, patient: fields});
 		return <StaticPatientChip ref={ref} {...props} />;
 	},
 );

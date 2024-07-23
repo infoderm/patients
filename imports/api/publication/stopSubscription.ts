@@ -33,7 +33,8 @@ const stopSubscription = (
 		set(key, undefined);
 		const sub = subscriptionInternals(handle);
 		console.debug({
-			what: 'DEACTIVATE',
+			what: 'stopSubscription',
+			msg: 'refCount === 0',
 			id: sub.id,
 			name: sub.name,
 			params: sub.params,
@@ -45,7 +46,8 @@ const stopSubscription = (
 		const timeout = setTimeout(() => {
 			if (sub.inactive) {
 				console.debug({
-					what: 'UNSUB',
+					what: 'stopSubscription',
+					msg: 'unsub',
 					id: sub.id,
 					name: sub.name,
 					params: sub.params,
