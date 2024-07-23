@@ -59,8 +59,8 @@ const makeFilteredCollection = <
 				publishCursorObserver(this, name),
 			);
 
-			this.onStop(async () => {
-				await handle.emit('stop');
+			this.onStop(async (error?: Error) => {
+				await handle.emit('stop', error);
 			});
 			this.ready();
 		},

@@ -58,15 +58,13 @@ const _filterToFullDocumentFilter = <T>(
 	);
 
 type Match = {
-	$match: {}
+	$match: {};
 };
-
 
 type Pipeline = {
 	pipeline: Match[];
 	isSuperset: boolean;
 };
-
 
 const _fullDocumentMissingFilter = {fullDocument: undefined};
 const _fullDocumentBeforeChangeMissingFilter = {
@@ -105,6 +103,7 @@ const _noFullDocumentMatch = (): Match => ({
 	},
 });
 
+// @ts-expect-error TODO
 const _noFullDocumentPipeline = (): Pipeline => {
 	return {
 		pipeline: [_noFullDocumentMatch()],
@@ -147,8 +146,8 @@ const _watchStream = <T extends Document, U = T>(
 	return _groupFragments(stream);
 };
 
-const _groupFragments = <T extends Document>( stream: ChangeStream<T>,) => {
-	const emitter = eventEmitter<{ entry: ChangeStreamEvent; close: undefined }>();
+const _groupFragments = <T extends Document>(stream: ChangeStream<T>) => {
+	const emitter = eventEmitter<{entry: ChangeStreamEvent; close: undefined}>();
 
 	let event: Fragment = {
 		_id: {
@@ -185,13 +184,15 @@ const _groupFragments = <T extends Document>( stream: ChangeStream<T>,) => {
 		void emitter.emitSerial('entry', rest);
 	});
 
-	emitter.once('close').then(
-		async () => stream.close()
-	);
+	emitter
+		.once('close')
+		.then(async () => stream.close())
+		.catch((error: Error) => {
+			console.error(error);
+		});
 
 	return emitter;
 };
-
 
 const _watchSetup = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -267,8 +268,7 @@ type ChangeStreamEvent = {
 		_data: string;
 	};
 	splitEvent?: undefined;
-}
-
+};
 
 export type FilteredOplogHandle = EventEmitter<{
 	entry: ChangeStreamEvent;
@@ -278,10 +278,10 @@ export type FilteredOplogHandle = EventEmitter<{
 export type WatchHandle<T> = EventEmitter<{
 	change: T[];
 	start: undefined;
-	stop: undefined;
+	stop?: Error;
 }>;
 
-class Watch<T extends Document, U = T> extends EventEmitter<T>{
+class Watch<T extends Document, U = T> extends EventEmitter<T> {
 	collection: Collection<T, U>;
 	filter: Filter<T>;
 	options: Options;
@@ -301,7 +301,7 @@ class Watch<T extends Document, U = T> extends EventEmitter<T>{
 	}
 
 	stop() {
-
+		// TODO
 	}
 }
 
@@ -311,27 +311,23 @@ let changeCount = 0;
 const _pipe = async <T extends Document, U = T>(
 	handle: WatchHandle<T>,
 	emitter: FilteredOplogHandle,
-	w: Watch<T, U>
+	w: Watch<T, U>,
 ) => {
-
 	const enqueue = await _makeQueue();
 
-	const onEntry = debounce(
-		() => {
-			enqueue(async () => {
-				const {init} = await _watchInit(
-					w.collection,
-					w.filter,
-					w.options,
-					w.sessionOptions,
-				);
+	const onEntry = debounce(() => {
+		enqueue(async () => {
+			const {init} = await _watchInit(
+				w.collection,
+				w.filter,
+				w.options,
+				w.sessionOptions,
+			);
 
-				console.debug({changeCount: ++changeCount});
-				await handle.emitSerial('change', init);
-			});
-		},
-		PIPE_DEBOUNCE
-	);
+			console.debug({changeCount: ++changeCount});
+			await handle.emitSerial('change', init);
+		});
+	}, PIPE_DEBOUNCE);
 
 	emitter.on('entry', onEntry);
 
@@ -371,11 +367,7 @@ const watch = async <T extends Document, U = T>(
 	changeStreamOptions?: ChangeStreamOptions,
 	sessionOptions?: ClientSessionOptions,
 ) => {
-	const handle = eventEmitter<{
-		change: T[];
-		start: undefined;
-		stop: undefined;
-	}>();
+	const handle: WatchHandle<T> = eventEmitter();
 
 	let stopped = false;
 

@@ -198,8 +198,11 @@ export default define({
 		this.added(collection, key, state());
 		this.ready();
 
-		this.onStop(async () => {
-			await Promise.all([cHandle.emit('stop'), pHandle.emit('stop')]);
+		this.onStop(async (error?: Error) => {
+			await Promise.all([
+				cHandle.emit('stop', error),
+				pHandle.emit('stop', error),
+			]);
 		});
 	},
 });
