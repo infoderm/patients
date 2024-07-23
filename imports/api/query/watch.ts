@@ -181,14 +181,16 @@ const _groupFragments = <T extends Document>(stream: ChangeStream<T>) => {
 
 		const {splitEvent, ...rest} = event;
 
-		void emitter.emitSerial('entry', rest);
+		emitter.emitSerial('entry', rest).catch((error: unknown) => {
+			console.error({error});
+		});
 	});
 
 	emitter
 		.once('close')
 		.then(async () => stream.close())
-		.catch((error: Error) => {
-			console.error(error);
+		.catch((error: unknown) => {
+			console.error({error});
 		});
 
 	return emitter;
@@ -371,9 +373,14 @@ const watch = async <T extends Document, U = T>(
 
 	let stopped = false;
 
-	void handle.once('stop').then(() => {
-		stopped = true;
-	});
+	handle
+		.once('stop')
+		.then(() => {
+			stopped = true;
+		})
+		.catch((error: unknown) => {
+			console.error({error});
+		});
 
 	handle.on('start', async () => {
 		if (stopped) return;
@@ -386,7 +393,13 @@ const watch = async <T extends Document, U = T>(
 			sessionOptions,
 		);
 		if (stopped) await stop();
-		else void handle.once('stop').then(stop);
+		else
+			handle
+				.once('stop')
+				.then(stop)
+				.catch((error: unknown) => {
+					console.error({error});
+				});
 	});
 
 	return handle;

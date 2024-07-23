@@ -42,7 +42,7 @@ const useSubscriptionClient = <A extends Args>(
 		setLoading(!handle.handle.ready());
 
 		return () => {
-			stopSubscription(handle, 5000);
+			stopSubscription(handle);
 		};
 	}, deps);
 
