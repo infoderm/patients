@@ -88,6 +88,8 @@ export const client = (title, fn) => {
 		let original;
 
 		const prepare = async () => {
+			// @ts-expect-error TODO
+			await import('./mocha.css');
 			await import('../../client/polyfill');
 
 			original = await forgetHistory();
