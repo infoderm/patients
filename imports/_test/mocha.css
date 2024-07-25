@@ -1,0 +1,38 @@
+div#mocha {
+	z-index: 99999999;
+	opacity: 0;
+	position: fixed;
+	top: 64px;
+	left: 73px;
+	right: 0;
+	background: white;
+	margin: 0;
+	padding: 1em;
+	overflow: auto;
+	height: calc(100% - 64px);
+}
+
+div#mocha:hover {
+	opacity: 0.9;
+}
+
+div#mocha > ul#mocha-report > li.suite > ul > li.test::before {
+	font-size: 18px;
+	line-height: 1em;
+}
+
+div#mocha > ul#mocha-report > li.suite > ul > li.test.pass::before {
+	color: #0b9;
+}
+
+div#mocha > ul#mocha-report > li.suite > ul > li.test.fail::before {
+	color: #b00;
+}
+
+div#mocha > ul#mocha-stats {
+	position: initial;
+}
+
+div#mocha > ul#mocha-report > li.suite > h1 {
+	font-size: 0.8em;
+}
