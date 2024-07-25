@@ -286,3 +286,5 @@ export const findOneOrThrow = async <T extends Document, U = T>(
 
 export const makeTemplate = (template) => (extra?) =>
 	create(template, extra, extra !== undefined);
+
+export const isNode = () => Meteor.isServer;
