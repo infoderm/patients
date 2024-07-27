@@ -3,10 +3,14 @@ import 'regenerator-runtime/runtime.js';
 
 import {assert, expect} from 'chai';
 
+import {Meteor} from 'meteor/meteor';
+
 import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+// eslint-disable-next-line import/no-unassigned-import
+import '../api/endpoint/_dev/_disableRateLimiting';
 import logout from '../api/user/logout';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
@@ -174,11 +178,24 @@ export const dropId = ({_id, ...rest}) => {
 
 export const dropIds = (x) => x.map(dropId);
 
-export const create = (template, extra) => {
-	if (typeof template === 'function') return extra ?? template();
+export const dropOwner = ({owner, ...rest}) => {
+	assert(typeof owner === 'string');
+	return rest;
+};
+
+export const dropOwners = (x) => x.map(dropOwner);
+
+export const create = (template, extra, hasExtra: boolean) => {
+	if (typeof template === 'function') return hasExtra ? extra : template();
 	if (Array.isArray(template)) {
 		return template
-			.map((x, i) => create(x, extra?.[i]))
+			.map((x, i) =>
+				create(
+					x,
+					extra?.[i],
+					Object.prototype.hasOwnProperty.call(extra ?? [], i),
+				),
+			)
 			.concat(extra?.slice(template.length) ?? []);
 	}
 
@@ -186,7 +203,11 @@ export const create = (template, extra) => {
 		(extra === undefined ? [] : Object.entries(extra)).concat(
 			Object.entries(template).map(([key, value]) => [
 				key,
-				create(value, extra?.[key]),
+				create(
+					value,
+					extra?.[key],
+					Object.prototype.hasOwnProperty.call(extra ?? {}, key),
+				),
 			]),
 		),
 	);
@@ -204,4 +225,5 @@ export const findOneOrThrow = async <T extends Document, U = T>(
 	return result!;
 };
 
-export const makeTemplate = (template) => (extra?) => create(template, extra);
+export const makeTemplate = (template) => (extra?) =>
+	create(template, extra, extra !== undefined);

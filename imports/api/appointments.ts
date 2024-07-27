@@ -61,8 +61,8 @@ export const appointmentUpdate = schema.union([
 	schema.object({
 		patient: schema.object({
 			_id: schema.string(),
-			firstname: schema.string(),
-			lastname: schema.string(),
+			firstname: schema.string().optional(),
+			lastname: schema.string().optional(),
 		}),
 		phone: schema.string().optional(),
 		datetime: schema.date().optional(),

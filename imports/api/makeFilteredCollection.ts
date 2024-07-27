@@ -14,6 +14,9 @@ import useSubscription from './publication/useSubscription';
 import {AuthenticationLoggedIn} from './Authentication';
 import {userFilter} from './query/UserFilter';
 import type UserFilter from './query/UserFilter';
+import observeSetChanges from './query/observeSetChanges';
+import type Filter from './query/Filter';
+import {publishCursorObserver} from './publication/publishCursors';
 
 const makeFilteredCollection = <
 	S extends schema.ZodTypeAny,
@@ -32,15 +35,15 @@ const makeFilteredCollection = <
 			userFilter(tSchema).nullable(),
 			options(tSchema).nullable(),
 		]),
-		handle(
+		async handle(
 			publicationFilter: UserFilter<schema.infer<S>> | null,
 			publicationOptions: Options<schema.infer<S>> | null,
 		) {
-			const selector = {
+			const scopedFilter = {
 				...filterSelector,
 				...publicationFilter,
 				owner: this.userId,
-			} as Selector<schema.infer<S>>;
+			} as Filter<schema.infer<S>>;
 
 			const options = {
 				...filterOptions,
@@ -49,22 +52,15 @@ const makeFilteredCollection = <
 				limit: 0,
 			};
 
-			const handle = collection.find(selector, options).observeChanges({
-				added: (_id, fields) => {
-					this.added(name, _id, fields);
-				},
+			const handle = await observeSetChanges(
+				collection,
+				scopedFilter,
+				options,
+				publishCursorObserver(this, name),
+			);
 
-				changed: (_id, fields) => {
-					this.changed(name, _id, fields);
-				},
-
-				removed: (_id) => {
-					this.removed(name, _id);
-				},
-			});
-
-			this.onStop(() => {
-				handle.stop();
+			this.onStop(async () => {
+				await handle.emit('stop');
 			});
 			this.ready();
 		},
