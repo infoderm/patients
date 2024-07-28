@@ -178,7 +178,7 @@
     "supertest": "7.0.0",
     "total-order": "4.0.1",
     "typescript": "~4.9.5",
-    "xo": "0.54.2"
+    "xo": "0.59.3"
   },
   "babel": {
     "plugins": [
