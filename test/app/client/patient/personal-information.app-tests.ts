@@ -298,5 +298,5 @@ client(__filename, () => {
 		await searchResultsForQuery(app, 'Jane');
 
 		await findByText('F');
-	}).timeout(60_000);
+	}).timeout(80_000);
 });

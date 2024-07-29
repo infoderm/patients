@@ -1,5 +1,12 @@
 import {type Meteor} from 'meteor/meteor';
 
-type SubscriptionHandle = Meteor.SubscriptionHandle;
+import type SubscriptionError from './SubscriptionError';
+
+type SubscriptionHandle = {
+	key: string;
+	handle: Meteor.SubscriptionHandle;
+	onReady?: () => Promise<void> | void;
+	onStop?: (error?: SubscriptionError) => Promise<void> | void;
+};
 
 export default SubscriptionHandle;

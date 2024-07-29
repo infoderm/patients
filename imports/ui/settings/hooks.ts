@@ -1,10 +1,8 @@
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 
-import {Settings} from '../../api/collection/settings';
+import {type SettingDocument, Settings} from '../../api/collection/settings';
 import {type UserSettings, type SettingKey, defaults} from '../../api/settings';
 import useSubscription from '../../api/publication/useSubscription';
-import useReactive from '../../api/publication/useReactive';
-import findOneSync from '../../api/publication/findOneSync';
 import byKey from '../../api/publication/settings/byKey';
 import call from '../../api/endpoint/call';
 import update from '../../api/endpoint/settings/update';
@@ -12,18 +10,17 @@ import reset from '../../api/endpoint/settings/reset';
 import useUserId from '../users/useUserId';
 import useLoggingOut from '../users/useLoggingOut';
 import useLoggingIn from '../users/useLoggingIn';
+import useItem from '../../api/publication/useItem';
 
 const useSettingSubscription = <K extends SettingKey>(key: K) =>
 	useSubscription(byKey, key);
 
-const get = <K extends SettingKey>(
+const withDefault = <K extends SettingKey>(
 	_loading: boolean,
 	_userId: string | null,
 	key: K,
-): UserSettings[K] => {
-	const item = findOneSync(Settings, {key});
-	return item === undefined ? defaults[key] : item.value;
-};
+	item: SettingDocument | undefined,
+): UserSettings[K] => (item === undefined ? defaults[key] : item.value);
 
 const localStoragePrefix = 'u3208hfosjas';
 const localStorageKey = (filter: string, key: string) =>
@@ -32,10 +29,11 @@ const defaultFilter = () => 'default';
 const userFilter = (userId: string) => `user-${userId}`;
 const userOrDefaultFilter = (userId: string | null) =>
 	userId === null ? defaultFilter() : userFilter(userId);
-const getWithBrowserCache = <K extends SettingKey>(
+const withBrowserCache = <K extends SettingKey>(
 	loading: boolean,
 	userId: string | null,
 	key: K,
+	item: SettingDocument | undefined,
 ): UserSettings[K] => {
 	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
 	// + clear own cache on logout?!
@@ -43,7 +41,6 @@ const getWithBrowserCache = <K extends SettingKey>(
 	// + warning message if cache was found on login
 	// OR maybe if not logged in and not logging in clear all cache with
 	// warning
-	const item = findOneSync(Settings, {key});
 	if (item === undefined) {
 		if (!loading && userId !== null) {
 			window.localStorage.removeItem(localStorageKey(defaultFilter(), key));
@@ -96,19 +93,25 @@ export const resetSetting = async <K extends SettingKey>(key: K) => {
 
 export const useSetting = <K extends SettingKey>(
 	key: K,
-	getFn: typeof get = get,
+	withDefaultFn: typeof withDefault = withDefault,
 ) => {
 	const userId = useUserId();
 	const loggingIn = useLoggingIn();
 	const loggingOut = useLoggingOut();
 	const isLoadingSetting = useSettingSubscription(key);
-	const loadingSetting = isLoadingSetting();
+	const loadingSettingSubscription = isLoadingSetting();
 
-	const loading = loggingIn || loggingOut || loadingSetting;
+	const loading = loggingIn || loggingOut || loadingSettingSubscription;
 
-	const value = useReactive(
-		() => getFn<K>(loading, userId, key),
-		[getFn, loading, userId, key],
+	const {loading: loadingSettingResult, result: setting} = useItem(
+		Settings,
+		{key},
+		undefined,
+		[loading, key],
+	);
+	const value = useMemo(
+		() => withDefaultFn(loading, userId, key, setting),
+		[withDefaultFn, loading, userId, key, setting],
 	);
 
 	const setValue = useCallback(
@@ -119,7 +122,7 @@ export const useSetting = <K extends SettingKey>(
 	const resetValue = useCallback(async () => resetSetting<K>(key), [key]);
 
 	return {
-		loading: loadingSetting,
+		loading: loadingSettingSubscription || loadingSettingResult,
 		value,
 		setValue,
 		resetValue,
@@ -127,12 +130,9 @@ export const useSetting = <K extends SettingKey>(
 };
 
 export const useSettingCached = <K extends SettingKey>(key: K) =>
-	useSetting<K>(key, getWithBrowserCache);
+	useSetting<K>(key, withBrowserCache);
 
 export const settings = {
 	defaults,
-	useSettingSubscription,
 	useSetting,
-	get,
-	getWithBrowserCache,
 };
