@@ -141,7 +141,7 @@
     "@babel/plugin-syntax-jsx": "7.24.7",
     "@commitlint/cli": "19.3.0",
     "@faker-js/faker": "8.4.1",
-    "@fontsource/roboto": "5.0.13",
+    "@fontsource/roboto": "5.0.14",
     "@iterable-iterator/repeat": "1.0.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "14.3.1",
