@@ -158,7 +158,7 @@
     "babel-plugin-istanbul": "7.0.0",
     "babel-plugin-transform-remove-console": "6.9.4",
     "chai": "4.5.0",
-    "dayjs": "1.11.12",
+    "dayjs": "1.11.13",
     "emoji-favicon-cli": "3.0.1",
     "eslint-config-xo-react": "0.27.0",
     "eslint-plugin-react": "7.35.0",
