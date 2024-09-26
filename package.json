@@ -140,7 +140,7 @@
     "@babel/eslint-parser": "7.25.1",
     "@babel/plugin-syntax-jsx": "7.24.7",
     "@commitlint/cli": "19.4.1",
-    "@faker-js/faker": "8.4.1",
+    "@faker-js/faker": "9.0.3",
     "@fontsource/roboto": "5.0.14",
     "@iterable-iterator/repeat": "1.0.1",
     "@testing-library/dom": "10.4.0",
