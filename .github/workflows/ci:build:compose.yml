@@ -13,12 +13,38 @@ concurrency:
 
 jobs:
 
+  list-targets:
+    name: Continuous integration (build compose list targets)
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      targets: ${{ steps.list-targets.outputs.targets }}
+
+    timeout-minutes: 1
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: List targets
+        id: list-targets
+        uses: docker/bake-action/subaction/list-targets@v4
+        with:
+          files: |
+            compose.yaml
+
   build:
     name: Continuous integration (build compose)
+
+    needs:
+      - list-targets
+
     strategy:
       matrix:
         platform:
           - ubuntu-latest
+        target: ${{ fromJson(needs.list-targets.outputs.targets) }}
 
     runs-on: ${{ matrix.platform }}
 
@@ -44,16 +70,17 @@ jobs:
         with:
           files: |
             compose.yaml
+          targets: ${{ matrix.target }}
           set: |
-            patient-web.cache-from=type=gha
-            patient-web.output=type=docker,dest=/tmp/patient-web.tar
-            patient-web.tags=patients-patient-web
+            ${{ matrix.target }}.cache-from=type=gha
+            ${{ matrix.target }}.output=type=docker,dest=/tmp/${{ matrix.target }}.tar
+            ${{ matrix.target }}.tags=patients-${{ matrix.target }}
 
       - name: Upload image
         uses: actions/upload-artifact@v4
         with:
-          name: images-patient-web
-          path: /tmp/patient-web.tar
+          name: images-${{ matrix.target }}
+          path: /tmp/${{ matrix.target }}.tar
           retention-days: 1
 
 
@@ -61,6 +88,7 @@ jobs:
     name: Continuous integration (build compose test)
 
     needs:
+      - list-targets
       - build
 
     strategy:
@@ -76,10 +104,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - name: Download image
+      - name: Download all images
         uses: actions/download-artifact@v4
         with:
-          name: images-patient-web
           path: /tmp/images
 
       - name: Set up Docker Buildx
