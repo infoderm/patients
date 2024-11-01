@@ -112,7 +112,7 @@
     "lru-cache": "^10.0.1",
     "medidoc": "1.1.0",
     "mem": "^8.1.1",
-    "meteor-node-stubs": "^1.2.5",
+    "meteor-node-stubs": "^1.2.12",
     "node-fetch": "^3.3.2",
     "notistack": "^3.0.1",
     "papaparse": "^5.4.1",
