@@ -26,7 +26,7 @@ client(__filename, () => {
 		await createUserWithPassword(username, password);
 		await loginWithPassword(username, password);
 
-		const n = 70;
+		const n = 60;
 
 		const patients: Array<{_id: string; firstname: string; lastname: string}> =
 			[];

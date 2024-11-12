@@ -2,11 +2,20 @@ import assert from 'assert';
 
 import {Meteor} from 'meteor/meteor';
 
+let prev = '';
+
 export const debugMeteorSubscriptions = () => {
 	const subscriptions = Meteor.connection._subscriptions;
-	console.debug({
-		subCount: Object.values(subscriptions).filter(Boolean).length,
-	});
+	const subs = Object.values(subscriptions).filter(Boolean);
+	const next = JSON.stringify({
+		subCount: subs.length,
+		subs: subs.map(({name, params}) => ({name, params})),
+	}, undefined, 2);
+
+	if (next !== prev) {
+		console.debug(next);
+		prev = next;
+	}
 };
 
 const subscriptionInternals = (

@@ -1,5 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 
+import {map} from '@iterable-iterator/map';
+
 import type Args from '../Args';
 
 import type Publication from './Publication';
@@ -43,6 +45,22 @@ const _parseCallbacks = <A extends Args>(
 	return [args as unknown as A[], undefined];
 };
 
+const _runCallbacks = <A extends any[], R>(run: (callback: (...args: A) => R) => R, callbacks: Iterable<(...a: A) => R>) => {
+	Promise.allSettled(map(run, callbacks))
+		.then((outcomes) => {
+			for (const outcome of outcomes) {
+				if (outcome.status === 'rejected') {
+					console.error({error: outcome.reason});
+				}
+			}
+		})
+		.catch((error: unknown) => {
+			console.error({error});
+		});
+}
+
+const _callbacks = <T>(init: T | undefined) => new Set(init === undefined ? [] : [init]);
+
 const subscribe = <A extends Args>(
 	{name}: Publication<A>,
 	...args: [...A, SubscriptionCallbacks?]
@@ -52,58 +70,35 @@ const subscribe = <A extends Args>(
 	const entry = get(key);
 	let handle: Meteor.SubscriptionHandle;
 	if (entry === undefined) {
-		const onReady = new Set(
-			callbacks?.onReady === undefined ? [] : [callbacks.onReady],
-		);
-		const onStop = new Set(
-			callbacks?.onStop === undefined ? [] : [callbacks.onStop],
-		);
+		const onReady = _callbacks(callbacks?.onReady);
+		const onStop = _callbacks(callbacks?.onStop);
 		handle = Meteor.subscribe(name, ...params, {
 			onReady() {
-				Promise.allSettled(
-					Array.from(onReady).map(async (callback) => callback()),
+				_runCallbacks(
+					async (callback) => callback(),
+					onReady,
 				)
-					.then((outcomes) => {
-						for (const outcome of outcomes) {
-							if (outcome.status === 'rejected') {
-								console.error({error: outcome.reason});
-							}
-						}
-					})
-					.catch((error: unknown) => {
-						console.error({error});
-					});
 			},
 			onStop(error: SubscriptionError) {
 				set(key, undefined);
-				Promise.allSettled(
-					Array.from(onStop).map(async (callback) => callback(error)),
+				_runCallbacks(
+					async (callback) => callback(error),
+					onStop,
 				)
-					.then((outcomes) => {
-						for (const outcome of outcomes) {
-							if (outcome.status === 'rejected') {
-								console.error({error: outcome.reason});
-							}
-						}
-					})
-					.catch((error: unknown) => {
-						console.error({error});
-					});
 			},
 		});
-		set(key, {handle, refCount: 1, onReady, onStop});
+		const internals = subscriptionInternals(handle);
+		set(key, {handle, internals, refCount: 1, onReady, onStop});
 	} else {
 		++entry.refCount;
 		handle = entry.handle;
-		const internals = subscriptionInternals(handle);
 		if (callbacks?.onReady !== undefined) {
-			if (internals.ready) {
+			if (entry.internals.ready) {
 				const maybePromise = callbacks.onReady();
-				if (maybePromise instanceof Promise) {
-					maybePromise.catch((error: unknown) => {
+				Promise.resolve(maybePromise)
+					.catch((error: unknown) => {
 						console.error({error});
 					});
-				}
 			} else {
 				entry.onReady.add(callbacks.onReady);
 			}

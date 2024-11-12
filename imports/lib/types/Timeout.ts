@@ -1,3 +1,3 @@
-type Timeout = ReturnType<typeof setTimeout>;
+type Timeout = ReturnType<typeof globalThis.setTimeout>;
 
 export default Timeout;
