@@ -19,13 +19,15 @@ const makeDebouncedResultsQuery =
 		const lastValue = useRef<U[]>(init);
 
 		const isLoading = useSubscription(publication, query);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const {results: currentValue} = useCursor(
+		const {loading: loadingResults, results: currentValue} = useCursor(
 			() => collection.find(selector, options),
 			deps,
 		);
+
+		const loading = loadingSubscription || loadingResults;
 
 		useEffect(() => {
 			if (!loading) {
