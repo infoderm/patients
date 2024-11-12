@@ -73,50 +73,44 @@ export type MergeInfo = {loading: boolean} & (
 );
 
 const useMergeInfo = (toMerge: string[]): MergeInfo => {
-	const patientsLoading = useSubscription(patientsPub, {
+	const loadingPatientsSubscription = useSubscription(patientsPub, {
 		filter: {
 			_id: {$in: toMerge},
 		},
 	});
-	const consultationsLoading = useSubscription(consultationsPub, {
+	const loadingConsultationsSubscription = useSubscription(consultationsPub, {
 		filter: {
 			patientId: {$in: toMerge},
 		},
 	});
-	const documentsLoading = useSubscription(documentsPub, {
+	const loadingDocumentsSubscription = useSubscription(documentsPub, {
 		filter: {
 			patientId: {$in: toMerge},
 		},
 	});
-	const attachmentsLoading = useSubscription(attachmentsPub, {
+	const loadingAttachmentsSubscription = useSubscription(attachmentsPub, {
 		filter: {
 			'meta.attachedToPatients': {$in: toMerge},
 		},
 	});
 
-	const loading =
-		patientsLoading() ||
-		consultationsLoading() ||
-		documentsLoading() ||
-		attachmentsLoading();
-
-	const {results: fetchedPatients} = useCursor(
+	const {loading: loadingPatientsResults, results: fetchedPatients} = useCursor(
 		() => Patients.find({_id: {$in: toMerge}}),
 		toMerge,
 	);
 
-	const {results: newConsultations} = useCursor(
+	const {loading: loadingConsultationsResults,results: newConsultations} = useCursor(
 		() =>
 			Consultations.find({patientId: {$in: toMerge}}, {sort: {datetime: -1}}),
 		toMerge,
 	);
 
-	const {results: newDocuments} = useCursor(
+	const {loading: loadingDocumentsResults, results: newDocuments} = useCursor(
 		() => Documents.find({patientId: {$in: toMerge}}, {sort: {createdAt: -1}}),
 		toMerge,
 	);
 
-	const {results: newAttachments} = useCursor(
+	const {loading: loadingAttachmentsResuts, results: newAttachments} = useCursor(
 		() =>
 			Attachments.find(
 				{'meta.attachedToPatients': {$in: toMerge}},
@@ -124,6 +118,13 @@ const useMergeInfo = (toMerge: string[]): MergeInfo => {
 			),
 		toMerge,
 	);
+
+	const loading =
+		loadingPatientsSubscription() || loadingPatientsResults ||
+		loadingConsultationsSubscription() || loadingConsultationsResults ||
+		loadingDocumentsSubscription() || loadingDocumentsResults ||
+		loadingAttachmentsSubscription() || loadingAttachmentsResuts;
+
 
 	const results = useMemo(() => {
 		const oldPatients: PatientDocument[] = [];
