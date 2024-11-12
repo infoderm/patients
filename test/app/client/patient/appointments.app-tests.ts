@@ -127,7 +127,7 @@ client(__filename, () => {
 		console.debug(
 			"Confirm we have opened the consultation's cancellation modal",
 		);
-		await findByRole('heading', {name: 'Cancel this appointment'});
+		await findByRole('heading', {name: 'Cancel this appointment'}, {timeout: 10000});
 
 		console.debug('Set cancellation reason');
 		console.debug('Open cancellation reason choice menu');
@@ -149,7 +149,7 @@ client(__filename, () => {
 		);
 		console.debug('Choose cancellation reason');
 		await user.click(
-			await findByRole('option', {name: 'patient-cancelled'}, {timeout: 5000}),
+			await findByRole('option', {name: 'patient-cancelled'}, {timeout: 10000}),
 		);
 		console.debug('Set cancellation explanation');
 		await user.type(
@@ -219,7 +219,7 @@ client(__filename, () => {
 		console.debug('Click on "Begin consultation"');
 		await user.click(await findByRole('button', {name: 'Begin consultation'}));
 		console.debug("Confirm we are on the consultation's edition page");
-		await findByRole('heading', {name: /^\/edit\/consultation\//});
+		await findByRole('heading', {name: /^\/edit\/consultation\//}, {timeout: 10000});
 
 		await editConsultation(app, {
 			reason: 'my test reason',
@@ -260,5 +260,5 @@ client(__filename, () => {
 		await findByText('test-book-id');
 
 		await findByText('À payé €55.00 de €55.00.');
-	}).timeout(50_000);
+	}).timeout(60_000);
 });

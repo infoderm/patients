@@ -1,14 +1,12 @@
 import assert from 'assert';
 
-import type Timeout from '../../lib/types/Timeout';
+import {defer, type Deferred} from '../../lib/async/defer';
 
 import type SubscriptionHandle from './SubscriptionHandle';
-import subscriptionInternals, {
-	debugMeteorSubscriptions,
-} from './subscriptionInternals';
+import { debugMeteorSubscriptions } from './subscriptionInternals';
 import {get, set} from './subscriptionRegistry';
 
-const _gcQueue = new Map<string, Timeout>();
+const _gcQueue = new Map<string, Deferred>();
 
 const stopSubscription = (
 	{key, handle, onReady, onStop}: SubscriptionHandle,
@@ -38,7 +36,7 @@ const stopSubscription = (
 
 	if (entry.refCount === 0) {
 		set(key, undefined);
-		const sub = subscriptionInternals(handle);
+		const sub = entry.internals;
 		console.debug({
 			what: 'stopSubscription',
 			msg: 'refCount === 0',
@@ -47,10 +45,10 @@ const stopSubscription = (
 			params: sub.params,
 		});
 		sub.inactive = true;
-		const queued = _gcQueue.get(sub.id);
-		if (queued) clearTimeout(queued);
+		const prev = _gcQueue.get(sub.id);
+		if (prev !== undefined) prev.cancel();
 
-		const timeout = setTimeout(() => {
+		const next = defer(() => {
 			if (sub.inactive) {
 				console.debug({
 					what: 'stopSubscription',
@@ -66,7 +64,7 @@ const stopSubscription = (
 			_gcQueue.delete(sub.id);
 		}, delay);
 
-		_gcQueue.set(sub.id, timeout);
+		_gcQueue.set(sub.id, next);
 	}
 };
 
