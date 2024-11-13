@@ -16,7 +16,7 @@ const PatientPersonalInformation = ({
 }: PatientPersonalInformationProps) => {
 	const init = {};
 	const query = {filter: {_id: patientId}};
-	const deps = [query];
+	const deps = [JSON.stringify(query)];
 
 	const {loading, found, fields: patient} = usePatient(init, query, deps);
 
