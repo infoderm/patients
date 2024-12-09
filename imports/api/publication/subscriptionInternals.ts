@@ -7,13 +7,17 @@ let prev = '';
 export const debugMeteorSubscriptions = () => {
 	const subscriptions = Meteor.connection._subscriptions;
 	const subs = Object.values(subscriptions).filter(Boolean);
-	const next = JSON.stringify({
-		subCount: subs.length,
-		subs: subs.map(({name, params}) => ({name, params})),
-	}, undefined, 2);
+	const next = JSON.stringify(
+		{
+			subCount: subs.length,
+			subs: subs.map(({name, params}) => ({name, params})),
+		},
+		undefined,
+		2,
+	);
 
 	if (next !== prev) {
-		console.debug(next);
+		// console.debug(next);
 		prev = next;
 	}
 };
