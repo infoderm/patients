@@ -107,12 +107,23 @@ export const useSetting = <K extends SettingKey>(
 		Settings,
 		{key},
 		undefined,
-		[loading, key],
+		[key],
 	);
+
 	const value = useMemo(
 		() => withDefaultFn(loading, userId, key, setting),
 		[withDefaultFn, loading, userId, key, setting],
 	);
+
+	// console.debug({
+	// key,
+	// value,
+	// loading,
+	// loggingIn,
+	// loggingOut,
+	// loadingSettingSubscription,
+	// loadingSettingResult,
+	// });
 
 	const setValue = useCallback(
 		async (newValue: UserSettings[K]) => setSetting<K>(key, newValue),

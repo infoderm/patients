@@ -3,7 +3,7 @@ import assert from 'assert';
 import {defer, type Deferred} from '../../lib/async/defer';
 
 import type SubscriptionHandle from './SubscriptionHandle';
-import { debugMeteorSubscriptions } from './subscriptionInternals';
+import {debugMeteorSubscriptions} from './subscriptionInternals';
 import {get, set} from './subscriptionRegistry';
 
 const _gcQueue = new Map<string, Deferred>();
@@ -14,10 +14,10 @@ const stopSubscription = (
 ) => {
 	const entry = get(key);
 	if (entry === undefined) {
-		console.debug({
-			what: 'stopSubscription',
-			msg: `subscription ${key} already stopped`,
-		});
+		// console.debug({
+		// what: 'stopSubscription',
+		// msg: `subscription ${key} already stopped`,
+		// });
 		return;
 	}
 
@@ -37,26 +37,26 @@ const stopSubscription = (
 	if (entry.refCount === 0) {
 		set(key, undefined);
 		const sub = entry.internals;
-		console.debug({
-			what: 'stopSubscription',
-			msg: 'refCount === 0',
-			id: sub.id,
-			name: sub.name,
-			params: sub.params,
-		});
+		// console.debug({
+		// what: 'stopSubscription',
+		// msg: 'refCount === 0',
+		// id: sub.id,
+		// name: sub.name,
+		// params: sub.params,
+		// });
 		sub.inactive = true;
 		const prev = _gcQueue.get(sub.id);
 		if (prev !== undefined) prev.cancel();
 
 		const next = defer(() => {
 			if (sub.inactive) {
-				console.debug({
-					what: 'stopSubscription',
-					msg: 'unsub',
-					id: sub.id,
-					name: sub.name,
-					params: sub.params,
-				});
+				// console.debug({
+				// what: 'stopSubscription',
+				// msg: 'unsub',
+				// id: sub.id,
+				// name: sub.name,
+				// params: sub.params,
+				// });
 				handle.stop();
 				debugMeteorSubscriptions();
 			}

@@ -30,7 +30,7 @@ const makeFindOne =
 			loading: loadingResult,
 			found,
 			result: upToDate,
-		} = useItem(collection, selector, options, [loadingSubscription, ...deps]);
+		} = useItem(collection, selector, options, deps);
 
 		const fields = {...init, ...upToDate};
 

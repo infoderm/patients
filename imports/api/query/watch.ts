@@ -114,7 +114,9 @@ const _noFullDocumentPipeline = (): Pipeline => {
 const _optionsToPipeline = (options: Options) =>
 	options.project === undefined ? [] : [{$project: options.project}];
 
-let watchCount = 0;
+let _watchStreamCount = 0;
+
+export const getWatchStreamCount = () => _watchStreamCount;
 
 const _watchStream = <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -133,14 +135,23 @@ const _watchStream = <T extends Document, U = T>(
 	];
 
 	const rawCollection = collection.rawCollection();
-	const {collectionName} = rawCollection;
 
-	console.debug({collection: collectionName, watchCount: ++watchCount});
 	const stream = rawCollection.watch(pipeline, {
 		startAtOperationTime,
 		fullDocument: 'whenAvailable',
 		fullDocumentBeforeChange: 'whenAvailable',
 		...changeStreamOptions,
+	});
+
+	let open = true;
+	++_watchStreamCount;
+	console.debug({_watchStreamCount});
+	stream.on('close', () => {
+		if (open) {
+			open = false;
+			--_watchStreamCount;
+			console.debug({_watchStreamCount});
+		}
 	});
 
 	return _groupFragments(stream);
@@ -232,28 +243,28 @@ const _watchSetup = async <T extends Document, U = T>(
 	return {init, stream: filteredStream, filterIsSuperset};
 };
 
-const _makeQueue = async () => {
-	let queued = 0;
-	let queue = new Promise((resolve) => {
+class Queue {
+	#queued = 0;
+	#queue = new Promise<void>((resolve) => {
 		resolve(undefined);
 	});
-	await queue;
 
-	const enqueue = (task: () => Promise<void> | void) => {
-		if (queued !== 0) return;
-		++queued;
-		queue = queue
+	public get length() {
+		return this.#queued;
+	}
+
+	public enqueue(task: () => Promise<void> | void) {
+		++this.#queued;
+		this.#queue = this.#queue
 			.then(async () => {
-				--queued;
+				--this.#queued;
 				return task();
 			})
 			.catch((error) => {
 				console.error({error});
 			});
-	};
-
-	return enqueue;
-};
+	}
+}
 
 type Fragment = {
 	_id: {
@@ -315,10 +326,11 @@ const _pipe = async <T extends Document, U = T>(
 	emitter: FilteredOplogHandle,
 	w: Watch<T, U>,
 ) => {
-	const enqueue = await _makeQueue();
+	const queue = new Queue();
 
 	const onEntry = debounce(() => {
-		enqueue(async () => {
+		if (queue.length > 0) return;
+		queue.enqueue(async () => {
 			const {init} = await _watchInit(
 				w.collection,
 				w.filter,
