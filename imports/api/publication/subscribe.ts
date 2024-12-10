@@ -45,7 +45,10 @@ const _parseCallbacks = <A extends Args>(
 	return [args as unknown as A[], undefined];
 };
 
-const _runCallbacks = <A extends any[], R>(run: (callback: (...args: A) => R) => R, callbacks: Iterable<(...a: A) => R>) => {
+const _runCallbacks = <A extends any[], R>(
+	run: (callback: (...args: A) => R) => R,
+	callbacks: Iterable<(...a: A) => R>,
+) => {
 	Promise.allSettled(map(run, callbacks))
 		.then((outcomes) => {
 			for (const outcome of outcomes) {
@@ -57,9 +60,10 @@ const _runCallbacks = <A extends any[], R>(run: (callback: (...args: A) => R) =>
 		.catch((error: unknown) => {
 			console.error({error});
 		});
-}
+};
 
-const _callbacks = <T>(init: T | undefined) => new Set(init === undefined ? [] : [init]);
+const _callbacks = <T>(init: T | undefined) =>
+	new Set(init === undefined ? [] : [init]);
 
 const subscribe = <A extends Args>(
 	{name}: Publication<A>,
@@ -74,17 +78,11 @@ const subscribe = <A extends Args>(
 		const onStop = _callbacks(callbacks?.onStop);
 		handle = Meteor.subscribe(name, ...params, {
 			onReady() {
-				_runCallbacks(
-					async (callback) => callback(),
-					onReady,
-				)
+				_runCallbacks(async (callback) => callback(), onReady);
 			},
 			onStop(error: SubscriptionError) {
 				set(key, undefined);
-				_runCallbacks(
-					async (callback) => callback(error),
-					onStop,
-				)
+				_runCallbacks(async (callback) => callback(error), onStop);
 			},
 		});
 		const internals = subscriptionInternals(handle);
@@ -95,10 +93,9 @@ const subscribe = <A extends Args>(
 		if (callbacks?.onReady !== undefined) {
 			if (entry.internals.ready) {
 				const maybePromise = callbacks.onReady();
-				Promise.resolve(maybePromise)
-					.catch((error: unknown) => {
-						console.error({error});
-					});
+				Promise.resolve(maybePromise).catch((error: unknown) => {
+					console.error({error});
+				});
 			} else {
 				entry.onReady.add(callbacks.onReady);
 			}

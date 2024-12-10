@@ -61,11 +61,7 @@ const usePatientsSearchResults = ({
 
 	const deps = [$search, showDead, page, perpage, refreshKey];
 
-	return useAdvancedObservedPatients(
-		concreteQuery,
-		deps,
-	);
-
+	return useAdvancedObservedPatients(concreteQuery, deps);
 };
 
 export default usePatientsSearchResults;

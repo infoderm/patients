@@ -27,7 +27,10 @@ const useEvents = (
 		...filter,
 	};
 
-	const {loading: loadingResults, results} = useCursor(() => Events.find(selector, options), deps);
+	const {loading: loadingResults, results} = useCursor(
+		() => Events.find(selector, options),
+		deps,
+	);
 
 	const loading = loadingSubscription || loadingResults;
 

@@ -7,7 +7,7 @@ import type SubscriptionError from './SubscriptionError';
 
 type MetaHandle = {
 	handle: Meteor.SubscriptionHandle;
-	internals: Meteor.InternalSubscriptionHandle,
+	internals: Meteor.InternalSubscriptionHandle;
 	refCount: number;
 	onReady: Set<() => void>;
 	onStop: Set<(error: SubscriptionError) => void>;
@@ -16,7 +16,10 @@ type MetaHandle = {
 const _registry = new Map<string, MetaHandle>();
 
 export const identify = <A extends Args>(name: string, params: A[]) =>
-	EJSON.stringify({userId: Meteor.userId(), name, params}, {indent: '', canonical: false});
+	EJSON.stringify(
+		{userId: Meteor.userId(), name, params},
+		{indent: '', canonical: false},
+	);
 
 export const get = (key: string) => _registry.get(key);
 export const set = (key: string, value: MetaHandle | undefined) => {
