@@ -88,7 +88,7 @@ const StaticConsultationCard = (props: StaticConsultationCardProps) => {
 	return (
 		<Accordion
 			defaultExpanded={defaultExpanded}
-			TransitionProps={{mountOnEnter: true, unmountOnExit: true}}
+			slotProps={{transition: {mountOnEnter: true, unmountOnExit: true}}}
 			loading={loading}
 			deleted={deleted}
 			isAppointment={isAppointment}
