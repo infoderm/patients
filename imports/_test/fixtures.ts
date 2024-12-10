@@ -5,7 +5,7 @@ import {assert, expect} from 'chai';
 
 import {Meteor} from 'meteor/meteor';
 
-import {cleanup as unmount} from '@testing-library/react';
+import {cleanup as _unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
@@ -24,6 +24,7 @@ import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
+import {_router} from '../ui/App';
 
 export {
 	default as randomId,
@@ -107,11 +108,27 @@ const forgetHistory = async () => {
 	return history.length - 1;
 };
 
+const mount = isAppTest()
+	? () => {
+			_router.navigate('/');
+	  }
+	: // eslint-disable-next-line @typescript-eslint/no-empty-function
+	  () => {};
+
+const unmount = isAppTest()
+	? () => {
+			_router.navigate('/_test/unmount');
+	  }
+	: () => {
+			_unmount();
+	  };
+
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
 		const cleanup = async () => {
 			await logout();
 			unmount();
+			mount();
 			await call(reset);
 		};
 
