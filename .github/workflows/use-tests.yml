@@ -62,6 +62,7 @@ jobs:
         with:
           name: ${{ inputs.test-target }}-${{ inputs.test-type }}-coverage
           path: .coverage
+          include-hidden-files: true
           retention-days: 1
 
   test-coverage-upload:
