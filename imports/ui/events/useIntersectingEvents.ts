@@ -27,7 +27,10 @@ const useIntersectingEvents = (
 		...filter,
 	};
 
-	const {loading: loadingResults, results} = useCursor(() => Events.find(selector, options), deps);
+	const {loading: loadingResults, results} = useCursor(
+		() => Events.find(selector, options),
+		deps,
+	);
 
 	const loading = loadingPublication || loadingResults;
 

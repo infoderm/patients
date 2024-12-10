@@ -39,7 +39,7 @@ const PatientsObservedSearchResultsPage = ({
 		showDead,
 		page,
 		perpage,
-		refreshKey
+		refreshKey,
 	});
 
 	return (

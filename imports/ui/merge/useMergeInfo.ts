@@ -99,32 +99,37 @@ const useMergeInfo = (toMerge: string[]): MergeInfo => {
 		toMerge,
 	);
 
-	const {loading: loadingConsultationsResults,results: newConsultations} = useCursor(
-		() =>
-			Consultations.find({patientId: {$in: toMerge}}, {sort: {datetime: -1}}),
-		toMerge,
-	);
+	const {loading: loadingConsultationsResults, results: newConsultations} =
+		useCursor(
+			() =>
+				Consultations.find({patientId: {$in: toMerge}}, {sort: {datetime: -1}}),
+			toMerge,
+		);
 
 	const {loading: loadingDocumentsResults, results: newDocuments} = useCursor(
 		() => Documents.find({patientId: {$in: toMerge}}, {sort: {createdAt: -1}}),
 		toMerge,
 	);
 
-	const {loading: loadingAttachmentsResuts, results: newAttachments} = useCursor(
-		() =>
-			Attachments.find(
-				{'meta.attachedToPatients': {$in: toMerge}},
-				{sort: {'meta.createdAt': -1}},
-			),
-		toMerge,
-	);
+	const {loading: loadingAttachmentsResuts, results: newAttachments} =
+		useCursor(
+			() =>
+				Attachments.find(
+					{'meta.attachedToPatients': {$in: toMerge}},
+					{sort: {'meta.createdAt': -1}},
+				),
+			toMerge,
+		);
 
 	const loading =
-		loadingPatientsSubscription() || loadingPatientsResults ||
-		loadingConsultationsSubscription() || loadingConsultationsResults ||
-		loadingDocumentsSubscription() || loadingDocumentsResults ||
-		loadingAttachmentsSubscription() || loadingAttachmentsResuts;
-
+		loadingPatientsSubscription() ||
+		loadingPatientsResults ||
+		loadingConsultationsSubscription() ||
+		loadingConsultationsResults ||
+		loadingDocumentsSubscription() ||
+		loadingDocumentsResults ||
+		loadingAttachmentsSubscription() ||
+		loadingAttachmentsResuts;
 
 	const results = useMemo(() => {
 		const oldPatients: PatientDocument[] = [];

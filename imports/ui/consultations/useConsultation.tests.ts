@@ -2,9 +2,13 @@ import {renderHook, waitFor} from '@testing-library/react';
 
 import {assert} from 'chai';
 
-import {client, randomId, randomPassword, randomUserId} from '../../_test/fixtures';
+import {
+	client,
+	randomId,
+	randomPassword,
+	randomUserId,
+} from '../../_test/fixtures';
 
-import useConsultation from './useConsultation';
 import createUserWithPassword from '../../api/user/createUserWithPassword';
 import loginWithPassword from '../../api/user/loginWithPassword';
 import {newConsultationFormData} from '../../api/_dev/populate/consultations';
@@ -14,14 +18,18 @@ import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import consultationsInsert from '../../api/endpoint/consultations/insert';
 
+import useConsultation from './useConsultation';
+
 client(__filename, () => {
 	it('should render when logged out', async () => {
 		const consultationId = randomId();
-		const {result} = renderHook(() => useConsultation({}, {filter: {_id: consultationId}}, [consultationId]));
+		const {result} = renderHook(() =>
+			useConsultation({}, {filter: {_id: consultationId}}, [consultationId]),
+		);
 		assert.deepEqual(result.current, {
 			loading: true,
 			found: false,
-			fields: {}
+			fields: {},
 		});
 
 		await waitFor(() => {
@@ -31,7 +39,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			found: false,
-			fields: {}
+			fields: {},
 		});
 	});
 
@@ -42,11 +50,13 @@ client(__filename, () => {
 		await loginWithPassword(username, password);
 
 		const consultationId = randomId();
-		const {result} = renderHook(() => useConsultation({}, {filter: {_id: consultationId}}, [consultationId]));
+		const {result} = renderHook(() =>
+			useConsultation({}, {filter: {_id: consultationId}}, [consultationId]),
+		);
 		assert.deepEqual(result.current, {
 			loading: true,
 			found: false,
-			fields: {}
+			fields: {},
 		});
 
 		await waitFor(() => {
@@ -56,7 +66,7 @@ client(__filename, () => {
 		assert.deepEqual(result.current, {
 			loading: false,
 			found: false,
-			fields: {}
+			fields: {},
 		});
 	});
 
@@ -98,7 +108,7 @@ client(__filename, () => {
 				more: '<more>',
 				price: 123,
 				paid: 5,
-				book: '4'
+				book: '4',
 			}),
 		);
 		await call(
@@ -106,7 +116,9 @@ client(__filename, () => {
 			newConsultationFormData({patientId: patientBId}),
 		);
 
-		const {result} = renderHook(() => useConsultation({}, {filter: {_id: consultationId}}, [consultationId]));
+		const {result} = renderHook(() =>
+			useConsultation({}, {filter: {_id: consultationId}}, [consultationId]),
+		);
 
 		await waitFor(() => {
 			assert(!result.current.loading);
@@ -126,7 +138,7 @@ client(__filename, () => {
 			more: '<more>',
 			price: 123,
 			paid: 5,
-			book: '4'
+			book: '4',
 		});
 	});
 });
