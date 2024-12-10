@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {BrowserRouter} from 'react-router-dom';
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	useNavigate,
+	type NavigateFunction,
+	type Path,
+} from 'react-router-dom';
 
 import {CacheProvider} from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -9,6 +16,8 @@ import {ThemeProvider} from '@mui/material/styles';
 import {SnackbarProvider} from 'notistack';
 
 import CssBaseline from '@mui/material/CssBaseline';
+
+import isTest from '../app/isTest';
 
 import DateTimeLocalizationProvider from './i18n/DateTimeLocalizationProvider';
 import CustomWholeWindowDropZone from './input/CustomWholeWindowDropZone';
@@ -24,11 +33,40 @@ export const muiCache = createCache({
 	prepend: true,
 });
 
+export const _router: {navigate: NavigateFunction} = {
+	navigate(_to: Partial<Path> | string | number) {
+		console.warn('Using unitialized test-only _navigate function call.');
+	},
+};
+
+const WithTestRoutes = ({children}) => {
+	_router.navigate = useNavigate();
+	return (
+		<Routes>
+			<Route
+				element={<div>test-only unmount route</div>}
+				path="/_test/unmount"
+			/>
+			<Route element={{...children}} path="*" />
+		</Routes>
+	);
+};
+
+const Router = isTest()
+	? ({children}) => {
+			return (
+				<BrowserRouter>
+					<WithTestRoutes>{children}</WithTestRoutes>
+				</BrowserRouter>
+			);
+	  }
+	: BrowserRouter;
+
 const App = () => {
 	const theme = useUserTheme();
 
 	return (
-		<BrowserRouter>
+		<Router>
 			<DateTimeLocalizationProvider>
 				<CacheProvider value={muiCache}>
 					<ThemeProvider theme={theme}>
@@ -47,7 +85,7 @@ const App = () => {
 					</ThemeProvider>
 				</CacheProvider>
 			</DateTimeLocalizationProvider>
-		</BrowserRouter>
+		</Router>
 	);
 };
 
