@@ -32,7 +32,7 @@ const makeCachedFindOne =
 			loading: loadingResult,
 			found,
 			result: upToDate,
-		} = useItem(collection, selector, options, [loadingSubscription, ...deps]);
+		} = useItem(collection, selector, options, deps);
 
 		const fields = {...ref.current, ...upToDate};
 		ref.current = fields;
