@@ -1,3 +1,4 @@
+import {map} from '@iterable-iterator/map';
 import {range} from '@iterable-iterator/range';
 
 import React, {StrictMode} from 'react';
@@ -28,16 +29,15 @@ client(__filename, () => {
 
 		const n = 60;
 
-		const patients: Array<{_id: string; firstname: string; lastname: string}> =
-			[];
+		const patients = await Promise.all(
+			map(async () => {
+				const fields = newPatientFormData();
 
-		for (const _ of range(n)) {
-			const fields = newPatientFormData();
-			// eslint-disable-next-line no-await-in-loop
-			const _id = await call(patientsInsert, fields);
-			const {firstname, lastname} = fields;
-			patients.push({_id, firstname, lastname});
-		}
+				const _id = await call(patientsInsert, fields);
+				const {firstname, lastname} = fields;
+				return {_id, firstname, lastname};
+			}, range(n)),
+		);
 
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const onClick = () => {};
