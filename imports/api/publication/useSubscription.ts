@@ -19,7 +19,11 @@ const useSubscriptionClient = <A extends Args>(
 	const deps = [setLoading, publication, JSON.stringify(args)];
 
 	useEffect(() => {
-		if (!publication) return undefined;
+		if (!publication) {
+			setLoading(true);
+			return undefined;
+		}
+
 		const id = {};
 		handleRef.current = id;
 		const setNotLoading = () => {
