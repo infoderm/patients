@@ -35,7 +35,6 @@ const stopSubscription = (
 	}
 
 	if (entry.refCount === 0) {
-		set(key, undefined);
 		const sub = entry.internals;
 		// console.debug({
 		// what: 'stopSubscription',
@@ -57,6 +56,7 @@ const stopSubscription = (
 				// name: sub.name,
 				// params: sub.params,
 				// });
+				set(key, undefined);
 				handle.stop();
 				debugMeteorSubscriptions();
 			}
