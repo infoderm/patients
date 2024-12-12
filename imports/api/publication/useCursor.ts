@@ -9,7 +9,7 @@ const useCursor = <T extends Document, U = T>(
 	factory: () => Cursor<T, U> | null,
 	deps: DependencyList,
 ): {loading: boolean; results: U[]} => {
-	return useFind(factory, deps) ?? [];
+	return useFind(factory, deps);
 };
 
 export default useCursor;
