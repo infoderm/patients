@@ -30,7 +30,6 @@ const stopSubscription = (
 	}
 
 	if (entry.refCount === 0) {
-		set(key, undefined);
 		const sub = entry.internals;
 		sub.inactive = true;
 		const prev = _gcQueue.get(sub.id);
@@ -38,6 +37,7 @@ const stopSubscription = (
 
 		const next = defer(() => {
 			if (sub.inactive) {
+				set(key, undefined);
 				handle.stop();
 			}
 
