@@ -90,6 +90,7 @@ const subscribe = <A extends Args>(
 	} else {
 		++entry.refCount;
 		handle = entry.handle;
+		entry.internals.inactive = false;
 		if (callbacks?.onReady !== undefined) {
 			if (entry.internals.ready) {
 				const maybePromise = callbacks.onReady();
