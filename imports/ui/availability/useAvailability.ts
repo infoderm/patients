@@ -30,10 +30,13 @@ const useAvailability = (
 		...filter,
 	} as Selector<SlotDocument>;
 
-	const results = useCursor(() => Availability.find(selector, options), deps);
+	const {loading, results} = useCursor(
+		() => Availability.find(selector, options),
+		deps,
+	);
 
 	return {
-		loading: isLoading(),
+		loading: isLoading() || loading,
 		results: publication ? results : [],
 	};
 };

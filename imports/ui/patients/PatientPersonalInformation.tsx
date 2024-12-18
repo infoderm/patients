@@ -16,7 +16,7 @@ const PatientPersonalInformation = ({
 }: PatientPersonalInformationProps) => {
 	const init = {};
 	const query = {filter: {_id: patientId}};
-	const deps = [query];
+	const deps = [patientId];
 
 	const {loading, found, fields: patient} = usePatient(init, query, deps);
 
@@ -26,7 +26,9 @@ const PatientPersonalInformation = ({
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	return <PatientPersonalInformationStatic patient={patient} />;
+	return (
+		<PatientPersonalInformationStatic found loading={false} patient={patient} />
+	);
 };
 
 export default PatientPersonalInformation;

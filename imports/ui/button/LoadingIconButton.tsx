@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {type MutableRefObject} from 'react';
 
 import {styled} from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -67,7 +67,7 @@ const Progress = styled(CircularProgress)(({size}: {size: number}) => ({
 
 const DEFAULT_SIZE = 'medium';
 
-const LoadingIconButton = React.forwardRef(
+const LoadingIconButton = React.forwardRef<unknown>(
 	(
 		{
 			loading = false,
@@ -81,8 +81,8 @@ const LoadingIconButton = React.forwardRef(
 		return (
 			<Box>
 				<IconButton
-					ref={ref}
-					component={component}
+					ref={ref as MutableRefObject<HTMLButtonElement>}
+					component={component as 'button'}
 					disabled={loading || disabled}
 					size={size}
 					{...rest}

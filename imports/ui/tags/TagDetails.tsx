@@ -1,4 +1,4 @@
-import React, {type DependencyList, useState} from 'react';
+import React, {type DependencyList} from 'react';
 
 import Typography from '@mui/material/Typography';
 
@@ -6,6 +6,7 @@ import Center from '../grid/Center';
 import Loading from '../navigation/Loading';
 import NoContent from '../navigation/NoContent';
 import type GenericQueryHook from '../../api/GenericQueryHook';
+import useRandom from '../hooks/useRandom';
 
 const ListWithHeader = ({name, Card, List, useItem, listProps}) => {
 	const {loading, item} = useItem(name, [name]);
@@ -73,10 +74,7 @@ const TagDetails = <T,>(props: Props<T>) => {
 		limit: perpage,
 	};
 
-	const [refreshKey, setRefreshKey] = useState(Math.random());
-	const refresh = () => {
-		setRefreshKey(Math.random());
-	};
+	const [refreshKey, refresh] = useRandom();
 
 	const {loading, results, dirty} = useParents(query, [
 		name,

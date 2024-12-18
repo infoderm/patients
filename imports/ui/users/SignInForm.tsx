@@ -1,37 +1,44 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 
 import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+import useUniqueId from '../hooks/useUniqueId';
 
 import LoginPopover from './LoginPopover';
 import RegisterPopover from './RegisterPopover';
 
 const SignInForm = () => {
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+	const anchorRef = useRef(null);
+	const anchorEl = anchorRef.current;
 	const [mode, setMode] = useState('choice');
 
-	const handleClick = (event) => {
+	const handleClick = () => {
 		setMode('login');
-		setAnchorEl(event.currentTarget);
+	};
+
+	const changeMode = (newMode: 'choice' | 'login' | 'register') => {
+		setMode(newMode);
 	};
 
 	const handleClose = () => {
-		setAnchorEl(null);
+		setMode('choice');
 	};
 
-	const changeMode = (newmode) => {
-		setMode(newmode);
-	};
+	const signInFormId = useUniqueId('signInForm');
+	const loginPopoverId = `${signInFormId}-login`;
+	const registerPopoverId = `${signInFormId}-register`;
 
 	return (
 		<div>
 			<Button
+				ref={anchorRef}
 				aria-owns={
-					anchorEl
-						? mode === 'login'
-							? 'login-popover'
-							: 'register-popover'
-						: undefined
+					anchorEl === null
+						? undefined
+						: mode === 'login'
+						? 'login-popover'
+						: 'register-popover'
 				}
 				aria-haspopup="true"
 				style={{color: 'inherit'}}
@@ -40,17 +47,22 @@ const SignInForm = () => {
 			>
 				Sign in
 			</Button>
-			{mode === 'login' ? (
+			{anchorEl !== null && mode === 'login' && (
 				<LoginPopover
-					anchorEl={anchorEl!}
-					handleClose={handleClose}
+					open
+					id={loginPopoverId}
+					anchorEl={anchorEl}
 					changeMode={changeMode}
+					handleClose={handleClose}
 				/>
-			) : (
+			)}
+			{anchorEl !== null && mode === 'register' && (
 				<RegisterPopover
-					anchorEl={anchorEl!}
-					handleClose={handleClose}
+					open
+					id={registerPopoverId}
+					anchorEl={anchorEl}
 					changeMode={changeMode}
+					handleClose={handleClose}
 				/>
 			)}
 		</div>

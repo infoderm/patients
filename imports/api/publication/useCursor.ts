@@ -1,14 +1,15 @@
 import {type DependencyList} from 'react';
-import {useFind} from 'meteor/react-meteor-data';
+
+import type Document from '../Document';
 
 import type Cursor from './Cursor';
+import useFind from './useFind';
 
-const useCursor = <T, U = T>(
-	factory: () => Cursor<T, U> | undefined | null,
+const useCursor = <T extends Document, U = T>(
+	factory: () => Cursor<T, U> | null,
 	deps: DependencyList,
-): U[] => {
-	// @ts-expect-error useFind types are wrong or incomplete.
-	return useFind(factory, deps) ?? [];
+): {loading: boolean; results: U[]} => {
+	return useFind(factory, deps);
 };
 
 export default useCursor;

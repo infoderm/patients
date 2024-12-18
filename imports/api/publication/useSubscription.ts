@@ -1,33 +1,52 @@
 import {Meteor} from 'meteor/meteor';
-import {Tracker} from 'meteor/tracker';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
 import useChanged from '../../ui/hooks/useChanged';
 
 import type Args from '../Args';
 
-import subscribe from './subscribe';
 import type Publication from './Publication';
+import stopSubscription from './stopSubscription';
+import subscribe from './subscribe';
 
 const useSubscriptionClient = <A extends Args>(
 	publication?: Publication<A> | null,
 	...args: A
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
+	const handleRef = useRef<any>(null);
 
-	const deps = [publication, JSON.stringify(args)];
+	const deps = [setLoading, publication, JSON.stringify(args)];
 
 	useEffect(() => {
-		const computation = Tracker.nonreactive(() =>
-			Tracker.autorun(() => {
-				const ready = !publication || subscribe(publication, ...args).ready();
-				setLoading(!ready);
-			}),
-		);
+		if (!publication) {
+			setLoading(true);
+			return undefined;
+		}
 
-		// Stop the computation on when publication changes or unmount.
+		const id = {};
+		handleRef.current = id;
+		const setNotLoading = () => {
+			if (handleRef.current === id) setLoading(false);
+		};
+
+		const callbacks = {
+			onReady: setNotLoading,
+			onStop: setNotLoading,
+			onError: setNotLoading,
+		};
+
+		const handle = subscribe(publication, ...args, callbacks);
+
+		// NOTE `setLoading(true)` is called:
+		//   - on first execution,
+		//   - on subsequent executions, if the subscription is not ready yet
+		//     (e.g. double-render in strict mode in development, concurrent mode)
+		//   - when restarting a stopped or errored subscription
+		setLoading(!handle.handle.ready());
+
 		return () => {
-			computation.stop();
+			stopSubscription(handle);
 		};
 	}, deps);
 

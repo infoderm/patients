@@ -23,6 +23,9 @@ type Props = {
 };
 
 const HealthOneReportContents = ({document}: Props) => {
+	// TODO: Change type expectations and display loading indicator.
+	if (document.text === undefined) return null;
+
 	return (
 		<Root>
 			<StyledPaper>{document.text.join('\n').trim()}</StyledPaper>

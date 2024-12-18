@@ -14,7 +14,7 @@ const addTooltip = (
 	React.forwardRef(({tooltip, ...rest}: Props<typeof Component>, ref) => {
 		const title = transform(rest, tooltip);
 
-		return title ? (
+		return title !== undefined ? (
 			<Tooltip title={title}>
 				<Component ref={ref} {...rest} />
 			</Tooltip>

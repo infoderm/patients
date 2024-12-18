@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 
 import startOfToday from 'date-fns/startOfToday';
+
+import removeUndefinedValuesFromArray from '../../lib/array/removeUndefined';
+import removeUndefinedValuesFromObject from '../../lib/object/removeUndefined';
 
 import usePatient from '../patients/usePatient';
 
@@ -18,6 +21,32 @@ type Props = {
 	readonly patientId: string;
 };
 
+const _sort = {datetime: -1} as const;
+
+const _filter = (patientId: string, {showCancelled, showNoShow}) => {
+	return {
+		patientId,
+		isDone: false,
+		$or: removeUndefinedValuesFromArray([
+			removeUndefinedValuesFromObject({
+				isCancelled: {
+					$in: [false, null!],
+				},
+				scheduledDatetime: showNoShow
+					? undefined
+					: {
+							$ge: startOfToday(), // TODO make reactive?
+					  },
+			}),
+			showCancelled
+				? {
+						isCancelled: true,
+				  }
+				: undefined,
+		]),
+	};
+};
+
 const AppointmentsForPatient = ({patientId}: Props) => {
 	const [showCancelled, setShowCancelled] = useState(true);
 	const [showNoShow, setShowNoShow] = useState(true);
@@ -28,6 +57,11 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 		[patientId],
 	);
 
+	const filter = useMemo(
+		() => _filter(patientId, {showCancelled, showNoShow}),
+		[patientId, showCancelled, showNoShow],
+	);
+
 	if (loading) {
 		return <Loading />;
 	}
@@ -36,48 +70,12 @@ const AppointmentsForPatient = ({patientId}: Props) => {
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	const $or: Array<{
-		isCancelled: boolean | {$in: boolean[]};
-		scheduledDatetime?: {$gt: Date};
-	}> = [
-		{
-			isCancelled: {
-				$in: [false, null!],
-			},
-			scheduledDatetime: {
-				$gt: startOfToday(), // TODO make reactive?
-			},
-		},
-	];
-
-	const filter = {
-		patientId,
-		isDone: false,
-		$or,
-	};
-
-	if (showCancelled) {
-		$or.push({
-			isCancelled: true,
-		});
-	}
-
-	if (showNoShow) {
-		$or.push({
-			isCancelled: {
-				$in: [false, null!],
-			},
-		});
-	}
-
-	const sort = {datetime: -1};
-
 	return (
 		<>
 			<ConsultationsPager
 				defaultExpandedFirst
 				filter={filter}
-				sort={sort}
+				sort={_sort}
 				perpage={5}
 			/>
 			<ManageConsultationsForPatientButton

@@ -3,10 +3,14 @@ import 'regenerator-runtime/runtime.js';
 
 import {assert, expect} from 'chai';
 
-import {cleanup as unmount} from '@testing-library/react';
+import {Meteor} from 'meteor/meteor';
+
+import {cleanup as _unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+// eslint-disable-next-line import/no-unassigned-import
+import '../api/endpoint/_dev/_disableRateLimiting';
 import logout from '../api/user/logout';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
@@ -16,6 +20,8 @@ import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
+import {_router} from '../ui/App';
+import {getWatchStreamCount} from '../api/query/watch';
 
 export {
 	default as randomId,
@@ -77,17 +83,43 @@ const forgetHistory = async () => {
 	return history.length - 1;
 };
 
+const mount = isAppTest()
+	? () => {
+			_router.navigate('/');
+	  }
+	: // eslint-disable-next-line @typescript-eslint/no-empty-function
+	  () => {};
+
+const unmount = isAppTest()
+	? () => {
+			_router.navigate('/_test/unmount');
+	  }
+	: () => {
+			_unmount();
+	  };
+
+const assertChangeStreamWatchersAreOff = () => {
+	const n = getWatchStreamCount();
+	if (n !== 0) {
+		console.warn(`ChangeStream watch count is different from 0 (got ${n})!`);
+	}
+};
+
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
 		const cleanup = async () => {
 			await logout();
 			unmount();
+			assertChangeStreamWatchersAreOff();
+			mount();
 			await call(reset);
 		};
 
 		let original;
 
 		const prepare = async () => {
+			// @ts-expect-error TODO
+			await import('./mocha.css');
 			await import('../../client/polyfill');
 
 			original = await forgetHistory();
@@ -174,23 +206,71 @@ export const dropId = ({_id, ...rest}) => {
 
 export const dropIds = (x) => x.map(dropId);
 
-export const create = (template, extra) => {
-	if (typeof template === 'function') return extra ?? template();
+export const dropOwner = ({owner, ...rest}) => {
+	assert(typeof owner === 'string');
+	return rest;
+};
+
+export const dropOwners = (x) => x.map(dropOwner);
+
+type Created<T> = T extends {[K in keyof T]: T[K]}
+	? {[K in keyof T]: Created<T[K]>}
+	: T extends () => any
+	? ReturnType<T>
+	: never;
+
+type Extra<T> = T extends any[]
+	? Created<T>
+	: T extends {[K in keyof T]: T[K]}
+	? Partial<Created<T>>
+	: T extends () => any
+	? ReturnType<T>
+	: never;
+
+export function create<T extends () => any>(
+	template: T,
+	extra?: Extra<T>,
+	hasExtra?: boolean,
+): Created<T>;
+export function create<T extends {[K in keyof T]: T[K]}>(
+	template: T,
+	extra?: Extra<T>,
+	hasExtra?: boolean,
+): Created<T>;
+
+export function create<T>(
+	template: T,
+	extra?: Extra<T>,
+	hasExtra?: boolean,
+): Created<T> {
+	if (typeof template === 'function') return hasExtra ? extra : template();
 	if (Array.isArray(template)) {
-		return template
-			.map((x, i) => create(x, extra?.[i]))
-			.concat(extra?.slice(template.length) ?? []);
+		return (template as Array<T[keyof T]>)
+			.map((x, i) =>
+				create(
+					x,
+					extra?.[i],
+					Object.prototype.hasOwnProperty.call(extra ?? [], i),
+				),
+			)
+			.concat(extra?.slice(template.length) ?? []) as Created<T>;
 	}
 
 	return Object.fromEntries(
 		(extra === undefined ? [] : Object.entries(extra)).concat(
-			Object.entries(template).map(([key, value]) => [
-				key,
-				create(value, extra?.[key]),
-			]),
+			Object.entries(template as {[K in keyof T]: T[K]}).map(
+				<V>([key, value]: [string, V]) => [
+					key,
+					create(
+						value,
+						extra?.[key],
+						Object.prototype.hasOwnProperty.call(extra ?? {}, key),
+					),
+				],
+			),
 		),
-	);
-};
+	) as Created<T>;
+}
 
 export const findOneOrThrow = async <T extends Document, U = T>(
 	collection: Collection<T, U>,
@@ -204,4 +284,7 @@ export const findOneOrThrow = async <T extends Document, U = T>(
 	return result!;
 };
 
-export const makeTemplate = (template) => (extra?) => create(template, extra);
+export const makeTemplate = (template) => (extra?) =>
+	create(template, extra, extra !== undefined);
+
+export const isNode = () => Meteor.isServer;
