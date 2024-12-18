@@ -115,6 +115,7 @@ const _optionsToPipeline = (options: Options) =>
 	options.project === undefined ? [] : [{$project: options.project}];
 
 let _watchStreamCount = 0;
+let _maxWatchStreamCount = 0;
 
 export const getWatchStreamCount = () => _watchStreamCount;
 
@@ -145,12 +146,14 @@ const _watchStream = <T extends Document, U = T>(
 
 	let open = true;
 	++_watchStreamCount;
-	console.debug({_watchStreamCount});
+	if (_watchStreamCount > _maxWatchStreamCount) {
+		_maxWatchStreamCount = _watchStreamCount;
+		console.debug({_watchStreamCount});
+	}
 	stream.on('close', () => {
 		if (open) {
 			open = false;
 			--_watchStreamCount;
-			console.debug({_watchStreamCount});
 		}
 	});
 

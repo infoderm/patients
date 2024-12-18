@@ -20,6 +20,9 @@ import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
+import sleep from '../lib/async/sleep';
+import {_navigate} from '../ui/App';
+import {getWatchStreamCount} from '../api/query/watch';
 
 export {
 	default as randomId,
@@ -86,6 +89,13 @@ export const client = (title, fn) => {
 		const cleanup = async () => {
 			await logout();
 			unmount();
+			_navigate('/_test/reset')
+			await sleep(5);
+			const n = getWatchStreamCount();
+			if (n !== 0) {
+				console.warn(`ChangeStream watch count is different from 0 (got ${n})!`);
+			}
+			_navigate('/')
 			await call(reset);
 		};
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -84,16 +84,20 @@ const OfflineOnlineToggle = ({onSuccess}: OfflineOnlineToggleProps) => {
 	}
 };
 
+type Mode = 'choice' | 'options' | 'change-password';
+
 type OptionsPopoverProps = {
 	readonly id: string;
-	readonly anchorEl?: HTMLElement | null;
+	readonly anchorEl: HTMLElement;
+	readonly open: boolean;
 	readonly handleClose: () => void;
-	readonly changeMode: (mode: string) => void;
+	readonly changeMode: (mode: Mode) => void;
 };
 
 const OptionsPopover = ({
 	id,
 	anchorEl,
+	open,
 	handleClose,
 	changeMode,
 }: OptionsPopoverProps) => {
@@ -105,7 +109,7 @@ const OptionsPopover = ({
 		<Menu
 			id={id}
 			anchorEl={anchorEl}
-			open={Boolean(anchorEl)}
+			open={open}
 			onClose={handleClose}
 		>
 			<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
@@ -116,20 +120,20 @@ const OptionsPopover = ({
 };
 
 const Dashboard = ({currentUser}) => {
-	const [mode, setMode] = useState('options');
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+	const anchorRef = useRef(null);
+	const anchorEl = anchorRef.current;
+	const [mode, setMode] = useState<Mode>('choice');
 
-	const handleClick = (event) => {
+	const handleClick = () => {
 		setMode('options');
-		setAnchorEl(event.currentTarget);
+	};
+
+	const changeMode = (newMode: Mode) => {
+		setMode(newMode);
 	};
 
 	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const changeMode = (newMode) => {
-		setMode(newMode);
+		setMode('choice');
 	};
 
 	const dashboardId = useUniqueId('dashboard');
@@ -139,6 +143,7 @@ const Dashboard = ({currentUser}) => {
 	return (
 		<div>
 			<Button
+				ref={anchorRef}
 				aria-controls={
 					anchorEl
 						? mode === 'options'
@@ -147,24 +152,28 @@ const Dashboard = ({currentUser}) => {
 						: undefined
 				}
 				aria-haspopup="true"
-				aria-expanded={anchorEl ? 'true' : undefined}
+				aria-expanded={anchorEl === null ? undefined : 'true'}
 				style={{color: 'inherit'}}
 				endIcon={<AccountCircleIcon />}
 				onClick={handleClick}
 			>
 				Logged in as {currentUser.username}
 			</Button>
-			<OptionsPopover
+			{anchorEl !== null && (
+				<OptionsPopover
 				id={optionsPopoverId}
-				anchorEl={mode === 'options' ? anchorEl : undefined}
-				handleClose={handleClose}
+				anchorEl={anchorEl}
+				open={mode === 'options'}
 				changeMode={changeMode}
-			/>
-			<ChangePasswordPopover
-				id={changePasswordPopoverId}
-				anchorEl={mode === 'options' ? undefined : anchorEl}
 				handleClose={handleClose}
-			/>
+			/>)}
+			{anchorEl !== null && mode === 'change-password' && (
+				<ChangePasswordPopover
+				id={changePasswordPopoverId}
+				anchorEl={anchorEl}
+				open={true}
+				handleClose={handleClose}
+			/>)}
 		</div>
 	);
 };

@@ -16,7 +16,7 @@ const PatientPersonalInformation = ({
 }: PatientPersonalInformationProps) => {
 	const init = {};
 	const query = {filter: {_id: patientId}};
-	const deps = [JSON.stringify(query)];
+	const deps = [patientId];
 
 	const {loading, found, fields: patient} = usePatient(init, query, deps);
 
@@ -26,7 +26,7 @@ const PatientPersonalInformation = ({
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	return <PatientPersonalInformationStatic patient={patient} />;
+	return <PatientPersonalInformationStatic loading={false} found={true} patient={patient} />;
 };
 
 export default PatientPersonalInformation;
