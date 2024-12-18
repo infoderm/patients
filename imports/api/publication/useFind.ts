@@ -1,7 +1,13 @@
 import assert from 'assert';
 
 import {type Mongo} from 'meteor/mongo';
-import {useMemo, useEffect, type DependencyList, useState, useDeferredValue} from 'react';
+import {
+	useMemo,
+	useEffect,
+	type DependencyList,
+	useState,
+	useDeferredValue,
+} from 'react';
 
 import type Document from '../Document';
 
@@ -101,7 +107,9 @@ const useFindClient = <T extends Document, U = T>(
 		};
 	}, [cursor]);
 
-	return useDeferredValue(useMemo(() => ({loading, results}), [loading, results]));
+	return useDeferredValue(
+		useMemo(() => ({loading, results}), [loading, results]),
+	);
 };
 
 const useFind = useFindClient;

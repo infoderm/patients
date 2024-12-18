@@ -18,14 +18,20 @@ type Props = {
 	readonly changeMode: (mode: 'choice' | 'login' | 'register') => void;
 };
 
-const RegisterPopover = ({id, anchorEl, open, handleClose, changeMode}: Props) => {
+const RegisterPopover = ({
+	id,
+	anchorEl,
+	open,
+	handleClose,
+	changeMode,
+}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorUsername, setErrorUsername] = useState('');
 	const [errorPassword, setErrorPassword] = useState('');
 
-	const register = async (event: {preventDefault: () => void;}) => {
+	const register = async (event: {preventDefault: () => void}) => {
 		event.preventDefault();
 		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 		feedback('Creating account...', {

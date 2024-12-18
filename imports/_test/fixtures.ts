@@ -5,7 +5,7 @@ import {assert, expect} from 'chai';
 
 import {Meteor} from 'meteor/meteor';
 
-import {cleanup as unmount} from '@testing-library/react';
+import {cleanup as _unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
@@ -20,8 +20,7 @@ import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
-import sleep from '../lib/async/sleep';
-import {_navigate} from '../ui/App';
+import {_router} from '../ui/App';
 import {getWatchStreamCount} from '../api/query/watch';
 
 export {
@@ -84,18 +83,35 @@ const forgetHistory = async () => {
 	return history.length - 1;
 };
 
+const mount = isAppTest()
+	? () => {
+			_router.navigate('/');
+	  }
+	: // eslint-disable-next-line @typescript-eslint/no-empty-function
+	  () => {};
+
+const unmount = isAppTest()
+	? () => {
+			_router.navigate('/_test/unmount');
+	  }
+	: () => {
+			_unmount();
+	  };
+
+const assertChangeStreamWatchersAreOff = () => {
+	const n = getWatchStreamCount();
+	if (n !== 0) {
+		console.warn(`ChangeStream watch count is different from 0 (got ${n})!`);
+	}
+};
+
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
 		const cleanup = async () => {
 			await logout();
 			unmount();
-			_navigate('/_test/reset')
-			await sleep(5);
-			const n = getWatchStreamCount();
-			if (n !== 0) {
-				console.warn(`ChangeStream watch count is different from 0 (got ${n})!`);
-			}
-			_navigate('/')
+			assertChangeStreamWatchersAreOff();
+			mount();
 			await call(reset);
 		};
 

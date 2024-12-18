@@ -106,12 +106,7 @@ const OptionsPopover = ({
 	};
 
 	return (
-		<Menu
-			id={id}
-			anchorEl={anchorEl}
-			open={open}
-			onClose={handleClose}
-		>
+		<Menu id={id} anchorEl={anchorEl} open={open} onClose={handleClose}>
 			<MenuItem onClick={handleModeChangePassword}>Change password</MenuItem>
 			<Logout />
 			<OfflineOnlineToggle onSuccess={handleClose} />
@@ -161,19 +156,21 @@ const Dashboard = ({currentUser}) => {
 			</Button>
 			{anchorEl !== null && (
 				<OptionsPopover
-				id={optionsPopoverId}
-				anchorEl={anchorEl}
-				open={mode === 'options'}
-				changeMode={changeMode}
-				handleClose={handleClose}
-			/>)}
+					id={optionsPopoverId}
+					anchorEl={anchorEl}
+					open={mode === 'options'}
+					changeMode={changeMode}
+					handleClose={handleClose}
+				/>
+			)}
 			{anchorEl !== null && mode === 'change-password' && (
 				<ChangePasswordPopover
-				id={changePasswordPopoverId}
-				anchorEl={anchorEl}
-				open={true}
-				handleClose={handleClose}
-			/>)}
+					open
+					id={changePasswordPopoverId}
+					anchorEl={anchorEl}
+					handleClose={handleClose}
+				/>
+			)}
 		</div>
 	);
 };

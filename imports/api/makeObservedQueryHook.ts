@@ -63,15 +63,17 @@ const makeObservedQueryHook =
 			};
 		}, deps);
 
-		return query === null ? {
-			loading: false,
-			results: [],
-			dirty: false,
-		} : {
-			loading: effectWillTrigger || loading,
-			results,
-			dirty: !effectWillTrigger && dirty,
-		};
+		return query === null
+			? {
+					loading: false,
+					results: [],
+					dirty: false,
+			  }
+			: {
+					loading: effectWillTrigger || loading,
+					results,
+					dirty: !effectWillTrigger && dirty,
+			  };
 	};
 
 export default makeObservedQueryHook;

@@ -1,4 +1,4 @@
-import React, {MutableRefObject, type CSSProperties} from 'react';
+import React, {type MutableRefObject, type CSSProperties} from 'react';
 
 import {styled, type Theme, useTheme} from '@mui/material/styles';
 import Fab, {type FabProps} from '@mui/material/Fab';

@@ -40,7 +40,7 @@ const FullTextSearchResults = () => {
 	const [key, refresh] = useRandom();
 	const {query: rawQuery} = useParams<Params>();
 	const query = myDecodeURIComponent(rawQuery);
-	const deferredQuery = useDeferredValue(query)
+	const deferredQuery = useDeferredValue(query);
 	return (
 		<Root className={classes.root}>
 			<Typography className={classes.heading} variant="h3">

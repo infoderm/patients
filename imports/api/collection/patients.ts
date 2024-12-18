@@ -88,13 +88,15 @@ export const patientFields = patientIdFields
 	.merge(patientTagFields);
 export type PatientFields = schema.infer<typeof patientFields>;
 
-export const patientUpdate = patientFields.merge(
-	schema.object({
-		sex: patientFields.shape.sex.nullable(),
-		deathdateModifiedAt: patientFields.shape.deathdateModifiedAt.nullable(),
-		deathdate: patientFields.shape.deathdate.nullable(),
-	})
-).partial();
+export const patientUpdate = patientFields
+	.merge(
+		schema.object({
+			sex: patientFields.shape.sex.nullable(),
+			deathdateModifiedAt: patientFields.shape.deathdateModifiedAt.nullable(),
+			deathdate: patientFields.shape.deathdate.nullable(),
+		}),
+	)
+	.partial();
 export type PatientUpdate = schema.infer<typeof patientUpdate>;
 
 export const patientComputedFields = schema.object({

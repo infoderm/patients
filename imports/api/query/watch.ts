@@ -150,6 +150,7 @@ const _watchStream = <T extends Document, U = T>(
 		_maxWatchStreamCount = _watchStreamCount;
 		console.debug({_watchStreamCount});
 	}
+
 	stream.on('close', () => {
 		if (open) {
 			open = false;

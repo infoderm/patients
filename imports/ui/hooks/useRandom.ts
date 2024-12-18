@@ -7,10 +7,7 @@ const useRandom = (): [number, () => void] => {
 		setValue(Math.random());
 	}, [setValue]);
 
-	return [
-		value,
-		update,
-	];
+	return [value, update];
 };
 
 export default useRandom;
