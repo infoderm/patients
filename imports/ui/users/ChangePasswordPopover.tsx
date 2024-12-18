@@ -12,11 +12,12 @@ import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {
 	readonly id: string;
-	readonly anchorEl?: HTMLElement | null;
+	readonly anchorEl: HTMLElement;
+	readonly open: boolean;
 	readonly handleClose: () => void;
 };
 
-const ChangePasswordPopover = ({id, anchorEl, handleClose}: Props) => {
+const ChangePasswordPopover = ({id, anchorEl, open, handleClose}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [oldPassword, setOldPassword] = useState('');
 	const [newPassword, setNewPassword] = useState('');
@@ -61,7 +62,7 @@ const ChangePasswordPopover = ({id, anchorEl, handleClose}: Props) => {
 		<Popover
 			id={id}
 			anchorEl={anchorEl}
-			open={Boolean(anchorEl)}
+			open={open}
 			anchorOrigin={{
 				vertical: 'bottom',
 				horizontal: 'right',

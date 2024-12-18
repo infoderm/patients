@@ -24,26 +24,35 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import {documentDiff} from '../../api/update';
 
 import {type reducer} from './usePatientPersonalInformationReducer';
+import MergeType from '@mui/icons-material/MergeType';
 
 type PatientPersonalInformationButtonsStaticProps = {
+	readonly readOnly: boolean;
+	readonly loading?: boolean;
 	readonly dirty: boolean;
 	readonly editing: boolean;
 	readonly dispatch: Dispatch<ReducerAction<typeof reducer>>;
-	readonly patient: PatientDocument;
-	readonly patientInit: PatientDocument;
+	readonly patient: Omit<PatientDocument, 'deathdate'> & {deathdate?: Date | null};
+	readonly patientInit?: Omit<PatientDocument, 'deathdate'> & {deathdate?: Date | null};
+	readonly initChanged?: boolean;
+	readonly refresh: () => void;
 };
 
 const PatientPersonalInformationButtonsStatic = ({
 	dispatch,
+	loading,
 	dirty,
 	editing,
+	readOnly,
 	patient,
 	patientInit,
+	initChanged,
+	refresh
 }: PatientPersonalInformationButtonsStaticProps) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [saving, setSaving] = useState(false);
 
-	const saveDetails = async (_event) => {
+	const saveDetails = patientInit === undefined ? undefined : async () => {
 		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 		feedback('Processing...', {
 			variant: 'info',
@@ -73,10 +82,20 @@ const PatientPersonalInformationButtonsStatic = ({
 	return (
 		<>
 			<FixedFab
-				visible={editing}
+				visible={!readOnly && initChanged}
+				col={1}
+				color={dirty ? 'secondary' : 'default'}
+				disabled={loading || saving}
+				aria-label="Merge"
+				onClick={refresh}
+			>
+				<MergeType />
+			</FixedFab>
+			<FixedFab
+				visible={!readOnly}
 				col={2}
-				color="primary"
-				disabled={!dirty}
+				color={initChanged ? 'secondary' : 'default'}
+				disabled={loading || !dirty || patientInit === undefined}
 				pending={saving}
 				aria-label="Save"
 				onClick={saveDetails}
@@ -84,19 +103,21 @@ const PatientPersonalInformationButtonsStatic = ({
 				<SaveIcon />
 			</FixedFab>
 			<FixedFab
-				visible={editing}
+				visible={!readOnly}
 				col={3}
 				color={dirty ? 'secondary' : 'default'}
-				disabled={saving}
+				disabled={loading || saving}
 				aria-label="Undo"
 				onClick={() => {
-					dispatch({type: 'init', payload: patientInit});
+					dispatch({type: 'undo'});
 				}}
 			>
 				<UndoIcon />
 			</FixedFab>
 			<FixedFab
-				visible={!editing}
+				visible={readOnly}
+				disabled={loading || editing}
+				pending={editing && readOnly}
 				col={2}
 				tooltip="Edit info"
 				onClick={() => {
@@ -107,7 +128,8 @@ const PatientPersonalInformationButtonsStatic = ({
 			</FixedFab>
 			<AttachFileButton
 				Button={FixedFab}
-				visible={!editing}
+				visible={readOnly}
+				disabled={loading || editing}
 				col={3}
 				endpoint={patientsAttach}
 				item={patient._id}
@@ -116,14 +138,16 @@ const PatientPersonalInformationButtonsStatic = ({
 			</AttachFileButton>
 			<ManageConsultationsForPatientButton
 				Button={FixedFab}
-				visible={!editing}
+				visible={readOnly}
+				disabled={loading || editing}
 				col={4}
 				color="primary"
 				patientId={patient._id}
 				tooltip="More actions!"
 			/>
 			<FixedFab
-				visible={!editing}
+				visible={readOnly}
+				disabled={loading || editing}
 				col={5}
 				color="secondary"
 				onClick={() => {

@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 import {type Mongo} from 'meteor/mongo';
-import {useMemo, useEffect, type DependencyList, useState} from 'react';
+import {useMemo, useEffect, type DependencyList, useState, useDeferredValue} from 'react';
 
 import type Document from '../Document';
 
@@ -30,6 +30,7 @@ const useFindClient = <T extends Document, U = T>(
 		cursor
 			.observeAsync({
 				addedAt(document, atIndex, _before) {
+					assert(!stopped, 'addedAt called after stop');
 					if (initializing) {
 						assert(
 							atIndex === init.length,
@@ -47,6 +48,7 @@ const useFindClient = <T extends Document, U = T>(
 
 				changedAt(newDocument, _oldDocument, atIndex) {
 					assert(!initializing, `changedAt called during init`);
+					assert(!stopped, 'changedAt called after stop');
 					setResults((data) => [
 						...data.slice(0, atIndex),
 						newDocument,
@@ -56,6 +58,7 @@ const useFindClient = <T extends Document, U = T>(
 
 				removedAt(_oldDocument, atIndex) {
 					assert(!initializing, `removedAt called during init`);
+					assert(!stopped, 'removedAt called after stop');
 					setResults((data) => [
 						...data.slice(0, atIndex),
 						...data.slice(atIndex + 1),
@@ -64,6 +67,7 @@ const useFindClient = <T extends Document, U = T>(
 
 				movedTo(_document, fromIndex, toIndex, _before) {
 					assert(!initializing, `movedTo called during init`);
+					assert(!stopped, 'movedTo called after stop');
 					setResults((data) => {
 						const doc = data[fromIndex]!;
 						const copy = [
@@ -97,7 +101,7 @@ const useFindClient = <T extends Document, U = T>(
 		};
 	}, [cursor]);
 
-	return {loading, results};
+	return useDeferredValue(useMemo(() => ({loading, results}), [loading, results]));
 };
 
 const useFind = useFindClient;

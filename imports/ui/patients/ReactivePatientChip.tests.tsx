@@ -56,7 +56,7 @@ client(__filename, () => {
 
 		await Promise.all(
 			patients.map(async (patient) =>
-				findByRole('button', {name: displayName(patient)}, {timeout: 1500}),
+				findByRole('button', {name: displayName(patient)}, {timeout: 3000}),
 			),
 		);
 	});

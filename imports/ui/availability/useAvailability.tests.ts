@@ -158,6 +158,8 @@ client(__filename, () => {
 		const end = addMilliseconds(datetime, duration);
 
 		assert.deepEqual(dropOwners(dropIds(result.current.results)), [
+			// NOTE: Sometimes, only the first item is present when running the
+			// test.
 			slot(beginningOfTime(), begin, 0),
 			slot(begin, end, 1),
 			slot(end, endOfTime(), 0),

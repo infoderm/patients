@@ -14,12 +14,23 @@ const stopSubscription = (
 ) => {
 	const entry = get(key);
 	if (entry === undefined) {
-		// console.debug({
-		// what: 'stopSubscription',
-		// msg: `subscription ${key} already stopped`,
-		// });
+		 console.debug({
+		 what: 'stopSubscription',
+		 msg: `subscription ${key} already stopped`,
+		 key,
+		 });
 		return;
 	}
+
+	 //console.debug(JSON.stringify({
+	 //what: 'stopSubscription',
+	 //msg: 'request',
+	 //key,
+	 //id: entry.internals.id,
+	 //name: entry.internals.name,
+	 //params: entry.internals.params,
+	 //refCount: entry.refCount,
+	 //}, undefined, 2));
 
 	--entry.refCount;
 	assert(entry.refCount >= 0, `Negative refCount for ${key}.`);
@@ -36,26 +47,26 @@ const stopSubscription = (
 
 	if (entry.refCount === 0) {
 		const sub = entry.internals;
-		// console.debug({
-		// what: 'stopSubscription',
-		// msg: 'refCount === 0',
-		// id: sub.id,
-		// name: sub.name,
-		// params: sub.params,
-		// });
+		 //console.debug(JSON.stringify({
+		 //what: 'stopSubscription',
+		 //msg: 'refCount === 0',
+		 //id: sub.id,
+		 //name: sub.name,
+		 //params: sub.params,
+		 //}, undefined, 2));
 		sub.inactive = true;
 		const prev = _gcQueue.get(sub.id);
 		if (prev !== undefined) prev.cancel();
 
 		const next = defer(() => {
 			if (sub.inactive) {
-				// console.debug({
-				// what: 'stopSubscription',
-				// msg: 'unsub',
-				// id: sub.id,
-				// name: sub.name,
-				// params: sub.params,
-				// });
+				//console.debug(JSON.stringify({
+				 //what: 'stopSubscription',
+				 //msg: 'delete',
+				 //id: sub.id,
+				 //name: sub.name,
+				 //params: sub.params,
+				//}, undefined, 2));
 				set(key, undefined);
 				handle.stop();
 				debugMeteorSubscriptions();

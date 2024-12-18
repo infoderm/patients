@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import React, {useEffect} from 'react';
 
 import {list} from '@iterable-iterator/list';
@@ -66,9 +68,32 @@ import PatientDeletionDialog from './PatientDeletionDialog';
 import usePatientPersonalInformationReducer from './usePatientPersonalInformationReducer';
 import PatientPersonalInformationButtonsStatic from './PatientPersonalInformationButtonsStatic';
 import PatientTagCommentEditionDialog from './PatientTagCommentEditionDialog';
+import useObservedPatientsWithChanges from './useObservedPatientsWithChanges';
+import useRandom from '../hooks/useRandom';
+import LinearProgress from '@mui/material/LinearProgress';
+import Alert from '@mui/material/Alert';
+import {Link} from 'react-router-dom';
+import MergeTypeIcon from '@mui/icons-material/MergeType';
+import UndoIcon from '@mui/icons-material/Undo';
 
 const useStyles = makeStyles()((theme) => ({
-	root: {
+	warning: {
+		marginTop: theme.spacing(-3),
+		marginBottom: theme.spacing(4),
+	},
+	inlineIcon: {
+		verticalAlign: 'bottom',
+	},
+	paper: {
+		position: 'relative',
+	},
+	progress: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+	},
+	grid: {
 		padding: theme.spacing(3),
 		paddingBottom: theme.spacing(5),
 	},
@@ -120,7 +145,7 @@ const ProblemText = styled(Typography)(({theme}) => ({
 }));
 
 const tagToKey = (x) => x.name;
-const tagCreate = (name) => ({name, displayName: name});
+const tagCreate = (name: string) => ({name, displayName: name});
 const tagToNode = (x) => (
 	<span>
 		{x.displayName} {x.comment ? <b>({x.comment})</b> : null}
@@ -131,11 +156,12 @@ const openUpdateTagCommentDialog = ({
 	kind,
 	item,
 	dialog,
-	editing,
+	readOnly,
 	onSave,
 }) =>
-	editing
-		? async () => {
+	readOnly
+		? undefined
+		: async () => {
 				const result = await dialog((resolve) => (
 					<PatientTagCommentEditionDialog
 						initialValue={item.comment ?? ''}
@@ -158,32 +184,47 @@ const openUpdateTagCommentDialog = ({
 						},
 					});
 				}
-		  }
-		: undefined;
+		  };
 
 type PatientPersonalInformationStaticProps = {
+	readonly loading: boolean;
+	readonly found: boolean;
 	readonly patient: PatientDocument;
-	readonly loading?: boolean;
 };
 
 const noSuggestions = () => ({results: []});
 
 const PatientPersonalInformationStatic = (
-	props: PatientPersonalInformationStaticProps,
+	{loading: loadingLast, found: foundLast, patient: last}: PatientPersonalInformationStaticProps,
 ) => {
 	const dialog = useDialog();
 	const importantStringsDict = useImportantStringsDict();
 
-	const [state, dispatch] = usePatientPersonalInformationReducer(props.patient);
 
-	const {editing, dirty, deleting, patient} = state;
-	const {loading = false} = props;
+	const [key, refresh] = useRandom();
+	const [{editing, dirty, deleting, current: patient}, dispatch] = usePatientPersonalInformationReducer(last);
+
+	const {loading: loadingInit, dirty: initChanged, results} = useObservedPatientsWithChanges(
+		editing ? {filter: {_id: last._id}, limit: 1} : null,
+		[editing ? last._id : '', key]
+	);
+
+	assert(results.length <= 1, 'At most one patient is returned.');
+
+	const init = results[0];
+	const foundInit = init !== undefined;
 
 	useEffect(() => {
-		if (patient !== props.patient) {
-			dispatch({type: 'init', payload: props.patient});
+		if (editing && !loadingInit && foundInit) {
+			dispatch({type: 'merge', payload: init});
 		}
-	}, [JSON.stringify(props.patient)]);
+	}, [editing, loadingInit, foundInit, JSON.stringify(init)]);
+
+	useEffect(() => {
+		if (!loadingLast && foundLast) {
+			dispatch({type: 'init', payload: last});
+		}
+	}, [loadingLast, foundLast, JSON.stringify(last)]);
 
 	usePrompt(
 		'You are trying to leave the page while in edit mode. Are you sure you want to continue?',
@@ -192,21 +233,23 @@ const PatientPersonalInformationStatic = (
 
 	const {classes} = useStyles();
 
-	const {value: reifiedNoShows} = useNoShowsForPatient(props.patient._id);
+	const {value: reifiedNoShows} = useNoShowsForPatient(last._id);
 
 	const localizeBirthdate = useDateFormat('PPP');
 	const localizeAge = useDateFormatAge();
 	const birthdatePickerProps = useBirthdatePickerProps();
 
-	if (loading) {
-		return <NoContent>Loading...</NoContent>;
-	}
+	const readOnly = Boolean(!editing || loadingInit);
 
-	if (!patient) {
+	const loading = editing ? loadingInit : loadingLast;
+
+	const found = readOnly ? foundLast : foundInit;
+
+	if (!found) {
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	const placeholder = editing ? 'Write some information here' : '?';
+	const placeholder = readOnly ? '?' : 'Write some information here';
 
 	const minRows = 8;
 	const maxRows = 100;
@@ -250,7 +293,7 @@ const PatientPersonalInformationStatic = (
 		onClick: openUpdateTagCommentDialog({
 			state: patient.allergies,
 			kind: 'allergy',
-			editing,
+			readOnly,
 			item,
 			dialog,
 			onSave: updateAllergies,
@@ -262,7 +305,7 @@ const PatientPersonalInformationStatic = (
 		onClick: openUpdateTagCommentDialog({
 			state: patient.doctors,
 			kind: 'doctor',
-			editing,
+			readOnly,
 			item,
 			dialog,
 			onSave: updateDoctors,
@@ -274,7 +317,7 @@ const PatientPersonalInformationStatic = (
 		onClick: openUpdateTagCommentDialog({
 			state: patient.insurances,
 			kind: 'insurance',
-			editing,
+			readOnly,
 			item,
 			dialog,
 			onSave: updateInsurances,
@@ -282,8 +325,18 @@ const PatientPersonalInformationStatic = (
 	});
 
 	return (
-		<Paper className={classes.root}>
-			<Grid container spacing={3}>
+		<>
+		{initChanged && (
+			<Alert severity="warning" className={classes.warning}>
+				<span>Patient info was updated while editing. </span>
+				<span>Current state can be consulted at </span>
+				<Link to={`/patient/${last._id}`} target='_blank'>{`/patient/${last._id}`}</Link>.
+				<span> You can drop all local changes and load the current state by clicking <UndoIcon className={classes.inlineIcon}/>. You can merge local changes with the current state and continue editing by clicking on <MergeTypeIcon className={classes.inlineIcon}/>.</span>
+			</Alert>
+		)}
+		<Paper className={classes.paper}>
+			{loading && <LinearProgress className={classes.progress}/>}
+			<Grid container spacing={3} className={classes.grid}>
 				<Grid item sm={4} md={2} className={classes.left}>
 					<div>
 						{patient.photo ? (
@@ -308,8 +361,9 @@ const PatientPersonalInformationStatic = (
 						<Typography variant="h5">{displayedAge}</Typography>
 					)}
 					{isDead && (
+						<div>
 						<Button
-							disabled={!editing}
+							disabled={readOnly}
 							color={isDead ? 'secondary' : 'primary'}
 							startIcon={isDead ? <HeartBrokenIcon /> : <MonitorHeartIcon />}
 							onClick={() => {
@@ -324,10 +378,13 @@ const PatientPersonalInformationStatic = (
 								isDead ? '' : ' ?'
 							}`}
 						</Button>
+						</div>
 					)}
 					{editing && isDead && (
+						<div>
 						<DatePicker<Date>
 							{...birthdatePickerProps}
+							readOnly={readOnly}
 							label="Death date"
 							value={deathdateLegal ?? null}
 							slotProps={{
@@ -346,6 +403,7 @@ const PatientPersonalInformationStatic = (
 								}
 							}}
 						/>
+						</div>
 					)}
 					{!totalNoShow ? null : (
 						<ProblemText variant="h4">PVPP = {totalNoShow}</ProblemText>
@@ -362,7 +420,7 @@ const PatientPersonalInformationStatic = (
 											className={classes.formControl}
 											label="NISS"
 											value={patient.niss}
-											readOnly={!editing}
+											readOnly={readOnly}
 											margin="normal"
 											onChange={update('niss')}
 										/>
@@ -373,7 +431,7 @@ const PatientPersonalInformationStatic = (
 											className={classes.formControl}
 											label="Last name"
 											value={patient.lastname}
-											readOnly={!editing}
+											readOnly={readOnly}
 											margin="normal"
 											onChange={update('lastname')}
 										/>
@@ -384,7 +442,7 @@ const PatientPersonalInformationStatic = (
 											className={classes.formControl}
 											label="First name"
 											value={patient.firstname}
-											readOnly={!editing}
+											readOnly={readOnly}
 											margin="normal"
 											onChange={update('firstname')}
 										/>
@@ -397,7 +455,7 @@ const PatientPersonalInformationStatic = (
 											margin="normal"
 											className={classes.formControl}
 											value={patient.sex || ''}
-											readOnly={!editing}
+											readOnly={readOnly}
 											onChange={update('sex')}
 										>
 											<MenuItem value="">
@@ -411,6 +469,7 @@ const PatientPersonalInformationStatic = (
 									<Grid item xs={2}>
 										<DatePicker<Date>
 											{...birthdatePickerProps}
+											readOnly={readOnly}
 											label="Birth date"
 											value={_birthdate}
 											disabled={!editing}
@@ -437,6 +496,7 @@ const PatientPersonalInformationStatic = (
 								<ColorizedTextarea
 									fullWidth
 									readOnly={!editing}
+									disabled={readOnly}
 									label="Antécédents"
 									placeholder={placeholder}
 									minRows={minRows}
@@ -451,7 +511,7 @@ const PatientPersonalInformationStatic = (
 											alignItems: 'start',
 										},
 									}}
-									value={patient.antecedents}
+									value={patient.antecedents ?? ''}
 									margin="normal"
 									dict={importantStringsDict}
 									onChange={update('antecedents')}
@@ -461,6 +521,7 @@ const PatientPersonalInformationStatic = (
 								<ColorizedTextarea
 									fullWidth
 									readOnly={!editing}
+									disabled={readOnly}
 									label="Traitement en cours"
 									placeholder={placeholder}
 									minRows={minRows}
@@ -475,7 +536,7 @@ const PatientPersonalInformationStatic = (
 											alignItems: 'start',
 										},
 									}}
-									value={patient.ongoing}
+									value={patient.ongoing ?? ''}
 									margin="normal"
 									dict={importantStringsDict}
 									onChange={update('ongoing')}
@@ -495,7 +556,7 @@ const PatientPersonalInformationStatic = (
 										undefined,
 										{displayName: 1},
 									)}
-									readOnly={!editing}
+									readOnly={readOnly}
 									TextFieldProps={{
 										label: 'Allergies',
 										margin: 'normal',
@@ -512,7 +573,7 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									readOnly={!editing}
+									readOnly={readOnly}
 									label="Rue et Numéro"
 									InputLabelProps={{
 										shrink: true,
@@ -529,7 +590,7 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									readOnly={!editing}
+									readOnly={readOnly}
 									label="Code Postal"
 									InputLabelProps={{
 										shrink: true,
@@ -546,7 +607,7 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									readOnly={!editing}
+									readOnly={readOnly}
 									label="Commune"
 									InputLabelProps={{
 										shrink: true,
@@ -564,7 +625,7 @@ const PatientPersonalInformationStatic = (
 								<TextField
 									fullWidth
 									multiline
-									readOnly={!editing}
+									readOnly={readOnly}
 									InputLabelProps={{
 										shrink: true,
 									}}
@@ -597,7 +658,7 @@ const PatientPersonalInformationStatic = (
 										undefined,
 										{displayName: 1},
 									)}
-									readOnly={!editing}
+									readOnly={readOnly}
 									TextFieldProps={{
 										fullWidth: true,
 										label: 'Médecin Traitant',
@@ -633,7 +694,7 @@ const PatientPersonalInformationStatic = (
 										undefined,
 										{displayName: 1},
 									)}
-									readOnly={!editing}
+									readOnly={readOnly}
 									TextFieldProps={{
 										fullWidth: true,
 										label: 'Mutuelle',
@@ -660,6 +721,7 @@ const PatientPersonalInformationStatic = (
 								<ColorizedTextarea
 									fullWidth
 									readOnly={!editing}
+									disabled={readOnly}
 									label="About"
 									placeholder={placeholder}
 									minRows={2}
@@ -674,7 +736,7 @@ const PatientPersonalInformationStatic = (
 											alignItems: 'start',
 										},
 									}}
-									value={patient.about}
+									value={patient.about ?? ''}
 									margin="normal"
 									dict={importantStringsDict}
 									onChange={update('about')}
@@ -683,7 +745,7 @@ const PatientPersonalInformationStatic = (
 							<Grid item xs={3}>
 								<TextField
 									fullWidth
-									readOnly={!editing}
+									readOnly={readOnly}
 									InputProps={{
 										startAdornment: reifiedNoShows ? (
 											<InputAdornment
@@ -709,7 +771,7 @@ const PatientPersonalInformationStatic = (
 							</Grid>
 							<Grid item xs={12}>
 								<SetPicker
-									readOnly={!editing}
+									readOnly={readOnly}
 									useSuggestions={noSuggestions}
 									itemToKey={(email) => email.address}
 									itemToString={(email) => email.address}
@@ -760,19 +822,24 @@ const PatientPersonalInformationStatic = (
 			</Grid>
 			<PatientPersonalInformationButtonsStatic
 				editing={editing}
+				readOnly={readOnly}
+				loading={loading}
 				dirty={dirty}
 				dispatch={dispatch}
 				patient={patient}
-				patientInit={props.patient}
+				patientInit={init}
+				initChanged={initChanged}
+				refresh={refresh}
 			/>
 			<PatientDeletionDialog
 				open={deleting}
-				patient={props.patient}
+				patient={last}
 				onClose={() => {
 					dispatch({type: 'not-deleting'});
 				}}
 			/>
 		</Paper>
+			</>
 	);
 };
 
