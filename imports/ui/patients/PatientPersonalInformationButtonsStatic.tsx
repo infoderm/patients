@@ -8,6 +8,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import UndoIcon from '@mui/icons-material/Undo';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
+import MergeType from '@mui/icons-material/MergeType';
+
 import FixedFab from '../button/FixedFab';
 
 import call from '../../api/endpoint/call';
@@ -24,16 +26,19 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import {documentDiff} from '../../api/update';
 
 import {type reducer} from './usePatientPersonalInformationReducer';
-import MergeType from '@mui/icons-material/MergeType';
 
 type PatientPersonalInformationButtonsStaticProps = {
 	readonly readOnly: boolean;
-	readonly loading?: boolean;
+	readonly loading: boolean;
 	readonly dirty: boolean;
 	readonly editing: boolean;
 	readonly dispatch: Dispatch<ReducerAction<typeof reducer>>;
-	readonly patient: Omit<PatientDocument, 'deathdate'> & {deathdate?: Date | null};
-	readonly patientInit?: Omit<PatientDocument, 'deathdate'> & {deathdate?: Date | null};
+	readonly patient: Omit<PatientDocument, 'deathdate'> & {
+		deathdate?: Date | null;
+	};
+	readonly patientInit?: Omit<PatientDocument, 'deathdate'> & {
+		deathdate?: Date | null;
+	};
 	readonly initChanged?: boolean;
 	readonly refresh: () => void;
 };
@@ -47,37 +52,41 @@ const PatientPersonalInformationButtonsStatic = ({
 	patient,
 	patientInit,
 	initChanged,
-	refresh
+	refresh,
 }: PatientPersonalInformationButtonsStaticProps) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [saving, setSaving] = useState(false);
 
-	const saveDetails = patientInit === undefined ? undefined : async () => {
-		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
-		feedback('Processing...', {
-			variant: 'info',
-			persist: true,
-		});
-		setSaving(true);
+	const saveDetails =
+		patientInit === undefined
+			? undefined
+			: async () => {
+					const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
+					feedback('Processing...', {
+						variant: 'info',
+						persist: true,
+					});
+					setSaving(true);
 
-		try {
-			await call(
-				patientsUpdate,
-				patient._id,
-				documentDiff(patientInit, patient),
-			);
-			setSaving(false);
-			const message = `Patient #${patient._id} updated.`;
-			console.log(message);
-			feedback(message, {variant: 'success'});
-			dispatch({type: 'not-editing'});
-		} catch (error: unknown) {
-			setSaving(false);
-			const message = error instanceof Error ? error.message : 'unknown error';
-			feedback(message, {variant: 'error'});
-			console.error({error});
-		}
-	};
+					try {
+						await call(
+							patientsUpdate,
+							patient._id,
+							documentDiff(patientInit, patient),
+						);
+						setSaving(false);
+						const message = `Patient #${patient._id} updated.`;
+						console.log(message);
+						feedback(message, {variant: 'success'});
+						dispatch({type: 'not-editing'});
+					} catch (error: unknown) {
+						setSaving(false);
+						const message =
+							error instanceof Error ? error.message : 'unknown error';
+						feedback(message, {variant: 'error'});
+						console.error({error});
+					}
+			  };
 
 	return (
 		<>

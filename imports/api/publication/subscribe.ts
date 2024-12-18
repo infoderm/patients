@@ -70,12 +70,12 @@ const subscribe = <A extends Args>(
 	...args: [...A, SubscriptionCallbacks?]
 ): SubscriptionHandle => {
 	const [params, callbacks] = _parseCallbacks(args);
-	 //console.debug(JSON.stringify({
-	 //what: 'subscribe',
-	 //msg: 'request',
-	 //name,
-	 //params,
-	 //}, undefined, 2));
+	// console.debug(JSON.stringify({
+	// what: 'subscribe',
+	// msg: 'request',
+	// name,
+	// params,
+	// }, undefined, 2));
 	const key = identify(name, params);
 	const entry = get(key);
 	let handle: Meteor.SubscriptionHandle;
@@ -94,23 +94,23 @@ const subscribe = <A extends Args>(
 		const internals = subscriptionInternals(handle);
 		set(key, {handle, internals, refCount: 1, onReady, onStop});
 
-		 //console.debug(JSON.stringify({
-		 //what: 'subscribe',
-		 //msg: 'create',
-		 //key,
-		 //id: internals.id,
-		 //name: internals.name,
-		 //params: internals.params,
-		 //}, undefined, 2));
+		// console.debug(JSON.stringify({
+		// what: 'subscribe',
+		// msg: 'create',
+		// key,
+		// id: internals.id,
+		// name: internals.name,
+		// params: internals.params,
+		// }, undefined, 2));
 	} else {
-		 //console.debug(JSON.stringify({
-		 //what: 'subscribe',
-		 //msg: 'recycle',
-		 //key,
-		 //id: entry.internals.id,
-		 //name: entry.internals.name,
-		 //params: entry.internals.params,
-		 //}, undefined, 2));
+		// console.debug(JSON.stringify({
+		// what: 'subscribe',
+		// msg: 'recycle',
+		// key,
+		// id: entry.internals.id,
+		// name: entry.internals.name,
+		// params: entry.internals.params,
+		// }, undefined, 2));
 		++entry.refCount;
 		handle = entry.handle;
 		entry.internals.inactive = false;

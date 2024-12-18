@@ -93,7 +93,7 @@ export const reducer = (state: State, action: Action): State => {
 				editing: false,
 				dirty: false,
 				deleting: false,
-				current: state.init
+				current: state.init,
 			};
 		}
 
@@ -104,32 +104,36 @@ export const reducer = (state: State, action: Action): State => {
 
 			const {init, current} = state;
 			const changes = documentDiff(init, current);
-			const dirty = Object.keys(changes).length >= 1;
+			const dirty = Object.keys(changes).length > 0;
 
-			return dirty ? {
-				...state,
-				dirty: true,
-				init: action.payload,
-				current: {
-					...action.payload,
-					...changes,
-				},
-			} : {
-				...state,
-				dirty: false,
-				init: action.payload,
-				current: action.payload,
-			};
+			return dirty
+				? {
+						...state,
+						dirty: true,
+						init: action.payload,
+						current: {
+							...action.payload,
+							...changes,
+						},
+				  }
+				: {
+						...state,
+						dirty: false,
+						init: action.payload,
+						current: action.payload,
+				  };
 		}
 
 		case 'init': {
 			if (state.editing) return state;
 
-			return state.init === action.payload && state.current === action.payload ? state : {
-				...state,
-				init: action.payload,
-				current: action.payload,
-			};
+			return state.init === action.payload && state.current === action.payload
+				? state
+				: {
+						...state,
+						init: action.payload,
+						current: action.payload,
+				  };
 		}
 
 		default: {

@@ -57,12 +57,7 @@ const editPatient = async (
 		action,
 	}: EditPatientOptions,
 ) => {
-	const {
-		user,
-		userWithRealisticTypingSpeed,
-		findByRole,
-		findByLabelText,
-	} = app;
+	const {user, userWithRealisticTypingSpeed, findByRole, findByLabelText} = app;
 	await user.click(
 		await findByRole('button', {name: /^edit info$/i}, {timeout: 5000}),
 	);
@@ -72,8 +67,8 @@ const editPatient = async (
 	if (typeof nn === 'string') {
 		await fillIn(
 			app,
-			await findByLabelText('NISS', { selector: 'input:not([readonly])' }),
-			nn
+			await findByLabelText('NISS', {selector: 'input:not([readonly])'}),
+			nn,
 		);
 	}
 

@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {BrowserRouter, Routes, Route, useNavigate, NavigateFunction, Path} from 'react-router-dom';
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	useNavigate,
+	type NavigateFunction,
+	type Path,
+} from 'react-router-dom';
 
 import {CacheProvider} from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -26,27 +33,35 @@ export const muiCache = createCache({
 	prepend: true,
 });
 
-export let _navigate: NavigateFunction = (_to: Partial<Path> | string | number) => {
-	// TODO: This gets called in non-full-app client tests.
-	console.warn('Using unitialized test-only _navigate function call.');
+export const _router: {navigate: NavigateFunction} = {
+	navigate(_to: Partial<Path> | string | number) {
+		// TODO: This gets called in non-full-app client tests.
+		console.warn('Using unitialized test-only _navigate function call.');
+	},
 };
 
-const _Routes = ({children}) => {
-	_navigate = useNavigate();
-	return (<Routes>
-		<Route element={<div>test-only reset page</div>} path="/_test/reset" />
-		<Route element={{...children}} path="*" />
-	</Routes>)
+const WithTestRoutes = ({children}) => {
+	_router.navigate = useNavigate();
+	return (
+		<Routes>
+			<Route
+				element={<div>test-only unmount route</div>}
+				path="/_test/unmount"
+			/>
+			<Route element={{...children}} path="*" />
+		</Routes>
+	);
 };
 
 const Router = isTest()
 	? ({children}) => {
-		return (
-			<BrowserRouter>
-				<_Routes>{children}</_Routes>
-			</BrowserRouter>
-		)
-	} : BrowserRouter;
+			return (
+				<BrowserRouter>
+					<WithTestRoutes>{children}</WithTestRoutes>
+				</BrowserRouter>
+			);
+	  }
+	: BrowserRouter;
 
 const App = () => {
 	const theme = useUserTheme();

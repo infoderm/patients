@@ -26,7 +26,9 @@ const PatientPersonalInformation = ({
 		return <NoContent>Patient not found.</NoContent>;
 	}
 
-	return <PatientPersonalInformationStatic loading={false} found={true} patient={patient} />;
+	return (
+		<PatientPersonalInformationStatic found loading={false} patient={patient} />
+	);
 };
 
 export default PatientPersonalInformation;

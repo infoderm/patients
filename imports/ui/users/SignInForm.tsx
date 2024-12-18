@@ -3,9 +3,10 @@ import React, {useRef, useState} from 'react';
 import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+import useUniqueId from '../hooks/useUniqueId';
+
 import LoginPopover from './LoginPopover';
 import RegisterPopover from './RegisterPopover';
-import useUniqueId from '../hooks/useUniqueId';
 
 const SignInForm = () => {
 	const anchorRef = useRef(null);
@@ -36,8 +37,8 @@ const SignInForm = () => {
 					anchorEl === null
 						? undefined
 						: mode === 'login'
-							? 'login-popover'
-							: 'register-popover'
+						? 'login-popover'
+						: 'register-popover'
 				}
 				aria-haspopup="true"
 				style={{color: 'inherit'}}
@@ -48,18 +49,18 @@ const SignInForm = () => {
 			</Button>
 			{anchorEl !== null && mode === 'login' && (
 				<LoginPopover
+					open
 					id={loginPopoverId}
 					anchorEl={anchorEl}
-					open={true}
 					changeMode={changeMode}
 					handleClose={handleClose}
 				/>
 			)}
 			{anchorEl !== null && mode === 'register' && (
 				<RegisterPopover
+					open
 					id={registerPopoverId}
 					anchorEl={anchorEl}
-					open={true}
 					changeMode={changeMode}
 					handleClose={handleClose}
 				/>

@@ -1,4 +1,4 @@
-import React, {MutableRefObject} from 'react';
+import React, {type MutableRefObject} from 'react';
 
 import {styled} from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';

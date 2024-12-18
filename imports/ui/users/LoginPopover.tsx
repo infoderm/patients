@@ -28,7 +28,7 @@ const LoginPopover = ({id, anchorEl, open, handleClose, changeMode}: Props) => {
 	const [errorPassword, setErrorPassword] = useState('');
 	const [loggingIn, setLoggingIn] = useState(false);
 
-	const login = async (event: {preventDefault: () => void;}) => {
+	const login = async (event: {preventDefault: () => void}) => {
 		event.preventDefault();
 		setLoggingIn(true);
 		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
