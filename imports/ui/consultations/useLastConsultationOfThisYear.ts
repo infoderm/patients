@@ -12,7 +12,7 @@ export default function useLastConsultationOfThisYear(
 ) {
 	const interval = thisYearsInterval();
 
-	const isLoading = useSubscription(last, ...interval, filter ?? null);
+	const isLoading = useSubscription(last, [...interval, filter ?? null]);
 	const loading = isLoading();
 
 	const consultation = useReactive(

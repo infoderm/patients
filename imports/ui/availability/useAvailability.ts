@@ -22,19 +22,22 @@ const useAvailability = (
 	deps: DependencyList,
 ) => {
 	// TODO Do not oversubscribe
-	const publication = isValid(begin) && isValid(end) ? intersects : null;
-	const isLoading = useSubscription(publication, begin, end, filter);
+	const enabled = isValid(begin) && isValid(end);
+	const isLoading = useSubscription(intersects, [begin, end, filter], enabled);
 
 	const selector = {
 		...intersectsInterval(begin, end),
 		...filter,
 	} as Selector<SlotDocument>;
 
-	const results = useCursor(() => Availability.find(selector, options), deps);
+	const {loading, results} = useCursor(
+		() => Availability.find(selector, options),
+		deps,
+	);
 
 	return {
-		loading: isLoading(),
-		results: publication ? results : [],
+		loading: isLoading() || loading,
+		results: enabled ? results : [],
 	};
 };
 

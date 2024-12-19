@@ -13,12 +13,14 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {
+	readonly id: string;
 	readonly anchorEl: HTMLElement;
+	readonly open: boolean;
 	readonly handleClose: () => void;
-	readonly changeMode: (mode: string) => void;
+	readonly changeMode: (mode: 'choice' | 'login' | 'register') => void;
 };
 
-const LoginPopover = ({anchorEl, handleClose, changeMode}: Props) => {
+const LoginPopover = ({id, anchorEl, open, handleClose, changeMode}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -26,7 +28,7 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 	const [errorPassword, setErrorPassword] = useState('');
 	const [loggingIn, setLoggingIn] = useState(false);
 
-	const login = async (event) => {
+	const login = async (event: {preventDefault: () => void}) => {
 		event.preventDefault();
 		setLoggingIn(true);
 		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
@@ -78,9 +80,9 @@ const LoginPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 
 	return (
 		<Popover
-			id="login-popover"
+			id={id}
 			anchorEl={anchorEl}
-			open={Boolean(anchorEl)}
+			open={open}
 			anchorOrigin={{
 				vertical: 'bottom',
 				horizontal: 'right',

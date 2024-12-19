@@ -1,5 +1,6 @@
 import React from 'react';
-import {render, waitForElementToBeRemoved} from '@testing-library/react';
+
+import {render, waitForElementToBeRemoved} from '../_test/react';
 
 import {client, randomPassword, randomUserId} from '../_test/fixtures';
 

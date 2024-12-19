@@ -1,6 +1,6 @@
 import {type DependencyList, useRef} from 'react';
 
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import useSubscription from './publication/useSubscription';
 import useItem from './publication/useItem';
 import type Collection from './Collection';
@@ -15,7 +15,7 @@ type ReturnValue<U, I> =
 const makeCachedFindOne =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[UserQuery<T>]>,
+		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
 	<I extends Partial<U>>(
 		init: I,
@@ -24,20 +24,24 @@ const makeCachedFindOne =
 	): ReturnValue<U, I> => {
 		const ref = useRef(init);
 
-		const isLoading = useSubscription(publication, query);
-		const loading = isLoading();
+		const isLoading = useSubscription(publication, [query]);
+		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const upToDate = useItem(loading ? null : collection, selector, options, [
-			loading,
-			...deps,
-		]);
+		const {
+			loading: loadingResult,
+			found,
+			result: upToDate,
+		} = useItem(collection, selector, options, deps);
 
-		const found = Boolean(upToDate);
 		const fields = {...ref.current, ...upToDate};
 		ref.current = fields;
 
-		return {loading, found, fields} as ReturnValue<U, I>;
+		return {
+			loading: loadingSubscription || loadingResult,
+			found,
+			fields,
+		} as ReturnValue<U, I>;
 	};
 
 export default makeCachedFindOne;

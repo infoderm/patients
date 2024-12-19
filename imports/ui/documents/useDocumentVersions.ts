@@ -14,17 +14,25 @@ const useDocumentVersions = (document) => {
 
 	const deps = [JSON.stringify(filter), JSON.stringify(options)];
 
-	const isLoading = useSubscription(parsed ? find : null, {
-		filter,
-		projection: fields,
-		sort,
-	});
-	const loading = isLoading();
+	const isLoading = useSubscription(
+		find,
+		[
+			{
+				filter,
+				projection: fields,
+				sort,
+			},
+		],
+		parsed,
+	);
+	const loadingSubscription = isLoading();
 
-	const fetchedVersions = useCursor(
+	const {loading: loadingResults, results: fetchedVersions} = useCursor(
 		() => (parsed ? Documents.find(filter, options) : null),
 		deps,
 	);
+
+	const loading = loadingSubscription || loadingResults;
 
 	return parsed
 		? {loading, versions: fetchedVersions}

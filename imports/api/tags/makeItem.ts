@@ -5,7 +5,7 @@ import type Selector from '../query/Selector';
 
 import useSubscription from '../publication/useSubscription';
 import useItem from '../publication/useItem';
-import type Publication from '../publication/Publication';
+import type PublicationEndpoint from '../publication/PublicationEndpoint';
 
 import type TagDocument from './TagDocument';
 
@@ -17,22 +17,22 @@ type ReturnType<U> = {
 const makeItem =
 	<T extends TagDocument, U = T>(
 		collection: Collection<T, U>,
-		singlePublication: Publication<[string]>,
+		singlePublication: PublicationEndpoint<[string]>,
 	) =>
 	(name: string, deps: DependencyList): ReturnType<U> => {
-		const isLoading = useSubscription(singlePublication, name);
-		const loading = isLoading();
+		const isLoading = useSubscription(singlePublication, [name]);
+		const loadingSubscription = isLoading();
 
-		const item = useItem(
-			loading ? null : collection,
+		const {loading: loadingResult, result} = useItem(
+			loadingSubscription ? null : collection,
 			{name} as Selector<T>,
 			undefined,
-			[loading, ...deps],
+			[loadingSubscription, ...deps],
 		);
 
 		return {
-			loading,
-			item,
+			loading: loadingSubscription || loadingResult,
+			item: result,
 		};
 	};
 

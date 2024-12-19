@@ -18,18 +18,20 @@ type Result = {
 const useFrequencyStats = (filter?: Filter<ConsultationDocument>): Result => {
 	const key = frequencySexKey(filter);
 
-	const isLoading = useSubscription(publication, filter ?? null);
-	const loading = isLoading();
+	const isLoading = useSubscription(publication, [filter ?? null]);
+	const loadingSubscription = isLoading();
 
-	const results = useItem(loading ? null : Count, {_id: key}, undefined, [
-		loading,
-		key,
-	]);
+	const {loading: loadingResult, result} = useItem(
+		loadingSubscription ? null : Count,
+		{_id: key},
+		undefined,
+		[loadingSubscription, key],
+	);
 
 	return {
-		loading,
-		total: results?.total,
-		count: results?.count,
+		loading: loadingSubscription || loadingResult,
+		total: result?.total,
+		count: result?.count,
 	};
 };
 

@@ -13,7 +13,7 @@ type ReturnValue =
 export default function useLastConsultation(
 	filter?: Filter<ConsultationDocument>,
 ) {
-	const isLoading = useSubscription(last, null);
+	const isLoading = useSubscription(last, [null]);
 	const loading = isLoading();
 
 	const consultation = useReactive(

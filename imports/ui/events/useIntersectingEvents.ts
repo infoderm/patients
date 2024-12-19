@@ -18,19 +18,27 @@ const useIntersectingEvents = (
 	deps: DependencyList,
 ) => {
 	// TODO Do not oversubscribe
-	const publication = isValid(begin) && isValid(end) ? intersects : null;
-	const isLoading = useSubscription(publication, begin, end);
+	const enabled = isValid(begin) && isValid(end);
+	const isLoading = useSubscription(intersects, [begin, end], enabled);
+	const loadingPublication = isLoading();
 
 	const selector = {
 		...intersectsInterval(begin, end),
 		...filter,
 	};
 
-	const results = useCursor(() => Events.find(selector, options), deps);
+	const {loading: loadingResults, results} = useCursor(
+		() => Events.find(selector, options),
+		deps,
+	);
+
+	const loading = loadingPublication || loadingResults;
+
+	console.debug({loadingPublication, loadingResults, intersects, results});
 
 	return {
-		loading: isLoading(),
-		results: publication ? results : [],
+		loading,
+		results: enabled ? results : [],
 	};
 };
 

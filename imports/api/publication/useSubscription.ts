@@ -1,37 +1,50 @@
 import {Meteor} from 'meteor/meteor';
-import {Tracker} from 'meteor/tracker';
-import {useState, useEffect} from 'react';
+import {useState, useRef, useMemo} from 'react';
 
 import useChanged from '../../ui/hooks/useChanged';
 
 import type Args from '../Args';
 
-import subscribe from './subscribe';
-import type Publication from './Publication';
+import type PublicationEndpoint from './PublicationEndpoint';
+import {useSubscriptionEffectClient} from './useSubscriptionEffect';
+import {subscription} from './Subscription';
+import {type SubscriptionId} from './subscriptionId';
 
 const useSubscriptionClient = <A extends Args>(
-	publication?: Publication<A> | null,
-	...args: A
+	publication: PublicationEndpoint<A>,
+	args: A,
+	enabled = true,
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
+	const handleRef = useRef<SubscriptionId | null>(null);
 
-	const deps = [publication, JSON.stringify(args)];
+	const deps = [handleRef, setLoading, publication, JSON.stringify(args)];
 
-	useEffect(() => {
-		const computation = Tracker.nonreactive(() =>
-			Tracker.autorun(() => {
-				const ready = !publication || subscribe(publication, ...args).ready();
-				setLoading(!ready);
-			}),
-		);
-
-		// Stop the computation on when publication changes or unmount.
-		return () => {
-			computation.stop();
+	const sub = useMemo(() => {
+		const setNotLoading = (id: SubscriptionId) => {
+			setLoading((prev) => (handleRef.current === id ? false : prev));
 		};
+
+		return subscription(publication, args, {
+			onSubscribe(id: SubscriptionId) {
+				handleRef.current = id;
+			},
+			onLoading(id: SubscriptionId) {
+				// NOTE `setLoading(true)` is called:
+				//   - on first execution,
+				//   - on subsequent executions, if the subscription is not ready yet
+				//     (e.g. double-render in strict mode in development, concurrent mode)
+				//   - when restarting a stopped or errored subscription
+				setLoading((prev) => (handleRef.current === id ? true : prev));
+			},
+			onReady: setNotLoading,
+			onStop: setNotLoading,
+		});
 	}, deps);
 
-	const effectWillTrigger = useChanged(deps);
+	useSubscriptionEffectClient(sub, [sub, enabled], enabled);
+
+	const effectWillTrigger = useChanged([sub, enabled]);
 	const userFacingLoadingState = effectWillTrigger || loading;
 
 	return () => userFacingLoadingState;
@@ -40,9 +53,11 @@ const useSubscriptionClient = <A extends Args>(
 const useSubscriptionServer =
 	<A extends Args>(
 		// @ts-expect-error Those parameters are not used.
-		publication?: Publication<A> | null,
+		publication: PublicationEndpoint<A> | null,
 		// @ts-expect-error Those parameters are not used.
-		...args: A
+		args: A,
+		// @ts-expect-error Those parameters are not used.
+		enabled = true,
 	): (() => boolean) =>
 	() =>
 		false;

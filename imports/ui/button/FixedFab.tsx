@@ -1,4 +1,4 @@
-import React, {type CSSProperties} from 'react';
+import React, {type MutableRefObject, type CSSProperties} from 'react';
 
 import {styled, type Theme, useTheme} from '@mui/material/styles';
 import Fab, {type FabProps} from '@mui/material/Fab';
@@ -44,7 +44,7 @@ const Progress = styled(CircularProgress)({
 	zIndex: 1,
 });
 
-const FixedFab = React.forwardRef(
+const FixedFab = React.forwardRef<unknown>(
 	(
 		{
 			col = DEFAULT_COL,
@@ -66,8 +66,8 @@ const FixedFab = React.forwardRef(
 			<FixedFabAnimation in={visible}>
 				<div style={computedStyle}>
 					<Fab
-						ref={ref}
-						component={component}
+						ref={ref as MutableRefObject<HTMLButtonElement>}
+						component={component as 'button'}
 						disabled={Boolean(disabled) || pending}
 						{...rest}
 					/>

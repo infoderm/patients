@@ -14,10 +14,10 @@ export default define({
 	name: stats,
 	authentication: AuthenticationLoggedIn,
 	schema: schema.tuple([userFilter(consultationDocument)]),
-	handle(filter: UserFilter<ConsultationDocument>) {
+	async handle(filter: UserFilter<ConsultationDocument>) {
 		const collection = stats;
 
-		const handle = setupConsultationsStatsPublication.call(
+		const handle = await setupConsultationsStatsPublication.call(
 			this,
 			collection,
 			filter,
@@ -27,8 +27,8 @@ export default define({
 		// Stop observing the cursor when the client unsubscribes. Stopping a
 		// subscription automatically takes care of sending the client any `removed`
 		// messages.
-		this.onStop(() => {
-			handle.stop();
+		this.onStop(async (error?: Error) => {
+			await handle.emit('stop', error);
 		});
 	},
 });
