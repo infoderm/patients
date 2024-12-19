@@ -1,6 +1,6 @@
 import {type DependencyList} from 'react';
 
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import useItem from './publication/useItem';
 import useSubscription from './publication/useSubscription';
 import type Collection from './Collection';
@@ -15,14 +15,14 @@ type ReturnValue<U, I> =
 const makeFindOne =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[UserQuery<T>]>,
+		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
 	<I extends Partial<U>>(
 		init: I,
 		query: UserQuery<T>,
 		deps: DependencyList,
 	): ReturnValue<U, I> => {
-		const isLoading = useSubscription(publication, query);
+		const isLoading = useSubscription(publication, [query]);
 		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);

@@ -1,6 +1,6 @@
 import {type DependencyList} from 'react';
 
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import useSubscription from './publication/useSubscription';
 import useCursor from './publication/useCursor';
 
@@ -12,13 +12,10 @@ import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 const makeQuery =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[UserQuery<T>]>,
+		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
 	(query: UserQuery<T> | null, deps: DependencyList) => {
-		const isLoading = useSubscription(
-			query === null ? null : publication,
-			query,
-		);
+		const isLoading = useSubscription(publication, [query], query !== null);
 		const loadingSubscription = isLoading();
 		const [selector, options] =
 			query === null ? [] : queryToSelectorOptionsPair(query);

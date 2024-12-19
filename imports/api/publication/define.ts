@@ -11,7 +11,7 @@ import type InferArgs from '../InferArgs';
 import type ArgsSchema from '../ArgsSchema';
 
 import type Params from './Params';
-import type Publication from './Publication';
+import type PublicationEndpoint from './PublicationEndpoint';
 import type Cursor from './Cursor';
 import publishCursors from './publishCursors';
 
@@ -29,7 +29,7 @@ const define = <
 	authentication,
 	schema,
 	...rest
-}: Params<S, T, U, Auth>): Publication<A> => {
+}: Params<S, T, U, Auth>): PublicationEndpoint<A> => {
 	if (Meteor.isServer) {
 		// @ts-expect-error Ignore this for now.
 		const {cursor, cursors, handle} = rest;

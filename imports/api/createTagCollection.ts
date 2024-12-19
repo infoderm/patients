@@ -32,7 +32,7 @@ import type CacheItem from './CacheItem';
 import {type TagComputedFields, type TagNameFields} from './tags/TagDocument';
 import type TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './query/Filter';
 import type Collection from './Collection';
@@ -85,7 +85,7 @@ type TagCollectionOptions<
 	publication: string;
 	singlePublication: string;
 	Parent: Collection<P>;
-	parentPublication: Publication<[UserQuery<P>]>;
+	parentPublication: PublicationEndpoint<[UserQuery<P>]>;
 	key: string;
 };
 
@@ -172,7 +172,7 @@ const createTagCollection = <
 			...rest,
 		};
 
-		const isLoading = useSubscription(parentPublication, query);
+		const isLoading = useSubscription(parentPublication, [query]);
 		const loadingSubscription = isLoading();
 
 		const {loading: loadingResults, results} = useCursor(
@@ -247,7 +247,7 @@ const createTagCollection = <
 	});
 
 	const useTagStats = (name) => {
-		const isLoading = useSubscription(_statsPublication, name);
+		const isLoading = useSubscription(_statsPublication, [name]);
 		const loadingSubscription = isLoading();
 
 		const {loading: loadingResult, result} = useItem(Stats, {name}, undefined, [

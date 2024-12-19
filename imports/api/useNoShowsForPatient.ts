@@ -4,7 +4,7 @@ import useSubscription from './publication/useSubscription';
 import useReactive from './publication/useReactive';
 
 const useNoShowsForPatient = (patientId: string) => {
-	const isLoading = useSubscription(noShows, patientId);
+	const isLoading = useSubscription(noShows, [patientId]);
 	const loading = isLoading();
 
 	const upToDate = useReactive(

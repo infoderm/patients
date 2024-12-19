@@ -11,7 +11,7 @@ client(__filename, () => {
 	it('should load immediately on second call', async () => {
 		const query = {filter: {}};
 		const {result: resultA} = renderHook(() =>
-			useSubscription(publication, query),
+			useSubscription(publication, [query]),
 		);
 
 		assert(resultA.current());
@@ -21,7 +21,7 @@ client(__filename, () => {
 		});
 
 		const {result: resultB} = renderHook(() =>
-			useSubscription(publication, query),
+			useSubscription(publication, [query]),
 		);
 
 		assert(!resultB.current());

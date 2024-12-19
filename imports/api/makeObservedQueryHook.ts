@@ -4,17 +4,20 @@ import useChanged from '../ui/hooks/useChanged';
 
 import type ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import subscribe from './publication/subscribe';
 import type GenericQueryHook from './GenericQueryHook';
 import type UserQuery from './query/UserQuery';
 import {type ObserveOptions} from './makeObservedQueryPublication';
 import stopSubscription from './publication/stopSubscription';
+import {subscription} from './publication/Subscription';
 
 const makeObservedQueryHook =
 	<T>(
 		Collection: ObservedQueryCacheCollection<T>,
-		publication: Publication<[string, UserQuery<T>, ObserveOptions | null]>,
+		publication: PublicationEndpoint<
+			[string, UserQuery<T>, ObserveOptions | null]
+		>,
 		observe: ObserveOptions | null = null,
 	): GenericQueryHook<T> =>
 	(query: UserQuery<T> | null, deps: DependencyList) => {
@@ -40,23 +43,25 @@ const makeObservedQueryHook =
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query});
-			const handle = subscribe(publication, key, query, observe, {
-				onStop() {
-					if (handleRef.current === id) {
-						setDirty(true);
-						setLoading(false);
-					}
-				},
-				async onReady() {
-					if (handleRef.current === id) {
-						const response = await Collection.findOneAsync({key});
+			const handle = subscribe(
+				subscription(publication, [key, query, observe], {
+					onStop() {
 						if (handleRef.current === id) {
-							setResults(response?.results ?? []);
+							setDirty(true);
 							setLoading(false);
 						}
-					}
-				},
-			});
+					},
+					async onReady() {
+						if (handleRef.current === id) {
+							const response = await Collection.findOneAsync({key});
+							if (handleRef.current === id) {
+								setResults(response?.results ?? []);
+								setLoading(false);
+							}
+						}
+					},
+				}),
+			);
 
 			return () => {
 				stopSubscription(handle);
