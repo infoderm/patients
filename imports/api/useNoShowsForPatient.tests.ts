@@ -1,9 +1,10 @@
-import {renderHook, waitFor} from '@testing-library/react';
 import {range} from '@iterable-iterator/range';
 
 import {assert} from 'chai';
 
 import {startOfTomorrow, startOfYesterday} from 'date-fns';
+
+import {renderHook, waitFor} from '../_test/react';
 
 import {client, randomPassword, randomUserId} from '../_test/fixtures';
 
