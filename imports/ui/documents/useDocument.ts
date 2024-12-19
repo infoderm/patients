@@ -5,7 +5,7 @@ import useItem from '../../api/publication/useItem';
 import findOne from '../../api/publication/documents/findOne';
 
 const useDocument = (documentId: DocumentId) => {
-	const isLoading = useSubscription(findOne, documentId);
+	const isLoading = useSubscription(findOne, [documentId]);
 	const loadingSubscription = isLoading();
 
 	const {loading: loadingResult, result} = useItem(

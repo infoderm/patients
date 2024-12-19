@@ -13,7 +13,7 @@ import useLoggingIn from '../users/useLoggingIn';
 import useItem from '../../api/publication/useItem';
 
 const useSettingSubscription = <K extends SettingKey>(key: K) =>
-	useSubscription(byKey, key);
+	useSubscription(byKey, [key]);
 
 const withDefault = <K extends SettingKey>(
 	_loading: boolean,

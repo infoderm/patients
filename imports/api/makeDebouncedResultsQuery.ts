@@ -1,6 +1,6 @@
 import {type DependencyList, useEffect, useRef} from 'react';
 
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import useSubscription from './publication/useSubscription';
 import useCursor from './publication/useCursor';
 import type Collection from './Collection';
@@ -13,12 +13,12 @@ const init = [];
 const makeDebouncedResultsQuery =
 	<T extends Document, U = T>(
 		collection: Collection<T, U>,
-		publication: Publication<[UserQuery<T>]>,
+		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
 	(query: UserQuery<T>, deps: DependencyList) => {
 		const lastValue = useRef<U[]>(init);
 
-		const isLoading = useSubscription(publication, query);
+		const isLoading = useSubscription(publication, [query]);
 		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);

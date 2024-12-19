@@ -4,20 +4,24 @@ import {EJSON} from 'meteor/ejson';
 import type Args from '../Args';
 
 import type SubscriptionError from './SubscriptionError';
+import {type SubscriptionId} from './subscriptionId';
 
 type MetaHandle = {
 	handle: Meteor.SubscriptionHandle;
 	internals: Meteor.InternalSubscriptionHandle;
 	refCount: number;
-	onReady: Set<() => void>;
-	onStop: Set<(error: SubscriptionError) => void>;
+	onReady: Map<SubscriptionId, (id: SubscriptionId) => Promise<void> | void>;
+	onStop: Map<
+		SubscriptionId,
+		(id: SubscriptionId, error: SubscriptionError) => Promise<void> | void
+	>;
 };
 
 const _registry = new Map<string, MetaHandle>();
 
-export const identify = <A extends Args>(name: string, params: A[]) =>
+export const identify = <A extends Args>(name: string, args: A) =>
 	EJSON.stringify(
-		{userId: Meteor.userId(), name, params},
+		{userId: Meteor.userId(), name, args},
 		{indent: '', canonical: false},
 	);
 

@@ -73,26 +73,34 @@ export type MergeInfo = {loading: boolean} & (
 );
 
 const useMergeInfo = (toMerge: string[]): MergeInfo => {
-	const loadingPatientsSubscription = useSubscription(patientsPub, {
-		filter: {
-			_id: {$in: toMerge},
+	const loadingPatientsSubscription = useSubscription(patientsPub, [
+		{
+			filter: {
+				_id: {$in: toMerge},
+			},
 		},
-	});
-	const loadingConsultationsSubscription = useSubscription(consultationsPub, {
-		filter: {
-			patientId: {$in: toMerge},
+	]);
+	const loadingConsultationsSubscription = useSubscription(consultationsPub, [
+		{
+			filter: {
+				patientId: {$in: toMerge},
+			},
 		},
-	});
-	const loadingDocumentsSubscription = useSubscription(documentsPub, {
-		filter: {
-			patientId: {$in: toMerge},
+	]);
+	const loadingDocumentsSubscription = useSubscription(documentsPub, [
+		{
+			filter: {
+				patientId: {$in: toMerge},
+			},
 		},
-	});
-	const loadingAttachmentsSubscription = useSubscription(attachmentsPub, {
-		filter: {
-			'meta.attachedToPatients': {$in: toMerge},
+	]);
+	const loadingAttachmentsSubscription = useSubscription(attachmentsPub, [
+		{
+			filter: {
+				'meta.attachedToPatients': {$in: toMerge},
+			},
 		},
-	});
+	]);
 
 	const {loading: loadingPatientsResults, results: fetchedPatients} = useCursor(
 		() => Patients.find({_id: {$in: toMerge}}),

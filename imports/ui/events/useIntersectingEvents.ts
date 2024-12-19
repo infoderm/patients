@@ -18,8 +18,8 @@ const useIntersectingEvents = (
 	deps: DependencyList,
 ) => {
 	// TODO Do not oversubscribe
-	const publication = isValid(begin) && isValid(end) ? intersects : null;
-	const isLoading = useSubscription(publication, begin, end);
+	const enabled = isValid(begin) && isValid(end);
+	const isLoading = useSubscription(intersects, [begin, end], enabled);
 	const loadingPublication = isLoading();
 
 	const selector = {
@@ -34,9 +34,11 @@ const useIntersectingEvents = (
 
 	const loading = loadingPublication || loadingResults;
 
+	console.debug({loadingPublication, loadingResults, intersects, results});
+
 	return {
 		loading,
-		results: publication ? results : [],
+		results: enabled ? results : [],
 	};
 };
 
