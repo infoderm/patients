@@ -1,10 +1,11 @@
 import {map} from '@iterable-iterator/map';
 import {range} from '@iterable-iterator/range';
 
-import React, {StrictMode} from 'react';
-import {render} from '@testing-library/react';
+import React from 'react';
 
 import {assert} from 'chai';
+
+import {render} from '../../_test/react';
 
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 
@@ -43,11 +44,11 @@ client(__filename, () => {
 		const onClick = () => {};
 
 		const {getAllByRole, findByRole} = render(
-			<StrictMode>
+			<>
 				{patients.map(({_id}) => (
 					<ReactivePatientChip key={_id} patient={{_id}} onClick={onClick} />
 				))}
-			</StrictMode>,
+			</>,
 		);
 
 		const chips = getAllByRole('button');

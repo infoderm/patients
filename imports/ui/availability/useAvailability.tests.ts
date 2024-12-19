@@ -1,8 +1,8 @@
-import {renderHook, waitFor} from '@testing-library/react';
-
 import {assert} from 'chai';
 
 import {addMilliseconds} from 'date-fns';
+
+import {renderHook, waitFor} from '../../_test/react';
 
 import {
 	client,
