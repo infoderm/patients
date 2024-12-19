@@ -1,6 +1,6 @@
-import {renderHook, waitFor} from '@testing-library/react';
-
 import {assert} from 'chai';
+
+import {renderHook, waitFor} from '../../_test/react';
 
 import {
 	client,

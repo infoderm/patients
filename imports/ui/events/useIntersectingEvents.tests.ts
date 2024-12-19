@@ -1,11 +1,11 @@
-import {renderHook, waitFor} from '@testing-library/react';
-
 import {assert} from 'chai';
 
 import {addMilliseconds} from 'date-fns';
 
 import {list} from '@iterable-iterator/list';
 import {map} from '@iterable-iterator/map';
+
+import {renderHook, waitFor} from '../../_test/react';
 
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 import createUserWithPassword from '../../api/user/createUserWithPassword';

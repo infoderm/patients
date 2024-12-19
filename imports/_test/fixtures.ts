@@ -5,7 +5,6 @@ import {assert, expect} from 'chai';
 
 import {Meteor} from 'meteor/meteor';
 
-import {cleanup as _unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
@@ -22,6 +21,8 @@ import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
 import {_router} from '../ui/App';
 import {getWatchStreamCount} from '../api/query/watch';
+
+import {unmount as _unmount} from './react';
 
 export {
 	default as randomId,
