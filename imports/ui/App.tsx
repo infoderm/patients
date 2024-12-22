@@ -35,7 +35,6 @@ export const muiCache = createCache({
 
 export const _router: {navigate: NavigateFunction} = {
 	navigate(_to: Partial<Path> | string | number) {
-		// TODO: This gets called in non-full-app client tests.
 		console.warn('Using unitialized test-only _navigate function call.');
 	},
 };
