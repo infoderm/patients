@@ -15,9 +15,11 @@ export const useSubscriptionEffectClient = <A extends Args>(
 	useEffect(() => {
 		const handle = subscribe(subscription, enabled);
 
-		return () => {
-			stopSubscription(handle);
-		};
+		return enabled
+			? () => {
+					stopSubscription(handle);
+			  }
+			: undefined;
 	}, deps);
 };
 
