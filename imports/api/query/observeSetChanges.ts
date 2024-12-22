@@ -20,6 +20,7 @@ const _makeOnChange = <T extends Document>(
 
 	return (items: T[]) => {
 		const next = _toSet(items);
+		// TODO Should have an async/await version of this.
 		DiffSequence.diffQueryUnorderedChanges<T>(
 			previous,
 			next,

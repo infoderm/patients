@@ -118,7 +118,10 @@ const useFindClient = <T extends Document, U = T>(
 		[cursor, setLoading, setResults],
 	);
 
+	return {loading, results};
 
+	// TODO: THis is bad when deferring after loading is false and subscription
+	// completes later.
 	return useDeferredValue(
 		useMemo(() => ({loading, results}), [loading, results]),
 	);

@@ -39,6 +39,7 @@ const _watchInit = async <T extends Document, U = T>(
 			.rawCollection()
 			.find(filter as MongoFilter<T>, {...options, session})
 			.toArray();
+		console.debug({_watchInit: init});
 		const {operationTime} = session;
 		assert(operationTime !== undefined, 'operationTime is undefined');
 		return {init, operationTime};

@@ -43,12 +43,19 @@ const subscribe = <A extends Args>(
 	{publication: {name}, args, callbacks}: Subscription<A>,
 	enabled = true,
 ): SubscriptionRegistryEntry => {
-	// console.debug(JSON.stringify({
-	// what: 'subscribe',
-	// msg: 'request',
-	// name,
-	// params,
-	// }, undefined, 2));
+	console.debug(
+		JSON.stringify(
+			{
+				what: 'subscribe',
+				msg: 'request',
+				name,
+				args,
+				enabled,
+			},
+			undefined,
+			2,
+		),
+	);
 	const id = subscriptionId();
 	_safeMaybePromise(callbacks?.onSubscribe?.(id));
 	const key = identify(name, args);
@@ -59,10 +66,37 @@ const subscribe = <A extends Args>(
 			const onStop = _callbacks(id, callbacks?.onStop);
 			const handle = Meteor.subscribe(name, ...args, {
 				onReady() {
+					console.debug(
+						JSON.stringify(
+							{
+								what: 'subscribe',
+								msg: 'onReady',
+								name,
+								args,
+								enabled,
+							},
+							undefined,
+							2,
+						),
+					);
 					_runCallbacks(async ([id, callback]) => callback(id), onReady);
 					onReady.clear();
 				},
 				onStop(error: SubscriptionError) {
+					console.debug(
+						JSON.stringify(
+							{
+								what: 'subscribe',
+								msg: 'onStop',
+								name,
+								args,
+								enabled,
+								error,
+							},
+							undefined,
+							2,
+						),
+					);
 					set(key, undefined);
 					_runCallbacks(async ([id, callback]) => callback(id, error), onStop);
 					onStop.clear();
@@ -73,23 +107,35 @@ const subscribe = <A extends Args>(
 			if (!ready) _safeMaybePromise(callbacks?.onLoading?.(id));
 			set(key, {handle, internals, refCount: 1, onReady, onStop});
 
-			// console.debug(JSON.stringify({
-			// what: 'subscribe',
-			// msg: 'create',
-			// key,
-			// id: internals.id,
-			// name: internals.name,
-			// params: internals.params,
-			// }, undefined, 2));
+			console.debug(
+				JSON.stringify(
+					{
+						what: 'subscribe',
+						msg: 'create',
+						key,
+						id: internals.id,
+						name: internals.name,
+						params: internals.params,
+					},
+					undefined,
+					2,
+				),
+			);
 		} else {
-			// console.debug(JSON.stringify({
-			// what: 'subscribe',
-			// msg: 'recycle',
-			// key,
-			// id: entry.internals.id,
-			// name: entry.internals.name,
-			// params: entry.internals.params,
-			// }, undefined, 2));
+			console.debug(
+				JSON.stringify(
+					{
+						what: 'subscribe',
+						msg: 'recycle',
+						key,
+						id: entry.internals.id,
+						name: entry.internals.name,
+						params: entry.internals.params,
+					},
+					undefined,
+					2,
+				),
+			);
 			++entry.refCount;
 			entry.internals.inactive = false;
 			const ready = entry.internals.ready;

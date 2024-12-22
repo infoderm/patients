@@ -76,6 +76,7 @@ export const publishEvents = async function (
 			docs.set(_id, document);
 			const entry = await event(_id, document);
 			this.added(events, _id, entry);
+			console.debug({what: 'added'});
 		},
 
 		changed: async (_id, changes) => {
@@ -94,6 +95,7 @@ export const publishEvents = async function (
 	});
 
 	// Mark the subscription as ready.
+	console.debug({what: 'ready'});
 	this.ready();
 
 	// Stop observing the cursor when the client unsubscribes. Stopping a
@@ -102,6 +104,7 @@ export const publishEvents = async function (
 	this.onStop(async (error?: Error) => {
 		await handle.emit('stop', error);
 	});
+	console.debug({what: 'publishEvents', query, options});
 };
 
 export {default as intersectsInterval} from './interval/intersectsInterval';
