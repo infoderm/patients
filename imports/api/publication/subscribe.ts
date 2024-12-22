@@ -60,10 +60,12 @@ const subscribe = <A extends Args>(
 			const handle = Meteor.subscribe(name, ...args, {
 				onReady() {
 					_runCallbacks(async ([id, callback]) => callback(id), onReady);
+					onReady.clear();
 				},
 				onStop(error: SubscriptionError) {
 					set(key, undefined);
 					_runCallbacks(async ([id, callback]) => callback(id, error), onStop);
+					onStop.clear();
 				},
 			});
 			const internals = subscriptionInternals(handle);
