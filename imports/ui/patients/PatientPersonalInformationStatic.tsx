@@ -236,7 +236,7 @@ const PatientPersonalInformationStatic = ({
 
 	usePrompt(
 		'You are trying to leave the page while in edit mode. Are you sure you want to continue?',
-		dirty,
+		editing && dirty,
 	);
 
 	const {classes} = useStyles();
