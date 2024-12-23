@@ -165,9 +165,7 @@ export default define({
 					commit();
 				},
 			},
-			{
-				projectionFn: ({sex}) => ({sex}),
-			},
+			({sex}) => ({sex}),
 		);
 
 		const cHandle = await observeSetChanges(
@@ -191,7 +189,7 @@ export default define({
 					commit();
 				},
 			},
-			{projectionFn: ({patientId}) => ({patientId})},
+			({patientId}) => ({patientId}),
 		);
 
 		initializing = false;

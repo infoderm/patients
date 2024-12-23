@@ -228,7 +228,7 @@ const createTagCollection = <
 
 					// We don't care about `changed` events.
 				},
-				{projectionFn: (_fields) => ({})},
+				(_fields) => ({}),
 			);
 
 			// Instead, we'll send one `added` message right after `observeChanges` has

@@ -49,7 +49,7 @@ export const defer = <A extends any[]>(
 			},
 
 			() => {
-				// NOTE This handles cancellation.
+				// NOTE: This handles cancellation.
 			},
 		)
 		.catch((error: unknown) => {

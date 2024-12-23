@@ -1,8 +1,16 @@
+import {EJSON} from 'meteor/ejson';
+
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
 
 import type schema from '../lib/schema';
 
-import {type DocumentUpdate} from './DocumentUpdate';
+import type Document from './Document';
+import {
+	type DocumentUpdateEntry as UpdateEntry,
+	type DocumentUpdate,
+	type OptionalKeys,
+	type RequiredKeys,
+} from './DocumentUpdate';
 import type TransactionDriver from './transaction/TransactionDriver';
 
 const id = <T>(x: T): T => x;
@@ -11,9 +19,9 @@ export type Entry<T> = {
 	[K in keyof T]: [K, T[K]];
 }[keyof T];
 
-export type UpdateEntry<T> = {
-	[K in keyof T]: [K, T[K] | null];
-}[keyof T];
+const _hasOwn = Object.prototype.hasOwnProperty;
+const hasOwn = <T>(object: T, property: string | number | symbol) =>
+	_hasOwn.call(object, property);
 
 export const yieldKey = function* <T, K extends keyof T>(
 	fields: T,
@@ -23,7 +31,7 @@ export const yieldKey = function* <T, K extends keyof T>(
 		x: Exclude<T[K], undefined | null>,
 	) => Exclude<T[K], undefined | null> = id<Exclude<T[K], undefined | null>>,
 ): IterableIterator<[K, Exclude<T[K], undefined | null>]> {
-	if (Object.prototype.hasOwnProperty.call(fields, key)) {
+	if (hasOwn(fields, key)) {
 		const value = fields[key] as Exclude<T[K], undefined | null>;
 		type.parse(value);
 		yield [key, transform(value)];
@@ -36,7 +44,7 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 	type: schema.ZodType<T[K]>,
 	transform: (x: T[K]) => T[K] = id<T[K]>,
 ): IterableIterator<[K, T[K]]> {
-	if (Object.prototype.hasOwnProperty.call(fields, key)) {
+	if (hasOwn(fields, key)) {
 		type.nullable().optional().parse(fields[key]);
 		yield [key, transform(fields[key])];
 	}
@@ -111,26 +119,21 @@ export const makeComputeUpdate =
 		};
 	};
 
-type SanitizeUpdate<T, U> = (
+type SanitizeUpdate<T extends Document, U extends Document> = (
 	fields: DocumentUpdate<T>,
 ) => IterableIterator<UpdateEntry<U>>;
 
-const fromEntries = <K extends string | number | symbol, V>(
-	entries: Array<[K, V]>,
-): undefined | Record<K, V> =>
-	entries.length === 0
-		? undefined
-		: (Object.fromEntries(entries) as Record<K, V>);
-
 export const makeSanitize =
-	<T, U>(sanitizeUpdate: SanitizeUpdate<T, U>) =>
+	<T extends Document, U extends Document>(
+		sanitizeUpdate: SanitizeUpdate<T, U>,
+	) =>
 	(fields: DocumentUpdate<T>) => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
-			$set: fromEntries(
+			$set: Object.fromEntries(
 				update.filter(([, value]) => value !== undefined && value !== null),
-			) as Partial<U>,
-			$unset: fromEntries(
+			),
+			$unset: Object.fromEntries(
 				update
 					.filter(([, value]) => value === undefined || value === null)
 					.map(([key]) => [key, true]),
@@ -138,19 +141,70 @@ export const makeSanitize =
 		};
 	};
 
-const documentDiffGen = function* <T, U extends {}>(
+const documentDiffGen = function* <T extends Document, U extends Document>(
 	prevState: T,
-	newState: Required<T> extends U ? U : never,
-): IterableIterator<Entry<U>> {
-	for (const [key, newValue] of Object.entries(newState)) {
-		if (JSON.stringify(newValue) !== JSON.stringify(prevState[key])) {
-			yield [key as keyof U, newValue as U[keyof U]];
+	newState: U,
+): IterableIterator<UpdateEntry<T>> {
+	const newIndex = new Map<keyof T, T[keyof T]>(Object.entries(newState));
+	const prevIndex = new Map<keyof T, T[keyof T]>(Object.entries(prevState));
+	for (const [key, newValue] of newIndex) {
+		if (
+			!EJSON.equals(
+				newValue,
+				// @ts-expect-error Typing of EJSON.equals is incorrect.
+				prevIndex.get(key),
+			)
+		) {
+			yield [key as RequiredKeys<T> & OptionalKeys<T>, newValue];
+		}
+	}
+
+	for (const key of prevIndex.keys()) {
+		if (!newIndex.has(key)) {
+			yield [key as OptionalKeys<T>, null];
 		}
 	}
 };
 
-export const documentDiff = <T, U extends {}>(
+export const documentDiff = <T extends Document, U extends Document>(
 	prevState: T,
-	newState: Required<T> extends U ? U : never,
-): Partial<U> =>
-	Object.fromEntries(documentDiffGen(prevState, newState)) as Partial<U>;
+	newState: U,
+): DocumentUpdate<T> =>
+	Object.fromEntries(documentDiffGen(prevState, newState)) as DocumentUpdate<T>;
+
+export const documentDiffApplyGen = function* <T extends Document>(
+	prevState: T,
+	changes: DocumentUpdate<T>,
+): IterableIterator<Entry<T>> {
+	const index = new Map(Object.entries(changes));
+	for (const [key, value] of Object.entries(prevState)) {
+		if (index.has(key)) {
+			const newValue = index.get(key);
+			if (newValue !== undefined && newValue !== null) {
+				yield [key, newValue as T[keyof T]];
+			}
+
+			index.delete(key);
+		} else {
+			yield [key, value];
+		}
+	}
+
+	for (const [key, newValue] of index) {
+		if (newValue !== undefined && newValue !== null) {
+			yield [key, newValue as T[keyof T]];
+		}
+	}
+};
+
+export const documentDiffApply = <T extends Document>(
+	prevState: T,
+	changes: DocumentUpdate<T>,
+): T => {
+	return Object.fromEntries(documentDiffApplyGen(prevState, changes)) as T;
+};
+
+export const isDiffEmpty = <T extends Document>(obj: DocumentUpdate<T>) =>
+	Object.keys(obj).length === 0;
+
+export {type DocumentUpdateEntry as UpdateEntry} from './DocumentUpdate';

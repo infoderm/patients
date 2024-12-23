@@ -22,6 +22,10 @@ import isAppTest from '../app/isAppTest';
 import {_router} from '../ui/App';
 import {getWatchStreamCount} from '../api/query/watch';
 
+import sleep from '../lib/async/sleep';
+import define from '../api/collection/define';
+import {removeCollection} from '../api/collection/registry';
+
 import {unmount as _unmount} from './react';
 
 export {
@@ -31,6 +35,28 @@ export {
 } from '../api/randomId';
 
 let resolving = 0;
+
+export const waitFor = async (condition: () => boolean) => {
+	while (!condition()) {
+		// eslint-disable-next-line no-await-in-loop
+		await sleep(50);
+	}
+};
+
+export const withMockCollection =
+	<T extends Document, U = T>(
+		callback: (collection: Collection<T, U>) => Promise<void> | void,
+	) =>
+	async () => {
+		const collectionName = '__mocks__';
+		const collection = define<T, U>(collectionName);
+		try {
+			await callback(collection);
+		} finally {
+			await collection.dropCollectionAsync();
+			removeCollection(collectionName);
+		}
+	};
 
 const resolveOnPopstate = async () =>
 	new Promise<void>((resolve) => {

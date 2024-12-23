@@ -204,7 +204,7 @@ export async function setupConsultationsStatsPublication(
 				this.changed(collectionName, key, state());
 			},
 		},
-		{projectionFn: ({price, datetime}) => ({price, datetime})},
+		({price, datetime}) => ({price, datetime}),
 	);
 
 	// Instead, we'll send one `added` message right after `observeChanges` has

@@ -1,4 +1,4 @@
-import {useMemo, useCallback, useState, type DependencyList} from 'react';
+import {useMemo, useState, type DependencyList} from 'react';
 
 import type Document from '../Document';
 
@@ -23,40 +23,24 @@ const useQuery = <A extends Args, T extends Document, U = T>(
 	const [loading, setLoading] = useState<boolean>(enabled);
 	const [results, setResults] = useState<U[]>([]);
 
-	const setLoadingDebug = useCallback(
-		(x: any) => {
-			console.debug({setLoading: x});
-			setLoading(x);
-		},
-		[setLoading],
-	);
-
-	const setResultsDebug = useCallback(
-		(x: any) => {
-			console.debug({setResults: x});
-			setResults(x);
-		},
-		[setResults],
-	);
-
 	let cleanup: (() => void) | undefined;
 
 	useSubscriptionEffect(
 		subscription(publication, args, {
 			onLoading() {
-				setLoadingDebug(true);
+				setLoading(true);
 			},
 
 			onReady() {
-				cleanup = findClientEffect(cursor, setLoadingDebug, setResultsDebug);
+				cleanup = findClientEffect(cursor, setLoading, setResults);
 			},
 
 			onStop() {
-				setLoadingDebug(!enabled);
+				setLoading(!enabled);
 				cleanup?.();
 			},
 		}),
-		[enabled, cursor, setLoadingDebug, setResultsDebug],
+		[enabled, cursor, setLoading, setResults],
 		enabled,
 	);
 

@@ -1,7 +1,7 @@
 import {configure as configureReact} from '@testing-library/react';
 
 configureReact({
-	reactStrictMode: false,
+	reactStrictMode: true,
 });
 
 export {

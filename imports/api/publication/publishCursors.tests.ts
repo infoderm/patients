@@ -104,6 +104,7 @@ const makeMockedContext = (
 			state.calls.push(['unblock']);
 		},
 		added(collection: string, id: string, fields: Document) {
+			// TODO: Cover async callbacks.
 			state.calls.push(['added', collection, id, fields]);
 		},
 		changed(collection: string, id: string, fields: Document) {

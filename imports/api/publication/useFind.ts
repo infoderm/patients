@@ -6,7 +6,6 @@ import {
 	useEffect,
 	type DependencyList,
 	useState,
-	useDeferredValue,
 	type SetStateAction,
 	type Dispatch,
 } from 'react';
@@ -119,12 +118,6 @@ const useFindClient = <T extends Document, U = T>(
 	);
 
 	return {loading, results};
-
-	// TODO: THis is bad when deferring after loading is false and subscription
-	// completes later.
-	return useDeferredValue(
-		useMemo(() => ({loading, results}), [loading, results]),
-	);
 };
 
 const useFind = useFindClient;

@@ -1,16 +1,15 @@
-import {DiffSequence} from 'meteor/diff-sequence';
-
 import schema from '../lib/schema';
 
 import type Collection from './Collection';
 import type Document from './Document';
 import type Filter from './query/Filter';
-import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
 import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 import {userQuery} from './query/UserQuery';
 import type UserQuery from './query/UserQuery';
 import watch from './query/watch';
 import {type Context} from './publication/Context';
+import {diffSequences} from './query/diffSequences';
+import type ObserveSequenceChangesCallbacks from './ObserveSequenceChangesCallbacks';
 
 const observeOptions = schema
 	.object({
@@ -64,14 +63,10 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 			this.stop();
 		};
 
-		// NOTE We diff ids only if we do not care about change events.
-		const diffOptions = callbacks.changed
-			? undefined
-			: {
-					projectionFn: (_fields: T) => ({}),
-			  };
+		// NOTE: We diff ids only if we do not care about change events.
+		const projection = callbacks.changed ? undefined : (_fields: T) => ({});
 
-		const observer: ObserveChangesCallbacks<T> = {};
+		const observer: ObserveSequenceChangesCallbacks<T> = {};
 
 		if (callbacks.addedBefore) observer.addedBefore = stop;
 		if (callbacks.movedBefore) observer.movedBefore = stop;
@@ -85,14 +80,9 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 		);
 
 		handle.once('change').then(
-			async (init) => {
+			(init) => {
 				handle.on('change', async (next) => {
-					DiffSequence.diffQueryOrderedChanges<T>(
-						init,
-						next,
-						observer,
-						diffOptions,
-					);
+					return diffSequences<T>(init, next, observer, projection);
 				});
 
 				this.added(observedQueryCacheCollectionName, uid, {

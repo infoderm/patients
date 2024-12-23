@@ -46,7 +46,7 @@ export default define({
 					this.changed(collection, key, state());
 				},
 			},
-			{projectionFn: (_fields) => ({})},
+			(_fields) => ({}),
 		);
 
 		initializing = false;

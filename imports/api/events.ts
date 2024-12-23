@@ -1,7 +1,5 @@
 import assert from 'assert';
 
-import {DiffSequence} from 'meteor/diff-sequence';
-
 import addMilliseconds from 'date-fns/addMilliseconds';
 import addMinutes from 'date-fns/addMinutes';
 import isBefore from 'date-fns/isBefore';
@@ -13,6 +11,7 @@ import {
 } from './collection/consultations';
 
 import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
+import {documentDiffApply} from './update';
 import {Patients} from './collection/patients';
 
 import {type EventDocument, events} from './collection/events';
@@ -76,15 +75,15 @@ export const publishEvents = async function (
 			docs.set(_id, document);
 			const entry = await event(_id, document);
 			this.added(events, _id, entry);
-			console.debug({what: 'added'});
 		},
 
 		changed: async (_id, changes) => {
 			const document = docs.get(_id);
 			assert(document !== undefined);
-			DiffSequence.applyChanges(document, changes);
 
-			const entry = await event(_id, document);
+			const updatedDoc = documentDiffApply(document, changes);
+
+			const entry = await event(_id, updatedDoc);
 			this.changed(events, _id, entry);
 		},
 
@@ -95,7 +94,6 @@ export const publishEvents = async function (
 	});
 
 	// Mark the subscription as ready.
-	console.debug({what: 'ready'});
 	this.ready();
 
 	// Stop observing the cursor when the client unsubscribes. Stopping a
@@ -104,7 +102,6 @@ export const publishEvents = async function (
 	this.onStop(async (error?: Error) => {
 		await handle.emit('stop', error);
 	});
-	console.debug({what: 'publishEvents', query, options});
 };
 
 export {default as intersectsInterval} from './interval/intersectsInterval';

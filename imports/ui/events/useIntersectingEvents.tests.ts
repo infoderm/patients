@@ -64,7 +64,7 @@ client(__filename, () => {
 		});
 	});
 
-	it.only('should have aggregate on load', async () => {
+	it('should have aggregate on load', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -95,7 +95,6 @@ client(__filename, () => {
 		);
 
 		await waitFor(() => {
-			console.debug({what: 'waitFor', ...result.current});
 			assert(!result.current.loading);
 		});
 

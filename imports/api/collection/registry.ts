@@ -24,3 +24,8 @@ export const addCollection = <T extends Document, U = T>(
 	assert(!hasCollection(name));
 	_registry.set(name, collection);
 };
+
+export const removeCollection = (name: string) => {
+	assert(hasCollection(name));
+	_registry.delete(name);
+};

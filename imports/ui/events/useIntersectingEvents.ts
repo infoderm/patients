@@ -16,7 +16,7 @@ const useIntersectingEvents = (
 	options: Options<EventDocument>,
 	deps: DependencyList,
 ) => {
-	// TODO Do not oversubscribe
+	// TODO: Do not oversubscribe
 	const enabled = isValid(begin) && isValid(end);
 
 	const selector = {
@@ -31,8 +31,6 @@ const useIntersectingEvents = (
 		deps,
 		enabled,
 	);
-
-	console.debug({loading, intersects, results});
 
 	return {
 		loading,
