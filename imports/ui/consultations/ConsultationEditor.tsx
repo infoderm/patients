@@ -209,6 +209,7 @@ const reducer = (state: State, action: Action) => {
 				inBookNumberString: '',
 				inBookNumberError: false,
 				inBookNumberDisabled: true,
+				loadingInBookNumber: false,
 				syncInBookNumber: false,
 				dirty: state.dirty || state.inBookNumberString !== '',
 			};
