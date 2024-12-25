@@ -196,7 +196,6 @@
     - [ ] Payment
       - [ ] Set account holder
       - [ ] Set IBAN, check that it validates
-      - [ ] Set account holder
       - [ ] Check only EUR is supported
     - [ ] Locale
       - [ ] Changing language updates first day of the week and first week
