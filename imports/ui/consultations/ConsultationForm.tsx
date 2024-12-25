@@ -20,11 +20,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '../input/TextField';
 
 import useBookStats from '../books/useBookStats';
-import {books, useBooksFind} from '../../api/books';
+import {books} from '../../api/books';
 import AutocompleteWithSuggestions from '../input/AutocompleteWithSuggestions';
 import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import CurrencyAmountInput from '../input/CurrencyAmountInput';
 import {parsePositiveIntegerStrictOrUndefined} from '../../api/string';
+import useBooksFind from '../books/useBooksFind';
 
 const useInBookNumberCollides = (
 	consultationId: string | undefined,
