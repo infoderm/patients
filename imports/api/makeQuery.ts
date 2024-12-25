@@ -1,8 +1,9 @@
+import assert from 'assert';
+
 import {type DependencyList} from 'react';
 
 import type PublicationEndpoint from './publication/PublicationEndpoint';
-import useSubscription from './publication/useSubscription';
-import useCursor from './publication/useCursor';
+import useQuery from './publication/useQuery';
 
 import type Collection from './Collection';
 import type Document from './Document';
@@ -15,16 +16,17 @@ const makeQuery =
 		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
 	(query: UserQuery<T> | null, deps: DependencyList) => {
-		const isLoading = useSubscription(publication, [query], query !== null);
-		const loadingSubscription = isLoading();
-		const [selector, options] =
-			query === null ? [] : queryToSelectorOptionsPair(query);
-		const {loading: loadingResults, results} = useCursor(
-			() => (query === null ? null : collection.find(selector, options)),
+		return useQuery(
+			publication,
+			[query],
+			() => {
+				assert(query !== null);
+				const [selector, options] = queryToSelectorOptionsPair(query);
+				return collection.find(selector, options);
+			},
 			deps,
+			query !== null,
 		);
-		const loading = loadingSubscription || loadingResults;
-		return {loading, results};
 	};
 
 export default makeQuery;
