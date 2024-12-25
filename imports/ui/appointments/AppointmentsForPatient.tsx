@@ -35,7 +35,7 @@ const _filter = (patientId: string, {showCancelled, showNoShow}) => {
 				scheduledDatetime: showNoShow
 					? undefined
 					: {
-							$ge: startOfToday(), // TODO make reactive?
+							$gte: startOfToday(), // TODO: make reactive?
 					  },
 			}),
 			showCancelled
