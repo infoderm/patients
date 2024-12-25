@@ -8,7 +8,6 @@ import dateFormat from 'date-fns/format';
 
 import TagList from '../tags/TagList';
 
-import {useBooks} from '../../api/books';
 import {useSettingCached} from '../settings/hooks';
 
 import YearJumper from '../navigation/YearJumper';
@@ -17,6 +16,7 @@ import FixedFab from '../button/FixedFab';
 
 import BookCard from './BookCard';
 import BooksDownloadDialog from './BooksDownloadDialog';
+import useBooks from './useBooks';
 
 type Props = {
 	readonly type?: string;

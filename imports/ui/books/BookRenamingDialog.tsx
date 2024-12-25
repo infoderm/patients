@@ -4,8 +4,10 @@ import TagRenamingDialog from '../tags/TagRenamingDialog';
 
 import rename from '../../api/endpoint/books/rename';
 
-import {books, useBooksFind} from '../../api/books';
+import {books} from '../../api/books';
 import {type BookDocument} from '../../api/collection/books';
+
+import useBooksFind from './useBooksFind';
 
 type Props = {
 	readonly open: boolean;

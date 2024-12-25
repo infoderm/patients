@@ -3,8 +3,6 @@ import addYears from 'date-fns/addYears';
 
 import schema from '../lib/schema';
 
-import makeQuery from './makeQuery';
-import makeObservedQueryHook from './makeObservedQueryHook';
 import {
 	type NormalizedLine,
 	normalizedLine,
@@ -13,16 +11,7 @@ import {
 } from './string';
 
 import {Books, collection} from './collection/books';
-import {BooksCache} from './collection/books/cache';
-
-import publication from './publication/books/find';
-import cachePublication from './publication/books/observe';
 import type TransactionDriver from './transaction/TransactionDriver';
-
-export const useBooks = makeQuery(Books, publication);
-
-// TODO rename to useObservedBooks
-export const useBooksFind = makeObservedQueryHook(BooksCache, cachePublication);
 
 const sanitizeInput = normalizedLineInput;
 const sanitize = normalizedLine;
