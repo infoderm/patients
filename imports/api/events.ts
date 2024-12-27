@@ -1,5 +1,7 @@
 import assert from 'assert';
 
+import {DiffSequence} from 'meteor/diff-sequence';
+
 import addMilliseconds from 'date-fns/addMilliseconds';
 import addMinutes from 'date-fns/addMinutes';
 import isBefore from 'date-fns/isBefore';
@@ -14,9 +16,12 @@ import {DEFAULT_DURATION_IN_MINUTES} from './consultations';
 import {Patients} from './collection/patients';
 
 import {type EventDocument, events} from './collection/events';
-import findOneSync from './publication/findOneSync';
 
-export const event = (
+import {type Options} from './transaction/TransactionDriver';
+import observeSetChanges from './query/observeSetChanges';
+import type Filter from './query/Filter';
+
+export const event = async (
 	_id: string,
 	{
 		owner,
@@ -28,8 +33,8 @@ export const event = (
 		doneDatetime,
 		createdAt,
 	}: Omit<ConsultationDocument, '_id'>,
-): EventDocument => {
-	const patient = findOneSync(Patients, {_id: patientId}); // TODO Make reactive (maybe)?
+): Promise<EventDocument> => {
+	const patient = await Patients.findOneAsync({_id: patientId}); // TODO Make reactive (maybe)?
 	assert(patient !== undefined);
 	const begin = datetime;
 	const end = isDone
@@ -59,17 +64,29 @@ export const event = (
 	};
 };
 
-export const publishEvents = function (query, options) {
-	const handle = Consultations.find(query, options).observe({
-		added: ({_id, ...fields}) => {
-			this.added(events, _id, event(_id, fields));
+export const publishEvents = async function (
+	query: Filter<ConsultationDocument>,
+	options: Options,
+) {
+	const docs = new Map();
+	const handle = await observeSetChanges(Consultations, query, options, {
+		added: async (_id, document: Omit<ConsultationDocument, '_id'>) => {
+			docs.set(_id, document);
+			const entry = await event(_id, document);
+			this.added(events, _id, entry);
 		},
 
-		changed: ({_id, ...fields}) => {
-			this.changed(events, _id, event(_id, fields));
+		changed: async (_id, changes) => {
+			const document = docs.get(_id);
+			assert(document !== undefined);
+			DiffSequence.applyChanges(document, changes);
+
+			const entry = await event(_id, document);
+			this.changed(events, _id, entry);
 		},
 
-		removed: ({_id}) => {
+		removed: (_id) => {
+			docs.delete(_id);
 			this.removed(events, _id);
 		},
 	});
@@ -80,8 +97,8 @@ export const publishEvents = function (query, options) {
 	// Stop observing the cursor when the client unsubscribes. Stopping a
 	// subscription automatically takes care of sending the client any `removed`
 	// messages.
-	this.onStop(() => {
-		handle.stop();
+	this.onStop(async () => {
+		await handle.emit('stop');
 	});
 };
 
