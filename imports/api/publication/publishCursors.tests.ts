@@ -81,6 +81,7 @@ const makeMockedContext = (
 			id: '',
 			clientAddress: '',
 			httpHeaders: {},
+			_subscriptions: {},
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			close() {},
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
