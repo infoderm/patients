@@ -53,6 +53,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@functional-abstraction/operator": "^3.0.0",
+    "@functional-abstraction/type": "^2.0.1",
     "@heap-data-structure/pairing-heap": "^4.0.0",
     "@iterable-iterator/cardinality": "^4.0.0",
     "@iterable-iterator/chain": "^2.0.0",
