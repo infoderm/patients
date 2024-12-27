@@ -4,6 +4,10 @@
   },
   "packages": {
     "mongo": {
+      "options": {
+        "minPoolSize": 100,
+        "maxPoolSize": 1000
+      },
       "oplogUrl": "",
       "oplogIncludeCollections": []
     }
