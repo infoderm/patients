@@ -29,7 +29,7 @@
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage",
     "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
     "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload",
-    "dev": "meteor run -p ${HOST:-localhost}:${PORT:-12345}",
+    "dev": "MONGO_OPLOG_URL=\"\" meteor run -s settings.json -p ${HOST:-localhost}:${PORT:-12345}",
     "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
     "install-hooks": "husky install",
     "lint": "xo",
