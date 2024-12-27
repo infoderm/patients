@@ -45,7 +45,6 @@ const makeCachedFindOneOpt =
 			let stopped = false;
 			const handle = subscribe(publication, filter, options, {
 				async onStop(e: SubscriptionError) {
-					console.debug('onStop()', {e, queryHandle});
 					stopped = true;
 					if (queryHandle !== undefined) await queryHandle.emit('stop');
 					else reset();
@@ -75,7 +74,6 @@ const makeCachedFindOneOpt =
 			});
 
 			return () => {
-				console.debug('handle.stop()');
 				handle.stop();
 			};
 		}, [key, ...deps]);
