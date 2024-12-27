@@ -1,6 +1,6 @@
 import define from './define';
 
-type SettingDocument = {
+export type SettingDocument = {
 	owner: string;
 	key: string;
 	value: any;
