@@ -23,15 +23,6 @@ const useItem = <T extends Document, U = T>(
 		deps,
 	);
 
-	console.debug({
-		what: 'USE_ITEM',
-		collection: collection?._collection.name,
-		selector,
-		options,
-		deps,
-		items,
-	});
-
 	assert(items.length <= 1, `useItem got items.length === ${items.length}`);
 	const result = items[0];
 	const found = Boolean(result);
