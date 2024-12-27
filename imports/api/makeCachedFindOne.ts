@@ -25,19 +25,23 @@ const makeCachedFindOne =
 		const ref = useRef(init);
 
 		const isLoading = useSubscription(publication, query);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const upToDate = useItem(loading ? null : collection, selector, options, [
-			loading,
-			...deps,
-		]);
+		const {
+			loading: loadingResult,
+			found,
+			result: upToDate,
+		} = useItem(collection, selector, options, [loadingSubscription, ...deps]);
 
-		const found = Boolean(upToDate);
 		const fields = {...ref.current, ...upToDate};
 		ref.current = fields;
 
-		return {loading, found, fields} as ReturnValue<U, I>;
+		return {
+			loading: loadingSubscription || loadingResult,
+			found,
+			fields,
+		} as ReturnValue<U, I>;
 	};
 
 export default makeCachedFindOne;

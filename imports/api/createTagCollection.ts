@@ -175,7 +175,7 @@ const createTagCollection = <
 		const isLoading = useSubscription(parentPublication, query);
 		const loading = isLoading();
 
-		const results = useCursor(
+		const {results} = useCursor(
 			() => Parent.find(filter as Selector<P>, options),
 			[name, JSON.stringify(options)],
 		);
@@ -246,12 +246,14 @@ const createTagCollection = <
 
 	const useTagStats = (name) => {
 		const isLoading = useSubscription(_statsPublication, name);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 
-		const result = useItem(Stats, {name}, undefined, [name]);
+		const {loading: loadingResult, result} = useItem(Stats, {name}, undefined, [
+			name,
+		]);
 
 		return {
-			loading,
+			loading: loadingSubscription || loadingResult,
 			result,
 		};
 	};
