@@ -21,7 +21,7 @@ const useDocumentVersions = (document) => {
 	});
 	const loading = isLoading();
 
-	const fetchedVersions = useCursor(
+	const {results: fetchedVersions} = useCursor(
 		() => (parsed ? Documents.find(filter, options) : null),
 		deps,
 	);

@@ -21,18 +21,18 @@ const makeItem =
 	) =>
 	(name: string, deps: DependencyList): ReturnType<U> => {
 		const isLoading = useSubscription(singlePublication, name);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 
-		const item = useItem(
-			loading ? null : collection,
+		const {loading: loadingResult, result} = useItem(
+			loadingSubscription ? null : collection,
 			{name} as Selector<T>,
 			undefined,
-			[loading, ...deps],
+			[loadingSubscription, ...deps],
 		);
 
 		return {
-			loading,
-			item,
+			loading: loadingSubscription || loadingResult,
+			item: result,
 		};
 	};
 
