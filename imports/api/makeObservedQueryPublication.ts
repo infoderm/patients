@@ -2,14 +2,19 @@ import schema from '../lib/schema';
 
 import type Collection from './Collection';
 import type Document from './Document';
-import type ObserveChangesCallbacks from './ObserveChangesCallbacks';
+import type Filter from './query/Filter';
 import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
 import {userQuery} from './query/UserQuery';
 import type UserQuery from './query/UserQuery';
+import watch from './query/watch';
+import {type Context} from './publication/Context';
+import {diffSequences} from './query/diffSequences';
+import type ObserveSequenceChangesCallbacks from './ObserveSequenceChangesCallbacks';
 
 const observeOptions = schema
 	.object({
-		added: schema.boolean().optional(),
+		addedBefore: schema.boolean().optional(),
+		movedBefore: schema.boolean().optional(),
 		removed: schema.boolean().optional(),
 		changed: schema.boolean().optional(),
 	})
@@ -28,58 +33,74 @@ const makeObservedQueryPublication = <T extends Document, U = T>(
 	QueriedCollection: Collection<T, U>,
 	observedQueryCacheCollectionName: string,
 ) =>
-	function (key: string, query: UserQuery<T>, observe: ObserveOptions | null) {
+	async function (
+		this: Context,
+		key: string,
+		query: UserQuery<T>,
+		observe: ObserveOptions | null,
+	) {
 		let [selector, options] = queryToSelectorOptionsPair(query);
 		selector = {
 			...selector,
 			owner: this.userId,
 		};
+
 		const callbacks: ObserveOptions = {
-			added: true,
+			addedBefore: true,
+			movedBefore: true,
 			removed: true,
 			...observe,
 		};
+
 		const uid = JSON.stringify({
 			key,
 			selector,
 			options,
 			observe,
 		});
-		const results: T[] = [];
-		let initializing = true;
 
 		const stop = () => {
 			this.stop();
 		};
 
-		const observers: ObserveChangesCallbacks<T> = {
-			added(_id, fields) {
-				if (initializing) results.push({_id, ...fields} as unknown as T);
-				else if (callbacks.added) stop();
-			},
-		};
+		// NOTE: We diff ids only if we do not care about change events.
+		const projection = callbacks.changed ? undefined : (_fields: T) => ({});
 
-		if (callbacks.removed) observers.removed = stop;
-		if (callbacks.changed) observers.changed = stop;
+		const observer: ObserveSequenceChangesCallbacks<T> = {};
 
-		const handle = QueriedCollection.find(selector, options).observeChanges(
-			observers,
+		if (callbacks.addedBefore) observer.addedBefore = stop;
+		if (callbacks.movedBefore) observer.movedBefore = stop;
+		if (callbacks.removed) observer.removed = stop;
+		if (callbacks.changed) observer.changed = stop;
+
+		const handle = await watch<T, U>(
+			QueriedCollection,
+			selector as Filter<T>,
+			options,
 		);
 
-		// Instead, we'll send one `added` message right after `observeChanges` has
-		// returned, and mark the subscription as ready.
-		initializing = false;
-		this.added(observedQueryCacheCollectionName, uid, {
-			key,
-			results,
-		});
-		this.ready();
+		handle.once('change').then(
+			(init) => {
+				handle.on('change', async (next) => {
+					return diffSequences<T>(init, next, observer, projection);
+				});
 
-		// Stop observing the cursor when the client unsubscribes. Stopping a
-		// subscription automatically takes care of sending the client any `removed`
-		// messages.
-		this.onStop(() => {
-			handle.stop();
+				this.added(observedQueryCacheCollectionName, uid, {
+					key,
+					results: init,
+				});
+				this.ready();
+			},
+			(error: Error) => {
+				this.error(error);
+			},
+		);
+
+		await handle.emit('start');
+
+		// NOTE: Stop observing the cursor when the client unsubscribes.
+		this.onStop(async (error?: Error) => {
+			await handle.emit('stop', error);
 		});
 	};
 
