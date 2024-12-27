@@ -1,6 +1,5 @@
-import {type DependencyList, useEffect, useRef} from 'react';
+import {type DependencyList, useEffect, useRef, useState} from 'react';
 
-import useForceUpdate from '../ui/hooks/useForceUpdate';
 import useChanged from '../ui/hooks/useChanged';
 
 import type ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
@@ -19,42 +18,30 @@ const makeObservedQueryHook =
 		publication: Publication<[string, UserQuery<T>, ObserveOptions | null]>,
 	): GenericQueryHook<T> =>
 	(query: UserQuery<T>, deps: DependencyList) => {
-		const loading = useRef<boolean>(true);
-		const results = useRef<any[]>([]);
-		const dirty = useRef<boolean>(false);
+		const [loading, setLoading] = useState<boolean>(true);
+		const [results, setResults] = useState<any[]>([]);
+		const [dirty, setDirty] = useState<boolean>(false);
 		const handleRef = useRef<SubscriptionHandle | null>(null);
-		const forceUpdate = useForceUpdate();
 
 		const effectWillTrigger = useChanged(deps);
 
-		if (effectWillTrigger) {
-			// This is to make sure we return the correct values on first
-			// render.
-			// TODO Find a better way to do this. It may cause problems in
-			// future concurrent mode.
-			dirty.current = false;
-			loading.current = true;
-		}
-
 		useEffect(() => {
-			dirty.current = false;
-			loading.current = true;
+			setDirty(false);
+			setLoading(true);
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query});
 			const handle = subscribe(publication, key, query, null, {
 				onStop() {
 					if (handleRef.current === handle) {
-						dirty.current = true;
-						loading.current = false;
-						forceUpdate();
+						setDirty(true);
+						setLoading(false);
 					}
 				},
 				onReady() {
 					if (handleRef.current === handle) {
-						results.current = findOneSync(Collection, {key})?.results ?? [];
-						loading.current = false;
-						forceUpdate();
+						setResults(findOneSync(Collection, {key})?.results ?? []);
+						setLoading(false);
 					}
 				},
 			});
@@ -66,9 +53,9 @@ const makeObservedQueryHook =
 		}, deps);
 
 		return {
-			loading: loading.current,
-			results: results.current,
-			dirty: dirty.current,
+			loading: effectWillTrigger || loading,
+			results,
+			dirty: !effectWillTrigger && dirty,
 		};
 	};
 
