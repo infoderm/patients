@@ -35,6 +35,7 @@ const withBrowserCache = <K extends SettingKey>(
 	key: K,
 	item: SettingDocument | undefined,
 ): UserSettings[K] => {
+	console.debug({what: 'GET', loading, userId, key});
 	// CAREFUL THIS LEAKS IF MULTIPLE USER USE THE APP
 	// + clear own cache on logout?!
 	// + clear other's cache on login
@@ -113,6 +114,7 @@ export const useSetting = <K extends SettingKey>(
 		() => withDefaultFn(loading, userId, key, setting),
 		[withDefaultFn, loading, userId, key, setting],
 	);
+	console.log({what: 'useSetting', loading, key, setting, value});
 
 	const setValue = useCallback(
 		async (newValue: UserSettings[K]) => setSetting<K>(key, newValue),

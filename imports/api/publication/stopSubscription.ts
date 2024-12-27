@@ -14,6 +14,10 @@ const stopSubscription = (
 ) => {
 	const entry = get(key);
 	if (entry === undefined) {
+		console.debug({
+			what: 'stopSubscription',
+			msg: `subscription ${key} already stopped`,
+		});
 		return;
 	}
 
@@ -28,12 +32,24 @@ const stopSubscription = (
 	if (entry.refCount === 0) {
 		set(key, undefined);
 		const sub = subscriptionInternals(handle);
+		console.debug({
+			what: 'DEACTIVATE',
+			id: sub.id,
+			name: sub.name,
+			params: sub.params,
+		});
 		sub.inactive = true;
 		const queued = _gcQueue.get(sub.id);
 		if (queued) clearTimeout(queued);
 
 		const timeout = setTimeout(() => {
 			if (sub.inactive) {
+				console.debug({
+					what: 'UNSUB',
+					id: sub.id,
+					name: sub.name,
+					params: sub.params,
+				});
 				handle.stop();
 			}
 

@@ -134,6 +134,7 @@ const StaticConsultationCardChips = ({
 	},
 	attachments,
 }: StaticConsultationCardChipsProps) => {
+	console.debug({what: 'CHIPS'});
 	const localizedDateFormat = useDateFormat();
 	const currencyFormat = useCurrencyFormat(currency!);
 
