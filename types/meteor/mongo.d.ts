@@ -17,13 +17,6 @@ declare module 'meteor/mongo' {
 			observeAsync(options: ObserveCallbacks<U>): Promise<ObserveHandle>;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-		interface Collection<T, U = T> {
-			_collection: {
-				name: string;
-			};
-		}
-
 		type ObserveHandle = {
 			stop(): void;
 		};
