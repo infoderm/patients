@@ -104,7 +104,8 @@ EXPOSE 3000
 ENV \
   ROOT_URL="http://localhost" \
   PORT="3000" \
-  MONGO_URL="mongodb://localhost:27017/meteor"
+  MONGO_URL="mongodb://localhost:27017/meteor" \
+  MONGO_OPLOG_URL=""
 
 HEALTHCHECK \
   --interval=21s \

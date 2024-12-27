@@ -84,6 +84,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
+            settings.json
             scripts/assert-replica-set.js
             .github/actions/docker/container/ip-address/action.yml
             .github/actions/docker/container/is-healthy/action.yml
@@ -138,10 +139,17 @@ jobs:
           container: mongodb
           timeout: 60
 
+      - name: Configure server
+        id: configure-server
+        run: |
+          echo "settings=$(tr -d '\r\n' < settings.json)" >> "${GITHUB_OUTPUT}"
+
       - name: Run server
         env:
           ROOT_URL: http://localhost
           MONGO_URL: mongodb://mongodb:27017/meteor
+          MONGO_OPLOG_URL: ""
+          METEOR_SETTINGS: ${{ steps.configure-server.outputs.meteor-settings }}
           PORT: 3000
         run: |
           docker container run \
@@ -151,6 +159,8 @@ jobs:
             --publish "${PORT}:${PORT}" \
             --env "ROOT_URL=${ROOT_URL}" \
             --env "MONGO_URL=${MONGO_URL}" \
+            --env "MONGO_OPLOG_URL=${MONGO_OPLOG_URL}" \
+            --env "METEOR_SETTINGS=${METEOR_SETTINGS}" \
             --env "PORT=${PORT}" \
             --name server \
             ${{ steps.server-image-url.outputs.url }}
