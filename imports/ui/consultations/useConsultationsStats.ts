@@ -10,20 +10,21 @@ const useConsultationsStats = (
 	skip?: boolean,
 ) => {
 	const isLoading = useSubscription(skip ? null : publication, query);
-	const loading = isLoading();
+	const loadingSubscription = isLoading();
 	const key = statsKey(query);
 
-	const result = useItem(
-		Boolean(skip) || loading ? null : Stats,
-		{_id: key},
-		undefined,
-		[skip, loading, JSON.stringify(query)],
-	);
-
-	const found = Boolean(result);
+	const {
+		loading: loadingResult,
+		found,
+		result,
+	} = useItem(skip ? null : Stats, {_id: key}, undefined, [
+		skip,
+		loadingSubscription,
+		JSON.stringify(query),
+	]);
 
 	return {
-		loading,
+		loading: loadingSubscription || loadingResult,
 		found,
 		result,
 	};

@@ -6,12 +6,17 @@ import findOne from '../../api/publication/documents/findOne';
 
 const useDocument = (documentId: DocumentId) => {
 	const isLoading = useSubscription(findOne, documentId);
-	const loading = isLoading();
+	const loadingSubscription = isLoading();
 
-	const result = useItem(Documents, {_id: documentId}, undefined, [documentId]);
+	const {loading: loadingResult, result} = useItem(
+		Documents,
+		{_id: documentId},
+		undefined,
+		[documentId],
+	);
 
 	return {
-		loading,
+		loading: loadingSubscription || loadingResult,
 		result,
 	};
 };

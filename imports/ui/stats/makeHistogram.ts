@@ -1,4 +1,4 @@
-import {Count, type PollResult} from '../../api/collection/stats';
+import {Count} from '../../api/collection/stats';
 import useSubscription from '../../api/publication/useSubscription';
 import useItem from '../../api/publication/useItem';
 
@@ -24,19 +24,19 @@ const makeHistogram = <C, T extends Document = any, U = T>(
 		const key = countPublicationKey(QueriedCollection, {values}, query);
 
 		const isLoading = useSubscription(publication, query ?? null);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 
-		const results: PollResult<C> | undefined = useItem(
-			loading ? null : Count,
+		const {loading: loadingResult, result} = useItem(
+			loadingSubscription ? null : Count,
 			{_id: key},
 			undefined,
-			[loading, key],
+			[loadingSubscription, key],
 		);
 
 		return {
-			loading,
-			total: results?.total,
-			count: results?.count,
+			loading: loadingSubscription || loadingResult,
+			total: result?.total,
+			count: result?.count,
 		};
 	};
 };

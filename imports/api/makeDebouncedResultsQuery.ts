@@ -22,7 +22,7 @@ const makeDebouncedResultsQuery =
 		const loading = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const currentValue = useCursor(
+		const {results: currentValue} = useCursor(
 			() => collection.find(selector, options),
 			deps,
 		);
