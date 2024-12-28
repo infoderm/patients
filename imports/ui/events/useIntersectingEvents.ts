@@ -20,16 +20,22 @@ const useIntersectingEvents = (
 	// TODO Do not oversubscribe
 	const publication = isValid(begin) && isValid(end) ? intersects : null;
 	const isLoading = useSubscription(publication, begin, end);
+	const loadingPublication = isLoading();
 
 	const selector = {
 		...intersectsInterval(begin, end),
 		...filter,
 	};
 
-	const {results} = useCursor(() => Events.find(selector, options), deps);
+	const {loading: loadingResults, results} = useCursor(
+		() => Events.find(selector, options),
+		deps,
+	);
+
+	const loading = loadingPublication || loadingResults;
 
 	return {
-		loading: isLoading(),
+		loading,
 		results: publication ? results : [],
 	};
 };
