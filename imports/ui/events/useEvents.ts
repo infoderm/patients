@@ -20,16 +20,22 @@ const useEvents = (
 	// TODO Do not oversubscribe
 	const publication = isValid(begin) && isValid(end) ? interval : null;
 	const isLoading = useSubscription(publication, begin, end);
+	const loadingSubscription = isLoading();
 
 	const selector = {
 		...beginsInInterval(begin, end),
 		...filter,
 	};
 
-	const {results} = useCursor(() => Events.find(selector, options), deps);
+	const {loading: loadingResults, results} = useCursor(
+		() => Events.find(selector, options),
+		deps,
+	);
+
+	const loading = loadingSubscription || loadingResults;
 
 	return {
-		loading: isLoading(),
+		loading,
 		results: publication ? results : [],
 	};
 };
