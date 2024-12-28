@@ -5,12 +5,12 @@ import useChanged from '../../ui/hooks/useChanged';
 
 import type Args from '../Args';
 
-import type Publication from './Publication';
+import type PublicationEndpoint from './PublicationEndpoint';
 import stopSubscription from './stopSubscription';
 import subscribe from './subscribe';
 
 const useSubscriptionClient = <A extends Args>(
-	publication?: Publication<A> | null,
+	publication?: PublicationEndpoint<A> | null,
 	...args: A
 ): (() => boolean) => {
 	const [loading, setLoading] = useState(true);
@@ -59,7 +59,7 @@ const useSubscriptionClient = <A extends Args>(
 const useSubscriptionServer =
 	<A extends Args>(
 		// @ts-expect-error Those parameters are not used.
-		publication?: Publication<A> | null,
+		publication?: PublicationEndpoint<A> | null,
 		// @ts-expect-error Those parameters are not used.
 		...args: A
 	): (() => boolean) =>

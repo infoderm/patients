@@ -4,7 +4,7 @@ import useChanged from '../ui/hooks/useChanged';
 
 import type ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import subscribe from './publication/subscribe';
 import type GenericQueryHook from './GenericQueryHook';
 import type UserQuery from './query/UserQuery';
@@ -14,7 +14,9 @@ import stopSubscription from './publication/stopSubscription';
 const makeObservedQueryHook =
 	<T>(
 		Collection: ObservedQueryCacheCollection<T>,
-		publication: Publication<[string, UserQuery<T>, ObserveOptions | null]>,
+		publication: PublicationEndpoint<
+			[string, UserQuery<T>, ObserveOptions | null]
+		>,
 		observe: ObserveOptions | null = null,
 	): GenericQueryHook<T> =>
 	(query: UserQuery<T> | null, deps: DependencyList) => {

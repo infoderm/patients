@@ -4,7 +4,7 @@ import {map} from '@iterable-iterator/map';
 
 import type Args from '../Args';
 
-import type Publication from './Publication';
+import type PublicationEndpoint from './PublicationEndpoint';
 import type SubscriptionHandle from './SubscriptionHandle';
 import subscriptionInternals from './subscriptionInternals';
 import type SubscriptionCallbacks from './SubscriptionCallbacks';
@@ -64,7 +64,7 @@ const _callbacks = <T>(init: T | undefined) =>
 	new Set(init === undefined ? [] : [init]);
 
 const subscribe = <A extends Args>(
-	{name}: Publication<A>,
+	{name}: PublicationEndpoint<A>,
 	...args: [...A, SubscriptionCallbacks?]
 ): SubscriptionHandle => {
 	const [params, callbacks] = _parseCallbacks(args);
