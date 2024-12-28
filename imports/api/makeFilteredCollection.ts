@@ -74,11 +74,12 @@ const makeFilteredCollection = <
 		deps: DependencyList = [],
 	) => {
 		const isLoading = useSubscription(publication, null, options ?? null);
-		const loading = isLoading();
-		const {results} = useCursor(
+		const loadingSubscription = isLoading();
+		const {loading: loadingResults, results} = useCursor(
 			() => Filtered.find(hookSelector, options),
 			deps,
 		);
+		const loading = loadingSubscription || loadingResults;
 		return {loading, results};
 	};
 };
