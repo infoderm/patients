@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -49,6 +49,15 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 		}
 	};
 
+	const renderValue = useMemo(
+		() =>
+			loading
+				? (value) => value || 'Loading options ...'
+				: (value) =>
+						value || 'Please choose a reason for the cancellation (required)',
+		[loading],
+	);
+
 	return (
 		<Dialog open={open} onClose={onClose}>
 			{loading && <LinearProgress />}
@@ -68,14 +77,7 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 					<InputLabel shrink>Cancellation reason</InputLabel>
 					<Select
 						displayEmpty
-						renderValue={(value) => {
-							return (
-								value ||
-								(loading
-									? 'Loading options ...'
-									: 'Please choose a reason for the cancellation (required)')
-							);
-						}}
+						renderValue={renderValue}
 						value={reason}
 						readOnly={loading}
 						onChange={(e) => {
