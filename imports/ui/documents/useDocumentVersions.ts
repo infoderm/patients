@@ -19,12 +19,14 @@ const useDocumentVersions = (document) => {
 		projection: fields,
 		sort,
 	});
-	const loading = isLoading();
+	const loadingSubscription = isLoading();
 
-	const {results: fetchedVersions} = useCursor(
+	const {loading: loadingResults, results: fetchedVersions} = useCursor(
 		() => (parsed ? Documents.find(filter, options) : null),
 		deps,
 	);
+
+	const loading = loadingSubscription || loadingResults;
 
 	return parsed
 		? {loading, versions: fetchedVersions}
