@@ -65,6 +65,7 @@ export const event = async (
 };
 
 export const publishEvents = async function (
+	this: Subscription,
 	query: Filter<ConsultationDocument>,
 	options: Options,
 ) {
