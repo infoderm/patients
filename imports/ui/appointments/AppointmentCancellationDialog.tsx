@@ -77,9 +77,7 @@ const AppointmentCancellationDialog = ({open, onClose, appointment}: Props) => {
 							);
 						}}
 						value={reason}
-						inputProps={{
-							readOnly: loading,
-						}}
+						readOnly={loading}
 						onChange={(e) => {
 							setReason(e.target.value);
 						}}
