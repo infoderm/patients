@@ -32,7 +32,7 @@ import type CacheItem from './CacheItem';
 import {type TagComputedFields, type TagNameFields} from './tags/TagDocument';
 import type TagDocument from './tags/TagDocument';
 import makeItem from './tags/makeItem';
-import type Publication from './publication/Publication';
+import type PublicationEndpoint from './publication/PublicationEndpoint';
 import type TransactionDriver from './transaction/TransactionDriver';
 import type Filter from './query/Filter';
 import type Collection from './Collection';
@@ -85,7 +85,7 @@ type TagCollectionOptions<
 	publication: string;
 	singlePublication: string;
 	Parent: Collection<P>;
-	parentPublication: Publication<[UserQuery<P>]>;
+	parentPublication: PublicationEndpoint<[UserQuery<P>]>;
 	key: string;
 };
 
