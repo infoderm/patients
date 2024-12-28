@@ -16,9 +16,13 @@ const makeQuery =
 	) =>
 	(query: UserQuery<T>, deps: DependencyList) => {
 		const isLoading = useSubscription(publication, query);
-		const loading = isLoading();
+		const loadingSubscription = isLoading();
 		const [selector, options] = queryToSelectorOptionsPair(query);
-		const {results} = useCursor(() => collection.find(selector, options), deps);
+		const {loading: loadingResults, results} = useCursor(
+			() => collection.find(selector, options),
+			deps,
+		);
+		const loading = loadingSubscription || loadingResults;
 		return {loading, results};
 	};
 
