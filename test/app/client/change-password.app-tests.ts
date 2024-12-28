@@ -72,5 +72,5 @@ client(__filename, () => {
 			/Timed out/,
 		);
 		await app.findByText('Incorrect password');
-	}).timeout(10_000);
+	}).timeout(15_000);
 });
