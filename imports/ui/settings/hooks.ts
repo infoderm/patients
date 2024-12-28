@@ -107,7 +107,7 @@ export const useSetting = <K extends SettingKey>(
 		Settings,
 		{key},
 		undefined,
-		[loading, key],
+		[key],
 	);
 	const value = useMemo(
 		() => withDefaultFn(loading, userId, key, setting),
