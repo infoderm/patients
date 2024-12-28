@@ -26,7 +26,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 			photo: 1,
 		},
 	} as const;
-	const deps = [query];
+	const deps = [JSON.stringify(query)];
 
 	const {loading, fields: patient} = usePatient(init, query, deps);
 
