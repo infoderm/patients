@@ -14,6 +14,8 @@ import sleep from '../lib/async/sleep';
 // eslint-disable-next-line import/no-unassigned-import
 import '../api/endpoint/_dev/_disableRateLimiting';
 import logout from '../api/user/logout';
+import define from '../api/collection/define';
+import {removeCollection} from '../api/collection/registry';
 import invoke from '../api/endpoint/invoke';
 import call from '../api/endpoint/call';
 import reset from '../api/endpoint/_dev/reset';
@@ -37,6 +39,21 @@ export const waitFor = async (condition: () => boolean) => {
 		await sleep(50);
 	}
 };
+
+export const withMockCollection =
+	<T extends Document, U = T>(
+		callback: (collection: Collection<T, U>) => Promise<void> | void,
+	) =>
+	async () => {
+		const collectionName = '__mocks__';
+		const collection = define<T, U>(collectionName);
+		try {
+			await callback(collection);
+		} finally {
+			await collection.dropCollectionAsync();
+			removeCollection(collectionName);
+		}
+	};
 
 const resolveOnPopstate = async () =>
 	new Promise<void>((resolve) => {
