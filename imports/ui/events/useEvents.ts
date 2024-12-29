@@ -17,7 +17,7 @@ const useEvents = (
 	options: Options<EventDocument>,
 	deps: DependencyList,
 ) => {
-	// TODO Do not oversubscribe
+	// TODO: Do not oversubscribe
 	const enabled = isValid(begin) && isValid(end);
 	const isLoading = useSubscription(interval, [begin, end], enabled);
 	const loadingSubscription = isLoading();
