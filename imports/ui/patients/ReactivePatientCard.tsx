@@ -32,9 +32,9 @@ const ReactivePatientCard = ({
 		// Currently this is not necessary since we do not preload photos.
 	};
 
-	const deps = [patientId, JSON.stringify(projection)];
-	const {loading, found, fields} = useCachedPatient({}, query, deps);
-	const props = {loading, found, patient: {...patient, ...fields}};
+	const deps = [JSON.stringify(patient), JSON.stringify(projection)];
+	const {loading, found, fields} = useCachedPatient(patient, query, deps);
+	const props = {loading, found, patient: fields};
 
 	return <Card {...rest} {...props} />;
 };
