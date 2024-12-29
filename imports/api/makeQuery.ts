@@ -15,10 +15,7 @@ const makeQuery =
 		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
 	(query: UserQuery<T> | null, deps: DependencyList) => {
-		const isLoading = useSubscription(
-			query === null ? null : publication,
-			query,
-		);
+		const isLoading = useSubscription(publication, [query], query !== null);
 		const loadingSubscription = isLoading();
 		const [selector, options] =
 			query === null ? [] : queryToSelectorOptionsPair(query);

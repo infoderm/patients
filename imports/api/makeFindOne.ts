@@ -22,7 +22,7 @@ const makeFindOne =
 		query: UserQuery<T>,
 		deps: DependencyList,
 	): ReturnValue<U, I> => {
-		const isLoading = useSubscription(publication, query);
+		const isLoading = useSubscription(publication, [query]);
 		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);

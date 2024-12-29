@@ -23,7 +23,7 @@ const makeHistogram = <C, T extends Document = any, U = T>(
 	return (query?: UserFilter<T>): Result<C> => {
 		const key = countPublicationKey(QueriedCollection, {values}, query);
 
-		const isLoading = useSubscription(publication, query ?? null);
+		const isLoading = useSubscription(publication, [query ?? null]);
 		const loadingSubscription = isLoading();
 
 		const {loading: loadingResult, result} = useItem(

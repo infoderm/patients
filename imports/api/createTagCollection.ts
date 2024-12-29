@@ -172,7 +172,7 @@ const createTagCollection = <
 			...rest,
 		};
 
-		const isLoading = useSubscription(parentPublication, query);
+		const isLoading = useSubscription(parentPublication, [query]);
 		const loadingSubscription = isLoading();
 
 		const {loading: loadingResults, results} = useCursor(
@@ -247,7 +247,7 @@ const createTagCollection = <
 	});
 
 	const useTagStats = (name) => {
-		const isLoading = useSubscription(_statsPublication, name);
+		const isLoading = useSubscription(_statsPublication, [name]);
 		const loadingSubscription = isLoading();
 
 		const {loading: loadingResult, result} = useItem(Stats, {name}, undefined, [

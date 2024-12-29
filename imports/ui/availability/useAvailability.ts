@@ -22,8 +22,8 @@ const useAvailability = (
 	deps: DependencyList,
 ) => {
 	// TODO Do not oversubscribe
-	const publication = isValid(begin) && isValid(end) ? intersects : null;
-	const isLoading = useSubscription(publication, begin, end, filter);
+	const enabled = isValid(begin) && isValid(end);
+	const isLoading = useSubscription(intersects, [begin, end, filter], enabled);
 
 	const selector = {
 		...intersectsInterval(begin, end),
@@ -37,7 +37,7 @@ const useAvailability = (
 
 	return {
 		loading: isLoading() || loading,
-		results: publication ? results : [],
+		results: enabled ? results : [],
 	};
 };
 

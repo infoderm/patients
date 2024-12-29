@@ -18,7 +18,7 @@ const makeDebouncedResultsQuery =
 	(query: UserQuery<T>, deps: DependencyList) => {
 		const lastValue = useRef<U[]>(init);
 
-		const isLoading = useSubscription(publication, query);
+		const isLoading = useSubscription(publication, [query]);
 		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);

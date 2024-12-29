@@ -20,7 +20,7 @@ const makeItem =
 		singlePublication: PublicationEndpoint<[string]>,
 	) =>
 	(name: string, deps: DependencyList): ReturnType<U> => {
-		const isLoading = useSubscription(singlePublication, name);
+		const isLoading = useSubscription(singlePublication, [name]);
 		const loadingSubscription = isLoading();
 
 		const {loading: loadingResult, result} = useItem(

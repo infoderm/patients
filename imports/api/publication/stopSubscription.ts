@@ -2,13 +2,13 @@ import assert from 'assert';
 
 import {defer, type Deferred} from '../../lib/async/defer';
 
-import type SubscriptionHandle from './SubscriptionHandle';
+import type SubscriptionRegistryEntry from './SubscriptionRegistryEntry';
 import {get, set} from './subscriptionRegistry';
 
 const _gcQueue = new Map<string, Deferred>();
 
 const stopSubscription = (
-	{key, handle, onReady, onStop}: SubscriptionHandle,
+	{id, key, onReady, onStop}: SubscriptionRegistryEntry,
 	delay = 0,
 ) => {
 	const entry = get(key);
@@ -18,10 +18,10 @@ const stopSubscription = (
 
 	--entry.refCount;
 	assert(entry.refCount >= 0, `Negative refCount for ${key}.`);
-	if (onReady !== undefined) entry.onReady.delete(onReady);
+	if (onReady !== undefined) entry.onReady.delete(id);
 	if (onStop !== undefined) {
-		entry.onStop.delete(onStop);
-		const maybePromise = onStop();
+		entry.onStop.delete(id);
+		const maybePromise = onStop(id);
 		if (maybePromise instanceof Promise) {
 			maybePromise.catch((error: unknown) => {
 				console.error({error});
@@ -38,7 +38,7 @@ const stopSubscription = (
 		const next = defer(() => {
 			if (sub.inactive) {
 				set(key, undefined);
-				handle.stop();
+				entry.handle.stop();
 			}
 
 			_gcQueue.delete(sub.id);
