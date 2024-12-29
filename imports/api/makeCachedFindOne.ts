@@ -24,7 +24,7 @@ const makeCachedFindOne =
 	): ReturnValue<U, I> => {
 		const ref = useRef(init);
 
-		const isLoading = useSubscription(publication, query);
+		const isLoading = useSubscription(publication, [query]);
 		const loadingSubscription = isLoading();
 
 		const [selector, options] = queryToSelectorOptionsPair(query);

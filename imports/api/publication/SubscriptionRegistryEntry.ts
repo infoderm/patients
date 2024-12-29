@@ -1,9 +1,9 @@
 import type SubscriptionError from './SubscriptionError';
 import {type SubscriptionId} from './subscriptionId';
 
-type SubscriptionCallbacks = {
-	onSubscribe?: (id: SubscriptionId) => Promise<void> | void;
-	onLoading?: (id: SubscriptionId) => Promise<void> | void;
+type SubscriptionRegistryEntry = {
+	id: SubscriptionId;
+	key: string;
 	onReady?: (id: SubscriptionId) => Promise<void> | void;
 	onStop?: (
 		id: SubscriptionId,
@@ -11,4 +11,4 @@ type SubscriptionCallbacks = {
 	) => Promise<void> | void;
 };
 
-export default SubscriptionCallbacks;
+export default SubscriptionRegistryEntry;

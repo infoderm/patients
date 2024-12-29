@@ -10,6 +10,7 @@ import type GenericQueryHook from './GenericQueryHook';
 import type UserQuery from './query/UserQuery';
 import {type ObserveOptions} from './makeObservedQueryPublication';
 import stopSubscription from './publication/stopSubscription';
+import {subscription} from './publication/Subscription';
 
 const makeObservedQueryHook =
 	<T>(
@@ -42,23 +43,25 @@ const makeObservedQueryHook =
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query});
-			const handle = subscribe(publication, key, query, observe, {
-				onStop() {
-					if (handleRef.current === id) {
-						setDirty(true);
-						setLoading(false);
-					}
-				},
-				async onReady() {
-					if (handleRef.current === id) {
-						const response = await Collection.findOneAsync({key});
+			const handle = subscribe(
+				subscription(publication, [key, query, observe], {
+					onStop() {
 						if (handleRef.current === id) {
-							setResults(response?.results ?? []);
+							setDirty(true);
 							setLoading(false);
 						}
-					}
-				},
-			});
+					},
+					async onReady() {
+						if (handleRef.current === id) {
+							const response = await Collection.findOneAsync({key});
+							if (handleRef.current === id) {
+								setResults(response?.results ?? []);
+								setLoading(false);
+							}
+						}
+					},
+				}),
+			);
 
 			return () => {
 				stopSubscription(handle);

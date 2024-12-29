@@ -18,8 +18,8 @@ const useEvents = (
 	deps: DependencyList,
 ) => {
 	// TODO Do not oversubscribe
-	const publication = isValid(begin) && isValid(end) ? interval : null;
-	const isLoading = useSubscription(publication, begin, end);
+	const enabled = isValid(begin) && isValid(end);
+	const isLoading = useSubscription(interval, [begin, end], enabled);
 	const loadingSubscription = isLoading();
 
 	const selector = {
@@ -36,7 +36,7 @@ const useEvents = (
 
 	return {
 		loading,
-		results: publication ? results : [],
+		results: enabled ? results : [],
 	};
 };
 

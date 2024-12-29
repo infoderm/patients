@@ -9,7 +9,7 @@ const useConsultationsStats = (
 	query: UserFilter<ConsultationDocument>,
 	skip?: boolean,
 ) => {
-	const isLoading = useSubscription(skip ? null : publication, query);
+	const isLoading = useSubscription(publication, [query], !skip);
 	const loadingSubscription = isLoading();
 	const key = statsKey(query);
 
