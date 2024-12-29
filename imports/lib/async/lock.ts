@@ -21,6 +21,18 @@ export class AcquiringLockWouldBlockError extends Error {
 export class AsyncLock {
 	#lastHandle: LockReleaseHandle | null = null;
 
+	public acquireNonBlocking() {
+		if (this.#lastHandle !== null) {
+			throw new AcquiringLockWouldBlockError();
+		}
+
+		const handle = new LockReleaseHandle();
+
+		this.#lastHandle = handle;
+
+		return handle;
+	}
+
 	public async acquire() {
 		const release = this.#lastHandle?._promise();
 		const handle = new LockReleaseHandle();
