@@ -9,6 +9,8 @@ import {cleanup as unmount} from '@testing-library/react';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
+import sleep from '../lib/async/sleep';
+
 // eslint-disable-next-line import/no-unassigned-import
 import '../api/endpoint/_dev/_disableRateLimiting';
 import logout from '../api/user/logout';
@@ -28,6 +30,13 @@ export {
 } from '../api/randomId';
 
 let resolving = 0;
+
+export const waitFor = async (condition: () => boolean) => {
+	while (!condition()) {
+		// eslint-disable-next-line no-await-in-loop
+		await sleep(50);
+	}
+};
 
 const resolveOnPopstate = async () =>
 	new Promise<void>((resolve) => {
