@@ -21,6 +21,8 @@ import withSession from '../transaction/withSession';
 
 import {EventEmitter, eventEmitter} from '../../lib/events';
 
+import {AsyncQueue} from '../../lib/async/queue';
+
 import type Filter from './Filter';
 
 const _watchInit = async <T extends Document, U = T>(
@@ -244,29 +246,6 @@ const _watchSetup = async <T extends Document, U = T>(
 	return {init, stream: filteredStream, filterIsSuperset};
 };
 
-class Queue {
-	#queued = 0;
-	#queue = new Promise<void>((resolve) => {
-		resolve(undefined);
-	});
-
-	public get length() {
-		return this.#queued;
-	}
-
-	public enqueue(task: () => Promise<void> | void) {
-		++this.#queued;
-		this.#queue = this.#queue
-			.then(async () => {
-				--this.#queued;
-				return task();
-			})
-			.catch((error) => {
-				console.error({error});
-			});
-	}
-}
-
 type Fragment = {
 	_id: {
 		_data: string;
@@ -326,7 +305,7 @@ const _pipe = async <T extends Document, U = T>(
 	emitter: FilteredOplogHandle,
 	w: Watch<T, U>,
 ) => {
-	const queue = new Queue();
+	const queue = new AsyncQueue();
 
 	const onEntry = debounce(() => {
 		if (queue.length > 0) return;
