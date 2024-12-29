@@ -53,3 +53,42 @@ export class AsyncLock {
 		handle._resolve();
 	}
 }
+
+export const withBlocking = async <T>(
+	lock: AsyncLock,
+	callback: () => Promise<T> | T,
+) => {
+	const handle = await lock.acquire();
+
+	try {
+		await callback();
+	} finally {
+		lock.release(handle);
+	}
+};
+
+export const withNonBlockingAsync = async <T>(
+	lock: AsyncLock,
+	callback: () => Promise<T> | T,
+) => {
+	const handle = lock.acquireNonBlocking();
+
+	try {
+		await callback();
+	} finally {
+		lock.release(handle);
+	}
+};
+
+export const withNonBlocking = async <T>(
+	lock: AsyncLock,
+	callback: () => T,
+) => {
+	const handle = lock.acquireNonBlocking();
+
+	try {
+		callback();
+	} finally {
+		lock.release(handle);
+	}
+};
