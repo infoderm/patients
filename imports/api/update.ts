@@ -15,6 +15,10 @@ export type UpdateEntry<T> = {
 	[K in keyof T]: [K, T[K] | null];
 }[keyof T];
 
+const _hasOwn = Object.prototype.hasOwnProperty;
+const hasOwn = <T>(object: T, property: string | number | symbol) =>
+	_hasOwn.call(object, property);
+
 export const yieldKey = function* <T, K extends keyof T>(
 	fields: T,
 	key: K,
@@ -23,7 +27,7 @@ export const yieldKey = function* <T, K extends keyof T>(
 		x: Exclude<T[K], undefined | null>,
 	) => Exclude<T[K], undefined | null> = id<Exclude<T[K], undefined | null>>,
 ): IterableIterator<[K, Exclude<T[K], undefined | null>]> {
-	if (Object.prototype.hasOwnProperty.call(fields, key)) {
+	if (hasOwn(fields, key)) {
 		const value = fields[key] as Exclude<T[K], undefined | null>;
 		type.parse(value);
 		yield [key, transform(value)];
@@ -36,7 +40,7 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 	type: schema.ZodType<T[K]>,
 	transform: (x: T[K]) => T[K] = id<T[K]>,
 ): IterableIterator<[K, T[K]]> {
-	if (Object.prototype.hasOwnProperty.call(fields, key)) {
+	if (hasOwn(fields, key)) {
 		type.nullable().optional().parse(fields[key]);
 		yield [key, transform(fields[key])];
 	}
