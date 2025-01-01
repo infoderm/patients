@@ -17,8 +17,8 @@ const makeObservedQueryHook =
 		publication: Publication<[string, UserQuery<T>, ObserveOptions | null]>,
 		observe: ObserveOptions | null = null,
 	): GenericQueryHook<T> =>
-	(query: UserQuery<T>, deps: DependencyList) => {
-		const [loading, setLoading] = useState<boolean>(true);
+	(query: UserQuery<T> | null, deps: DependencyList) => {
+		const [loading, setLoading] = useState<boolean>(query !== null);
 		const [results, setResults] = useState<any[]>([]);
 		const [dirty, setDirty] = useState<boolean>(false);
 		const handleRef = useRef<any>(null);
@@ -26,6 +26,13 @@ const makeObservedQueryHook =
 		const effectWillTrigger = useChanged(deps);
 
 		useEffect(() => {
+			if (query === null) {
+				setLoading(false);
+				setResults([]);
+				setDirty(false);
+				return;
+			}
+
 			const id = {};
 			handleRef.current = id;
 			setDirty(false);
@@ -56,11 +63,17 @@ const makeObservedQueryHook =
 			};
 		}, deps);
 
-		return {
-			loading: effectWillTrigger || loading,
-			results,
-			dirty: !effectWillTrigger && dirty,
-		};
+		return query === null
+			? {
+					loading: false,
+					results: [],
+					dirty: false,
+			  }
+			: {
+					loading: effectWillTrigger || loading,
+					results,
+					dirty: !effectWillTrigger && dirty,
+			  };
 	};
 
 export default makeObservedQueryHook;

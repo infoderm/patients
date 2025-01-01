@@ -14,12 +14,16 @@ const makeQuery =
 		collection: Collection<T, U>,
 		publication: Publication<[UserQuery<T>]>,
 	) =>
-	(query: UserQuery<T>, deps: DependencyList) => {
-		const isLoading = useSubscription(publication, query);
+	(query: UserQuery<T> | null, deps: DependencyList) => {
+		const isLoading = useSubscription(
+			query === null ? null : publication,
+			query,
+		);
 		const loadingSubscription = isLoading();
-		const [selector, options] = queryToSelectorOptionsPair(query);
+		const [selector, options] =
+			query === null ? [] : queryToSelectorOptionsPair(query);
 		const {loading: loadingResults, results} = useCursor(
-			() => collection.find(selector, options),
+			() => (query === null ? null : collection.find(selector, options)),
 			deps,
 		);
 		const loading = loadingSubscription || loadingResults;
