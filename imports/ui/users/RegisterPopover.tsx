@@ -11,19 +11,27 @@ import debounceSnackbar from '../snackbar/debounceSnackbar';
 import {Popover, Form, RowTextField, RowButton} from './Popover';
 
 type Props = {
+	readonly id: string;
 	readonly anchorEl: HTMLElement;
+	readonly open: boolean;
 	readonly handleClose: () => void;
-	readonly changeMode: (mode: string) => void;
+	readonly changeMode: (mode: 'choice' | 'login' | 'register') => void;
 };
 
-const RegisterPopover = ({anchorEl, handleClose, changeMode}: Props) => {
+const RegisterPopover = ({
+	id,
+	anchorEl,
+	open,
+	handleClose,
+	changeMode,
+}: Props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorUsername, setErrorUsername] = useState('');
 	const [errorPassword, setErrorPassword] = useState('');
 
-	const register = async (event) => {
+	const register = async (event: {preventDefault: () => void}) => {
 		event.preventDefault();
 		const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 		feedback('Creating account...', {
@@ -72,9 +80,9 @@ const RegisterPopover = ({anchorEl, handleClose, changeMode}: Props) => {
 
 	return (
 		<Popover
-			id="register-popover"
+			id={id}
 			anchorEl={anchorEl}
-			open={Boolean(anchorEl)}
+			open={open}
 			anchorOrigin={{
 				vertical: 'bottom',
 				horizontal: 'right',
