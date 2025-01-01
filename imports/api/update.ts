@@ -154,3 +154,5 @@ export const documentDiff = <T, U extends {}>(
 	newState: Required<T> extends U ? U : never,
 ): Partial<U> =>
 	Object.fromEntries(documentDiffGen(prevState, newState)) as Partial<U>;
+
+export const isDiffEmpty = (obj: any) => Object.keys(obj).length === 0;
