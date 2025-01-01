@@ -15,6 +15,7 @@ const makeObservedQueryHook =
 	<T>(
 		Collection: ObservedQueryCacheCollection<T>,
 		publication: Publication<[string, UserQuery<T>, ObserveOptions | null]>,
+		observe: ObserveOptions | null = null,
 	): GenericQueryHook<T> =>
 	(query: UserQuery<T>, deps: DependencyList) => {
 		const [loading, setLoading] = useState<boolean>(true);
@@ -32,7 +33,7 @@ const makeObservedQueryHook =
 
 			const timestamp = Date.now();
 			const key = JSON.stringify({timestamp, query});
-			const handle = subscribe(publication, key, query, null, {
+			const handle = subscribe(publication, key, query, observe, {
 				onStop() {
 					if (handleRef.current === id) {
 						setDirty(true);
