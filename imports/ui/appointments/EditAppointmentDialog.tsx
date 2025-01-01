@@ -7,7 +7,7 @@ import reschedule from '../../api/endpoint/appointments/reschedule';
 import useCall from '../action/useCall';
 import {type AppointmentDocument} from '../../api/collection/appointments';
 import {type AppointmentUpdate} from '../../api/appointments';
-import {type Entry} from '../../api/update';
+import {type UpdateEntry} from '../../api/update';
 
 import AppointmentFromPatientIdDialog from './AppointmentFromPatientIdDialog';
 
@@ -20,7 +20,7 @@ type Props = {
 const appointmentDiffGen = function* (
 	appointment: AppointmentDocument,
 	update: AppointmentUpdate,
-): IterableIterator<Entry<AppointmentUpdate>> {
+): IterableIterator<UpdateEntry<AppointmentUpdate>> {
 	assert(update.patient !== undefined);
 
 	if (
@@ -48,7 +48,6 @@ const appointmentDiff = (
 	update: AppointmentUpdate,
 ): Partial<AppointmentUpdate> => {
 	const entries = appointmentDiffGen(appointment, update);
-	// @ts-expect-error Too complex to fix.
 	return Object.fromEntries(entries);
 };
 
