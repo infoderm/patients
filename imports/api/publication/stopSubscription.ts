@@ -22,7 +22,12 @@ const stopSubscription = (
 	if (onReady !== undefined) entry.onReady.delete(onReady);
 	if (onStop !== undefined) {
 		entry.onStop.delete(onStop);
-		onStop();
+		const maybePromise = onStop();
+		if (maybePromise instanceof Promise) {
+			maybePromise.catch((error: unknown) => {
+				console.error({error});
+			});
+		}
 	}
 
 	if (entry.refCount === 0) {

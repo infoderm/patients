@@ -5,8 +5,8 @@ import type SubscriptionError from './SubscriptionError';
 type SubscriptionHandle = {
 	key: string;
 	handle: Meteor.SubscriptionHandle;
-	onReady?: () => void;
-	onStop?: (error?: SubscriptionError) => void;
+	onReady?: () => Promise<void> | void;
+	onStop?: (error?: SubscriptionError) => Promise<void> | void;
 };
 
 export default SubscriptionHandle;
