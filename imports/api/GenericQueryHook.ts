@@ -9,7 +9,7 @@ type GenericQueryHookReturnType<R> = {
 };
 
 type GenericQueryHook<R> = (
-	query: UserQuery<R>,
+	query: UserQuery<R> | null,
 	deps: DependencyList,
 ) => GenericQueryHookReturnType<R>;
 
