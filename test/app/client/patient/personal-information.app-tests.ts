@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import dateFormat from 'date-fns/format';
 
 import {
@@ -59,23 +57,19 @@ const editPatient = async (
 		action,
 	}: EditPatientOptions,
 ) => {
-	const {
-		user,
-		userWithRealisticTypingSpeed,
-		findByRole,
-		findAllByRole,
-		findByLabelText,
-	} = app;
+	const {user, userWithRealisticTypingSpeed, findByRole, findByLabelText} = app;
 	await user.click(
-		await findByRole('button', {name: /^edit info/i}, {timeout: 5000}),
+		await findByRole('button', {name: /^edit info$/i}, {timeout: 5000}),
 	);
 
+	await findByRole('button', {name: /^undo$/i});
+
 	if (typeof nn === 'string') {
-		const matches = await findAllByRole('textbox', {name: 'NISS'});
-		const inputs = matches.filter((x) => x.attributes.readonly === undefined);
-		assert(inputs.length === 1);
-		const input = inputs[0];
-		await fillIn(app, input, nn);
+		await fillIn(
+			app,
+			await findByLabelText('NISS', {selector: 'input:not([readonly])'}),
+			nn,
+		);
 	}
 
 	if (typeof lastname === 'string') {
@@ -95,7 +89,7 @@ const editPatient = async (
 	}
 
 	if (typeof sex === 'string') {
-		await user.click(await findByLabelText('Sex'));
+		await user.click(await findByRole('combobox', {name: 'Sex'}));
 		await user.click(await findByRole('option', {name: sex}));
 	}
 
