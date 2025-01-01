@@ -16,7 +16,10 @@ import call from '../../api/endpoint/call';
 import patientsUpdate from '../../api/endpoint/patients/update';
 import patientsAttach from '../../api/endpoint/patients/attach';
 
-import {type PatientDocument} from '../../api/collection/patients';
+import {
+	type PatientUpdate,
+	type PatientDocument,
+} from '../../api/collection/patients';
 
 import ManageConsultationsForPatientButton from '../consultations/ManageConsultationsForPatientButton';
 import AttachFileButton from '../attachments/AttachFileButton';
@@ -72,7 +75,7 @@ const PatientPersonalInformationButtonsStatic = ({
 						await call(
 							patientsUpdate,
 							patient._id,
-							documentDiff(patientInit, patient),
+							documentDiff(patientInit, patient) as PatientUpdate,
 						);
 						setSaving(false);
 						const message = `Patient #${patient._id} updated.`;

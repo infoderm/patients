@@ -92,7 +92,7 @@ export const reducer = (state: State, action: Action): State => {
 			}
 
 			const {init, current} = state;
-			const changes = documentDiff(init, current);
+			const changes = documentDiff(init, current) as UpdatedPatientDocument;
 			const dirty = Object.keys(changes).length > 0;
 
 			return dirty
