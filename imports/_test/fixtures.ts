@@ -25,6 +25,7 @@ import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
 import {_router} from '../ui/App';
+import {getWatchStreamCount} from '../api/query/watch';
 
 export {
 	default as randomId,
@@ -123,11 +124,19 @@ const unmount = isAppTest()
 			_unmount();
 	  };
 
+const assertChangeStreamWatchersAreOff = () => {
+	const n = getWatchStreamCount();
+	if (n !== 0) {
+		console.warn(`ChangeStream watch count is different from 0 (got ${n})!`);
+	}
+};
+
 export const client = (title, fn) => {
 	if (Meteor.isClient) {
 		const cleanup = async () => {
 			await logout();
 			unmount();
+			assertChangeStreamWatchersAreOff();
 			mount();
 			await call(reset);
 		};
