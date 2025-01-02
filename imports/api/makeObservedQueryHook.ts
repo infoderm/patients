@@ -7,10 +7,9 @@ import type ObservedQueryCacheCollection from './ObservedQueryCacheCollection';
 import type Publication from './publication/Publication';
 import subscribe from './publication/subscribe';
 import type GenericQueryHook from './GenericQueryHook';
-import findOneSync from './publication/findOneSync';
 import type UserQuery from './query/UserQuery';
-import type SubscriptionHandle from './publication/SubscriptionHandle';
 import {type ObserveOptions} from './makeObservedQueryPublication';
+import stopSubscription from './publication/stopSubscription';
 
 const makeObservedQueryHook =
 	<T>(
@@ -21,11 +20,13 @@ const makeObservedQueryHook =
 		const [loading, setLoading] = useState<boolean>(true);
 		const [results, setResults] = useState<any[]>([]);
 		const [dirty, setDirty] = useState<boolean>(false);
-		const handleRef = useRef<SubscriptionHandle | null>(null);
+		const handleRef = useRef<any>(null);
 
 		const effectWillTrigger = useChanged(deps);
 
 		useEffect(() => {
+			const id = {};
+			handleRef.current = id;
 			setDirty(false);
 			setLoading(true);
 
@@ -33,22 +34,24 @@ const makeObservedQueryHook =
 			const key = JSON.stringify({timestamp, query});
 			const handle = subscribe(publication, key, query, null, {
 				onStop() {
-					if (handleRef.current === handle) {
+					if (handleRef.current === id) {
 						setDirty(true);
 						setLoading(false);
 					}
 				},
-				onReady() {
-					if (handleRef.current === handle) {
-						setResults(findOneSync(Collection, {key})?.results ?? []);
-						setLoading(false);
+				async onReady() {
+					if (handleRef.current === id) {
+						const response = await Collection.findOneAsync({key});
+						if (handleRef.current === id) {
+							setResults(response?.results ?? []);
+							setLoading(false);
+						}
 					}
 				},
 			});
-			handleRef.current = handle;
 
 			return () => {
-				handle.stop();
+				stopSubscription(handle);
 			};
 		}, deps);
 
