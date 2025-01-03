@@ -99,7 +99,7 @@ const LargeMultilineReadOnlyTextField = (props) => (
 );
 
 const SmallMultilineReadOnlyTextField = (props) => (
-	<MultilineReadOnlyTextField rows={1} {...props} />
+	<MultilineReadOnlyTextField minRows={1} {...props} />
 );
 
 type Props = {

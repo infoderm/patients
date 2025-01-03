@@ -175,7 +175,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								autoFocus={Boolean(update)}
 								label="Motif de la visite"
 								placeholder="Motif de la visite"
-								rows={4}
+								minRows={5}
 								value={reason}
 								margin="normal"
 								onChange={update?.('reason')}
@@ -187,7 +187,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								readOnly={!update}
 								label="Examens déjà réalisés"
 								placeholder="Examens déjà réalisés"
-								rows={4}
+								minRows={2}
 								value={done}
 								margin="normal"
 								onChange={update?.('done')}
@@ -199,7 +199,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								readOnly={!update}
 								label="Examens à réaliser"
 								placeholder="Examens à réaliser"
-								rows={4}
+								minRows={2}
 								value={todo}
 								margin="normal"
 								onChange={update?.('todo')}
@@ -211,7 +211,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								readOnly={!update}
 								label="Traitement"
 								placeholder="Traitement"
-								rows={4}
+								minRows={5}
 								value={treatment}
 								margin="normal"
 								onChange={update?.('treatment')}
@@ -223,7 +223,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								readOnly={!update}
 								label="À revoir"
 								placeholder="À revoir"
-								rows={4}
+								minRows={2}
 								value={next}
 								margin="normal"
 								onChange={update?.('next')}
@@ -235,7 +235,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 								readOnly={!update}
 								label="Autres remarques"
 								placeholder="Write some additional information about the consultation here"
-								rows={4}
+								minRows={2}
 								value={more}
 								margin="normal"
 								onChange={update?.('more')}
