@@ -1,0 +1,3 @@
+[submodule "packages/meteortesting:browser-tests"]
+	path = packages/meteortesting:browser-tests
+	url = https://github.com/contribulate/meteor-browser-tests
