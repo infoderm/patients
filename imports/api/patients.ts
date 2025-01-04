@@ -17,6 +17,7 @@ import {
 	type PatientDocument,
 	type PatientTagFields,
 	patientSex,
+    patientIdFields,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -48,6 +49,7 @@ import {
 	yieldResettableKey,
 } from './update';
 import {type DocumentUpdate} from './DocumentUpdate';
+import { EidFields } from './collection/eids';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -378,6 +380,17 @@ function createPatient(string: string) {
 		_id: '?',
 	};
 }
+
+export const patientFieldsFromEid = ({address, identity: {nationalnumber, gender, firstname, name, photo, dateofbirth}}: EidFields) => patientIdFields.parse({
+	niss: nationalnumber,
+	firstname,
+	lastname: name,
+	photo,
+	birthdate: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(4, 6)}-${dateofbirth.slice(6, 8)}`,
+	sex: gender,
+
+	...address,
+});
 
 export const patients = {
 	updateIndex,

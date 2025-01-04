@@ -34,9 +34,8 @@ import mergeFields from '../../api/query/mergeFields';
 
 import {
 	type PatientDocument,
-	type PatientIdFields,
 } from '../../api/collection/patients';
-import {patients} from '../../api/patients';
+import {patientFieldsFromEid, patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
 import useDialog from '../modal/useDialog';
@@ -49,6 +48,7 @@ import SelectablePatientCard from '../patients/SelectablePatientCard';
 import ReactivePatientCard from '../patients/ReactivePatientCard';
 import GenericNewPatientCard from '../patients/GenericNewPatientCard';
 import PatientsGrid from '../patients/PatientsGrid';
+import { EidFields } from '../../api/collection/eids';
 
 const DEFAULT_LIMIT = 3;
 const DEFAULT_FIELDS = {
@@ -129,7 +129,7 @@ type Props = {
 	readonly titleId?: string;
 	readonly onClose: () => void;
 	readonly onNext: () => void;
-	readonly eidInfo: PatientIdFields;
+	readonly eidInfo: EidFields;
 	readonly selected: Set<string>;
 	readonly setSelected: (selection: Set<string>) => void;
 };
@@ -145,7 +145,7 @@ const EidCardDialogStepSelection = ({
 	const {classes, cx} = useStyles();
 	const dialog = useDialog();
 
-	const {$set} = patients.sanitize(eidInfo);
+	const {$set} = patients.sanitize(patientFieldsFromEid(eidInfo));
 	const eidPatient = {_id: '?', ...$set};
 	const normalizedName = patients.normalizedName(
 		eidPatient.firstname,
