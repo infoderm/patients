@@ -42,7 +42,7 @@ export const patientIdFields = schema.object({
 	municipality: schema.string(),
 	streetandnumber: schema.string(),
 	zip: schema.string(),
-});
+}).partial();
 
 export type PatientIdFields = schema.infer<typeof patientIdFields>;
 
@@ -83,7 +83,6 @@ export type PatientPersonalInformationFields = schema.infer<
 >;
 
 export const patientFields = patientIdFields
-	.partial()
 	.merge(patientPersonalInformationFields)
 	.merge(patientTagFields);
 export type PatientFields = schema.infer<typeof patientFields>;
