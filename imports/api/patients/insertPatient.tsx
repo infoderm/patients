@@ -26,7 +26,7 @@ const insertPatient = async (
 				resolve();
 			}}
 			onCancel={() => {
-				reject(new Error('Closed dialog.'));
+				reject(new Error('Closed eid dialog.'));
 			}}
 		/>
 	));
