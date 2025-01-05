@@ -18,6 +18,7 @@ import {
 	type PatientTagFields,
 	patientSex,
     patientIdFields,
+    PatientIdFields,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -50,6 +51,7 @@ import {
 } from './update';
 import {type DocumentUpdate} from './DocumentUpdate';
 import { EidFields } from './collection/eids';
+import removeUndefined from '../lib/object/removeUndefined';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -391,7 +393,7 @@ export const patientFieldsFromEid = ({
 		photo,
 		dateofbirth
 	}
-}: EidFields) => patientIdFields.parse({
+}: EidFields): PatientIdFields => removeUndefined(patientIdFields.parse({
 	niss: nationalnumber,
 	firstname,
 	lastname: name,
@@ -401,7 +403,7 @@ export const patientFieldsFromEid = ({
 		: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(4, 6)}-${dateofbirth.slice(6, 8)}`,
 	sex: gender,
 	...address,
-});
+}));
 
 export const patients = {
 	updateIndex,
