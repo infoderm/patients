@@ -146,13 +146,13 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	patientId,
 	eidInfo,
 	navigate,
-	onClose,
+	onConfirm,
 }: EidCardDialogStepPreviewSingleProps) => {
 	const dialog = useDialog();
 	const [call, {pending}] = useCall();
 	const onOpen = () => {
 		navigate(`/patient/${patientId}`);
-		onClose();
+		onConfirm();
 	};
 
 	const onNext = async () => {

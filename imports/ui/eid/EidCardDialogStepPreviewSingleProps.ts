@@ -8,6 +8,6 @@ type Props = {
 	patientId: string;
 	eidInfo: EidFields;
 	navigate: ReturnType<typeof useNavigate>;
-	onClose: () => void;
+	onConfirm: () => void;
 };
 export default Props;
