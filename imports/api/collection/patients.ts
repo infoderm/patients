@@ -31,18 +31,20 @@ export const patientTag = schema.object({
 
 export type PatientTag = schema.infer<typeof patientTag>;
 
-export const patientIdFields = schema.object({
-	niss: schema.string(),
-	firstname: schema.string(),
-	lastname: schema.string(),
-	birthdate: schema.string(),
-	sex: patientSex,
-	photo: schema.string(),
+export const patientIdFields = schema
+	.object({
+		niss: schema.string(),
+		firstname: schema.string(),
+		lastname: schema.string(),
+		birthdate: schema.string(),
+		sex: patientSex,
+		photo: schema.string(),
 
-	municipality: schema.string(),
-	streetandnumber: schema.string(),
-	zip: schema.string(),
-});
+		municipality: schema.string(),
+		streetandnumber: schema.string(),
+		zip: schema.string(),
+	})
+	.partial();
 
 export type PatientIdFields = schema.infer<typeof patientIdFields>;
 
@@ -83,7 +85,6 @@ export type PatientPersonalInformationFields = schema.infer<
 >;
 
 export const patientFields = patientIdFields
-	.partial()
 	.merge(patientPersonalInformationFields)
 	.merge(patientTagFields);
 export type PatientFields = schema.infer<typeof patientFields>;
