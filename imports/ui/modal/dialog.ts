@@ -18,7 +18,7 @@ export type Options = Omit<typeof DEFAULT_OPTIONS, 'key'> & {
 };
 
 type Resolve<T> = (value: T | PromiseLike<T>) => void;
-type Reject = () => void;
+type Reject = (error?: Error) => void;
 
 export type ComponentExecutor<T> = (resolve: Resolve<T>, reject: Reject) => any;
 
@@ -33,7 +33,7 @@ const dialog = async <T>(
 
 	let currentChild: JSX.Element | null = null;
 
-	const render = (resolve, reject, open) => {
+	const render = (resolve: Resolve<T>, reject: Reject, open: boolean) => {
 		const target = currentChild;
 		currentChild = cloneElement(componentExecutor(resolve, reject), {
 			key,
