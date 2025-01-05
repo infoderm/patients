@@ -56,11 +56,14 @@ const splitNames = (string: string) => {
 	return [firstnameWords, middlenameWords] as const;
 };
 
-function normalizedName(firstname, lastname) {
+export const normalizedName = (
+	firstname: string | undefined,
+	lastname: string | undefined,
+) => {
 	const lastnameHash = words(lastname ?? '').join('');
 	const firstnameHash = words(names(firstname ?? '')[0] ?? '').join('');
 	return `${lastnameHash} ${firstnameHash}`;
-}
+};
 
 const updateIndex = async (
 	db: TransactionDriver,
