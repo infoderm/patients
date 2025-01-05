@@ -15,23 +15,30 @@ type Props = {
 	readonly navigate: ReturnType<typeof useNavigate>;
 	readonly eidInfo: PatientIdFields;
 	readonly open: boolean;
-	readonly onClose: () => void;
+	readonly onConfirm: () => void;
+	readonly onCancel: () => void;
 };
 
-const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
+const EidCardDialog = ({
+	navigate,
+	eidInfo,
+	open,
+	onConfirm,
+	onCancel,
+}: Props) => {
 	const [selected, setSelected] = useState(new Set<string>());
 	const [step, setStep] = useState('selection');
 
 	const selectionIsSingle = selected.size === 1;
 
 	return (
-		<Dialog open={open} onClose={onClose}>
+		<Dialog open={open} onClose={onCancel}>
 			{step === 'selection' && (
 				<EidCardDialogStepSelection
 					eidInfo={eidInfo}
 					selected={selected}
 					setSelected={setSelected}
-					onClose={onClose}
+					onClose={onCancel}
 					onNext={() => {
 						setStep('preview');
 					}}
@@ -45,7 +52,7 @@ const EidCardDialog = ({navigate, eidInfo, open, onClose}: Props) => {
 					onPrevStep={() => {
 						setStep('selection');
 					}}
-					onClose={onClose}
+					onConfirm={onConfirm}
 				/>
 			)}
 			{step === 'preview' && !selectionIsSingle && (

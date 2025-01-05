@@ -17,13 +17,16 @@ const insertPatient = async (
 
 	const eidInfo = eidParseXML(xmlString);
 
-	return dialog<void>((resolve) => (
+	return dialog<void>((resolve, reject) => (
 		<EidCardDialog
 			open={false}
 			navigate={navigate}
 			eidInfo={eidInfo}
-			onClose={() => {
+			onConfirm={() => {
 				resolve();
+			}}
+			onCancel={() => {
+				reject(new Error('Closed eid dialog.'));
 			}}
 		/>
 	));
