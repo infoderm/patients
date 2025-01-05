@@ -6,11 +6,11 @@ export const eidFields = schema.object({
 	xml: schema.object({
 		encoding: schema.string(),
 		version: schema.string(),
-	}),
+	}).partial(),
 	eid: schema.object({
 		graphpersoversion: schema.string(),
 		version: schema.string(),
-	}),
+	}).partial(),
 	card: schema.object({
 		carddata_appl_version: schema.string(),
 		cardnumber: schema.string(),
@@ -19,14 +19,14 @@ export const eidFields = schema.object({
 		validitydatebegin: schema.string(),
 		validitydateend: schema.string(),
 		deliverymunicipality: schema.string(),
-	}),
+	}).partial(),
 	certificates: schema.object({
 		authentication: schema.string(),
 		citizenca: schema.string(),
 		root: schema.string(),
 		rrn: schema.string(),
 		signing: schema.string(),
-	}),
+	}).partial(),
 	identity: schema.object({
 		nationality: schema.string(),
 		nationalnumber: schema.string(),
@@ -38,12 +38,12 @@ export const eidFields = schema.object({
 		firstname: schema.string(),
 		middlenames: schema.string(),
 		photo: schema.string(),
-	}),
+	}).partial(),
 	address: schema.object({
 		municipality: schema.string(),
 		streetandnumber: schema.string(),
 		zip: schema.string(),
-	}),
+	}).partial(),
 });
 
 export type EidFields = schema.infer<typeof eidFields>;

@@ -381,14 +381,25 @@ function createPatient(string: string) {
 	};
 }
 
-export const patientFieldsFromEid = ({address, identity: {nationalnumber, gender, firstname, name, photo, dateofbirth}}: EidFields) => patientIdFields.parse({
+export const patientFieldsFromEid = ({
+	address,
+	identity: {
+		nationalnumber,
+		gender,
+		firstname,
+		name,
+		photo,
+		dateofbirth
+	}
+}: EidFields) => patientIdFields.parse({
 	niss: nationalnumber,
 	firstname,
 	lastname: name,
 	photo,
-	birthdate: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(4, 6)}-${dateofbirth.slice(6, 8)}`,
+	birthdate: dateofbirth === undefined
+		? undefined
+		: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(4, 6)}-${dateofbirth.slice(6, 8)}`,
 	sex: gender,
-
 	...address,
 });
 
