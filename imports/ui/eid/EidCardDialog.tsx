@@ -19,7 +19,13 @@ type Props = {
 	readonly onCancel: () => void;
 };
 
-const EidCardDialog = ({navigate, eidInfo, open, onConfirm, onCancel}: Props) => {
+const EidCardDialog = ({
+	navigate,
+	eidInfo,
+	open,
+	onConfirm,
+	onCancel,
+}: Props) => {
 	const [selected, setSelected] = useState(new Set<string>());
 	const [step, setStep] = useState('selection');
 

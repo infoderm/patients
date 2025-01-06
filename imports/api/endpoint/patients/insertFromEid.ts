@@ -1,12 +1,13 @@
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import schema from '../../../lib/schema';
-import { eidFields, Eids } from '../../collection/eids';
+import {eidFields, Eids} from '../../collection/eids';
 import {patientFieldsFromEid} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
 import compose from '../compose';
+
 import insert from './insert';
 
 export default define({

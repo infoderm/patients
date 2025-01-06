@@ -9,18 +9,21 @@ import {Insurances} from '../../collection/insurances';
 
 import {newEidData} from '../../_dev/populate/eids';
 import invoke from '../invoke';
+
+import {normalizedName, patientFieldsFromEid} from '../../patients';
+
 import insertFromEid from './insertFromEid';
-import { normalizedName, patientFieldsFromEid } from '../../patients';
 
 server(__filename, () => {
 	it('cannot create a patient when not logged in', async () => {
 		return throws(
-			async () => invoke(
-				insertFromEid,
-				// @ts-expect-error Type-checking is working as expected.
-				{userId: undefined},
-				[newEidData()]
-			),
+			async () =>
+				invoke(
+					insertFromEid,
+					// @ts-expect-error Type-checking is working as expected.
+					{userId: undefined},
+					[newEidData()],
+				),
 			/not-authorized/,
 		);
 	});
@@ -38,8 +41,11 @@ server(__filename, () => {
 
 		const expectedPatientFields = patientFieldsFromEid(eid);
 		const expectedComputedFields = {
-			normalizedName: normalizedName(expectedPatientFields.firstname, expectedPatientFields.lastname),
-		}
+			normalizedName: normalizedName(
+				expectedPatientFields.firstname,
+				expectedPatientFields.lastname,
+			),
+		};
 
 		const expected = {
 			...expectedPatientFields,
@@ -55,17 +61,8 @@ server(__filename, () => {
 
 		assert.isAtMost(createdAt.valueOf(), Date.now());
 
-		assert.sameDeepMembers(
-			await Allergies.find().fetchAsync(),
-			[],
-		);
-		assert.sameDeepMembers(
-			await Doctors.find().fetchAsync(),
-			[],
-		);
-		assert.sameDeepMembers(
-			await Insurances.find().fetchAsync(),
-			[],
-		);
+		assert.sameDeepMembers(await Allergies.find().fetchAsync(), []);
+		assert.sameDeepMembers(await Doctors.find().fetchAsync(), []);
+		assert.sameDeepMembers(await Insurances.find().fetchAsync(), []);
 	});
 });

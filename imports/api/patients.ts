@@ -8,6 +8,8 @@ import isValid from 'date-fns/isValid';
 
 import schema from '../lib/schema';
 
+import removeUndefined from '../lib/object/removeUndefined';
+
 import {
 	type PatientFields,
 	type PatientComputedFields,
@@ -17,8 +19,8 @@ import {
 	type PatientDocument,
 	type PatientTagFields,
 	patientSex,
-    patientIdFields,
-    PatientIdFields,
+	patientIdFields,
+	type PatientIdFields,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -50,8 +52,7 @@ import {
 	yieldResettableKey,
 } from './update';
 import {type DocumentUpdate} from './DocumentUpdate';
-import { EidFields } from './collection/eids';
-import removeUndefined from '../lib/object/removeUndefined';
+import {type EidFields} from './collection/eids';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -60,11 +61,14 @@ const splitNames = (string: string) => {
 	return [firstnameWords, middlenameWords] as const;
 };
 
-export const normalizedName = (firstname: string | undefined, lastname: string | undefined) => {
+export const normalizedName = (
+	firstname: string | undefined,
+	lastname: string | undefined,
+) => {
 	const lastnameHash = words(lastname ?? '').join('');
 	const firstnameHash = words(names(firstname ?? '')[0] ?? '').join('');
 	return `${lastnameHash} ${firstnameHash}`;
-}
+};
 
 const updateIndex = async (
 	db: TransactionDriver,
@@ -385,25 +389,25 @@ function createPatient(string: string) {
 
 export const patientFieldsFromEid = ({
 	address,
-	identity: {
-		nationalnumber,
-		gender,
-		firstname,
-		name,
-		photo,
-		dateofbirth
-	}
-}: EidFields): PatientIdFields => removeUndefined(patientIdFields.parse({
-	niss: nationalnumber,
-	firstname,
-	lastname: name,
-	photo,
-	birthdate: dateofbirth === undefined
-		? undefined
-		: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(4, 6)}-${dateofbirth.slice(6, 8)}`,
-	sex: gender,
-	...address,
-}));
+	identity: {nationalnumber, gender, firstname, name, photo, dateofbirth},
+}: EidFields): PatientIdFields =>
+	removeUndefined(
+		patientIdFields.parse({
+			niss: nationalnumber,
+			firstname,
+			lastname: name,
+			photo,
+			birthdate:
+				dateofbirth === undefined
+					? undefined
+					: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(
+							4,
+							6,
+					  )}-${dateofbirth.slice(6, 8)}`,
+			sex: gender,
+			...address,
+		}),
+	);
 
 export const patients = {
 	updateIndex,

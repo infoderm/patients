@@ -1,6 +1,6 @@
 import {type useNavigate} from 'react-router-dom';
 
-import { EidFields } from '../../api/collection/eids';
+import {type EidFields} from '../../api/collection/eids';
 
 type Props = {
 	titleId?: string;

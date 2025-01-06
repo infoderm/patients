@@ -9,6 +9,7 @@ const AGE_MAX = 130;
 
 export const newEidData = makeTemplate({
 	xml: {
+		// eslint-disable-next-line unicorn/text-encoding-identifier-case
 		encoding: () => 'UTF-8',
 		version: () => '1.0',
 	},
@@ -20,7 +21,7 @@ export const newEidData = makeTemplate({
 		carddata_appl_version: () => faker.string.numeric(2),
 		cardnumber: () => faker.string.numeric(12),
 		chipnumber: () => faker.string.alphanumeric(32),
-		documenttype: () => "belgian_citizen",
+		documenttype: () => 'belgian_citizen',
 		validitydatebegin: () => format(faker.date.past({years: 30}), DATE_FORMAT),
 		validitydateend: () => format(faker.date.past({years: 30}), DATE_FORMAT),
 		deliverymunicipality: () => faker.location.county(),

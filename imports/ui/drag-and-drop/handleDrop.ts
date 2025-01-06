@@ -5,13 +5,14 @@ import insertDrugs from '../../api/drugs/insertDrugs';
 import insertDocument from '../../api/documents/insertDocument';
 import type useDialog from '../modal/useDialog';
 
-function unpack(item: DataTransferItem):
-['drugs', File] |
-['attachment', File] |
-['document', File] |
-['patient', DataTransferItem] |
-['unknown', DataTransferItem]
-{
+function unpack(
+	item: DataTransferItem,
+):
+	| ['drugs', File]
+	| ['attachment', File]
+	| ['document', File]
+	| ['patient', DataTransferItem]
+	| ['unknown', DataTransferItem] {
 	if (item.kind === 'file') {
 		const f = item.getAsFile()!;
 		if (item.type === 'text/csv') {
@@ -35,7 +36,7 @@ function unpack(item: DataTransferItem):
 const _items = (data: DataTransfer): Iterable<DataTransferItem> => {
 	// @ts-expect-error NOTE: DataTransferItem is actually an iterable.
 	return data.items;
-}
+};
 
 const handleDrop =
 	(

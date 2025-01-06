@@ -32,9 +32,7 @@ import CancelButton from '../button/CancelButton';
 
 import mergeFields from '../../api/query/mergeFields';
 
-import {
-	type PatientDocument,
-} from '../../api/collection/patients';
+import {type PatientDocument} from '../../api/collection/patients';
 import {patientFieldsFromEid, patients} from '../../api/patients';
 import {onlyNumeric} from '../../api/string';
 
@@ -48,7 +46,7 @@ import SelectablePatientCard from '../patients/SelectablePatientCard';
 import ReactivePatientCard from '../patients/ReactivePatientCard';
 import GenericNewPatientCard from '../patients/GenericNewPatientCard';
 import PatientsGrid from '../patients/PatientsGrid';
-import { EidFields } from '../../api/collection/eids';
+import {type EidFields} from '../../api/collection/eids';
 
 const DEFAULT_LIMIT = 3;
 const DEFAULT_FIELDS = {
