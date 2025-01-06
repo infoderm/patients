@@ -50,10 +50,9 @@ const StyledPaper = styled(Paper)(({theme}) => ({
 	padding: theme.spacing(3),
 }));
 
-const TextArea = styled(TextField)(({theme}) => ({
-	margin: theme.spacing(1),
+const TextArea = styled(TextField)(() => ({
 	overflow: 'auto',
-	width: `calc(100% - ${theme.spacing(2)})`,
+	width: '100%',
 }));
 
 const defaultDate = '1970-01-01';
