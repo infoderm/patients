@@ -1,17 +1,18 @@
 import {fireEvent} from '@testing-library/dom';
 
+import call from '../../../../imports/api/endpoint/call';
+import insert from '../../../../imports/api/endpoint/patients/insert';
+import createUserWithPassword from '../../../../imports/api/user/createUserWithPassword';
+
 import {exampleEidXML} from '../../../../imports/api/_dev/populate/eids';
+import {newPatientFormData} from '../../../../imports/api/_dev/populate/patients';
 
 import {
 	client,
 	randomPassword,
 	randomUserId,
 } from '../../../../imports/_test/fixtures';
-import {
-	setupApp,
-	createUserWithPasswordAndLogin,
-	searchForPatient,
-} from '../fixtures';
+import {setupApp, searchForPatient} from '../fixtures';
 
 type Item = string | File;
 
@@ -95,7 +96,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPassword(username, password);
 
 		const {findByRole, findByText, user} = app;
 
@@ -112,7 +113,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPassword(username, password);
 
 		const {findByRole, user} = app;
 
@@ -132,8 +133,105 @@ client(__filename, () => {
 			await findByRole('button', {name: 'Create a new patient'}),
 		);
 
-		await searchForPatient(app, `Jane Doe`, {
-			name: `Jane Doe`,
+		await searchForPatient(app, 'Jane Doe', {
+			name: 'Jane Doe',
 		});
+	});
+
+	it('should allow to open a patient from eid', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPassword(username, password);
+
+		const {findAllByRole, findByRole, findByText, user} = app;
+
+		const sex = 'female';
+
+		const formData = newPatientFormData({sex});
+
+		const {
+			niss,
+			firstname,
+			lastname,
+			birthdate,
+			photo,
+			streetandnumber,
+			zip,
+			municipality,
+		} = formData;
+
+		const patientId = await call(insert, formData);
+
+		const eidXML = exampleEidXML({
+			nationalnumber: niss,
+			dateofbirth: birthdate.replaceAll('-', ''),
+			photo,
+			name: lastname,
+			gender: sex,
+			firstname,
+			streetandnumber,
+			zip,
+			municipality,
+		});
+
+		await dropFiles(app, eidXML);
+
+		await findByRole('heading', {name: 'Select record to work with.'});
+
+		const buttons = await findAllByRole('button', {
+			name: new RegExp(` ${lastname} ${firstname} `, 'i'),
+		});
+		await user.click(buttons[0]!);
+
+		await user.click(await findByRole('button', {name: 'Next (1)'}));
+
+		await user.click(
+			await findByText(/^open$/i, {selector: 'button:not([disabled])'}),
+		);
+
+		await findByRole('heading', {name: `/patient/${patientId}`});
+	});
+
+	it('should allow to update a patient from eid', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPassword(username, password);
+
+		const {findAllByRole, findByRole, findByText, user} = app;
+
+		const formData = newPatientFormData({
+			streetandnumber: 'streetandnumber-initial',
+		});
+
+		const {firstname, lastname} = formData;
+
+		const patientId = await call(insert, formData);
+
+		const eidXML = exampleEidXML({
+			name: lastname,
+			firstname,
+			streetandnumber: 'streetandnumber-eid',
+		});
+
+		await dropFiles(app, eidXML);
+
+		await findByRole('heading', {name: 'Select record to work with.'});
+
+		const buttons = await findAllByRole('button', {
+			name: new RegExp(` ${lastname} ${firstname} `, 'i'),
+		});
+		await user.click(buttons[0]!);
+
+		await user.click(await findByRole('button', {name: 'Next (1)'}));
+
+		await user.click(await findByRole('button', {name: 'Next'}));
+
+		await user.click(await findByRole('button', {name: 'Update'}));
+
+		await findByRole('heading', {name: `/patient/${patientId}`});
+
+		await findByText('streetandnumber-eid');
 	});
 });

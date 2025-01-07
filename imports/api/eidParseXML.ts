@@ -5,7 +5,7 @@ import schema from '../lib/schema';
 import {type EidFields} from './collection/eids';
 
 const text = schema.object({
-	_text: schema.string(),
+	_text: schema.string().optional(),
 });
 
 export const eidXml = schema.object({

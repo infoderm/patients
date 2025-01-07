@@ -54,27 +54,54 @@ export const newEidData = makeTemplate({
 });
 
 export const exampleEidXML = (options?: {
+	nationalnumber?: string;
+	dateofbirth?: string;
 	name?: string;
 	firstname?: string;
 	middlenames?: string;
 	nationality?: string;
 	placeofbirth?: string;
+	gender?: 'male' | 'female';
+	photo?: string;
+	streetandnumber?: string;
+	zip?: string;
+	municipality?: string;
 }) => {
-	const {name, firstname, middlenames, nationality, placeofbirth} = {
+	const {
+		nationalnumber,
+		dateofbirth,
+		name,
+		firstname,
+		middlenames,
+		nationality,
+		placeofbirth,
+		gender,
+		photo,
+		streetandnumber,
+		zip,
+		municipality,
+	} = {
+		nationalnumber: '70010112345',
+		dateofbirth: '19700101',
 		name: 'Name',
 		firstname: 'First Name',
 		middlenames: 'M',
 		nationality: 'Belge',
 		placeofbirth: 'Bruxelles',
+		gender: 'female',
+		photo: randomPNGBase64(),
+		streetandnumber: 'Rue de la montagne 58 ',
+		zip: '1000',
+		municipality: 'Bruxelles',
 		...options,
 	};
 	// TODO: Generalizes and escape values.
 	return `<?xml version="1.0" encoding="UTF-8"?>
 <eid version="4.3" graphpersoversion="00">
 	<identity
-	  nationalnumber="70010112345"
-	  dateofbirth="19700101"
-	  gender="male"
+	  nationalnumber="${nationalnumber}"
+	  dateofbirth="${dateofbirth}"
+	  gender="${gender}"
 	  specialstatus="NO_STATUS"
 	>
 		<name>${name}</name>
@@ -82,7 +109,7 @@ export const exampleEidXML = (options?: {
 		<middlenames>${middlenames}</middlenames>
 		<nationality>${nationality}</nationality>
 		<placeofbirth>${placeofbirth}</placeofbirth>
-		<photo>${randomPNGBase64()}</photo>
+		<photo>${photo}</photo>
 	</identity>
 	<card
 		documenttype="belgian_citizen"
@@ -95,9 +122,9 @@ export const exampleEidXML = (options?: {
 		<deliverymunicipality>Bruxelles</deliverymunicipality>
 	</card>
 	<address>
-		<streetandnumber>Rue de la montagne 58 </streetandnumber>
-		<zip>1000</zip>
-		<municipality>Bruxelles</municipality>
+		<streetandnumber>${streetandnumber}</streetandnumber>
+		<zip>${zip}</zip>
+		<municipality>${municipality}</municipality>
 	</address>
 	<certificates>
 		<root>ROOT</root>
