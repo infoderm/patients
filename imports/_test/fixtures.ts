@@ -111,17 +111,17 @@ const forgetHistory = async () => {
 };
 
 const mount = isAppTest()
-	? () => {
-			_router.navigate('/');
+	? async () => {
+			await _router.navigate('/');
 	  }
 	: // eslint-disable-next-line @typescript-eslint/no-empty-function
-	  () => {};
+	  async () => {};
 
 const unmount = isAppTest()
-	? () => {
-			_router.navigate('/_test/unmount');
+	? async () => {
+			await _router.navigate('/_test/unmount');
 	  }
-	: () => {
+	: async () => {
 			_unmount();
 	  };
 
@@ -136,9 +136,9 @@ export const client = (title, fn) => {
 	if (Meteor.isClient) {
 		const cleanup = async () => {
 			await logout();
-			unmount();
+			await unmount();
 			assertChangeStreamWatchersAreOff();
-			mount();
+			await mount();
 			await call(reset);
 		};
 
