@@ -99,18 +99,18 @@ const App = () => {
 			<DateTimeLocalizationProvider>
 				<CacheProvider value={muiCache}>
 					<ThemeProvider theme={theme}>
-						<ModalProvider>
-							<CssBaseline />
-							<PlannerProvider>
-								<ErrorBoundary>
-									<StatusNotifications />
-									<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
-										<CustomWholeWindowDropZone />
+						<CssBaseline />
+						<ErrorBoundary>
+							<StatusNotifications />
+							<SnackbarProvider maxSnack={10} autoHideDuration={8000}>
+								<ModalProvider>
+									<CustomWholeWindowDropZone />
+									<PlannerProvider>
 										<AppFrame />
-									</SnackbarProvider>
-								</ErrorBoundary>
-							</PlannerProvider>
-						</ModalProvider>
+									</PlannerProvider>
+								</ModalProvider>
+							</SnackbarProvider>
+						</ErrorBoundary>
 					</ThemeProvider>
 				</CacheProvider>
 			</DateTimeLocalizationProvider>
