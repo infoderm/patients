@@ -2,6 +2,7 @@ import {fireEvent} from '@testing-library/dom';
 
 import call from '../../../../imports/api/endpoint/call';
 import insert from '../../../../imports/api/endpoint/patients/insert';
+import remove from '../../../../imports/api/endpoint/patients/remove';
 import createUserWithPassword from '../../../../imports/api/user/createUserWithPassword';
 
 import {exampleEidXML} from '../../../../imports/api/_dev/populate/eids';
@@ -233,5 +234,106 @@ client(__filename, () => {
 		await findByRole('heading', {name: `/patient/${patientId}`});
 
 		await findByText('streetandnumber-eid');
+	});
+
+	it('should handle deleted patients (open)', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPassword(username, password);
+
+		const {findAllByRole, findByRole, findByText, user} = app;
+
+		const sex = 'female';
+
+		const formData = newPatientFormData({sex});
+
+		const {
+			niss,
+			firstname,
+			lastname,
+			birthdate,
+			photo,
+			streetandnumber,
+			zip,
+			municipality,
+		} = formData;
+
+		const patientId = await call(insert, formData);
+
+		const eidXML = exampleEidXML({
+			nationalnumber: niss,
+			dateofbirth: birthdate.replaceAll('-', ''),
+			photo,
+			name: lastname,
+			gender: sex,
+			firstname,
+			streetandnumber,
+			zip,
+			municipality,
+		});
+
+		await dropFiles(app, eidXML);
+
+		await findByRole('heading', {name: 'Select record to work with.'});
+
+		const buttons = await findAllByRole('button', {
+			name: new RegExp(`\\b${lastname} ${firstname}\\b`, 'i'),
+		});
+		await user.click(buttons[0]!);
+
+		await user.click(await findByRole('button', {name: 'Next (1)'}));
+
+		await findByText(/^open$/i, {selector: 'button:not([disabled])'});
+
+		await call(remove, patientId);
+
+		await findByText(/^open$/i, {selector: 'button[disabled]'});
+	});
+
+	it('should handle deleted patient (update)', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPassword(username, password);
+
+		const {findAllByRole, findByRole, findByText, user} = app;
+
+		const formData = newPatientFormData({
+			streetandnumber: 'streetandnumber-initial',
+		});
+
+		const {firstname, lastname} = formData;
+
+		const patientId = await call(insert, formData);
+
+		const eidXML = exampleEidXML({
+			name: lastname,
+			firstname,
+			streetandnumber: 'streetandnumber-eid',
+		});
+
+		await dropFiles(app, eidXML);
+
+		await findByRole('heading', {name: 'Select record to work with.'});
+
+		const buttons = await findAllByRole('button', {
+			name: new RegExp(`\\b${lastname} ${firstname}\\b`, 'i'),
+		});
+		await user.click(buttons[0]!);
+
+		await user.click(await findByRole('button', {name: 'Next (1)'}));
+
+		await user.click(await findByRole('button', {name: 'Next'}));
+
+		await findByRole('button', {name: 'Update'});
+
+		await call(remove, patientId);
+
+		await user.click(await findByRole('button', {name: 'Update'}));
+
+		await findByText('Updating patient with eid info failed: [not-found].');
+
+		await findByText(/^open$/i, {selector: 'button[disabled]'});
 	});
 });
