@@ -37,7 +37,7 @@ import {useSnackbar} from 'notistack';
 import diff from '../../lib/lcs/diff';
 import pngDataURL from '../../lib/png/dataURL';
 
-import patientsUpdate from '../../api/endpoint/patients/update';
+import patientsUpdateFromEid from '../../api/endpoint/patients/updateFromEid';
 import {patientFieldsFromEid, patients} from '../../api/patients';
 
 import useDialog from '../modal/useDialog';
@@ -179,7 +179,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 			))
 		) {
 			try {
-				await call(patientsUpdate, patientId, patientFieldsFromEid(eidInfo));
+				await call(patientsUpdateFromEid, patientId, eidInfo);
 				onOpen();
 			} catch (error: unknown) {
 				console.error(error);
