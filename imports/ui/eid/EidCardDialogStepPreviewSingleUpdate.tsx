@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -31,6 +31,8 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import {red, green} from '@mui/material/colors';
 
 import LoadingButton from '@mui/lab/LoadingButton';
+
+import {useSnackbar} from 'notistack';
 
 import diff from '../../lib/lcs/diff';
 import pngDataURL from '../../lib/png/dataURL';
@@ -150,12 +152,14 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 }: EidCardDialogStepPreviewSingleProps) => {
 	const dialog = useDialog();
 	const [call, {pending}] = useCall();
-	const onOpen = () => {
+	const {enqueueSnackbar} = useSnackbar();
+
+	const onOpen = useCallback(() => {
 		navigate(`/patient/${patientId}`);
 		onConfirm();
-	};
+	}, [navigate, onConfirm]);
 
-	const onNext = async () => {
+	const onNext = useCallback(async () => {
 		if (
 			await dialog((resolve) => (
 				<ConfirmationDialog
@@ -179,9 +183,23 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 				onOpen();
 			} catch (error: unknown) {
 				console.error(error);
+				enqueueSnackbar(
+					`Updating patient with eid info failed: ${
+						error instanceof Error ? error.message : 'unknown'
+					}.`,
+					{variant: 'error'},
+				);
 			}
 		}
-	};
+	}, [
+		enqueueSnackbar,
+		dialog,
+		EditAttributesIcon,
+		call,
+		patientId,
+		eidInfo,
+		onOpen,
+	]);
 
 	const {$set} = patients.sanitize(patientFieldsFromEid(eidInfo));
 	const eidPatients = [{_id: '?', ...$set}];
