@@ -33,6 +33,7 @@ import {availability} from '../../api/availability';
 import {names} from '../../api/createTagCollection';
 import type TagDocument from '../../api/tags/TagDocument';
 import db from '../../backend/mongodb/db';
+import {Eids} from '../../api/collection/eids';
 
 export default async () => {
 	// Check that all ids are strings
@@ -312,6 +313,47 @@ export default async () => {
 	await createSimpleUniqueIndex(Doctors, 'name');
 	await createSimpleUniqueIndex(Allergies, 'name');
 	await createSimpleUniqueIndex(Books, 'name');
+
+	await Eids.rawCollection().createIndex(
+		{
+			owner: 1,
+			// NOTE: Those are the fields that are the most likely to change.
+			'card.cardnumber': 1,
+			'card.chipnumber': 1,
+			// NOTE: If the ones above match, usually the rest will match too.
+			'xml.encoding': 1,
+			'xml.version': 1,
+			'eid.graphpersoversion': 1,
+			'eid.version': 1,
+			'card.carddata_appl_version': 1,
+			'card.documenttype': 1,
+			'card.validitydatebegin': 1,
+			'card.validitydateend': 1,
+			'card.deliverymunicipality': 1,
+			'certificates.authentication': 1,
+			'certificates.citizenca': 1,
+			'certificates.root': 1,
+			'certificates.rrn': 1,
+			'certificates.signing': 1,
+			'identity.nationality': 1,
+			'identity.nationalnumber': 1,
+			'identity.dateofbirth': 1,
+			'identity.placeofbirth': 1,
+			'identity.gender': 1,
+			'identity.specialstatus': 1,
+			'identity.name': 1,
+			'identity.firstname': 1,
+			'identity.middlenames': 1,
+			'identity.photo': 1,
+			'address.municipality': 1,
+			'address.streetandnumber': 1,
+			'address.zip': 1,
+		},
+		{
+			unique: true,
+			background: true,
+		},
+	);
 
 	await Books.rawCollection().createIndex(
 		{

@@ -64,6 +64,7 @@ const eidMetadata = schema.object({
 	_id: schema.string(),
 	owner: schema.string(),
 	createdAt: schema.date(),
+	lastUsedAt: schema.date(),
 });
 
 export type EidMetadata = schema.infer<typeof eidMetadata>;

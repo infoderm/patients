@@ -1,6 +1,7 @@
 import type Collection from '../Collection';
 
 import {Settings} from './settings';
+import {Eids} from './eids';
 import {Patients} from './patients';
 import {PatientsSearchIndex} from './patients/search';
 import {Drugs} from './drugs';
@@ -16,6 +17,7 @@ import {Availability} from './availability';
 
 const collections: Array<Collection<any>> = [
 	Settings,
+	Eids,
 	Patients,
 	PatientsSearchIndex,
 	Drugs,

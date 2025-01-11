@@ -80,10 +80,11 @@ server(__filename, () => {
 
 		assert.strictEqual(entries.length, 1);
 
-		const {_id, createdAt, owner, ...rest} = entries[0]!;
+		const {_id, createdAt, lastUsedAt, owner, ...rest} = entries[0]!;
 
 		assert.strictEqual(owner, userId);
 		assert.isAtMost(createdAt.valueOf(), Date.now());
+		assert.strictEqual(lastUsedAt.valueOf(), createdAt.valueOf());
 
 		assert.deepEqual(
 			rest,
