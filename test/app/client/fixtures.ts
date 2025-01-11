@@ -204,21 +204,27 @@ export const createNewPatient = async (app: App, {firstname, lastname}) => {
 };
 
 export const searchResultsForQuery = async (
-	{userWithoutPointerEventsCheck, findByRole, getByRole}: App,
+	{userWithoutPointerEventsCheck, findByRole}: App,
 	query,
 ) => {
 	await userWithoutPointerEventsCheck.type(
-		getByRole('searchbox', {name: 'Patient search'}),
+		await findByRole('searchbox', {name: 'Patient search'}),
 		query,
 	);
 	await findByRole('heading', {name: /^Results for query/}, {timeout: 5000});
 };
 
-export const searchForPatient = async (app: App, query, {name, id}) => {
+export const searchForPatient = async (
+	app: App,
+	query: string,
+	{name, id}: {name: string; id?: string},
+) => {
 	const {findByRole, user} = app;
 	await searchResultsForQuery(app, query);
 	await user.click(await findByRole('link', {name}, {timeout: 5000}));
-	await findByRole('heading', {name: `/patient/${id}`}, {timeout: 10_000});
+	if (id !== undefined) {
+		await findByRole('heading', {name: `/patient/${id}`}, {timeout: 10_000});
+	}
 };
 
 type EditConsultationOptions = {

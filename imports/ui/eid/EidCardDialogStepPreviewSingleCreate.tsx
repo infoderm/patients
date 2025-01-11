@@ -14,8 +14,8 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import patientsInsert from '../../api/endpoint/patients/insert';
-import {patients} from '../../api/patients';
+import patientsInsertFromEid from '../../api/endpoint/patients/insertFromEid';
+import {patientFieldsFromEid, patients} from '../../api/patients';
 
 import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
@@ -31,7 +31,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 	patientId,
 	eidInfo,
 	navigate,
-	onClose,
+	onConfirm,
 }: EidCardDialogStepPreviewSingleProps) => {
 	assert(patientId === '?');
 	const dialog = useDialog();
@@ -55,16 +55,16 @@ const EidCardDialogStepPreviewSingleCreate = ({
 			))
 		) {
 			try {
-				const _id = await call(patientsInsert, eidInfo);
+				const _id = await call(patientsInsertFromEid, eidInfo);
 				navigate({pathname: `/patient/${_id}`});
-				onClose();
+				onConfirm();
 			} catch (error: unknown) {
 				console.error(error);
 			}
 		}
 	};
 
-	const {$set} = patients.sanitize(eidInfo);
+	const {$set} = patients.sanitize(patientFieldsFromEid(eidInfo));
 
 	const eidPatient = {
 		firstname: '',

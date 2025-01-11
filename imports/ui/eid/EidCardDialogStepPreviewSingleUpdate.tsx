@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -32,11 +32,13 @@ import {red, green} from '@mui/material/colors';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import {useSnackbar} from 'notistack';
+
 import diff from '../../lib/lcs/diff';
 import pngDataURL from '../../lib/png/dataURL';
 
-import patientsUpdate from '../../api/endpoint/patients/update';
-import {patients} from '../../api/patients';
+import patientsUpdateFromEid from '../../api/endpoint/patients/updateFromEid';
+import {patientFieldsFromEid, patients} from '../../api/patients';
 
 import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
@@ -146,16 +148,18 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 	patientId,
 	eidInfo,
 	navigate,
-	onClose,
+	onConfirm,
 }: EidCardDialogStepPreviewSingleProps) => {
 	const dialog = useDialog();
 	const [call, {pending}] = useCall();
-	const onOpen = () => {
-		navigate(`/patient/${patientId}`);
-		onClose();
-	};
+	const {enqueueSnackbar} = useSnackbar();
 
-	const onNext = async () => {
+	const onOpen = useCallback(() => {
+		navigate(`/patient/${patientId}`);
+		onConfirm();
+	}, [navigate, onConfirm]);
+
+	const onNext = useCallback(async () => {
 		if (
 			await dialog((resolve) => (
 				<ConfirmationDialog
@@ -175,15 +179,29 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 			))
 		) {
 			try {
-				await call(patientsUpdate, patientId, eidInfo);
+				await call(patientsUpdateFromEid, patientId, eidInfo);
 				onOpen();
 			} catch (error: unknown) {
 				console.error(error);
+				enqueueSnackbar(
+					`Updating patient with eid info failed: ${
+						error instanceof Error ? error.message : 'unknown'
+					}.`,
+					{variant: 'error'},
+				);
 			}
 		}
-	};
+	}, [
+		enqueueSnackbar,
+		dialog,
+		EditAttributesIcon,
+		call,
+		patientId,
+		eidInfo,
+		onOpen,
+	]);
 
-	const {$set} = patients.sanitize(eidInfo);
+	const {$set} = patients.sanitize(patientFieldsFromEid(eidInfo));
 	const eidPatients = [{_id: '?', ...$set}];
 	const selectedPatient = {_id: patientId};
 	const selectedPatients = [selectedPatient];

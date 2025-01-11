@@ -5,9 +5,16 @@ import insertDrugs from '../../api/drugs/insertDrugs';
 import insertDocument from '../../api/documents/insertDocument';
 import type useDialog from '../modal/useDialog';
 
-function unpack(data, item) {
+function unpack(
+	item: DataTransferItem,
+):
+	| ['drugs', File]
+	| ['attachment', File]
+	| ['document', File]
+	| ['patient', DataTransferItem]
+	| ['unknown', DataTransferItem] {
 	if (item.kind === 'file') {
-		const f = item.getAsFile();
+		const f = item.getAsFile()!;
 		if (item.type === 'text/csv') {
 			return ['drugs', f];
 		}
@@ -20,23 +27,27 @@ function unpack(data, item) {
 	}
 
 	if (item.kind === 'string' && item.type === 'text/plain') {
-		const xmlString = data.getData('text/plain');
-		return ['patient', xmlString];
+		return ['patient', item];
 	}
 
 	return ['unknown', item];
 }
+
+const _items = (data: DataTransfer): Iterable<DataTransferItem> => {
+	// @ts-expect-error NOTE: DataTransferItem is actually an iterable.
+	return data.items;
+};
 
 const handleDrop =
 	(
 		navigate: ReturnType<typeof useNavigate>,
 		dialog: ReturnType<typeof useDialog>,
 	) =>
-	async (data) => {
+	async (data: DataTransfer) => {
 		console.debug('handleDrop', data);
 
-		for (const item of data.items) {
-			const [kind, object] = unpack(data, item);
+		for (const item of _items(data)) {
+			const [kind, object] = unpack(item);
 			switch (kind) {
 				case 'drugs': {
 					// eslint-disable-next-line no-await-in-loop

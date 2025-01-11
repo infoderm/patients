@@ -5,7 +5,7 @@ import {type DrugDocument} from '../collection/drugs';
 import call from '../endpoint/call';
 import insertMany from '../endpoint/drugs/insertMany';
 
-const insertDrugs = async (fd) => {
+const insertDrugs = async (fd: File) => {
 	let i = 0;
 
 	const {promise, resolve, reject} = createPromise();

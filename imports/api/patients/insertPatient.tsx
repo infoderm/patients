@@ -9,17 +9,24 @@ import eidParseXML from '../eidParseXML';
 const insertPatient = async (
 	navigate: ReturnType<typeof useNavigate>,
 	dialog: ReturnType<typeof useDialog>,
-	xmlString: string,
+	item: DataTransferItem,
 ) => {
+	const xmlString = await new Promise<string>((resolve) => {
+		item.getAsString(resolve);
+	});
+
 	const eidInfo = eidParseXML(xmlString);
 
-	return dialog<void>((resolve) => (
+	return dialog<void>((resolve, reject) => (
 		<EidCardDialog
 			open={false}
 			navigate={navigate}
 			eidInfo={eidInfo}
-			onClose={() => {
+			onConfirm={() => {
 				resolve();
+			}}
+			onCancel={() => {
+				reject(new Error('Closed eid dialog.'));
 			}}
 		/>
 	));
