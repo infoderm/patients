@@ -13,6 +13,9 @@ import invoke from '../invoke';
 import {newEidData} from '../../_dev/populate/eids';
 import {normalizedName, patientFieldsFromEid} from '../../patients';
 
+import {Eids} from '../../collection/eids';
+import removeUndefined from '../../../lib/object/removeUndefined';
+
 import updateFromEid from './updateFromEid';
 
 server(__filename, () => {
@@ -107,12 +110,12 @@ server(__filename, () => {
 			phone,
 		};
 
-		const expected = {
+		const expected = removeUndefined({
 			...expectedPreviousFieldsIfAbsentInEid,
 			...expectedChangedFields,
 			...expectedComputedFields,
 			...expectedUnchangedFields,
-		};
+		});
 		const {_id, createdAt, owner, ...actual} = patients[0]!;
 
 		assert.strictEqual(patientId, _id);
@@ -143,6 +146,35 @@ server(__filename, () => {
 				name,
 			})),
 			insurances!.map(({displayName, name}) => ({displayName, name})),
+		);
+	});
+
+	it('creates an eid entry', async () => {
+		const userId = randomUserId();
+
+		const eid = newEidData();
+
+		const patientId = await newPatient({userId});
+
+		await invoke(updateFromEid, {userId}, [patientId, eid]);
+
+		const entries = await Eids.find({owner: userId}).fetchAsync();
+
+		assert.strictEqual(entries.length, 1);
+
+		const {_id, createdAt, owner, ...rest} = entries[0]!;
+
+		assert.strictEqual(owner, userId);
+		assert.isAtMost(createdAt.valueOf(), Date.now());
+
+		assert.deepEqual(
+			rest,
+			Object.fromEntries(
+				Object.entries(eid).map(([key, value]) => [
+					key,
+					removeUndefined(value as {}),
+				]),
+			),
 		);
 	});
 });
