@@ -17,11 +17,26 @@ export default define({
 	async transaction(db: TransactionDriver, eid) {
 		const owner = this.userId;
 
-		await db.insertOne(Eids, {
-			...eid,
-			createdAt: new Date(),
-			owner,
-		});
+		const lastUsedAt = new Date();
+
+		await db.updateOne(
+			Eids,
+			{
+				owner,
+				...eid,
+			},
+			{
+				$set: {
+					lastUsedAt,
+				},
+				$setOnInsert: {
+					createdAt: lastUsedAt,
+				},
+			},
+			{
+				upsert: true,
+			},
+		);
 
 		const patient = patientFieldsFromEid(eid);
 
