@@ -24,16 +24,16 @@
     - [x] Logging out
 
   - [ ] Patients
-    - [ ] Create
+    - [x] Create
       - [x] Create patient from scratch
-      - [ ] Create patient from eID
+      - [x] Create patient from eID
     - [ ] Read
       - [x] Search
       - [ ] Search including deceased
-    - [ ] Update
+    - [x] Update
       - [x] Patient personal info edition
-      - [ ] Update patient from eID
-      - [ ] eID noop when already up-to-date
+      - [x] Update patient from eID
+      - [x] eID noop when already up-to-date
       - [x] Patient merge (~`integration`~)
     - [ ] Delete
       - [ ] Mark patient as deceased
