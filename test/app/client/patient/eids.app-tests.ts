@@ -192,4 +192,46 @@ client(__filename, () => {
 
 		await findByRole('heading', {name: `/patient/${patientId}`});
 	});
+
+	it('should allow to update a patient from eid', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPassword(username, password);
+
+		const {findAllByRole, findByRole, findByText, user} = app;
+
+		const formData = newPatientFormData({
+			streetandnumber: 'streetandnumber-initial',
+		});
+
+		const {firstname, lastname} = formData;
+
+		const patientId = await call(insert, formData);
+
+		const eidXML = exampleEidXML({
+			name: lastname,
+			firstname,
+			streetandnumber: 'streetandnumber-eid',
+		});
+
+		await dropFiles(app, eidXML);
+
+		await findByRole('heading', {name: 'Select record to work with.'});
+
+		const buttons = await findAllByRole('button', {
+			name: new RegExp(`\\b${lastname} ${firstname}\\b`, 'i'),
+		});
+		await user.click(buttons[0]!);
+
+		await user.click(await findByRole('button', {name: 'Next (1)'}));
+
+		await user.click(await findByRole('button', {name: 'Next'}));
+
+		await user.click(await findByRole('button', {name: 'Update'}));
+
+		await findByRole('heading', {name: `/patient/${patientId}`});
+
+		await findByText('streetandnumber-eid');
+	});
 });
