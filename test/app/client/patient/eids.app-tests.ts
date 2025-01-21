@@ -1,8 +1,11 @@
 import {fireEvent} from '@testing-library/dom';
 
+import call from '../../../../imports/api/endpoint/call';
+import insert from '../../../../imports/api/endpoint/patients/insert';
 import createUserWithPassword from '../../../../imports/api/user/createUserWithPassword';
 
 import {exampleEidXML} from '../../../../imports/api/_dev/populate/eids';
+import {newPatientFormData} from '../../../../imports/api/_dev/populate/patients';
 
 import {
 	client,
@@ -133,5 +136,60 @@ client(__filename, () => {
 		await searchForPatient(app, 'Jane Doe', {
 			name: 'Jane Doe',
 		});
+	});
+
+	it('should allow to open a patient from eid', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPassword(username, password);
+
+		const {findAllByRole, findByRole, findByText, user} = app;
+
+		const sex = 'female';
+
+		const formData = newPatientFormData({sex});
+
+		const {
+			niss,
+			firstname,
+			lastname,
+			birthdate,
+			photo,
+			streetandnumber,
+			zip,
+			municipality,
+		} = formData;
+
+		const patientId = await call(insert, formData);
+
+		const eidXML = exampleEidXML({
+			nationalnumber: niss,
+			dateofbirth: birthdate.replaceAll('-', ''),
+			photo,
+			name: lastname,
+			gender: sex,
+			firstname,
+			streetandnumber,
+			zip,
+			municipality,
+		});
+
+		await dropFiles(app, eidXML);
+
+		await findByRole('heading', {name: 'Select record to work with.'});
+
+		const buttons = await findAllByRole('button', {
+			name: new RegExp(`\\b${lastname} ${firstname}\\b`, 'i'),
+		});
+		await user.click(buttons[0]!);
+
+		await user.click(await findByRole('button', {name: 'Next (1)'}));
+
+		await user.click(
+			await findByText(/^open$/i, {selector: 'button:not([disabled])'}),
+		);
+
+		await findByRole('heading', {name: `/patient/${patientId}`});
 	});
 });
