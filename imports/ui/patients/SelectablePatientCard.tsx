@@ -8,6 +8,8 @@ import RadioButtonUncheckedOutlinedIcon from '@mui/icons-material/RadioButtonUnc
 
 import type PropsOf from '../../lib/types/PropsOf';
 
+import useUniqueId from '../hooks/useUniqueId';
+
 import GenericStaticPatientCard from './GenericStaticPatientCard';
 
 type Props = {
@@ -75,12 +77,14 @@ const SelectablePatientCard = ({
 	patient,
 	...rest
 }: Props) => {
+	const labelId = useUniqueId('selectable-patient-card');
 	return (
 		<Root>
-			<Card patient={patient} {...rest} />
+			<Card id={labelId} role="none" patient={patient} {...rest} />
 			<SelectionStateIcon selected={selected} />
 			<ClickableArea
 				focusRipple
+				aria-labelledby={labelId}
 				selected={selected}
 				onClick={() => {
 					onClick(patient);
