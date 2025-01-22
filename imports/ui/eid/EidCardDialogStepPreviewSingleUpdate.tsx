@@ -36,7 +36,7 @@ import diff from '../../lib/lcs/diff';
 import pngDataURL from '../../lib/png/dataURL';
 
 import patientsUpdate from '../../api/endpoint/patients/update';
-import {patients} from '../../api/patients';
+import {patientFieldsFromEid, patients} from '../../api/patients';
 
 import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
@@ -175,7 +175,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 			))
 		) {
 			try {
-				await call(patientsUpdate, patientId, eidInfo);
+				await call(patientsUpdate, patientId, patientFieldsFromEid(eidInfo));
 				onOpen();
 			} catch (error: unknown) {
 				console.error(error);
@@ -183,7 +183,7 @@ const EidCardDialogStepPreviewSingleUpdate = ({
 		}
 	};
 
-	const {$set} = patients.sanitize(eidInfo);
+	const {$set} = patients.sanitize(patientFieldsFromEid(eidInfo));
 	const eidPatients = [{_id: '?', ...$set}];
 	const selectedPatient = {_id: patientId};
 	const selectedPatients = [selectedPatient];

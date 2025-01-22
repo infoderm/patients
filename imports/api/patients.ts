@@ -8,6 +8,8 @@ import isValid from 'date-fns/isValid';
 
 import schema from '../lib/schema';
 
+import removeUndefined from '../lib/object/removeUndefined';
+
 import {
 	type PatientFields,
 	type PatientComputedFields,
@@ -17,6 +19,8 @@ import {
 	type PatientDocument,
 	type PatientTagFields,
 	patientSex,
+	patientIdFields,
+	type PatientIdFields,
 } from './collection/patients';
 
 import {PatientsSearchIndex} from './collection/patients/search';
@@ -48,6 +52,7 @@ import {
 	yieldResettableKey,
 } from './update';
 import {type DocumentUpdate} from './DocumentUpdate';
+import {type EidFields} from './collection/eids';
 
 const splitNames = (string: string) => {
 	const [firstname, ...middlenames] = names(string);
@@ -381,6 +386,28 @@ function createPatient(string: string) {
 		_id: '?',
 	};
 }
+
+export const patientFieldsFromEid = ({
+	address,
+	identity: {nationalnumber, gender, firstname, name, photo, dateofbirth},
+}: EidFields): PatientIdFields =>
+	removeUndefined(
+		patientIdFields.parse({
+			niss: nationalnumber,
+			firstname,
+			lastname: name,
+			photo,
+			birthdate:
+				dateofbirth === undefined
+					? undefined
+					: `${dateofbirth.slice(0, 4)}-${dateofbirth.slice(
+							4,
+							6,
+					  )}-${dateofbirth.slice(6, 8)}`,
+			sex: gender,
+			...address,
+		}),
+	);
 
 export const patients = {
 	updateIndex,

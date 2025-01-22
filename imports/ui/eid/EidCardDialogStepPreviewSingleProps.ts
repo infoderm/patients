@@ -1,12 +1,12 @@
 import {type useNavigate} from 'react-router-dom';
 
-import {type PatientIdFields} from '../../api/collection/patients';
+import {type EidFields} from '../../api/collection/eids';
 
 type Props = {
 	titleId?: string;
 	onPrevStep: () => void;
 	patientId: string;
-	eidInfo: PatientIdFields;
+	eidInfo: EidFields;
 	navigate: ReturnType<typeof useNavigate>;
 	onConfirm: () => void;
 };

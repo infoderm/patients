@@ -15,7 +15,7 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import patientsInsert from '../../api/endpoint/patients/insert';
-import {patients} from '../../api/patients';
+import {patientFieldsFromEid, patients} from '../../api/patients';
 
 import useDialog from '../modal/useDialog';
 import ConfirmationDialog from '../modal/ConfirmationDialog';
@@ -55,7 +55,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 			))
 		) {
 			try {
-				const _id = await call(patientsInsert, eidInfo);
+				const _id = await call(patientsInsert, patientFieldsFromEid(eidInfo));
 				navigate({pathname: `/patient/${_id}`});
 				onConfirm();
 			} catch (error: unknown) {
@@ -64,7 +64,7 @@ const EidCardDialogStepPreviewSingleCreate = ({
 		}
 	};
 
-	const {$set} = patients.sanitize(eidInfo);
+	const {$set} = patients.sanitize(patientFieldsFromEid(eidInfo));
 
 	const eidPatient = {
 		firstname: '',

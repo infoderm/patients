@@ -6,14 +6,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
-import {type PatientIdFields} from '../../api/collection/patients';
+import {type EidFields} from '../../api/collection/eids';
 
 import EidCardDialogStepSelection from './EidCardDialogStepSelection';
 import EidCardDialogStepPreviewSingle from './EidCardDialogStepPreviewSingle';
 
 type Props = {
 	readonly navigate: ReturnType<typeof useNavigate>;
-	readonly eidInfo: PatientIdFields;
+	readonly eidInfo: EidFields;
 	readonly open: boolean;
 	readonly onConfirm: () => void;
 	readonly onCancel: () => void;
