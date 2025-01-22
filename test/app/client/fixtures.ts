@@ -204,11 +204,11 @@ export const createNewPatient = async (app: App, {firstname, lastname}) => {
 };
 
 export const searchResultsForQuery = async (
-	{userWithoutPointerEventsCheck, findByRole, getByRole}: App,
+	{userWithoutPointerEventsCheck, findByRole}: App,
 	query,
 ) => {
 	await userWithoutPointerEventsCheck.type(
-		getByRole('searchbox', {name: 'Patient search'}),
+		await findByRole('searchbox', {name: 'Patient search'}),
 		query,
 	);
 	await findByRole('heading', {name: /^Results for query/}, {timeout: 5000});
