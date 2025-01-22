@@ -3,6 +3,8 @@ import pngDataURL from '../lib/png/dataURL';
 const base64Encoded =
 	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
+export const randomPNGBase64 = () => base64Encoded;
+
 export const randomPNGBuffer = async () => {
 	const {Buffer} = await import('buffer');
 	return Buffer.from(base64Encoded, 'base64');
