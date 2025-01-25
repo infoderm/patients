@@ -5,7 +5,7 @@ import Collection from '../Collection';
 
 import {hasCollection, addCollection} from './registry';
 
-const define = <T extends Document, U = T>(name: string) => {
+const define = <T extends Document, U = T>(name: string): Collection<T, U> => {
 	assert(!hasCollection(name));
 
 	const collection = new Collection<T, U>(name, {
