@@ -231,7 +231,7 @@ export const dropId = ({_id, ...rest}) => {
 	return rest;
 };
 
-export const dropIds = (x) => x.map(dropId);
+export const dropIds = (x) => x.map((x) => (x === null ? null : dropId(x)));
 
 export const dropOwner = ({owner, ...rest}) => {
 	assert(typeof owner === 'string');
