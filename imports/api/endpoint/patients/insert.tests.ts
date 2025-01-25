@@ -9,6 +9,7 @@ import {Insurances} from '../../collection/insurances';
 
 import {newPatient} from '../../_dev/populate/patients';
 import {type FormattedLine, type NormalizedLine} from '../../string';
+import {Changes} from '../../collection/changes';
 
 server(__filename, () => {
 	it('cannot create a patient when not logged in', async () => {
@@ -59,5 +60,58 @@ server(__filename, () => {
 			})),
 			insurances,
 		);
+	});
+
+	it('creates associated Changes entries', async () => {
+		const userId = randomUserId();
+
+		const patientId = await newPatient(
+			{userId},
+			{
+				firstname: 'Alice',
+				lastname: 'X',
+				sex: 'female',
+				about: 'about',
+				municipality: 'municipality',
+			},
+		);
+
+		const changes = await Changes.find({
+			owner: userId,
+			'operation.type': 'create',
+		}).fetchAsync();
+
+		assert.lengthOf(changes, 1);
+
+		const {operation, what, who, when, why} = changes[0]!;
+
+		assert.deepNestedInclude(operation, {
+			type: 'create',
+			'$set.owner': userId,
+			'$set.firstname': 'Alice',
+			'$set.lastname': 'X',
+			'$set.sex': 'female',
+			'$set.about': 'about',
+			'$set.municipality': 'municipality',
+		});
+
+		assert.deepNestedInclude(what, {
+			_id: patientId,
+			type: 'patient',
+		});
+
+		assert.deepNestedInclude(who, {
+			_id: userId,
+			type: 'user',
+		});
+
+		assert.typeOf(when, 'Date');
+
+		assert.deepNestedInclude(why, {
+			method: 'insert',
+			source: {
+				type: 'manual',
+			},
+		});
 	});
 });

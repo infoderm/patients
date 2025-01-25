@@ -6,9 +6,10 @@ import {patientFieldsFromEid} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
-import compose from '../compose';
 
-import insert from './insert';
+import {Changes} from '../../collection/changes';
+
+import {_insert} from './insert';
 
 export default define({
 	name: '/api/patients/insertFromEid',
@@ -19,7 +20,7 @@ export default define({
 
 		const lastUsedAt = new Date();
 
-		await db.updateOne(
+		const {_id: eidId} = (await db.findOneAndUpdate(
 			Eids,
 			{
 				owner,
@@ -35,12 +36,43 @@ export default define({
 			},
 			{
 				upsert: true,
+				returnDocument: 'after',
+				projection: {
+					_id: 1,
+				},
 			},
-		);
+		))!;
 
-		const patient = patientFieldsFromEid(eid);
+		const fields = patientFieldsFromEid(eid);
 
-		return compose(db, insert, this, [patient]);
+		const {_id: patientId, ...$set} = await _insert(db, owner, fields);
+
+		await db.insertOne(Changes, {
+			owner,
+			when: lastUsedAt,
+			who: {
+				type: 'user',
+				_id: owner,
+			},
+			why: {
+				method: 'insertFromEid',
+				source: {
+					type: 'entity',
+					collection: 'eid',
+					_id: eidId,
+				},
+			},
+			what: {
+				type: 'patient',
+				_id: patientId,
+			},
+			operation: {
+				type: 'create',
+				$set,
+			},
+		});
+
+		return patientId;
 	},
 	simulate(_patient) {
 		return undefined;

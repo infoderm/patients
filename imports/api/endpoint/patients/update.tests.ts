@@ -11,6 +11,8 @@ import {newPatient} from '../../_dev/populate/patients';
 import invoke from '../invoke';
 import {type FormattedLine, type NormalizedLine} from '../../string';
 
+import {Changes} from '../../collection/changes';
+
 import update from './update';
 
 server(__filename, () => {
@@ -84,5 +86,47 @@ server(__filename, () => {
 			})),
 			insurances,
 		);
+	});
+
+	it('creates associated Changes entries', async () => {
+		const userId = randomUserId();
+
+		const patientId = await newPatient({userId}, {firstname: 'Alice'});
+
+		await invoke(update, {userId}, [patientId, {firstname: 'Bob'}]);
+
+		const changes = await Changes.find({
+			owner: userId,
+			'operation.type': 'update',
+		}).fetchAsync();
+
+		assert.lengthOf(changes, 1);
+
+		const {operation, what, who, when, why} = changes[0]!;
+
+		assert.deepNestedInclude(operation, {
+			'$set.firstname': 'Bob',
+			$unset: {},
+			type: 'update',
+		});
+
+		assert.deepNestedInclude(what, {
+			_id: patientId,
+			type: 'patient',
+		});
+
+		assert.deepNestedInclude(who, {
+			_id: userId,
+			type: 'user',
+		});
+
+		assert.typeOf(when, 'Date');
+
+		assert.deepNestedInclude(why, {
+			method: 'update',
+			source: {
+				type: 'manual',
+			},
+		});
 	});
 });
