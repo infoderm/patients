@@ -6,9 +6,10 @@ import {patientFieldsFromEid} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 
 import define from '../define';
-import compose from '../compose';
 
-import update from './update';
+import {Changes} from '../../collection/changes';
+
+import {_update} from './update';
 
 export default define({
 	name: '/api/patients/updateFromEid',
@@ -19,7 +20,7 @@ export default define({
 
 		const lastUsedAt = new Date();
 
-		await db.updateOne(
+		const {_id: eidId} = (await db.findOneAndUpdate(
 			Eids,
 			{
 				owner,
@@ -35,12 +36,51 @@ export default define({
 			},
 			{
 				upsert: true,
+				returnDocument: 'after',
+				projection: {
+					_id: 1,
+				},
 			},
+		))!;
+
+		const documentUpdate = patientFieldsFromEid(eid);
+
+		const {result, $set, $unset} = await _update(
+			db,
+			owner,
+			patientId,
+			documentUpdate,
 		);
 
-		const changes = patientFieldsFromEid(eid);
+		if (result.modifiedCount >= 1) {
+			await db.insertOne(Changes, {
+				owner,
+				when: new Date(),
+				who: {
+					type: 'user',
+					_id: owner,
+				},
+				why: {
+					method: 'updateFromEid',
+					source: {
+						type: 'entity',
+						collection: 'eid',
+						_id: eidId,
+					},
+				},
+				what: {
+					type: 'patient',
+					_id: patientId,
+				},
+				operation: {
+					type: 'update',
+					$set,
+					$unset,
+				},
+			});
+		}
 
-		return compose(db, update, this, [patientId, changes]);
+		return result;
 	},
 	simulate(_patient) {
 		return undefined;
