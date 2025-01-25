@@ -81,7 +81,15 @@ const updateIndex = async (
 		birthdate,
 		deathdateModifiedAt,
 		sex,
-	}: PatientDocument,
+	}: Pick<
+		PatientDocument,
+		| 'niss'
+		| 'firstname'
+		| 'lastname'
+		| 'birthdate'
+		| 'deathdateModifiedAt'
+		| 'sex'
+	>,
 	$unset?: {},
 ) => {
 	const [firstnameWords, middlenameWords] = splitNames(firstname);

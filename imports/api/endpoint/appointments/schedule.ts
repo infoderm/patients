@@ -1,6 +1,9 @@
 import assert from 'assert';
 
-import {Appointments} from '../../collection/appointments';
+import {
+	type AppointmentDocument,
+	Appointments,
+} from '../../collection/appointments';
 import {Patients} from '../../collection/patients';
 import {sanitizeAppointmentUpdate, appointmentUpdate} from '../../appointments';
 import {availability} from '../../availability';
@@ -33,14 +36,17 @@ export default define({
 
 		const owner = this.userId;
 
+		let patientId: string;
+
 		if (createPatient) {
-			$set.patientId = await compose(db, createPatientForAppointment, this, [
+			patientId = await compose(db, createPatientForAppointment, this, [
 				createPatient,
 			]);
 		} else {
 			assert(typeof $set.patientId === 'string');
+			patientId = $set.patientId;
 			const patient = await db.findOne(Patients, {
-				_id: $set.patientId,
+				_id: patientId,
 				owner,
 			});
 			if (patient === null) {
@@ -53,12 +59,18 @@ export default define({
 		const createdAt = new Date();
 		const lastModifiedAt = createdAt;
 
-		const {insertedId: appointmentId} = await db.insertOne(Appointments, {
+		const document = {
 			...$set,
+			patientId,
 			createdAt,
 			lastModifiedAt,
 			owner,
-		});
+		} as Omit<AppointmentDocument, '_id'>;
+
+		const {insertedId: appointmentId} = await db.insertOne(
+			Appointments,
+			document,
+		);
 
 		return {
 			_id: appointmentId,

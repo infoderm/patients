@@ -12,6 +12,7 @@ import {
 	type RequiredKeys,
 } from './DocumentUpdate';
 import type TransactionDriver from './transaction/TransactionDriver';
+import {type Changes} from './Changes';
 
 const id = <T>(x: T): T => x;
 
@@ -48,13 +49,6 @@ export const yieldResettableKey = function* <T, K extends keyof T>(
 		type.nullable().optional().parse(fields[key]);
 		yield [key, transform(fields[key])];
 	}
-};
-
-type Changes<T> = {
-	$set?: Partial<T>;
-	$unset?: {
-		[K in keyof T]?: boolean;
-	};
 };
 
 export const simulateUpdate = <T extends {}>(
@@ -127,7 +121,7 @@ export const makeSanitize =
 	<T extends Document, U extends Document>(
 		sanitizeUpdate: SanitizeUpdate<T, U>,
 	) =>
-	(fields: DocumentUpdate<T>) => {
+	(fields: DocumentUpdate<T>): Required<Changes<U>> => {
 		const update = Array.from(sanitizeUpdate(fields));
 		return {
 			$set: Object.fromEntries(
@@ -137,7 +131,7 @@ export const makeSanitize =
 				update
 					.filter(([, value]) => value === undefined || value === null)
 					.map(([key]) => [key, true]),
-			),
+			) as {[K in keyof U]?: boolean},
 		};
 	};
 
