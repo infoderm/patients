@@ -3,6 +3,7 @@ import assert from 'assert';
 import {
 	Consultations,
 	consultationFields,
+	type ConsultationDocument,
 } from '../../collection/consultations';
 
 import {computeUpdate, consultations} from '../../consultations';
@@ -15,14 +16,13 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import schema from '../../../lib/schema';
-import {documentUpdate} from '../../DocumentUpdate';
 
 const {sanitize} = consultations;
 
 export default define({
 	name: 'consultations.insert',
 	authentication: AuthenticationLoggedIn,
-	schema: schema.tuple([documentUpdate(consultationFields)]),
+	schema: schema.tuple([consultationFields]),
 	async transaction(db: TransactionDriver, consultation) {
 		const owner = this.userId;
 		const changes = sanitize(consultation);
@@ -33,12 +33,7 @@ export default define({
 			changes,
 		);
 
-		assert(
-			$unset === undefined ||
-				!Object.keys($unset).some((key) =>
-					Object.prototype.hasOwnProperty.call(newState, key),
-				),
-		);
+		assert($unset === undefined || Object.keys($unset).length === 0);
 
 		const patient = await db.findOne(Patients, {_id: $set.patientId, owner});
 
@@ -58,7 +53,7 @@ export default define({
 			createdAt,
 			lastModifiedAt,
 			owner,
-		};
+		} as Omit<ConsultationDocument, '_id'>;
 
 		const {begin, end} = document;
 

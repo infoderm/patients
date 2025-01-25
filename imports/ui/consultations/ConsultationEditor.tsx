@@ -30,7 +30,7 @@ import updateConsultation from '../../api/endpoint/consultations/update';
 import usePrompt from '../navigation/usePrompt';
 import {books} from '../../api/books';
 import {documentDiff} from '../../api/update';
-import {parseNonNegativeIntegerStrictOrNull} from '../../api/string';
+import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
 
 import ConsultationEditorHeader from './ConsultationEditorHeader';
 import ConsultationForm, {defaultState, type State} from './ConsultationForm';
@@ -385,10 +385,11 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 
 			currency,
 			payment_method,
-			price: parseNonNegativeIntegerStrictOrNull(priceString),
-			paid: parseNonNegativeIntegerStrictOrNull(paidString),
+			price: parseNonNegativeIntegerStrictOrUndefined(priceString),
+			paid: parseNonNegativeIntegerStrictOrUndefined(paidString),
 			book,
-			inBookNumber: parseNonNegativeIntegerStrictOrNull(inBookNumberString),
+			inBookNumber:
+				parseNonNegativeIntegerStrictOrUndefined(inBookNumberString),
 		});
 
 		if (
