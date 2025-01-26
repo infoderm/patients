@@ -1,9 +1,8 @@
-import {type InferIdType} from 'mongodb';
-
 import type Collection from '../Collection';
 import type Document from '../Document';
 
 import type TransactionDriver from './TransactionDriver';
+import {type InferIdType, type Options} from './TransactionDriver';
 
 export default class MeteorTransactionSimulationDriver
 	implements TransactionDriver
@@ -14,10 +13,11 @@ export default class MeteorTransactionSimulationDriver
 
 	async insertOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		doc,
-		options?,
+		doc: Omit<T, '_id'>,
+		options?: Options,
 	) {
 		const insertedId = (await Collection.insertAsync(
+			// @ts-expect-error UnionOmit is not generic enough.
 			doc,
 			this._makeOptions(options),
 		)) as unknown as InferIdType<T>;
@@ -30,8 +30,8 @@ export default class MeteorTransactionSimulationDriver
 
 	async insertMany<T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		docs,
-		options?,
+		docs: Array<Omit<T, '_id'>>,
+		options?: Options,
 	) {
 		const insertedIds: Array<InferIdType<T>> = [];
 		for (const doc of docs) {
@@ -133,7 +133,7 @@ export default class MeteorTransactionSimulationDriver
 					matchedCount: 0,
 					modifiedCount: 0,
 					upsertedCount: 1,
-					upsertedId: insertedId,
+					upsertedId: insertedId as InferIdType<T>,
 				};
 			}
 
@@ -179,7 +179,7 @@ export default class MeteorTransactionSimulationDriver
 				matchedCount,
 				modifiedCount: matchedCount,
 				upsertedCount,
-				upsertedId: insertedId,
+				upsertedId: insertedId as InferIdType<T>,
 			};
 		}
 

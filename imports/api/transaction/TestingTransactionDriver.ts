@@ -2,6 +2,7 @@ import type Collection from '../Collection';
 import type Document from '../Document';
 
 import type TransactionDriver from './TransactionDriver';
+import {type Options} from './TransactionDriver';
 
 type TransactionExecutor = (txn: (db: TransactionDriver) => any) => any;
 
@@ -18,16 +19,16 @@ export default class TestingTransactionDriver implements TransactionDriver {
 
 	insertOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		doc,
-		options?,
+		doc: Omit<T, '_id'>,
+		options?: Options,
 	) {
 		return this.#exec(async (db) => db.insertOne(Collection, doc, options));
 	}
 
 	insertMany<T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		docs,
-		options?,
+		docs: Array<Omit<T, '_id'>>,
+		options?: Options,
 	) {
 		return this.#exec(async (db) => db.insertMany(Collection, docs, options));
 	}
