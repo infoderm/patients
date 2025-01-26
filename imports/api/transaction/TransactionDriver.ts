@@ -1,11 +1,4 @@
-import {
-	type ClientSession,
-	type UpdateResult as MongoUpdateResult,
-	type InsertOneResult as MongoInsertOneResult,
-	type InsertManyResult as MongoInsertManyResult,
-	type DeleteResult as MongoDeleteResult,
-	type WithId,
-} from 'mongodb';
+import {type ClientSession, type WithId} from 'mongodb';
 
 import type Collection from '../Collection';
 import type Document from '../Document';
@@ -15,13 +8,29 @@ export type ObjectId = string;
 
 export type ObjectIds = Record<number, ObjectId>;
 
-export type UpdateResult = Omit<MongoUpdateResult, 'upsertedId'> & {
-	upsertedId?: ObjectId;
+export type InferIdType<T extends Document> = T extends T ? string : never;
+
+export type UpdateResult<T extends Document> = {
+	acknowledged: boolean;
+	matchedCount: number;
+	modifiedCount: number;
+	upsertedCount: number;
+	upsertedId?: InferIdType<T>;
 };
 
-export type InsertOneResult<T> = MongoInsertOneResult<T>;
-export type InsertManyResult<T> = MongoInsertManyResult<T>;
-export type DeleteResult = MongoDeleteResult;
+export type InsertOneResult<T extends Document> = {
+	acknowledged: boolean;
+	insertedId: InferIdType<T>;
+};
+export type InsertManyResult<T extends Document> = {
+	acknowledged: boolean;
+	insertedCount: number;
+	insertedIds: Record<number, InferIdType<T>>;
+};
+export type DeleteResult = {
+	acknowledged: boolean;
+	deletedCount: number;
+};
 
 export type Options = Record<string, any>;
 type TransactionDriver = {
@@ -29,12 +38,12 @@ type TransactionDriver = {
 	// TODO template depends on Collection document type
 	insertOne: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		doc: any,
+		doc: Omit<T, '_id'>,
 		options?: Options,
 	) => Promise<InsertOneResult<T>>;
 	insertMany: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		docs: any[],
+		docs: Array<Omit<T, '_id'>>,
 		options?: Options,
 	) => Promise<InsertManyResult<T>>;
 	findOne: <T extends Document, U = T>(
@@ -67,13 +76,13 @@ type TransactionDriver = {
 		filter: Filter<T>,
 		update: any,
 		options?: Options,
-	) => Promise<UpdateResult>;
+	) => Promise<UpdateResult<T>>;
 	updateMany: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
 		update: any,
 		options?: Options,
-	) => Promise<UpdateResult>;
+	) => Promise<UpdateResult<T>>;
 	distinct: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		key: string,

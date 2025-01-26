@@ -22,7 +22,7 @@ export default class MongoTransactionExecutionDriver
 
 	async insertOne<T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		doc,
+		doc: Omit<T, '_id'>,
 		options?: Options,
 	) {
 		return Collection.rawCollection().insertOne(
@@ -30,20 +30,20 @@ export default class MongoTransactionExecutionDriver
 			// @ts-expect-error _makeNewID is a private method
 			{_id: Collection._makeNewID(), ...doc},
 			this._makeOptions(options),
-		);
+		)!;
 	}
 
 	async insertMany<T extends Document, U = T>(
 		Collection: Collection<T, U>,
-		docs,
-		options?,
+		docs: Array<Omit<T, '_id'>>,
+		options?: Options,
 	) {
 		return Collection.rawCollection().insertMany(
 			// TODO skip _id creation if it already exists
 			// @ts-expect-error _makeNewID is a private method
 			docs.map((doc) => ({_id: Collection._makeNewID(), ...doc})),
 			this._makeOptions(options),
-		);
+		)!;
 	}
 
 	async findOne<T extends Document, U = T>(
@@ -105,7 +105,7 @@ export default class MongoTransactionExecutionDriver
 			filter,
 			this._makeUpdate<T, U>(Collection, filter, update, options),
 			this._makeOptions(options),
-		) as unknown as Promise<UpdateResult>;
+		) as unknown as Promise<UpdateResult<T>>;
 	}
 
 	async updateMany<T extends Document, U = T>(
@@ -118,7 +118,7 @@ export default class MongoTransactionExecutionDriver
 			filter,
 			this._makeUpdate<T, U>(Collection, filter, update, options),
 			this._makeOptions(options),
-		) as Promise<UpdateResult>;
+		) as Promise<UpdateResult<T>>;
 	}
 
 	async distinct<T extends Document, U = T>(
