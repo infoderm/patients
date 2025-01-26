@@ -225,6 +225,70 @@ server(__filename, () => {
 		assert.sameDeepMembers(dropIds(actual), expected);
 	});
 
+	it2('findOneAndUpdate', (db) => async () => {
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		const w = randomId();
+		assert.strictEqual(await Tests.find().countAsync(), 0);
+		await db.insertOne(Tests, {x});
+		await db.insertOne(Tests, {y});
+		await db.insertOne(Tests, {z});
+		assert.strictEqual(await Tests.find().countAsync(), 3);
+		const a = await db.findOneAndUpdate(Tests, {}, {$set: {w}});
+		const b = await db.findOne(Tests, {w});
+		const c = await db.findOneAndUpdate(
+			Tests,
+			{z},
+			{$set: {w}},
+			{returnDocument: 'after'},
+		);
+
+		assert.deepEqual(dropIds([a, b, c]), [{x}, {x, w}, {z, w}]);
+
+		const after = await Tests.find().fetchAsync();
+		assert.sameDeepMembers(dropIds(after), [{x, w}, {y}, {z, w}]);
+	});
+
+	it2('findOneAndUpdate [upsert]', (db) => async () => {
+		const x = randomId();
+		const y = randomId();
+		const z = randomId();
+		assert.strictEqual(await Tests.find().countAsync(), 0);
+		const a = await db.findOneAndUpdate(
+			Tests,
+			{x},
+			{$set: {y}},
+			{upsert: true},
+		);
+		const b = await Tests.findOneAsync();
+		assert.strictEqual(await Tests.find().countAsync(), 1);
+		const c = await db.findOneAndUpdate(
+			Tests,
+			{x},
+			{$set: {z}},
+			{upsert: true, returnDocument: 'after'},
+		);
+		assert.strictEqual(await Tests.find().countAsync(), 1);
+		const d = await db.findOneAndUpdate(
+			Tests,
+			{x},
+			{$set: {z}},
+			{upsert: true},
+		);
+		assert.strictEqual(await Tests.find().countAsync(), 1);
+
+		assert.deepEqual(dropIds([a, b, c, d]), [
+			null,
+			{x, y},
+			{x, y, z},
+			{x, y, z},
+		]);
+
+		const after = await Tests.find().fetchAsync();
+		assert.sameDeepMembers(dropIds(after), [{x, y, z}]);
+	});
+
 	it2('updateMany', (db) => async () => {
 		const x = randomId();
 		const y = randomId();

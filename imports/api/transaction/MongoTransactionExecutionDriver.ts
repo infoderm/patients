@@ -57,6 +57,28 @@ export default class MongoTransactionExecutionDriver
 		) as Promise<null | T>;
 	}
 
+	async findOneAndUpdate<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		update,
+		options?,
+	) {
+		const {value, lastErrorObject, ok} =
+			await Collection.rawCollection().findOneAndUpdate(
+				filter,
+				this._makeUpdate<T, U>(Collection, filter, update, options),
+				this._makeOptions(options),
+			)!;
+
+		if (ok) return value as T;
+
+		throw new Error(
+			lastErrorObject === undefined
+				? 'unknown error in findOneAndUpdate'
+				: JSON.stringify(lastErrorObject),
+		);
+	}
+
 	find<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,

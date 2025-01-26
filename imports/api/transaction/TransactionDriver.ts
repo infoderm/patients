@@ -51,6 +51,12 @@ type TransactionDriver = {
 		filter: Filter<T>,
 		options?: Options,
 	) => Promise<null | T>;
+	findOneAndUpdate: <T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter: Filter<T>,
+		update: any,
+		options?: Options,
+	) => Promise<null | T>;
 	find: <T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter: Filter<T>,
