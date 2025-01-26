@@ -41,6 +41,17 @@ export default class TestingTransactionDriver implements TransactionDriver {
 		return this.#exec(async (db) => db.findOne(Collection, filter, options));
 	}
 
+	findOneAndUpdate<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		update,
+		options?,
+	) {
+		return this.#exec(async (db) =>
+			db.findOneAndUpdate(Collection, filter, update, options),
+		);
+	}
+
 	find<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,

@@ -59,6 +59,34 @@ export default class MeteorTransactionSimulationDriver
 		return found ?? null;
 	}
 
+	async findOneAndUpdate<T extends Document, U = T>(
+		Collection: Collection<T, U>,
+		filter,
+		update,
+		options?: Options,
+	) {
+		const {upsert, returnDocument, ...rest} = {
+			upsert: false,
+			returnDocument: 'before',
+			...options,
+		};
+		const found = await this.findOne(Collection, filter, rest);
+		let matchedId: string;
+		if (found === null) {
+			if (!upsert) return null;
+			const {insertedId} = await this.insertOne(Collection, filter);
+			matchedId = insertedId;
+		} else {
+			matchedId = found._id;
+		}
+
+		await this.updateOne(Collection, {_id: matchedId}, update);
+
+		if (returnDocument === 'before') return found;
+
+		return this.findOne(Collection, {_id: matchedId});
+	}
+
 	find<T extends Document, U = T>(
 		Collection: Collection<T, U>,
 		filter,
