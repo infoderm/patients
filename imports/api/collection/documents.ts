@@ -48,7 +48,11 @@ export const rawDocument = schema
 export const parsedDocument = schema
 	.object({
 		parsed: schema.literal(true),
-		text: schema.array(schema.string()),
+		sections: schema.array(
+			schema.object({
+				text: schema.array(schema.string()),
+			}),
+		),
 		format: schema.string(),
 		kind: schema.string(),
 		patientId: schema.string(),
