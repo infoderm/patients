@@ -112,7 +112,7 @@
     "lodash.deburr": "^4.1.0",
     "lodash.omit": "^4.5.0",
     "lru-cache": "^10.0.1",
-    "medidoc": "1.1.0",
+    "medidoc": "1.2.0",
     "mem": "^8.1.1",
     "meteor-node-stubs": "^1.2.5",
     "node-fetch": "^3.3.2",
