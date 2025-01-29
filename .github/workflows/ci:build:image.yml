@@ -2,6 +2,8 @@ name: ci:build:image
 
 on:
   push:
+    tags:
+      - v*
     branches:
       - main
   pull_request:
