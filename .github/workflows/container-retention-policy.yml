@@ -1,0 +1,24 @@
+name: container-retention-policy
+
+on:
+  schedule:
+    # NOTE: Every day at 03:15am
+    - cron: '15 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  cleanup:
+    name: Container retention policy cleanup job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cleanup old non-release images 🧹
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          dry-run: true
+          older-than: '1 month'
+          exclude-tags: 'v*'
