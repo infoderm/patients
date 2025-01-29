@@ -152,7 +152,7 @@ jobs:
 
       - name: Start MongoDB container
         env:
-          MONGO_VERSION: '5.0'
+          MONGO_VERSION: '7.0.5'
         run: |
           mkdir -p "${GITHUB_WORKSPACE}/data/db"
           docker container run \
