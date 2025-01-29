@@ -9,6 +9,9 @@ on:
       dry-run:
         type: boolean
         default: true
+      older-than:
+        type: string
+        default: '1 month'
 
 concurrency:
   group: ${{ github.workflow }}
@@ -24,5 +27,5 @@ jobs:
         uses: dataaxiom/ghcr-cleanup-action@v1
         with:
           dry-run: ${{ inputs.dry-run || false }}
-          older-than: '1 month'
+          older-than: ${{ inputs.older-than || '1 month' }}
           exclude-tags: 'v*'
