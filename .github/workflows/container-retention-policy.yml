@@ -30,4 +30,6 @@ jobs:
         with:
           dry-run: ${{ inputs.dry-run || false }}
           older-than: ${{ inputs.older-than || '1 month' }}
+          delete-tags: sha-*,pr-*,gh-readonly-queue-*
+          delete-untagged: true
           exclude-tags: 'v*'
