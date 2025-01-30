@@ -79,6 +79,9 @@ jobs:
           - ubuntu-latest
         architecture:
           - linux-x64
+        port:
+          - 3000
+          - 3123
 
     runs-on: ${{ matrix.platform }}
 
@@ -185,11 +188,11 @@ jobs:
       - name: Run server
         id: server
         env:
-          ROOT_URL: http://localhost
+          ROOT_URL: http://localhost:${{ matrix.port }}
           MONGO_URL: mongodb://localhost:27017/meteor
           MONGO_OPLOG_URL: ""
           METEOR_SETTINGS: ${{ steps.configure-server.outputs.meteor-settings }}
-          PORT: 3000
+          PORT: ${{ matrix.port }}
         run: |
           cd dist
           node main.js &
@@ -199,17 +202,17 @@ jobs:
         uses: ./.github/actions/network/is-reachable
         with:
           timeout: 60
-          port: 3000
+          port: ${{ matrix.port }}
 
       - name: Call healthcheck endpoint
         run: |
           timeout 60 bash -c \
-            'curl -f http://localhost:3000/api/healthcheck'
+            'curl -f http://localhost:${{ matrix.port }}/api/healthcheck'
 
       - name: Run healthcheck script
         run: |
           timeout 60 bash -c \
-            'node scripts/healthcheck.cjs http://localhost:3000/api/healthcheck'
+            'node scripts/healthcheck.cjs http://localhost:${{ matrix.port }}/api/healthcheck'
 
       - name: Stop server
         run: |
