@@ -77,6 +77,9 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
+        port:
+          - 3000
+          - 3123
 
     runs-on: ${{ matrix.platform }}
 
@@ -148,11 +151,11 @@ jobs:
 
       - name: Run server
         env:
-          ROOT_URL: http://localhost
+          ROOT_URL: http://localhost:${{ matrix.port }}
           MONGO_URL: mongodb://mongodb:27017/meteor
           MONGO_OPLOG_URL: ""
           METEOR_SETTINGS: ${{ steps.configure-server.outputs.meteor-settings }}
-          PORT: 3000
+          PORT: ${{ matrix.port }}
         run: |
           docker container run \
             --init \
@@ -184,7 +187,7 @@ jobs:
         with:
           timeout: 60
           host: ${{ steps.server-container-ip-address.outputs.address }}
-          port: 3000
+          port: ${{ matrix.port }}
 
       - name: Show docker containers
         if: always()
@@ -204,7 +207,7 @@ jobs:
       - name: Run healthcheck
         run: |
           timeout 60 bash -c \
-            'curl -f http://${{ steps.server-container-ip-address.outputs.address }}:3000/api/healthcheck'
+            'curl -f http://${{ steps.server-container-ip-address.outputs.address }}:${{ matrix.port }}/api/healthcheck'
 
       - name: Wait for container to be healthy
         uses: ./.github/actions/docker/container/is-healthy
