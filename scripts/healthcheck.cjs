@@ -1,10 +1,15 @@
 const http = require('http');
 const process = require('process');
 
+const endpoint =
+	process.argv.length >= 3
+		? process.argv[2]
+		: `http://localhost:${process.env.PORT}/api/healthcheck`;
+
 const expectedStatusCode = 200;
 const expected = 'OK';
 
-const req = http.get(process.argv[2], (res) => {
+const req = http.get(endpoint, (res) => {
 	if (res.statusCode !== expectedStatusCode) {
 		req.destroy(new Error(`Response status is not ${expectedStatusCode}.`));
 	}

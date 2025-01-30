@@ -99,13 +99,13 @@ COPY --chown=nonroot:nonroot [ \
 
 ENV PATH="/home/nonroot/node/bin"
 
-EXPOSE 3000
-
 ENV \
   ROOT_URL="http://localhost" \
   PORT="3000" \
   MONGO_URL="mongodb://localhost:27017/meteor" \
   MONGO_OPLOG_URL=""
+
+EXPOSE ${PORT}
 
 HEALTHCHECK \
   --interval=21s \
@@ -115,8 +115,7 @@ HEALTHCHECK \
   --retries=2 \
   CMD [ \
     "node", \
-    "scripts/healthcheck.cjs", \
-    "http://localhost:3000/api/healthcheck" \
+    "scripts/healthcheck.cjs" \
   ]
 
 CMD [ \
