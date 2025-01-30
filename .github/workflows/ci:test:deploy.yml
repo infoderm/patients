@@ -24,6 +24,9 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
+        port:
+          - 3000
+          - 3123
 
     runs-on: ${{ matrix.platform }}
 
@@ -56,7 +59,8 @@ jobs:
 
       - name: Start
         env:
-          ROOT_URL: http://localhost
+          ROOT_URL: http://localhost:${{ matrix.port }}
+          PORT: ${{ matrix.port }}
           IMAGE_TAG: sha-${{ github.sha }}
         run: |
           docker compose \
@@ -79,7 +83,7 @@ jobs:
         uses: ./.github/actions/network/is-reachable
         with:
           timeout: 60
-          port: 3000
+          port: ${{ matrix.port }}
 
       - id: patient-web-container
         uses: ./.github/actions/docker/compose/container
@@ -95,12 +99,12 @@ jobs:
       - name: Call healthcheck endpoint
         run: |
           timeout 60 bash -c \
-            'curl -f http://localhost:3000/api/healthcheck'
+            'curl -f http://localhost:${{ matrix.port }}/api/healthcheck'
 
       - name: Run healthcheck script
         run: |
           timeout 60 bash -c \
-            'node scripts/healthcheck.cjs http://localhost:3000/api/healthcheck'
+            'node scripts/healthcheck.cjs http://localhost:${{ matrix.port }}/api/healthcheck'
 
       - name: Stop
         run: |
