@@ -1,4 +1,5 @@
 ARG DEBIAN_VERSION=11
+ARG PORT=3000
 
 
 # NOTE Build stage
@@ -101,7 +102,7 @@ ENV PATH="/home/nonroot/node/bin"
 
 ENV \
   ROOT_URL="http://localhost" \
-  PORT="3000" \
+  PORT="${PORT}" \
   MONGO_URL="mongodb://localhost:27017/meteor" \
   MONGO_OPLOG_URL=""
 
