@@ -6,7 +6,7 @@ services:
       context: .
     environment:
       - ROOT_URL=${ROOT_URL}
-      - PORT=${PORT}
+      - PORT=${CONTAINER_PORT:-3000}
       - MONGO_URL=${MONGO_URL}
       - MONGO_OPLOG_URL=${MONGO_OPLOG_URL}
       - METEOR_SETTINGS=${METEOR_SETTINGS}
@@ -17,7 +17,7 @@ services:
     networks:
       - patient-network
     ports:
-      - "${PORT}:${PORT}"
+      - "${PORT}:${CONTAINER_PORT:-3000}"
 
   patient-db:
     restart: always
