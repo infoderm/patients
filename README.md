@@ -189,10 +189,18 @@ Install dependencies, custom certificates, and MongoDB on server:
 
 :construction: This is work in progress. :construction:
 
-    ROOT_URL=https://example.local IMAGE_TAG=v1 \
+    IMAGE_TAG=v2025.01.29-1 \
+    ROOT_URL=https://example.local PORT=3000 HTTP_FORWARDED_COUNT=2 \
+    METEOR_SETTINGS="$(jq -c < .deploy/ghcr.io/settings.json)" \
+    BACKUP_KEY="<AGE-PUBLIC-KEY>" \
+    BACKUP_DIR="$HOME/backup/patients" \
+    BACKUP_SCHEDULE="0 21 * * *" \
+    BACKUP_RETENTION_POLICY_SCHEDULE="0 18 * * 0" \
     docker compose \
-      --env-file .env -f compose.yaml \
-      --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml \
+      -f compose.yaml \
+      -f .deploy/ghcr.io/compose.yaml \
+      -f .deploy/backup/compose.yaml \
+      -f .deploy/backup-retention-policy/compose.yaml \
       config
 
 ## :recycle: Backup & Restore
