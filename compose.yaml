@@ -8,7 +8,7 @@ services:
       - ROOT_URL=${ROOT_URL}
       - PORT=${CONTAINER_PORT:-3000}
       - MONGO_URL=${MONGO_URL:-mongodb://patient-db:27017/meteor}
-      - MONGO_OPLOG_URL=${MONGO_OPLOG_URL}
+      - MONGO_OPLOG_URL=${MONGO_OPLOG_URL:-}
       - METEOR_SETTINGS=${METEOR_SETTINGS}
       - HTTP_FORWARDED_COUNT=${HTTP_FORWARDED_COUNT}
     depends_on:
