@@ -30,6 +30,9 @@ jobs:
 
     timeout-minutes: 15
 
+    outputs:
+      image: ${{ steps.build-publish.outputs.image }}
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -42,7 +45,244 @@ jobs:
           password: ${{ github.token }}
 
       - name: Build and publish
+        id: build-publish
         uses: ./.github/actions/package/build-publish
         with:
           file: .deploy/backup/Dockerfile
           package: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+  test:
+    name: Continuous integration (build image backup test)
+
+    needs:
+      - build
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-24.04
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/assert-replica-set.js
+            .github/actions/docker/container/ip-address/action.yml
+            .github/actions/docker/container/is-healthy/action.yml
+            .github/actions/docker/container/is-running/action.yml
+            .github/actions/network/is-reachable/action.yml
+          sparse-checkout-cone-mode: false
+
+      - name: Get image URL
+        id: image-url
+        env:
+          IMAGE_METADATA: ${{ needs.build.outputs.image }}
+        run: |
+          IMAGE_URL="$(echo "${IMAGE_METADATA}" | jq -r 'first(.tags[] | select(test(":sha-[0-9a-f]{40}$")))')"
+          echo "url=${IMAGE_URL}" >> "${GITHUB_OUTPUT}"
+          test -n "${IMAGE_URL}"
+
+      - name: Create a network to connect the backup container to the database
+        run: |
+          docker network create patient-backup-network
+
+      - name: Start MongoDB container
+        env:
+          MONGO_VERSION: '7.0.5'
+        run: |
+          mkdir -p "${GITHUB_WORKSPACE}/data/db"
+          docker container run \
+            --detach \
+            --restart unless-stopped \
+            --network patient-backup-network \
+            --volume "${GITHUB_WORKSPACE}/data/db":/data/db \
+            --volume "${GITHUB_WORKSPACE}/scripts/assert-replica-set.js":/scripts/assert-replica-set.js \
+            --log-opt max-size=100m \
+            --log-opt max-file=7 \
+            --health-cmd 'mongosh --eval "replSet = \"meteor\"; hostname = \"mongodb\"" /scripts/assert-replica-set.js' \
+            --health-interval 5s \
+            --health-retries 3 \
+            --health-timeout 10s \
+            --health-start-period 40s \
+            --name mongodb \
+            "mongo:${MONGO_VERSION}" mongod --dbpath /data/db --replSet meteor
+
+      - name: Wait for MongoDB container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: mongodb
+          timeout: 60
+
+      - name: Install age
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y age
+
+      - name: Generate age keys
+        run: |
+          age-keygen -o private.key
+
+      - name: Configure
+        id: configure
+        run: |
+          echo "schedule=$(date -d "+1 minutes 10 seconds" '+%M %H * * *')" >> "${GITHUB_OUTPUT}"
+          echo "backup-key=$(grep 'public key' private.key | cut -d' ' -f4)" >> "${GITHUB_OUTPUT}"
+
+      - name: Create test backups directory
+        run: |
+          mkdir backups
+
+      - name: Run backup container
+        env:
+          MONGO_URL: mongodb://mongodb:27017/meteor
+          BACKUP_SCHEDULE: ${{ steps.configure.outputs.schedule }}
+          BACKUP_KEY: ${{ steps.configure.outputs.backup-key }}
+        run: |
+          docker container run \
+            --init \
+            --detach \
+            --network patient-backup-network \
+            --env "MONGO_URL=${MONGO_URL}" \
+            --env "BACKUP_SCHEDULE=${BACKUP_SCHEDULE}" \
+            --env "BACKUP_KEY=${BACKUP_KEY}" \
+            --mount type=bind,src="${GITHUB_WORKSPACE}/backups/",dst=/backups \
+            --name backup-container \
+            ${{ steps.image-url.outputs.url }}
+
+      - name: Wait for backup container to be running
+        uses: ./.github/actions/docker/container/is-running
+        with:
+          container: backup-container
+          timeout: 60
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Show backup container logs
+        if: always()
+        run: |
+          docker container logs --timestamps backup-container
+
+      - name: Verify backup files
+        env:
+          DELAY: 30
+          INTERVAL: 5
+          TIMEOUT: 90
+        run: |
+          echo "Waiting ${DELAY} seconds before starting checks..."
+          sleep "${DELAY}"
+
+          start_time="$(date +%s)"
+
+          while true; do
+            echo "Checking backup files (attempt duration: $(($(date +%s) - start_time))s)"
+
+            if [ ! -d "backups" ]; then
+              echo "Backups directory not found - waiting..."
+            else
+              if [ "$(find backups -type f | wc -l)" -eq 1 ] ; then
+                echo "✅ Backup file exists!"
+                exit 0
+              else
+                echo "⚠️  Backup file is missing - retrying..."
+              fi
+            fi
+
+            if [ $(($(date +%s) - start_time)) -ge "${TIMEOUT}" ]; then
+              echo "❌ Timeout reached after ${TIMEOUT} seconds"
+              exit 1
+            fi
+
+            sleep "${INTERVAL}"
+          done
+
+      - name: Retrieve mongodb container IP address
+        id: mongodb-container-ip-address
+        uses: ./.github/actions/docker/container/ip-address
+        with:
+          container: mongodb
+
+      - name: Wait for mongodb container port to be available
+        uses: ./.github/actions/network/is-reachable
+        with:
+          timeout: 60
+          host: ${{ steps.mongodb-container-ip-address.outputs.address }}
+          port: 27017
+
+      - name: Install MongoDB Database Tools
+        env:
+          PACKAGE: mongodb-database-tools-ubuntu2404-x86_64-100.11.0.deb
+        run: |
+          wget "https://fastdl.mongodb.org/tools/db/${{ env.PACKAGE }}"
+          sudo apt install "./${{ env.PACKAGE }}"
+
+      - name: Verify mongorestore installation
+        run: |
+          mongorestore --version
+
+      - name: Restore backup
+        run: |
+          < private.key age --decrypt -i - backups/* | \
+            mongorestore --uri mongodb://${{ steps.mongodb-container-ip-address.outputs.address }}:27017 \
+            --drop \
+            --nsInclude 'meteor.*' \
+            --nsFrom 'meteor.*' \
+            --nsTo 'meteor.*' \
+            --archive --gzip
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Show mongodb container logs
+        if: always()
+        run: |
+          docker container logs --timestamps mongodb
+
+      - name: Show backup container logs
+        if: always()
+        run: |
+          docker container logs --timestamps backup-container
+
+      - name: Stop backup container
+        run: |
+          docker container stop backup-container
+
+      - name: Stop MongoDB container
+        run: |
+          docker container stop mongodb
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Show mongodb container logs
+        if: always()
+        run: |
+          docker container logs --timestamps mongodb
+
+      - name: Show backup container logs
+        if: always()
+        run: |
+          docker container logs --timestamps backup-container
+
+      - name: Remove backup container
+        run: |
+          docker container rm backup-container
+
+      - name: Remove MongoDB container
+        run: |
+          docker container rm mongodb
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
