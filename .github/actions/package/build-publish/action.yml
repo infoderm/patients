@@ -1,0 +1,57 @@
+name: build-publish
+description: >
+  Build and publish package to registry.
+
+inputs:
+
+  file:
+    type: string
+    default: "Dockerfile"
+
+  context:
+    type: string
+    default: "."
+
+  package:
+    type: string
+    required: true
+
+outputs:
+
+  image:
+    description: >
+      JSON metadata for built image.
+    value: ${{ steps.meta.outputs.json }}
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ inputs.package }}
+        tags: |
+          type=ref,event=tag
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,format=long
+          type=schedule
+          type=edge
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

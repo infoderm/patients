@@ -31,24 +31,11 @@ jobs:
     timeout-minutes: 15
 
     outputs:
-      server-image: ${{ steps.meta-server.outputs.json }}
+      server-image: ${{ steps.build-publish.outputs.image }}
 
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
-
-      - name: Docker meta
-        id: meta-server
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=tag
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,format=long
-            type=schedule
-            type=edge
 
       - name: Log in to GitHub Packages registry
         uses: docker/login-action@v3
@@ -57,18 +44,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
+      - name: Build and publish
+        id: build-publish
+        uses: ./.github/actions/package/build-publish
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta-server.outputs.tags }}
-          labels: ${{ steps.meta-server.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          package: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
 
   test:
