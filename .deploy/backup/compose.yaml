@@ -1,0 +1,23 @@
+services:
+  patient-db-backup:
+    build:
+      context: .
+      dockerfile: .deploy/backup/Dockerfile
+    environment:
+      - MONGO_URL=${MONGO_URL:-mongodb://patient-db:27017/meteor}
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE?error}
+      - BACKUP_KEY=${BACKUP_KEY?error}
+    depends_on:
+      patient-db:
+        condition: service_healthy
+    networks:
+      - patient-backup-network
+    volumes:
+      - ${BACKUP_DIR?error}:/backups
+
+  patient-db:
+    networks:
+      - patient-backup-network
+
+networks:
+  patient-backup-network:
