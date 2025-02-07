@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+if [ -z "${CRONJOB_SCHEDULE}" ] ; then
+	 >&2 printf '%s: %s\n' "${0}" 'CRONJOB_SCHEDULE not set.'
+	exit 1
+fi
+
+CMD="${1}"
+
+if [ -z "${CMD}" ] ; then
+	 >&2 printf '%s: %s\n' "${0}" 'CMD not set.'
+	exit 1
+fi
+
+LOGS="/var/log/cron.log"
+
+touch "${LOGS}"
+
+printenv | grep -v 'no_proxy' >> /etc/environment
+
+echo "${CRONJOB_SCHEDULE} ${CMD} >> ${LOGS} 2>&1" > /etc/crontabs/root
+
+crond && tail -f "${LOGS}"
