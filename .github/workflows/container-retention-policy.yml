@@ -28,7 +28,7 @@ jobs:
       - name: Cleanup old non-release images 🧹
         uses: dataaxiom/ghcr-cleanup-action@v1
         with:
-          packages: ${{ github.repository_owner }}/patient-web
+          packages: ${{ github.repository_owner }}/patient-web,${{ github.repository_owner }}/patient-backup,${{ github.repository_owner }}/patient-backup-retention-policy
           dry-run: ${{ inputs.dry-run || false }}
           older-than: ${{ inputs.older-than || '1 month' }}
           delete-tags: sha-*,pr-*,gh-readonly-queue-*
