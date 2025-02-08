@@ -246,3 +246,122 @@ jobs:
       - name: Delete network
         run: |
           docker network rm patient-network
+
+
+  build-compose:
+    name: Continuous integration (build compose)
+
+    needs:
+      - build
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Bake 🧑‍🍳
+        uses: docker/bake-action@v6
+        with:
+          files: |
+            compose.yaml
+          set: |
+            patient-web.cache-from=type=gha
+            patient-web.output=type=docker,dest=/tmp/patient-web.tar
+            patient-web.tags=patients-patient-web
+
+      - name: Upload image
+        uses: actions/upload-artifact@v4
+        with:
+          name: images-patient-web
+          path: /tmp/patient-web.tar
+          retention-days: 1
+
+
+  build-compose-test:
+    name: Continuous integration (build compose test)
+
+    needs:
+      - build-compose
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Download image
+        uses: actions/download-artifact@v4
+        with:
+          name: images-patient-web
+          path: /tmp/images
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Load image
+        run: |
+          docker image load --input /tmp/images/patient-web.tar
+
+      - name: Start
+        run: |
+          docker compose up --no-build --detach
+
+      - id: patient-db-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-db
+
+      - name: Wait for database container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-db-container.outputs.id }}
+          timeout: 60
+
+      - name: Wait for web port to be available
+        uses: ./.github/actions/network/is-reachable
+        with:
+          timeout: 60
+          port: 3000
+
+      - id: patient-web-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-web
+
+      - name: Wait for web container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-web-container.outputs.id }}
+          timeout: 60
+
+      - name: Call healthcheck endpoint
+        run: |
+          timeout 60 bash -c \
+            'curl -f http://localhost:3000/api/healthcheck'
+
+      - name: Run healthcheck script
+        run: |
+          timeout 60 bash -c \
+            'node scripts/healthcheck.cjs http://localhost:3000/api/healthcheck'
+
+      - name: Stop
+        run: |
+          docker compose down
