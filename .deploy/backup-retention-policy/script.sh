@@ -16,3 +16,5 @@ DELETE="$(comm -23 <(echo "${ALL}") <(echo "${KEEP}"))"
 for item in ${DELETE} ; do
   rm "${BACKUP_DIR}/${item}"
 done
+
+exit 0
