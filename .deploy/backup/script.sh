@@ -24,6 +24,8 @@ mongodump --uri "${MONGO_URL}" --archive --gzip |
 
 if [ "$?" -eq 0 ] ; then
   echo 'SUCCESS!!'
+  exit 0
 else
   echo 'FAILURE...'
+  exit 1
 fi
