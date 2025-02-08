@@ -12,12 +12,12 @@ if [ -z "${CMD}" ] ; then
 	exit 1
 fi
 
-LOGS="/var/log/cron.log"
+LOG="/var/log/cron.log"
 
-touch "${LOGS}"
+touch "${LOG}"
 
 printenv | grep -v 'no_proxy' >> /etc/environment
 
-echo "${CRONJOB_SCHEDULE} ${CMD} >> ${LOGS} 2>&1" > /etc/crontabs/root
+echo "${CRONJOB_SCHEDULE} ${CMD} >> ${LOG} 2>&1" > /etc/crontabs/root
 
-crond && tail -f "${LOGS}"
+crond && tail -f "${LOG}"
