@@ -1,0 +1,103 @@
+#!/usr/bin/env sh
+
+if [ -z "${CRONJOB_INTERVAL}" ] ; then
+	 >&2 printf '%s: %s\n' "${0}" 'CRONJOB_INTERVAL not set.'
+	exit 1
+fi
+
+if [ -z "${CRONJOB_SCHEDULE}" ] ; then
+	 >&2 printf '%s: %s\n' "${0}" 'CRONJOB_SCHEDULE not set.'
+	exit 1
+fi
+
+CMD="${1}"
+
+if [ -z "${CMD}" ] ; then
+	 >&2 printf '%s: %s\n' "${0}" 'CMD not set.'
+	exit 1
+fi
+
+CMD_SUCCESS_LOG_LINE="${2}"
+
+if [ -z "${CMD_SUCCESS_LOG_LINE}" ] ; then
+	 >&2 printf '%s: %s\n' "${0}" 'CMD_SUCCESS_LOG_LINE not set.'
+	exit 1
+fi
+
+LOG="/var/log/cron.log"
+PID_FILE="/var/run/crond.pid"
+
+
+# NOTE: Check that crond is configured properly.
+
+CRONTAB="$(crontab -l | head -n2)"
+CRONTAB_ENTRIES="$(wc -l <<< "${CRONTAB}")"
+
+if [ "${CRONTAB_ENTRIES}" -ne 1 ] ; then
+	>&2 printf 'Expected 1 crontab entry, got %d:\n' "${CRONTAB_ENTRIES}"
+	>&2 cat <<< "${CRONTAB}"
+	exit 1
+fi
+
+EXPECTED_ENTRY="${CRONJOB_SCHEDULE} ${CMD} >> ${LOG} 2>&1"
+
+if [ "${CRONTAB}" != "${EXPECTED_ENTRY}" ] ; then
+	>&2 printf '%s\n' 'Expected crontab to be:'
+	>&2 printf '%s\n' "${EXPECTED_ENTRY}"
+	>&2 printf '%s\n' 'Got:'
+	>&2 cat <<< "${CRONTAB}"
+	exit 1
+fi
+
+
+# NOTE: Check that crond is running.
+
+PID="$(pgrep crond)"
+
+if [ -z "${PID}" ] ; then
+	>&2 printf '%s\n' 'Could not find crond process.'
+	exit 1
+fi
+
+LAST_PID="$(cat "${PID_FILE}")"
+
+if [ -z "${LAST_PID}" ] ; then
+	>&2 printf '%s\n' 'Could not read pid file for crond process.'
+	exit 1
+fi
+
+if [ "${PID}" -ne "${LAST_PID}" ] ; then
+	>&2 printf 'Expected pid file to contain %d, got %d.\n' "${PID}" "${LAST_PID}"
+	exit 1
+fi
+
+
+# NOTE: Check that cronjob has run recently enough.
+
+NOW="$(date +'%s')"
+LAST_MODIFIED_AT="$(stat "${LOG}" -c %Y)"
+ELAPSED="$((${NOW} - ${LAST_MODIFIED_AT}))"
+
+if [ "${ELAPSED}" -ge "${CRONJOB_INTERVAL}" ] ; then
+	>&2 printf 'Time is now: %s.\n' "$(date -d@"${NOW}")"
+	>&2 printf 'Cronjob last ran %d seconds ago, at %s.\n' "${ELAPSED}" "$(date -d@"${LAST_MODIFIED_AT}")"
+	>&2 printf 'Expected cronjob to run every %d seconds.\n' "${CRONJOB_INTERVAL}"
+	exit 1
+fi
+
+
+# NOTE: Check that cronjob is not erroring.
+
+LAST_LOG_LINE="$(tail -1 "${LOG}")"
+LOG_LINES_COUNT="$(tail -1 "${LOG}" | wc -l)"
+
+if [ "${LOG_LINES_COUNT}" -ge 1 ] && [ "${LAST_LOG_LINE}" != "${CMD_SUCCESS_LOG_LINE}" ] ; then
+	>&2 printf '%s\n' 'Expected last log line to be:'
+	>&2 printf '%s\n' "${CMD_SUCCESS_LOG_LINE}"
+	>&2 printf '%s\n' 'Got:'
+	>&2 printf '%s\n' "${LAST_LOG_LINE}"
+	exit 1
+fi
+
+
+exit 0
