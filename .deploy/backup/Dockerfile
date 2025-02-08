@@ -13,6 +13,7 @@ COPY scripts/cronjob /cronjob
 ENV \
   MONGO_URL="" \
   BACKUP_SCHEDULE="" \
+  BACKUP_CMD="bash /script.sh /backups" \
   BACKUP_KEY=""
 
 CMD [ \

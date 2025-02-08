@@ -2,4 +2,4 @@
 
 export CRONJOB_SCHEDULE="${BACKUP_SCHEDULE}"
 
-exec bash /cronjob "bash /script.sh /backups"
+exec bash /cronjob "${BACKUP_CMD}"
