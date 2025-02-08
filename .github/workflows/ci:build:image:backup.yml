@@ -140,6 +140,7 @@ jobs:
         env:
           MONGO_URL: mongodb://mongodb:27017/meteor
           BACKUP_SCHEDULE: ${{ steps.configure.outputs.schedule }}
+          BACKUP_INTERVAL: 120
           BACKUP_KEY: ${{ steps.configure.outputs.backup-key }}
         run: |
           docker container run \
@@ -148,6 +149,7 @@ jobs:
             --network patient-backup-network \
             --env "MONGO_URL=${MONGO_URL}" \
             --env "BACKUP_SCHEDULE=${BACKUP_SCHEDULE}" \
+            --env "BACKUP_INTERVAL=${BACKUP_INTERVAL}" \
             --env "BACKUP_KEY=${BACKUP_KEY}" \
             --mount type=bind,src="${GITHUB_WORKSPACE}/backups/",dst=/backups \
             --name backup-container \

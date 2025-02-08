@@ -6,6 +6,7 @@ services:
     environment:
       - MONGO_URL=${MONGO_URL:-mongodb://patient-db:27017/meteor}
       - BACKUP_SCHEDULE=${BACKUP_SCHEDULE?error}
+      - BACKUP_INTERVAL=${BACKUP_INTERVAL?error}
       - BACKUP_KEY=${BACKUP_KEY?error}
     depends_on:
       patient-db:
