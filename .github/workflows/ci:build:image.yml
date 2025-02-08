@@ -365,3 +365,79 @@ jobs:
       - name: Stop
         run: |
           docker compose down
+
+
+  test-deploy:
+    name: Continuous integration (test deploy)
+
+    needs:
+      - build
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+        port:
+          - 3000
+          - 3123
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Start
+        env:
+          ROOT_URL: http://localhost:${{ matrix.port }}
+          PORT: ${{ matrix.port }}
+          IMAGE_TAG: sha-${{ github.sha }}
+        run: |
+          docker compose \
+            --env-file .env -f compose.yaml \
+            --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml \
+            up --no-build --detach
+
+      - id: patient-db-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-db
+
+      - name: Wait for database container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-db-container.outputs.id }}
+          timeout: 60
+
+      - name: Wait for web port to be available
+        uses: ./.github/actions/network/is-reachable
+        with:
+          timeout: 60
+          port: ${{ matrix.port }}
+
+      - id: patient-web-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-web
+
+      - name: Wait for web container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-web-container.outputs.id }}
+          timeout: 60
+
+      - name: Call healthcheck endpoint
+        run: |
+          timeout 60 bash -c \
+            'curl -f http://localhost:${{ matrix.port }}/api/healthcheck'
+
+      - name: Run healthcheck script
+        run: |
+          timeout 60 bash -c \
+            'node scripts/healthcheck.cjs http://localhost:${{ matrix.port }}/api/healthcheck'
+
+      - name: Stop
+        run: |
+          docker compose down
