@@ -70,6 +70,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
+            .github/actions/docker/container/is-healthy/action.yml
             .github/actions/docker/container/is-running/action.yml
           sparse-checkout-cone-mode: false
 
@@ -131,6 +132,13 @@ jobs:
         with:
           container: backup-retention-policy-container
           timeout: 60
+
+      - name: Wait for container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: backup-retention-policy-container
+          timeout: 15
+          debug: true
 
       - name: Show docker containers
         if: always()
