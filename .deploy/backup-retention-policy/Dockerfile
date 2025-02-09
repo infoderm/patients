@@ -12,7 +12,8 @@ COPY scripts/cronjob /cronjob
 
 ENV \
   NOW="" \
-  BACKUP_RETENTION_POLICY_SCHEDULE=""
+  BACKUP_RETENTION_POLICY_SCHEDULE="" \
+  BACKUP_RETENTION_POLICY_CMD="bash /script.sh /keep.py /backups"
 
 CMD [ \
   "bash", \
