@@ -15,6 +15,11 @@ inputs:
     required: true
     default: 1
 
+  debug:
+    type: boolean
+    default: false
+
+
 runs:
 
   using: composite
@@ -33,3 +38,15 @@ runs:
       run: |
         timeout "${TIMEOUT}" bash -c \
          'until docker inspect --format "{{json .State.Health}}" "${NAME_OR_ID}" | jq -e ".Status == \"healthy\"" ; do sleep "${POLLING_INTERVAL}"; done'
+
+    - name: Debug HEALTHCHECK
+
+      if: fromJSON(inputs.debug) && failure()
+
+      env:
+        NAME_OR_ID: ${{ inputs.container }}
+
+      shell: bash
+
+      run: |
+         docker inspect --format "{{json .State.Health}}" "${NAME_OR_ID}" | jq
