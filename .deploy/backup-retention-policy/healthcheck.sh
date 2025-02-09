@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+export CRONJOB_SCHEDULE="${BACKUP_RETENTION_POLICY_SCHEDULE}"
+export CRONJOB_INTERVAL="${BACKUP_RETENTION_POLICY_INTERVAL}"
+
+exec bash /cronjob-healthcheck "${BACKUP_RETENTION_POLICY_CMD}" '+ exit 0'

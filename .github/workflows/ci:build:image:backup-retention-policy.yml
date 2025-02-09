@@ -114,12 +114,14 @@ jobs:
         env:
           NOW: 2023-02-10_12:34:56
           BACKUP_RETENTION_POLICY_SCHEDULE: ${{ steps.configure.outputs.schedule }}
+          BACKUP_RETENTION_POLICY_INTERVAL: 120
         run: |
           docker container run \
             --init \
             --detach \
             --env "NOW=${NOW}" \
             --env "BACKUP_RETENTION_POLICY_SCHEDULE=${BACKUP_RETENTION_POLICY_SCHEDULE}" \
+            --env "BACKUP_RETENTION_POLICY_INTERVAL=${BACKUP_RETENTION_POLICY_INTERVAL}" \
             --mount type=bind,src="${GITHUB_WORKSPACE}/backups/",dst=/backups \
             --name backup-retention-policy-container \
             ${{ steps.image-url.outputs.url }}
