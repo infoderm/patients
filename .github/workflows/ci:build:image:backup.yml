@@ -161,6 +161,13 @@ jobs:
           container: backup-container
           timeout: 60
 
+      - name: Wait for backup container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: backup-container
+          timeout: 15
+          debug: true
+
       - name: Show docker containers
         if: always()
         run: |
