@@ -1,0 +1,4 @@
+services:
+  patient-db-backup-retention-policy:
+    build: !reset null
+    image: ghcr.io/infoderm/patient-backup-retention-policy:${IMAGE_TAG}

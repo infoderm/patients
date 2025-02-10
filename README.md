@@ -198,9 +198,11 @@ Install dependencies, custom certificates, and MongoDB on server:
     BACKUP_RETENTION_POLICY_SCHEDULE="0 18 * * 0" \
     docker compose \
       -f compose.yaml \
-      -f .deploy/ghcr.io/patient-web.yaml \
       -f .deploy/backup/compose.yaml \
       -f .deploy/backup-retention-policy/compose.yaml \
+      -f .deploy/ghcr.io/patient-web.yaml \
+      -f .deploy/ghcr.io/patient-backup.yaml \
+      -f .deploy/ghcr.io/patient-backup-retention-policy.yaml \
       config
 
 ## :recycle: Backup & Restore

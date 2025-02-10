@@ -1,0 +1,4 @@
+services:
+  patient-db-backup:
+    build: !reset null
+    image: ghcr.io/infoderm/patient-backup:${IMAGE_TAG}
