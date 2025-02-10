@@ -15,7 +15,6 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/patient-web
 
 jobs:
 
@@ -32,6 +31,9 @@ jobs:
 
     outputs:
       server-image: ${{ steps.build-publish.outputs.image }}
+
+    env:
+      IMAGE_NAME: ${{ github.repository_owner }}/patient-web
 
     steps:
       - name: Checkout 🛎️
