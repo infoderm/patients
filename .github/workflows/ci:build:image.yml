@@ -399,7 +399,7 @@ jobs:
         run: |
           docker compose \
             --env-file .env -f compose.yaml \
-            --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml \
+            --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/patient-web.yaml \
             up --no-build --detach
 
       - id: patient-db-container
