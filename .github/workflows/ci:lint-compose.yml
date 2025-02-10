@@ -32,12 +32,12 @@ jobs:
           - config: build
             compose-flags: >-
               --env-file .env -f compose.yaml
-              --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml
+              --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/patient-web.yaml
 
           - config: build-with-backups
             compose-flags: >-
               --env-file .env -f compose.yaml
-              --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/compose.yaml
+              --env-file .deploy/ghcr.io/.env -f .deploy/ghcr.io/patient-web.yaml
               --env-file .deploy/backup/.env -f .deploy/backup/compose.yaml
               --env-file .deploy/backup-retention-policy/.env -f .deploy/backup-retention-policy/compose.yaml
 
