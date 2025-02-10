@@ -18,7 +18,7 @@ env:
 
 jobs:
 
-  build:
+  build-backup-retention-policy:
     name: Continuous integration (build image backup-retention-policy)
     strategy:
       matrix:
@@ -53,11 +53,11 @@ jobs:
           file: .deploy/backup-retention-policy/Dockerfile
           package: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-  test:
+  test-backup-retention-policy:
     name: Continuous integration (build image backup-retention-policy test)
 
     needs:
-      - build
+      - build-backup-retention-policy
 
     strategy:
       matrix:
@@ -79,7 +79,7 @@ jobs:
       - name: Get image URL
         id: image-url
         env:
-          IMAGE_METADATA: ${{ needs.build.outputs.image }}
+          IMAGE_METADATA: ${{ needs.build-backup-retention-policy.outputs.image }}
         run: |
           IMAGE_URL="$(echo "${IMAGE_METADATA}" | jq -r 'first(.tags[] | select(test(":sha-[0-9a-f]{40}$")))')"
           echo "url=${IMAGE_URL}" >> "${GITHUB_OUTPUT}"
