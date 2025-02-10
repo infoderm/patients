@@ -195,7 +195,9 @@ Install dependencies, custom certificates, and MongoDB on server:
     BACKUP_KEY="<AGE-PUBLIC-KEY>" \
     BACKUP_DIR="$HOME/backup/patients" \
     BACKUP_SCHEDULE="0 21 * * *" \
+    BACKUP_INTERVAL="129600" \
     BACKUP_RETENTION_POLICY_SCHEDULE="0 18 * * 0" \
+    BACKUP_RETENTION_POLICY_INTERVAL="691200" \
     docker compose \
       -f compose.yaml \
       -f .deploy/backup/compose.yaml \
