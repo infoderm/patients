@@ -947,3 +947,177 @@ jobs:
         if: always()
         run: |
           docker ps -a
+
+
+  test-deploy-with-backup:
+    name: Continuous integration (test deploy with backup)
+
+    needs:
+      - build
+      - build-backup
+      - build-backup-retention-policy
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+        port:
+          - 3000
+          - 3123
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 15
+
+    env:
+      FLAGS: >
+        --env-file .env -f compose.yaml
+        --env-file .deploy/ghcr.io/.env
+        --env-file .deploy/backup/.env -f .deploy/backup/compose.yaml
+        --env-file .deploy/backup-retention-policy/.env
+        -f .deploy/backup-retention-policy/compose.yaml
+        -f .deploy/ghcr.io/patient-web.yaml
+        -f .deploy/ghcr.io/patient-backup.yaml
+        -f .deploy/ghcr.io/patient-backup-retention-policy.yaml
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install age
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y age
+
+      - name: Generate age keys
+        run: |
+          age-keygen -o private.key
+
+      - name: Configure
+        id: configure
+        run: |
+          echo "backup-key=$(grep 'public key' private.key | cut -d' ' -f4)" >> "${GITHUB_OUTPUT}"
+          echo "meteor-settings=$(jq -c . settings.json)" >> "${GITHUB_OUTPUT}"
+
+      - name: Create test backups directory
+        run: |
+          mkdir backups
+
+      - name: Start
+        env:
+          ROOT_URL: http://localhost:${{ matrix.port }}
+          PORT: ${{ matrix.port }}
+          # TODO: Should be tag on push tag?
+          IMAGE_TAG: sha-${{ github.sha }}
+          METEOR_SETTINGS: ${{ steps.configure.outputs.meteor-settings }}
+          BACKUP_KEY: ${{ steps.configure.outputs.backup-key }}
+          BACKUP_DIR: ${{ github.workspace }}/backups/
+          BACKUP_SCHEDULE: "0 21 * * *"
+          BACKUP_INTERVAL: "129600"
+          BACKUP_RETENTION_POLICY_SCHEDULE: "0 18 * * 0"
+          BACKUP_RETENTION_POLICY_INTERVAL: "691200"
+        run: |
+          # shellcheck disable=SC2086
+          docker compose ${FLAGS} up --no-build --detach
+
+      - id: patient-db-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-db
+          compose-flags: ${{ env.FLAGS }}
+
+      - name: Wait for database container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-db-container.outputs.id }}
+          timeout: 60
+          debug: true
+
+      - id: patient-db-backup-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-db-backup
+          compose-flags: ${{ env.FLAGS }}
+
+      - name: Wait for backup container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-db-backup-container.outputs.id }}
+          timeout: 15
+          debug: true
+
+      - id: patient-db-backup-retention-policy-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-db-backup-retention-policy
+          compose-flags: ${{ env.FLAGS }}
+
+      - name: Wait for backup retention policy container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-db-backup-retention-policy-container.outputs.id }}
+          timeout: 15
+          debug: true
+
+      - name: Wait for web port to be available
+        uses: ./.github/actions/network/is-reachable
+        with:
+          timeout: 60
+          port: ${{ matrix.port }}
+
+      - id: patient-web-container
+        uses: ./.github/actions/docker/compose/container
+        with:
+          service: patient-web
+          compose-flags: ${{ env.FLAGS }}
+
+      - name: Wait for web container to be healthy
+        uses: ./.github/actions/docker/container/is-healthy
+        with:
+          container: ${{ steps.patient-web-container.outputs.id }}
+          timeout: 60
+          debug: true
+
+      - name: Call healthcheck endpoint
+        run: |
+          timeout 60 bash -c \
+            'curl -f http://localhost:${{ matrix.port }}/api/healthcheck'
+
+      - name: Run healthcheck script
+        run: |
+          timeout 60 bash -c \
+            'node scripts/healthcheck.cjs http://localhost:${{ matrix.port }}/api/healthcheck'
+
+      - name: Show compose containers
+        if: always()
+        run: |
+          # shellcheck disable=SC2086
+          docker compose ${FLAGS} ps
+
+      - name: Show all compose containers
+        if: always()
+        run: |
+          # shellcheck disable=SC2086
+          docker compose ${FLAGS} ps -a
+
+      - name: Show compose services
+        if: always()
+        run: |
+          # shellcheck disable=SC2086
+          docker compose ${FLAGS} ps --services
+
+      - name: Show compose logs
+        if: always()
+        run: |
+          # shellcheck disable=SC2086
+          docker compose ${FLAGS} logs
+
+      - name: Show docker containers
+        if: always()
+        run: |
+          docker ps -a
+
+      - name: Stop
+        run: |
+          # shellcheck disable=SC2086
+          docker compose ${FLAGS} down
