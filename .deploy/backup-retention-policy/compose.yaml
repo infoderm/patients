@@ -8,3 +8,8 @@ services:
     environment:
       - BACKUP_RETENTION_POLICY_SCHEDULE=${BACKUP_RETENTION_POLICY_SCHEDULE?error}
       - BACKUP_RETENTION_POLICY_INTERVAL=${BACKUP_RETENTION_POLICY_INTERVAL?error}
+    networks:
+      - patient-backup-retention-policy-network
+
+networks:
+  patient-backup-retention-policy-network:
