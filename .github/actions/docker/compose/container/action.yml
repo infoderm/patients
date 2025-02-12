@@ -7,6 +7,9 @@ inputs:
   service:
     required: true
 
+  compose-flags:
+    default: ''
+
 outputs:
 
   id:
@@ -26,10 +29,11 @@ runs:
 
       env:
         SERVICE: ${{ inputs.service }}
+        FLAGS: ${{ inputs.compose-flags }}
 
       shell: bash
 
       run: |
-        CONTAINER_ID="$(docker compose ps -q "${SERVICE}")"
+        CONTAINER_ID="$(docker compose ${FLAGS} ps -q "${SERVICE}")"
         echo "id=${CONTAINER_ID}" >> "$GITHUB_OUTPUT"
         test -n "${CONTAINER_ID}"
