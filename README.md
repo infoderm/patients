@@ -189,6 +189,18 @@ Install dependencies, custom certificates, and MongoDB on server:
 
 :construction: This is work in progress. :construction:
 
+Without backup:
+
+    IMAGE_TAG=v2025.01.29-1 \
+    ROOT_URL=https://example.local PORT=3000 HTTP_FORWARDED_COUNT=2 \
+    METEOR_SETTINGS="$(jq -c < .deploy/ghcr.io/settings.json)" \
+    docker compose \
+      -f compose.yaml \
+      -f .deploy/ghcr.io/patient-web.yaml \
+      config
+
+With backup:
+
     IMAGE_TAG=v2025.01.29-1 \
     ROOT_URL=https://example.local PORT=3000 HTTP_FORWARDED_COUNT=2 \
     METEOR_SETTINGS="$(jq -c < .deploy/ghcr.io/settings.json)" \
