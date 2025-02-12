@@ -18,7 +18,10 @@ services:
 
   patient-db:
     networks:
-      - patient-backup-network
+      patient-backup-network:
+        aliases:
+          - patient-db-ro
+
 
 networks:
   patient-backup-network:
