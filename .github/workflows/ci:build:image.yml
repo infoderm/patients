@@ -124,7 +124,7 @@ jobs:
       - name: Configure server
         id: configure-server
         run: |
-          echo "meteor-settings=$(tr -d '\r\n' < settings.json)" >> "${GITHUB_OUTPUT}"
+          echo "meteor-settings=$(jq -c . settings.json)" >> "${GITHUB_OUTPUT}"
 
       - name: Run server
         env:
