@@ -26,14 +26,16 @@ services:
       - patient-data:/data/db
       - ./scripts/assert-replica-set.js:/scripts/assert-replica-set.js
     networks:
-      - patient-network
+      patient-network:
+        aliases:
+          - patient-db-rw
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "7"
     command: [
-      "--bind_ip", "localhost,patient-db",
+      "--bind_ip", "localhost,patient-db-ro,patient-db-rw",
       "--dbpath", "/data/db",
       "--replSet", "meteor"
     ]
