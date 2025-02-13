@@ -1,6 +1,8 @@
 name: container-retention-policy
 
 on:
+  pull_request:
+  merge_group:
   schedule:
     # NOTE: Every day at 03:15am
     - cron: '15 3 * * *'
