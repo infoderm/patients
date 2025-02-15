@@ -1011,7 +1011,7 @@ jobs:
           IMAGE_TAG: sha-${{ github.sha }}
           METEOR_SETTINGS: ${{ steps.configure.outputs.meteor-settings }}
           BACKUP_KEY: ${{ steps.configure.outputs.backup-key }}
-          BACKUP_DIR: ${{ github.workspace }}/backups/
+          BACKUP_DIR: ${{ github.workspace }}/backups
           BACKUP_SCHEDULE: "0 21 * * *"
           BACKUP_INTERVAL: "129600"
           BACKUP_RETENTION_POLICY_SCHEDULE: "0 18 * * 0"
