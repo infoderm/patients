@@ -21,7 +21,7 @@ services:
 
   patient-db:
     restart: always
-    image: "mongo:${MONGO_VERSION}"
+    image: "mongo:${MONGO_VERSION:-7.0.5}"
     volumes:
       - patient-data:/data/db
       - ./scripts/assert-replica-set.js:/scripts/assert-replica-set.js
