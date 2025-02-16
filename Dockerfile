@@ -96,6 +96,9 @@ RUN output="$(ldd dist/bundle/programs/server/npm/node_modules/canvas/build/Rele
 
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot AS main
 
+# NOTE: Required by `node-canvas`.
+COPY --from=build /usr/lib/x86_64-linux-gnu/libuuid.so.1 /usr/lib/x86_64-linux-gnu/libuuid.so.1
+
 COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
 COPY --from=build --chown=nonroot:nonroot /home/build/dist/bundle /home/nonroot/dist
 COPY --chown=nonroot:nonroot [ \
