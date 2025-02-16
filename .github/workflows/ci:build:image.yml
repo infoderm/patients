@@ -53,6 +53,49 @@ jobs:
           package: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
 
+  debug:
+    name: Continuous integration (build image debug)
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 15
+
+    needs:
+      - build
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build debug image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: debug
+          tags: patient-web:debug
+          load: true
+          push: false
+          cache-from: type=gha
+          cache-to: type=inline
+
+      - name: Check we have all required libraries for `canvas`
+        run: |
+          # shellcheck disable=SC2015
+          output="$(docker run --rm patient-web:debug \
+            sh \
+            ldd \
+            /home/nonroot/dist/programs/server/npm/node_modules/canvas/build/Release/canvas.node 2>&1)" \
+            || { printf '%s\n' "${output}" >&2; exit 1; } \
+            && <<< "${output}" grep "=> not found" && exit 1 || true
+
+
   test:
     name: Continuous integration (build image test)
 
