@@ -88,6 +88,11 @@ RUN cd src && \
 RUN cd dist/bundle/programs/server && \
   meteor npm install
 
+# NOTE: Check we have all required libraries for `node-canvas`.
+RUN output="$(ldd dist/bundle/programs/server/npm/node_modules/canvas/build/Release/canvas.node 2>&1)" \
+  || { printf '%s\n' "${output}" >&2; exit 1; } \
+  && printf '%s\n' "${output}" | grep "=> not found" && exit 1 || true
+
 
 FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot
 
