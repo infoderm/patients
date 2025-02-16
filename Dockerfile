@@ -131,3 +131,12 @@ CMD [ \
   "node", \
   "dist/main.js" \
 ]
+
+
+FROM main AS debug
+
+COPY --from=build --chown=nonroot:nonroot /bin/sh /home/nonroot/node/bin/sh
+COPY --from=build --chown=nonroot:nonroot /usr/bin/ldd /home/nonroot/ldd
+
+
+FROM main
