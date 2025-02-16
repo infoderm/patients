@@ -94,7 +94,7 @@ RUN output="$(ldd dist/bundle/programs/server/npm/node_modules/canvas/build/Rele
   && printf '%s\n' "${output}" | grep "=> not found" && exit 1 || true
 
 
-FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot
+FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot AS main
 
 COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
 COPY --from=build --chown=nonroot:nonroot /home/build/dist/bundle /home/nonroot/dist
