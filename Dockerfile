@@ -4,7 +4,7 @@ ARG PORT=3000
 
 # NOTE Build stage
 
-FROM debian:${DEBIAN_VERSION}-slim AS build
+FROM docker.io/debian:${DEBIAN_VERSION}-slim AS build
 
 
 # NOTE Install build tools
