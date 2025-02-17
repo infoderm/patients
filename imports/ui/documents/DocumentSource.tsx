@@ -3,7 +3,7 @@ import React from 'react';
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
-const PREFIX = 'HealthOneReportContents';
+const PREFIX = 'DocumentSource';
 
 const classes = {
 	container: `${PREFIX}-container`,
@@ -24,7 +24,7 @@ const Root = styled('div')(({theme}) => ({
 	},
 }));
 
-const HealthOneReportContents = ({document: {decoded, source}}) => {
+const DocumentSource = ({document: {decoded, source}}) => {
 	return (
 		<Root className={classes.container}>
 			<Paper className={classes.paper}>{decoded || source}</Paper>
@@ -32,4 +32,4 @@ const HealthOneReportContents = ({document: {decoded, source}}) => {
 	);
 };
 
-export default HealthOneReportContents;
+export default DocumentSource;
