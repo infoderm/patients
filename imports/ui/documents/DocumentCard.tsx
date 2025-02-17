@@ -29,6 +29,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import type PropsOf from '../../lib/types/PropsOf';
 
+import {type DocumentDocument} from '../../api/collection/documents';
+
 import DocumentChips from './DocumentChips';
 import DocumentVersionsButton from './actions/DocumentVersionsButton';
 
@@ -70,7 +72,7 @@ const DocumentCard = ({
 	const [restoring, setRestoring] = useState(false);
 	const [superdeleting, setSuperdeleting] = useState(false);
 
-	const {patientId, parsed, format, kind, deleted} = document;
+	const {patientId, deleted} = document;
 
 	return (
 		<Accordion
@@ -84,48 +86,7 @@ const DocumentCard = ({
 			</AccordionSummary>
 			<AccordionDetails>
 				<List>
-					{parsed && format === 'healthone' && kind === 'lab' && (
-						<ListItem>
-							<ListItemAvatar>
-								<Avatar>
-									<TableChartIcon />
-								</Avatar>
-							</ListItemAvatar>
-							<ListItemText
-								disableTypography
-								primary={<Typography variant="subtitle1">Table</Typography>}
-								secondary={<HealthOneLabResultsTable document={document} />}
-							/>
-						</ListItem>
-					)}
-					{parsed && format === 'healthone' && kind === 'report' && (
-						<ListItem>
-							<ListItemAvatar>
-								<Avatar>
-									<SubjectIcon />
-								</Avatar>
-							</ListItemAvatar>
-							<ListItemText
-								disableTypography
-								primary={<Typography variant="subtitle1">Contents</Typography>}
-								secondary={<HealthOneReportContents document={document} />}
-							/>
-						</ListItem>
-					)}
-					{(!parsed || format !== 'healthone') && (
-						<ListItem>
-							<ListItemAvatar>
-								<Avatar>
-									<FileCopyIcon />
-								</Avatar>
-							</ListItemAvatar>
-							<ListItemText
-								disableTypography
-								primary={<Typography variant="subtitle1">Source</Typography>}
-								secondary={<DocumentSource document={document} />}
-							/>
-						</ListItem>
-					)}
+					<DocumentCardListItem document={document} />
 				</List>
 			</AccordionDetails>
 			<Divider />
@@ -213,6 +174,75 @@ const DocumentCard = ({
 				/>
 			</AccordionActions>
 		</Accordion>
+	);
+};
+
+type DocumentCardListItemProps = {
+	readonly document: DocumentDocument;
+};
+
+const DocumentCardListItem = ({document}: DocumentCardListItemProps) => {
+	const {parsed, format, kind} = document;
+
+	if (parsed) {
+		// eslint-disable-next-line default-case
+		switch (format) {
+			case 'healthone': {
+				// eslint-disable-next-line default-case
+				switch (kind) {
+					case 'lab': {
+						return (
+							<ListItem>
+								<ListItemAvatar>
+									<Avatar>
+										<TableChartIcon />
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText
+									disableTypography
+									primary={<Typography variant="subtitle1">Table</Typography>}
+									secondary={<HealthOneLabResultsTable document={document} />}
+								/>
+							</ListItem>
+						);
+					}
+
+					case 'report': {
+						return (
+							<ListItem>
+								<ListItemAvatar>
+									<Avatar>
+										<SubjectIcon />
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText
+									disableTypography
+									primary={
+										<Typography variant="subtitle1">Contents</Typography>
+									}
+									secondary={<HealthOneReportContents document={document} />}
+								/>
+							</ListItem>
+						);
+					}
+				}
+			}
+		}
+	}
+
+	return (
+		<ListItem>
+			<ListItemAvatar>
+				<Avatar>
+					<FileCopyIcon />
+				</Avatar>
+			</ListItemAvatar>
+			<ListItemText
+				disableTypography
+				primary={<Typography variant="subtitle1">Source</Typography>}
+				secondary={<DocumentSource document={document} />}
+			/>
+		</ListItem>
 	);
 };
 
