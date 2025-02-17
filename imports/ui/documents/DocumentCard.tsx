@@ -40,7 +40,7 @@ import DocumentRestorationDialog from './DocumentRestorationDialog';
 import DocumentLinkingDialog from './DocumentLinkingDialog';
 import DocumentUnlinkingDialog from './DocumentUnlinkingDialog';
 import HealthOneLabResultsTable from './HealthOneLabResultsTable';
-import HealthOneReportContents from './HealthOneReportContents';
+import ReportContents from './ReportContents';
 import DocumentSource from './DocumentSource';
 import DocumentDownloadButton from './actions/DocumentDownloadButton';
 import DocumentDeletionButton from './actions/DocumentDeletionButton';
@@ -220,7 +220,7 @@ const DocumentCardListItem = ({document}: DocumentCardListItemProps) => {
 									primary={
 										<Typography variant="subtitle1">Contents</Typography>
 									}
-									secondary={<HealthOneReportContents document={document} />}
+									secondary={<ReportContents document={document} />}
 								/>
 							</ListItem>
 						);

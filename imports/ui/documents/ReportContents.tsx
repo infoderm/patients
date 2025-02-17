@@ -31,14 +31,14 @@ type Props = {
 	readonly document: ParsedDocumentDocument;
 };
 
-const HealthOneReportContents = ({document}: Props) => {
+const ReportContents = ({document: {sections}}: Props) => {
 	// TODO: Change type expectations and display loading indicator.
-	if (document.sections === undefined) return null;
+	if (sections === undefined) return null;
 
 	return (
 		<Root>
 			<StyledPaper>
-				{document.sections.map(({text}, i) => (
+				{sections.map(({text}, i) => (
 					<Fragment key={i}>
 						{i !== 0 && <Divider />}
 						<Section>{text.join('\n').trim()}</Section>
@@ -49,4 +49,4 @@ const HealthOneReportContents = ({document}: Props) => {
 	);
 };
 
-export default HealthOneReportContents;
+export default ReportContents;
