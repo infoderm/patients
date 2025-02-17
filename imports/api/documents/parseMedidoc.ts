@@ -1,5 +1,10 @@
 import omit from 'lodash.omit';
+import {list} from '@iterable-iterator/list';
 import {zip} from '@iterable-iterator/zip';
+import {filter} from '@iterable-iterator/filter';
+import {map} from '@iterable-iterator/map';
+import {sum} from '@iterable-iterator/reduce';
+import {isEmpty} from '@iterable-iterator/cardinality';
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
 
 import parse from 'date-fns/parse';
@@ -33,13 +38,41 @@ const medidocParseDatetime = (datetime): Date | undefined => {
 };
 
 const computedProps = (document) => {
+	const {type, results} = document;
+	const identifier =
+		type === 'lab'
+			? document.lab.name
+			: `${document.doctor.lastname} ${document.doctor.firstname}`;
+
+	const sections = list(filter(({type}) => type === 'b', results));
+	const labResults = list(
+		filter(
+			({type, comments}) =>
+				(type !== 'b' && type !== 'c') || (type === 'c' && !isEmpty(comments)),
+			results,
+		),
+	);
+	const kind =
+		type === 'lab'
+			? isEmpty(results) || !isEmpty(labResults)
+				? 'lab'
+				: 'report'
+			: type;
+
+	if (kind === 'lab') throw new Error('Medidoc lab reports not implemented');
+
+	const anomalies = sum(
+		map(({intensity}) => (intensity === 'Normal' ? 0 : 1), labResults),
+	);
+
 	return {
-		kind: document.type,
-		anomalies: 0, // TODO
-		identifier: `${document.doctor.lastname} ${document.doctor.firstname}`,
+		kind,
+		anomalies,
+		identifier,
 		datetime: medidocParseDatetime(document.meta),
 		reference: document.meta.reference,
 		status: document.meta.status,
+		sections,
 	};
 };
 
@@ -57,7 +90,7 @@ const parseMedidoc = async function* (decoded: string, mangled: string) {
 		// const utf8_buffer = utf8_array.buffer;
 		// const utf8_binary = Binary(utf8_buffer);
 		yield {
-			...omit(document, ['lines']),
+			...omit(document, ['lines', 'results']),
 			...computedProps(document),
 			source: `${mangledDocument.lines
 				.map(({contents}) => contents)

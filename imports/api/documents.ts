@@ -79,7 +79,7 @@ async function* sanitize({
 				return;
 			}
 
-			if (format === 'DMA-REP') {
+			if (format === 'DMA-REP' || format === 'DMA-LAB') {
 				for await (const document of parseMedidoc(decoded, mangled)) {
 					yield {
 						...document,
