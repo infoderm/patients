@@ -186,11 +186,11 @@ const DocumentCardListItem = ({document}: DocumentCardListItemProps) => {
 
 	if (parsed) {
 		// eslint-disable-next-line default-case
-		switch (format) {
-			case 'healthone': {
+		switch (kind) {
+			case 'lab': {
 				// eslint-disable-next-line default-case
-				switch (kind) {
-					case 'lab': {
+				switch (format) {
+					case 'healthone': {
 						return (
 							<ListItem>
 								<ListItemAvatar>
@@ -206,26 +206,26 @@ const DocumentCardListItem = ({document}: DocumentCardListItemProps) => {
 							</ListItem>
 						);
 					}
-
-					case 'report': {
-						return (
-							<ListItem>
-								<ListItemAvatar>
-									<Avatar>
-										<SubjectIcon />
-									</Avatar>
-								</ListItemAvatar>
-								<ListItemText
-									disableTypography
-									primary={
-										<Typography variant="subtitle1">Contents</Typography>
-									}
-									secondary={<ReportContents document={document} />}
-								/>
-							</ListItem>
-						);
-					}
 				}
+
+				break;
+			}
+
+			case 'report': {
+				return (
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<SubjectIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText
+							disableTypography
+							primary={<Typography variant="subtitle1">Contents</Typography>}
+							secondary={<ReportContents document={document} />}
+						/>
+					</ListItem>
+				);
 			}
 		}
 	}
