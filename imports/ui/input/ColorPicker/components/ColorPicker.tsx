@@ -7,6 +7,8 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 import color from '../../../../lib/color';
 
+import useChanged from '../../../hooks/useChanged';
+
 import {DEFAULT_CONVERTER, converters} from '../transformers';
 
 import PickerDialog from './PickerDialog';
@@ -26,15 +28,13 @@ const ColorPicker = ({
 }: Props) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const [value, setValue] = useState(defaultValue);
-	const [previousDefaultValue, setPreviousDefaultValue] =
-		useState(defaultValue);
+	const changed = useChanged([defaultValue]);
 
 	useEffect(() => {
-		if (defaultValue !== previousDefaultValue) {
-			setPreviousDefaultValue(defaultValue);
+		if (changed) {
 			setValue(defaultValue);
 		}
-	}, [defaultValue, previousDefaultValue]);
+	}, [changed, defaultValue]);
 
 	return (
 		<span>
