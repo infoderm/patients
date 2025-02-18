@@ -29,7 +29,7 @@ type Props<K extends SettingKey> = {
 	readonly label?: string;
 	readonly setting: K;
 	readonly sanitize?: (inputValue: string) => any;
-	readonly validate?: (x: any) => Outcome;
+	readonly validate?: (x: string) => Outcome;
 };
 
 const InputOneSetting = <K extends SettingKey>({
