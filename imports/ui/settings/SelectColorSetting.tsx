@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import Typography from '@mui/material/Typography';
 
@@ -25,9 +25,13 @@ const SelectColorSetting = <K extends SettingKey>({
 }: Props<K>) => {
 	const {loading, value, setValue} = useSetting(setting);
 
-	const onChange = async (newValue: string) => {
-		await setValue(newValue as UserSettings[K]);
-	};
+	const onChange = useMemo(
+		() =>
+			debounce(async (newValue: string) => {
+				await setValue(newValue as UserSettings[K]);
+			}, 1000),
+		[setValue],
+	);
 
 	return (
 		<div className={className}>
@@ -35,7 +39,7 @@ const SelectColorSetting = <K extends SettingKey>({
 			<ColorPicker
 				readOnly={loading}
 				defaultValue={value as string}
-				onChange={debounce(onChange, 1000)}
+				onChange={onChange}
 			/>
 			<SettingResetButton setting={setting} />
 		</div>
