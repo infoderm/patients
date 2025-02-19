@@ -117,6 +117,7 @@
     "meteor-node-stubs": "^1.2.5",
     "node-fetch": "^3.3.2",
     "notistack": "^3.0.1",
+    "p-debounce": "^4.0.0",
     "papaparse": "^5.4.1",
     "pdfjs-dist": "~3.4.120",
     "qrcode.react": "^3.1.0",
