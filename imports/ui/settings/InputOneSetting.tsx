@@ -3,15 +3,16 @@ import React, {useState, useEffect, useMemo, startTransition} from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
-import debounce from 'debounce';
+import debounce from 'p-debounce';
 import {useDebounce} from 'use-debounce';
 
-import {type SettingKey} from '../../api/settings';
+import {type UserSettings, type SettingKey} from '../../api/settings';
 
 import {
 	TIMEOUT_INPUT_DEBOUNCE,
 	TIMEOUT_REACTIVITY_DEBOUNCE,
 } from '../constants';
+
 import useChanged from '../hooks/useChanged';
 
 import {useSetting} from './hooks';
@@ -46,52 +47,67 @@ const InputOneSetting = <K extends SettingKey>({
 		TIMEOUT_REACTIVITY_DEBOUNCE,
 	);
 	const [displayedValue, setDisplayedValue] = useState(value as string);
-	const [pending, setPending] = useState<Promise<void> | undefined>(undefined);
+	const [ignoreUpdates, setIgnoreUpdates] = useState(false);
 
 	const [error, setError] = useState(false);
 
 	const changed = useChanged([debouncedValue]);
 
+	console.debug({
+		loading,
+		value,
+		debouncedValue,
+		isPending: isPending(),
+		displayedValue,
+		ignoreUpdates,
+		error,
+		changed,
+	});
+
 	useEffect(() => {
-		if (!pending && changed && debouncedValue !== undefined) {
+		if (!ignoreUpdates && changed && debouncedValue !== undefined) {
 			setDisplayedValue((prev) =>
 				isPending() ? prev : (debouncedValue as string),
 			);
 		}
-	}, [pending, isPending, debouncedValue]);
+	}, [ignoreUpdates, isPending, debouncedValue]);
 
 	useEffect(() => {
 		const {outcome} = validate(displayedValue);
 		setError(!outcome);
 	}, [validate, displayedValue]);
 
-	const updateValue = useMemo(
-		() =>
-			debounce(async (newValue) => {
-				let current: Promise<void>;
-				try {
-					current = setValue(newValue);
-					setPending(current);
-					await current;
-				} finally {
-					setTimeout(() => {
-						startTransition(() => {
-							// NOTE: This works because all method calls are queued in calling
-							// order.
-							// eslint-disable-next-line @typescript-eslint/promise-function-async
-							setPending((last) => (last === current ? undefined : last));
-						});
-					}, TIMEOUT_REACTIVITY_DEBOUNCE);
-				}
-			}, TIMEOUT_INPUT_DEBOUNCE),
-		[setValue, setPending],
-	);
+	const updateValue = useMemo(() => {
+		let last = {};
+
+		const debounced = debounce(async (newValue: UserSettings[K]) => {
+			const current = {};
+			last = current;
+			try {
+				await setValue(newValue);
+			} finally {
+				setTimeout(() => {
+					startTransition(() => {
+						// NOTE: Continue ignoring updates if we are not the
+						// last pending call. This works because all method
+						// calls are queued in calling order.
+
+						setIgnoreUpdates(() => last !== current);
+					});
+				}, TIMEOUT_REACTIVITY_DEBOUNCE);
+			}
+		}, TIMEOUT_INPUT_DEBOUNCE);
+
+		return debounced;
+	}, [setValue, setIgnoreUpdates]);
 
 	const onChange = async (e) => {
-		cancel();
+		cancel(); // NOTE: Cancel all pending debounced updates from DB.
+		setIgnoreUpdates(true); // NOTE: We ignore all updates.
 		const newValue = sanitize(e.target.value);
 		setDisplayedValue(newValue);
-		await updateValue(newValue);
+		await updateValue(newValue); // NOTE: We start to listen to new updates.
+		cancel(); // NOTE: Cancel all pending debounced updates from DB.
 	};
 
 	return (
