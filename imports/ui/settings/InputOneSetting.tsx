@@ -1,9 +1,19 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo, startTransition} from 'react';
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
-import {type SettingKey} from '../../api/settings';
+import debounce from 'p-debounce';
+import {useDebounce} from 'use-debounce';
+
+import {type UserSettings, type SettingKey} from '../../api/settings';
+
+import {
+	TIMEOUT_INPUT_DEBOUNCE,
+	TIMEOUT_REACTIVITY_DEBOUNCE,
+} from '../constants';
+
+import useChanged from '../hooks/useChanged';
 
 import {useSetting} from './hooks';
 
@@ -20,7 +30,7 @@ type Props<K extends SettingKey> = {
 	readonly label?: string;
 	readonly setting: K;
 	readonly sanitize?: (inputValue: string) => any;
-	readonly validate?: (x: any) => Outcome;
+	readonly validate?: (x: string) => Outcome;
 };
 
 const InputOneSetting = <K extends SettingKey>({
@@ -32,17 +42,72 @@ const InputOneSetting = <K extends SettingKey>({
 	title,
 }: Props<K>) => {
 	const {loading, value, setValue} = useSetting(setting);
+	const [debouncedValue, {isPending, cancel}] = useDebounce(
+		value,
+		TIMEOUT_REACTIVITY_DEBOUNCE,
+	);
+	const [displayedValue, setDisplayedValue] = useState(value as string);
+	const [ignoreUpdates, setIgnoreUpdates] = useState(false);
 
 	const [error, setError] = useState(false);
 
+	const changed = useChanged([debouncedValue]);
+
+	console.debug({
+		loading,
+		value,
+		debouncedValue,
+		isPending: isPending(),
+		displayedValue,
+		ignoreUpdates,
+		error,
+		changed,
+	});
+
 	useEffect(() => {
-		const {outcome} = validate(value);
+		if (!ignoreUpdates && changed && debouncedValue !== undefined) {
+			setDisplayedValue((prev) =>
+				isPending() ? prev : (debouncedValue as string),
+			);
+		}
+	}, [ignoreUpdates, isPending, debouncedValue]);
+
+	useEffect(() => {
+		const {outcome} = validate(displayedValue);
 		setError(!outcome);
-	}, [validate, value]);
+	}, [validate, displayedValue]);
+
+	const updateValue = useMemo(() => {
+		let last = {};
+
+		const debounced = debounce(async (newValue: UserSettings[K]) => {
+			const current = {};
+			last = current;
+			try {
+				await setValue(newValue);
+			} finally {
+				setTimeout(() => {
+					startTransition(() => {
+						// NOTE: Continue ignoring updates if we are not the
+						// last pending call. This works because all method
+						// calls are queued in calling order.
+
+						setIgnoreUpdates(() => last !== current);
+					});
+				}, TIMEOUT_REACTIVITY_DEBOUNCE);
+			}
+		}, TIMEOUT_INPUT_DEBOUNCE);
+
+		return debounced;
+	}, [setValue, setIgnoreUpdates]);
 
 	const onChange = async (e) => {
+		cancel(); // NOTE: Cancel all pending debounced updates from DB.
+		setIgnoreUpdates(true); // NOTE: We ignore all updates.
 		const newValue = sanitize(e.target.value);
-		await setValue(newValue);
+		setDisplayedValue(newValue);
+		await updateValue(newValue); // NOTE: We start to listen to new updates.
+		cancel(); // NOTE: Cancel all pending debounced updates from DB.
 	};
 
 	return (
@@ -51,7 +116,7 @@ const InputOneSetting = <K extends SettingKey>({
 			<TextField
 				disabled={loading}
 				label={label}
-				value={value}
+				value={displayedValue}
 				error={error}
 				onChange={onChange}
 			/>
