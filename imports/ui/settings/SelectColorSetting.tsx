@@ -1,13 +1,11 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import Typography from '@mui/material/Typography';
-
-import debounce from 'debounce';
 
 import ColorPicker from '../input/ColorPicker';
 import {type SettingKey, type UserSettings} from '../../api/settings';
 
-import {useSetting} from './hooks';
+import {useSettingDebounced} from './hooks';
 import SettingResetButton from './SettingResetButton';
 
 type Props<K extends SettingKey> = UserSettings[K] extends string
@@ -23,15 +21,8 @@ const SelectColorSetting = <K extends SettingKey>({
 	setting,
 	title,
 }: Props<K>) => {
-	const {loading, value, setValue, resetValue} = useSetting(setting);
-
-	const onChange = useMemo(
-		() =>
-			debounce(async (newValue: string) => {
-				await setValue(newValue as UserSettings[K]);
-			}, 1000),
-		[setValue],
-	);
+	const {loading, value, setValue, resetValue} = useSettingDebounced(setting);
+	const onChange = setValue as (newValue: string) => Promise<void>;
 
 	return (
 		<div className={className}>
