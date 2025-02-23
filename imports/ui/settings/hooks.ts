@@ -42,7 +42,7 @@ const defaultFilter = () => 'default';
 const userFilter = (userId: string) => `user-${userId}`;
 const userOrDefaultFilter = (userId: string | null) =>
 	userId === null ? defaultFilter() : userFilter(userId);
-const withBrowserCache = <K extends SettingKey>(
+export const withBrowserCache = <K extends SettingKey>(
 	loading: boolean,
 	userId: string | null,
 	key: K,
