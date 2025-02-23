@@ -1,4 +1,13 @@
-import {useCallback, useMemo} from 'react';
+import {
+	startTransition,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react';
+
+import debounce from 'p-debounce';
+import {useDebounce} from 'use-debounce';
 
 import {type SettingDocument, Settings} from '../../api/collection/settings';
 import {type UserSettings, type SettingKey, defaults} from '../../api/settings';
@@ -11,6 +20,10 @@ import useUserId from '../users/useUserId';
 import useLoggingOut from '../users/useLoggingOut';
 import useLoggingIn from '../users/useLoggingIn';
 import useItem from '../../api/publication/useItem';
+import {
+	TIMEOUT_INPUT_DEBOUNCE,
+	TIMEOUT_REACTIVITY_DEBOUNCE,
+} from '../constants';
 
 const useSettingSubscription = <K extends SettingKey>(key: K) =>
 	useSubscription(byKey, [key]);
@@ -122,6 +135,7 @@ export const useSetting = <K extends SettingKey>(
 	const resetValue = useCallback(async () => resetSetting<K>(key), [key]);
 
 	return {
+		userId,
 		loading: loadingSettingSubscription || loadingSettingResult,
 		value,
 		setValue,
@@ -131,6 +145,105 @@ export const useSetting = <K extends SettingKey>(
 
 export const useSettingCached = <K extends SettingKey>(key: K) =>
 	useSetting<K>(key, withBrowserCache);
+
+export const useSettingDebounced = <K extends SettingKey>(
+	key: K,
+	withDefaultFn: typeof withDefault = withDefault,
+	inputDebounceTimeout: number = TIMEOUT_INPUT_DEBOUNCE,
+	reactivityDebounceTimeout: number = TIMEOUT_REACTIVITY_DEBOUNCE,
+) => {
+	const {
+		userId,
+		loading,
+		value: serverValue,
+		setValue: setServerValue,
+		resetValue: resetServerValue,
+	} = useSetting(key, withDefaultFn);
+	const [debouncedServerValue, {isPending, flush}] = useDebounce(
+		serverValue,
+		reactivityDebounceTimeout,
+		// NOTE: This should really be `{leading: !loading}`, but that does
+		// seem to work as `isPending` returns `true` even when leading update
+		// has been taken into account. See `flush`-based workaround below.
+		// SEE: https://github.com/xnimorz/use-debounce/issues/192
+		{leading: false},
+	);
+	useEffect(() => {
+		// NOTE: Flush when loading is done.
+		if (!loading) flush();
+	}, [loading, flush]);
+
+	const [clientValue, setClientValue] = useState(serverValue);
+	const [ignoreServer, setIgnoreServer] = useState(false);
+
+	useEffect(() => {
+		if (ignoreServer) return;
+		setClientValue((prev) => (isPending() ? prev : debouncedServerValue));
+	}, [ignoreServer, isPending, debouncedServerValue]);
+
+	const wrap = useMemo(() => {
+		let last = {};
+
+		const debouncedSetServerValue = debounce(
+			async (current: unknown, setServerValue: () => Promise<void>) => {
+				try {
+					await setServerValue();
+				} finally {
+					setTimeout(() => {
+						startTransition(() => {
+							flush(); // NOTE: Fast-forward debounced state to current DB state.
+							// NOTE: Continue ignoring updates if we are not the
+							// last pending call. This works because all method
+							// calls are queued in calling order.
+							setIgnoreServer((prev) => (last === current ? false : prev));
+						});
+					}, inputDebounceTimeout + reactivityDebounceTimeout);
+				}
+			},
+			inputDebounceTimeout,
+		);
+
+		return async (
+			setClientValue: () => void,
+			setServerValue: () => Promise<void>,
+		) => {
+			setIgnoreServer(true); // NOTE: We ignore all updates.
+			const current = {};
+			last = current;
+			setClientValue();
+			await debouncedSetServerValue(current, setServerValue);
+			// NOTE: We will listen to updates again some time after last update
+			// is complete.
+		};
+	}, [setIgnoreServer, flush, inputDebounceTimeout, reactivityDebounceTimeout]);
+
+	const setValue = useMemo(() => {
+		return async (newValue: UserSettings[K]) =>
+			wrap(
+				() => {
+					setClientValue(newValue);
+				},
+				async () => setServerValue(newValue),
+			);
+	}, [wrap, setClientValue, setServerValue]);
+
+	const resetValue = useMemo(() => {
+		return async () =>
+			wrap(
+				() => {
+					setClientValue(withDefaultFn(loading, userId, key, undefined));
+				},
+				async () => resetServerValue(),
+			);
+	}, [wrap, setClientValue, setServerValue]);
+
+	return {
+		loading,
+		value: clientValue,
+		setValue,
+		resetValue,
+	};
+};
 
 export const settings = {
 	defaults,
