@@ -1,9 +1,8 @@
-import {useRef} from 'react';
+import useReduce from './useReduce';
 
-const useLastTruthyValue = (value: any) => {
-	const ref = useRef<any>(undefined);
-	ref.current = value || ref.current;
-	return ref.current;
-};
+const lastTruthyValue = (acc: any, value: any) => value || acc;
+
+const useLastTruthyValue = (value: any) =>
+	useReduce(lastTruthyValue, value, undefined);
 
 export default useLastTruthyValue;
