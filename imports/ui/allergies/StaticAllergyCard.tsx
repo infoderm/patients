@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {styled} from '@mui/material/styles';
 
@@ -61,23 +61,28 @@ type LoadedTagCardProps = {
 
 const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 	({loading, found, item}, ref) => {
-		const {result} = useAllergyStats(item.name);
+		const {_id, name, color} = item;
+		const {result} = useAllergyStats(name);
 		const {count} = result ?? {};
-		const {results: patients} = usePatientsHavingAllergy(item.name, {
+		const {results: patients} = usePatientsHavingAllergy(name, {
 			fields: StaticPatientChipProjection,
 			limit: 1,
 		});
 
-		const onChange = async (color: string) => {
-			if (color !== item.color) {
-				try {
-					await call(changeColor, item._id, color);
-					console.log(`Changed color of allergy ${item._id} to ${color}`);
-				} catch (error: unknown) {
-					console.error(error);
-				}
-			}
-		};
+		const onChange = useMemo(
+			() =>
+				debounce(async (newColor: string) => {
+					if (newColor !== color) {
+						try {
+							await call(changeColor, _id, newColor);
+							console.log(`Changed color of allergy ${_id} to ${newColor}`);
+						} catch (error: unknown) {
+							console.error(error);
+						}
+					}
+				}, 1000),
+			[_id, color],
+		);
 
 		const subheader = count === undefined ? '...' : `affecte ${count} patients`;
 
@@ -111,10 +116,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 				subheader={subheader}
 				content={content}
 				actions={
-					<ColorPicker
-						defaultValue={item.color ?? '#e0e0e0'}
-						onChange={debounce(onChange, 1000)}
-					/>
+					<ColorPicker defaultValue={color ?? '#e0e0e0'} onChange={onChange} />
 				}
 				avatar={<AllergyAvatar>Al</AllergyAvatar>}
 				DeletionDialog={AllergyDeletionDialog}
