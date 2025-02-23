@@ -47,7 +47,17 @@ const InputOneSetting = <K extends StringSettingKey>({
 	const [debouncedValue, {isPending, flush}] = useDebounce(
 		value as string,
 		TIMEOUT_REACTIVITY_DEBOUNCE,
+		// NOTE: This should really be `{leading: !loading}`, but that does
+		// seem to work as `isPending` returns `true` even when leading update
+		// has been taken into account. See `flush`-based workaround below.
+		// SEE: https://github.com/xnimorz/use-debounce/issues/192
+		{leading: false},
 	);
+	useEffect(() => {
+		// NOTE: Flush when loading is done.
+		if (!loading) flush();
+	}, [loading, flush]);
+
 	const [displayedValue, setDisplayedValue] = useState(value as string);
 	const [ignoreUpdates, setIgnoreUpdates] = useState(false);
 
