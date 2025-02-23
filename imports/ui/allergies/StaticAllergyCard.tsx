@@ -1,12 +1,10 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {styled} from '@mui/material/styles';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import {green} from '@mui/material/colors';
-
-import debounce from 'debounce';
 
 import StaticTagCard from '../tags/StaticTagCard';
 
@@ -23,7 +21,12 @@ import ColorPicker from '../input/ColorPicker';
 import {myEncodeURIComponent} from '../../lib/uri';
 import changeColor from '../../api/endpoint/allergies/changeColor';
 
-import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
+import {
+	TIMEOUT_INPUT_DEBOUNCE,
+	TIMEOUT_REACTIVITY_DEBOUNCE,
+} from '../constants';
+
+import {useSync} from '../../ux/hooks/useSync';
 
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';
@@ -71,20 +74,38 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 			limit: 1,
 		});
 
-		const onChange = useMemo(
-			() =>
-				debounce(async (newColor: string) => {
-					if (newColor !== color) {
-						try {
-							await call(changeColor, _id, newColor);
-							console.log(`Changed color of allergy ${_id} to ${newColor}`);
-						} catch (error: unknown) {
-							console.error(error);
-						}
-					}
-				}, TIMEOUT_INPUT_DEBOUNCE),
-			[_id, color],
+		const {
+			value: clientValue,
+			setValue: setClientValue,
+			sync,
+		} = useSync(
+			loading,
+			color,
+			TIMEOUT_INPUT_DEBOUNCE,
+			TIMEOUT_REACTIVITY_DEBOUNCE,
 		);
+
+		const setServerValue = useCallback(
+			async (newColor: string) => {
+				try {
+					await call(changeColor, _id, newColor);
+					console.log(`Changed color of allergy ${_id} to ${newColor}`);
+				} catch (error: unknown) {
+					console.error(error);
+				}
+			},
+			[_id],
+		);
+
+		const onChange = useMemo(() => {
+			return async (newValue: string) =>
+				sync(
+					() => {
+						setClientValue(newValue);
+					},
+					async () => setServerValue(newValue),
+				);
+		}, [sync, setClientValue, setServerValue]);
 
 		const subheader = count === undefined ? '...' : `affecte ${count} patients`;
 
@@ -118,7 +139,10 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 				subheader={subheader}
 				content={content}
 				actions={
-					<ColorPicker defaultValue={color ?? '#e0e0e0'} onChange={onChange} />
+					<ColorPicker
+						defaultValue={clientValue ?? '#e0e0e0'}
+						onChange={onChange}
+					/>
 				}
 				avatar={<AllergyAvatar>Al</AllergyAvatar>}
 				DeletionDialog={AllergyDeletionDialog}
