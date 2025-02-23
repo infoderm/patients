@@ -22,7 +22,11 @@ type Outcome = {
 	//  0 wrong input (no sync, no update)
 };
 
-type Props<K extends SettingKey> = {
+type StringSettingKey = keyof {
+	[K in SettingKey]: string extends UserSettings[K] ? 1 : never;
+};
+
+type Props<K extends StringSettingKey> = {
 	readonly className?: string;
 	readonly title?: string;
 	readonly label?: string;
@@ -31,7 +35,7 @@ type Props<K extends SettingKey> = {
 	readonly validate?: (x: string) => Outcome;
 };
 
-const InputOneSetting = <K extends SettingKey>({
+const InputOneSetting = <K extends StringSettingKey>({
 	className,
 	setting,
 	sanitize = (x) => x,
@@ -39,9 +43,9 @@ const InputOneSetting = <K extends SettingKey>({
 	label,
 	title,
 }: Props<K>) => {
-	const {loading, value, setValue} = useSetting(setting);
+	const {loading, value, setValue} = useSetting<K>(setting);
 	const [debouncedValue, {isPending, flush}] = useDebounce(
-		value,
+		value as string,
 		TIMEOUT_REACTIVITY_DEBOUNCE,
 	);
 	const [displayedValue, setDisplayedValue] = useState(value as string);
@@ -54,32 +58,27 @@ const InputOneSetting = <K extends SettingKey>({
 
 	useEffect(() => {
 		if (ignoreUpdates) return;
-		setDisplayedValue((prev) =>
-			isPending() ? prev : (debouncedValue as string),
-		);
+		setDisplayedValue((prev) => (isPending() ? prev : debouncedValue));
 	}, [ignoreUpdates, isPending, debouncedValue]);
 
 	const onChange = useMemo(() => {
 		let last = {};
 
-		const updateValue = debounce(
-			async (current: unknown, newValue: UserSettings[K]) => {
-				try {
-					await setValue(newValue);
-				} finally {
-					setTimeout(() => {
-						startTransition(() => {
-							flush(); // NOTE: Fast-forward debounced state to current DB state.
-							// NOTE: Continue ignoring updates if we are not the
-							// last pending call. This works because all method
-							// calls are queued in calling order.
-							setIgnoreUpdates((prev) => (last === current ? false : prev));
-						});
-					}, TIMEOUT_INPUT_DEBOUNCE + TIMEOUT_REACTIVITY_DEBOUNCE);
-				}
-			},
-			TIMEOUT_INPUT_DEBOUNCE,
-		);
+		const updateValue = debounce(async (current: unknown, newValue: string) => {
+			try {
+				await setValue(newValue as UserSettings[K]);
+			} finally {
+				setTimeout(() => {
+					startTransition(() => {
+						flush(); // NOTE: Fast-forward debounced state to current DB state.
+						// NOTE: Continue ignoring updates if we are not the
+						// last pending call. This works because all method
+						// calls are queued in calling order.
+						setIgnoreUpdates((prev) => (last === current ? false : prev));
+					});
+				}, TIMEOUT_INPUT_DEBOUNCE + TIMEOUT_REACTIVITY_DEBOUNCE);
+			}
+		}, TIMEOUT_INPUT_DEBOUNCE);
 
 		const _onChange = async (e) => {
 			setIgnoreUpdates(true); // NOTE: We ignore all updates.
