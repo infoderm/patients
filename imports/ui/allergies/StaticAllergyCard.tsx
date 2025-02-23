@@ -23,6 +23,8 @@ import ColorPicker from '../input/ColorPicker';
 import {myEncodeURIComponent} from '../../lib/uri';
 import changeColor from '../../api/endpoint/allergies/changeColor';
 
+import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
+
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';
 
@@ -80,7 +82,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 							console.error(error);
 						}
 					}
-				}, 1000),
+				}, TIMEOUT_INPUT_DEBOUNCE),
 			[_id, color],
 		);
 
