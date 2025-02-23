@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import ColorPicker from '../input/ColorPicker';
 import {type SettingKey, type UserSettings} from '../../api/settings';
 
-import {useSettingDebounced} from './hooks';
+import {useSettingDebounced, withBrowserCache} from './hooks';
 import SettingResetButton from './SettingResetButton';
 
 type Props<K extends SettingKey> = UserSettings[K] extends string
@@ -21,7 +21,10 @@ const SelectColorSetting = <K extends SettingKey>({
 	setting,
 	title,
 }: Props<K>) => {
-	const {loading, value, setValue, resetValue} = useSettingDebounced(setting);
+	const {loading, value, setValue, resetValue} = useSettingDebounced(
+		setting,
+		withBrowserCache,
+	);
 	const onChange = setValue as (newValue: string) => Promise<void>;
 
 	return (
