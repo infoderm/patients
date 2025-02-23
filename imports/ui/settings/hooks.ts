@@ -159,6 +159,52 @@ export const useSettingDebounced = <K extends SettingKey>(
 		setValue: setServerValue,
 		resetValue: resetServerValue,
 	} = useSetting(key, withDefaultFn);
+
+	const {
+		value: clientValue,
+		setValue: setClientValue,
+		sync,
+	} = useSync(
+		loading,
+		serverValue,
+		inputDebounceTimeout,
+		reactivityDebounceTimeout,
+	);
+
+	const setValue = useMemo(() => {
+		return async (newValue: UserSettings[K]) =>
+			sync(
+				() => {
+					setClientValue(newValue);
+				},
+				async () => setServerValue(newValue),
+			);
+	}, [sync, setClientValue, setServerValue]);
+
+	const resetValue = useMemo(() => {
+		return async () =>
+			sync(
+				() => {
+					setClientValue(withDefaultFn(loading, userId, key, undefined));
+				},
+				async () => resetServerValue(),
+			);
+	}, [sync, setClientValue, setServerValue]);
+
+	return {
+		loading,
+		value: clientValue,
+		setValue,
+		resetValue,
+	};
+};
+
+export const useSync = <T>(
+	loading: boolean,
+	serverValue: T,
+	inputDebounceTimeout: number,
+	reactivityDebounceTimeout: number,
+) => {
 	const [debouncedServerValue, {isPending, flush}] = useDebounce(
 		serverValue,
 		reactivityDebounceTimeout,
@@ -181,7 +227,7 @@ export const useSettingDebounced = <K extends SettingKey>(
 		setClientValue((prev) => (isPending() ? prev : debouncedServerValue));
 	}, [ignoreServer, isPending, debouncedServerValue]);
 
-	const wrap = useMemo(() => {
+	const sync = useMemo(() => {
 		let last = {};
 
 		const debouncedSetServerValue = debounce(
@@ -217,31 +263,10 @@ export const useSettingDebounced = <K extends SettingKey>(
 		};
 	}, [setIgnoreServer, flush, inputDebounceTimeout, reactivityDebounceTimeout]);
 
-	const setValue = useMemo(() => {
-		return async (newValue: UserSettings[K]) =>
-			wrap(
-				() => {
-					setClientValue(newValue);
-				},
-				async () => setServerValue(newValue),
-			);
-	}, [wrap, setClientValue, setServerValue]);
-
-	const resetValue = useMemo(() => {
-		return async () =>
-			wrap(
-				() => {
-					setClientValue(withDefaultFn(loading, userId, key, undefined));
-				},
-				async () => resetServerValue(),
-			);
-	}, [wrap, setClientValue, setServerValue]);
-
 	return {
-		loading,
 		value: clientValue,
-		setValue,
-		resetValue,
+		setValue: setClientValue,
+		sync,
 	};
 };
 
