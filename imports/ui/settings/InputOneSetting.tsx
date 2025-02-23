@@ -3,16 +3,15 @@ import React, {useState, useEffect, useMemo, startTransition} from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
-import debounce from 'debounce';
+import debounce from 'p-debounce';
 import {useDebounce} from 'use-debounce';
 
-import {type SettingKey} from '../../api/settings';
+import {type UserSettings, type SettingKey} from '../../api/settings';
 
 import {
 	TIMEOUT_INPUT_DEBOUNCE,
 	TIMEOUT_REACTIVITY_DEBOUNCE,
 } from '../constants';
-import useChanged from '../hooks/useChanged';
 
 import {useSetting} from './hooks';
 
@@ -41,58 +40,60 @@ const InputOneSetting = <K extends SettingKey>({
 	title,
 }: Props<K>) => {
 	const {loading, value, setValue} = useSetting(setting);
-	const [debouncedValue, {isPending, cancel}] = useDebounce(
+	const [debouncedValue, {isPending, flush}] = useDebounce(
 		value,
 		TIMEOUT_REACTIVITY_DEBOUNCE,
 	);
 	const [displayedValue, setDisplayedValue] = useState(value as string);
-	const [pending, setPending] = useState<Promise<void> | undefined>(undefined);
+	const [ignoreUpdates, setIgnoreUpdates] = useState(false);
 
-	const [error, setError] = useState(false);
-
-	const changed = useChanged([debouncedValue]);
-
-	useEffect(() => {
-		if (!pending && changed && debouncedValue !== undefined) {
-			setDisplayedValue((prev) =>
-				isPending() ? prev : (debouncedValue as string),
-			);
-		}
-	}, [pending, isPending, debouncedValue]);
+	const error = useMemo(
+		() => !validate(displayedValue).outcome,
+		[validate, displayedValue],
+	);
 
 	useEffect(() => {
-		const {outcome} = validate(displayedValue);
-		setError(!outcome);
-	}, [validate, displayedValue]);
+		if (ignoreUpdates) return;
+		setDisplayedValue((prev) =>
+			isPending() ? prev : (debouncedValue as string),
+		);
+	}, [ignoreUpdates, isPending, debouncedValue]);
 
-	const updateValue = useMemo(
-		() =>
-			debounce(async (newValue) => {
-				let current: Promise<void>;
+	const onChange = useMemo(() => {
+		let last = {};
+
+		const updateValue = debounce(
+			async (current: unknown, newValue: UserSettings[K]) => {
 				try {
-					current = setValue(newValue);
-					setPending(current);
-					await current;
+					await setValue(newValue);
 				} finally {
 					setTimeout(() => {
 						startTransition(() => {
-							// NOTE: This works because all method calls are queued in calling
-							// order.
-							// eslint-disable-next-line @typescript-eslint/promise-function-async
-							setPending((last) => (last === current ? undefined : last));
+							flush(); // NOTE: Fast-forward debounced state to current DB state.
+							// NOTE: Continue ignoring updates if we are not the
+							// last pending call. This works because all method
+							// calls are queued in calling order.
+							setIgnoreUpdates((prev) => (last === current ? false : prev));
 						});
-					}, TIMEOUT_REACTIVITY_DEBOUNCE);
+					}, TIMEOUT_INPUT_DEBOUNCE + TIMEOUT_REACTIVITY_DEBOUNCE);
 				}
-			}, TIMEOUT_INPUT_DEBOUNCE),
-		[setValue, setPending],
-	);
+			},
+			TIMEOUT_INPUT_DEBOUNCE,
+		);
 
-	const onChange = async (e) => {
-		cancel();
-		const newValue = sanitize(e.target.value);
-		setDisplayedValue(newValue);
-		await updateValue(newValue);
-	};
+		const _onChange = async (e) => {
+			setIgnoreUpdates(true); // NOTE: We ignore all updates.
+			const current = {};
+			last = current;
+			const newValue = sanitize(e.target.value);
+			setDisplayedValue(newValue);
+			await updateValue(current, newValue);
+			// NOTE: We will listen to updates again some timer after last update
+			// is complete.
+		};
+
+		return _onChange;
+	}, [setValue, setIgnoreUpdates]);
 
 	return (
 		<div className={className}>
