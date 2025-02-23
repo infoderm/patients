@@ -23,7 +23,7 @@ const SelectColorSetting = <K extends SettingKey>({
 	setting,
 	title,
 }: Props<K>) => {
-	const {loading, value, setValue} = useSetting(setting);
+	const {loading, value, setValue, resetValue} = useSetting(setting);
 
 	const onChange = useMemo(
 		() =>
@@ -41,7 +41,7 @@ const SelectColorSetting = <K extends SettingKey>({
 				defaultValue={value as string}
 				onChange={onChange}
 			/>
-			<SettingResetButton setting={setting} />
+			<SettingResetButton loading={loading} resetValue={resetValue} />
 		</div>
 	);
 };
