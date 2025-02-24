@@ -14,6 +14,8 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
+import {useSnackbar} from 'notistack';
+
 import patientsInsertFromEid from '../../api/endpoint/patients/insertFromEid';
 import {patientFieldsFromEid, patients} from '../../api/patients';
 
@@ -36,6 +38,8 @@ const EidCardDialogStepPreviewSingleCreate = ({
 	assert(patientId === '?');
 	const dialog = useDialog();
 	const [call, {pending}] = useCall();
+	const {enqueueSnackbar} = useSnackbar();
+
 	const onNext = async () => {
 		if (
 			await dialog((resolve) => (
@@ -60,6 +64,12 @@ const EidCardDialogStepPreviewSingleCreate = ({
 				onConfirm();
 			} catch (error: unknown) {
 				console.error(error);
+				enqueueSnackbar(
+					`Inserting patient with eid info failed: ${
+						error instanceof Error ? error.message : 'unknown'
+					}.`,
+					{variant: 'error'},
+				);
 			}
 		}
 	};
