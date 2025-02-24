@@ -68,11 +68,15 @@ import '../patients/find';
 // eslint-disable-next-line import/no-unassigned-import
 import '../patients/insert';
 // eslint-disable-next-line import/no-unassigned-import
+import '../patients/insertFromEid';
+// eslint-disable-next-line import/no-unassigned-import
 import '../patients/merge';
 // eslint-disable-next-line import/no-unassigned-import
 import '../patients/remove';
 // eslint-disable-next-line import/no-unassigned-import
 import '../patients/update';
+// eslint-disable-next-line import/no-unassigned-import
+import '../patients/updateFromEid';
 
 // eslint-disable-next-line import/no-unassigned-import
 import '../permissions/token/generate';
