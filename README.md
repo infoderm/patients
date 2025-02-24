@@ -392,6 +392,8 @@ encrypted (`age`) compressed MongoDB archive (`--archive --gzip`).
 
 ### :movie_camera: Backup
 
+    TODO docker exec patient-patient-db-backup-1 bash /script.sh /backups
+
     sh .backup/fs/backup.sh
 
 ### :film_projector: Restore
@@ -400,7 +402,15 @@ encrypted (`age`) compressed MongoDB archive (`--archive --gzip`).
 
 ### :scroll: Changelog
 
-#### Now
+#### Now (compose) TODO (should run this in CI actually)
+
+    age --decrypt -i "$KEYFILE" < 'patients.gz.age' | docker exec -i patient-patient-db-1 mongorestore --uri "mongodb://localhost:27017" --drop --nsInclude 'meteor.*' --archive --gzip
+
+#### Now (transition)
+
+    age --decrypt -i "$KEYFILE" < 'patients.gz.age' | docker exec -i patient-patient-db-1 mongorestore --uri "mongodb://localhost:27017" --drop --nsInclude 'patients.*' --nsFrom 'patients.*' --nsTo 'meteor.*' --archive --gzip
+
+#### Now (meteor-up)
 
 The backup system uses encrypted (`age`) compressed MongoDB archives
 (`--archive --gzip`). They can be restored with

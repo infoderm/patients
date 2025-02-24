@@ -708,7 +708,7 @@ jobs:
         run: |
           mongorestore --version
 
-      - name: Restore backup
+      - name: Restore backup (TODO use docker exec)
         run: |
           < private.key age --decrypt -i - backups/* | \
             mongorestore --uri mongodb://${{ steps.mongodb-container-ip-address.outputs.address }}:27017 \
