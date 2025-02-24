@@ -11,6 +11,11 @@ import useUserId from '../users/useUserId';
 import useLoggingOut from '../users/useLoggingOut';
 import useLoggingIn from '../users/useLoggingIn';
 import useItem from '../../api/publication/useItem';
+import {
+	TIMEOUT_INPUT_DEBOUNCE,
+	TIMEOUT_REACTIVITY_DEBOUNCE,
+} from '../constants';
+import {useSync} from '../../ux/hooks/useSync';
 
 const useSettingSubscription = <K extends SettingKey>(key: K) =>
 	useSubscription(byKey, [key]);
@@ -29,7 +34,7 @@ const defaultFilter = () => 'default';
 const userFilter = (userId: string) => `user-${userId}`;
 const userOrDefaultFilter = (userId: string | null) =>
 	userId === null ? defaultFilter() : userFilter(userId);
-const withBrowserCache = <K extends SettingKey>(
+export const withBrowserCache = <K extends SettingKey>(
 	loading: boolean,
 	userId: string | null,
 	key: K,
@@ -122,6 +127,7 @@ export const useSetting = <K extends SettingKey>(
 	const resetValue = useCallback(async () => resetSetting<K>(key), [key]);
 
 	return {
+		userId,
 		loading: loadingSettingSubscription || loadingSettingResult,
 		value,
 		setValue,
@@ -131,6 +137,59 @@ export const useSetting = <K extends SettingKey>(
 
 export const useSettingCached = <K extends SettingKey>(key: K) =>
 	useSetting<K>(key, withBrowserCache);
+
+export const useSettingDebounced = <K extends SettingKey>(
+	key: K,
+	withDefaultFn: typeof withDefault = withDefault,
+	inputDebounceTimeout: number = TIMEOUT_INPUT_DEBOUNCE,
+	reactivityDebounceTimeout: number = TIMEOUT_REACTIVITY_DEBOUNCE,
+) => {
+	const {
+		userId,
+		loading,
+		value: serverValue,
+		setValue: setServerValue,
+		resetValue: resetServerValue,
+	} = useSetting(key, withDefaultFn);
+
+	const {
+		value: clientValue,
+		setValue: setClientValue,
+		sync,
+	} = useSync(
+		loading,
+		serverValue,
+		inputDebounceTimeout,
+		reactivityDebounceTimeout,
+	);
+
+	const setValue = useMemo(() => {
+		return async (newValue: UserSettings[K]) =>
+			sync(
+				() => {
+					setClientValue(newValue);
+				},
+				async () => setServerValue(newValue),
+			);
+	}, [sync, setClientValue, setServerValue]);
+
+	const resetValue = useMemo(() => {
+		return async () =>
+			sync(
+				() => {
+					setClientValue(withDefaultFn(loading, userId, key, undefined));
+				},
+				async () => resetServerValue(),
+			);
+	}, [sync, setClientValue, setServerValue]);
+
+	return {
+		loading,
+		value: clientValue,
+		setValue,
+		resetValue,
+	};
+};
 
 export const settings = {
 	defaults,

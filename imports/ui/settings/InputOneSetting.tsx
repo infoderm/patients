@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useCallback, useMemo, type ChangeEvent} from 'react';
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
-import {type SettingKey} from '../../api/settings';
+import {type UserSettings, type SettingKey} from '../../api/settings';
 
-import {useSetting} from './hooks';
+import {useSettingDebounced} from './hooks';
 
 type Outcome = {
 	outcome: -1 | 0 | 1;
@@ -14,16 +14,20 @@ type Outcome = {
 	//  0 wrong input (no sync, no update)
 };
 
-type Props<K extends SettingKey> = {
+type StringSettingKey = keyof {
+	[K in SettingKey]: string extends UserSettings[K] ? 1 : never;
+};
+
+type Props<K extends StringSettingKey> = {
 	readonly className?: string;
 	readonly title?: string;
 	readonly label?: string;
 	readonly setting: K;
 	readonly sanitize?: (inputValue: string) => any;
-	readonly validate?: (x: any) => Outcome;
+	readonly validate?: (x: string) => Outcome;
 };
 
-const InputOneSetting = <K extends SettingKey>({
+const InputOneSetting = <K extends StringSettingKey>({
 	className,
 	setting,
 	sanitize = (x) => x,
@@ -31,19 +35,20 @@ const InputOneSetting = <K extends SettingKey>({
 	label,
 	title,
 }: Props<K>) => {
-	const {loading, value, setValue} = useSetting(setting);
+	const {loading, value, setValue} = useSettingDebounced<K>(setting);
 
-	const [error, setError] = useState(false);
+	const error = useMemo(
+		() => !validate(value as string).outcome,
+		[validate, value],
+	);
 
-	useEffect(() => {
-		const {outcome} = validate(value);
-		setError(!outcome);
-	}, [validate, value]);
-
-	const onChange = async (e) => {
-		const newValue = sanitize(e.target.value);
-		await setValue(newValue);
-	};
+	const onChange = useCallback(
+		async ({
+			target: {value},
+		}: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+			setValue(sanitize(value)),
+		[setValue, sanitize],
+	);
 
 	return (
 		<div className={className}>

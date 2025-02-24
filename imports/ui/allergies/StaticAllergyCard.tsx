@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {styled} from '@mui/material/styles';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import {green} from '@mui/material/colors';
-
-import debounce from 'debounce';
 
 import StaticTagCard from '../tags/StaticTagCard';
 
@@ -22,6 +20,13 @@ import ColorPicker from '../input/ColorPicker';
 
 import {myEncodeURIComponent} from '../../lib/uri';
 import changeColor from '../../api/endpoint/allergies/changeColor';
+
+import {
+	TIMEOUT_INPUT_DEBOUNCE,
+	TIMEOUT_REACTIVITY_DEBOUNCE,
+} from '../constants';
+
+import {useSync} from '../../ux/hooks/useSync';
 
 import AllergyRenamingDialog from './AllergyRenamingDialog';
 import AllergyDeletionDialog from './AllergyDeletionDialog';
@@ -61,23 +66,46 @@ type LoadedTagCardProps = {
 
 const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 	({loading, found, item}, ref) => {
-		const {result} = useAllergyStats(item.name);
+		const {_id, name, color} = item;
+		const {result} = useAllergyStats(name);
 		const {count} = result ?? {};
-		const {results: patients} = usePatientsHavingAllergy(item.name, {
+		const {results: patients} = usePatientsHavingAllergy(name, {
 			fields: StaticPatientChipProjection,
 			limit: 1,
 		});
 
-		const onChange = async (color: string) => {
-			if (color !== item.color) {
+		const {
+			value: clientValue,
+			setValue: setClientValue,
+			sync,
+		} = useSync(
+			loading,
+			color,
+			TIMEOUT_INPUT_DEBOUNCE,
+			TIMEOUT_REACTIVITY_DEBOUNCE,
+		);
+
+		const setServerValue = useCallback(
+			async (newColor: string) => {
 				try {
-					await call(changeColor, item._id, color);
-					console.log(`Changed color of allergy ${item._id} to ${color}`);
+					await call(changeColor, _id, newColor);
+					console.log(`Changed color of allergy ${_id} to ${newColor}`);
 				} catch (error: unknown) {
 					console.error(error);
 				}
-			}
-		};
+			},
+			[_id],
+		);
+
+		const onChange = useMemo(() => {
+			return async (newValue: string) =>
+				sync(
+					() => {
+						setClientValue(newValue);
+					},
+					async () => setServerValue(newValue),
+				);
+		}, [sync, setClientValue, setServerValue]);
 
 		const subheader = count === undefined ? '...' : `affecte ${count} patients`;
 
@@ -112,8 +140,8 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 				content={content}
 				actions={
 					<ColorPicker
-						defaultValue={item.color ?? '#e0e0e0'}
-						onChange={debounce(onChange, 1000)}
+						defaultValue={clientValue ?? '#e0e0e0'}
+						onChange={onChange}
 					/>
 				}
 				avatar={<AllergyAvatar>Al</AllergyAvatar>}

@@ -2,12 +2,10 @@ import React from 'react';
 
 import Typography from '@mui/material/Typography';
 
-import debounce from 'debounce';
-
 import ColorPicker from '../input/ColorPicker';
 import {type SettingKey, type UserSettings} from '../../api/settings';
 
-import {useSetting} from './hooks';
+import {useSettingDebounced, withBrowserCache} from './hooks';
 import SettingResetButton from './SettingResetButton';
 
 type Props<K extends SettingKey> = UserSettings[K] extends string
@@ -23,11 +21,11 @@ const SelectColorSetting = <K extends SettingKey>({
 	setting,
 	title,
 }: Props<K>) => {
-	const {loading, value, setValue} = useSetting(setting);
-
-	const onChange = async (newValue: string) => {
-		await setValue(newValue as UserSettings[K]);
-	};
+	const {loading, value, setValue, resetValue} = useSettingDebounced(
+		setting,
+		withBrowserCache,
+	);
+	const onChange = setValue as (newValue: string) => Promise<void>;
 
 	return (
 		<div className={className}>
@@ -35,9 +33,9 @@ const SelectColorSetting = <K extends SettingKey>({
 			<ColorPicker
 				readOnly={loading}
 				defaultValue={value as string}
-				onChange={debounce(onChange, 1000)}
+				onChange={onChange}
 			/>
-			<SettingResetButton setting={setting} />
+			<SettingResetButton loading={loading} resetValue={resetValue} />
 		</div>
 	);
 };

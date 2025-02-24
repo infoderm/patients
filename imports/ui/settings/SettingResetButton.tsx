@@ -3,16 +3,12 @@ import React, {useState} from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import {type SettingKey} from '../../api/settings';
-
-import {useSetting} from './hooks';
-
 type Props = {
-	readonly setting: SettingKey;
+	readonly loading: boolean;
+	readonly resetValue: () => Promise<void>;
 };
 
-const SettingResetButton = ({setting}: Props) => {
-	const {loading, resetValue} = useSetting(setting);
+const SettingResetButton = ({loading, resetValue}: Props) => {
 	const [resetting, setResetting] = useState(false);
 
 	const onClick = async () => {
