@@ -14,13 +14,15 @@ configure({
 
 type UserEvent = ReturnType<typeof userEvent.setup>;
 
-export type App = {
+export type User = {
 	user: UserEvent;
 	userWithoutPointerEventsCheck: UserEvent;
 	userWithRealisticTypingSpeed: UserEvent;
-} & BoundFunctions<typeof queries>;
+};
 
-export const setupApp = (): App => {
+export type App = User & BoundFunctions<typeof queries>;
+
+export const setupUser = () => {
 	const user = userEvent.setup();
 	return {
 		user,
@@ -30,6 +32,12 @@ export const setupApp = (): App => {
 		userWithRealisticTypingSpeed: user.setup({
 			delay: 100,
 		}),
+	};
+};
+
+export const setupApp = (): App => {
+	return {
+		...setupUser(),
 		...getQueriesForElement(document.body),
 	};
 };
