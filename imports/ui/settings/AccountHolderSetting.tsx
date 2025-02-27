@@ -2,7 +2,7 @@ import React from 'react';
 
 import InputOneSetting from './InputOneSetting';
 
-export default function IBANSetting({className}) {
+export default function AccountHolderSetting({className}) {
 	return (
 		<InputOneSetting
 			className={className}
