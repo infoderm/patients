@@ -38,7 +38,15 @@ const SelectColorSetting = <K extends SettingKey>({
 				defaultValue={value as string}
 				onChange={onChange}
 			/>
-			<SettingResetButton loading={loading} resetValue={resetValue} />
+			<SettingResetButton
+				aria-label={
+					ariaLabel === undefined
+						? undefined
+						: `Reset ${ariaLabel.toLowerCase()}`
+				}
+				loading={loading}
+				resetValue={resetValue}
+			/>
 		</div>
 	);
 };
