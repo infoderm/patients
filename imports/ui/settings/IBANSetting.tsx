@@ -4,7 +4,11 @@ import IBAN from 'iban';
 
 import InputOneSetting from './InputOneSetting';
 
-export default function IBANSetting({className}) {
+type Props = {
+	readonly className?: string;
+};
+
+export default function IBANSetting({className}: Props) {
 	return (
 		<InputOneSetting
 			className={className}
