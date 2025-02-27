@@ -26,5 +26,26 @@ jobs:
           grep -v '^  --start-interval=' Dockerfile > Dockerfile.patched
 
       - name: Lint Dockerfile 👕
-        run: |
-          < ./Dockerfile.patched docker run --rm -i -v ./.hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint
+        id: lint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./Dockerfile.patched
+
+      - name: Annotate PR 📣
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const output = `
+            #### Hadolint: \`${{ steps.lint.outcome }}\`
+            \`\`\`
+            ${process.env.HADOLINT_RESULTS}
+            \`\`\`
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
