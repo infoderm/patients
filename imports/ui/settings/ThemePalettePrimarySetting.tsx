@@ -9,6 +9,7 @@ type Props = {
 const ThemePaletteModeSetting = ({className}: Props) => {
 	return (
 		<SelectColorSetting
+			aria-label="Primary color for theme"
 			className={className}
 			title="Theme Primary"
 			setting="theme-palette-primary"
