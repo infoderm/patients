@@ -17,9 +17,9 @@ const SettingResetButton = ({loading, resetValue}: Props) => {
 			await resetValue();
 		} catch (error: unknown) {
 			console.error(error);
+		} finally {
+			setResetting(false);
 		}
-
-		setResetting(false);
 	};
 
 	return (
