@@ -12,11 +12,13 @@ type Props<K extends SettingKey> = UserSettings[K] extends string
 	? {
 			className?: string;
 			title?: string;
+			'aria-label'?: string;
 			setting: K;
 	  }
 	: never;
 
 const SelectColorSetting = <K extends SettingKey>({
+	'aria-label': ariaLabel,
 	className,
 	setting,
 	title,
@@ -31,6 +33,7 @@ const SelectColorSetting = <K extends SettingKey>({
 		<div className={className}>
 			{title && <Typography variant="h4">{title}</Typography>}
 			<ColorPicker
+				aria-label={ariaLabel}
 				readOnly={loading}
 				defaultValue={value as string}
 				onChange={onChange}

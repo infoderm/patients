@@ -14,6 +14,7 @@ import {DEFAULT_CONVERTER, converters} from '../transformers';
 import PickerDialog from './PickerDialog';
 
 type Props = {
+	readonly 'aria-label'?: string;
 	readonly defaultValue: string;
 	readonly onChange: (color: string) => void;
 	readonly convert?: keyof typeof converters;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 const ColorPicker = ({
+	'aria-label': ariaLabel,
 	defaultValue,
 	onChange,
 	convert = DEFAULT_CONVERTER,
@@ -49,6 +51,7 @@ const ColorPicker = ({
 					color: color(value).isLight() ? '#111' : '#ddd',
 				}}
 				label={value}
+				aria-label={ariaLabel}
 				onClick={
 					readOnly
 						? undefined
