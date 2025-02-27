@@ -2,7 +2,11 @@ import React from 'react';
 
 import InputOneSetting from './InputOneSetting';
 
-export default function AccountHolderSetting({className}) {
+type Props = {
+	readonly className?: string;
+};
+
+export default function AccountHolderSetting({className}: Props) {
 	return (
 		<InputOneSetting
 			className={className}
