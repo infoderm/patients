@@ -63,7 +63,7 @@ const ColorPicker = ({
 			{!readOnly && showPicker && (
 				<PickerDialog
 					value={value}
-					onClick={() => {
+					onClose={() => {
 						setShowPicker(false);
 						onChange(value);
 					}}
