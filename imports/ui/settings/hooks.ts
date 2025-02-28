@@ -177,6 +177,13 @@ export const useSettingDebounced = <K extends SettingKey>(
 				() => {
 					setClientValue(newValue);
 				},
+				// TODO: Since this is debounced, very quick logout/login
+				// cycles (as in tests) will cause the call to target whatever
+				// is the current user after the debounce timeout. We should
+				// have a way to at least pin the action to a specific user at
+				// call time. On top of that, `useSync` should gives us the
+				// ability to either `cancel` or `flush` the debounced call
+				// queue.
 				async () => setServerValue(newValue),
 			);
 	}, [sync, setClientValue, setServerValue]);
@@ -187,6 +194,13 @@ export const useSettingDebounced = <K extends SettingKey>(
 				() => {
 					setClientValue(withDefaultFn(loading, userId, key, undefined));
 				},
+				// TODO: Since this is debounced, very quick logout/login
+				// cycles (as in tests) will cause the call to target whatever
+				// is the current user after the debounce timeout. We should
+				// have a way to at least pin the action to a specific user at
+				// call time. On top of that, `useSync` should gives us the
+				// ability to either `cancel` or `flush` the debounced call
+				// queue.
 				async () => resetServerValue(),
 			);
 	}, [sync, setClientValue, setServerValue]);
