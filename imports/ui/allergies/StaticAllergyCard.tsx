@@ -140,6 +140,7 @@ const LoadedTagCard = React.forwardRef<any, LoadedTagCardProps>(
 				content={content}
 				actions={
 					<ColorPicker
+						aria-label={`Color for ${name}`}
 						defaultValue={clientValue ?? '#e0e0e0'}
 						onChange={onChange}
 					/>
