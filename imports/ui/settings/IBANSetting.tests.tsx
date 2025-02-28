@@ -57,4 +57,26 @@ client(__filename, () => {
 
 		assert.strictEqual(iban.value, validInput.replaceAll(' ', ''));
 	});
+
+	it('sanitizes input when pasting', async () => {
+		const {setupUser} = await import('../../../test/app/client/fixtures');
+		const username = randomUserId();
+		const password = randomPassword();
+		await createUserWithPassword(username, password);
+		await loginWithPassword(username, password);
+
+		const {findByLabelText} = render(<IBANSetting />);
+
+		const iban = (await findByLabelText('IBAN', {
+			selector: 'input:not([disabled])',
+		})) as HTMLInputElement;
+
+		const {user} = setupUser();
+
+		const validInput = faker.finance.iban({formatted: true});
+		await user.clear(iban);
+		await user.paste(validInput);
+
+		assert.strictEqual(iban.value, validInput.replaceAll(' ', ''));
+	});
 });
