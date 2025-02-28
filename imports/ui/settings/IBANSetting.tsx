@@ -14,7 +14,7 @@ export default function IBANSetting({className}: Props) {
 			className={className}
 			setting="iban"
 			label="IBAN"
-			sanitize={(s) => s.trim()}
+			sanitize={(s) => s.replaceAll(' ', '')}
 			validate={(s) => ({
 				outcome: IBAN.isValid(s) ? 1 : 0,
 			})}
