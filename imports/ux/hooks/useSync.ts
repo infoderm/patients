@@ -3,6 +3,8 @@ import {startTransition, useEffect, useMemo, useState} from 'react';
 import debounce from 'p-debounce';
 import {useDebounce} from 'use-debounce';
 
+import useIsMounted from '../../ui/hooks/useIsMounted';
+
 export const useSync = <T>(
 	loading: boolean,
 	serverValue: T,
@@ -31,11 +33,16 @@ export const useSync = <T>(
 		setClientValue((prev) => (isPending() ? prev : debouncedServerValue));
 	}, [ignoreServer, isPending, debouncedServerValue]);
 
+	const isMounted = useIsMounted();
+
 	const sync = useMemo(() => {
 		let last = {};
 
 		const debouncedSetServerValue = debounce(
 			async (current: unknown, setServerValue: () => Promise<void>) => {
+				// TODO: We should let the consumer decide between cancelling
+				// or flushing the debounced calls on unmount.
+				if (!isMounted()) return;
 				try {
 					await setServerValue();
 				} finally {
@@ -65,7 +72,13 @@ export const useSync = <T>(
 			// NOTE: We will listen to updates again some time after last update
 			// is complete.
 		};
-	}, [setIgnoreServer, flush, inputDebounceTimeout, reactivityDebounceTimeout]);
+	}, [
+		setIgnoreServer,
+		flush,
+		isMounted,
+		inputDebounceTimeout,
+		reactivityDebounceTimeout,
+	]);
 
 	return {
 		value: clientValue,
