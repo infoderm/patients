@@ -12,8 +12,8 @@ import findOneSync from './publication/findOneSync';
 
 export type UserSettings = {
 	'theme-palette-mode': PaletteMode;
-	'theme-palette-primary': (typeof indigo)[500];
-	'theme-palette-secondary': typeof pink.A400;
+	'theme-palette-primary': string;
+	'theme-palette-secondary': string;
 	'navigation-drawer-is-open': 'open' | 'closed';
 	'books-sorting-order': -1 | 1;
 	currency: 'EUR';
