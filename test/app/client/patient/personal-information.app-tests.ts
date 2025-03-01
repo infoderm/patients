@@ -127,7 +127,7 @@ const editPatient = async (
 	if (Array.isArray(allergies)) {
 		await userWithRealisticTypingSpeed.type(
 			await findByRole('textbox', {name: 'Allergies'}),
-			allergies.join('[Enter]') + '[Enter]',
+			allergies.join('{Enter}') + '{Enter}',
 		);
 	}
 
@@ -154,21 +154,21 @@ const editPatient = async (
 	if (Array.isArray(phone)) {
 		await userWithRealisticTypingSpeed.type(
 			await findByRole('textbox', {name: 'Numéro de téléphone'}),
-			phone.join('[Enter]') + '[Enter]',
+			phone.join('{Enter}') + '{Enter}',
 		);
 	}
 
 	if (Array.isArray(doctors)) {
 		await userWithRealisticTypingSpeed.type(
 			await findByRole('textbox', {name: 'Médecin Traitant'}),
-			doctors.join('[Enter]') + '[Enter]',
+			doctors.join('{Enter}') + '{Enter}',
 		);
 	}
 
 	if (Array.isArray(insurances)) {
 		await userWithRealisticTypingSpeed.type(
 			await findByRole('textbox', {name: 'Mutuelle'}),
-			insurances.join('[Enter]') + '[Enter]',
+			insurances.join('{Enter}') + '{Enter}',
 		);
 	}
 
