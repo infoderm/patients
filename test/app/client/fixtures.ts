@@ -63,9 +63,9 @@ export const fillIn = async (
 const flakyCloseModals = async ({user}: {user: UserEvent}) => {
 	// This is to escape any modals that have been opened by previous tests.
 	// TODO find way to do this in cleanup hook
-	await user.keyboard('[Escape]');
-	await user.keyboard('[Escape]');
-	await user.keyboard('[Escape]');
+	await user.keyboard('{Escape}');
+	await user.keyboard('{Escape}');
+	await user.keyboard('{Escape}');
 };
 
 export const createUserWithPasswordAndLogin = async (
