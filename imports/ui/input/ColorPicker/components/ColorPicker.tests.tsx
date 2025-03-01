@@ -63,4 +63,34 @@ client(__filename, () => {
 			/Timed out in waitForElementToBeRemoved/,
 		);
 	});
+
+	it('should close picker dialog on {Escape} after leaving input', async () => {
+		const {setupUser} = await import('../../../../../test/app/client/fixtures');
+		const {findByRole} = render(
+			<ColorPicker
+				aria-label="test-label"
+				defaultValue="#000"
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				onChange={() => {}}
+			/>,
+		);
+
+		const button = await findByRole('button', {name: 'test-label'});
+
+		const {user} = setupUser();
+		await user.click(button);
+
+		const hex = await findByRole('textbox', {name: 'hex'});
+
+		const validInput = faker.color.rgb().toUpperCase();
+
+		await user.clear(hex);
+		await user.paste(validInput);
+
+		await Promise.all([
+			waitForElementToBeRemoved(hex),
+			user.keyboard('{Tab}'),
+			user.keyboard('{Escape}'),
+		]);
+	});
 });
