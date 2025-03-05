@@ -165,6 +165,7 @@ jobs:
         with:
           container: mongodb
           timeout: 60
+          debug: true
 
       - name: Configure server
         id: configure-server
@@ -203,6 +204,7 @@ jobs:
         with:
           container: server
           timeout: 60
+          debug: true
 
       - name: Wait for server container port to be available
         uses: ./.github/actions/network/is-reachable
@@ -210,21 +212,6 @@ jobs:
           timeout: 60
           host: ${{ steps.server-container-ip-address.outputs.address }}
           port: ${{ matrix.port }}
-
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show server container logs
-        if: always()
-        run: |
-          docker container logs --timestamps server
 
       - name: Run healthcheck
         run: |
@@ -236,21 +223,7 @@ jobs:
         with:
           container: server
           timeout: 60
-
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show server container logs
-        if: always()
-        run: |
-          docker container logs --timestamps server
+          debug: true
 
       - name: Stop Server container
         run: |
@@ -261,19 +234,8 @@ jobs:
           docker container stop mongodb
 
       - name: Show docker containers
-        if: always()
         run: |
           docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show server container logs
-        if: always()
-        run: |
-          docker container logs --timestamps server
 
       - name: Remove Server container
         run: |
@@ -284,7 +246,6 @@ jobs:
           docker container rm mongodb
 
       - name: Show docker containers
-        if: always()
         run: |
           docker ps -a
 
@@ -643,16 +604,6 @@ jobs:
           timeout: 15
           debug: true
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show backup container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-container
-
       - name: Verify backup files
         env:
           DELAY: 30
@@ -747,16 +698,6 @@ jobs:
         if: always()
         run: |
           docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show backup container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-container
 
       - name: Remove backup container
         run: |
@@ -897,16 +838,6 @@ jobs:
           timeout: 15
           debug: true
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show backup retention policy container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-retention-policy-container
-
       - name: Verify backup files
         env:
           DELAY: 30
@@ -978,11 +909,6 @@ jobs:
         if: always()
         run: |
           docker ps -a
-
-      - name: Show backup retention policy container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-retention-policy-container
 
       - name: Remove backup retention policy container
         run: |
