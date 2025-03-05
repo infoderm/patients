@@ -1,0 +1,28 @@
+name: debug
+description: >
+  Debugs a container.
+
+inputs:
+
+  container:
+    required: true
+
+runs:
+
+  using: composite
+
+  steps:
+
+    - name: Show container status
+      env:
+        NAME_OR_ID: ${{ inputs.container }}
+      shell: bash
+      run: |
+        docker ps -a -f name="${NAME_OR_ID}"
+
+    - name: Show container logs
+      env:
+        NAME_OR_ID: ${{ inputs.container }}
+      shell: bash
+      run: |
+        docker container logs --timestamps "${NAME_OR_ID}"

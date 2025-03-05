@@ -33,3 +33,9 @@ runs:
         CONTAINER_IP_ADDRESS="$(docker container inspect --format '{{ range.NetworkSettings.Networks }}{{ .IPAddress }}{{ end }}' "${NAME_OR_ID}")"
         echo "address=${CONTAINER_IP_ADDRESS}" >> "$GITHUB_OUTPUT"
         test -n "${CONTAINER_IP_ADDRESS}"
+
+    - name: Debug container in case of failure
+      if: failure()
+      uses: ./.github/actions/docker/container/debug
+      with:
+        container: ${{ inputs.container }}

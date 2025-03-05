@@ -123,6 +123,7 @@ jobs:
             .github/actions/docker/container/ip-address/action.yml
             .github/actions/docker/container/is-healthy/action.yml
             .github/actions/docker/container/is-running/action.yml
+            .github/actions/docker/container/debug/action.yml
             .github/actions/network/is-reachable/action.yml
           sparse-checkout-cone-mode: false
 
@@ -211,21 +212,6 @@ jobs:
           host: ${{ steps.server-container-ip-address.outputs.address }}
           port: ${{ matrix.port }}
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show server container logs
-        if: always()
-        run: |
-          docker container logs --timestamps server
-
       - name: Run healthcheck
         run: |
           timeout 60 bash -c \
@@ -237,56 +223,45 @@ jobs:
           container: server
           timeout: 60
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show server container logs
-        if: always()
-        run: |
-          docker container logs --timestamps server
-
       - name: Stop Server container
         run: |
           docker container stop server
+
+      - name: Debug server container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: server
 
       - name: Stop MongoDB container
         run: |
           docker container stop mongodb
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show server container logs
-        if: always()
-        run: |
-          docker container logs --timestamps server
+      - name: Debug mongodb container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: mongodb
 
       - name: Remove Server container
         run: |
           docker container rm server
 
+      - name: Debug server container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: server
+
       - name: Remove MongoDB container
         run: |
           docker container rm mongodb
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
+      - name: Debug mongodb container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: mongodb
 
       - name: Delete network
         run: |
@@ -549,6 +524,7 @@ jobs:
             .github/actions/docker/container/ip-address/action.yml
             .github/actions/docker/container/is-healthy/action.yml
             .github/actions/docker/container/is-running/action.yml
+            .github/actions/docker/container/debug/action.yml
             .github/actions/network/is-reachable/action.yml
           sparse-checkout-cone-mode: false
 
@@ -641,17 +617,6 @@ jobs:
         with:
           container: backup-container
           timeout: 15
-          debug: true
-
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show backup container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-container
 
       - name: Verify backup files
         env:
@@ -720,56 +685,57 @@ jobs:
             --nsTo 'meteor.*' \
             --archive --gzip
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
+      - name: Debug mongodb container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: mongodb
 
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show backup container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-container
+      - name: Debug backup-container container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: backup-container
 
       - name: Stop backup container
         run: |
           docker container stop backup-container
 
+      - name: Debug backup-container container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: backup-container
+
       - name: Stop MongoDB container
         run: |
           docker container stop mongodb
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show mongodb container logs
-        if: always()
-        run: |
-          docker container logs --timestamps mongodb
-
-      - name: Show backup container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-container
+      - name: Debug mongodb container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: mongodb
 
       - name: Remove backup container
         run: |
           docker container rm backup-container
 
+      - name: Debug backup-container container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: backup-container
+
       - name: Remove MongoDB container
         run: |
           docker container rm mongodb
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
+      - name: Debug mongodb container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: mongodb
 
 
   build-backup-retention-policy:
@@ -829,6 +795,7 @@ jobs:
           sparse-checkout: |
             .github/actions/docker/container/is-healthy/action.yml
             .github/actions/docker/container/is-running/action.yml
+            .github/actions/docker/container/debug/action.yml
           sparse-checkout-cone-mode: false
 
       - name: Get image URL
@@ -895,17 +862,6 @@ jobs:
         with:
           container: backup-retention-policy-container
           timeout: 15
-          debug: true
-
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show backup retention policy container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-retention-policy-container
 
       - name: Verify backup files
         env:
@@ -960,38 +916,32 @@ jobs:
             sleep "${INTERVAL}"
           done
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
 
-      - name: Show backup retention policy container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-retention-policy-container
+      - name: Debug backup-retention-policy-container container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: backup-retention-policy-container
 
       - name: Stop backup retention policy container
         run: |
           docker container stop backup-retention-policy-container
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
-
-      - name: Show backup retention policy container logs
-        if: always()
-        run: |
-          docker container logs --timestamps backup-retention-policy-container
+      - name: Debug backup-retention-policy-container container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: backup-retention-policy-container
 
       - name: Remove backup retention policy container
         run: |
           docker container rm backup-retention-policy-container
 
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
+      - name: Debug backup-retention-policy-container container in case of failure
+        if: failure()
+        uses: ./.github/actions/docker/container/debug
+        with:
+          container: backup-retention-policy-container
 
 
   test-deploy-with-backup:
@@ -1076,7 +1026,6 @@ jobs:
         with:
           container: ${{ steps.patient-db-container.outputs.id }}
           timeout: 60
-          debug: true
 
       - id: patient-db-backup-container
         uses: ./.github/actions/docker/compose/container
@@ -1089,7 +1038,6 @@ jobs:
         with:
           container: ${{ steps.patient-db-backup-container.outputs.id }}
           timeout: 15
-          debug: true
 
       - id: patient-db-backup-retention-policy-container
         uses: ./.github/actions/docker/compose/container
@@ -1102,7 +1050,6 @@ jobs:
         with:
           container: ${{ steps.patient-db-backup-retention-policy-container.outputs.id }}
           timeout: 15
-          debug: true
 
       - name: Wait for web port to be available
         uses: ./.github/actions/network/is-reachable
@@ -1121,7 +1068,6 @@ jobs:
         with:
           container: ${{ steps.patient-web-container.outputs.id }}
           timeout: 60
-          debug: true
 
       - name: Call healthcheck endpoint
         run: |
@@ -1132,35 +1078,6 @@ jobs:
         run: |
           timeout 60 bash -c \
             'node scripts/healthcheck.cjs http://localhost:${{ matrix.port }}/api/healthcheck'
-
-      - name: Show compose containers
-        if: always()
-        run: |
-          # shellcheck disable=SC2086
-          docker compose ${FLAGS} ps
-
-      - name: Show all compose containers
-        if: always()
-        run: |
-          # shellcheck disable=SC2086
-          docker compose ${FLAGS} ps -a
-
-      - name: Show compose services
-        if: always()
-        run: |
-          # shellcheck disable=SC2086
-          docker compose ${FLAGS} ps --services
-
-      - name: Show compose logs
-        if: always()
-        run: |
-          # shellcheck disable=SC2086
-          docker compose ${FLAGS} logs
-
-      - name: Show docker containers
-        if: always()
-        run: |
-          docker ps -a
 
       - name: Stop
         run: |
