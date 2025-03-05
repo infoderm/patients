@@ -39,6 +39,23 @@ runs:
         timeout "${TIMEOUT}" bash -c \
          'until docker inspect --format "{{json .State.Health}}" "${NAME_OR_ID}" | jq -e ".Status == \"healthy\"" ; do sleep "${POLLING_INTERVAL}"; done'
 
+    - name: Show docker containers
+      if: fromJSON(inputs.debug) && failure()
+      shell: bash
+      run: |
+        docker ps -a
+
+    - name: Show container logs
+      if: fromJSON(inputs.debug) && failure()
+
+      env:
+        NAME_OR_ID: ${{ inputs.container }}
+
+      shell: bash
+
+      run: |
+        docker container logs --timestamps "${NAME_OR_ID}"
+
     - name: Debug HEALTHCHECK
 
       if: fromJSON(inputs.debug) && failure()
