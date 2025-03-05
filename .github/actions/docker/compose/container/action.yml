@@ -37,3 +37,9 @@ runs:
         CONTAINER_ID="$(docker compose ${FLAGS} ps -q "${SERVICE}")"
         echo "id=${CONTAINER_ID}" >> "$GITHUB_OUTPUT"
         test -n "${CONTAINER_ID}"
+
+    - name: Debug compose in case of failure
+      if: failure()
+      uses: ./.github/actions/docker/compose/debug
+      with:
+        compose-flags: ${{ inputs.compose-flags }}

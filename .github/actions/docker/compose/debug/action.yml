@@ -1,0 +1,38 @@
+name: compose-debug
+description: >
+  Debugs compose deployment.
+
+inputs:
+
+  compose-flags:
+    default: ''
+
+outputs:
+
+  id:
+    description: >
+      The input service's container id.
+    value: ${{ steps.fetch.outputs.id }}
+
+runs:
+
+  using: composite
+
+  steps:
+    - name: Show compose services
+      env:
+        FLAGS: ${{ inputs.compose-flags }}
+      run: |
+        # shellcheck disable=SC2086
+        docker compose ${FLAGS} ps -a
+
+    - name: Show compose logs
+      env:
+        FLAGS: ${{ inputs.compose-flags }}
+      run: |
+        # shellcheck disable=SC2086
+        docker compose ${FLAGS} logs
+
+    - name: Show docker containers
+      run: |
+        docker ps -a
