@@ -45,21 +45,68 @@ jobs:
         with:
           dockerfile: ${{ matrix.dockerfile }}.patched
 
+      - name: Clean up previous annotations  🧹
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile }}
+        with:
+          script: |
+            const dockerfile = process.env.DOCKERFILE;
+
+            try {
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+              });
+
+              for (const comment of comments) {
+                try {
+                  if (comment.user.login === 'github-actions[bot]' &&
+                    comment.body.includes(`#### Hadolint for ${dockerfile}:`)) {
+                    await github.rest.issues.deleteComment({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      comment_id: comment.id,
+                    });
+                    core.info(`Deleted comment ${comment.id} for ${dockerfile}`);
+                  }
+                } catch (deleteError) {
+                  core.error(`Failed to delete ${dockerfile} comment ${comment.id}: ${deleteError.message}`);
+                }
+              }
+            } catch (mainError) {
+              core.error(`Matrix comment handling failed for ${dockerfile}: ${mainError.message}`);
+              core.setFailed(`Hadolint comment workflow failed for ${dockerfile}`);
+            }
+
       - name: Annotate PR 📣
         uses: actions/github-script@v7
         if: github.event_name == 'pull_request'
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile }}
         with:
           script: |
+            const dockerfile = process.env.DOCKERFILE;
+
             const output = `
-            #### Hadolint: \`${{ steps.lint.outcome }}\`
+            #### Hadolint for ${dockerfile}: \`${{ steps.lint.outcome }}\`
             \`\`\`
             ${process.env.HADOLINT_RESULTS}
             \`\`\`
             `;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            try {
+              const newComment = await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              });
+
+              core.info(`Created new comment for ${dockerfile}: ${newComment.data.id}`);
+            } catch (createError) {
+              core.error(`Failed to create ${dockerfile} comment: ${createError.message}`);
+              core.setFailed(`Failed to create comment for ${dockerfile}`);
+            }
