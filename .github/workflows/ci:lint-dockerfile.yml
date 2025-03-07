@@ -20,6 +20,10 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
+        dockerfile:
+          - ./Dockerfile
+          - .deploy/backup/Dockerfile
+          - .deploy/backup-retention-policy/Dockerfile
 
     runs-on: ${{ matrix.platform }}
 
@@ -30,14 +34,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Work around https://github.com/hadolint/hadolint/issues/978
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile }}
         run: |
-          grep -v '^  --start-interval=' Dockerfile > Dockerfile.patched
+          grep -v '^  --start-interval=' "${DOCKERFILE}" > "${DOCKERFILE}.patched"
 
       - name: Lint Dockerfile 👕
         id: lint
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ./Dockerfile.patched
+          dockerfile: ${{ matrix.dockerfile }}.patched
 
       - name: Annotate PR 📣
         uses: actions/github-script@v7
