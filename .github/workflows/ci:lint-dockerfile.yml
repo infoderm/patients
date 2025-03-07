@@ -17,6 +17,9 @@ jobs:
     name: Continuous integration (lint dockerfile)
 
     strategy:
+
+      fail-fast: false
+
       matrix:
         platform:
           - ubuntu-latest
