@@ -98,6 +98,7 @@ WORKDIR /home/build/dist/bundle/programs/server
 RUN meteor npm install
 
 # NOTE: Check we have all required libraries for `node-canvas`.
+# hadolint ignore=SC2015
 RUN output="$(ldd npm/node_modules/canvas/build/Release/canvas.node 2>&1)" \
   || { printf '%s\n' "${output}" >&2; exit 1; } \
   && printf '%s\n' "${output}" | grep "=> not found" && exit 1 || true
