@@ -37,7 +37,11 @@ COPY --chown=build:build [ \
 ]
 
 RUN echo "export METEOR_LOCAL_RELEASE=$(sed -n 's/^METEOR@\([0-9][0-9]*.*\)$/\1/p' src/.meteor/release)" >> ./.env
+
+# hadolint ignore=SC1091
 RUN . ./.env; echo "export METEOR_EXECUTABLE_VERSION=${METEOR_LOCAL_RELEASE}" >> ./.env
+
+# hadolint ignore=SC1091
 RUN . ./.env; curl "https://install.meteor.com?release=${METEOR_EXECUTABLE_VERSION}" | sh
 
 ENV PATH="/home/build/.meteor:${PATH}"
@@ -52,6 +56,7 @@ ENV \
   NODE_ARCH="linux-x64" \
   NODE_INSTALL_PATH="/home/build/node"
 
+# hadolint ignore=SC1091
 RUN . ./.env; \
   mkdir -p "${NODE_INSTALL_PATH}" && \
   curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz" | \
