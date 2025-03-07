@@ -62,36 +62,37 @@ RUN . ./.env; \
 ENV \
   PUPPETEER_SKIP_DOWNLOAD="true"
 
+WORKDIR /home/build/src
+
 COPY --chown=build:build [ \
   "./package.json", \
   "./package-lock.json", \
-  "/home/build/src/" \
+  "./" \
 ]
 
-RUN cd src && \
-  meteor npm clean-install
+RUN meteor npm clean-install
 
 
 # NOTE Build app from sources
 
-COPY --chown=build:build ./types /home/build/src/types
-COPY --chown=build:build ./imports /home/build/src/imports
-COPY --chown=build:build ./server /home/build/src/server
-COPY --chown=build:build ./client /home/build/src/client
-COPY --chown=build:build ./.meteor /home/build/src/.meteor
+COPY --chown=build:build ./types types
+COPY --chown=build:build ./imports imports
+COPY --chown=build:build ./server server
+COPY --chown=build:build ./client client
+COPY --chown=build:build ./.meteor .meteor
 COPY --chown=build:build [ \
   "./tsconfig.json", \
-  "/home/build/src/" \
+  "./" \
 ]
 
-RUN cd src && \
-  meteor npm run build -- ../dist --directory --architecture os.linux.x86_64 --server-only
+RUN meteor npm run build -- ../dist --directory --architecture os.linux.x86_64 --server-only
 
-RUN cd dist/bundle/programs/server && \
-  meteor npm install
+WORKDIR /home/build/dist/bundle/programs/server
+
+RUN meteor npm install
 
 # NOTE: Check we have all required libraries for `node-canvas`.
-RUN output="$(ldd dist/bundle/programs/server/npm/node_modules/canvas/build/Release/canvas.node 2>&1)" \
+RUN output="$(ldd npm/node_modules/canvas/build/Release/canvas.node 2>&1)" \
   || { printf '%s\n' "${output}" >&2; exit 1; } \
   && printf '%s\n' "${output}" | grep "=> not found" && exit 1 || true
 
