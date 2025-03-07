@@ -6,6 +6,8 @@ ARG PORT=3000
 
 FROM docker.io/debian:${DEBIAN_VERSION}-slim AS build
 
+# SEE: https://github.com/hadolint/hadolint/wiki/DL4006.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # NOTE Install build tools
 
