@@ -24,6 +24,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     timeout-minutes: 2
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
