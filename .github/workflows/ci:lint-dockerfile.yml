@@ -15,7 +15,14 @@ jobs:
 
   lint:
     name: Continuous integration (lint dockerfile)
-    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.platform }}
+
     timeout-minutes: 2
     steps:
       - name: Checkout 🛎️
