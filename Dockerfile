@@ -18,8 +18,9 @@ RUN apt-get update && \
 
 # NOTE Create $USER and its $HOME
 
-RUN useradd --create-home --shell /bin/bash --uid 1000 --user-group build
-RUN chown -R build:build /home/build/
+RUN \
+  useradd --create-home --shell /bin/bash --uid 1000 --user-group build && \
+  chown -R build:build /home/build/
 
 
 # NOTE Switch to $USER and $HOME
