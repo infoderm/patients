@@ -1,4 +1,4 @@
-failure-threshold: error
+failure-threshold: style
 
 trustedRegistries:
   - docker.io
