@@ -1,9 +1,9 @@
 FROM alpine:3.21.3
 
 RUN apk add --no-cache \
-  dcron \
-  bash \
-  python3
+  dcron=4.6-r0 \
+  bash=5.2.37-r0 \
+  python3=3.12.9-r0
 
 COPY .deploy/backup-retention-policy/script.sh /script.sh
 COPY .deploy/backup-retention-policy/entrypoint.sh /entrypoint.sh
