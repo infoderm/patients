@@ -1,0 +1,28 @@
+name: ci:lint-unused
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    name: Continuous integration (lint-unused)
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install 💾
+        uses: ./.github/actions/install
+
+      - name: Search for unused code and dependencies 🧹
+        run: npm run lint-unused
