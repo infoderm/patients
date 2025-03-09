@@ -11,6 +11,8 @@ import {type Authentication} from '../Authentication';
 import type ArgsSchema from '../ArgsSchema';
 import type InferArgs from '../InferArgs';
 
+import isNonAppTest from '../../app/isNonAppTest';
+
 import type Params from './Params';
 import type Endpoint from './Endpoint';
 import invoke from './invoke';
@@ -19,6 +21,16 @@ import type Executor from './Executor';
 import type Simulator from './Simulator';
 import {type Context} from './Context';
 import type ContextFor from './ContextFor';
+
+let isServerRegistrationOpen = false;
+
+export const openServerRegistration = () => {
+	isServerRegistrationOpen = true;
+};
+
+export const closeServerRegistration = () => {
+	isServerRegistrationOpen = false;
+};
 
 const define = <
 	S extends ArgsSchema,
@@ -48,24 +60,30 @@ const define = <
 		options: simulate ? {returnStubValue: false, ...options} : options,
 	};
 
-	if (testOnly) {
-		if (!isTest()) {
-			// NOTE Do not publish endpoint if not testing.
-			return endpoint;
-		}
-
-		console.warn(`Publishing test-only method '${name}'.`);
+	if (testOnly && !isTest()) {
+		// NOTE Do not publish endpoint if not testing.
+		return endpoint;
 	}
 
-	Meteor.methods({
-		async [name](...args: any[]) {
-			return invoke(
-				endpoint,
-				this as unknown as ContextFor<Auth>,
-				args as InferArgs<S>,
-			);
-		},
-	});
+	if (
+		Meteor.isClient ||
+		(Meteor.isServer &&
+			(isServerRegistrationOpen || isNonAppTest() || testOnly))
+	) {
+		if (testOnly) {
+			console.warn(`Publishing test-only method '${name}'.`);
+		}
+
+		Meteor.methods({
+			async [name](...args: any[]) {
+				return invoke(
+					endpoint,
+					this as unknown as ContextFor<Auth>,
+					args as InferArgs<S>,
+				);
+			},
+		});
+	}
 
 	return endpoint;
 };
