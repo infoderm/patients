@@ -1,0 +1,26 @@
+{
+  "entry": [
+	"server/main.ts!",
+	"client/main.tsx!",
+	"scripts/**",
+	".deploy/**",
+	".upgrade/**",
+	"**/*.tests.ts",
+	"**/*.tests.tsx",
+	"**/*.app-tests.ts"
+  ],
+  "project": [
+	"imports/**!",
+	"server/**!",
+	"client/**!"
+  ],
+  "ignore": [
+	".meteor/local/**"
+  ],
+  "ignoreDependencies": [
+	"mongodb",
+	"bson",
+	"@emotion/cache",
+	"semver"
+  ]
+}
