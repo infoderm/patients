@@ -10,10 +10,6 @@ import '../imports/api/endpoint/_register/enabled';
 import atStartup from '../imports/app/atStartup';
 import scheduleAllMigrations from '../imports/migrations/scheduleAll';
 
-// DECLARE ALL ENABLED PUBLICATIONS
-// eslint-disable-next-line import/no-unassigned-import
-import './publication/_register/enabled';
-
 import ics from './api/ics/index';
 import healthcheck from './api/healthcheck/index';
 
@@ -22,5 +18,14 @@ WebApp.connectHandlers.use('/api/ics', ics);
 WebApp.connectHandlers.use('/api/healthcheck', healthcheck);
 
 atStartup(async () => {
+	// DECLARE ALL ENABLED PUBLICATIONS
+	const {closeServerRegistration, openServerRegistration} = await import(
+		'../imports/api/endpoint/define'
+	);
+
+	openServerRegistration();
+	await import('./publication/_register/enabled');
+	closeServerRegistration();
+
 	await scheduleAllMigrations();
 });

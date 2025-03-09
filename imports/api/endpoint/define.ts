@@ -19,6 +19,17 @@ import type Executor from './Executor';
 import type Simulator from './Simulator';
 import {type Context} from './Context';
 import type ContextFor from './ContextFor';
+import isNonAppTest from '../../app/isNonAppTest';
+
+let isServerRegistrationOpen = false;
+
+export const openServerRegistration = () => {
+	isServerRegistrationOpen = true;
+};
+
+export const closeServerRegistration = () => {
+	isServerRegistrationOpen = false;
+};
 
 const define = <
 	S extends ArgsSchema,
@@ -57,15 +68,24 @@ const define = <
 		console.warn(`Publishing test-only method '${name}'.`);
 	}
 
-	Meteor.methods({
-		async [name](...args: any[]) {
-			return invoke(
-				endpoint,
-				this as unknown as ContextFor<Auth>,
-				args as InferArgs<S>,
-			);
-		},
-	});
+	if (
+		Meteor.isClient ||
+			(
+				Meteor.isServer && (
+					isServerRegistrationOpen || isNonAppTest() || testOnly
+				)
+			)
+	) {
+		Meteor.methods({
+			async [name](...args: any[]) {
+				return invoke(
+					endpoint,
+					this as unknown as ContextFor<Auth>,
+					args as InferArgs<S>,
+				);
+			},
+		});
+	}
 
 	return endpoint;
 };
