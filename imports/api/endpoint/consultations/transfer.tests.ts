@@ -9,9 +9,10 @@ import {newConsultation} from '../../_dev/populate/consultations';
 
 import invoke from '../invoke';
 
+import consultationsTransfer from './transfer';
+
 server(__filename, () => {
 	it('can transfer consultation', async () => {
-		const {default: consultationsTransfer} = await import('./transfer');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
@@ -44,7 +45,6 @@ server(__filename, () => {
 	});
 
 	it("cannot transfer other user's consultation", async () => {
-		const {default: consultationsTransfer} = await import('./transfer');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});

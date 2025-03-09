@@ -15,6 +15,9 @@ import {newConsultationFormData} from '../../api/_dev/populate/consultations';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 import call from '../../api/endpoint/call';
 
+import patientsInsert from '../../api/endpoint/patients/insert';
+import consultationsInsert from '../../api/endpoint/consultations/insert';
+
 import useConsultation from './useConsultation';
 
 client(__filename, () => {
@@ -68,14 +71,6 @@ client(__filename, () => {
 	});
 
 	it('should contain fields on load', async () => {
-		const [
-			{default: patientsInsert},
-			{default: consultationsInsert},
-		] = await Promise.all([
-			import('../../api/endpoint/patients/insert'),
-			import('../../api/endpoint/consultations/insert'),
-		]);
-
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);

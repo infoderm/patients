@@ -17,9 +17,10 @@ import removeUndefined from '../../../lib/object/removeUndefined';
 
 import {Changes} from '../../collection/changes';
 
+import insertFromEid from './insertFromEid';
+
 server(__filename, () => {
 	it('cannot create a patient when not logged in', async () => {
-		const {default: insertFromEid} = await import ('./insertFromEid');
 		return throws(
 			async () =>
 				invoke(
@@ -33,7 +34,6 @@ server(__filename, () => {
 	});
 
 	it('can create a patient when logged in', async () => {
-		const {default: insertFromEid} = await import ('./insertFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();
@@ -72,7 +72,6 @@ server(__filename, () => {
 	});
 
 	it('creates an eid entry', async () => {
-		const {default: insertFromEid} = await import ('./insertFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();
@@ -101,7 +100,6 @@ server(__filename, () => {
 	});
 
 	it('does not create duplicate eid entries', async () => {
-		const {default: insertFromEid} = await import ('./insertFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();
@@ -121,7 +119,6 @@ server(__filename, () => {
 	});
 
 	it('creates associated Changes entries', async () => {
-		const {default: insertFromEid} = await import ('./insertFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();

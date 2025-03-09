@@ -11,9 +11,10 @@ import {
 	exampleHealthoneReport,
 } from '../../_dev/populate/documents';
 
+import insert from './insert';
+
 server(__filename, () => {
 	it('cannot insert a document when not logged in', async () => {
-		const {default: insert} = await import('./insert');
 		await throws(
 			async () =>
 				invoke(insert, {userId: undefined!}, [
@@ -28,7 +29,6 @@ server(__filename, () => {
 	});
 
 	it('cannot insert a document linked to a non-existing patient', async () => {
-		const {default: insert} = await import('./insert');
 		const userId = randomUserId();
 		await throws(
 			async () =>
@@ -45,7 +45,6 @@ server(__filename, () => {
 	});
 
 	it('cannot insert a document linked to a patient that is not owned', async () => {
-		const {default: insert} = await import('./insert');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId: `${userId}x`});
 		await throws(
@@ -63,7 +62,6 @@ server(__filename, () => {
 	});
 
 	it('can insert a document linked to a patient that is owned', async () => {
-		const {default: insert} = await import('./insert');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		const documentIds = await invoke(insert, {userId}, [
@@ -86,7 +84,6 @@ server(__filename, () => {
 	});
 
 	it('can automatically link to an owned patient', async () => {
-		const {default: insert} = await import('./insert');
 		const userId = randomUserId();
 		const firstname = 'Jane';
 		const lastname = 'Doe';
@@ -107,7 +104,6 @@ server(__filename, () => {
 	});
 
 	it('set patientId overwrites patient matching', async () => {
-		const {default: insert} = await import('./insert');
 		const userId = randomUserId();
 		const firstname = 'John';
 		const lastname = 'Doe';
@@ -130,7 +126,6 @@ server(__filename, () => {
 	});
 
 	it('does not automatically link when multiple patients match', async () => {
-		const {default: insert} = await import('./insert');
 		const userId = randomUserId();
 		const firstname = 'Jane';
 		const lastname = 'Doe';

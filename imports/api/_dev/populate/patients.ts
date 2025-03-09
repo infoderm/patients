@@ -10,6 +10,7 @@ import {makeTemplate} from '../../../_test/fixtures';
 
 import {BIRTHDATE_FORMAT, SEX_ALLOWED} from '../../collection/patients';
 
+import insertPatient from '../../endpoint/patients/insert';
 import invoke from '../../endpoint/invoke';
 
 const AGE_MAX = 130;
@@ -68,6 +69,5 @@ export const newPatientFormData = makeTemplate({
 });
 
 export const newPatient = async (invocation, extra?) => {
-	const {default: insertPatient} = await import('../../endpoint/patients/insert');
 	return invoke(insertPatient, invocation, [newPatientFormData(extra)]);
 };

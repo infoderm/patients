@@ -11,9 +11,10 @@ import {newAppointment} from '../../_dev/populate/appointments';
 
 import invoke from '../invoke';
 
+import patientsRemove from './remove';
+
 server(__filename, () => {
 	it('can delete own patient', async () => {
-		const {default: patientsRemove} = await import('./remove');
 		const userId = randomUserId();
 
 		const invocation = {userId};
@@ -26,7 +27,6 @@ server(__filename, () => {
 	});
 
 	it("cannot delete someone else's patient", async () => {
-		const {default: patientsRemove} = await import('./remove');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -40,7 +40,6 @@ server(__filename, () => {
 	});
 
 	it('deletes associated consultations and appointments', async () => {
-		const {default: patientsRemove} = await import('./remove');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});

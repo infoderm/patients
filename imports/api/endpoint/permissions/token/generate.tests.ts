@@ -9,9 +9,10 @@ import {
 
 import invoke from '../../invoke';
 
+import generate from './generate';
+
 server(__filename, () => {
 	it('allows to generate a token and use it', async () => {
-		const {default: generate} = await import('./generate');
 		const userId = randomUserId();
 		const connection = {
 			clientAddress: '1.2.3.4',
@@ -75,7 +76,6 @@ server(__filename, () => {
 	});
 
 	it('cannot generate a token if not logged in', async () => {
-		const {default: generate} = await import('./generate');
 		const userId = null!;
 		const connection = {
 			clientAddress: '1.2.3.4',
@@ -92,7 +92,6 @@ server(__filename, () => {
 	});
 
 	it('correctly filters based on permissions', async () => {
-		const {default: generate} = await import('./generate');
 		const userId = randomUserId();
 		const connection = {
 			clientAddress: '1.2.3.4',
@@ -113,7 +112,6 @@ server(__filename, () => {
 	});
 
 	it('cannot use token without correct key', async () => {
-		const {default: generate} = await import('./generate');
 		const userId = randomUserId();
 		const connection = {
 			clientAddress: '1.2.3.4',

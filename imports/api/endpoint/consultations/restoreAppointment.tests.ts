@@ -3,16 +3,15 @@ import {assert} from 'chai';
 import {dropIds, randomUserId, server, throws} from '../../../_test/fixtures';
 import {beginningOfTime, endOfTime} from '../../../lib/datetime';
 
-import {newAppointment} from '../../_dev/populate/appointments';
-
 import {Appointments} from '../../collection/appointments';
 import {Availability} from '../../collection/availability';
+import {newAppointment} from '../../_dev/populate/appointments';
 
 import {slot} from '../../availability';
 
 import invoke from '../invoke';
-
 import appointmentsBeginConsultation from '../appointments/beginConsultation';
+
 import restoreAppointment from './restoreAppointment';
 
 server(__filename, () => {

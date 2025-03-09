@@ -7,9 +7,10 @@ import {newUpload} from '../../_dev/populate/uploads';
 
 import invoke from '../invoke';
 
+import rename from './rename';
+
 server(__filename, () => {
 	it('can rename an upload', async () => {
-		const {default: rename} = await import('./rename');
 		const userId = randomUserId();
 
 		const before = 'a.png';
@@ -29,7 +30,6 @@ server(__filename, () => {
 	});
 
 	it('is idempotent', async () => {
-		const {default: rename} = await import('./rename');
 		const userId = randomUserId();
 
 		const before = 'a.png';
@@ -46,7 +46,6 @@ server(__filename, () => {
 	});
 
 	it("cannot rename another user's upload as deleted", async () => {
-		const {default: rename} = await import('./rename');
 		const userId = randomUserId();
 
 		const before = 'a.png';
@@ -65,7 +64,6 @@ server(__filename, () => {
 	});
 
 	it('cannot mark an upload as deleted if not logged in', async () => {
-		const {default: rename} = await import('./rename');
 		const userId = randomUserId();
 
 		const before = 'a.png';

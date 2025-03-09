@@ -18,6 +18,8 @@ import {
 import invoke from '../invoke';
 import {type AuthenticatedContext} from '../Context';
 
+import appointmentsReschedule from './reschedule';
+
 const expected = ({owner, begin, end}) => [
 	{
 		...slot(beginningOfTime(), begin, 0),
@@ -35,7 +37,6 @@ const expected = ({owner, begin, end}) => [
 
 server(__filename, () => {
 	it('does not work without being logged in', async () => {
-		const {default: appointmentsReschedule} = await import ('./reschedule');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -59,7 +60,6 @@ server(__filename, () => {
 	});
 
 	it("cannot reschedule other user's appointments", async () => {
-		const {default: appointmentsReschedule} = await import ('./reschedule');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -83,7 +83,6 @@ server(__filename, () => {
 	});
 
 	it('updates availability', async () => {
-		const {default: appointmentsReschedule} = await import ('./reschedule');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});

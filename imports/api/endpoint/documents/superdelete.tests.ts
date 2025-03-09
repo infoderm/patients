@@ -7,9 +7,10 @@ import {newDocument} from '../../_dev/populate/documents';
 
 import invoke from '../invoke';
 
+import documentSuperdelete from './superdelete';
+
 server(__filename, () => {
 	it('cannot superdelete a document when not logged in', async () => {
-		const {default: documentSuperdelete} = await import('./superdelete');
 		const userId = randomUserId();
 		const documentId = await newDocument({userId});
 		assert.strictEqual(await Documents.find().countAsync(), 1);
@@ -22,7 +23,6 @@ server(__filename, () => {
 	});
 
 	it('cannot superdelete a document owned by another user', async () => {
-		const {default: documentSuperdelete} = await import('./superdelete');
 		const userId = randomUserId();
 		const documentId = await newDocument({userId: `${userId}x`});
 		assert.strictEqual(await Documents.find().countAsync(), 1);
@@ -34,7 +34,6 @@ server(__filename, () => {
 	});
 
 	it('cannot superdelete a document that does not exist', async () => {
-		const {default: documentSuperdelete} = await import('./superdelete');
 		const userId = randomUserId();
 		return throws(
 			async () => invoke(documentSuperdelete, {userId}, ['x']),
@@ -43,7 +42,6 @@ server(__filename, () => {
 	});
 
 	it('can superdelete a document', async () => {
-		const {default: documentSuperdelete} = await import('./superdelete');
 		const userId = randomUserId();
 		const documentAId = await newDocument({userId});
 		const documentBId = await newDocument({userId});

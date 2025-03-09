@@ -5,9 +5,15 @@ import {renderHook, waitFor} from '../../_test/react';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 import createUserWithPassword from '../../api/user/createUserWithPassword';
 import loginWithPassword from '../../api/user/loginWithPassword';
+import patientsInsert from '../../api/endpoint/patients/insert';
 import call from '../../api/endpoint/call';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 import {newConsultationFormData} from '../../api/_dev/populate/consultations';
+import consultationsInsert from '../../api/endpoint/consultations/insert';
+import patientsRemove from '../../api/endpoint/patients/remove';
+import consultationsRemove from '../../api/endpoint/consultations/remove';
+
+import patientsUpdate from '../../api/endpoint/patients/update';
 
 import useFrequencyStats from './useFrequencyStats';
 
@@ -56,13 +62,6 @@ client(__filename, () => {
 	});
 
 	it('should have aggregate on load', async () => {
-		const [
-			{default: patientsInsert},
-			{default: consultationsInsert},
-		] = await Promise.all([
-			import('../../api/endpoint/patients/insert'),
-			import('../../api/endpoint/consultations/insert'),
-		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -108,17 +107,6 @@ client(__filename, () => {
 	});
 
 	it('should react to changes', async () => {
-		const [
-			{default: patientsInsert},
-			{default: patientsRemove},
-			{default: consultationsInsert},
-			{default: consultationsRemove},
-		] = await Promise.all([
-			import('../../api/endpoint/patients/insert'),
-			import('../../api/endpoint/patients/remove'),
-			import('../../api/endpoint/consultations/insert'),
-			import('../../api/endpoint/consultations/remove'),
-		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -261,11 +249,6 @@ client(__filename, () => {
 	});
 
 	it('should handle `other` patient sex', async () => {
-		const [
-			{default: patientsInsert},
-		] = await Promise.all([
-			import('../../api/endpoint/patients/insert'),
-		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -287,11 +270,6 @@ client(__filename, () => {
 	});
 
 	it('should handle <empty string> patient sex', async () => {
-		const [
-			{default: patientsInsert},
-		] = await Promise.all([
-			import('../../api/endpoint/patients/insert'),
-		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -313,15 +291,6 @@ client(__filename, () => {
 	});
 
 	it('should handle patient sex update', async () => {
-		const [
-			{default: patientsInsert},
-			{default: patientsUpdate},
-			{default: consultationsInsert},
-		] = await Promise.all([
-			import('../../api/endpoint/patients/insert'),
-			import('../../api/endpoint/patients/update'),
-			import('../../api/endpoint/consultations/insert'),
-		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);

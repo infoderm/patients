@@ -10,10 +10,10 @@ import {newDocument} from '../../_dev/populate/documents';
 
 import invoke from '../invoke';
 
+import documentsLink from './link';
+
 server(__filename, () => {
 	it('can link documents to patients', async () => {
-		const {default: documentsLink} = await import('./link');
-
 		const userId = randomUserId();
 		const invocation = {userId};
 
@@ -42,8 +42,6 @@ server(__filename, () => {
 	});
 
 	it('is idempotent', async () => {
-		const {default: documentsLink} = await import('./link');
-
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -81,8 +79,6 @@ server(__filename, () => {
 	});
 
 	it('cannot link document to a patient that is not owned', async () => {
-		const {default: documentsLink} = await import('./link');
-
 		const userId = randomUserId();
 
 		const patientXId = await newPatient({userId: `${userId}x`});
@@ -96,8 +92,6 @@ server(__filename, () => {
 	});
 
 	it('cannot link non-owned document to a patient', async () => {
-		const {default: documentsLink} = await import('./link');
-
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -111,8 +105,6 @@ server(__filename, () => {
 	});
 
 	it('cannot link document to a patient when both are not owned', async () => {
-		const {default: documentsLink} = await import('./link');
-
 		const userId = randomUserId();
 
 		const patientXId = await newPatient({userId: `${userId}x`});
@@ -126,8 +118,6 @@ server(__filename, () => {
 	});
 
 	it('cannot link document to a patient when not logged in', async () => {
-		const {default: documentsLink} = await import('./link');
-
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});

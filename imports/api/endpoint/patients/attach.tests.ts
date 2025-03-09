@@ -10,10 +10,10 @@ import {newUpload} from '../../_dev/populate/uploads';
 
 import invoke from '../invoke';
 
+import patientsAttach from './attach';
+
 server(__filename, () => {
 	it('can attach uploads to patients', async () => {
-		const {default: patientsAttach} = await import('./attach');
-
 		const userId = randomUserId();
 		const invocation = {userId};
 
@@ -42,8 +42,6 @@ server(__filename, () => {
 	});
 
 	it('is idempotent', async () => {
-		const {default: patientsAttach} = await import('./attach');
-
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -81,8 +79,6 @@ server(__filename, () => {
 	});
 
 	it('cannot attach upload to a patient that is not owned', async () => {
-		const {default: patientsAttach} = await import('./attach');
-
 		const userId = randomUserId();
 
 		const patientXId = await newPatient({userId: `${userId}x`});
@@ -96,8 +92,6 @@ server(__filename, () => {
 	});
 
 	it('cannot attach non-owned upload to a patient', async () => {
-		const {default: patientsAttach} = await import('./attach');
-
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -111,8 +105,6 @@ server(__filename, () => {
 	});
 
 	it('cannot attach upload to a patient when both are not owned', async () => {
-		const {default: patientsAttach} = await import('./attach');
-
 		const userId = randomUserId();
 
 		const patientXId = await newPatient({userId: `${userId}x`});
@@ -126,8 +118,6 @@ server(__filename, () => {
 	});
 
 	it('cannot attach upload to a patient when not logged in', async () => {
-		const {default: patientsAttach} = await import('./attach');
-
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});

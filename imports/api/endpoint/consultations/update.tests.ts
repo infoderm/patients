@@ -3,8 +3,6 @@ import {assert} from 'chai';
 import {randomUserId, server, throws} from '../../../_test/fixtures';
 
 import {Availability} from '../../collection/availability';
-import {Consultations} from '../../collection/consultations';
-
 import {newPatient} from '../../_dev/populate/patients';
 import {
 	newConsultation,
@@ -12,10 +10,12 @@ import {
 } from '../../_dev/populate/consultations';
 
 import invoke from '../invoke';
+import {Consultations} from '../../collection/consultations';
+
+import update from './update';
 
 server(__filename, () => {
 	it('cannot update a consultation when not logged in', async () => {
-		const {default: update} = await import ('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -35,7 +35,6 @@ server(__filename, () => {
 	});
 
 	it('cannot update a consultation by linking it to a non-existing patient', async () => {
-		const {default: update} = await import ('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -54,7 +53,6 @@ server(__filename, () => {
 	});
 
 	it("cannot update a consultation by linking it to another owner's patient", async () => {
-		const {default: update} = await import ('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -74,7 +72,6 @@ server(__filename, () => {
 	});
 
 	it('updates unpaid flag', async () => {
-		const {default: update} = await import ('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -109,7 +106,6 @@ server(__filename, () => {
 	});
 
 	it('does not fill availability', async () => {
-		const {default: update} = await import ('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});

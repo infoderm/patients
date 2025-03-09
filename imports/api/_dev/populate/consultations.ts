@@ -2,6 +2,7 @@ import {faker} from '@faker-js/faker';
 
 import {makeTemplate} from '../../../_test/fixtures';
 
+import insertConsultation from '../../endpoint/consultations/insert';
 import invoke from '../../endpoint/invoke';
 
 export const newConsultationFormData = makeTemplate({
@@ -20,7 +21,6 @@ export const newConsultationFormData = makeTemplate({
 });
 
 export const newConsultation = async (invocation, extra?) => {
-	const {default: insertConsultation} = await import('../../endpoint/consultations/insert');
 	return invoke(insertConsultation, invocation, [
 		newConsultationFormData(extra),
 	]);

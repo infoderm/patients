@@ -5,9 +5,10 @@ import {randomUserId, server, throws} from '../../../_test/fixtures';
 import invoke from '../invoke';
 import {defaults, get} from '../../settings';
 
+import update from './update';
+
 server(__filename, () => {
 	it('can set a setting', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 
 		const key = 'x';
@@ -21,7 +22,6 @@ server(__filename, () => {
 	});
 
 	it('can update a setting', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 
 		const key = 'x';
@@ -38,7 +38,6 @@ server(__filename, () => {
 	});
 
 	it('cannot set a setting if not logged in', async () => {
-		const {default: update} = await import('./update');
 		const key = 'x';
 		const value = 123_819_832;
 
@@ -49,7 +48,6 @@ server(__filename, () => {
 	});
 
 	it('cannot update a setting if not logged in', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 
 		const key = 'x';
@@ -65,7 +63,6 @@ server(__filename, () => {
 	});
 
 	it("does not read other user's settings", async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 
 		const key = 'x';

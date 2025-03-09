@@ -13,9 +13,10 @@ import {type FormattedLine, type NormalizedLine} from '../../string';
 
 import {Changes} from '../../collection/changes';
 
+import update from './update';
+
 server(__filename, () => {
 	it('cannot update a patient when not logged in', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		return throws(
@@ -25,7 +26,6 @@ server(__filename, () => {
 	});
 
 	it("cannot update another user's patient", async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		return throws(
@@ -35,14 +35,12 @@ server(__filename, () => {
 	});
 
 	it('cannot update a non-existing patient', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 		await newPatient({userId});
 		return throws(async () => invoke(update, {userId}, ['x', {}]), /not-found/);
 	});
 
 	it('creates associated tags', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -91,7 +89,6 @@ server(__filename, () => {
 	});
 
 	it('creates associated Changes entries', async () => {
-		const {default: update} = await import('./update');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId}, {firstname: 'Alice'});
