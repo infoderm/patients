@@ -10,8 +10,6 @@ import {newConsultation} from '../../_dev/populate/consultations';
 import invoke from '../invoke';
 import {type AuthenticatedContext} from '../Context';
 
-import csv from './csv';
-
 const prepare = async (userId) => {
 	const patientAId = await newPatient({userId});
 	const patientBId = await newPatient({userId});
@@ -120,6 +118,8 @@ const prepare = async (userId) => {
 
 server(__filename, () => {
 	it('can downlowd books csv file', async () => {
+		const {default: csv} = await import ('./csv');
+
 		const userId = randomUserId();
 
 		const {expected, begin, end, firstBook, lastBook, maxRows} = await prepare(
@@ -138,6 +138,8 @@ server(__filename, () => {
 	});
 
 	it('cannot download csv file if not logged in', async () => {
+		const {default: csv} = await import ('./csv');
+
 		const userId = randomUserId();
 
 		const {begin, end, firstBook, lastBook, maxRows} = await prepare(userId);

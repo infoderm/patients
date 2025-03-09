@@ -18,10 +18,9 @@ import removeUndefined from '../../../lib/object/removeUndefined';
 
 import {Changes} from '../../collection/changes';
 
-import updateFromEid from './updateFromEid';
-
 server(__filename, () => {
 	it('cannot update a patient when not logged in', async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		const eidInfo = newEidData();
@@ -38,6 +37,7 @@ server(__filename, () => {
 	});
 
 	it("cannot update another user's patient", async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		const eidInfo = newEidData();
@@ -49,6 +49,7 @@ server(__filename, () => {
 	});
 
 	it('cannot update a non-existing patient', async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 		const patientId = await newPatient({userId});
 		const eidInfo = newEidData();
@@ -59,6 +60,7 @@ server(__filename, () => {
 	});
 
 	it('can update a patient when logged in', async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();
@@ -152,6 +154,7 @@ server(__filename, () => {
 	});
 
 	it('creates an eid entry', async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();
@@ -182,6 +185,7 @@ server(__filename, () => {
 	});
 
 	it('does not create duplicate eid entries', async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();
@@ -203,6 +207,7 @@ server(__filename, () => {
 	});
 
 	it('creates associated Changes entries', async () => {
+		const {default: updateFromEid} = await import('./updateFromEid');
 		const userId = randomUserId();
 
 		const eid = newEidData();

@@ -10,10 +10,9 @@ import {newDocument} from '../../_dev/populate/documents';
 
 import invoke from '../invoke';
 
-import documentsUnlink from './unlink';
-
 server(__filename, () => {
 	it('can unlink document from patient', async () => {
+		const {default: documentsUnlink} = await import('./unlink');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
@@ -82,6 +81,7 @@ server(__filename, () => {
 	});
 
 	it('is idempotent', async () => {
+		const {default: documentsUnlink} = await import('./unlink');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -108,6 +108,7 @@ server(__filename, () => {
 	});
 
 	it('cannot unlink non-owned document', async () => {
+		const {default: documentsUnlink} = await import('./unlink');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});
@@ -121,6 +122,7 @@ server(__filename, () => {
 	});
 
 	it('cannot unlink upload from a patient when not logged in', async () => {
+		const {default: documentsUnlink} = await import('./unlink');
 		const userId = randomUserId();
 
 		const patientId = await newPatient({userId});

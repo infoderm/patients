@@ -7,10 +7,9 @@ import {newUpload} from '../../_dev/populate/uploads';
 
 import invoke from '../invoke';
 
-import uploadsDelete from './delete';
-
 server(__filename, () => {
 	it('can mark an upload as deleted', async () => {
+		const {default: uploadsDelete} = await import('./delete');
 		const userId = randomUserId();
 
 		const {_id: uploadId} = await newUpload({userId});
@@ -27,6 +26,7 @@ server(__filename, () => {
 	});
 
 	it('is idempotent', async () => {
+		const {default: uploadsDelete} = await import('./delete');
 		const userId = randomUserId();
 
 		const {_id: uploadId} = await newUpload({userId});
@@ -41,6 +41,7 @@ server(__filename, () => {
 	});
 
 	it("cannot mark another user's upload as deleted", async () => {
+		const {default: uploadsDelete} = await import('./delete');
 		const userId = randomUserId();
 
 		const {_id: uploadId} = await newUpload({userId});
@@ -56,6 +57,7 @@ server(__filename, () => {
 	});
 
 	it('cannot mark an upload as deleted if not logged in', async () => {
+		const {default: uploadsDelete} = await import('./delete');
 		const userId = randomUserId();
 
 		const {_id: uploadId} = await newUpload({userId});

@@ -9,10 +9,9 @@ import {findOneOrThrow, randomUserId, server} from '../../../_test/fixtures';
 import {newPatient} from '../../_dev/populate/patients';
 import {newConsultation} from '../../_dev/populate/consultations';
 
-import bookRename from './rename';
-
 server(__filename, () => {
 	it('renaming a book updates its consultation', async () => {
+		const {default: bookRename} = await import('./rename');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
@@ -46,6 +45,7 @@ server(__filename, () => {
 	});
 
 	it('renaming a book updates its consultations', async () => {
+		const {default: bookRename} = await import('./rename');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});
@@ -100,6 +100,7 @@ server(__filename, () => {
 	});
 
 	it('renaming a book updates its consultations only', async () => {
+		const {default: bookRename} = await import('./rename');
 		const userId = randomUserId();
 
 		const patientAId = await newPatient({userId});

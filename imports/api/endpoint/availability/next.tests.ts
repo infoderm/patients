@@ -7,24 +7,26 @@ import {sorted} from '@iterable-iterator/sorted';
 
 import startOfDay from 'date-fns/startOfDay';
 
+import {dropId, randomUserId, server} from '../../../_test/fixtures';
+
 import {
 	beginningOfTime,
 	endOfTime,
 	someDateAtGivenDayOfWeek,
 } from '../../../lib/datetime';
-import {dropId, randomUserId, server} from '../../../_test/fixtures';
 import nonOverlappingIntersection from '../../../lib/interval/nonOverlappingIntersection';
+
 import {weekSlotsCyclicOrder} from '../../../ui/settings/useWorkScheduleSort';
-import {Availability} from '../../collection/availability';
-import {units} from '../../duration';
-import {initialSlot, slot} from '../../availability';
-import {newAppointment} from '../../_dev/populate/appointments';
-import cancelAppointment from '../appointments/cancel';
-import invoke from '../invoke';
 import timeSlotFromString from '../../../ui/settings/timeSlotFromString';
 import type ModuloWeekInterval from '../../../ui/settings/ModuloWeekInterval';
 
-import next from './next';
+import {newAppointment} from '../../_dev/populate/appointments';
+
+import {Availability} from '../../collection/availability';
+import {units} from '../../duration';
+import {initialSlot, slot} from '../../availability';
+
+import invoke from '../invoke';
 
 const bookSlot = async (userId, begin, end) => {
 	return newAppointment(
@@ -44,6 +46,8 @@ const findNextAvailable = async (
 	durationInMinutes: number,
 	givenConstraints?: ModuloWeekInterval[],
 ) => {
+	const {default: next} = await import('./next');
+
 	const duration = durationInMinutes * units.minute;
 
 	const week: Array<[number, number]> = [[0, units.week + duration]];
@@ -82,6 +86,8 @@ server(__filename, () => {
 	});
 
 	it('stays with complete availability', async () => {
+		const {default: cancelAppointment} = await import('../appointments/cancel');
+
 		const userId = randomUserId();
 
 		const now = new Date();

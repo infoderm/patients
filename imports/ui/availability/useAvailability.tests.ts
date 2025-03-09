@@ -16,11 +16,8 @@ import loginWithPassword from '../../api/user/loginWithPassword';
 import call from '../../api/endpoint/call';
 import {newAppointmentFormData} from '../../api/_dev/populate/appointments';
 
-import appointmentsSchedule from '../../api/endpoint/appointments/schedule';
-
 import {beginningOfTime, endOfTime} from '../../lib/datetime';
 import {slot} from '../../api/availability';
-import appointmentsCancel from '../../api/endpoint/appointments/cancel';
 
 import useAvailability from './useAvailability';
 
@@ -70,6 +67,11 @@ client(__filename, () => {
 	});
 
 	it('should have aggregate on load', async () => {
+		const [
+			{default: appointmentsSchedule},
+		] = await Promise.all([
+			import('../../api/endpoint/appointments/schedule'),
+		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -111,6 +113,13 @@ client(__filename, () => {
 	});
 
 	it('should react to changes', async () => {
+		const [
+			{default: appointmentsSchedule},
+			{default: appointmentsCancel},
+		] = await Promise.all([
+			import('../../api/endpoint/appointments/schedule'),
+			import('../../api/endpoint/appointments/cancel'),
+		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -175,6 +184,11 @@ client(__filename, () => {
 	});
 
 	it('should allow to filter by weight', async () => {
+		const [
+			{default: appointmentsSchedule},
+		] = await Promise.all([
+			import('../../api/endpoint/appointments/schedule'),
+		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -215,6 +229,11 @@ client(__filename, () => {
 	});
 
 	it('should allow to filter intersection', async () => {
+		const [
+			{default: appointmentsSchedule},
+		] = await Promise.all([
+			import('../../api/endpoint/appointments/schedule'),
+		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);

@@ -13,14 +13,9 @@ import loginWithPassword from './user/loginWithPassword';
 import call from './endpoint/call';
 import {newAppointmentFormData} from './_dev/populate/appointments';
 
-import appointmentsSchedule from './endpoint/appointments/schedule';
-import appointmentsCancel from './endpoint/appointments/cancel';
 import randomId from './randomId';
 import useNoShowsForPatient from './useNoShowsForPatient';
 import {newPatientFormData} from './_dev/populate/patients';
-import patientsInsert from './endpoint/patients/insert';
-import beginConsultation from './endpoint/appointments/beginConsultation';
-import appointmentsReschedule from './endpoint/appointments/reschedule';
 
 client(__filename, () => {
 	it('should render when logged out', async () => {
@@ -69,6 +64,13 @@ client(__filename, () => {
 	});
 
 	it('should have aggregate on load', async () => {
+		const [
+			{default: patientsInsert},
+			{default: appointmentsSchedule},
+		] = await Promise.all([
+			import('./endpoint/patients/insert'),
+			import('./endpoint/appointments/schedule'),
+		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);
@@ -114,6 +116,19 @@ client(__filename, () => {
 	});
 
 	it('should react to changes', async () => {
+		const [
+			{default: patientsInsert},
+			{default: appointmentsSchedule},
+			{default: appointmentsReschedule},
+			{default: appointmentsCancel},
+			{default: beginConsultation},
+		] = await Promise.all([
+			import('./endpoint/patients/insert'),
+			import('./endpoint/appointments/schedule'),
+			import('./endpoint/appointments/reschedule'),
+			import('./endpoint/appointments/cancel'),
+			import('./endpoint/appointments/beginConsultation'),
+		]);
 		const username = randomUserId();
 		const password = randomPassword();
 		await createUserWithPassword(username, password);

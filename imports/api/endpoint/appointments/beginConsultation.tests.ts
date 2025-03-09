@@ -18,10 +18,9 @@ import {initialSlot, slot} from '../../availability';
 
 import invoke from '../invoke';
 
-import appointmentsBeginConsultation from './beginConsultation';
-
 server(__filename, () => {
 	it('can begin consultation', async () => {
+		const {default: appointmentsBeginConsultation} = await import('./beginConsultation');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -42,6 +41,7 @@ server(__filename, () => {
 	});
 
 	it("cannot begin other user's consultation", async () => {
+		const {default: appointmentsBeginConsultation} = await import('./beginConsultation');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -56,6 +56,7 @@ server(__filename, () => {
 	});
 
 	it('cannot begin consultation when not logged in', async () => {
+		const {default: appointmentsBeginConsultation} = await import('./beginConsultation');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -70,6 +71,7 @@ server(__filename, () => {
 	});
 
 	it('restores availability', async () => {
+		const {default: appointmentsBeginConsultation} = await import('./beginConsultation');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});

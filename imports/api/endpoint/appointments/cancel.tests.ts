@@ -19,10 +19,9 @@ import {initialSlot, slot} from '../../availability';
 
 import invoke from '../invoke';
 
-import appointmentsCancel from './cancel';
-
 server(__filename, () => {
 	it('can cancel appointment', async () => {
+		const {default: appointmentsCancel} = await import('./cancel');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -43,6 +42,7 @@ server(__filename, () => {
 	});
 
 	it("cannot cancel other user's consultation", async () => {
+		const {default: appointmentsCancel} = await import('./cancel');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});
@@ -59,6 +59,7 @@ server(__filename, () => {
 	});
 
 	it('restores availability', async () => {
+		const {default: appointmentsCancel} = await import('./cancel');
 		const userId = randomUserId();
 
 		const appointmentId = await newAppointment({userId});

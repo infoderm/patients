@@ -13,10 +13,10 @@ import {
 import invoke from '../invoke';
 import {type AuthenticatedContext} from '../Context';
 
-import changeAllergyColor from './changeColor';
-
 server(__filename, () => {
 	it('can change color of allergy', async () => {
+		const {default: changeAllergyColor} = await import ('./changeColor');
+
 		const userId = randomUserId();
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
@@ -38,6 +38,8 @@ server(__filename, () => {
 	});
 
 	it('cannot change color of allergy if not logged in', async () => {
+		const {default: changeAllergyColor} = await import ('./changeColor');
+
 		const userId = randomUserId();
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
@@ -67,6 +69,8 @@ server(__filename, () => {
 	});
 
 	it('cannot change color of allergy of other user', async () => {
+		const {default: changeAllergyColor} = await import ('./changeColor');
+
 		const userId = randomUserId();
 
 		const {upsertedId: allergyId} = await newAllergy({userId});
