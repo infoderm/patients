@@ -23,7 +23,7 @@ import type Document from '../api/Document';
 import type Selector from '../api/query/Selector';
 import appIsReady from '../app/isReady';
 import isAppTest from '../app/isAppTest';
-import {_router} from '../ui/App';
+import {_router} from '../ui/Router';
 import {getWatchStreamCount} from '../api/query/watch';
 
 import {unmount as _unmount} from './react';

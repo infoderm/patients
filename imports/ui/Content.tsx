@@ -1,7 +1,7 @@
 import React from 'react';
 
 import NoContent from './navigation/NoContent';
-import Router from './Router';
+import Routing from './Routing';
 import ErrorBoundary from './ErrorBoundary';
 import Main from './Main';
 
@@ -20,7 +20,7 @@ const Child = ({loading, loggingIn, loggingOut, currentUser}: Props) => {
 
 	return (
 		<ErrorBoundary>
-			<Router />
+			<Routing />
 		</ErrorBoundary>
 	);
 };
