@@ -213,6 +213,9 @@
     "parser": "@babel/eslint-parser",
     "extends": "xo-react",
     "prettier": true,
+    "ignores": [
+      "packages/**"
+    ],
     "rules": {
       "camelcase": "off",
       "no-constant-condition": "off",
