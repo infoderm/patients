@@ -8,9 +8,8 @@ import {list} from '@iterable-iterator/list';
 
 import {faker} from '@faker-js/faker';
 
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import {render, waitFor} from '../../_test/react';
 
 import {
@@ -27,8 +26,7 @@ client(__filename, () => {
 		const {setupUser} = await import('../../../test/app/client/fixtures');
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findByRole} = render(
 			<SelectColorSetting aria-label="Color" setting="theme-palette-primary" />,
@@ -68,8 +66,7 @@ client(__filename, () => {
 		const {setupUser} = await import('../../../test/app/client/fixtures');
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findByRole} = render(
 			<SelectColorSetting

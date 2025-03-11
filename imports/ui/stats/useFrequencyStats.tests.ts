@@ -3,8 +3,7 @@ import {assert} from 'chai';
 import {renderHook, waitFor} from '../../_test/react';
 
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import call from '../../api/endpoint/call';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
@@ -40,8 +39,7 @@ client(__filename, () => {
 	it('should render when logged in', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() => useFrequencyStats());
 		assert.deepEqual(result.current, {
@@ -64,8 +62,7 @@ client(__filename, () => {
 	it('should have aggregate on load', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientAId = await call(
 			patientsInsert,
@@ -109,8 +106,7 @@ client(__filename, () => {
 	it('should react to changes', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() => useFrequencyStats());
 		assert.deepEqual(result.current, {
@@ -251,8 +247,7 @@ client(__filename, () => {
 	it('should handle `other` patient sex', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() => useFrequencyStats());
 
@@ -272,8 +267,7 @@ client(__filename, () => {
 	it('should handle <empty string> patient sex', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() => useFrequencyStats());
 
@@ -293,8 +287,7 @@ client(__filename, () => {
 	it('should handle patient sex update', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() => useFrequencyStats());
 

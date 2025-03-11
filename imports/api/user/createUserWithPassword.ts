@@ -1,8 +1,13 @@
-import {Accounts} from 'meteor/accounts-base';
+import createUserWithPasswordAndLogin from './createUserWithPasswordAndLogin';
+import logout from './logout';
 
 const createUserWithPassword = async (
 	username: string,
 	password: string,
-): Promise<string> => Accounts.createUserAsync({username, password});
+): Promise<string> => {
+	const userId = await createUserWithPasswordAndLogin(username, password);
+	await logout();
+	return userId;
+};
 
 export default createUserWithPassword;

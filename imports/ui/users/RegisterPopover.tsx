@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 
 import {useSnackbar} from 'notistack';
 
-import createUserWithPassword from '../../api/user/createUserWithPassword';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 
 import debounceSnackbar from '../snackbar/debounceSnackbar';
 
@@ -38,7 +38,7 @@ const RegisterPopover = ({
 			variant: 'info',
 			persist: true,
 		});
-		return createUserWithPassword(username, password).then(
+		return createUserWithPasswordAndLogin(username, password).then(
 			() => {
 				feedback('Welcome!', {variant: 'success'});
 			},

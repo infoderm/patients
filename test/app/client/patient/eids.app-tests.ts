@@ -3,7 +3,6 @@ import {fireEvent} from '@testing-library/dom';
 import call from '../../../../imports/api/endpoint/call';
 import insert from '../../../../imports/api/endpoint/patients/insert';
 import remove from '../../../../imports/api/endpoint/patients/remove';
-import createUserWithPassword from '../../../../imports/api/user/createUserWithPassword';
 
 import {exampleEidXML} from '../../../../imports/api/_dev/populate/eids';
 import {newPatientFormData} from '../../../../imports/api/_dev/populate/patients';
@@ -13,6 +12,7 @@ import {
 	randomPassword,
 	randomUserId,
 } from '../../../../imports/_test/fixtures';
+import createUserWithPasswordAndLogin from '../../../../imports/api/user/createUserWithPasswordAndLogin';
 import {setupApp, searchForPatient} from '../fixtures';
 
 type Item = string | File;
@@ -97,7 +97,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findByRole, findByText, user} = app;
 
@@ -114,7 +114,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findByRole, user} = app;
 
@@ -143,7 +143,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findAllByRole, findByRole, findByText, user} = app;
 
@@ -198,7 +198,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findAllByRole, findByRole, findByText, user} = app;
 
@@ -240,7 +240,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findAllByRole, findByRole, findByText, user} = app;
 
@@ -295,7 +295,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findAllByRole, findByRole, findByText, user} = app;
 

@@ -9,8 +9,7 @@ import {
 	randomUserId,
 } from '../../_test/fixtures';
 
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import {newConsultationFormData} from '../../api/_dev/populate/consultations';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 import call from '../../api/endpoint/call';
@@ -46,8 +45,7 @@ client(__filename, () => {
 	it('should render when logged in', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const consultationId = randomId();
 		const {result} = renderHook(() =>
@@ -73,8 +71,7 @@ client(__filename, () => {
 	it('should contain fields on load', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientAId = await call(
 			patientsInsert,
