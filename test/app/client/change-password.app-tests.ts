@@ -4,21 +4,16 @@ import {
 	randomUserId,
 	throws,
 } from '../../../imports/_test/fixtures';
+import createUserWithPasswordAndLogin from '../../../imports/api/user/createUserWithPasswordAndLogin';
 
-import {
-	setupApp,
-	createUserWithPasswordAndLogin,
-	changePassword,
-	logout,
-	loginWithPassword,
-} from './fixtures';
+import {setupApp, changePassword, logout, loginWithPassword} from './fixtures';
 
 client(__filename, () => {
 	it('should allow to change password', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const newPassword = `${password}-changed`;
 		await changePassword(app, password, newPassword);
@@ -28,7 +23,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 		await throws(
 			async () => changePassword(app, `${password}-typo`, password),
 			/Timed out/,
@@ -40,7 +35,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 		await throws(async () => changePassword(app, password, ''), /Timed out/);
 		await app.findByText('Password may not be empty');
 	});
@@ -49,7 +44,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const newPassword = `${password}-changed`;
 		await changePassword(app, password, newPassword);
@@ -61,7 +56,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const newPassword = `${password}-changed`;
 		await changePassword(app, password, newPassword);

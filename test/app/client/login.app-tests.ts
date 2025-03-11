@@ -4,15 +4,16 @@ import {
 	randomUserId,
 	throws,
 } from '../../../imports/_test/fixtures';
+import createUserWithPassword from '../../../imports/api/user/createUserWithPassword';
 
-import {setupApp, createUserWithPassword, loginWithPassword} from './fixtures';
+import {setupApp, loginWithPassword} from './fixtures';
 
 client(__filename, () => {
 	it('should allow to log in', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(app, username, password);
+		await createUserWithPassword(username, password);
 		await loginWithPassword(app, username, password);
 	});
 
@@ -31,7 +32,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(app, username, password);
+		await createUserWithPassword(username, password);
 		await throws(
 			async () => loginWithPassword(app, username, `${password}-typo`),
 			/Timed out/,
@@ -43,7 +44,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPassword(app, username, password);
+		await createUserWithPassword(username, password);
 		await throws(
 			async () => loginWithPassword(app, `${username}-typo`, password),
 			/Timed out/,
@@ -57,8 +58,8 @@ client(__filename, () => {
 		const username2 = randomUserId();
 		const password2 = `${password1}-typo`;
 		const app = setupApp();
-		await createUserWithPassword(app, username1, password1);
-		await createUserWithPassword(app, username2, password2);
+		await createUserWithPassword(username1, password1);
+		await createUserWithPassword(username2, password2);
 		await throws(
 			async () => loginWithPassword(app, username1, password2),
 			/Timed out/,

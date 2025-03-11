@@ -12,13 +12,8 @@ import {
 	randomPassword,
 	randomUserId,
 } from '../../../../imports/_test/fixtures';
-import {
-	setupApp,
-	createUserWithPasswordAndLogin,
-	createNewPatient,
-	navigateTo,
-	uploadFile,
-} from '../fixtures';
+import createUserWithPasswordAndLogin from '../../../../imports/api/user/createUserWithPasswordAndLogin';
+import {setupApp, createNewPatient, navigateTo, uploadFile} from '../fixtures';
 
 const createFileList = (files: File[]): FileList => {
 	const list: FileList & Iterable<File> = {
@@ -121,7 +116,7 @@ const macro = (
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientId = await createNewPatient(app, {
 			firstname,

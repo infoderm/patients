@@ -3,17 +3,18 @@ import {
 	randomPassword,
 	randomUserId,
 } from '../../../imports/_test/fixtures';
+import createUserWithPasswordAndLogin from '../../../imports/api/user/createUserWithPasswordAndLogin';
 
 import {navigationDrawerBlocks} from '../../../imports/ui/NavigationDrawer';
 
-import {setupApp, createUserWithPasswordAndLogin, navigateTo} from './fixtures';
+import {setupApp, navigateTo} from './fixtures';
 
 const testNavigation = (title: string, url: string) => {
 	it(`should allow to reach ${url}`, async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		await navigateTo(app, title, url);
 	});
@@ -30,7 +31,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		await navigateTo(app, 'Agenda', '/calendar/week/current');
 		await navigateTo(app, 'Month', /^\/calendar\/month\//);

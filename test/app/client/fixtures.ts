@@ -143,15 +143,6 @@ export const loginWithPassword = async (
 	console.debug('User succesfully logged in');
 };
 
-export const createUserWithPassword = async (
-	app: App,
-	username: string,
-	password: string,
-) => {
-	await createUserWithPasswordAndLogin(app, username, password);
-	await logout(app);
-};
-
 export const changePassword = async (
 	{getByRole, findByRole, getByLabelText, findByText, user}: App,
 	oldPassword: string,
