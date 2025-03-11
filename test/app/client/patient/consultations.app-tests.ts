@@ -3,10 +3,10 @@ import {
 	randomPassword,
 	randomUserId,
 } from '../../../../imports/_test/fixtures';
+import createUserWithPasswordAndLogin from '../../../../imports/api/user/createUserWithPasswordAndLogin';
 
 import {
 	setupApp,
-	createUserWithPasswordAndLogin,
 	createNewPatient,
 	searchForPatient,
 	navigateTo,
@@ -18,7 +18,7 @@ client(__filename, () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const firstname = 'John';
 		const lastname = 'Doe';

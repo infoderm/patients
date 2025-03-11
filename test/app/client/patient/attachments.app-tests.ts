@@ -4,21 +4,16 @@ import {
 	randomUserId,
 } from '../../../../imports/_test/fixtures';
 import {randomPNGArrayBuffer} from '../../../../imports/_test/png';
+import createUserWithPasswordAndLogin from '../../../../imports/api/user/createUserWithPasswordAndLogin';
 
-import {
-	setupApp,
-	createUserWithPasswordAndLogin,
-	navigateTo,
-	createNewPatient,
-	uploadFile,
-} from '../fixtures';
+import {setupApp, navigateTo, createNewPatient, uploadFile} from '../fixtures';
 
 client(__filename, () => {
 	it('should allow to attach a file to a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientId = await createNewPatient(app, {
 			firstname: 'John',

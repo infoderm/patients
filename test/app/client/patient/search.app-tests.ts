@@ -3,20 +3,16 @@ import {
 	randomPassword,
 	randomUserId,
 } from '../../../../imports/_test/fixtures';
+import createUserWithPasswordAndLogin from '../../../../imports/api/user/createUserWithPasswordAndLogin';
 
-import {
-	setupApp,
-	createUserWithPasswordAndLogin,
-	createNewPatient,
-	searchForPatient,
-} from '../fixtures';
+import {setupApp, createNewPatient, searchForPatient} from '../fixtures';
 
 client(__filename, () => {
 	it('should allow to search for a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
-		await createUserWithPasswordAndLogin(app, username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientId = await createNewPatient(app, {
 			firstname: 'John',
