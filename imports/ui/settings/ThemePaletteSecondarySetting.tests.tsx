@@ -4,9 +4,8 @@ import {assert} from 'chai';
 
 import {faker} from '@faker-js/faker';
 
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import {render, waitFor} from '../../_test/react';
 
 import {setSetting} from './hooks';
@@ -17,8 +16,7 @@ client(__filename, () => {
 	it('loads saved value', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 		const value = faker.color.rgb();
 		await setSetting('theme-palette-secondary', value);
 

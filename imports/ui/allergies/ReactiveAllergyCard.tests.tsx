@@ -7,9 +7,8 @@ import {assert} from 'chai';
 import {BrowserRouter} from 'react-router-dom';
 
 import call from '../../api/endpoint/call';
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 
 import patientsInsert from '../../api/endpoint/patients/insert';
@@ -24,8 +23,7 @@ client(__filename, () => {
 		const {setupUser} = await import('../../../test/app/client/fixtures');
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const allergy = {
 			displayName: 'Orange' as FormattedLine,

@@ -11,8 +11,7 @@ import {
 	randomPassword,
 	randomUserId,
 } from '../../_test/fixtures';
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import call from '../../api/endpoint/call';
 import {newAppointmentFormData} from '../../api/_dev/populate/appointments';
 
@@ -47,8 +46,7 @@ client(__filename, () => {
 	it('should render when logged in', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() =>
 			useAvailability(beginningOfTime(), endOfTime(), {}, {}, []),
@@ -72,8 +70,7 @@ client(__filename, () => {
 	it('should have aggregate on load', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const datetime = new Date();
 		const duration = 12_345;
@@ -113,8 +110,7 @@ client(__filename, () => {
 	it('should react to changes', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {result} = renderHook(() =>
 			useAvailability(
@@ -177,8 +173,7 @@ client(__filename, () => {
 	it('should allow to filter by weight', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const datetime = new Date();
 		const duration = 12_345;
@@ -217,8 +212,7 @@ client(__filename, () => {
 	it('should allow to filter intersection', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const datetime = new Date();
 		const duration = 12_345;

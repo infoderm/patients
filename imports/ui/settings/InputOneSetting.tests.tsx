@@ -3,10 +3,9 @@ import React from 'react';
 import {assert} from 'chai';
 import {faker} from '@faker-js/faker';
 
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 import {render} from '../../_test/react';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 
 import {
 	TIMEOUT_INPUT_DEBOUNCE,
@@ -23,8 +22,7 @@ client(__filename, () => {
 		);
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const {findByLabelText} = render(
 			<InputOneSetting label="test-label" setting="account-holder" />,

@@ -3,10 +3,9 @@ import React from 'react';
 import {assert} from 'chai';
 import {faker} from '@faker-js/faker';
 
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 import {render, waitFor} from '../../_test/react';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 
 import {setSetting} from './hooks';
 import AccountHolderSetting from './AccountHolderSetting';
@@ -15,8 +14,7 @@ client(__filename, () => {
 	it('loads saved value', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 		const value = faker.company.name();
 		await setSetting('account-holder', value);
 

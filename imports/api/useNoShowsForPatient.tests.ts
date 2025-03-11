@@ -8,8 +8,7 @@ import {renderHook, waitFor} from '../_test/react';
 
 import {client, randomPassword, randomUserId} from '../_test/fixtures';
 
-import createUserWithPassword from './user/createUserWithPassword';
-import loginWithPassword from './user/loginWithPassword';
+import createUserWithPasswordAndLogin from './user/createUserWithPasswordAndLogin';
 import call from './endpoint/call';
 import {newAppointmentFormData} from './_dev/populate/appointments';
 
@@ -46,8 +45,7 @@ client(__filename, () => {
 	it('should render when logged in', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientId = randomId();
 		const {result} = renderHook(() => useNoShowsForPatient(patientId));
@@ -71,8 +69,7 @@ client(__filename, () => {
 	it('should have aggregate on load', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientId = await call(patientsInsert, newPatientFormData());
 
@@ -116,8 +113,7 @@ client(__filename, () => {
 	it('should react to changes', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const patientId = await call(patientsInsert, newPatientFormData());
 

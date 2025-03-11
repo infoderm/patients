@@ -12,8 +12,7 @@ import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 import call from '../../api/endpoint/call';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 import patientsInsert from '../../api/endpoint/patients/insert';
-import createUserWithPassword from '../../api/user/createUserWithPassword';
-import loginWithPassword from '../../api/user/loginWithPassword';
+import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import {type Patient} from '../../api/collection/documents';
 
 import ReactivePatientChip from './ReactivePatientChip';
@@ -25,8 +24,7 @@ client(__filename, () => {
 	it('should be possible to render many chips concurrently', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
-		await createUserWithPassword(username, password);
-		await loginWithPassword(username, password);
+		await createUserWithPasswordAndLogin(username, password);
 
 		const n = 60;
 
