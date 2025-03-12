@@ -14,7 +14,7 @@ import {newEidData} from '../../_dev/populate/eids';
 import {normalizedName, patientFieldsFromEid} from '../../patients';
 
 import {Eids} from '../../collection/eids';
-import removeUndefined from '../../../lib/object/removeUndefined';
+import removeUndefined from '../../../util/object/removeUndefined';
 
 import {Changes} from '../../collection/changes';
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import type UserFilter from '../../api/query/UserFilter';
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import PagedConsultationsList from './PagedConsultationsList';
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';

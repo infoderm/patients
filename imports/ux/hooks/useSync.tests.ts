@@ -9,9 +9,9 @@ import {filter} from '@iterable-iterator/filter';
 import {renderHook, waitFor} from '../../_test/react';
 import {client} from '../../_test/fixtures';
 
-import sleep from '../../lib/async/sleep';
+import sleep from '../../util/async/sleep';
 
-import {AsyncQueue} from '../../lib/async/queue';
+import {AsyncQueue} from '../../util/async/queue';
 
 import {useSync} from './useSync';
 

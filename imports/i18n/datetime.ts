@@ -20,7 +20,7 @@ import {
 	someDateAtGivenDayOfWeek,
 	someDateAtGivenPositionOfYear,
 	type WeekDay,
-} from '../lib/datetime';
+} from '../util/datetime';
 
 import useLocaleKey from './useLocale';
 

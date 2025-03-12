@@ -10,9 +10,9 @@ import {map} from '@iterable-iterator/map';
 
 import createBucket from '../backend/gridfs/createBucket';
 import createObjectId from '../backend/gridfs/createObjectId';
-import streamToUint8Array from '../lib/stream/streamToUint8Array';
-import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
-import schema from '../lib/schema';
+import streamToUint8Array from '../util/stream/streamToUint8Array';
+import {thumbnailStream} from '../util/pdf/pdfthumbnails';
+import schema from '../util/schema';
 
 import fetchSync from './publication/fetchSync';
 import defineCollection from './collection/define';

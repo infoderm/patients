@@ -4,7 +4,7 @@ import availableLocales, {
 	localeDescriptions,
 } from '../../i18n/availableLocales';
 import {useNavigatorLocale} from '../../i18n/navigator';
-import tuple from '../../lib/types/tuple';
+import tuple from '../../util/types/tuple';
 
 import SelectOneSetting from './SelectOneSetting';
 

@@ -1,4 +1,4 @@
-import type schema from '../../../../lib/schema';
+import type schema from '../../../../util/schema';
 import {cacheItem} from '../../../CacheItem';
 import define from '../../define';
 import {patientSearchIndexDocument} from '../search';

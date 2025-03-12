@@ -16,7 +16,7 @@ import {patients} from '../../patients';
 
 import invoke from '../invoke';
 
-import tuple from '../../../lib/types/tuple';
+import tuple from '../../../util/types/tuple';
 
 import patientsMerge from './merge';
 import patientsAttach from './attach';

@@ -2,7 +2,7 @@ import React from 'react';
 
 import {NumericFormat} from 'react-number-format';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import {useReactNumberFormatOptionsForCurrency} from '../../i18n/currency';
 

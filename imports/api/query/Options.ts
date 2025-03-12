@@ -1,6 +1,6 @@
 import {type Mongo} from 'meteor/mongo';
 
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 
 import {projection} from './Projection';
 import sort from './sort';

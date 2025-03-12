@@ -14,7 +14,7 @@ import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import {documentUpdate} from '../../DocumentUpdate';
 
 const {sanitize} = consultations;

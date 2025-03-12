@@ -9,7 +9,7 @@ import {grey} from '@mui/material/colors';
 import {type Theme} from '@mui/material/styles';
 
 import Tooltip from '../accessibility/Tooltip';
-import color from '../../lib/color';
+import color from '../../util/color';
 
 const themedColor = (theme: Theme, tint: string) =>
 	color(theme.palette.background.paper).mix(tint, 0.5).toRgbString();

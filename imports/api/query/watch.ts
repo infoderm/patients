@@ -19,9 +19,9 @@ import type Document from '../Document';
 import {type Options} from '../transaction/TransactionDriver';
 import withSession from '../transaction/withSession';
 
-import {EventEmitter, eventEmitter} from '../../lib/events';
+import {EventEmitter, eventEmitter} from '../../util/events';
 
-import {AsyncQueue} from '../../lib/async/queue';
+import {AsyncQueue} from '../../util/async/queue';
 
 import type Filter from './Filter';
 

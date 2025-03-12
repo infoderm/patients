@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 
 import Chip, {type ChipProps} from '@mui/material/Chip';
 
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import {type DoctorFields} from '../../api/collection/doctors';
 

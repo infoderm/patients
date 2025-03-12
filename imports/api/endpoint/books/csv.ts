@@ -5,7 +5,7 @@ import {map} from '@iterable-iterator/map';
 import {list} from '@iterable-iterator/list';
 import {range} from '@iterable-iterator/range';
 
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 import {Consultations} from '../../collection/consultations';
 import {books} from '../../books';

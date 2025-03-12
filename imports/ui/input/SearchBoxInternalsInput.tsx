@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 
 import InputBase from '@mui/material/InputBase';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 type Props = {
 	readonly expands?: boolean;

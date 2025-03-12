@@ -5,7 +5,7 @@ import define from '../define';
 import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 export default define({
 	name: 'consultations.remove',

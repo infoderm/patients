@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import AssistantIcon from '@mui/icons-material/Assistant';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import ManageConsultationsForPatientDialog from './ManageConsultationsForPatientDialog';
 

@@ -34,8 +34,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import {useSnackbar} from 'notistack';
 
-import diff from '../../lib/lcs/diff';
-import pngDataURL from '../../lib/png/dataURL';
+import diff from '../../util/lcs/diff';
+import pngDataURL from '../../util/png/dataURL';
 
 import patientsUpdateFromEid from '../../api/endpoint/patients/updateFromEid';
 import {patientFieldsFromEid, patients} from '../../api/patients';

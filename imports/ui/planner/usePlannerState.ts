@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
 
-import {ALL_WEEK_DAYS} from '../../lib/datetime';
+import {ALL_WEEK_DAYS} from '../../util/datetime';
 
 import {useSettingCached} from '../settings/hooks';
 

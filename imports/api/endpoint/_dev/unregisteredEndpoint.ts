@@ -1,5 +1,5 @@
 import {AuthenticationDangerousNone} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import define from '../define';
 
 export default define({

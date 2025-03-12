@@ -14,7 +14,7 @@ import StaticPatientChip, {
 
 import {useDoctorStats, usePatientsGoingToDoctor} from '../../api/doctors';
 
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 import {type TagNameFields} from '../../api/tags/TagDocument';
 
 import DoctorRenamingDialog from './DoctorRenamingDialog';

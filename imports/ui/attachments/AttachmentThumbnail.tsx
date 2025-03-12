@@ -1,8 +1,8 @@
 import React from 'react';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
-import eee from '../../lib/png/eee';
+import eee from '../../util/png/eee';
 import {thumb} from '../../api/attachments';
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 

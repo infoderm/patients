@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 const CancelButton = (props: PropsOf<typeof Button>) => (
 	<Button endIcon={<CancelIcon />} {...props}>

@@ -17,7 +17,7 @@ import UnstyledLinkChip from '../chips/LinkChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import {type DocumentDocument} from '../../api/collection/documents';
 

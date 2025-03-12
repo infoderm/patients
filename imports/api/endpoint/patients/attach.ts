@@ -6,7 +6,7 @@ import type TransactionDriver from '../../transaction/TransactionDriver';
 import define from '../define';
 import EndpointError from '../EndpointError';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 export default define({
 	name: '/patients/attach',

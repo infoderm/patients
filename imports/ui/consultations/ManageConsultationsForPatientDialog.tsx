@@ -26,7 +26,7 @@ import withLazyOpening from '../modal/withLazyOpening';
 
 import useUpcomingAppointmentsForPatient from '../appointments/useUpcomingAppointmentsForPatient';
 import beginConsultation from '../../api/endpoint/appointments/beginConsultation';
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 import {type AppointmentDocument} from '../../api/collection/appointments';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 

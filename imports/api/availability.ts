@@ -12,7 +12,7 @@ import getSeconds from 'date-fns/getSeconds';
 import getMilliseconds from 'date-fns/getMilliseconds';
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
 
-import schema from '../lib/schema';
+import schema from '../util/schema';
 import {
 	ALL_WEEK_DAYS,
 	beginningOfTime,
@@ -20,10 +20,10 @@ import {
 	someDateAtGivenDayOfWeek,
 	type WeekDay,
 	WEEK_MODULO,
-} from '../lib/datetime';
-import add from '../lib/interval/add';
-import isEmpty from '../lib/interval/isEmpty';
-import isContiguous from '../lib/interval/isContiguous';
+} from '../util/datetime';
+import add from '../util/interval/add';
+import isEmpty from '../util/interval/isEmpty';
+import isContiguous from '../util/interval/isContiguous';
 
 import {units} from './duration';
 

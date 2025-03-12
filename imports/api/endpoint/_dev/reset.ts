@@ -1,5 +1,5 @@
 import {AuthenticationDangerousNone} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import reset from '../../reset';
 import define from '../define';
 

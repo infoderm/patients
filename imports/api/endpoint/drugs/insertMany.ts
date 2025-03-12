@@ -1,5 +1,5 @@
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 import {drugDocument, Drugs} from '../../collection/drugs';
 import type TransactionDriver from '../../transaction/TransactionDriver';

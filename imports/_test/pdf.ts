@@ -1,4 +1,4 @@
-import blobToDataURL from '../lib/blob/blobToDataURL';
+import blobToDataURL from '../util/blob/blobToDataURL';
 
 const document = `%PDF-1.0
 1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj

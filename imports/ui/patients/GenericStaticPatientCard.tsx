@@ -15,12 +15,12 @@ import {blue, pink, red, yellow} from '@mui/material/colors';
 
 import AnimatedCardMedia from '../cards/AnimatedCardMedia';
 
-import {emphasize} from '../../lib/color';
-import pngDataURL from '../../lib/png/dataURL';
+import {emphasize} from '../../util/color';
+import pngDataURL from '../../util/png/dataURL';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 import {useDateFormat} from '../../i18n/datetime';
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 import {type PatientDocument} from '../../api/collection/patients';
 
 const PREFIX = 'GenericStaticPatientCard';

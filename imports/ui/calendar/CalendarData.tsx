@@ -19,9 +19,9 @@ import {useTheme} from '@mui/material/styles';
 import makeStyles from '../styles/makeStyles';
 import {useDateFormat} from '../../i18n/datetime';
 
-import {ALL_WEEK_DAYS, generateDays, type WeekDay} from '../../lib/datetime';
+import {ALL_WEEK_DAYS, generateDays, type WeekDay} from '../../util/datetime';
 import type CSSObject from '../styles/CSSObject';
-import color, {hoverColor} from '../../lib/color';
+import color, {hoverColor} from '../../util/color';
 
 import type Event from './Event';
 import EventFragment from './EventFragment';

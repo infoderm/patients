@@ -16,7 +16,7 @@ import {
 	TIMEOUT_INPUT_DEBOUNCE,
 	TIMEOUT_REACTIVITY_DEBOUNCE,
 } from '../constants';
-import sleep from '../../lib/async/sleep';
+import sleep from '../../util/async/sleep';
 
 import SelectColorSetting from './SelectColorSetting';
 import {setSetting} from './hooks';

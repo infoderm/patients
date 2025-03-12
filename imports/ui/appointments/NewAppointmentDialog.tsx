@@ -2,7 +2,7 @@ import React from 'react';
 
 import schedule from '../../api/endpoint/appointments/schedule';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 import useCall from '../action/useCall';
 
 import AppointmentDialog from './AppointmentDialog';

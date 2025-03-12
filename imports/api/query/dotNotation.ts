@@ -4,7 +4,7 @@
 // @ts-expect-error Needs more recent @types/node
 import {type Buffer} from 'buffer';
 
-import schema, {at, keyof} from '../../lib/schema';
+import schema, {at, keyof} from '../../util/schema';
 
 /** @public */
 type Join<T extends unknown[], D extends string> = T extends []

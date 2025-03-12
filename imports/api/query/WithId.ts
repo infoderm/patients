@@ -1,4 +1,4 @@
-import type EnhancedOmit from '../../lib/types/EnhancedOmit';
+import type EnhancedOmit from '../../util/types/EnhancedOmit';
 
 /** Given an object shaped type, return the type of the _id field or default to string @public */
 type InferIdType<TSchema> = TSchema extends {_id: infer IdType}

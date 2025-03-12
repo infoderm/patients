@@ -8,7 +8,7 @@ import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import makeStyles from '../styles/makeStyles';
 
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 import {type DocumentDocument} from '../../api/collection/documents';
 
 import useDocumentVersions from './useDocumentVersions';

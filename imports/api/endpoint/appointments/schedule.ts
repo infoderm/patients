@@ -9,7 +9,7 @@ import {sanitizeAppointmentUpdate, appointmentUpdate} from '../../appointments';
 import {availability} from '../../availability';
 
 import type TransactionDriver from '../../transaction/TransactionDriver';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 import define from '../define';
 import compose from '../compose';

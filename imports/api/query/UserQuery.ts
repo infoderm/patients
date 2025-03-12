@@ -1,4 +1,4 @@
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 
 import sort, {type Sort} from './sort';
 import {projection} from './Projection';

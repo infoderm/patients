@@ -1,5 +1,5 @@
-import schema from '../lib/schema';
-import type Optional from '../lib/types/Optional';
+import schema from '../util/schema';
+import type Optional from '../util/types/Optional';
 
 import {type Context} from './publication/Context';
 

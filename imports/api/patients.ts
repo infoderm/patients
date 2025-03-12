@@ -6,9 +6,9 @@ import {filter} from '@iterable-iterator/filter';
 
 import isValid from 'date-fns/isValid';
 
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
-import removeUndefined from '../lib/object/removeUndefined';
+import removeUndefined from '../util/object/removeUndefined';
 
 import {
 	type PatientFields,

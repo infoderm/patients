@@ -1,6 +1,6 @@
 import {xml2json} from 'xml-js';
 
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 import {type EidFields} from './collection/eids';
 

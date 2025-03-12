@@ -1,6 +1,6 @@
 import {chain} from '@iterable-iterator/chain';
 
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 
 import {fieldSpecifiers} from './dotNotation';
 

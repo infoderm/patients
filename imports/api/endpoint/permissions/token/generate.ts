@@ -1,12 +1,12 @@
-import {beginningOfTime, endOfTime} from '../../../../lib/datetime';
+import {beginningOfTime, endOfTime} from '../../../../util/datetime';
 import {PermissionTokens} from '../../../collection/permissionTokens';
 
-import {genKey, type HMACConfig, sign} from '../../../../lib/hmac';
+import {genKey, type HMACConfig, sign} from '../../../../util/hmac';
 
 import define from '../../define';
 import {encode} from '../../../permissions/token';
 import {AuthenticationLoggedIn} from '../../../Authentication';
-import schema from '../../../../lib/schema';
+import schema from '../../../../util/schema';
 
 const TOKEN_HASH_ALGO = 'sha256';
 // see https://crypto.stackexchange.com/questions/34864/key-size-for-hmac-sha256

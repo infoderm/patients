@@ -8,7 +8,7 @@ import TabJumper from '../navigation/TabJumper';
 import NoMatch from '../navigation/NoMatch';
 import Loading from '../navigation/Loading';
 
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import PatientHeader from './PatientHeader';
 import PatientPersonalInformation from './PatientPersonalInformation';

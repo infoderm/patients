@@ -10,7 +10,7 @@ import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 
-import {emphasize} from '../../lib/color';
+import {emphasize} from '../../util/color';
 import {useDateFormatRange} from '../../i18n/datetime';
 
 import useConsultationsStats from './useConsultationsStats';

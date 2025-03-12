@@ -1,7 +1,7 @@
 import {Settings} from '../../collection/settings';
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 export default define({
 	name: 'setting',

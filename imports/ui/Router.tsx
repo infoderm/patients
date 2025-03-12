@@ -11,7 +11,7 @@ import {
 
 import isTest from '../app/isTest';
 
-import createPromise from '../lib/async/createPromise';
+import createPromise from '../util/async/createPromise';
 
 export type NavigateFunction = {
 	(to: To, options?: NavigateOptions): Promise<void>;

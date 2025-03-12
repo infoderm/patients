@@ -1,6 +1,6 @@
 import React from 'react';
 
-import tuple from '../../lib/types/tuple';
+import tuple from '../../util/types/tuple';
 
 import SelectOneSetting from './SelectOneSetting';
 

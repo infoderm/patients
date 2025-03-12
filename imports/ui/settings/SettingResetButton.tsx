@@ -4,7 +4,7 @@ import type Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 type Props = {
 	readonly loading: boolean;

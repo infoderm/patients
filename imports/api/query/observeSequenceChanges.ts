@@ -1,4 +1,4 @@
-import {AsyncLock} from '../../lib/async/lock';
+import {AsyncLock} from '../../util/async/lock';
 import type Collection from '../Collection';
 import type Document from '../Document';
 

@@ -11,7 +11,7 @@ import {availability} from '../../availability';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 export default define({
 	name: 'consultations.restoreAppointment',

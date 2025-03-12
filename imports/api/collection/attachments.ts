@@ -1,4 +1,4 @@
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 import {Uploads, meta} from '../uploads';
 
 export const Attachments = Uploads.collection;

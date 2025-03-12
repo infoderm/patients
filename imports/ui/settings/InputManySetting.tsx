@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import SetPicker from '../input/SetPicker';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 import {type SettingKey, type UserSettings} from '../../api/settings';
 
 import {useSetting} from './hooks';

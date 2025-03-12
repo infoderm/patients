@@ -1,5 +1,5 @@
 // Import { Binary } from 'meteor/mongo';
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 import {Documents} from './collection/documents';
 import decodeText from './documents/decodeText';

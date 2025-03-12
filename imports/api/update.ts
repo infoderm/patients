@@ -2,7 +2,7 @@ import {EJSON} from 'meteor/ejson';
 
 import {asyncIterableToArray} from '@async-iterable-iterator/async-iterable-to-array';
 
-import type schema from '../lib/schema';
+import type schema from '../util/schema';
 
 import type Document from './Document';
 import {

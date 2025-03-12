@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Route, Routes} from 'react-router-dom';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 type Props = {
 	readonly paths: string[];

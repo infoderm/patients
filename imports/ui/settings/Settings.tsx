@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import {Route, Routes, useParams} from 'react-router-dom';
 
 import TabJumper from '../navigation/TabJumper';
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 import NoContent from '../navigation/NoContent';
 
 import CurrencySetting from './CurrencySetting';

@@ -1,4 +1,4 @@
-import pngDataURL from '../lib/png/dataURL';
+import pngDataURL from '../util/png/dataURL';
 
 const base64Encoded =
 	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';

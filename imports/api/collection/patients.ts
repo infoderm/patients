@@ -1,4 +1,4 @@
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 import {formattedLineSchema, normalizedLineSchema} from '../string';
 
 import define from './define';

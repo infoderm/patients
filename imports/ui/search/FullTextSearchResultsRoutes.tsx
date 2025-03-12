@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
 
-import {myDecodeURIComponent} from '../../lib/uri';
+import {myDecodeURIComponent} from '../../util/uri';
 
 import useRandom from '../hooks/useRandom';
 import PatientsObservedSearchResultsPager from '../patients/PatientsObservedSearchResultsPager';

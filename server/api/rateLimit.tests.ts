@@ -17,7 +17,7 @@ import {chain} from '@iterable-iterator/chain';
 import {max} from '@iterable-iterator/reduce';
 
 import {server, setLike} from '../../imports/_test/fixtures';
-import sleep from '../../imports/lib/async/sleep';
+import sleep from '../../imports/util/async/sleep';
 
 import {RateLimiterMemory, pipe} from './rateLimit';
 import {createRouter} from './route';

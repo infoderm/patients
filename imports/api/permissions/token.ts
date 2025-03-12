@@ -7,8 +7,8 @@ import {
 	sign,
 	type SignedDocument,
 	verify,
-} from '../../lib/hmac';
-import {encode as _encode, decode as _decode} from '../../lib/base64/rfc7515';
+} from '../../util/hmac';
+import {encode as _encode, decode as _decode} from '../../util/base64/rfc7515';
 import executeTransaction from '../transaction/executeTransaction';
 
 export const encode = (_id: string, key: string) =>

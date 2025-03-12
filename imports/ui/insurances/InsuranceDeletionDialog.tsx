@@ -2,7 +2,7 @@ import React from 'react';
 
 import TagDeletionDialog from '../tags/TagDeletionDialog';
 import {deleteInsurance} from '../../api/insurances';
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 type Props = Omit<PropsOf<typeof TagDeletionDialog>, 'endpoint' | 'title'>;
 

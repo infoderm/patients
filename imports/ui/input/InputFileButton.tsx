@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {styled} from '@mui/material/styles';
 import MuiButton from '@mui/material/Button';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 import useUniqueId from '../hooks/useUniqueId';
 
 const Input = styled('input')({

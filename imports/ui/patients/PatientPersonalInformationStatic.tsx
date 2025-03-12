@@ -39,7 +39,7 @@ import makeStyles from '../styles/makeStyles';
 
 import TextField from '../input/TextField';
 
-import pngDataURL from '../../lib/png/dataURL';
+import pngDataURL from '../../util/png/dataURL';
 
 import {useInsurancesFind} from '../../api/insurances';
 import {useDoctorsFind} from '../../api/doctors';
@@ -68,7 +68,7 @@ import ReactiveInsuranceChip from '../insurances/ReactiveInsuranceChip';
 import useImportantStringsDict from '../settings/useImportantStringsDict';
 import virtualFields from '../../api/patients/virtualFields';
 import useDialog from '../modal/useDialog';
-import {emphasize} from '../../lib/color';
+import {emphasize} from '../../util/color';
 
 import useRandom from '../hooks/useRandom';
 

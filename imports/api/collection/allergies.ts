@@ -1,4 +1,4 @@
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 
 import {tagDocument} from '../tags/TagDocument';
 
