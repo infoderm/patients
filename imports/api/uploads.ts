@@ -103,7 +103,7 @@ const getTransform = <T>(upload: FileObj<T>): StreamTransform | null => {
 	return null;
 };
 
-const thumbify = async <T>(
+export const thumbify = async <T>(
 	upload: FileObj<T>,
 	source: () => Readable,
 	size: ThumbSizeOptions,
