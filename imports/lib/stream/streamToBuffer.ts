@@ -1,21 +1,11 @@
 import {Buffer} from 'buffer';
 import {type Readable} from 'stream';
 
-const streamToBuffer = async (stream: Readable) =>
-	new Promise<Buffer>((resolve, reject) => {
-		stream.on('error', (error: Error) => {
-			reject(error);
-		});
+import streamToChunks from './streamToChunks';
 
-		const chunks: Buffer[] = [];
-
-		stream.on('data', (chunk: Buffer) => {
-			chunks.push(chunk);
-		});
-
-		stream.on('end', () => {
-			resolve(Buffer.concat(chunks));
-		});
-	});
+const streamToBuffer = async (stream: Readable) => {
+	const chunks = await streamToChunks(stream);
+	return Buffer.concat(chunks);
+};
 
 export default streamToBuffer;
