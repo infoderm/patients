@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'regenerator-runtime/runtime.js';
-
 import {assert, expect} from 'chai';
 
 import {Meteor} from 'meteor/meteor';
