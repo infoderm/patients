@@ -1,6 +1,4 @@
 import fs from 'fs'; // Required to read files initially uploaded via Meteor-Files
-// @ts-expect-error Needs more recent @types/node
-import {type Buffer} from 'buffer';
 import {Readable} from 'stream';
 
 import {Meteor} from 'meteor/meteor';
@@ -12,7 +10,6 @@ import {map} from '@iterable-iterator/map';
 
 import createBucket from '../backend/gridfs/createBucket';
 import createObjectId from '../backend/gridfs/createObjectId';
-import streamToBuffer from '../lib/stream/streamToBuffer';
 import streamToUint8Array from '../lib/stream/streamToUint8Array';
 import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 import schema from '../lib/schema';
@@ -28,12 +25,12 @@ const _128MB = 128 * _1MB;
 const MAXIMUM_UPLOAD_SIZE = _128MB; // TODO allow user configuration
 const THUMBNAIL_CACHE_SIZE = _64MB;
 
-let thumbnailCache: MemoryLRU<string, Buffer>;
+let thumbnailCache: MemoryLRU<string, Uint8Array>;
 if (Meteor.isServer) {
-	thumbnailCache = new MemoryLRU<string, Buffer>({
+	thumbnailCache = new MemoryLRU<string, Uint8Array>({
 		max: 1000,
 		maxSize: THUMBNAIL_CACHE_SIZE,
-		sizeCalculation: (buffer: Buffer) => buffer.length,
+		sizeCalculation: (array: Uint8Array) => array.byteLength,
 		// NOTE disable ttl
 		ttl: 0,
 		allowStale: false,
@@ -88,12 +85,12 @@ const cacheResult = async <T>(
 	const cached = thumbnailCache.get(key);
 	if (cached === undefined) {
 		const stream = await transform(source, size);
-		const buffer = await streamToBuffer(stream);
-		thumbnailCache.set(key, buffer);
-		return Readable.from(buffer);
+		const array = await streamToUint8Array(stream);
+		thumbnailCache.set(key, array);
+		return Readable.from([array]);
 	}
 
-	return Readable.from(cached);
+	return Readable.from([cached]);
 };
 
 const getTransform = <T>(upload: FileObj<T>): StreamTransform | null => {
