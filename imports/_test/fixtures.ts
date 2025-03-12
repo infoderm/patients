@@ -7,8 +7,6 @@ import {sorted} from '@iterable-iterator/sorted';
 
 import sleep from '../util/async/sleep';
 
-// eslint-disable-next-line import/no-unassigned-import
-import '../api/endpoint/_dev/_disableRateLimiting';
 import logout from '../api/user/logout';
 import define from '../api/collection/define';
 import {removeCollection} from '../api/collection/registry';

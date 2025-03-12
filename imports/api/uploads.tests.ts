@@ -7,12 +7,12 @@ import {assert} from 'chai';
 
 import {randomPDFUint8Array} from '../_test/pdf';
 import {server} from '../_test/fixtures';
-import streamToBuffer from '../lib/stream/streamToBuffer';
+import streamToBuffer from '../util/stream/streamToBuffer';
 import {
 	assertEqual as assertEqualImages,
 	whiteRectanglePNG,
 } from '../_test/image';
-import bufferToUint8ArrayView from '../lib/buffer/bufferToUint8ArrayView';
+import bufferToUint8ArrayView from '../util/buffer/bufferToUint8ArrayView';
 import {randomPNGBuffer} from '../_test/png';
 
 import {cacheKey, type MetadataType, thumbify} from './uploads';
