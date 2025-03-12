@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import CalendarHeader from './CalendarHeader';
 import MonthlyCalendarData from './MonthlyCalendarData';

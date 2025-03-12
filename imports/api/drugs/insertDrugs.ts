@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 
-import createPromise from '../../lib/async/createPromise';
+import createPromise from '../../util/async/createPromise';
 import {type DrugDocument} from '../collection/drugs';
 import call from '../endpoint/call';
 import insertMany from '../endpoint/drugs/insertMany';

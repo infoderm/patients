@@ -10,7 +10,7 @@ import {type ConsultationDocument} from '../../collection/consultations';
 import compose from '../compose';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {Patients} from '../../collection/patients';
-import schema, {partial} from '../../../lib/schema';
+import schema, {partial} from '../../../util/schema';
 import type Modifier from '../../Modifier';
 import {AuthenticationLoggedIn} from '../../Authentication';
 

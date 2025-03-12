@@ -11,9 +11,9 @@ import {
 	beginningOfTime,
 	endOfTime,
 	someDateAtGivenDayOfWeek,
-} from '../../../lib/datetime';
+} from '../../../util/datetime';
 import {dropId, randomUserId, server} from '../../../_test/fixtures';
-import nonOverlappingIntersection from '../../../lib/interval/nonOverlappingIntersection';
+import nonOverlappingIntersection from '../../../util/interval/nonOverlappingIntersection';
 import {weekSlotsCyclicOrder} from '../../../ui/settings/useWorkScheduleSort';
 import {Availability} from '../../collection/availability';
 import {units} from '../../duration';

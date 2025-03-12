@@ -14,7 +14,7 @@ import {newAppointmentFormData} from '../../api/_dev/populate/appointments';
 
 import appointmentsSchedule from '../../api/endpoint/appointments/schedule';
 
-import {beginningOfTime, endOfTime} from '../../lib/datetime';
+import {beginningOfTime, endOfTime} from '../../util/datetime';
 import appointmentsCancel from '../../api/endpoint/appointments/cancel';
 
 import useIntersectingEvents from './useIntersectingEvents';

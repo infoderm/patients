@@ -2,8 +2,8 @@ import {assert} from 'chai';
 
 import {type Sharp} from 'sharp';
 
-import {createContextIso, destroyContextIso} from '../lib/canvas';
-import blobToImage from '../lib/blob/blobToImage';
+import {createContextIso, destroyContextIso} from '../util/canvas';
+import blobToImage from '../util/blob/blobToImage';
 
 type TypedArray =
 	| Uint8Array

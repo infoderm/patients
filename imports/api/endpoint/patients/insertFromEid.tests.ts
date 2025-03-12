@@ -13,7 +13,7 @@ import invoke from '../invoke';
 
 import {normalizedName, patientFieldsFromEid} from '../../patients';
 
-import removeUndefined from '../../../lib/object/removeUndefined';
+import removeUndefined from '../../../util/object/removeUndefined';
 
 import {Changes} from '../../collection/changes';
 

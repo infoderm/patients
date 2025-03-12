@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 
-import eee from '../../lib/png/eee';
+import eee from '../../util/png/eee';
 
-import {thumbnailDataURL} from '../../lib/pdf/pdfthumbnails';
+import {thumbnailDataURL} from '../../util/pdf/pdfthumbnails';
 
 type Options = {
 	isImage?: boolean;

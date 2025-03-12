@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 import {
 	type ConsultationDocument,

@@ -2,8 +2,8 @@ import assert from 'assert';
 
 import define from '../define';
 
-import schema from '../../../lib/schema';
-import {WEEK_MODULO} from '../../../lib/datetime';
+import schema from '../../../util/schema';
+import {WEEK_MODULO} from '../../../util/datetime';
 
 import properlyIntersectsWithRightOpenInterval from '../../interval/containsDate';
 import isContainedInRightOpenIterval from '../../interval/beginsAfterDate';

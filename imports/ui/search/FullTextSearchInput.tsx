@@ -5,12 +5,12 @@ import {styled, alpha} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 
-import {myEncodeURIComponent} from '../../lib/uri';
+import {myEncodeURIComponent} from '../../util/uri';
 
 import SearchBox from '../input/SearchBox';
 
 import {TIMEOUT_INPUT_DEBOUNCE} from '../constants';
-import type Timeout from '../../lib/types/Timeout';
+import type Timeout from '../../util/types/Timeout';
 
 const PREFIX = 'FullTextSearchInput';
 

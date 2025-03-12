@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 
 import Chip, {type ChipProps} from '@mui/material/Chip';
 
-import color, {focusColor, hoverColor, textColor} from '../../lib/color';
+import color, {focusColor, hoverColor, textColor} from '../../util/color';
 
 type Props<C extends React.ElementType> = Omit<ChipProps<C>, 'color'> & {
 	readonly color: string;

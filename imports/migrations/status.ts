@@ -1,4 +1,4 @@
-import createPromise from '../lib/async/createPromise';
+import createPromise from '../util/async/createPromise';
 
 const {promise, resolve, reject} = createPromise<true>();
 

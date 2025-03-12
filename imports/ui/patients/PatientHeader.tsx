@@ -5,7 +5,7 @@ import FaceIcon from '@mui/icons-material/Face';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-import pngDataURL from '../../lib/png/dataURL';
+import pngDataURL from '../../util/png/dataURL';
 
 import eidDisplayBirthdate from '../../api/eidDisplayBirthdate';
 

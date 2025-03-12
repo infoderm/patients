@@ -16,7 +16,7 @@ import {combinations} from '@combinatorics/n-combinations';
 import {product} from '@set-theory/cartesian-product';
 import escapeStringRegexp from 'escape-string-regexp';
 
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 export {default as escapeStringRegexp} from 'escape-string-regexp';
 

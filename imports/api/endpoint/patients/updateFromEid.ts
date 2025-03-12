@@ -1,6 +1,6 @@
 import {AuthenticationLoggedIn} from '../../Authentication';
 
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import {eidFields, Eids} from '../../collection/eids';
 import {patientFieldsFromEid} from '../../patients';
 import type TransactionDriver from '../../transaction/TransactionDriver';

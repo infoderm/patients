@@ -13,7 +13,7 @@ import {
 
 import useEvents from '../events/useEvents';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import DayHeader from './DayHeader';
 import StaticMonthlyCalendar from './StaticMonthlyCalendar';

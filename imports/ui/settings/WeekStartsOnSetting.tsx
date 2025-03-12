@@ -4,7 +4,7 @@ import {list} from '@iterable-iterator/list';
 import {chain} from '@iterable-iterator/chain';
 
 import {useDaysNames, useLocaleWeekStartsOn} from '../../i18n/datetime';
-import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
+import {ALL_WEEK_DAYS, type WeekDay} from '../../util/datetime';
 
 import SelectOneSetting from './SelectOneSetting';
 

@@ -5,7 +5,7 @@ import {styled} from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import FaceIcon from '@mui/icons-material/Face';
 
-import color, {focusColor, hoverColor, emphasize} from '../../lib/color';
+import color, {focusColor, hoverColor, emphasize} from '../../util/color';
 
 const StyledButton = styled(Button)(({theme}) => {
 	const backgroundColor = emphasize(theme.palette.background.paper, 0.2);

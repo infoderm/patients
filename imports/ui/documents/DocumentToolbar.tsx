@@ -8,7 +8,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import {styled} from '@mui/material/styles';
 
 import LoadingIconButton from '../button/LoadingIconButton';
-import {saveHTMLElementAsPDF} from '../../lib/pdf/pdf';
+import {saveHTMLElementAsPDF} from '../../util/pdf/pdf';
 
 const PREFIX = 'DocumentToolbar';
 

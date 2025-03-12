@@ -6,7 +6,7 @@ import patientsAttach from '../../api/endpoint/patients/attach';
 
 import FixedFab from '../button/FixedFab';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import AttachFileButton from './AttachFileButton';
 import AttachmentsForPatientPager from './AttachmentsForPatientPager';

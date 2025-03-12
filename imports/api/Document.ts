@@ -1,4 +1,4 @@
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 const literalSchema = schema.union([
 	schema.string(),

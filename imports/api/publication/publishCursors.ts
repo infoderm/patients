@@ -2,8 +2,8 @@ import observeSetChanges from '../query/observeSetChanges';
 import type Filter from '../query/Filter';
 import type Document from '../Document';
 
-import duplicates from '../../lib/iterable-iterator/duplicates';
-import unique from '../../lib/iterable-iterator/unique';
+import duplicates from '../../util/iterable-iterator/duplicates';
+import unique from '../../util/iterable-iterator/unique';
 
 import {getCollection} from '../collection/registry';
 

@@ -1,4 +1,4 @@
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 import type Collection from './Collection';
 import type Document from './Document';

@@ -4,7 +4,7 @@ import compose from '../compose';
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import {patientFields} from '../../collection/patients';
 
 export default define({

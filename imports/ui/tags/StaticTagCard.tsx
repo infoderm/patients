@@ -10,7 +10,7 @@ import MuiCardContent from '@mui/material/CardContent';
 import MuiCardActions from '@mui/material/CardActions';
 import MuiCardMedia from '@mui/material/CardMedia';
 
-import {emphasize} from '../../lib/color';
+import {emphasize} from '../../util/color';
 import useIsMounted from '../hooks/useIsMounted';
 import DeleteButton from '../button/DeleteButton';
 import RenameButton from '../button/RenameButton';

@@ -48,8 +48,8 @@ import withLazyOpening from '../modal/withLazyOpening';
 import PatientPicker from '../patients/PatientPicker';
 import {AVAILABILITY_TIMEZONE, weekShifted} from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
-import nonOverlappingIntersectionQuery from '../../lib/interval/nonOverlappingIntersectionQuery';
-import isContiguous from '../../lib/interval/isContiguous';
+import nonOverlappingIntersectionQuery from '../../util/interval/nonOverlappingIntersectionQuery';
+import isContiguous from '../../util/interval/isContiguous';
 import {type AppointmentUpdate} from '../../api/appointments';
 
 const Multiline = styled(TextField)({

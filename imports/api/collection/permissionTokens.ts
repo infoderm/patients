@@ -1,6 +1,6 @@
-import {hmacConfig} from '../../lib/hmac';
+import {hmacConfig} from '../../util/hmac';
 
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 
 import define from './define';
 

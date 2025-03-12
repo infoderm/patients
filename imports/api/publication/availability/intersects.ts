@@ -9,7 +9,7 @@ import intersectsInterval from '../../interval/intersectsInterval';
 import define from '../define';
 import type Selector from '../../query/Selector';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import PublicationError from '../PublicationError';
 import {userFilter} from '../../query/UserFilter';
 

@@ -5,7 +5,7 @@ import FaceIcon from '@mui/icons-material/Face';
 
 import {DateTimePicker} from '@mui/x-date-pickers';
 
-import pngDataURL from '../../lib/png/dataURL';
+import pngDataURL from '../../util/png/dataURL';
 
 import {LinkedSubheaderAvatar, Subheader} from '../Subheader';
 

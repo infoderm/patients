@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import DocumentChips from './DocumentChips';
 

@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
 import useAny from '../hooks/useAny';
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 export const useConfirmationTextFieldState = (
 	expected: string,

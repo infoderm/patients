@@ -9,7 +9,7 @@ import {computeUpdate, patients} from '../../patients';
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 const {sanitize, updateIndex} = patients;
 

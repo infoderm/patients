@@ -16,7 +16,7 @@ import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import consultationsAttach from '../../api/endpoint/consultations/attach';
 

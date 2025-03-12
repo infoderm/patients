@@ -33,7 +33,7 @@ import {useCurrencyFormat} from '../../i18n/currency';
 import ReactiveAttachmentLink from '../attachments/ReactiveAttachmentLink';
 import {type ConsultationDocument} from '../../api/collection/consultations';
 import {type AttachmentDocument} from '../../api/collection/attachments';
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 const PREFIX = 'StaticConsultationCardDetails';
 

@@ -1,5 +1,5 @@
-import schema from '../../lib/schema';
-import removeUndefined from '../../lib/object/removeUndefined';
+import schema from '../../util/schema';
+import removeUndefined from '../../util/object/removeUndefined';
 import type Collection from '../Collection';
 import type Document from '../Document';
 import {type AuthenticatedContext} from '../publication/Context';

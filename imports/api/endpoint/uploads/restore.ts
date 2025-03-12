@@ -3,7 +3,7 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 export default define({
 	name: 'uploads.restore',

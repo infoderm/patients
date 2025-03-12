@@ -7,7 +7,7 @@ import {
 	newAppointmentFormData,
 } from '../../_dev/populate/appointments';
 import {slot} from '../../availability';
-import {beginningOfTime, endOfTime} from '../../../lib/datetime';
+import {beginningOfTime, endOfTime} from '../../../util/datetime';
 import {
 	dropIds,
 	findOneOrThrow,

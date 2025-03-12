@@ -1,4 +1,4 @@
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import {AuthenticationLoggedIn} from '../../Authentication';
 
 import {Drugs} from '../../collection/drugs';

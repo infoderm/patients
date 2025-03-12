@@ -1,4 +1,4 @@
-import {thisYearsInterval} from '../../../lib/datetime';
+import {thisYearsInterval} from '../../../util/datetime';
 
 import {type ConsultationDocument} from '../../collection/consultations';
 
@@ -16,7 +16,7 @@ import unconditionallyUpdateById from '../../unconditionallyUpdateById';
 
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import {books} from '../../books';
 
 export default define({

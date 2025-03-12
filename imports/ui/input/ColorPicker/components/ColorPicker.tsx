@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 
-import color from '../../../../lib/color';
+import color from '../../../../util/color';
 
 import useChanged from '../../../hooks/useChanged';
 

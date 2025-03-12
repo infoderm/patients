@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 
-import pngDataURL from '../../lib/png/dataURL';
+import pngDataURL from '../../util/png/dataURL';
 
 import SetPicker from '../input/SetPicker';
 import {type PatientFields} from '../../api/collection/patients';

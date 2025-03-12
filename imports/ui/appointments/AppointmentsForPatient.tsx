@@ -5,8 +5,8 @@ import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 
 import startOfToday from 'date-fns/startOfToday';
 
-import removeUndefinedValuesFromArray from '../../lib/array/removeUndefined';
-import removeUndefinedValuesFromObject from '../../lib/object/removeUndefined';
+import removeUndefinedValuesFromArray from '../../util/array/removeUndefined';
+import removeUndefinedValuesFromObject from '../../util/object/removeUndefined';
 
 import usePatient from '../patients/usePatient';
 

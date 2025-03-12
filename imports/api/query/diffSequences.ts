@@ -1,12 +1,12 @@
 import assert from 'assert';
 
-import {AsyncQueue} from '../../lib/async/queue';
+import {AsyncQueue} from '../../util/async/queue';
 
 import type Document from '../Document';
 
 import type ObserveSequenceChangesCallbacks from '../ObserveSequenceChangesCallbacks';
 import {documentDiff, isDiffEmpty} from '../update';
-import {lis} from '../../lib/lcs/lis';
+import {lis} from '../../util/lcs/lis';
 
 const identity = <T>(x: T) => x;
 export type Project<T> = (document: T) => Partial<T>;

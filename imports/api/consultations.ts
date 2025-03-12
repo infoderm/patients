@@ -5,7 +5,7 @@ import {increasing, decreasing} from '@total-order/date';
 
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 import {books} from './books';
 

@@ -1,6 +1,6 @@
 import {type Binary} from 'bson';
 
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 
 type BitwiseFilter =
 	| number /** numeric bit mask */

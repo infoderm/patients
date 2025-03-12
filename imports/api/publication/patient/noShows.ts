@@ -6,7 +6,7 @@ import {noShows, type State} from '../../collection/noShows';
 
 import define from '../define';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 import observeSetChanges from '../../query/observeSetChanges';
 
 export default define({

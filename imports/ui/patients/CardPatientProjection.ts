@@ -1,4 +1,4 @@
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 type CardPatientProjection<C> = PropsOf<C> extends {patient: infer P} ? P : {};
 

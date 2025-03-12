@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import {defer, type Deferred} from '../../lib/async/defer';
+import {defer, type Deferred} from '../../util/async/defer';
 
 import type SubscriptionRegistryEntry from './SubscriptionRegistryEntry';
 import {get, set} from './subscriptionRegistry';

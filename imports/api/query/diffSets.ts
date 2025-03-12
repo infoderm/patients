@@ -1,4 +1,4 @@
-import {AsyncQueue} from '../../lib/async/queue';
+import {AsyncQueue} from '../../util/async/queue';
 
 import type Document from '../Document';
 

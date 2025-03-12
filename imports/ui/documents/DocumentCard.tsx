@@ -27,7 +27,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import {type DocumentDocument} from '../../api/collection/documents';
 

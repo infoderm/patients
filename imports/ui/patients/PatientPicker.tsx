@@ -4,8 +4,8 @@ import {patients} from '../../api/patients';
 
 import SetPicker from '../input/SetPicker';
 
-import type PropsOf from '../../lib/types/PropsOf';
-import type Optional from '../../lib/types/Optional';
+import type PropsOf from '../../util/types/PropsOf';
+import type Optional from '../../util/types/Optional';
 
 import ReactivePatientChip from './ReactivePatientChip';
 import usePatientsSuggestions from './usePatientsSuggestions';

@@ -2,7 +2,7 @@ import {chain} from '@iterable-iterator/chain';
 import {map} from '@iterable-iterator/map';
 import {type BSONRegExp} from 'bson';
 
-import schema from '../../lib/schema';
+import schema from '../../util/schema';
 import type Document from '../Document';
 import {document} from '../Document'; // TODO Replace this
 

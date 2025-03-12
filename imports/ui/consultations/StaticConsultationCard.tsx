@@ -4,11 +4,11 @@ import {styled} from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';
 import Divider from '@mui/material/Divider';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 import virtualFields from '../../api/consultations/virtualFields';
 
-import color from '../../lib/color';
+import color from '../../util/color';
 
 import StaticConsultationCardSummary from './StaticConsultationCardSummary';
 import StaticConsultationCardDetails from './StaticConsultationCardDetails';

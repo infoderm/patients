@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 
 import FaceIcon from '@mui/icons-material/Face';
 
-import pngDataURL from '../../lib/png/dataURL';
+import pngDataURL from '../../util/png/dataURL';
 
 import {type PatientDocument} from '../../api/collection/patients';
 import {patients} from '../../api/patients';

@@ -1,6 +1,6 @@
 import {createContext} from 'react';
 
-import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
+import {ALL_WEEK_DAYS, type WeekDay} from '../../util/datetime';
 
 type Context = {
 	showCancelledEvents: boolean;

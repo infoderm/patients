@@ -1,4 +1,4 @@
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 export type RequiredKeys<T> = {
 	[K in keyof T]-?: {} extends {[P in K]: T[K]} ? never : K;

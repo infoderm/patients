@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 import mergeOptions from './query/mergeOptions';
 

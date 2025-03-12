@@ -8,7 +8,7 @@ import {Meteor} from 'meteor/meteor';
 import totalOrder from 'total-order';
 import {sorted} from '@iterable-iterator/sorted';
 
-import sleep from '../lib/async/sleep';
+import sleep from '../util/async/sleep';
 
 // eslint-disable-next-line import/no-unassigned-import
 import '../api/endpoint/_dev/_disableRateLimiting';

@@ -6,7 +6,7 @@ import {styled} from '@mui/material/styles';
 import MuiChip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 
-import pngDataURL from '../../lib/png/dataURL';
+import pngDataURL from '../../util/png/dataURL';
 
 type MuiChipProps = {
 	loading: boolean | undefined;

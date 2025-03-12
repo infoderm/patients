@@ -4,7 +4,7 @@ import {Attachments} from '../../collection/attachments';
 import define from '../define';
 import type TransactionDriver from '../../transaction/TransactionDriver';
 import {AuthenticationLoggedIn} from '../../Authentication';
-import schema from '../../../lib/schema';
+import schema from '../../../util/schema';
 
 export default define({
 	name: '/patients/detach',

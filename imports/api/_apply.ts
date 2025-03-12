@@ -1,9 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {DDP} from 'meteor/ddp';
 
-import promisify from '../lib/async/promisify';
+import promisify from '../util/async/promisify';
 
-import {AsyncLock} from '../lib/async/lock';
+import {AsyncLock} from '../util/async/lock';
 
 import type Options from './endpoint/Options';
 import type Args from './Args';

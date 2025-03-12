@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {map} from '@iterable-iterator/map';
 import {sorted} from '@iterable-iterator/sorted';
 
-import simplifyUnion from '../../lib/interval/simplifyUnion';
+import simplifyUnion from '../../util/interval/simplifyUnion';
 
 import InputManySetting from './InputManySetting';
 import useWorkScheduleSort, {weekSlotsCyclicOrder} from './useWorkScheduleSort';

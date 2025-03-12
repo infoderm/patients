@@ -2,7 +2,7 @@ import React from 'react';
 
 import {useInsurancesFind} from '../../api/insurances';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 import TagNamePrefixFilteredList from '../tags/TagNamePrefixFilteredList';
 
 import ReactiveInsuranceCard from './ReactiveInsuranceCard';

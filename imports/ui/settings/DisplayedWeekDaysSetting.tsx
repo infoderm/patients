@@ -12,8 +12,8 @@ import {
 	type WeekStartsOn,
 } from '../../i18n/datetime';
 
-import {ALL_WEEK_DAYS, type WeekDay} from '../../lib/datetime';
-import {mod} from '../../lib/arithmetic';
+import {ALL_WEEK_DAYS, type WeekDay} from '../../util/datetime';
+import {mod} from '../../util/arithmetic';
 
 import InputManySetting from './InputManySetting';
 

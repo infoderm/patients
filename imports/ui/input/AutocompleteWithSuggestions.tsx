@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
-import type PropsOf from '../../lib/types/PropsOf';
+import type PropsOf from '../../util/types/PropsOf';
 
 type BaseProps = {
 	readonly itemToString?: (x: any) => any;

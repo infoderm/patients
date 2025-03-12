@@ -1,4 +1,4 @@
-import schema from '../lib/schema';
+import schema from '../util/schema';
 
 type CacheItem<R> = {
 	key: string;
