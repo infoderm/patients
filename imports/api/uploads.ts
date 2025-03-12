@@ -79,17 +79,18 @@ export const cacheKey = <T>(upload: FileObj<T>, size: ThumbSizeOptions) =>
 	`${upload._id}-${size.minWidth ?? '?'}x${size.minHeight ?? '?'}`;
 
 const cacheResult = async <T>(
+	cache: MemoryLRU<string, Uint8Array>,
 	upload: FileObj<T>,
 	transform: StreamTransform,
 	source: () => Readable,
 	size: ThumbSizeOptions,
 ): Promise<Readable> => {
 	const key = cacheKey(upload, size);
-	const cached = thumbnailCache.get(key);
+	const cached = cache.get(key);
 	if (cached === undefined) {
 		const stream = await transform(source, size);
 		const array = await streamToUint8Array(stream);
-		thumbnailCache.set(key, array);
+		cache.set(key, array);
 		return Readable.from([array]);
 	}
 
@@ -106,10 +107,11 @@ const thumbify = async <T>(
 	upload: FileObj<T>,
 	source: () => Readable,
 	size: ThumbSizeOptions,
+	cache: MemoryLRU<string, Uint8Array> = thumbnailCache,
 ): Promise<Readable> => {
 	const transform = getTransform(upload);
 	if (transform === null) return source();
-	return cacheResult(upload, transform, source, size);
+	return cacheResult(cache, upload, transform, source, size);
 };
 
 export const meta = schema.object({
