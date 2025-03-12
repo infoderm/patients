@@ -13,6 +13,7 @@ import {map} from '@iterable-iterator/map';
 import createBucket from '../backend/gridfs/createBucket';
 import createObjectId from '../backend/gridfs/createObjectId';
 import streamToBuffer from '../lib/stream/streamToBuffer';
+import streamToUint8Array from '../lib/stream/streamToUint8Array';
 import {thumbnailStream} from '../lib/pdf/pdfthumbnails';
 import schema from '../lib/schema';
 
@@ -67,7 +68,8 @@ const thumbifyPDF = async (
 	source: () => Readable,
 	size: ThumbSizeOptions,
 ): Promise<Readable> => {
-	const data = await streamToBuffer(source());
+	// NOTE: https://github.com/mozilla/pdf.js/commit/b6ba8cc84a0cef762aa5349dcb18cc0799f5d946
+	const data = await streamToUint8Array(source());
 	return thumbnailStream({data}, size, {type: 'image/png'});
 };
 
