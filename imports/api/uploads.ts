@@ -75,13 +75,16 @@ type StreamTransform = (
 	size: ThumbSizeOptions,
 ) => Promise<Readable>;
 
+export const cacheKey = <T>(upload: FileObj<T>, size: ThumbSizeOptions) =>
+	`${upload._id}-${size.minWidth ?? '?'}x${size.minHeight ?? '?'}`;
+
 const cacheResult = async <T>(
 	upload: FileObj<T>,
 	transform: StreamTransform,
 	source: () => Readable,
 	size: ThumbSizeOptions,
 ): Promise<Readable> => {
-	const key = `${upload._id}-${size.minWidth ?? '?'}x${size.minHeight ?? '?'}`;
+	const key = cacheKey(upload, size);
 	const cached = thumbnailCache.get(key);
 	if (cached === undefined) {
 		const stream = await transform(source, size);
