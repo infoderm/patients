@@ -36,4 +36,19 @@ client(__filename, () => {
 		await navigateTo(app, 'Agenda', '/calendar/week/current');
 		await navigateTo(app, 'Month', /^\/calendar\/month\//);
 	});
+
+	it('should allow to reach /settings/* tabs', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPasswordAndLogin(username, password);
+
+		await navigateTo(app, 'Settings', '/settings');
+		await navigateTo(app, 'ui', '/settings/ui');
+		await navigateTo(app, 'theme', '/settings/theme');
+		await navigateTo(app, 'payment', '/settings/payment');
+		await navigateTo(app, 'locale', '/settings/locale');
+		await navigateTo(app, 'agenda', '/settings/agenda');
+		await navigateTo(app, 'text', '/settings/text');
+	});
 });
