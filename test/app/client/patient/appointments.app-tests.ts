@@ -16,6 +16,7 @@ import {
 	editConsultation,
 	fillIn,
 } from '../fixtures';
+import {setSetting} from '../../../../imports/ui/settings/hooks';
 
 const scheduleAppointmentForPatient = async (
 	app,
@@ -198,6 +199,8 @@ client(__filename, () => {
 		const password = randomPassword();
 		const app = setupApp();
 		await createUserWithPasswordAndLogin(username, password);
+
+		await setSetting('consultations-paid-sync', ['cash']);
 
 		const firstname = 'John';
 		const lastname = 'Doe';

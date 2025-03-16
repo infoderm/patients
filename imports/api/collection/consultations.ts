@@ -2,6 +2,14 @@ import schema from '../../util/schema';
 
 import define from './define';
 
+export const paymentMethod = schema.union([
+	schema.literal('cash'),
+	schema.literal('wire'),
+	schema.literal('third-party'),
+]);
+
+export type PaymentMethod = schema.infer<typeof paymentMethod>;
+
 export const consultationFields = schema
 	.object({
 		patientId: schema.string(),
@@ -22,7 +30,7 @@ export const consultationFields = schema
 		unpaid: schema.boolean().optional(),
 		book: schema.string().optional(),
 		inBookNumber: schema.number().int().gte(1).optional(),
-		payment_method: schema.string().optional(),
+		payment_method: paymentMethod.optional(),
 		isCancelled: schema.boolean().optional(),
 		cancellationDatetime: schema.date().optional(),
 		cancellationReason: schema.string().optional(),

@@ -13,7 +13,24 @@ import CopiableTextField from '../input/CopiableTextField';
 
 import usePatient from '../patients/usePatient';
 
-const ConsultationEditorHeader = ({consultation, state, update}) => {
+import {
+	type ConsultationEditorInit,
+	type State,
+} from './useConsultationEditorState';
+
+type Props = {
+	readonly consultation: ConsultationEditorInit;
+	readonly state: State;
+	readonly update: (
+		key: keyof State['fields'],
+	) => (event: {target: {value: Date | null}}) => void;
+};
+
+const ConsultationEditorHeader = ({
+	consultation,
+	state: {fields},
+	update,
+}: Props) => {
 	const patientId = consultation.patientId;
 
 	const init = {};
@@ -30,7 +47,7 @@ const ConsultationEditorHeader = ({consultation, state, update}) => {
 
 	const {loading, fields: patient} = usePatient(init, query, deps);
 
-	const {datetime, doneDatetime} = state;
+	const {datetime, doneDatetime} = fields;
 
 	const textPlaceHolder = loading ? '' : '?';
 

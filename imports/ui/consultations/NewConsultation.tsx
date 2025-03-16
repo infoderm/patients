@@ -34,7 +34,7 @@ const NewConsultation = () => {
 		currency: 'EUR',
 		payment_method: 'cash',
 		book: bookNumber,
-	};
+	} as const;
 
 	return (
 		<ConsultationEditor found loading={false} consultation={consultation} />

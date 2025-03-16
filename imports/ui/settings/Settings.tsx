@@ -26,6 +26,7 @@ import ThemePaletteModeSetting from './ThemePaletteModeSetting';
 import ThemePalettePrimarySetting from './ThemePalettePrimarySetting';
 import ThemePaletteSecondarySetting from './ThemePaletteSecondarySetting';
 import AgendaSlotClickSetsInitialTime from './AgendaSlotClickSetsInitialTime';
+import SyncPaidSetting from './SyncPaidSetting';
 
 const PREFIX = 'Settings';
 
@@ -78,9 +79,16 @@ export default function Settings() {
 					path="payment"
 					element={
 						<>
-							<AccountHolderSetting className={classes.setting} />
-							<IBANSetting className={classes.setting} />
-							<CurrencySetting className={classes.setting} />
+							<div className={classes.setting}>
+								<Typography variant="h4">Wire</Typography>
+								<AccountHolderSetting />
+								<IBANSetting />
+							</div>
+							<div className={classes.setting}>
+								<Typography variant="h4">Consultations</Typography>
+								<CurrencySetting />
+								<SyncPaidSetting />
+							</div>
 						</>
 					}
 				/>
