@@ -12,6 +12,7 @@ const Loading = (props) => {
 	return (
 		<div>
 			<StyledAnimation
+				aria-label="loading"
 				type="bubbles"
 				color={theme.palette.primary.main}
 				height={400}
