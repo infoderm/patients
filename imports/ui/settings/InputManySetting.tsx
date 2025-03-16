@@ -7,7 +7,7 @@ import SetPicker from '../input/SetPicker';
 import type PropsOf from '../../util/types/PropsOf';
 import {type SettingKey, type UserSettings} from '../../api/settings';
 
-import {useSetting} from './hooks';
+import {useSettingDebounced} from './hooks';
 
 type BaseProps<K extends SettingKey> = UserSettings[K] extends Array<infer V>
 	? {
@@ -16,7 +16,7 @@ type BaseProps<K extends SettingKey> = UserSettings[K] extends Array<infer V>
 			makeSuggestions?: (
 				value: UserSettings[K],
 			) => (x: string) => {loading?: boolean; results: UserSettings[K]};
-			title: string;
+			title?: string;
 			label?: string;
 			placeholder?: string;
 			itemToKey?: (x: V) => string;
@@ -43,7 +43,7 @@ const InputManySetting = <K extends SettingKey>({
 	sort = undefined,
 	...rest
 }: InputManySettingProps<K>) => {
-	const {loading, value, setValue} = useSetting(setting);
+	const {loading, value, setValue} = useSettingDebounced<K>(setting);
 
 	const onChange = useMemo(
 		() => async (e) => {
@@ -60,7 +60,7 @@ const InputManySetting = <K extends SettingKey>({
 
 	return (
 		<div className={className}>
-			<Typography variant="h4">{title}</Typography>
+			{title && <Typography variant="h4">{title}</Typography>}
 			<SetPicker
 				readOnly={loading}
 				useSuggestions={makeSuggestions(value)}

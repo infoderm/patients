@@ -7,7 +7,11 @@ import availableCurrencies, {
 
 import SelectOneSetting from './SelectOneSetting';
 
-const CurrencySetting = ({className}) => {
+type Props = {
+	readonly className?: string;
+};
+
+const CurrencySetting = ({className}: Props) => {
 	const options = [...availableCurrencies];
 	const optionToString = (option: AvailableCurrency) =>
 		currencyDescriptions[option];

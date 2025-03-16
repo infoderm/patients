@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {styled} from '@mui/material/styles';
 
-import dateParseISO from 'date-fns/parseISO';
 import getYear from 'date-fns/getYear';
 
 import Grid from '@mui/material/Grid';
@@ -27,6 +26,8 @@ import makeSubstringSuggestions from '../input/makeSubstringSuggestions';
 import CurrencyAmountInput from '../input/CurrencyAmountInput';
 import {parsePositiveIntegerStrictOrUndefined} from '../../api/string';
 import useBooksFind from '../books/useBooksFind';
+
+import {type State} from './useConsultationEditorState';
 
 const useInBookNumberCollides = (
 	consultationId: string | undefined,
@@ -56,61 +57,18 @@ const TextArea = styled(TextField)(() => ({
 	width: '100%',
 }));
 
-const defaultDate = '1970-01-01';
-const defaultTime = '00:00';
-
-const datetimeParse = (date, time) => dateParseISO(`${date}T${time}:00`);
-
-export const defaultState = {
-	_id: undefined,
-	datetime: datetimeParse(defaultDate, defaultTime),
-	doneDatetime: undefined,
-	reason: '',
-	done: '',
-	todo: '',
-	treatment: '',
-	next: '',
-	more: '',
-
-	currency: 'EUR',
-	payment_method: 'cash',
-	priceString: '',
-	paidString: '',
-	book: '',
-	inBookNumberString: '',
-
-	syncPaid: true,
-	syncInBookNumber: false,
-	loadingInBookNumber: false,
-	priceWarning: false,
-	priceError: true,
-	paidError: true,
-	inBookNumberError: true,
-	inBookNumberDisabled: false,
-	dirty: false,
-	saving: false,
-	lastSaveWasSuccessful: false,
-	lastInsertedId: undefined,
-};
-
-export type State = Omit<
-	typeof defaultState,
-	'_id' | 'doneDatetime' | 'lastInsertedId'
-> & {
-	_id?: string;
-	doneDatetime?: Date;
-	lastInsertedId?: string;
-};
-
 type Props = {
-	readonly consultation: State;
+	readonly state: State;
 	readonly update?: (
 		key: string,
 		transform?: (x: any) => any,
 	) => (event: {target: {value: any}}) => void;
 };
 
-const ConsultationForm = ({consultation, update}: Props) => {
+const ConsultationForm = ({
+	state: {fields: consultation, config},
+	update,
+}: Props) => {
 	const {
 		_id,
 		datetime,
@@ -128,7 +86,9 @@ const ConsultationForm = ({consultation, update}: Props) => {
 		priceString,
 		paidString,
 		book,
+	} = consultation;
 
+	const {
 		syncInBookNumber,
 		loadingInBookNumber,
 		syncPaid,
@@ -137,7 +97,7 @@ const ConsultationForm = ({consultation, update}: Props) => {
 		priceWarning,
 		priceError,
 		paidError,
-	} = consultation;
+	} = config;
 
 	// eslint-disable-next-line react/hook-use-state
 	const [initialDatetime] = useState(datetime);

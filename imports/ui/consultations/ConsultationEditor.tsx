@@ -1,6 +1,5 @@
 import React, {
 	useState,
-	useReducer,
 	useEffect,
 	type Dispatch,
 	type ReducerAction,
@@ -33,240 +32,24 @@ import {documentDiff} from '../../api/update';
 import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
 
 import ConsultationEditorHeader from './ConsultationEditorHeader';
-import ConsultationForm, {defaultState, type State} from './ConsultationForm';
+import ConsultationForm from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
 import useNextInBookNumber from './useNextInBookNumber';
-
-type ConsultationEditorFields = {
-	_id: string | undefined;
-	isDone: boolean;
-	patientId: string;
-	datetime: Date;
-	doneDatetime?: Date;
-	reason: string;
-	done?: string;
-	todo?: string;
-	treatment?: string;
-	next?: string;
-	more?: string;
-	currency?: string;
-	payment_method?: string;
-	price?: number;
-	paid?: number;
-	book?: string;
-	inBookNumber?: number;
-};
+import useConsultationEditorState, {
+	type ConsultationEditorInit,
+	type reducer,
+	type State,
+} from './useConsultationEditorState';
 
 const Main = styled(Grid)(({theme}) => ({
 	marginTop: 64,
 	paddingTop: theme.spacing(3),
 }));
 
-const isZero = (x: string) => Number.parseInt(x, 10) === 0;
-const isValidAmount = (amount: string) => /^\d+$/.test(amount);
-const isRealBookNumber = (numberString: string) =>
-	books.isRealBookNumberStringRegex.test(numberString);
-const isValidInBookNumber = (numberString: string) =>
-	books.isValidInBookNumberStringRegex.test(numberString);
-const init = (consultation: ConsultationEditorFields): State => {
-	const priceString = Number.isFinite(consultation.price)
-		? String(consultation.price)
-		: '';
-	const paidString = Number.isFinite(consultation.paid)
-		? String(consultation.paid)
-		: '';
-
-	const inBookNumberString =
-		Number.isInteger(consultation.inBookNumber) &&
-		consultation.inBookNumber !== undefined &&
-		consultation.inBookNumber >= 1
-			? String(consultation.inBookNumber)
-			: '';
-	return {
-		...defaultState,
-		...removeUndefined({
-			_id: consultation._id,
-			datetime: consultation.datetime,
-			doneDatetime: consultation.doneDatetime,
-			reason: consultation.reason,
-			done: consultation.done,
-			todo: consultation.todo,
-			treatment: consultation.treatment,
-			next: consultation.next,
-			more: consultation.more,
-
-			currency: consultation.currency,
-			payment_method: consultation.payment_method,
-			priceString,
-			paidString,
-			book: consultation.book,
-			inBookNumberString,
-
-			syncPaid: priceString === paidString,
-			syncInBookNumber:
-				consultation._id === undefined && inBookNumberString === '',
-			priceWarning: isZero(priceString),
-			priceError: !isValidAmount(priceString),
-			paidError: !isValidAmount(paidString),
-			inBookNumberError: !isValidInBookNumber(inBookNumberString),
-			inBookNumberDisabled:
-				typeof consultation.book !== 'string' ||
-				!isRealBookNumber(consultation.book),
-		}),
-	};
-};
-
-type Action =
-	| ({type: 'update'} & (
-			| {key: 'paidString'; value: string}
-			| {key: 'priceString'; value: string}
-			| {key: 'inBookNumberString'; value: string}
-			| {key: string; value: string}
-	  ))
-	| {type: 'save-success'; insertedId?: string}
-	| {type: 'sync-in-book-number'; inBookNumber: number}
-	| {type: 'loading-next-in-book-number'}
-	| {type: 'disable-in-book-number'}
-	| {type: 'save'}
-	| {type: 'save-failure'}
-	| {type: 'not-dirty'};
-
-const reducer = (state: State, action: Action) => {
-	switch (action.type) {
-		case 'update': {
-			switch (action.key) {
-				case '_id': {
-					throw new Error('Cannot update _id.');
-				}
-
-				case 'dirty': {
-					throw new Error('Cannot update dirty.');
-				}
-
-				case 'paidString': {
-					const paidString = action.value;
-					return {
-						...state,
-						paidString,
-						paidError: !isValidAmount(paidString),
-						syncPaid: false,
-						dirty: true,
-					};
-				}
-
-				case 'priceString': {
-					const priceString = action.value;
-					const paidString =
-						state.syncPaid && state.payment_method === 'cash'
-							? priceString
-							: state.paidString;
-					return {
-						...state,
-						priceString,
-						priceWarning: isZero(priceString),
-						priceError: !isValidAmount(priceString),
-						paidString,
-						paidError: !isValidAmount(paidString),
-						dirty: true,
-					};
-				}
-
-				case 'inBookNumberString': {
-					const inBookNumberString = action.value;
-					return {
-						...state,
-						inBookNumberString,
-						inBookNumberError: !isValidInBookNumber(inBookNumberString),
-						inBookNumberDisabled: !isRealBookNumber(state.book),
-						syncInBookNumber: false,
-						dirty:
-							state.dirty || inBookNumberString !== state.inBookNumberString,
-					};
-				}
-
-				default: {
-					if (!Object.prototype.hasOwnProperty.call(defaultState, action.key)) {
-						throw new Error(`Unknown key ${action.key}`);
-					}
-
-					return {...state, [action.key]: action.value, dirty: true};
-				}
-			}
-		}
-
-		case 'loading-next-in-book-number': {
-			return {
-				...state,
-				loadingInBookNumber: true,
-				inBookNumberDisabled: false,
-				syncInBookNumber: true,
-			};
-		}
-
-		case 'disable-in-book-number': {
-			return {
-				...state,
-				inBookNumberString: '',
-				inBookNumberError: false,
-				inBookNumberDisabled: true,
-				loadingInBookNumber: false,
-				syncInBookNumber: false,
-				dirty: state.dirty || state.inBookNumberString !== '',
-			};
-		}
-
-		case 'sync-in-book-number': {
-			return {
-				...state,
-				inBookNumberString: String(action.inBookNumber),
-				inBookNumberError: false,
-				loadingInBookNumber: false,
-				syncInBookNumber: true,
-			};
-		}
-
-		case 'save': {
-			return {...state, saving: true};
-		}
-
-		case 'save-success': {
-			if (action.insertedId) {
-				return {
-					...state,
-					saving: false,
-					dirty: false,
-					lastSaveWasSuccessful: true,
-					lastInsertedId: action.insertedId,
-				};
-			}
-
-			return {
-				...state,
-				saving: false,
-				dirty: false,
-				lastSaveWasSuccessful: true,
-			};
-		}
-
-		case 'save-failure': {
-			return {...state, saving: false, lastSaveWasSuccessful: false};
-		}
-
-		case 'not-dirty': {
-			return {...state, dirty: false};
-		}
-
-		default: {
-			// @ts-expect-error NOTE Can code defensively and be type-safe.
-			throw new Error(`Unknown action type ${action.type}.`);
-		}
-	}
-};
-
 type LoaderProps =
 	| {loading: true; found: unknown; consultation: unknown}
 	| {loading: false; found: false; consultation: unknown}
-	| {loading: false; found: true; consultation: ConsultationEditorFields};
+	| {loading: false; found: true; consultation: ConsultationEditorInit};
 
 const Loader = ({loading, found, consultation}: LoaderProps) => {
 	if (loading) return <Loading />;
@@ -280,16 +63,13 @@ const Loader = ({loading, found, consultation}: LoaderProps) => {
 	return <ConsultationEditor consultation={consultation} />;
 };
 
-const useConsultationEditorState = (consultation: ConsultationEditorFields) =>
-	useReducer(reducer, consultation, init);
-
 const useInBookNumberEffect = (
 	{
 		_id: consultationId,
 		book: initBook,
 		inBookNumber: initInBookNumber,
-	}: ConsultationEditorFields,
-	{book, syncInBookNumber}: State,
+	}: ConsultationEditorInit,
+	{fields: {book}, config: {syncInBookNumber}}: State,
 	dispatch: Dispatch<ReducerAction<typeof reducer>>,
 ) => {
 	const {loading, inBookNumber} = useNextInBookNumber(book);
@@ -313,7 +93,7 @@ const useInBookNumberEffect = (
 };
 
 type ConsultationEditorProps = {
-	readonly consultation: ConsultationEditorFields;
+	readonly consultation: ConsultationEditorInit;
 };
 
 const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
@@ -327,26 +107,30 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 	const [state, dispatch] = useConsultationEditorState(consultation);
 
 	const {
-		datetime,
-		reason,
-		done,
-		todo,
-		treatment,
-		next,
-		more,
+		fields: {
+			datetime,
+			reason,
+			done,
+			todo,
+			treatment,
+			next,
+			more,
 
-		currency,
-		payment_method,
-		priceString,
-		paidString,
-		book,
+			currency,
+			payment_method,
+			priceString,
+			paidString,
+			book,
 
-		inBookNumberString,
-		dirty,
-		saving,
-		lastSaveWasSuccessful,
-		lastInsertedId,
-		priceWarning,
+			inBookNumberString,
+		},
+		config: {
+			dirty,
+			saving,
+			lastSaveWasSuccessful,
+			lastInsertedId,
+			priceWarning,
+		},
 	} = state;
 
 	usePrompt(
@@ -452,7 +236,7 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 					</Grid>
 				)}
 				<Grid item xs={12} lg={compare ? 6 : 12} xl={compare ? 8 : 12}>
-					<ConsultationForm consultation={state} update={update} />
+					<ConsultationForm state={state} update={update} />
 				</Grid>
 			</Main>
 			<FixedFab

@@ -10,6 +10,8 @@ import type ModuloWeekInterval from '../ui/settings/ModuloWeekInterval';
 import {Settings} from './collection/settings';
 import findOneSync from './publication/findOneSync';
 
+import {type PaymentMethod} from './collection/consultations';
+
 export type UserSettings = {
 	'theme-palette-mode': PaletteMode;
 	'theme-palette-primary': string;
@@ -29,6 +31,7 @@ export type UserSettings = {
 	iban: string;
 	'account-holder': string;
 	'displayed-week-days': WeekDay[];
+	'consultations-paid-sync': PaymentMethod[];
 };
 
 export type SettingKey = keyof UserSettings;
@@ -52,6 +55,7 @@ export const defaults: UserSettings = {
 	iban: '',
 	'account-holder': '',
 	'displayed-week-days': [...ALL_WEEK_DAYS],
+	'consultations-paid-sync': [],
 };
 
 export function get(owner: string, key: string) {

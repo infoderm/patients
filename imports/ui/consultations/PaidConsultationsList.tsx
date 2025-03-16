@@ -11,7 +11,10 @@ import {capitalized} from '../../api/string';
 import Center from '../grid/Center';
 import YearJumper from '../navigation/YearJumper';
 import type Filter from '../../api/query/Filter';
-import {type ConsultationDocument} from '../../api/collection/consultations';
+import {
+	type PaymentMethod,
+	type ConsultationDocument,
+} from '../../api/collection/consultations';
 import FixedFab from '../button/FixedFab';
 
 import ConsultationsStatsCard from './ConsultationsStatsCard';
@@ -19,7 +22,7 @@ import ConsultationsPager from './ConsultationsPager';
 
 type Props = {
 	readonly year: number;
-	readonly payment_method?: string;
+	readonly payment_method?: PaymentMethod;
 };
 
 const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {

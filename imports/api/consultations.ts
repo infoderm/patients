@@ -14,6 +14,7 @@ import {
 	type ConsultationDocument,
 	type ConsultationFields,
 	Consultations,
+	paymentMethod,
 } from './collection/consultations';
 import {key as statsKey} from './collection/consultations/stats';
 import type TransactionDriver from './transaction/TransactionDriver';
@@ -250,12 +251,7 @@ const sanitizeUpdate = function* (
 		schema.string(),
 		(book: string | undefined | null) => books.sanitize(book ?? ''),
 	);
-	yield* yieldResettableKey(
-		fields,
-		'payment_method',
-		schema.string(),
-		(x) => x,
-	);
+	yield* yieldResettableKey(fields, 'payment_method', paymentMethod, (x) => x);
 
 	yield* yieldResettableKey(
 		fields,
