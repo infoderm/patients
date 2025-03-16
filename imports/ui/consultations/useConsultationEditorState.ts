@@ -234,8 +234,7 @@ export type Action =
 	| {type: 'loading-next-in-book-number'}
 	| {type: 'disable-in-book-number'}
 	| {type: 'save'}
-	| {type: 'save-failure'}
-	| {type: 'not-dirty'};
+	| {type: 'save-failure'};
 
 export const reducer = ({fields, config}: State, action: Action): State => {
 	switch (action.type) {
@@ -428,16 +427,6 @@ export const reducer = ({fields, config}: State, action: Action): State => {
 					...config,
 					saving: false,
 					lastSaveWasSuccessful: false,
-				},
-			};
-		}
-
-		case 'not-dirty': {
-			return {
-				fields,
-				config: {
-					...config,
-					dirty: false,
 				},
 			};
 		}
