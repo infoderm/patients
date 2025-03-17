@@ -48,7 +48,7 @@ const useConsultationEditorState = (consultation: ConsultationEditorInit) => {
 
 export default useConsultationEditorState;
 
-const isZero = (x: string) => Number.parseInt(x, 10) === 0;
+const parseAmount = (x: string) => Number.parseInt(x, 10);
 const isValidAmount = (amount: string) => /^\d+$/.test(amount);
 const isRealBookNumber = (numberString: string) =>
 	books.isRealBookNumberStringRegex.test(numberString);
@@ -114,9 +114,8 @@ const init = (consultation: ConsultationEditorInit): State => {
 			syncPaidPaymentMethods: [],
 			syncInBookNumber:
 				consultation._id === undefined && inBookNumberString === '',
-			priceWarning: isZero(priceString),
-			priceError: !isValidAmount(priceString),
-			paidError: !isValidAmount(paidString),
+			priceStatus: _priceStatus(fields),
+			paidStatus: _paidStatus(fields),
 			isPaidDirty: _initIsPaidDirty({fields}),
 			inBookNumberError: !isValidInBookNumber(inBookNumberString),
 			inBookNumberDisabled:
@@ -138,6 +137,22 @@ const init = (consultation: ConsultationEditorInit): State => {
 		},
 	};
 };
+
+export enum PriceStatus {
+	OK = 0,
+	SHOULD_NOT_BE_EMPTY,
+	SHOULD_NOT_BE_ZERO,
+	SHOULD_NOT_BE_INVALID,
+}
+
+export enum PaidStatus {
+	OK = 0,
+	SHOULD_NOT_BE_EMPTY,
+	SHOULD_NOT_BE_ZERO,
+	SHOULD_NOT_BE_INVALID,
+	SHOULD_NOT_BE_GT_PRICE,
+	SHOULD_NOT_BE_LT_PRICE,
+}
 
 type ConsultationFormFields = {
 	_id: string | undefined;
@@ -163,9 +178,8 @@ type ConsultationFormConfiguration = {
 	syncPaidPaymentMethods: PaymentMethod[];
 	syncInBookNumber: boolean;
 	loadingInBookNumber: boolean;
-	priceWarning: boolean;
-	priceError: boolean;
-	paidError: boolean;
+	priceStatus: PriceStatus;
+	paidStatus: PaidStatus;
 	inBookNumberError: boolean;
 	inBookNumberDisabled: boolean;
 	dirty: boolean;
@@ -184,6 +198,33 @@ const defaultTime = '00:00';
 
 const datetimeParse = (date: string, time: string) =>
 	dateParseISO(`${date}T${time}:00`);
+
+const _priceStatus = ({
+	book,
+	priceString,
+}: Pick<ConsultationFormFields, 'book' | 'priceString'>): PriceStatus => {
+	if (priceString === '') return PriceStatus.SHOULD_NOT_BE_EMPTY;
+	if (!isValidAmount(priceString)) return PriceStatus.SHOULD_NOT_BE_INVALID;
+	const price = parseAmount(priceString);
+	if (price === 0 && isRealBookNumber(book))
+		return PriceStatus.SHOULD_NOT_BE_ZERO;
+	return PriceStatus.OK;
+};
+
+const _paidStatus = ({
+	priceString,
+	paidString,
+}: Pick<ConsultationFormFields, 'priceString' | 'paidString'>): PaidStatus => {
+	if (!isValidAmount(paidString) && !isValidAmount(priceString))
+		return PaidStatus.SHOULD_NOT_BE_INVALID;
+	if (paidString === '') return PaidStatus.SHOULD_NOT_BE_EMPTY;
+	const paid = parseAmount(paidString);
+	const price = parseAmount(priceString);
+	if (paid === 0 && paid !== price) return PaidStatus.SHOULD_NOT_BE_ZERO;
+	if (paid < price) return PaidStatus.SHOULD_NOT_BE_LT_PRICE;
+	if (paid > price) return PaidStatus.SHOULD_NOT_BE_GT_PRICE;
+	return PaidStatus.OK;
+};
 
 export const defaultState: State = {
 	fields: {
@@ -210,9 +251,8 @@ export const defaultState: State = {
 		syncPaidPaymentMethods: [],
 		syncInBookNumber: false,
 		loadingInBookNumber: false,
-		priceWarning: false,
-		priceError: true,
-		paidError: true,
+		priceStatus: _priceStatus({priceString: '', book: ''}),
+		paidStatus: _paidStatus({priceString: '', paidString: ''}),
 		inBookNumberError: true,
 		inBookNumberDisabled: false,
 		dirty: false,
@@ -261,15 +301,15 @@ export const reducer = ({fields, config}: State, action: Action): State => {
 				}
 
 				case 'paidString': {
-					const paidString = action.value;
+					const newFields = {
+						...fields,
+						paidString: action.value,
+					};
 					return {
-						fields: {
-							...fields,
-							paidString,
-						},
+						fields: newFields,
 						config: {
 							...config,
-							paidError: !isValidAmount(paidString),
+							paidStatus: _paidStatus(newFields),
 							syncPaid: false,
 							dirty: true,
 							isPaidDirty: true,
@@ -281,19 +321,34 @@ export const reducer = ({fields, config}: State, action: Action): State => {
 					const priceString = action.value;
 					const paidString = config.syncPaid ? priceString : fields.paidString;
 					const isPaidDirty = config.isPaidDirty || paidString !== priceString;
+					const newFields = {
+						...fields,
+						priceString,
+						paidString,
+					};
 					return {
-						fields: {
-							...fields,
-							priceString,
-							paidString,
-						},
+						fields: newFields,
 						config: {
 							...config,
-							priceWarning: isZero(priceString),
-							priceError: !isValidAmount(priceString),
-							paidError: !isValidAmount(paidString),
+							priceStatus: _priceStatus(newFields),
+							paidStatus: _paidStatus(newFields),
 							dirty: true,
 							isPaidDirty,
+						},
+					};
+				}
+
+				case 'book': {
+					const newFields = {
+						...fields,
+						book: action.value,
+					};
+					return {
+						fields: newFields,
+						config: {
+							...config,
+							priceStatus: _priceStatus(newFields),
+							dirty: true,
 						},
 					};
 				}
