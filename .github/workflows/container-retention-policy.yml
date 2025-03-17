@@ -27,7 +27,17 @@ jobs:
       packages: write
 
     steps:
+      - name: Check if workflow file changed 🔍
+        if: github.event_name == 'pull_request'
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            workflow:
+              - .github/workflows/container-retention-policy.yml
+
       - name: Cleanup old non-release images 🧹
+        if: github.event_name != 'pull_request' || steps.changes.outputs.workflow == 'true'
         uses: dataaxiom/ghcr-cleanup-action@v1
         with:
           packages: patient-web,patient-backup,patient-backup-retention-policy
