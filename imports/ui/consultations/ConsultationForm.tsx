@@ -27,7 +27,13 @@ import CurrencyAmountInput from '../input/CurrencyAmountInput';
 import {parsePositiveIntegerStrictOrUndefined} from '../../api/string';
 import useBooksFind from '../books/useBooksFind';
 
-import {type State} from './useConsultationEditorState';
+import type PropsOf from '../../util/types/PropsOf';
+
+import {
+	PaidStatus,
+	PriceStatus,
+	type State,
+} from './useConsultationEditorState';
 
 const useInBookNumberCollides = (
 	consultationId: string | undefined,
@@ -94,9 +100,7 @@ const ConsultationForm = ({
 		syncPaid,
 		inBookNumberError,
 		inBookNumberDisabled,
-		priceWarning,
-		priceError,
-		paidError,
+		priceStatus,
 	} = config;
 
 	// eslint-disable-next-line react/hook-use-state
@@ -243,13 +247,17 @@ const ConsultationForm = ({
 								label="Prix"
 								value={priceString}
 								margin="normal"
-								error={priceError}
+								{..._priceProps({fields: consultation, config})}
 								InputProps={{
 									endAdornment: (
 										<InputAdornment position="end">
 											<IconButton
 												size="large"
-												sx={priceWarning ? undefined : {display: 'none'}}
+												sx={
+													priceStatus === PriceStatus.SHOULD_NOT_BE_ZERO
+														? undefined
+														: {display: 'none'}
+												}
 											>
 												<WarningIcon />
 											</IconButton>
@@ -268,7 +276,7 @@ const ConsultationForm = ({
 								label="Payé"
 								value={paidString}
 								margin="normal"
-								error={paidError}
+								{..._paidProps({fields: consultation, config})}
 								InputProps={{
 									endAdornment: (
 										<InputAdornment position="end">
@@ -369,3 +377,80 @@ const ConsultationForm = ({
 };
 
 export default ConsultationForm;
+
+const _priceProps = ({
+	config: {priceStatus},
+}: State): Partial<PropsOf<typeof TextField>> => {
+	// eslint-disable-next-line default-case
+	switch (priceStatus) {
+		case PriceStatus.OK: {
+			return {};
+		}
+
+		case PriceStatus.SHOULD_NOT_BE_ZERO: {
+			return {
+				color: 'warning',
+				helperText: 'Price is zero but book is not special',
+				focused: true,
+			};
+		}
+
+		case PriceStatus.SHOULD_NOT_BE_EMPTY:
+		case PriceStatus.SHOULD_NOT_BE_INVALID: {
+			return {
+				error: true,
+			};
+		}
+	}
+};
+
+const _paidProps = ({
+	config: {paidStatus, dirty},
+}: State): Partial<PropsOf<typeof TextField>> => {
+	// eslint-disable-next-line default-case
+	switch (paidStatus) {
+		case PaidStatus.OK: {
+			return {
+				color: 'info',
+				helperText: dirty
+					? 'This consultation will be considered paid'
+					: 'This consultation is considered paid',
+				focused: true,
+			};
+		}
+
+		case PaidStatus.SHOULD_NOT_BE_ZERO:
+		case PaidStatus.SHOULD_NOT_BE_EMPTY: {
+			return {
+				color: 'warning',
+				helperText: dirty
+					? 'This consultation will be considered unpaid'
+					: 'This consultation is considered unpaid',
+				focused: true,
+			};
+		}
+
+		case PaidStatus.SHOULD_NOT_BE_LT_PRICE: {
+			return {
+				color: 'warning',
+				helperText: dirty
+					? 'This consultation will be considered partially unpaid'
+					: 'This consultation is considered partially unpaid',
+				focused: true,
+			};
+		}
+
+		case PaidStatus.SHOULD_NOT_BE_GT_PRICE: {
+			return {
+				helperText: 'Paid amount is larger than price',
+				error: true,
+			};
+		}
+
+		case PaidStatus.SHOULD_NOT_BE_INVALID: {
+			return {
+				error: true,
+			};
+		}
+	}
+};

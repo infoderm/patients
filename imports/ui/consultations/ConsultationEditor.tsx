@@ -36,6 +36,7 @@ import ConsultationForm from './ConsultationForm';
 import PrecedingConsultationsList from './PrecedingConsultationsList';
 import useNextInBookNumber from './useNextInBookNumber';
 import useConsultationEditorState, {
+	PriceStatus,
 	type ConsultationEditorInit,
 	type reducer,
 	type State,
@@ -124,13 +125,7 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 
 			inBookNumberString,
 		},
-		config: {
-			dirty,
-			saving,
-			lastSaveWasSuccessful,
-			lastInsertedId,
-			priceWarning,
-		},
+		config: {dirty, saving, lastSaveWasSuccessful, lastInsertedId, priceStatus},
 	} = state;
 
 	usePrompt(
@@ -177,11 +172,15 @@ const ConsultationEditor = ({consultation}: ConsultationEditorProps) => {
 		});
 
 		if (
-			priceWarning &&
+			priceStatus !== PriceStatus.OK &&
 			!(await dialog((resolve) => (
 				<ConfirmationDialog
 					title="Confirm"
-					text={`This consultation has a price of ${priceString}.`}
+					text={
+						priceStatus === PriceStatus.SHOULD_NOT_BE_EMPTY
+							? "This consultation's price is not set."
+							: `This consultation has a price of ${priceString}.`
+					}
 					cancel="Cancel"
 					confirm={
 						consultationId === undefined
