@@ -157,7 +157,7 @@ export default function Routing() {
 				<Route element={<Stats />} path="stats" />
 				<Route element={<SEPAPaymentDetails />} path="sepa" />
 
-				<Route element={<Issues />} path="issues" />
+				<Route element={<Issues />} path="issues/*" />
 				<Route element={<MergePatientsForm />} path="merge" />
 
 				<Route element={<DoctorsListRoutes />} path="doctors/*" />
