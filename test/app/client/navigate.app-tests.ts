@@ -37,6 +37,55 @@ client(__filename, () => {
 		await navigateTo(app, 'Month', /^\/calendar\/month\//);
 	});
 
+	it('should allow to reach /issues/* tabs', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		const app = setupApp();
+		await createUserWithPasswordAndLogin(username, password);
+
+		await navigateTo(app, 'Issues', '/issues');
+		await navigateTo(
+			app,
+			'uploads-not-attached',
+			'/issues/uploads-not-attached',
+		);
+		await navigateTo(
+			app,
+			'documents-not-decoded',
+			'/issues/documents-not-decoded',
+		);
+		await navigateTo(
+			app,
+			'documents-not-parsed',
+			'/issues/documents-not-parsed',
+		);
+		await navigateTo(
+			app,
+			'documents-not-linked',
+			'/issues/documents-not-linked',
+		);
+		await navigateTo(
+			app,
+			'consultations-no-payment',
+			'/issues/consultations-no-payment',
+		);
+		await navigateTo(
+			app,
+			'consultations-no-book',
+			'/issues/consultations-no-book',
+		);
+		await navigateTo(
+			app,
+			'consultations-price-is-zero',
+			'/issues/consultations-price-is-zero',
+		);
+		await navigateTo(
+			app,
+			'doctors-non-alphabetical',
+			'/issues/doctors-non-alphabetical',
+		);
+	});
+
 	it('should allow to reach /settings/* tabs', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
