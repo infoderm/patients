@@ -1,30 +1,28 @@
 import React from 'react';
 
-import {useConsultationsMissingABook} from '../../api/issues';
+import ConsultationsPager from '../consultations/ConsultationsPager';
 
-import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
+const filter = {
+	isDone: true,
+	$or: [{book: null!}, {book: ''}],
+};
+
+const sort = {
+	datetime: -1,
+};
+
 const ConsultationsMissingABook = (props) => {
-	const {loading, results: consultations} = useConsultationsMissingABook();
-
-	if (loading) {
-		return <div {...props}>Loading...</div>;
-	}
-
-	if (consultations.length === 0) {
-		return <div {...props}>All consultations have a book :)</div>;
-	}
-
 	return (
 		<div {...props}>
-			{consultations.map((consultation) => (
-				<ReactiveConsultationCard
-					key={consultation._id}
-					consultation={consultation}
-					PatientChip={ReactivePatientChip}
-				/>
-			))}
+			<ConsultationsPager
+				filter={filter}
+				sort={sort}
+				itemProps={{
+					PatientChip: ReactivePatientChip,
+				}}
+			/>
 		</div>
 	);
 };

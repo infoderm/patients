@@ -1,48 +1,40 @@
 import React from 'react';
 
-import {useConsultationsMissingPaymentData} from '../../api/issues';
+import ConsultationsPager from '../consultations/ConsultationsPager';
 
-import ReactiveConsultationCard from '../consultations/ReactiveConsultationCard';
 import ReactivePatientChip from '../patients/ReactivePatientChip';
 
+const filter = {
+	isDone: true,
+	datetime: {$gte: new Date(2020, 0, 1)},
+	$or: [
+		{price: {$exists: false}},
+		{price: {$not: {$type: 1}}},
+		{price: Number.NaN},
+		{price: {$exists: false}},
+		{paid: {$not: {$type: 1}}},
+		{paid: Number.NaN},
+		{currency: {$exists: false}},
+		{currency: {$not: {$type: 2}}},
+		{payment_method: {$exists: false}},
+		{payment_method: {$not: {$type: 2}}},
+	],
+};
+
+const sort = {
+	datetime: -1,
+};
+
 const ConsultationsMissingPaymentData = (props) => {
-	const {loading, results: consultations} = useConsultationsMissingPaymentData(
-		{
-			isDone: true,
-			datetime: {$gte: new Date(2020, 0, 1)},
-			$or: [
-				{price: {$not: {$type: 1}}},
-				{price: Number.NaN},
-				{paid: {$not: {$type: 1}}},
-				{paid: Number.NaN},
-				{currency: {$not: {$type: 2}}},
-				{payment_method: {$not: {$type: 2}}},
-			],
-		},
-		{
-			sort: {
-				datetime: -1,
-			},
-		},
-	);
-
-	if (loading) {
-		return <div {...props}>Loading...</div>;
-	}
-
-	if (consultations.length === 0) {
-		return <div {...props}>All consultations have payment data :)</div>;
-	}
-
 	return (
 		<div {...props}>
-			{consultations.map((consultation) => (
-				<ReactiveConsultationCard
-					key={consultation._id}
-					consultation={consultation}
-					PatientChip={ReactivePatientChip}
-				/>
-			))}
+			<ConsultationsPager
+				filter={filter}
+				sort={sort}
+				itemProps={{
+					PatientChip: ReactivePatientChip,
+				}}
+			/>
 		</div>
 	);
 };
