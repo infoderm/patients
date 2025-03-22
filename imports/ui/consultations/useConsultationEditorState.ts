@@ -206,8 +206,7 @@ const _priceStatus = ({
 	if (priceString === '') return PriceStatus.SHOULD_NOT_BE_EMPTY;
 	if (!isValidAmount(priceString)) return PriceStatus.SHOULD_NOT_BE_INVALID;
 	const price = parseAmount(priceString);
-	if (price === 0 && isRealBookNumber(book))
-		return PriceStatus.SHOULD_NOT_BE_ZERO;
+	if (price === 0 && book !== '0') return PriceStatus.SHOULD_NOT_BE_ZERO;
 	return PriceStatus.OK;
 };
 

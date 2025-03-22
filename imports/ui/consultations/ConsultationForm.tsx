@@ -390,7 +390,7 @@ const _priceProps = ({
 		case PriceStatus.SHOULD_NOT_BE_ZERO: {
 			return {
 				color: 'warning',
-				helperText: 'Price is zero but book is not special',
+				helperText: 'Price is zero but book is not `0`',
 				focused: true,
 			};
 		}
