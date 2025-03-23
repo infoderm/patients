@@ -47,7 +47,7 @@ const UnpaidConsultationsList = ({year}: Props) => {
 		filter.payment_method = {$in: displayedPaymentMethods};
 	}
 
-	const sort = {datetime: 1};
+	const sort = {datetime: 1} as const;
 
 	const toURL = (x) => `/unpaid/year/${x}`;
 
