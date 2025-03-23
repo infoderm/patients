@@ -1,12 +1,13 @@
-import React, {type DependencyList} from 'react';
+import React from 'react';
 
-import FixedFab from '../button/FixedFab';
+import type PropsOf from '../../util/types/PropsOf';
 
-import type UserQuery from '../../api/query/UserQuery';
 import {type DocumentDocument} from '../../api/collection/documents';
 import type UserFilter from '../../api/query/UserFilter';
 import {type Sort} from '../../api/query/sort';
-import type PropsOf from '../../util/types/PropsOf';
+import type GenericQueryHook from '../../api/GenericQueryHook';
+
+import FixedFab from '../button/FixedFab';
 
 import CustomDocumentImportButton from './CustomDocumentImportButton';
 import StaticDocumentList from './StaticDocumentList';
@@ -19,13 +20,8 @@ type Props = {
 	readonly perpage?: number;
 } & Omit<PropsOf<typeof StaticDocumentList>, 'page' | 'perpage' | 'documents'>;
 
-type Hook<T> = (
-	query: UserQuery<T>,
-	deps: DependencyList,
-) => {loading: boolean; results: T[]};
-
 const makeDocumentsList =
-	(useDocuments: Hook<DocumentDocument>) =>
+	(useDocuments: GenericQueryHook<DocumentDocument>) =>
 	({filter = {}, sort, page = 1, perpage = 10, ...rest}: Props) => {
 		const query = {
 			filter,
