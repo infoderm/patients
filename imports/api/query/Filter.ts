@@ -1,6 +1,16 @@
-import {type Condition} from './UserFilter';
+import {chain} from '@iterable-iterator/chain';
+import {map} from '@iterable-iterator/map';
+
+import schema from '../../util/schema';
+
+import {$expr, $text, condition, type Condition} from './UserFilter';
 import type WithId from './WithId';
-import {type FieldSpecifiers, type PropertyType} from './dotNotation';
+import {
+	fieldSpecifiers,
+	type FieldSpecifiers,
+	propertyType,
+	type PropertyType,
+} from './dotNotation';
 
 type RootFilterOperators<TSchema> = {
 	$expr?: Record<string, any>;
@@ -23,3 +33,41 @@ type StrictFilter<TSchema> = {
 } & RootFilterOperators<WithId<TSchema>>;
 
 export default StrictFilter;
+
+export const $where = <S extends schema.ZodTypeAny>(tSchema: S) =>
+	schema.union([
+		schema.string(),
+		schema.function(schema.tuple([tSchema]), schema.boolean()),
+	]);
+
+export const filter = <S extends schema.ZodTypeAny>(
+	tSchema: S,
+): schema.ZodType<StrictFilter<schema.infer<S>>> => {
+	const as = schema.lazy(() => schema.array(s));
+	const s = schema
+		.object(
+			Object.fromEntries(
+				chain(
+					map(
+						(key: string) => [
+							key,
+							condition(propertyType(tSchema, key) as any),
+						],
+						fieldSpecifiers(tSchema),
+					),
+					[
+						['$and', as],
+						['$nor', as],
+						['$or', as],
+						['$expr', $expr(tSchema)],
+						['$text', $text],
+						['$where', $where(tSchema)],
+					],
+				),
+			),
+		)
+		.strict()
+		.partial();
+
+	return s;
+};
