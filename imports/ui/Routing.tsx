@@ -120,10 +120,7 @@ export default function Routing() {
 				<Route element={<PatientRecordRoute />} path="patient/:id/*" />
 				<Route element={<NewPatientForm />} path="new/patient" />
 
-				<Route
-					element={<DocumentsListRoutes sort={{createdAt: -1}} />}
-					path="documents/*"
-				/>
+				<Route element={<DocumentsListRoutes />} path="documents/*" />
 				<Route
 					element={<DocumentsFromIdentifierListRoutes />}
 					path="documents/filterBy/identifier/:identifier/*"
