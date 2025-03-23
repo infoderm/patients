@@ -23,7 +23,15 @@ export type TagListPageProps<T extends TagNameFields & TagMetadata> = {
 	readonly sort?: Sort<T>;
 
 	readonly useTags: GenericQueryHook<T>;
+
+	readonly LoadingIndicator?: React.ElementType<{}>;
+	readonly EmptyPage?: React.ElementType<{page: number}>;
 };
+
+const DefaultLoadingIndicator = Loading;
+const DefaultEmptyPage = ({page}: {readonly page: number}) => (
+	<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+);
 
 const TagListPage = <T extends TagNameFields & TagMetadata>({
 	useTags,
@@ -32,6 +40,8 @@ const TagListPage = <T extends TagNameFields & TagMetadata>({
 	page = 1,
 	perpage = 10,
 	Card,
+	LoadingIndicator = DefaultLoadingIndicator,
+	EmptyPage = DefaultEmptyPage,
 }: TagListPageProps<T>) => {
 	const [key, refresh] = useRandom();
 	const query = {
@@ -53,9 +63,9 @@ const TagListPage = <T extends TagNameFields & TagMetadata>({
 			<div style={style}>
 				{tags.length === 0 ? (
 					loading ? (
-						<Loading />
+						<LoadingIndicator />
 					) : (
-						<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+						<EmptyPage page={page} />
 					)
 				) : (
 					<TagGrid Card={Card} tags={tags} />
