@@ -2,39 +2,34 @@ import React from 'react';
 
 import {useMangledDocuments} from '../../api/issues';
 
-import DocumentsPage from '../documents/DocumentsPage';
+import paged from '../routes/paged';
+
+import makeDocumentsList from '../documents/makeDocumentsList';
+
+const DocumentsPage = makeDocumentsList(useMangledDocuments);
+const DocumentsPager = paged(DocumentsPage);
 
 type Props = React.JSX.IntrinsicAttributes &
 	React.ClassAttributes<HTMLDivElement> &
 	React.HTMLAttributes<HTMLDivElement>;
 
 const MangledDocuments = (props: Props) => {
-	const {loading, results: documents} = useMangledDocuments(
-		{
-			filter: {},
-			sort: {
-				createdAt: 1,
-			},
-			projection: {
-				...DocumentsPage.projection,
-				// encoding: 1,
-				// createdAt: 1
-			},
-		},
-		[],
-	);
-
-	if (loading) {
-		return <div {...props}>Loading...</div>;
-	}
-
-	if (documents.length === 0) {
-		return <div {...props}>All documents have been decoded :)</div>;
-	}
-
 	return (
 		<div {...props}>
-			<DocumentsPage documents={documents} />
+			<DocumentsPager
+				sort={{
+					createdAt: 1,
+				}}
+				LoadingIndicator={(_: {}) => <>Loading...</>}
+				EmptyPage={({page}: {readonly page: number}) =>
+					page === 1 ? (
+						<>All documents have been decoded :)</>
+					) : (
+						// eslint-disable-next-line react/jsx-no-useless-fragment
+						<>{`Nothing to see on page ${page}.`}</>
+					)
+				}
+			/>
 		</div>
 	);
 };
