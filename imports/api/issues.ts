@@ -21,6 +21,11 @@ import {
 
 import makeFilteredCollection from './makeFilteredCollection';
 import type Query from './query/Query';
+import {
+	type DoctorDocument,
+	doctorDocument,
+	Doctors,
+} from './collection/doctors';
 
 export const usePatientsMissingABirthdate = makeFilteredCollection(
 	Patients,
@@ -186,4 +191,18 @@ export const useUnattachedUploads = makeFilteredCollection(
 		...userOptions,
 	}),
 	'issues.UnattachedUploads',
+);
+
+export const useDoctorsWithNonAlphabeticalSymbols = makeFilteredCollection(
+	Doctors,
+	doctorDocument,
+	(ctx, {filter: userFilter, ...userOptions}): Query<DoctorDocument> => ({
+		filter: {
+			containsNonAlphabetical: true,
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
+	'issues.DoctorsWithNonAlphabeticalSymbols',
 );

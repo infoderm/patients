@@ -1,26 +1,36 @@
 import React from 'react';
 
-import {useDoctors} from '../../api/doctors';
-import TagGrid from '../tags/TagGrid';
+import {useDoctorsWithNonAlphabeticalSymbols} from '../../api/issues';
+
 import StaticDoctorCard from '../doctors/StaticDoctorCard';
+import TagListPage from '../tags/TagListPage';
 
-const DoctorsWithNonAlphabeticalSymbols = (props) => {
-	const query = {
-		filter: {containsNonAlphabetical: true},
-	};
-	const {loading, results: tags} = useDoctors(query, []);
+import paged from '../routes/paged';
 
-	if (loading) {
-		return <div {...props}>Loading...</div>;
-	}
+const TagList = paged(TagListPage);
 
-	if (tags.length === 0) {
-		return (
-			<div {...props}>All doctors are made of alphabetical symbols only :)</div>
-		);
-	}
+type Props = React.JSX.IntrinsicAttributes &
+	React.ClassAttributes<HTMLDivElement> &
+	React.HTMLAttributes<HTMLDivElement>;
 
-	return <TagGrid {...props} Card={StaticDoctorCard} tags={tags} />;
+const DoctorsWithNonAlphabeticalSymbols = (props: Props) => {
+	return (
+		<div {...props}>
+			<TagList
+				Card={StaticDoctorCard}
+				useTags={useDoctorsWithNonAlphabeticalSymbols}
+				LoadingIndicator={(_: {}) => <>Loading...</>}
+				EmptyPage={({page}: {readonly page: number}) =>
+					page === 1 ? (
+						<>All doctors are made of alphabetical symbols only :)</>
+					) : (
+						// eslint-disable-next-line react/jsx-no-useless-fragment
+						<>{`Nothing to see on page ${page}.`}</>
+					)
+				}
+			/>
+		</div>
+	);
 };
 
 export default DoctorsWithNonAlphabeticalSymbols;
