@@ -13,6 +13,11 @@ import {
 	documentDocument,
 	Documents,
 } from './collection/documents';
+import {
+	type AttachmentDocument,
+	attachmentDocument,
+	Attachments,
+} from './collection/attachments';
 
 import makeFilteredCollection from './makeFilteredCollection';
 import type Query from './query/Query';
@@ -164,4 +169,21 @@ export const useUnparsedDocuments = makeFilteredCollection(
 		...userOptions,
 	}),
 	'issues.UnparsedDocuments',
+);
+
+export const useUnattachedUploads = makeFilteredCollection(
+	Attachments,
+	attachmentDocument,
+	(ctx, {filter: userFilter, ...userOptions}): Query<AttachmentDocument> => ({
+		filter: {
+			$and: [
+				{'meta.attachedToPatients': {$not: {$gt: ''}}},
+				{'meta.attachedToConsultations': {$not: {$gt: ''}}},
+			],
+			...userFilter,
+			userId: ctx.userId,
+		},
+		...userOptions,
+	}),
+	'issues.UnattachedUploads',
 );
