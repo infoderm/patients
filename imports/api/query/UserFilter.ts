@@ -37,14 +37,14 @@ type UserFilter<TSchema> = {
 	>;
 } & RootFilterOperators<WithId<TSchema>>;
 
-const $text = schema.object({
+export const $text = schema.object({
 	$search: schema.string(),
 	$language: schema.string().optional(),
 	$caseSensitive: schema.boolean().optional(),
 	$diacriticSensitive: schema.boolean().optional(),
 });
 
-const $expr = <S extends schema.ZodTypeAny>(
+export const $expr = <S extends schema.ZodTypeAny>(
 	// @ts-expect-error TODO
 	tSchema: S /* TODO */,
 ) => schema.record(schema.string(), schema.any());
