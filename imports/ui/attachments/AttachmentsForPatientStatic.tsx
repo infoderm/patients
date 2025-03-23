@@ -13,7 +13,6 @@ import AttachmentsForPatientPager from './AttachmentsForPatientPager';
 
 type Props = {
 	readonly patientId: string;
-	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 } & PropsOf<typeof AttachmentsForPatientPager>;
 
 const AttachmentsForPatientStatic = ({patientId, ...rest}: Props) => {

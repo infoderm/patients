@@ -36,7 +36,7 @@ const ConsultationsForPatient = ({patientId}: Props) => {
 		isDone: true,
 	};
 
-	const sort = {datetime: -1};
+	const sort = {datetime: -1} as const;
 
 	return (
 		<>

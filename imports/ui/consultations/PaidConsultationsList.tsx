@@ -41,7 +41,7 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 	if (payment_method) filter.payment_method = payment_method;
 	if (!showBookZero) filter.book = {$ne: '0'};
 
-	const sort = {datetime: -1};
+	const sort = {datetime: -1} as const;
 
 	const genericToURL = (method) =>
 		method

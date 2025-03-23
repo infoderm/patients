@@ -3,6 +3,7 @@ import React from 'react';
 import {useParams} from 'react-router-dom';
 
 import {parseNonNegativeIntegerStrictOrUndefined} from '../../api/string';
+import type PropsOf from '../../util/types/PropsOf';
 
 import branch, {type BranchProps} from './branch';
 
@@ -22,6 +23,10 @@ const PagedRoute = <C extends React.ElementType>({
 	return <Component page={page} {...props} />;
 };
 
-const paged = branch(['*', 'page/:page/*'], PagedRoute);
+const paged = branch(['*', 'page/:page/*'], PagedRoute) as <
+	C extends React.ElementType,
+>(
+	component: C,
+) => (props: PropsOf<C>) => React.ReactElement;
 
 export default paged;
