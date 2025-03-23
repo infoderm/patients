@@ -49,7 +49,7 @@ const UnpaidConsultationsList = ({year}: Props) => {
 
 	const sort = {datetime: 1} as const;
 
-	const toURL = (x) => `/unpaid/year/${x}`;
+	const toURL = (x: number) => `/unpaid/year/${x}`;
 
 	return (
 		<div>

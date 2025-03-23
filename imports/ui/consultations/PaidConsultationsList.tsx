@@ -43,12 +43,12 @@ const PaidConsultationsList = ({year, payment_method = undefined}: Props) => {
 
 	const sort = {datetime: -1} as const;
 
-	const genericToURL = (method) =>
-		method
-			? (x) => `/paid/year/${x}/payment_method/${method}`
-			: (x) => `/paid/year/${x}`;
+	const genericToURL = (method: PaymentMethod | undefined) =>
+		method === undefined
+			? (x: number) => `/paid/year/${x}`
+			: (x: number) => `/paid/year/${x}/payment_method/${method}`;
 	const toURL = genericToURL(payment_method);
-	const toggle = (method) =>
+	const toggle = (method: PaymentMethod) =>
 		payment_method === method
 			? genericToURL(undefined)(year)
 			: genericToURL(method)(year);
