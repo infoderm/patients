@@ -49,32 +49,43 @@ const classes = {
 	thumbnail: `${PREFIX}-thumbnail`,
 };
 
-const StyledCard = styled(Card)(({theme}) => ({
-	[`&.${classes.card}`]: {
-		display: 'block',
-		margin: theme.spacing(1),
-	},
+type AdditionalProps = {
+	loading: boolean;
+};
 
-	[`& .${classes.headerContent}`]: {
-		overflow: 'hidden',
-	},
+const additionalProps = new Set<number | string | Symbol>(['loading']);
+const shouldForwardProp = (prop: string | number | Symbol) =>
+	!additionalProps.has(prop);
+const StyledCard = styled(Card, {shouldForwardProp})<AdditionalProps>(
+	({theme, loading}) => ({
+		[`&.${classes.card}`]: {
+			display: 'block',
+			margin: theme.spacing(1),
+			transition: 'opacity 500ms ease-out',
+			opacity: loading ? 0.7 : 1,
+		},
 
-	[`& .${classes.headerContentTitle}`]: {
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-	},
+		[`& .${classes.headerContent}`]: {
+			overflow: 'hidden',
+		},
 
-	[`& .${classes.headerContentSubheader}`]: {
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-	},
+		[`& .${classes.headerContentTitle}`]: {
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			whiteSpace: 'nowrap',
+		},
 
-	[`& .${classes.thumbnail}`]: {
-		height: 300,
-	},
-}));
+		[`& .${classes.headerContentSubheader}`]: {
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			whiteSpace: 'nowrap',
+		},
+
+		[`& .${classes.thumbnail}`]: {
+			height: 300,
+		},
+	}),
+);
 
 const initialState = {
 	menu: null,
@@ -144,11 +155,12 @@ export type AttachmentInfo = {
 };
 
 type Props = {
+	readonly loading?: boolean;
 	readonly attachment: AttachmentDocument;
 	readonly info?: AttachmentInfo;
 };
 
-const AttachmentCard = ({attachment, info}: Props) => {
+const AttachmentCard = ({loading = false, attachment, info}: Props) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	const {menu, editing, linking, deleting, superDeleting} = state;
@@ -190,7 +202,7 @@ const AttachmentCard = ({attachment, info}: Props) => {
 	const open = Boolean(menu);
 
 	return (
-		<StyledCard className={classes.card}>
+		<StyledCard className={classes.card} loading={loading}>
 			<CardHeader
 				classes={headerClasses}
 				avatar={
