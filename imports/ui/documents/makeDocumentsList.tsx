@@ -7,9 +7,6 @@ import type UserFilter from '../../api/query/UserFilter';
 import {type Sort} from '../../api/query/sort';
 import type GenericQueryHook from '../../api/GenericQueryHook';
 
-import FixedFab from '../button/FixedFab';
-
-import CustomDocumentImportButton from './CustomDocumentImportButton';
 import StaticDocumentList from './StaticDocumentList';
 
 type Props = {
@@ -36,20 +33,13 @@ const makeDocumentsList =
 		const {loading, results: documents} = useDocuments(query, deps);
 
 		return (
-			<>
-				<StaticDocumentList
-					page={page}
-					perpage={perpage}
-					loading={loading}
-					documents={documents}
-					{...rest}
-				/>
-				<CustomDocumentImportButton
-					Button={FixedFab}
-					col={4}
-					tooltip="Import documents"
-				/>
-			</>
+			<StaticDocumentList
+				page={page}
+				perpage={perpage}
+				loading={loading}
+				documents={documents}
+				{...rest}
+			/>
 		);
 	};
 
