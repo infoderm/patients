@@ -14,17 +14,18 @@ const makeDebouncedResultsQuery =
 		collection: Collection<T, U>,
 		publication: PublicationEndpoint<[UserQuery<T>]>,
 	) =>
-	(query: UserQuery<T>, deps: DependencyList) => {
+	(query: UserQuery<T> | null, deps: DependencyList) => {
 		const lastValue = useRef<U[]>(init);
 
 		const {loading, results: currentValue} = useQuery(
 			publication,
 			[query],
 			() => {
-				const [selector, options] = queryToSelectorOptionsPair(query);
+				const [selector, options] = queryToSelectorOptionsPair(query!);
 				return collection.find(selector, options);
 			},
 			deps,
+			query !== null,
 		);
 
 		useEffect(() => {
