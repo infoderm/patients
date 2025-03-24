@@ -34,17 +34,24 @@ const PaginatorBase = ({
 		}
 	}, [loading, isOnlyPage]);
 
+	const prevPage = page - 1;
+	const nextPage = page + 1;
+	const prevDisabled = disabled || isFirstPage;
+	const nextDisabled = disabled || (!loading && end);
+
 	return (
 		<>
 			<Prev
 				visible={!hide}
-				to={`${root}${page - 1}`}
-				disabled={disabled || isFirstPage}
+				to={`${root}${prevPage}`}
+				disabled={prevDisabled}
+				aria-label={prevDisabled ? undefined : `Page ${prevPage}`}
 			/>
 			<Next
 				visible={!hide}
-				to={`${root}${page + 1}`}
-				disabled={disabled || (!loading && end)}
+				to={`${root}${nextPage}`}
+				disabled={nextDisabled}
+				aria-label={nextDisabled ? undefined : `Page ${nextPage}`}
 			/>
 		</>
 	);
