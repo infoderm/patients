@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {type BoundFunctions, type queries} from '@testing-library/dom';
+
 import {render, waitForElementToBeRemoved} from '../_test/react';
 
 import {client, randomPassword, randomUserId} from '../_test/fixtures';
@@ -10,7 +12,7 @@ const setup = async (jsx: JSX.Element) => {
 	const {default: userEvent} = await import('@testing-library/user-event');
 	return {
 		user: userEvent.setup(),
-		...render(jsx),
+		...(render(jsx) as BoundFunctions<typeof queries>),
 	};
 };
 
@@ -32,23 +34,17 @@ client(__filename, () => {
 	});
 
 	it('should allow to register a new user', async () => {
+		const {createUserWithPasswordAndLogin} = await import(
+			'../../test/app/client/fixtures'
+		);
 		const username = randomUserId();
 		const password = randomPassword();
-		const {getByRole, findByRole, getByLabelText, user} = await setupApp();
-		await user.click(await findByRole('button', {name: 'Sign in'}));
-		await user.click(await findByRole('button', {name: 'Create account?'}));
-		await findByRole('button', {name: 'Register'});
-		await user.type(getByLabelText('Username'), username);
-		await user.type(getByLabelText('Password'), password);
-		await user.click(getByRole('button', {name: 'Register'}));
-		await waitForElementToBeRemoved(
-			() => {
-				return getByRole('button', {name: 'Register'});
-			},
-			{timeout: 5000},
+		const app = await setupApp();
+		const button = await createUserWithPasswordAndLogin(
+			app,
+			username,
+			password,
 		);
-		await user.click(
-			await findByRole('button', {name: `Logged in as ${username}`}),
-		);
+		await app.user.click(button);
 	});
 });

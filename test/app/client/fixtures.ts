@@ -69,7 +69,16 @@ const flakyCloseModals = async ({user}: {user: UserEvent}) => {
 };
 
 export const createUserWithPasswordAndLogin = async (
-	{queryByRole, getByRole, findByRole, getByLabelText, user}: App,
+	{
+		queryByRole,
+		getByRole,
+		findByRole,
+		getByLabelText,
+		user,
+	}: Pick<
+		App,
+		'queryByRole' | 'getByRole' | 'findByRole' | 'getByLabelText' | 'user'
+	>,
 	username: string,
 	password: string,
 ) => {
@@ -95,12 +104,13 @@ export const createUserWithPasswordAndLogin = async (
 	}
 
 	console.debug('Waiting for "Logged in as ..." button to appear');
-	await findByRole(
+	const loggedInButton = await findByRole(
 		'button',
 		{name: `Logged in as ${username}`},
 		{timeout: 5000},
 	);
 	console.debug('User successfully created and logged in');
+	return loggedInButton;
 };
 
 export const logout = async ({findByRole, user}: App) => {
