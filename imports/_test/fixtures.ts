@@ -142,7 +142,6 @@ export const client = (title, fn) => {
 		const prepare = async () => {
 			// @ts-expect-error TODO
 			await import('./mocha.css');
-			await import('../../client/polyfill');
 
 			original = await forgetHistory();
 			await cleanup();
@@ -169,8 +168,6 @@ export const server = (title, fn) => {
 		};
 
 		const prepare = async () => {
-			await import('../../server/polyfill');
-
 			if (isAppTest()) {
 				await appIsReady();
 			}
