@@ -63,7 +63,7 @@ const DocumentListItem = ({loading = false, document, ...rest}: Props) => {
 					rel="noreferrer"
 					target="_blank"
 					to={`/document/${_id}`}
-					aria-label="Open in New Tab"
+					aria-label={`Open document #${_id} in New Tab`}
 				>
 					<OpenInNewIcon />
 				</IconButton>
