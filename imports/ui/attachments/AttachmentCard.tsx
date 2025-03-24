@@ -331,6 +331,7 @@ const AttachmentCard = ({loading = false, attachment, info}: Props) => {
 					width={450}
 					height={300}
 					attachmentId={attachment._id}
+					title={attachment.name}
 				/>
 			</CardActionArea>
 		</StyledCard>

@@ -33,6 +33,7 @@ const AnimatedCardMedia = ({
 	loading,
 	image,
 	placeholder,
+	title,
 	...rest
 }: AnimatedCardMediaProps) => {
 	const transition = useTransition(image, {
@@ -51,6 +52,7 @@ const AnimatedCardMedia = ({
 							component={animated.div}
 							className={classes.item}
 							image={item}
+							title={style.opacity.goal === 1 ? title : undefined}
 							style={style as unknown as React.CSSProperties}
 							{...rest}
 						/>
