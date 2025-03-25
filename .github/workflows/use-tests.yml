@@ -76,6 +76,11 @@ jobs:
     timeout-minutes: 1
 
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
       - name: Load coverage data 💽
         uses: actions/download-artifact@v4
         with:
