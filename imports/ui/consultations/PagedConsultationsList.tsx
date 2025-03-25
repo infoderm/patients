@@ -16,7 +16,14 @@ type PagedConsultationsListProps = {
 	readonly loading?: boolean;
 	readonly dirty?: boolean;
 	readonly refresh?: () => void;
+	readonly LoadingIndicator?: React.ElementType<{}>;
+	readonly EmptyPage?: React.ElementType<{page: number}>;
 } & PropsOf<typeof ConsultationsList>;
+
+const DefaultLoadingIndicator = Loading;
+const DefaultEmptyPage = ({page}: {readonly page: number}) => (
+	<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+);
 
 const PagedConsultationsList = ({
 	loading = false,
@@ -25,15 +32,17 @@ const PagedConsultationsList = ({
 	items,
 	refresh = undefined,
 	dirty = false,
+	LoadingIndicator = DefaultLoadingIndicator,
+	EmptyPage = DefaultEmptyPage,
 	...rest
 }: PagedConsultationsListProps) => (
 	<div>
 		{loading && items.length === 0 ? (
-			<Loading />
+			<LoadingIndicator />
 		) : items.length > 0 ? (
 			<ConsultationsList loading={loading} items={items} {...rest} />
 		) : (
-			<NoContent>{`Nothing to see on page ${page}.`}</NoContent>
+			<EmptyPage page={page} />
 		)}
 		<Paginator loading={loading} end={items.length < perpage} />
 		{refresh && dirty && <Refresh onClick={refresh} />}
