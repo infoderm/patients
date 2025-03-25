@@ -30,7 +30,7 @@ const _filter = (patientId: string, {showCancelled, showNoShow}) => {
 		$or: removeUndefinedValuesFromArray([
 			removeUndefinedValuesFromObject({
 				isCancelled: {
-					$in: [false, null!],
+					$in: [false, null],
 				},
 				scheduledDatetime: showNoShow
 					? undefined
