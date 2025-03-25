@@ -4,24 +4,30 @@ import {useUnlinkedDocuments} from '../../api/issues';
 
 import DocumentsPage from '../documents/DocumentsPage';
 
-const UnlinkedDocuments = (props) => {
-	const options = {
-		sort: {
-			'patient.lastname': 1,
-			'patient.firstname': 1,
-			datetime: 1,
-			createdAt: 1,
-		},
-		fields: {
-			...DocumentsPage.projection,
-			// patientId: 1,
-			// patient: 1,
-			// datetime: 1,
-			// createdAt: 1
-		},
-	};
+type Props = React.JSX.IntrinsicAttributes &
+	React.ClassAttributes<HTMLDivElement> &
+	React.HTMLAttributes<HTMLDivElement>;
 
-	const {loading, results: documents} = useUnlinkedDocuments({}, options, []);
+const UnlinkedDocuments = (props: Props) => {
+	const {loading, results: documents} = useUnlinkedDocuments(
+		{
+			filter: {},
+			sort: {
+				'patient.lastname': 1,
+				'patient.firstname': 1,
+				datetime: 1,
+				createdAt: 1,
+			},
+			projection: {
+				...DocumentsPage.projection,
+				// patientId: 1,
+				// patient: 1,
+				// datetime: 1,
+				// createdAt: 1
+			},
+		},
+		[],
+	);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;

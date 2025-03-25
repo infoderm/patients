@@ -1,36 +1,62 @@
-import {patientDocument, Patients} from './collection/patients';
-import {consultationDocument, Consultations} from './collection/consultations';
-import {documentDocument, Documents} from './collection/documents';
+import {
+	type PatientDocument,
+	patientDocument,
+	Patients,
+} from './collection/patients';
+import {
+	type ConsultationDocument,
+	consultationDocument,
+	Consultations,
+} from './collection/consultations';
+import {
+	type DocumentDocument,
+	documentDocument,
+	Documents,
+} from './collection/documents';
+
 import makeFilteredCollection from './makeFilteredCollection';
+import type Query from './query/Query';
 
 export const usePatientsMissingABirthdate = makeFilteredCollection(
 	Patients,
 	patientDocument,
-	{
-		$or: [{birthdate: null!}, {birthdate: ''}],
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<PatientDocument> => ({
+		filter: {
+			$or: [{birthdate: null!}, {birthdate: ''}],
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.PatientsMissingABirthdate',
 );
 
 export const usePatientsMissingAGender = makeFilteredCollection(
 	Patients,
 	patientDocument,
-	{
-		$or: [{sex: null!}, {sex: ''}],
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<PatientDocument> => ({
+		filter: {
+			$or: [{sex: null!}, {sex: ''}],
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.PatientsMissingAGender',
 );
 
 export const useConsultationsMissingABook = makeFilteredCollection(
 	Consultations,
 	consultationDocument,
-	{
-		isDone: true,
-		$or: [{book: null!}, {book: ''}],
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<ConsultationDocument> => ({
+		filter: {
+			isDone: true,
+			$or: [{book: null!}, {book: ''}],
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.ConsultationsMissingABook',
 );
 
@@ -38,81 +64,104 @@ export const useConsultationsWithPriceZeroNotInBookZero =
 	makeFilteredCollection(
 		Consultations,
 		consultationDocument,
-		{
-			isDone: true,
-			price: 0,
-			book: {$ne: '0'},
-		},
-		undefined,
+		(
+			ctx,
+			{filter: userFilter, ...userOptions},
+		): Query<ConsultationDocument> => ({
+			filter: {
+				isDone: true,
+				price: 0,
+				book: {$ne: '0'},
+				...userFilter,
+				owner: ctx.userId,
+			},
+			...userOptions,
+		}),
 		'issues.ConsultationsWithPriceZeroNotInBookZero',
 	);
 
 export const useConsultationsMissingPaymentData = makeFilteredCollection(
 	Consultations,
 	consultationDocument,
-	{
-		isDone: true,
-		datetime: {$gte: new Date(2020, 0, 1)},
-		$or: [
-			/**
-			 * We filter a superset of the following query:
-			 * {
-			 *   $or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}]
-			 * }.
-			 *
-			 * Executing this query through meteor raises the following error:
-			 * "The Mongo server and the Meteor query disagree on how many documents match your query."
-			 * See https://forums.meteor.com/t/the-mongo-server-and-the-meteor-query-disagree-not-type/55086.
-			 */
-			{price: {$not: {$gt: 1}}},
-			{paid: {$not: {$gt: 1}}},
-			/**
-			 * The original query must then be run on the superset loaded in minimongo.
-			 *
-			 * Remark:
-			 * --
-			 * Note that:
-			 *   - true >= 1
-			 *   - '' >= 0
-			 *
-			 * So we cannot use price: {$not: {$gte: 0}} which would correspond to
-			 * a supserset with negative prices included (and excluding prices in
-			 * [0, 1)).
-			 */
-			{currency: {$not: {$type: 2}}},
-			{payment_method: {$not: {$type: 2}}},
-		],
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<ConsultationDocument> => ({
+		filter: {
+			isDone: true,
+			datetime: {$gte: new Date(2020, 0, 1)},
+			$or: [
+				/**
+				 * We filter a superset of the following query:
+				 * {
+				 *   $or: [{price: {$not: {$type: 1}}}, {price: Number.NaN}]
+				 * }.
+				 *
+				 * Executing this query through meteor raises the following error:
+				 * "The Mongo server and the Meteor query disagree on how many documents match your query."
+				 * See https://forums.meteor.com/t/the-mongo-server-and-the-meteor-query-disagree-not-type/55086.
+				 */
+				{price: {$not: {$gt: 1}}},
+				{paid: {$not: {$gt: 1}}},
+				/**
+				 * The original query must then be run on the superset loaded in minimongo.
+				 *
+				 * Remark:
+				 * --
+				 * Note that:
+				 *   - true >= 1
+				 *   - '' >= 0
+				 *
+				 * So we cannot use price: {$not: {$gte: 0}} which would correspond to
+				 * a supserset with negative prices included (and excluding prices in
+				 * [0, 1)).
+				 */
+				{currency: {$not: {$type: 2}}},
+				{payment_method: {$not: {$type: 2}}},
+			],
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.ConsultationsMissingPaymentData',
 );
 
 export const useUnlinkedDocuments = makeFilteredCollection(
 	Documents,
 	documentDocument,
-	{
-		patientId: null!,
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<DocumentDocument> => ({
+		filter: {
+			patientId: null!,
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.UnlinkedDocuments',
 );
 
 export const useMangledDocuments = makeFilteredCollection(
 	Documents,
 	documentDocument,
-	{
-		encoding: null!,
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<DocumentDocument> => ({
+		filter: {
+			encoding: null!,
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.MangledDocuments',
 );
 
 export const useUnparsedDocuments = makeFilteredCollection(
 	Documents,
 	documentDocument,
-	{
-		parsed: false,
-	},
-	undefined,
+	(ctx, {filter: userFilter, ...userOptions}): Query<DocumentDocument> => ({
+		filter: {
+			parsed: false,
+			...userFilter,
+			owner: ctx.userId,
+		},
+		...userOptions,
+	}),
 	'issues.UnparsedDocuments',
 );
