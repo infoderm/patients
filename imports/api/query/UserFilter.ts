@@ -86,11 +86,19 @@ export type Condition<T> =
  * string types can be searched using a regex in mongo
  * array types can be searched using their element type
  */
-type AlternativeType<T> = T extends ReadonlyArray<infer U>
-	? T | Condition<U>
-	: RegExpOrString<T>;
+type AlternativeType<T> = T extends schema.ZodOptional<infer U>
+	? null | AlternativeType<U>
+	: T extends ReadonlyArray<infer U>
+	? ArrayFilter<U, T>
+	: T extends string
+	? StringFilter<T>
+	: T;
 
-type RegExpOrString<T> = T extends string ? BSONRegExp | RegExp | T : T;
+type ArrayFilter<U, T extends readonly U[] = readonly U[]> = T | Condition<U>;
+
+type StringFilter<T extends string> = BSONRegExp | RegExp | T;
+
+type NumberFilter<T extends number> = T;
 
 export const condition = <S extends schema.ZodTypeAny>(
 	tSchema: S,
@@ -102,27 +110,43 @@ export const condition = <S extends schema.ZodTypeAny>(
 const alternativeType = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): schema.ZodType<AlternativeType<schema.infer<S>>> => {
-	tSchema = unwrap(tSchema);
+	const [_tSchema, wrap] = unwrap(tSchema);
 
-	if (tSchema instanceof schema.ZodArray) {
-		return schema.union([tSchema, condition(tSchema.element)]);
+	if (_tSchema instanceof schema.ZodArray) {
+		return wrap(arrayFilter(_tSchema));
 	}
 
-	return regExpOrString(tSchema) as any;
+	if (_tSchema instanceof schema.ZodString) {
+		return wrap(stringFilter(_tSchema));
+	}
+
+	if (_tSchema instanceof schema.ZodNumber) {
+		return wrap(numberFilter(_tSchema));
+	}
+
+	return wrap(_tSchema);
 };
 
-const regExpOrString = <S extends schema.ZodTypeAny>(
+const arrayFilter = <U extends schema.ZodTypeAny, S extends schema.ZodArray<U>>(
 	tSchema: S,
-): schema.ZodType<RegExpOrString<schema.infer<S>>> => {
-	if (unwrap(tSchema) instanceof schema.ZodString) {
-		return schema.union([
-			tSchema,
-			schema.instanceof(RegExp),
-			// schema.instanceof(BSONRegExp), // TODO This requires an explicit dependency on bson.
-		]) as any;
-	}
+): schema.ZodType<ArrayFilter<schema.infer<U>, schema.infer<S>>> => {
+	return schema.union([tSchema, condition(tSchema.element)]);
+};
 
-	return tSchema;
+const stringFilter = <S extends schema.ZodString>(
+	tSchema: S,
+): schema.ZodType<StringFilter<schema.infer<S>>> => {
+	return schema.union([
+		tSchema,
+		schema.instanceof(RegExp),
+		// schema.instanceof(BSONRegExp), // TODO This requires an explicit dependency on bson.
+	]);
+};
+
+const numberFilter = <S extends schema.ZodNumber>(
+	tSchema: S,
+): schema.ZodType<NumberFilter<schema.infer<S>>> => {
+	return schema.union([tSchema, schema.nan()]);
 };
 
 export type FilterOperators<TValue> = {
@@ -187,7 +211,7 @@ export const filterOperators = <S extends schema.ZodTypeAny>(
 			$nin: schema.array(tSchema.nullable()),
 			// Logical
 			$not: schema.lazy(() =>
-				unwrap(tSchema) instanceof schema.ZodString
+				unwrap(tSchema)[0] instanceof schema.ZodString
 					? schema.union(s, schema.instanceof(RegExp))
 					: s,
 			),
@@ -226,27 +250,69 @@ export const filterOperators = <S extends schema.ZodTypeAny>(
 	return s;
 };
 
-const unwrap = <S extends schema.ZodTypeAny>(tSchema: S) => {
-	if (
-		tSchema instanceof schema.ZodOptional ||
-		tSchema instanceof schema.ZodBranded
-	) {
-		return unwrap(tSchema.unwrap());
+const unwrap = <S extends schema.ZodTypeAny>(tSchema: S) =>
+	_unwrap(tSchema, (x: S) => x);
+
+const _unwrap = <W extends schema.ZodTypeAny, S extends schema.ZodTypeAny = W>(
+	tSchema: S,
+	wrap: (tSchema: S) => W,
+) => {
+	if (tSchema instanceof schema.ZodOptional) {
+		const [_tSchema, _wrap] = _unwrapOptional(tSchema);
+		return [_tSchema, (x: typeof _tSchema) => wrap(_wrap(x))] as const;
 	}
 
-	return tSchema;
+	if (tSchema instanceof schema.ZodNullable) {
+		const [_tSchema, _wrap] = _unwrapNullable(tSchema);
+		return [_tSchema, (x: typeof _tSchema) => wrap(_wrap(x))] as const;
+	}
+
+	if (tSchema instanceof schema.ZodBranded) {
+		const [_tSchema, _wrap] = _unwrapBranded(tSchema);
+		return [_tSchema, (x: typeof _tSchema) => wrap(_wrap(x))] as const;
+	}
+
+	return [tSchema, wrap] as const;
+};
+
+const _unwrapOptional = <
+	S extends schema.ZodOptional<T>,
+	T extends schema.ZodTypeAny,
+>(
+	tSchema: S,
+) => {
+	return _unwrap(tSchema.unwrap(), (x) => x.nullable());
+};
+
+const _unwrapNullable = <
+	S extends schema.ZodNullable<T>,
+	T extends schema.ZodTypeAny,
+>(
+	tSchema: S,
+) => {
+	return _unwrap(tSchema.unwrap(), (x) => x.nullable());
+};
+
+const _unwrapBranded = <
+	S extends schema.ZodBranded<T, B>,
+	T extends schema.ZodTypeAny,
+	B extends string,
+>(
+	tSchema: S,
+) => {
+	return _unwrap(tSchema.unwrap(), (x) => x.brand<B>());
 };
 
 const operator =
 	<O extends (s: schema.ZodTypeAny) => schema.ZodTypeAny>(op: O) =>
 	<S extends schema.ZodTypeAny>(tSchema: S) => {
-		tSchema = unwrap(tSchema);
+		const [_tSchema, wrap] = unwrap(tSchema);
 
-		if (tSchema instanceof schema.ZodUnion) {
-			return schema.union(tSchema.options.map(op));
+		if (_tSchema instanceof schema.ZodUnion) {
+			return wrap(schema.union(_tSchema.options.map(op)));
 		}
 
-		return op(tSchema);
+		return wrap(op(_tSchema));
 	};
 
 const $all = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
