@@ -65,7 +65,7 @@ const Issues = () => {
 			<Routes>
 				<Route path="/" element={<NoContent>Select an issue type</NoContent>} />
 				<Route
-					path="uploads-not-attached"
+					path="uploads-not-attached/*"
 					element={
 						<>
 							<Typography variant="h3">
@@ -76,7 +76,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="documents-not-parsed"
+					path="documents-not-parsed/*"
 					element={
 						<>
 							<Typography variant="h3">
@@ -87,7 +87,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="documents-not-decoded"
+					path="documents-not-decoded/*"
 					element={
 						<>
 							<Typography variant="h3">
@@ -98,7 +98,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="documents-not-linked"
+					path="documents-not-linked/*"
 					element={
 						<>
 							<Typography variant="h3">
@@ -109,7 +109,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="consultations-no-payment"
+					path="consultations-no-payment/*"
 					element={
 						<>
 							<Typography variant="h3">
@@ -120,7 +120,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="consultations-no-book"
+					path="consultations-no-book/*"
 					element={
 						<>
 							<Typography variant="h3">Consultations missing a book</Typography>
@@ -129,7 +129,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="consultations-price-is-zero"
+					path="consultations-price-is-zero/*"
 					element={
 						<>
 							<Typography variant="h3">
@@ -142,7 +142,7 @@ const Issues = () => {
 					}
 				/>
 				<Route
-					path="doctors-non-alphabetical"
+					path="doctors-non-alphabetical/*"
 					element={
 						<>
 							<Typography variant="h3">
