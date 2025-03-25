@@ -21,7 +21,7 @@ export default define({
 			owner: this.userId,
 			patientId,
 			isDone: false,
-			isCancelled: {$in: [false, null!]},
+			isCancelled: {$in: [false, null]},
 			scheduledDatetime: {$lt: startOfToday()}, // TODO make reactive?
 		};
 		const options = {fields: {_id: 1}};

@@ -22,7 +22,7 @@ export const usePatientsMissingABirthdate = makeFilteredCollection(
 	patientDocument,
 	(ctx, {filter: userFilter, ...userOptions}): Query<PatientDocument> => ({
 		filter: {
-			$or: [{birthdate: null!}, {birthdate: ''}],
+			$or: [{birthdate: null}, {birthdate: ''}],
 			...userFilter,
 			owner: ctx.userId,
 		},
@@ -36,7 +36,7 @@ export const usePatientsMissingAGender = makeFilteredCollection(
 	patientDocument,
 	(ctx, {filter: userFilter, ...userOptions}): Query<PatientDocument> => ({
 		filter: {
-			$or: [{sex: null!}, {sex: ''}],
+			$or: [{sex: null}, {sex: ''}],
 			...userFilter,
 			owner: ctx.userId,
 		},
@@ -51,7 +51,7 @@ export const useConsultationsMissingABook = makeFilteredCollection(
 	(ctx, {filter: userFilter, ...userOptions}): Query<ConsultationDocument> => ({
 		filter: {
 			isDone: true,
-			$or: [{book: null!}, {book: ''}],
+			$or: [{book: null}, {book: ''}],
 			...userFilter,
 			owner: ctx.userId,
 		},
@@ -129,7 +129,7 @@ export const useUnlinkedDocuments = makeFilteredCollection(
 	documentDocument,
 	(ctx, {filter: userFilter, ...userOptions}): Query<DocumentDocument> => ({
 		filter: {
-			patientId: null!,
+			patientId: null,
 			...userFilter,
 			owner: ctx.userId,
 		},
@@ -143,7 +143,7 @@ export const useMangledDocuments = makeFilteredCollection(
 	documentDocument,
 	(ctx, {filter: userFilter, ...userOptions}): Query<DocumentDocument> => ({
 		filter: {
-			encoding: null!,
+			encoding: null,
 			...userFilter,
 			owner: ctx.userId,
 		},

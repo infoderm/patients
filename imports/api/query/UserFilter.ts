@@ -86,12 +86,14 @@ export type Condition<T> =
  * string types can be searched using a regex in mongo
  * array types can be searched using their element type
  */
-type AlternativeType<T> = T extends schema.ZodOptional<infer U>
-	? null | AlternativeType<U>
-	: T extends ReadonlyArray<infer U>
+type AlternativeType<T> = T extends undefined
+	? null | T
+	: T extends Array<infer U>
 	? ArrayFilter<U, T>
 	: T extends string
 	? StringFilter<T>
+	: T extends number
+	? NumberFilter<T>
 	: T;
 
 type ArrayFilter<U, T extends readonly U[] = readonly U[]> = T | Condition<U>;
