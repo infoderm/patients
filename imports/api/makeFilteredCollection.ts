@@ -3,20 +3,19 @@ import {type DependencyList} from 'react';
 import schema from '../util/schema';
 
 import type Collection from './Collection';
-import type Selector from './query/Selector';
-import {options} from './query/Options';
-import type Options from './query/Options';
 
 import defineCollection from './collection/define';
 import define from './publication/define';
 import useCursor from './publication/useCursor';
 import useSubscription from './publication/useSubscription';
 import {AuthenticationLoggedIn} from './Authentication';
-import {userFilter} from './query/UserFilter';
-import type UserFilter from './query/UserFilter';
 import observeSetChanges from './query/observeSetChanges';
-import type Filter from './query/Filter';
 import {publishCursorObserver} from './publication/publishCursors';
+import type UserQuery from './query/UserQuery';
+import queryToSelectorOptionsPair from './query/queryToSelectorOptionsPair';
+import {type AuthenticatedContext} from './publication/Context';
+import type Query from './query/Query';
+import {userQuery} from './query/UserQuery';
 
 const makeFilteredCollection = <
 	S extends schema.ZodTypeAny,
@@ -24,37 +23,28 @@ const makeFilteredCollection = <
 >(
 	collection: Collection<schema.infer<S>, U>,
 	tSchema: S,
-	filterSelector: Selector<schema.infer<S>> | undefined,
-	filterOptions: Options<schema.infer<S>> | undefined,
+	query: (
+		ctx: AuthenticatedContext,
+		publicationQuery: UserQuery<schema.infer<S>>,
+	) => Query<schema.infer<S>>,
 	name: string,
 ) => {
 	const publication = define({
 		name,
 		authentication: AuthenticationLoggedIn,
-		schema: schema.tuple([
-			userFilter(tSchema).nullable(),
-			options(tSchema).nullable(),
-		]),
-		async handle(
-			publicationFilter: UserFilter<schema.infer<S>> | null,
-			publicationOptions: Options<schema.infer<S>> | null,
-		) {
-			const scopedFilter = {
-				...filterSelector,
-				...publicationFilter,
-				owner: this.userId,
-			} as Filter<schema.infer<S>>;
+		schema: schema.tuple([userQuery(tSchema)]),
+		async handle(publicationQuery: UserQuery<schema.infer<S>>) {
+			const {filter, ...rest} = query(this, publicationQuery);
 
 			const options = {
-				...filterOptions,
-				...publicationOptions,
+				...rest,
 				skip: 0,
 				limit: 0,
 			};
 
 			const handle = await observeSetChanges(
 				collection,
-				scopedFilter,
+				filter,
 				options,
 				publishCursorObserver(this, name),
 			);
@@ -68,15 +58,20 @@ const makeFilteredCollection = <
 
 	const Filtered = defineCollection<schema.infer<S>, U>(name);
 
-	return (
-		hookSelector: Selector<schema.infer<S>> = {},
-		options: Options<schema.infer<S>> | undefined = undefined,
-		deps: DependencyList = [],
-	) => {
-		const isLoading = useSubscription(publication, [null, options ?? null]);
+	return (query: UserQuery<schema.infer<S>> | null, deps: DependencyList) => {
+		const isLoading = useSubscription(
+			publication,
+			[{...query, filter: {}}],
+			query !== null,
+		);
 		const loadingSubscription = isLoading();
 		const {loading: loadingResults, results} = useCursor(
-			() => Filtered.find(hookSelector, options),
+			query === null
+				? () => null
+				: () => {
+						const [hookSelector, options] = queryToSelectorOptionsPair(query);
+						return Filtered.find(hookSelector, options);
+				  },
 			deps,
 		);
 		const loading = loadingSubscription || loadingResults;

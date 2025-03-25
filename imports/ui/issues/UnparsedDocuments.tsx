@@ -4,19 +4,25 @@ import {useUnparsedDocuments} from '../../api/issues';
 
 import DocumentsPage from '../documents/DocumentsPage';
 
-const UnparsedDocuments = (props) => {
-	const options = {
-		sort: {
-			createdAt: 1,
-		},
-		fields: {
-			...DocumentsPage.projection,
-			// parsed: 1,
-			// createdAt: 1
-		},
-	};
+type Props = React.JSX.IntrinsicAttributes &
+	React.ClassAttributes<HTMLDivElement> &
+	React.HTMLAttributes<HTMLDivElement>;
 
-	const {loading, results: documents} = useUnparsedDocuments({}, options, []);
+const UnparsedDocuments = (props: Props) => {
+	const {loading, results: documents} = useUnparsedDocuments(
+		{
+			filter: {},
+			sort: {
+				createdAt: 1,
+			},
+			projection: {
+				...DocumentsPage.projection,
+				// parsed: 1,
+				// createdAt: 1
+			},
+		},
+		[],
+	);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;

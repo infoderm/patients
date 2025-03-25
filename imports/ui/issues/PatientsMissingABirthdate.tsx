@@ -6,9 +6,19 @@ import PatientGridItem from '../patients/PatientGridItem';
 import StaticPatientCard from '../patients/StaticPatientCard';
 
 import {usePatientsMissingABirthdate} from '../../api/issues';
+import type PropsOf from '../../util/types/PropsOf';
 
-const PatientsMissingABirthdate = (props) => {
-	const {loading, results: patients} = usePatientsMissingABirthdate();
+type DivProps = React.JSX.IntrinsicAttributes &
+	React.ClassAttributes<HTMLDivElement> &
+	React.HTMLAttributes<HTMLDivElement>;
+type GridProps = PropsOf<typeof Grid>;
+type Props = DivProps & GridProps;
+
+const PatientsMissingABirthdate = (props: Props) => {
+	const {loading, results: patients} = usePatientsMissingABirthdate(
+		{filter: {}},
+		[],
+	);
 
 	if (loading) {
 		return <div {...props}>Loading...</div>;
