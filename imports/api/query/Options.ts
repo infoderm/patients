@@ -11,7 +11,7 @@ import sort from './sort';
 type Options<T> = Pick<Mongo.Options<T>, 'fields' | 'sort' | 'skip' | 'limit'>;
 
 /**
- * @deprecated Use userFilter instead.
+ * @deprecated Use userQuery instead.
  */
 export const options = <S extends schema.ZodTypeAny>(
 	tSchema: S,
