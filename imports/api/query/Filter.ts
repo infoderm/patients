@@ -23,8 +23,10 @@ type RootFilterOperators<TSchema> = {
 		$caseSensitive?: boolean;
 		$diacriticSensitive?: boolean;
 	};
-	$where?: string | ((this: TSchema) => boolean);
+	$where?: string | WhereFunction<TSchema>;
 };
+
+type WhereFunction<TSchema> = (this: TSchema) => boolean;
 
 type StrictFilter<TSchema> = {
 	[P in FieldSpecifiers<WithId<TSchema>>]?: Condition<
@@ -34,11 +36,10 @@ type StrictFilter<TSchema> = {
 
 export default StrictFilter;
 
-export const $where = <S extends schema.ZodTypeAny>(tSchema: S) =>
-	schema.union([
-		schema.string(),
-		schema.function(schema.tuple([tSchema]), schema.boolean()),
-	]);
+export const $where = schema.union([
+	schema.string(),
+	schema.instanceof(Function),
+]);
 
 export const filter = <S extends schema.ZodTypeAny>(
 	tSchema: S,
@@ -61,7 +62,7 @@ export const filter = <S extends schema.ZodTypeAny>(
 						['$or', as],
 						['$expr', $expr(tSchema)],
 						['$text', $text],
-						['$where', $where(tSchema)],
+						['$where', $where],
 					],
 				),
 			),
