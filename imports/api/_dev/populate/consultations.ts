@@ -17,6 +17,9 @@ export const newConsultationFormData = makeTemplate({
 	currency: () => 'EUR',
 	price: () => faker.number.int(150),
 	paid: () => 0,
+	payment_method: () =>
+		faker.helpers.arrayElement(['cash', 'wire', 'third-party']),
+
 	book: () => `${faker.number.int(100)}`,
 });
 
