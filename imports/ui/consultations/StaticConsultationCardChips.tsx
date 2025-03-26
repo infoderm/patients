@@ -18,7 +18,10 @@ import UnstyledLinkChip from '../chips/LinkChip';
 import {useDateFormat} from '../../i18n/datetime';
 import {useCurrencyFormat} from '../../i18n/currency';
 import {type PatientDocument} from '../../api/collection/patients';
-import {type ConsultationDocument} from '../../api/collection/consultations';
+import {
+	type PaymentMethod,
+	type ConsultationDocument,
+} from '../../api/collection/consultations';
 import {msToString, msToStringShort} from '../../api/duration';
 
 const Chips = styled('div')(({theme}) => ({
@@ -35,7 +38,8 @@ const additionalProps = new Set<number | string | Symbol>([
 	'isDebt',
 	'bold',
 ]);
-const shouldForwardProp = (prop) => !additionalProps.has(prop);
+const shouldForwardProp = (prop: string | number | Symbol) =>
+	!additionalProps.has(prop);
 const styles: any = ({
 	theme,
 	didNotOrWillNotHappen,
@@ -74,7 +78,7 @@ const LinkChip = styled(UnstyledLinkChip, {
 	shouldForwardProp,
 })<AdditionalChipProps>(styles);
 
-function paymentMethodIcon(payment_method) {
+function paymentMethodIcon(payment_method: PaymentMethod | undefined) {
 	switch (payment_method) {
 		case 'wire': {
 			return <PaymentIcon />;
