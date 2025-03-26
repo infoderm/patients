@@ -82,6 +82,15 @@ isomorphic(__filename, () => {
 		_asserInvalidInput(tSchema.safeParse(filter));
 	});
 
+	it('should throw error on a simple schema (null)', () => {
+		// @ts-expect-error -- NOTE: This is on purpose for testing.
+		const filter: UserFilter<{name: string}> = {name: null};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.object({name: schema.string()}),
+		);
+		_asserInvalidInput(tSchema.safeParse(filter));
+	});
+
 	it('should throw an error on a schema containing an array (single value filter)', () => {
 		// @ts-expect-error -- NOTE: This is on purpose for testing.
 		const filter: UserFilter<{name: string[]}> = {name: 1};
