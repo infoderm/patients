@@ -21,6 +21,14 @@ isomorphic(__filename, () => {
 		assert.deepEqual(tSchema.parse(filter), filter);
 	});
 
+	it('should work on a simple schema (NaN)', () => {
+		const filter: UserFilter<{count: number}> = {count: Number.NaN};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.object({count: schema.number()}),
+		);
+		assert.deepEqual(tSchema.parse(filter), filter);
+	});
+
 	it('should work on a schema with an optional field', () => {
 		const filter: UserFilter<{name?: string}> = {name: null};
 		const tSchema: schema.ZodType<typeof filter> = userFilter(
