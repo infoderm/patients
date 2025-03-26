@@ -189,13 +189,14 @@
         - [ ] By clicking hamburger menu
     - [ ] Theme
       - [ ] Toggle theme light/dark
-      - [ ] Set theme primary color
-      - [ ] Reset theme primary color
-      - [ ] Set theme secondary color
-      - [ ] Reset theme secondary color
+      - [x] Set theme primary color (~`integration`~)
+      - [x] Reset theme primary color (~`integration`~)
+      - [x] Set theme secondary color (~`integration`~)
+      - [x] Reset theme secondary color (~`integration`~)
     - [ ] Payment
-      - [ ] Set account holder
-      - [ ] Set IBAN, check that it validates
+      - [x] Set account holder (~`integration`~)
+      - [x] Set IBAN (~`integration`~)
+      - [ ] Check IBAN validation
       - [ ] Check only EUR is supported
     - [ ] Locale
       - [ ] Changing language updates first day of the week and first week
