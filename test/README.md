@@ -172,15 +172,15 @@
     - [ ] Delete
       - [ ] Deleting insurance removes it from all patients
 
-  - [ ] Issues
-    - [ ] It lists uploads that are not attached
-    - [ ] It lists documents that are not parsed
-    - [ ] It lists documents that are not decoded
-    - [ ] It lists documents that are not linked
-    - [ ] It lists consultations missing payment data
-    - [ ] It lists consultations missing a book
-    - [ ] It lists consultations with price 0 not in book 0
-    - [ ] It lists doctors with non-alphabetical symbols
+  - [x] Issues
+    - [x] It lists uploads that are not attached (~`integration`~)
+    - [x] It lists documents that are not parsed (~`integration`~)
+    - [x] It lists documents that are not decoded (~`integration`~)
+    - [x] It lists documents that are not linked (~`integration`~)
+    - [x] It lists consultations missing payment data (~`integration`~)
+    - [x] It lists consultations missing a book (~`integration`~)
+    - [x] It lists consultations with price 0 not in book 0 (~`integration`~)
+    - [x] It lists doctors with non-alphabetical symbols (~`integration`~)
 
   - [ ] Settings
     - [ ] UI
