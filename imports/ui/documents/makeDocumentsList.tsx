@@ -8,6 +8,7 @@ import {type Sort} from '../../api/query/sort';
 import type GenericQueryHook from '../../api/GenericQueryHook';
 
 import StaticDocumentList from './StaticDocumentList';
+import DocumentsTable from './DocumentsTable';
 
 type Props = {
 	readonly filter?: UserFilter<DocumentDocument>;
@@ -31,6 +32,10 @@ const makeDocumentsList =
 		const deps = [JSON.stringify(query)];
 
 		const {loading, results: documents} = useDocuments(query, deps);
+
+		return (
+			<DocumentsTable items={documents}/>
+		);
 
 		return (
 			<StaticDocumentList
