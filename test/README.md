@@ -112,7 +112,7 @@
       - [x] Should allow to link document to a different patient (~`integration`~)
       - [x] Should allow to unlink (~`integration`~)
     - [x] Delete
-      - [x] Should allow to mark document as "deleted" (~`integration`~)
+      - [x] Should allow to mark document as "deleted"
       - [x] Should allow to remove document from DB (~`integration`~)
       - [x] Should allow to restore a document (~`integration`~)
 
