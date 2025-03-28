@@ -28,7 +28,7 @@ const makeDocumentsList =
 			limit: perpage,
 		};
 
-		const deps = [page, perpage];
+		const deps = [JSON.stringify(query)];
 
 		const {loading, results: documents} = useDocuments(query, deps);
 

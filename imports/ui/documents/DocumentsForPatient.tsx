@@ -8,6 +8,8 @@ import Paginator from '../navigation/Paginator';
 
 import useDocuments from './useDocuments';
 import DocumentsForPatientStatic from './DocumentsForPatientStatic';
+import DocumentsListAutoFilterToggleButton from './DocumentsListAutoFilterToggleButton';
+import useDocumentsListAutoFilter from './useDocumentsListAutoFilter';
 
 type Props = {
 	readonly patientId: string;
@@ -28,17 +30,18 @@ const DocumentsForPatient = ({
 	perpage = 5,
 	...rest
 }: Props) => {
+	const [filter, toggleFilter] = useDocumentsListAutoFilter();
 	const query = {
 		filter: {
 			patientId,
-			deleted: false,
+			...filter,
 			lastVersion: true,
 		},
 		sort: {datetime: -1} as const,
 		skip: (page - 1) * perpage,
 		limit: perpage,
 	};
-	const deps = [patientId, page, perpage];
+	const deps = [JSON.stringify(query)];
 	const {loading: loadingDocuments, results: documents} = useDocuments(
 		query,
 		deps,
@@ -61,6 +64,10 @@ const DocumentsForPatient = ({
 				{...rest}
 			/>
 			<Paginator loading={loadingDocuments} end={documents.length < perpage} />
+			<DocumentsListAutoFilterToggleButton
+				filter={filter}
+				onClick={toggleFilter}
+			/>
 		</>
 	);
 };

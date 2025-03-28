@@ -32,7 +32,7 @@ const DocumentsForPatientStatic = ({
 						key={document._id}
 						document={document}
 						PatientChip={undefined}
-						defaultExpanded={i === 0 && page === 1}
+						defaultExpanded={i === 0 && page === 1 && !document.deleted}
 					/>
 				))}
 		</div>
