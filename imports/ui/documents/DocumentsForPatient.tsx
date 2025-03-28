@@ -37,12 +37,12 @@ const DocumentsForPatient = ({
 			...filter,
 			lastVersion: true,
 		},
-		sort: {datetime: -1} as const,
+		sort: { datetime: -1 } as const,
 		skip: (page - 1) * perpage,
 		limit: perpage,
 	};
 	const deps = [JSON.stringify(query)];
-	const {loading: loadingDocuments, results: documents} = useDocuments(
+	const { loading: loadingDocuments, results: documents } = useDocuments(
 		query,
 		deps,
 	);
