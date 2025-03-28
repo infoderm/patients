@@ -55,7 +55,10 @@ const DocumentListItem = ({loading = false, document, ...rest}: Props) => {
 				}
 			/>
 			<ListItemSecondaryAction>
-				<DocumentDeletionIconButton document={document} />
+				<DocumentDeletionIconButton
+					document={document}
+					aria-label={`Delete document #${_id}`}
+				/>
 				<DocumentDownloadIconButton document={document} />
 				<IconButton
 					size="large"
