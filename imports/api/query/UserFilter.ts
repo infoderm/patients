@@ -355,7 +355,7 @@ const $mod = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 });
 
 const $regex = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
-	return tSchema instanceof schema.ZodString
+	return unwrap(tSchema)[0] instanceof schema.ZodString
 		? schema.union([
 				schema.string(),
 				schema.instanceof(RegExp),
