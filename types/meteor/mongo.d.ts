@@ -13,10 +13,6 @@ declare module 'meteor/mongo' {
 			_cursorDescription: CursorDescription<T>;
 			_getCollectionName(): string;
 			observeAsync(options: ObserveCallbacks<U>): Promise<ObserveHandle>;
-			observeChangesAsync(
-				callbacks: ObserveChangesCallbacks<T>,
-				options?: {nonMutatingCallbacks?: boolean | undefined},
-			): Promise<ObserveHandle>;
 		}
 
 		type ObserveHandle = {
