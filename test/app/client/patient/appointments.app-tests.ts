@@ -251,9 +251,13 @@ client(__filename, () => {
 		await navigateTo(app, 'Dernière', '/consultation/last');
 
 		await user.click(
-			await findByRole('link', {
-				name: `${lastname} ${firstname}`,
-			}, {timeout: 10_000}),
+			await findByRole(
+				'link',
+				{
+					name: `${lastname} ${firstname}`,
+				},
+				{timeout: 10_000},
+			),
 		);
 
 		await navigateTo(app, 'appointments', `/patient/${patientId}/appointments`);
