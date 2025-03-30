@@ -1,9 +1,0 @@
-[Unit]
-Description=Run patients backup every day at 9PM
-
-[Timer]
-OnCalendar=*-*-* 21:00:00
-Persistent=true
-
-[Install]
-WantedBy=timers.target

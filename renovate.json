@@ -16,7 +16,6 @@
         "@types/mocha",
         "@types/node",
         "faker",
-        "mup",
         "typescript"
       ],
       "matchPackagePrefixes": [
