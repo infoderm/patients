@@ -218,7 +218,7 @@ export const Uploads = new FilesCollection<MetadataType>({
 						);
 					}
 
-					this.unlink(document, versionName);
+					return this.unlinkAsync(document, versionName);
 				})
 				.catch((error) => {
 					console.error(
