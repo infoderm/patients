@@ -129,12 +129,12 @@ const AttachFileButton = React.forwardRef(
 				}
 
 				// TODO Figure out a way without this.
-				const _id = randomId();
+				const fileId = randomId();
 
 				const upload = Uploads.insert(
 					{
 						// TODO Figure out a way without this.
-						fileId: _id,
+						fileId,
 						file,
 						chunkSize: 'dynamic',
 						meta,
@@ -155,9 +155,13 @@ const AttachFileButton = React.forwardRef(
 					uploadFileFeedback(message, notistackInfoOptions);
 				});
 
-				upload.on('end', async (err, fileObject) => {
+				upload.on('end', async (err, {_id, ...fileObject}) => {
 					// TODO Figure out a way without this.
-					await onEnd(err, {_id, ...fileObject}, uploadFileFeedback);
+					await onEnd(
+						err,
+						{_id: _id ?? fileId, ...fileObject},
+						uploadFileFeedback,
+					);
 				});
 
 				upload.start();
