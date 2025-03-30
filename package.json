@@ -21,14 +21,12 @@
   },
   "scripts": {
     "build": "meteor build",
-    "build-and-upload": "mup deploy --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
     "bundle-visualizer": "npm run dev -- --extra-packages bundle-visualizer --production",
     "check:commit-msg": "commitlint --config commitlint.config.ts",
     "ci:test": "TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_LCOVONLY=1 npm run cover -- --once",
     "commit-msg": "npm run check:commit-msg -- --edit",
     "cover": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_APP_FOLDER=$PWD/ npm run test -- --extra-packages lmieulet:meteor-coverage",
     "cover:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer COVERAGE_OUT_HTML=1 npm run cover --",
-    "deploy": "git diff --exit-code && git diff --cached --exit-code && git pull && git checkout $TAG && meteor npm clean-install && npm run build-and-upload",
     "dev": "MONGO_OPLOG_URL=\"\" meteor run -s settings.json -p ${HOST:-localhost}:${PORT:-12345}",
     "favicon": "emoji-favicon-cli -d public -v twitter face_with_thermometer",
     "install-hooks": "husky install",
@@ -38,7 +36,6 @@
     "lint-config-and-fix": "fixpack || fixpack",
     "postinstall": "postinstall && npm run favicon",
     "precommit": "lint-staged",
-    "setup-deploy": "mup setup --config=.deploy/${DEPLOY_SITE:-default}/mup.js --settings=.deploy/${DEPLOY_SITE:-default}/settings.json",
     "test": "TZ=Europe/Brussels meteor test -p ${HOST:-localhost}:${PORT:-12348} --driver-package meteortesting:mocha",
     "test:dev:non-interactive": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium TEST_BROWSER_DRIVER=puppeteer npm run test --",
     "tsc": "tsc",
@@ -173,7 +170,6 @@
     "lint-staged": "15.5.0",
     "moment": "2.30.1",
     "moment-timezone": "0.5.48",
-    "mup": "1.5.10",
     "npm-check-updates": "16.14.20",
     "postinstall": "0.11.1",
     "puppeteer": "19.11.1",
@@ -338,7 +334,6 @@
       },
       {
         "files": [
-          ".deploy/*/mup.js",
           "lint-staged.config.js"
         ],
         "rules": {

@@ -142,25 +142,31 @@ to ESM. See [the relevant discussion](https://github.com/meteor/meteor/discussio
 
 ## :woman_health_worker: Production
 
-### :wrench: Setup (common to all deployment methods)
+### :building_construction: Setup `prod`
 
-#### `prod` On the production machine
-
-##### Install and enable docker
+#### Install and enable docker
 
     pacman -S docker
     systemctl enable --now docker
 
-##### Create a user
+#### Create a user
 
-    useradd -m meteorapp
-    gpasswd -a meteorapp wheel
-    gpasswd -a meteorapp docker
+    useradd -m patient
+    gpasswd -a patient wheel
+    gpasswd -a patient docker
+
+#### Switch user
+
+    su patient && cd
+
+#### Get the sources
+
+    git clone https://github.com/infoderm/patients && cd patients
 
 
-### :whale: Deploy (with `docker compose`)
+### :whale: Deploy
 
-#### Key environment variables (with `docker compose`)
+#### Key environment variables
 
 ##### `IMAGE_TAG`
 
@@ -241,15 +247,9 @@ The backup retention policy container will be considered unhealthy if no backup
 happens in this interval.
 
 
-#### :wrench: Setup (with `docker compose`)
+#### :wrench: Configure `prod`
 
-##### `prod` On the production machine
-
-###### Get the sources
-
-    git clone https://github.com/infoderm/patients && cd patients
-
-###### Generate a Docker `compose` configuration from releases
+##### Generate a Docker `compose` configuration from releases
 
 We recommend you name your deployment uniquely, for instance using its domain
 name:
@@ -310,7 +310,7 @@ Example with encrypted backups (`IMAGE_TAG>=v2025.02.15-1`,
     config > "${DEPLOYMENT}/compose.yaml"
 ```
 
-###### Generate a Docker `compose` configuration from sources
+##### Generate a Docker `compose` configuration from sources
 
 Just remove `IMAGE_TAG=...` and the lines that configure pulling from
 `ghcr.io`:
@@ -336,7 +336,7 @@ Just remove `IMAGE_TAG=...` and the lines that configure pulling from
 ```
 
 
-#### :rocket: Upgrade `prod` from `prod`  (with `docker compose`)
+#### :rocket: Upgrade `prod`
 
 Update `${DEPLOYMENT}/compose.yaml`, then:
 
@@ -347,70 +347,28 @@ Update `${DEPLOYMENT}/compose.yaml`, then:
 > `.gitignore` to exclude the database backup files from the git history).
 
 
-### :rocket: Deploy (with `meteor-up`)
-
-This method is last known to have worked with `v2023.09.21-1`.
-
-#### :wrench: Setup (with `meteor-up`)
-
-##### `dev` Create ssh keys on the development machine
-
-    ssh-keygen -m PEM -t rsa -b 4096 -a 100 -f .ssh/meteorapp
-
-##### `prod` On the production machine
-
-###### Copy `dev` public key on `prod`
-
-Append it to `/home/meteorapp/.ssh/authorized_keys`.
-Remember: `chmod .ssh 700` and `chmod .ssh/authorized_keys 640`.
-
-##### `dev` On the development machine
-Install dependencies, custom certificates, and MongoDB on server:
-
-    meteor npm run setup-deploy
-
-#### :rocket: Upgrade `prod` from `dev`  (with `meteor-up`)
-
-##### Deploy the current state of `dev`
-
-    meteor npm run build-and-upload
-
-##### Deploy the last commit
-
-    meteor npm run deploy
-
-##### Deploy a specific tag
-
-    TAG=vYYYY.MM.DD meteor npm run deploy
-
-
 ## :recycle: Backup & Restore
 
-The current backup system requires `age` and the encryption/decryption key at
-`~/key/patients` on the production machine. It saves the database as an
-encrypted (`age`) compressed MongoDB archive (`--archive --gzip`).
+The current backup system dumps the database as an encrypted (`age`) compressed
+MongoDB archive (`--archive --gzip`).
 
 ### :movie_camera: Backup
 
-    sh .backup/fs/backup.sh
+[Backups can be automated](#wrench-configure-prod), or they can be run manually:
+
+    docker exec -i patient-patient-db-1 \
+      mongodump --uri "${MONGO_URL}" --archive --gzip |
+      age -r "${AGE_PUBLIC_KEY}" > "backups/$(date '+%Y-%m-%d_%H:%M:%S')"
 
 ### :film_projector: Restore
 
-    sh .backup/restore.sh
+They can be restored with
 
-### :scroll: Changelog
-
-#### Now
-
-The backup system uses encrypted (`age`) compressed MongoDB archives
-(`--archive --gzip`). They can be restored with
-
-    age --decrypt -i "$KEYFILE" < 'patients.gz.age' |
-      mongorestore --drop --nsInclude 'patients.*' --archive --gzip
-
-#### Until 2021-04-20
-
-The backup system uses encrypted gzipped TAR archives. They can be processed by
-first decrypting with `age` to obtain a `.gz` file, then decompressing and
-unarchiving with `tar xzf` to obtain a `dump` directory, and finally using
-`mongorestore --drop --db patients` to restore the database.
+    age --decrypt -i "${AGE_PRIVATE_KEY}" < backups/YYYY-MM-DD_HH:mm:ss |
+      docker exec -i patient-patient-db-1 \
+        mongorestore --uri "mongodb://localhost:27017" \
+        --drop \
+        --nsInclude 'meteor.*' \
+        --nsFrom 'meteor.*' \
+        --nsTo 'meteor.*' \
+        --archive --gzip
