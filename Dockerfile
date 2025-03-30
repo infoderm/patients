@@ -64,7 +64,7 @@ ENV \
 # hadolint ignore=SC1091
 RUN . ./.env; \
   mkdir -p "${NODE_INSTALL_PATH}" && \
-  curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz" | \
+  curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz" | \
   tar -C "${NODE_INSTALL_PATH}" -xzf - "node-v${NODE_VERSION}-${NODE_ARCH}" --strip-components=1
 
 
