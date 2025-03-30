@@ -8,7 +8,6 @@ import {ALL_WEEK_DAYS, type WeekDay} from '../util/datetime';
 import type ModuloWeekInterval from '../ui/settings/ModuloWeekInterval';
 
 import {Settings} from './collection/settings';
-import findOneSync from './publication/findOneSync';
 
 import {type PaymentMethod} from './collection/consultations';
 
@@ -58,8 +57,8 @@ export const defaults: UserSettings = {
 	'consultations-paid-sync': [],
 };
 
-export function get(owner: string, key: string) {
-	const item = findOneSync(Settings, {owner, key});
+export async function get(owner: string, key: string) {
+	const item = await Settings.findOneAsync({owner, key});
 	if (item === undefined) {
 		return defaults[key];
 	}

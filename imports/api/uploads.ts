@@ -14,7 +14,6 @@ import streamToUint8Array from '../util/stream/streamToUint8Array';
 import {thumbnailStream} from '../util/pdf/pdfthumbnails';
 import schema from '../util/schema';
 
-import fetchSync from './publication/fetchSync';
 import defineCollection from './collection/define';
 
 const bucket = Meteor.isServer ? createBucket({bucketName: 'fs'}) : undefined;
@@ -314,8 +313,9 @@ export const Uploads = new FilesCollection<MetadataType>({
 
 		return true;
 	},
-	onBeforeRemove(cursor) {
-		return all(map((x) => x.userId === this.userId, fetchSync(cursor)));
+	async onBeforeRemove(cursor) {
+		const items = await cursor.fetchAsync();
+		return all(map((x) => x.userId === this.userId, items));
 	},
 	onAfterRemove(uploads) {
 		uploads.forEach((upload) => {
