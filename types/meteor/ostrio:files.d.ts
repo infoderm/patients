@@ -320,20 +320,17 @@ declare module 'meteor/ostrio:files' {
 		addFile(
 			path: string,
 			opts: LoadOptions<MetadataType>,
-			callback?: (err: any, fileRef: FileRef<MetadataType>) => any,
 			proceedAfterUpload?: boolean,
-		): FilesCollection<MetadataType>;
+		): Promise<FileRef<MetadataType>>;
 		load(
 			url: string,
 			opts: LoadOptions<MetadataType>,
-			callback?: (err: object, fileRef: FileRef<MetadataType>) => any,
 			proceedAfterUpload?: boolean,
-		): FilesCollection<MetadataType>;
+		): Promise<FileRef<MetadataType>>;
 		write(
 			buffer: Buffer,
 			opts: LoadOptions<MetadataType>,
-			callback?: (err: object, fileRef: FileRef<MetadataType>) => any,
 			proceedAfterUpload?: boolean,
-		): FilesCollection<MetadataType>;
+		): Promise<FileRef<MetadataType>>;
 	}
 }
