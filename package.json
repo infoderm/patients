@@ -162,7 +162,7 @@
     "emoji-favicon-cli": "3.0.1",
     "eslint-config-xo-react": "0.27.0",
     "eslint-plugin-no-only-tests": "3.3.0",
-    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "4.6.2",
     "fixpack": "4.0.0",
     "husky": "8.0.3",
