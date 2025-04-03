@@ -35,7 +35,8 @@ type Row = {
 	identifier?: string;
 	reference?: string;
 	parsed?: boolean;
-	patientName?: string;
+	'patient.firstname'?: string;
+	'patient.lastname'?: string;
 	patientId?: string;
 	anomalies?: number;
 	status?: string;
@@ -78,7 +79,8 @@ const DocumentsTable = ({items}: Props) => {
 			},
 			{field: 'identifier', headerName: 'Identifier', flex: 1},
 			{field: 'reference', headerName: 'Reference'},
-			{field: 'patientName', headerName: 'Subject', flex: 1},
+			{field: 'patient.lastname', headerName: 'Lastname', flex: 1},
+			{field: 'patient.firstname', headerName: 'Firstname', flex: 1},
 			{
 				field: 'patientId',
 				headerName: 'Patient',
@@ -186,9 +188,8 @@ const DocumentsTable = ({items}: Props) => {
 					datetime,
 					identifier,
 					reference,
-					patientName: parsed
-						? `${patient.lastname} ${patient.firstname}`
-						: undefined,
+					'patient.firstname': patient?.firstname,
+					'patient.lastname': patient?.lastname,
 					patientId,
 					anomalies,
 					status,
