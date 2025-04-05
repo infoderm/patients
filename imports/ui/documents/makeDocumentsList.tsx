@@ -1,4 +1,10 @@
+import assert from 'assert';
+
 import React from 'react';
+
+import {type GridFilterModel, type GridSortModel} from '@mui/x-data-grid';
+
+import escapeStringRegexp from 'escape-string-regexp';
 
 import type PropsOf from '../../util/types/PropsOf';
 
@@ -7,7 +13,14 @@ import type UserFilter from '../../api/query/UserFilter';
 import {type Sort} from '../../api/query/sort';
 import type GenericQueryHook from '../../api/GenericQueryHook';
 
+import useDataGridModelContextState from '../data-grid/useDataGridModelContextState';
+
+import DataGridModelProvider from '../data-grid/DataGridModelProvider';
+
+import Paginator from '../navigation/Paginator';
+
 import StaticDocumentList from './StaticDocumentList';
+import DocumentsTable from './DocumentsTable';
 
 type Props = {
 	readonly filter?: UserFilter<DocumentDocument>;
@@ -17,20 +30,138 @@ type Props = {
 	readonly perpage?: number;
 } & Omit<PropsOf<typeof StaticDocumentList>, 'page' | 'perpage' | 'documents'>;
 
-const makeDocumentsList =
-	(useDocuments: GenericQueryHook<DocumentDocument>) =>
-	({filter = {}, sort, page = 1, perpage = 10, ...rest}: Props) => {
+const _sort = (sortModel: GridSortModel): Sort<DocumentDocument> => {
+	assert(sortModel.length === 1);
+	return {
+		[sortModel[0]!.field]: sortModel[0]!.sort === 'asc' ? 1 : -1,
+	} as const;
+};
+
+const _filterModelItem = ({
+	field,
+	operator,
+	value,
+}: GridFilterModel['items'][number]) => {
+	switch (operator) {
+		case 'isAnyOf': {
+			return value === undefined ? undefined : {[field]: {$in: value}};
+		}
+
+		case 'contains': {
+			return value === undefined
+				? undefined
+				: {[field]: {$regex: escapeStringRegexp(value)}};
+		}
+
+		case 'is':
+		case 'equals':
+		case '=': {
+			return value === undefined ? undefined : {[field]: value};
+		}
+
+		case 'not':
+		case '!=': {
+			return value === undefined ? undefined : {[field]: {$ne: value}};
+		}
+
+		case '>':
+		case 'after': {
+			return value === undefined ? undefined : {[field]: {$gt: value}};
+		}
+
+		case '>=':
+		case 'onOrAfter': {
+			return value === undefined ? undefined : {[field]: {$gte: value}};
+		}
+
+		case '<':
+		case 'before': {
+			return value === undefined ? undefined : {[field]: {$lt: value}};
+		}
+
+		case '<=':
+		case 'onOrBefore': {
+			return value === undefined ? undefined : {[field]: {$lte: value}};
+		}
+
+		case 'startsWith': {
+			return value === undefined
+				? undefined
+				: {[field]: {$regex: `^${escapeStringRegexp(value)}`}};
+		}
+
+		case 'endsWith': {
+			return value === undefined
+				? undefined
+				: {[field]: {$regex: `${escapeStringRegexp(value)}$`}};
+		}
+
+		case 'isEmpty': {
+			return {[field]: ''};
+		}
+
+		case 'isNotEmpty': {
+			return {[field]: {$ne: ''}};
+		}
+
+		default: {
+			throw new Error(`Not implemented: ${operator}(${field}, ${value})`);
+		}
+	}
+};
+
+const _filter = ({
+	items,
+	logicOperator,
+}: GridFilterModel): UserFilter<DocumentDocument> | undefined => {
+	const op =
+		logicOperator === undefined || logicOperator === 'or' ? '$or' : '$and';
+	const filters = items.map(_filterModelItem).filter(Boolean);
+	return filters.length <= 1
+		? filters[0]
+		: {
+				[op]: filters,
+		  };
+};
+
+const makeDocumentsList = (
+	useDocuments: GenericQueryHook<DocumentDocument>,
+) => {
+	const DocumentsList = ({
+		filter = {},
+		sort,
+		page = 1,
+		perpage = 10,
+		...rest
+	}: Props) => {
+		const {sortModel, filterModel} = useDataGridModelContextState();
+
 		const query = {
-			filter,
-			sort,
+			filter: {
+				$and: [filter, _filter(filterModel) ?? {}],
+			},
+			sort: sortModel.length === 0 ? sort : _sort(sortModel),
 			projection: StaticDocumentList.projection,
 			skip: (page - 1) * perpage,
 			limit: perpage,
 		};
 
 		const deps = [JSON.stringify(query)];
+		console.debug({sortModel, filterModel, query});
 
 		const {loading, results: documents} = useDocuments(query, deps);
+
+		return (
+			<>
+				<DocumentsTable
+					loading={Boolean(loading)}
+					items={documents}
+					page={page - 1}
+					pageSize={perpage}
+				/>
+				<Paginator loading={loading} end={documents.length < perpage} />
+			</>
+		);
 
 		return (
 			<StaticDocumentList
@@ -42,5 +173,12 @@ const makeDocumentsList =
 			/>
 		);
 	};
+
+	return (props: Props) => (
+		<DataGridModelProvider>
+			<DocumentsList {...props} />
+		</DataGridModelProvider>
+	);
+};
 
 export default makeDocumentsList;

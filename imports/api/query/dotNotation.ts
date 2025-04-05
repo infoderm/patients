@@ -109,11 +109,13 @@ export type FieldSpecifiers<TSchema> = Join<NestedPaths<TSchema, []>, '.'>;
 export const _fieldSpecifiers = function* <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): Iterable<string[]> {
-	if (tSchema instanceof schema.ZodOptional) {
-		tSchema = tSchema.unwrap();
-	}
-
-	if (tSchema instanceof schema.ZodObject) {
+	if (
+		tSchema instanceof schema.ZodOptional ||
+		tSchema instanceof schema.ZodNullable ||
+		tSchema instanceof schema.ZodBranded
+	) {
+		yield* _fieldSpecifiers(tSchema.unwrap());
+	} else if (tSchema instanceof schema.ZodObject) {
 		const keys: any = keyof(tSchema).options;
 		for (const key of keys) {
 			yield [key];
@@ -123,29 +125,23 @@ export const _fieldSpecifiers = function* <S extends schema.ZodTypeAny>(
 			}
 		}
 	} else if (tSchema instanceof schema.ZodUnion) {
-		const merged = new Set<string[]>();
 		for (const specifiers of tSchema.options.map(_fieldSpecifiers)) {
-			for (const specifier of specifiers) {
-				merged.add(specifier);
-			}
+			yield* specifiers;
 		}
-
-		yield* merged;
 	} else if (tSchema instanceof schema.ZodIntersection) {
-		const merged = new Set<string[]>();
 		for (const specifiers of [tSchema._def.left, tSchema._def.right].map(
 			_fieldSpecifiers,
 		)) {
-			for (const specifier of specifiers) {
-				merged.add(specifier);
-			}
+			yield* specifiers;
 		}
-
-		yield* merged;
 	}
 };
 
 export const fieldSpecifiers = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): FieldSpecifiers<schema.infer<typeof tSchema>> =>
-	Array.from(_fieldSpecifiers(tSchema)).map((path) => path.join('.')) as any;
+	Array.from(
+		new Set(
+			Array.from(_fieldSpecifiers(tSchema)).map((path) => path.join('.')),
+		),
+	) as any;

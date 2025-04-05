@@ -89,7 +89,7 @@ const _parse = <S extends ArgsSchema, A extends InferArgs<S> = InferArgs<S>>(
 	} catch (error: unknown) {
 		console.debug({
 			publication: name,
-			args: JSON.stringify(args),
+			args: JSON.stringify(args, undefined, 2),
 			error,
 		});
 		throw new PublicationError('schema validation of publication args failed');
