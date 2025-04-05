@@ -35,6 +35,7 @@ const dataGridLocalizationsCache = new Map<
 	string,
 	DataGridLocalization | undefined
 >();
+dataGridLocalizationsCache.clear();
 
 const _getDataGridLocalization = async (
 	key: string,

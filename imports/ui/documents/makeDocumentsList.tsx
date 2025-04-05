@@ -17,6 +17,8 @@ import useDataGridModelContextState from '../data-grid/useDataGridModelContextSt
 
 import DataGridModelProvider from '../data-grid/DataGridModelProvider';
 
+import Paginator from '../navigation/Paginator';
+
 import StaticDocumentList from './StaticDocumentList';
 import DocumentsTable from './DocumentsTable';
 
@@ -51,8 +53,35 @@ const _filterModelItem = ({
 				: {[field]: {$regex: escapeStringRegexp(value)}};
 		}
 
-		case 'equals': {
+		case 'is':
+		case 'equals':
+		case '=': {
 			return value === undefined ? undefined : {[field]: value};
+		}
+
+		case 'not':
+		case '!=': {
+			return value === undefined ? undefined : {[field]: {$ne: value}};
+		}
+
+		case '>':
+		case 'after': {
+			return value === undefined ? undefined : {[field]: {$gt: value}};
+		}
+
+		case '>=':
+		case 'onOrAfter': {
+			return value === undefined ? undefined : {[field]: {$gte: value}};
+		}
+
+		case '<':
+		case 'before': {
+			return value === undefined ? undefined : {[field]: {$lt: value}};
+		}
+
+		case '<=':
+		case 'onOrBefore': {
+			return value === undefined ? undefined : {[field]: {$lte: value}};
 		}
 
 		case 'startsWith': {
@@ -122,7 +151,17 @@ const makeDocumentsList = (
 
 		const {loading, results: documents} = useDocuments(query, deps);
 
-		return <DocumentsTable items={documents} />;
+		return (
+			<>
+				<DocumentsTable
+					loading={Boolean(loading)}
+					items={documents}
+					page={page - 1}
+					pageSize={perpage}
+				/>
+				<Paginator loading={loading} end={documents.length < perpage} />
+			</>
+		);
 
 		return (
 			<StaticDocumentList

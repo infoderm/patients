@@ -1,9 +1,11 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import isValid from 'date-fns/isValid';
 
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import BusinessIcon from '@mui/icons-material/Business';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HistoryIcon from '@mui/icons-material/History';
 
@@ -13,11 +15,26 @@ import {
 	type GridRenderCellParams,
 	GridToolbar,
 	type GridValueFormatterParams,
+	type GridColTypeDef,
+	type GridFilterInputValueProps,
 } from '@mui/x-data-grid';
 
 import DoneIcon from '@mui/icons-material/Done';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+
+import LinearProgress from '@mui/material/LinearProgress';
+
+import IconButton from '@mui/material/IconButton';
+
+import {Link} from 'react-router-dom';
+
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+
+import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
 
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -27,7 +44,19 @@ import {useLocaleText} from '../../i18n/dataGrid';
 import Tooltip from '../accessibility/Tooltip';
 import useDataGridModelContextState from '../data-grid/useDataGridModelContextState';
 
+import LinkChip from '../chips/LinkChip';
+
+import {myEncodeURIComponent} from '../../util/uri';
+
+import DocumentLinkingDialog from './DocumentLinkingDialog';
+import {Chip} from './DocumentChips';
+
+import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton';
+
+import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton';
+
 type Row = {
+	_id: string;
 	encoding?: string;
 	format?: string;
 	kind?: string;
@@ -45,13 +74,17 @@ type Row = {
 };
 
 type Props = {
+	readonly loading: boolean;
 	readonly items: DocumentDocument[];
+	readonly page: number;
+	readonly pageSize: number;
 };
 
-const DocumentsTable = ({items}: Props) => {
+const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 	const localeText = useLocaleText();
+	const [linking, setLinking] = useState<Row | null>(null);
 
-	const format = useDateFormat('PPP');
+	const format = useDateFormat('Pp');
 
 	const dateValueFormatter = useCallback(
 		({value}: GridValueFormatterParams<Date>) =>
@@ -65,6 +98,7 @@ const DocumentsTable = ({items}: Props) => {
 				field: 'createdAt',
 				headerName: 'Created at',
 				flex: 1,
+				filterOperators: getDateFilterOperators(true),
 				valueFormatter: dateValueFormatter,
 			},
 			{field: 'encoding', headerName: 'Encoding', width: 50},
@@ -75,18 +109,78 @@ const DocumentsTable = ({items}: Props) => {
 				field: 'datetime',
 				headerName: 'Datetime',
 				flex: 1,
+				filterOperators: getDateFilterOperators(true),
 				valueFormatter: dateValueFormatter,
 			},
-			{field: 'identifier', headerName: 'Identifier', flex: 1},
-			{field: 'reference', headerName: 'Reference'},
+			{
+				field: 'identifier',
+				headerName: 'Identifier',
+				flex: 1,
+				hideable: false,
+				renderCell: ({value}: GridRenderCellParams<any, string>) =>
+					value === undefined ? null : (
+						<LinkChip
+							maxWidth
+							icon={<BusinessIcon />}
+							to={`/documents/filterBy/identifier/${myEncodeURIComponent(
+								value,
+							)}`}
+							label={value}
+						/>
+					),
+			},
+			{
+				field: 'reference',
+				headerName: 'Reference',
+				flex: 1,
+				hideable: false,
+				renderCell: ({
+					row: {parsed, identifier, reference},
+				}: GridRenderCellParams<any, string>) =>
+					parsed ? (
+						<LinkChip
+							maxWidth
+							icon={<ConfirmationNumberIcon />}
+							to={`/document/versions/${myEncodeURIComponent(
+								identifier,
+							)}/${myEncodeURIComponent(reference)}`}
+							label={reference}
+						/>
+					) : null,
+			},
 			{field: 'patient.lastname', headerName: 'Lastname', flex: 1},
 			{field: 'patient.firstname', headerName: 'Firstname', flex: 1},
 			{
 				field: 'patientId',
 				headerName: 'Patient',
 				flex: 1,
-				renderCell: ({value: patientId}: GridRenderCellParams<any, string>) =>
-					patientId === undefined ? null : (
+				renderCell: ({
+					value: patientId,
+					row,
+				}: GridRenderCellParams<any, string>) =>
+					patientId === undefined ? (
+						row.parsed ? (
+							<Chip
+								icon={<LinkOffIcon />}
+								label={`${row['patient.lastname']} ${row['patient.firstname']}`}
+								kind="unlinked"
+								onClick={(e) => {
+									e.stopPropagation();
+									setLinking(row);
+								}}
+							/>
+						) : (
+							<Chip
+								icon={<LinkOffIcon />}
+								label="not linked"
+								kind="linkoff"
+								onClick={(e) => {
+									e.stopPropagation();
+									setLinking(row);
+								}}
+							/>
+						)
+					) : (
 						<ReactivePatientChip patient={{_id: patientId}} />
 					),
 			},
@@ -155,6 +249,33 @@ const DocumentsTable = ({items}: Props) => {
 						</Tooltip>
 					),
 			},
+			{
+				field: '_actions',
+				headerName: '',
+				width: 150,
+				hideable: false,
+				sortable: false,
+				filterable: false,
+				renderCell: ({row}: GridRenderCellParams<any, unknown>) => (
+					<>
+						<DocumentDeletionIconButton
+							document={row}
+							aria-label={`Delete document #${row._id}`}
+						/>
+						<DocumentDownloadIconButton document={row} />
+						<IconButton
+							size="large"
+							component={Link}
+							rel="noreferrer"
+							target="_blank"
+							to={`/document/${row._id}`}
+							aria-label={`Open document #${row._id} in New Tab`}
+						>
+							<OpenInNewIcon />
+						</IconButton>
+					</>
+				),
+			},
 		],
 		[dateValueFormatter],
 	);
@@ -180,6 +301,7 @@ const DocumentsTable = ({items}: Props) => {
 					lastVersion,
 				}) => ({
 					id: _id,
+					_id,
 					createdAt,
 					encoding,
 					parsed,
@@ -209,6 +331,8 @@ const DocumentsTable = ({items}: Props) => {
 		<Box sx={{height: 720, width: '100%'}}>
 			<DataGrid
 				disableRowSelectionOnClick
+				hideFooterPagination
+				loading={loading}
 				localeText={localeText}
 				initialState={{
 					columns: {
@@ -227,15 +351,17 @@ const DocumentsTable = ({items}: Props) => {
 						],
 					},
 					pagination: {
-						paginationModel: {page: 0, pageSize: 10},
+						paginationModel: {page, pageSize},
 					},
 				}}
 				rows={rows}
 				columns={columns}
-				pageSizeOptions={[10]}
-				components={{
-					Toolbar: GridToolbar,
-					NoRowsOverlay: CustomNoRowsOverlay,
+				paginationModel={{page, pageSize}}
+				pageSizeOptions={[pageSize]}
+				slots={{
+					loadingOverlay: LinearProgress,
+					toolbar: GridToolbar,
+					noRowsOverlay: CustomNoRowsOverlay,
 				}}
 				componentsProps={{
 					toolbar: {
@@ -254,6 +380,13 @@ const DocumentsTable = ({items}: Props) => {
 				onSortModelChange={onSortModelChange}
 				onFilterModelChange={onFilterModelChange}
 				onPaginationModelChange={onPaginationModelChange}
+			/>
+			<DocumentLinkingDialog
+				open={Boolean(linking)}
+				document={linking}
+				onClose={() => {
+					setLinking(null);
+				}}
 			/>
 		</Box>
 	);
@@ -329,3 +462,93 @@ const CustomNoRowsOverlay = () => (
 		<Box sx={{mt: 1}}>No Rows</Box>
 	</StyledGridOverlay>
 );
+
+function GridFilterDateInput(
+	props: GridFilterInputValueProps & {readonly showTime?: boolean},
+) {
+	const {item, showTime, applyValue, apiRef} = props;
+
+	const Component = showTime ? DateTimePicker : DatePicker;
+
+	const handleFilterChange = (newValue: unknown) => {
+		applyValue({...item, value: newValue});
+	};
+
+	return (
+		<Component
+			autoFocus
+			value={item.value || null}
+			label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+			slotProps={{
+				textField: {
+					variant: 'standard',
+				},
+				inputAdornment: {
+					sx: {
+						'& .MuiButtonBase-root': {
+							marginRight: -1,
+						},
+					},
+				},
+			}}
+			onChange={handleFilterChange}
+		/>
+	);
+}
+
+const getApplyDateFilterFn = (_: unknown) => {
+	throw new Error('Not implemented');
+};
+
+const getDateFilterOperators = (
+	showTime = false,
+): GridColTypeDef['filterOperators'] => {
+	return [
+		{
+			value: 'equals',
+			getApplyFilterFn: getApplyDateFilterFn,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
+		},
+		{
+			value: 'not',
+			getApplyFilterFn: getApplyDateFilterFn,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
+		},
+		{
+			value: 'after',
+			getApplyFilterFn: getApplyDateFilterFn,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
+		},
+		{
+			value: 'onOrAfter',
+			getApplyFilterFn: getApplyDateFilterFn,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
+		},
+		{
+			value: 'before',
+			getApplyFilterFn: getApplyDateFilterFn,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
+		},
+		{
+			value: 'onOrBefore',
+			getApplyFilterFn: getApplyDateFilterFn,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
+		},
+		{
+			value: 'isEmpty',
+			getApplyFilterFn: getApplyDateFilterFn,
+			requiresFilterValue: false,
+		},
+		{
+			value: 'isNotEmpty',
+			getApplyFilterFn: getApplyDateFilterFn,
+			requiresFilterValue: false,
+		},
+	];
+};
