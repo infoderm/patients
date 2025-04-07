@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import isValid from 'date-fns/isValid';
 
@@ -17,20 +17,22 @@ import {
 	type GridValueFormatterParams,
 	type GridColTypeDef,
 	type GridFilterInputValueProps,
+	type GridRowParams,
+	GridActionsCellItem,
+	type GridCallbackDetails,
+	type GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
 
 import DoneIcon from '@mui/icons-material/Done';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-
 import LinkOffIcon from '@mui/icons-material/LinkOff';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import SubjectIcon from '@mui/icons-material/Subject';
 
 import LinearProgress from '@mui/material/LinearProgress';
-
-import IconButton from '@mui/material/IconButton';
-
-import {Link} from 'react-router-dom';
 
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
@@ -52,7 +54,6 @@ import DocumentLinkingDialog from './DocumentLinkingDialog';
 import {Chip} from './DocumentChips';
 
 import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton';
-
 import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton';
 
 type Row = {
@@ -78,39 +79,108 @@ type Props = {
 	readonly items: DocumentDocument[];
 	readonly page: number;
 	readonly pageSize: number;
+	readonly showDeleted: boolean;
 };
 
-const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
+const DocumentsTable = ({
+	loading,
+	items,
+	page,
+	pageSize,
+	showDeleted,
+}: Props) => {
 	const localeText = useLocaleText();
 	const [linking, setLinking] = useState<Row | null>(null);
 
-	const format = useDateFormat('Pp');
+	const dateFormat = useDateFormat('Pp');
 
 	const dateValueFormatter = useCallback(
 		({value}: GridValueFormatterParams<Date>) =>
-			isValid(value) ? format(value) : value,
-		[format],
+			isValid(value) ? dateFormat(value) : value,
+		[dateFormat],
 	);
 
 	const columns = useMemo(
 		(): Array<GridColDef<Row>> => [
 			{
 				field: 'createdAt',
+				type: 'dateTime',
 				headerName: 'Created at',
 				flex: 1,
-				filterOperators: getDateFilterOperators(true),
+				filterOperators: getDateTimeFilterOperators(true),
 				valueFormatter: dateValueFormatter,
 			},
-			{field: 'encoding', headerName: 'Encoding', width: 50},
-			{field: 'parsed', headerName: 'Parsed', width: 50},
-			{field: 'format', headerName: 'Format', width: 90},
-			{field: 'kind', headerName: 'Kind', width: 70},
+			{field: 'encoding', type: 'string', headerName: 'Encoding', width: 50},
+			{field: 'parsed', type: 'boolean', headerName: 'Parsed', width: 50},
+			{
+				field: 'format',
+				type: 'singleSelect',
+				headerName: 'Format',
+				valueOptions: ['healthone', 'DMA-REP', 'DMA-LAB'],
+				width: 90,
+			},
+			{
+				field: 'kind',
+				type: 'singleSelect',
+				valueOptions: ['lab', 'report'],
+				sortable: false,
+				headerName: 'Kind',
+				width: 50,
+				renderCell({value}: GridRenderCellParams<any, string | undefined>) {
+					switch (value) {
+						case undefined: {
+							return <></>;
+						}
+
+						case 'lab': {
+							return (
+								<Tooltip title="lab">
+									<TableChartIcon />
+								</Tooltip>
+							);
+						}
+
+						case 'report': {
+							return (
+								<Tooltip title="report">
+									<SubjectIcon />
+								</Tooltip>
+							);
+						}
+
+						default: {
+							return (
+								<Tooltip title={value}>
+									<QuestionMarkIcon />
+								</Tooltip>
+							);
+						}
+					}
+				},
+			},
 			{
 				field: 'datetime',
+				type: 'dateTime',
 				headerName: 'Datetime',
 				flex: 1,
-				filterOperators: getDateFilterOperators(true),
-				valueFormatter: dateValueFormatter,
+				hideable: false,
+				filterOperators: getDateTimeFilterOperators(true),
+				renderCell({value, row}: GridRenderCellParams<any, Date>) {
+					if (value === undefined) return null;
+					const label = dateFormat(value);
+					return (
+						<Tooltip title={label}>
+							<LinkChip
+								icon={<OpenInNewIcon />}
+								to={`/document/${row._id}`}
+								label={label}
+								rel="noreferrer"
+								target="_blank"
+								aria-label={`Open document #${row._id} in New Tab`}
+							/>
+						</Tooltip>
+					);
+				},
 			},
 			{
 				field: 'identifier',
@@ -119,18 +189,20 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 				hideable: false,
 				renderCell: ({value}: GridRenderCellParams<any, string>) =>
 					value === undefined ? null : (
-						<LinkChip
-							maxWidth
-							icon={<BusinessIcon />}
-							to={`/documents/filterBy/identifier/${myEncodeURIComponent(
-								value,
-							)}`}
-							label={value}
-						/>
+						<Tooltip title={value}>
+							<LinkChip
+								icon={<BusinessIcon />}
+								to={`/documents/filterBy/identifier/${myEncodeURIComponent(
+									value,
+								)}`}
+								label={value}
+							/>
+						</Tooltip>
 					),
 			},
 			{
 				field: 'reference',
+				type: 'string',
 				headerName: 'Reference',
 				flex: 1,
 				hideable: false,
@@ -138,20 +210,32 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 					row: {parsed, identifier, reference},
 				}: GridRenderCellParams<any, string>) =>
 					parsed ? (
-						<LinkChip
-							maxWidth
-							icon={<ConfirmationNumberIcon />}
-							to={`/document/versions/${myEncodeURIComponent(
-								identifier,
-							)}/${myEncodeURIComponent(reference)}`}
-							label={reference}
-						/>
+						<Tooltip title={reference}>
+							<LinkChip
+								icon={<ConfirmationNumberIcon />}
+								to={`/document/versions/${myEncodeURIComponent(
+									identifier,
+								)}/${myEncodeURIComponent(reference)}`}
+								label={reference}
+							/>
+						</Tooltip>
 					) : null,
 			},
-			{field: 'patient.lastname', headerName: 'Lastname', flex: 1},
-			{field: 'patient.firstname', headerName: 'Firstname', flex: 1},
+			{
+				field: 'patient.lastname',
+				type: 'string',
+				headerName: 'Lastname',
+				flex: 1,
+			},
+			{
+				field: 'patient.firstname',
+				type: 'string',
+				headerName: 'Firstname',
+				flex: 1,
+			},
 			{
 				field: 'patientId',
+				type: 'string',
 				headerName: 'Patient',
 				flex: 1,
 				renderCell: ({
@@ -160,33 +244,47 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 				}: GridRenderCellParams<any, string>) =>
 					patientId === undefined ? (
 						row.parsed ? (
-							<Chip
-								icon={<LinkOffIcon />}
-								label={`${row['patient.lastname']} ${row['patient.firstname']}`}
-								kind="unlinked"
-								onClick={(e) => {
-									e.stopPropagation();
-									setLinking(row);
-								}}
-							/>
+							<Tooltip
+								title={`${row['patient.lastname']} ${row['patient.firstname']}`}
+							>
+								<Chip
+									icon={<LinkOffIcon />}
+									label={`${row['patient.lastname']} ${row['patient.firstname']}`}
+									kind="unlinked"
+									onClick={(e) => {
+										e.stopPropagation();
+										setLinking(row);
+									}}
+								/>
+							</Tooltip>
 						) : (
-							<Chip
-								icon={<LinkOffIcon />}
-								label="not linked"
-								kind="linkoff"
-								onClick={(e) => {
-									e.stopPropagation();
-									setLinking(row);
-								}}
-							/>
+							<Tooltip title="not linked">
+								<Chip
+									icon={<LinkOffIcon />}
+									label="not linked"
+									kind="linkoff"
+									onClick={(e) => {
+										e.stopPropagation();
+										setLinking(row);
+									}}
+								/>
+							</Tooltip>
 						)
 					) : (
 						<ReactivePatientChip patient={{_id: patientId}} />
 					),
 			},
-			{field: 'anomalies', headerName: 'Anomalies', width: 30},
+			{
+				field: 'anomalies',
+				type: 'number',
+				headerName: 'Anomalies',
+				width: 30,
+			},
 			{
 				field: 'status',
+				type: 'singleSelect',
+				valueOptions: ['complete', 'partial'],
+				sortable: false,
 				headerName: 'Status',
 				description: 'Status',
 				width: 50,
@@ -224,9 +322,11 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 			},
 			{
 				field: 'deleted',
+				type: 'boolean',
 				headerName: 'Deleted',
 				filterable: false,
-				width: 50,
+				hideable: false,
+				width: 60,
 				renderCell: ({value}: GridRenderCellParams<any, boolean>) =>
 					value ? (
 						<Tooltip title="deleted">
@@ -238,6 +338,8 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 			},
 			{
 				field: 'lastVersion',
+				type: 'boolean',
+				sortable: false,
 				headerName: 'LastVersion',
 				width: 50,
 				renderCell: ({value}: GridRenderCellParams<any, boolean>) =>
@@ -251,33 +353,30 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 			},
 			{
 				field: '_actions',
-				headerName: '',
-				width: 150,
-				hideable: false,
-				sortable: false,
-				filterable: false,
-				renderCell: ({row}: GridRenderCellParams<any, unknown>) => (
-					<>
-						<DocumentDeletionIconButton
-							document={row}
+				type: 'actions',
+				width: 30,
+				getActions: ({row}: GridRowParams<Row>) => [
+					row.deleted ? (
+						<></>
+					) : (
+						<GridActionsCellItem
+							showInMenu
+							icon={<DeleteIcon color="secondary" />}
+							label="Delete"
 							aria-label={`Delete document #${row._id}`}
+							onClick={() => {}}
 						/>
-						<DocumentDownloadIconButton document={row} />
-						<IconButton
-							size="large"
-							component={Link}
-							rel="noreferrer"
-							target="_blank"
-							to={`/document/${row._id}`}
-							aria-label={`Open document #${row._id} in New Tab`}
-						>
-							<OpenInNewIcon />
-						</IconButton>
-					</>
-				),
+					),
+					<GridActionsCellItem
+						showInMenu
+						icon={<CloudDownloadIcon color="primary" />}
+						label="Download"
+						onClick={() => {}}
+					/>,
+				],
 			},
 		],
-		[dateValueFormatter],
+		[dateValueFormatter, showDeleted],
 	);
 
 	const rows = useMemo(
@@ -322,38 +421,61 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 		[items],
 	);
 
-	const rowCount = 100;
+	const rowCount = rows.length;
 
 	const {onSortModelChange, onFilterModelChange, onPaginationModelChange} =
 		useDataGridModelContextState();
 
+	const initialState = useMemo(
+		() => ({
+			columns: {
+				columnVisibilityModel: {
+					encoding: false,
+					parsed: false,
+					anomalies: false,
+					deleted: showDeleted,
+				},
+			},
+			sorting: {
+				sortModel: [
+					{
+						field: 'createdAt',
+						sort: 'desc',
+					} as const,
+				],
+			},
+			pagination: {
+				paginationModel: {page, pageSize},
+			},
+		}),
+		[page, pageSize, showDeleted],
+	);
+
+	const [columnVisibilityModel, setColumnVisibilityModel] =
+		useState<GridColumnVisibilityModel>(
+			initialState.columns.columnVisibilityModel,
+		);
+	const onColumnVisibilityModelChange = useCallback(
+		(model: GridColumnVisibilityModel, _: GridCallbackDetails) => {
+			setColumnVisibilityModel({...model, deleted: showDeleted});
+		},
+		[setColumnVisibilityModel, showDeleted],
+	);
+
+	useEffect(() => {
+		setColumnVisibilityModel((prev) => ({...prev, deleted: showDeleted}));
+	}, [setColumnVisibilityModel, showDeleted]);
+
 	return (
-		<Box sx={{height: 720, width: '100%'}}>
+		<Box sx={{width: '100%'}}>
 			<DataGrid
+				autoHeight
 				disableRowSelectionOnClick
-				hideFooterPagination
+				hideFooter
 				loading={loading}
 				localeText={localeText}
-				initialState={{
-					columns: {
-						columnVisibilityModel: {
-							encoding: false,
-							parsed: false,
-							anomalies: false,
-						},
-					},
-					sorting: {
-						sortModel: [
-							{
-								field: 'createdAt',
-								sort: 'desc',
-							},
-						],
-					},
-					pagination: {
-						paginationModel: {page, pageSize},
-					},
-				}}
+				initialState={initialState}
+				columnVisibilityModel={columnVisibilityModel}
 				rows={rows}
 				columns={columns}
 				paginationModel={{page, pageSize}}
@@ -377,6 +499,7 @@ const DocumentsTable = ({loading, items, page, pageSize}: Props) => {
 				filterMode="server"
 				paginationMode="server"
 				rowCount={rowCount}
+				onColumnVisibilityModelChange={onColumnVisibilityModelChange}
 				onSortModelChange={onSortModelChange}
 				onFilterModelChange={onFilterModelChange}
 				onPaginationModelChange={onPaginationModelChange}
@@ -496,59 +619,37 @@ function GridFilterDateInput(
 	);
 }
 
-const getApplyDateFilterFn = (_: unknown) => {
-	throw new Error('Not implemented');
+const serverSideFiltering = (_: unknown) => {
+	throw new Error('Client-side filtering not implemented');
 };
 
-const getDateFilterOperators = (
+const getDateTimeFilterOperators = (
 	showTime = false,
 ): GridColTypeDef['filterOperators'] => {
 	return [
 		{
-			value: 'equals',
-			getApplyFilterFn: getApplyDateFilterFn,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-		{
-			value: 'not',
-			getApplyFilterFn: getApplyDateFilterFn,
+			value: 'onOrAfter',
+			getApplyFilterFn: serverSideFiltering,
 			InputComponent: GridFilterDateInput,
 			InputComponentProps: {showTime},
 		},
 		{
 			value: 'after',
-			getApplyFilterFn: getApplyDateFilterFn,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-		{
-			value: 'onOrAfter',
-			getApplyFilterFn: getApplyDateFilterFn,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-		{
-			value: 'before',
-			getApplyFilterFn: getApplyDateFilterFn,
+			getApplyFilterFn: serverSideFiltering,
 			InputComponent: GridFilterDateInput,
 			InputComponentProps: {showTime},
 		},
 		{
 			value: 'onOrBefore',
-			getApplyFilterFn: getApplyDateFilterFn,
+			getApplyFilterFn: serverSideFiltering,
 			InputComponent: GridFilterDateInput,
 			InputComponentProps: {showTime},
 		},
 		{
-			value: 'isEmpty',
-			getApplyFilterFn: getApplyDateFilterFn,
-			requiresFilterValue: false,
-		},
-		{
-			value: 'isNotEmpty',
-			getApplyFilterFn: getApplyDateFilterFn,
-			requiresFilterValue: false,
+			value: 'before',
+			getApplyFilterFn: serverSideFiltering,
+			InputComponent: GridFilterDateInput,
+			InputComponentProps: {showTime},
 		},
 	];
 };

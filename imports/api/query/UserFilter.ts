@@ -420,7 +420,9 @@ const $regex = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 });
 
 const $options = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
-	return tSchema instanceof schema.ZodString ? schema.string() : schema.never();
+	return tSchema.safeParse('').success // TODO: Does not work against refinements.
+		? schema.string()
+		: undefined;
 });
 
 export default UserFilter;
