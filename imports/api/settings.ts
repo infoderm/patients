@@ -32,6 +32,7 @@ export type UserSettings = {
 	'account-holder': string;
 	'displayed-week-days': WeekDay[];
 	'consultations-paid-sync': PaymentMethod[];
+	'user-account-display-name': string;
 };
 
 export type SettingKey = keyof UserSettings;
@@ -56,6 +57,7 @@ export const defaults: UserSettings = {
 	'account-holder': '',
 	'displayed-week-days': [...ALL_WEEK_DAYS],
 	'consultations-paid-sync': [],
+	'user-account-display-name': '',
 };
 
 export function get(owner: string, key: string) {
