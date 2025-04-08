@@ -2,13 +2,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import isValid from 'date-fns/isValid';
 
-import {styled} from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import BusinessIcon from '@mui/icons-material/Business';
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HistoryIcon from '@mui/icons-material/History';
-
 import {
 	DataGrid,
 	type GridColDef,
@@ -21,8 +14,23 @@ import {
 	GridActionsCellItem,
 	type GridCallbackDetails,
 	type GridColumnVisibilityModel,
+	type GridFilterInputBooleanProps,
 } from '@mui/x-data-grid';
 
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
+
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select, {type SelectChangeEvent} from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import LinearProgress from '@mui/material/LinearProgress';
+
+import BusinessIcon from '@mui/icons-material/Business';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import DeleteIcon from '@mui/icons-material/Delete';
+import HistoryIcon from '@mui/icons-material/History';
 import DoneIcon from '@mui/icons-material/Done';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
@@ -31,12 +39,6 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SubjectIcon from '@mui/icons-material/Subject';
-
-import LinearProgress from '@mui/material/LinearProgress';
-
-import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-
-import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
 
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -111,7 +113,14 @@ const DocumentsTable = ({
 				valueFormatter: dateValueFormatter,
 			},
 			{field: 'encoding', type: 'string', headerName: 'Encoding', width: 50},
-			{field: 'parsed', type: 'boolean', headerName: 'Parsed', width: 50},
+			{
+				field: 'parsed',
+				type: 'boolean',
+				sortable: false,
+				headerName: 'Parsed',
+				width: 50,
+				filterOperators: booleanFilterOperators,
+			},
 			{
 				field: 'format',
 				type: 'singleSelect',
@@ -340,6 +349,7 @@ const DocumentsTable = ({
 				field: 'lastVersion',
 				type: 'boolean',
 				sortable: false,
+				filterOperators: booleanFilterOperators,
 				headerName: 'LastVersion',
 				width: 50,
 				renderCell: ({value}: GridRenderCellParams<any, boolean>) =>
@@ -653,3 +663,66 @@ const getDateTimeFilterOperators = (
 		},
 	];
 };
+
+const _valueForOption = (option: 'any' | 'true' | 'false') => {
+	switch (option) {
+		case 'any': {
+			return undefined;
+		}
+
+		case 'true': {
+			return true;
+		}
+
+		case 'false': {
+			return false;
+		}
+	}
+};
+
+function GridFilterBooleanInput({
+	item,
+	applyValue,
+	apiRef,
+}: GridFilterInputBooleanProps) {
+	const handleFilterChange = ({
+		target: {value},
+	}: SelectChangeEvent<'any' | 'true' | 'false'>) => {
+		applyValue({
+			...item,
+			value: _valueForOption(value as 'any' | 'true' | 'false'),
+		});
+	};
+
+	const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+
+	return (
+		<FormControl fullWidth>
+			<InputLabel>{label}</InputLabel>
+			<Select
+				autoFocus
+				value={item.value ?? 'any'}
+				label={label}
+				onChange={handleFilterChange}
+			>
+				<MenuItem value="any">
+					{apiRef.current.getLocaleText('filterValueAny')}
+				</MenuItem>
+				<MenuItem value="true">
+					{apiRef.current.getLocaleText('filterValueTrue')}
+				</MenuItem>
+				<MenuItem value="false">
+					{apiRef.current.getLocaleText('filterValueFalse')}
+				</MenuItem>
+			</Select>
+		</FormControl>
+	);
+}
+
+const booleanFilterOperators: GridColTypeDef['filterOperators'] = [
+	{
+		value: 'is',
+		getApplyFilterFn: serverSideFiltering,
+		InputComponent: GridFilterBooleanInput,
+	},
+];
