@@ -170,7 +170,7 @@
     "lint-staged": "15.5.0",
     "moment": "2.30.1",
     "moment-timezone": "0.5.48",
-    "npm-check-updates": "16.14.20",
+    "npm-check-updates": "17.1.18",
     "postinstall": "0.11.1",
     "puppeteer": "19.11.1",
     "rrule": "2.8.1",
