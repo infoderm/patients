@@ -257,6 +257,7 @@ const DocumentsTable = ({
 							>
 								<Chip
 									icon={<LinkOffIcon />}
+									color="red"
 									label={`${row['patient.lastname']} ${row['patient.firstname']}`}
 									kind="unlinked"
 									onClick={(e) => {
@@ -269,6 +270,7 @@ const DocumentsTable = ({
 							<Tooltip title="not linked">
 								<Chip
 									icon={<LinkOffIcon />}
+									color="red"
 									label="not linked"
 									kind="linkoff"
 									onClick={(e) => {
