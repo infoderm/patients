@@ -6,7 +6,7 @@ import Chip, {type ChipProps} from '@mui/material/Chip';
 
 const LinkChip = React.forwardRef(
 	({to, ...rest}: ChipProps<typeof Link>, ref) => (
-		<Chip ref={ref} component={Link} to={to} {...rest} />
+		<Chip ref={ref} clickable component={Link} to={to} {...rest} />
 	),
 );
 

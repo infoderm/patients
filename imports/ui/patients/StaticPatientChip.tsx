@@ -97,6 +97,7 @@ const StaticPatientChip = React.forwardRef(
 			<Chip
 				ref={ref}
 				key={patient._id}
+				clickable
 				className={className}
 				style={style}
 				avatar={
