@@ -35,8 +35,11 @@ const DataGridModel = createContext<Context>({
 		page: 0,
 		pageSize: 10,
 	},
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	onSortModelChange() {},
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	onFilterModelChange() {},
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	onPaginationModelChange() {},
 });
 

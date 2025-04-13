@@ -148,6 +148,7 @@ const DocumentsTable = ({
 				renderCell({value}: GridRenderCellParams<any, string | undefined>) {
 					switch (value) {
 						case undefined: {
+							// eslint-disable-next-line react/jsx-no-useless-fragment
 							return <></>;
 						}
 
@@ -314,6 +315,7 @@ const DocumentsTable = ({
 				renderCell({value}: GridRenderCellParams<any, string | undefined>) {
 					switch (value) {
 						case undefined: {
+							// eslint-disable-next-line react/jsx-no-useless-fragment
 							return <></>;
 						}
 
@@ -356,6 +358,7 @@ const DocumentsTable = ({
 							<DeleteIcon />
 						</Tooltip>
 					) : (
+						// eslint-disable-next-line react/jsx-no-useless-fragment
 						<></>
 					),
 			},
@@ -368,6 +371,7 @@ const DocumentsTable = ({
 				width: 50,
 				renderCell: ({value}: GridRenderCellParams<any, boolean>) =>
 					value ? (
+						// eslint-disable-next-line react/jsx-no-useless-fragment
 						<></>
 					) : (
 						<Tooltip title="old version">
@@ -637,6 +641,7 @@ const getDateTimeFilterOperators = (
 };
 
 const _valueForOption = (option: 'any' | 'true' | 'false') => {
+	// eslint-disable-next-line default-case
 	switch (option) {
 		case 'any': {
 			return undefined;

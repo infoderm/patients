@@ -10,7 +10,7 @@ type GetUnionLast<T> = UnionToIntersectionFn<T> extends () => infer Last
 	? Last
 	: never;
 
-type UnionToIntersection<T, Intersection extends any = any> = T extends never
+type UnionToIntersection<T, Intersection = any> = T extends never
 	? Intersection
 	: UnionToIntersection<
 			Exclude<T, GetUnionLast<T>>,
