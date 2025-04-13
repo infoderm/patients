@@ -21,7 +21,7 @@ import DateTimeLocalizationProvider from '../i18n/DateTimeLocalizationProvider';
 
 import MangledDocuments from './MangledDocuments';
 
-const textNoIssues = 'All documents have been decoded :)';
+const textNoIssues = 'No rows';
 
 const documentLinkName = (_id: string) => `Open document #${_id} in New Tab`;
 
@@ -169,6 +169,6 @@ client(__filename, () => {
 
 		await user.click(await findByRole('link', {name: 'Page 2'}));
 
-		await findByText('Nothing to see on page 2.');
+		await findByText('No rows');
 	});
 });
