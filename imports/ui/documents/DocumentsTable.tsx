@@ -27,6 +27,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, {type SelectChangeEvent} from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import MuiChip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import BusinessIcon from '@mui/icons-material/Business';
@@ -41,8 +42,8 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SubjectIcon from '@mui/icons-material/Subject';
-
-import MuiChip from '@mui/material/Chip';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -58,6 +59,8 @@ import {myEncodeURIComponent} from '../../util/uri';
 
 import DocumentLinkingDialog from './DocumentLinkingDialog';
 import DocumentDeletionGenericButton from './actions/DocumentDeletionGenericButton';
+import DocumentSuperDeletionGenericButton from './actions/DocumentSuperDeletionGenericButton';
+import DocumentRestorationGenericButton from './actions/DocumentRestorationGenericButton';
 import DocumentDownloadGenericButton from './actions/DocumentDownloadGenericButton';
 
 const Chip = styled(MuiChip)(() => ({
@@ -378,20 +381,8 @@ const DocumentsTable = ({
 				hideable: false,
 				width: 30,
 				getActions: ({row}: GridRowParams<Row>) => [
-					row.deleted ? (
-						<></>
-					) : (
-						<DocumentDeletionGenericButton
-							showInMenu
-							document={row}
-							component={GridActionsCellItem}
-							icon={<DeleteIcon color="secondary" />}
-							label="Delete"
-							aria-label={`Delete document #${row._id}`}
-							closeMenuOnClick={false}
-						/>
-					),
 					<DocumentDownloadGenericButton
+						key="download"
 						showInMenu
 						document={row}
 						component={GridActionsCellItem}
@@ -399,6 +390,41 @@ const DocumentsTable = ({
 						label="Download"
 						aria-label={`Download document #${row._id}`}
 					/>,
+					...(row.deleted
+						? [
+								<DocumentRestorationGenericButton
+									key="restore"
+									showInMenu
+									document={row}
+									component={GridActionsCellItem}
+									icon={<RestoreFromTrashIcon color="primary" />}
+									label="Restore"
+									aria-label={`Restore document #${row._id}`}
+									closeMenuOnClick={false}
+								/>,
+								<DocumentSuperDeletionGenericButton
+									key="super-delete"
+									showInMenu
+									document={row}
+									component={GridActionsCellItem}
+									icon={<DeleteForeverIcon color="secondary" />}
+									label="Delete forever"
+									aria-label={`Delete document #${row._id} forever`}
+									closeMenuOnClick={false}
+								/>,
+						  ]
+						: [
+								<DocumentDeletionGenericButton
+									key="delete"
+									showInMenu
+									document={row}
+									component={GridActionsCellItem}
+									icon={<DeleteIcon color="secondary" />}
+									label="Delete"
+									aria-label={`Delete document #${row._id}`}
+									closeMenuOnClick={false}
+								/>,
+						  ]),
 				],
 			},
 		],
