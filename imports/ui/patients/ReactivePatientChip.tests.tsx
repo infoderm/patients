@@ -5,7 +5,7 @@ import React from 'react';
 
 import {assert} from 'chai';
 
-import {render} from '../../_test/react';
+import {render as _render} from '../../_test/react';
 
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 
@@ -15,10 +15,19 @@ import patientsInsert from '../../api/endpoint/patients/insert';
 import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
 import {type Patient} from '../../api/collection/documents';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import ReactivePatientChip from './ReactivePatientChip';
 
 const displayName = ({firstname, lastname}: Patient) =>
 	[lastname, firstname].filter(Boolean).join(' ') || 'Unknown';
+
+const render = (children: React.ReactNode) =>
+	_render(children, {
+		wrapper: ({children}: {children: React.ReactNode}) => (
+			<UserThemeProvider>{children}</UserThemeProvider>
+		),
+	});
 
 client(__filename, () => {
 	it('should be possible to render many chips concurrently', async () => {

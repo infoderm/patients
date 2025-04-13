@@ -6,8 +6,6 @@ import {assert} from 'chai';
 
 import {BrowserRouter} from 'react-router-dom';
 
-import {ThemeProvider} from '@mui/material/styles';
-
 import call from '../../api/endpoint/call';
 import {client, randomPassword, randomUserId} from '../../_test/fixtures';
 import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswordAndLogin';
@@ -18,22 +16,17 @@ import {render as _render} from '../../_test/react';
 
 import {type FormattedLine, type NormalizedLine} from '../../api/string';
 
-import useUserTheme from '../useUserTheme';
+import UserThemeProvider from '../UserThemeProvider';
 
 import ReactiveAllergyCard from './ReactiveAllergyCard';
 
-const RenderWrapper = ({children}: {readonly children: React.ReactNode}) => {
-	const theme = useUserTheme();
-	return (
-		<ThemeProvider theme={theme}>
-			<BrowserRouter>{children}</BrowserRouter>
-		</ThemeProvider>
-	);
-};
-
 const render = (children: React.ReactNode) =>
 	_render(children, {
-		wrapper: RenderWrapper,
+		wrapper: ({children}: {children: React.ReactNode}) => (
+			<UserThemeProvider>
+				<BrowserRouter>{children}</BrowserRouter>
+			</UserThemeProvider>
+		),
 	});
 
 client(__filename, () => {

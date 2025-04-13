@@ -30,6 +30,8 @@ import {
 import {type PatientDocument} from '../../api/collection/patients';
 import {deleteDoctor, renameDoctor, useDoctor} from '../../api/doctors';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import DoctorsWithNonAlphabeticalSymbols from './DoctorsWithNonAlphabeticalSymbols';
 
 const textNoIssues = 'All doctors are made of alphabetical symbols only :)';
@@ -46,9 +48,11 @@ const doctorLinkName = (displayName: FormattedLine, patientCount: number) =>
 const render = (children: React.ReactNode) =>
 	_render(children, {
 		wrapper: ({children}: {children: React.ReactNode}) => (
-			<DateTimeLocalizationProvider>
-				<BrowserRouter>{children}</BrowserRouter>
-			</DateTimeLocalizationProvider>
+			<UserThemeProvider>
+				<DateTimeLocalizationProvider>
+					<BrowserRouter>{children}</BrowserRouter>
+				</DateTimeLocalizationProvider>
+			</UserThemeProvider>
 		),
 	});
 
