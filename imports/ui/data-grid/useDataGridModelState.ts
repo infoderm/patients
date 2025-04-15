@@ -25,7 +25,7 @@ const useDataGridModelState = () => {
 
 	const onFilterModelChange = useCallback(
 		(filterModel: GridFilterModel, details: GridCallbackDetails) => {
-			console.debug({filterModel, details});
+			console.debug(JSON.stringify({filterModel, details}));
 			setFilterModel(filterModel);
 		},
 		[],

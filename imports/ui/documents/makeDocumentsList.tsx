@@ -43,7 +43,7 @@ const makeDocumentsList = (
 			filter: {
 				$and: [filter, toUserFilter(filterModel) ?? {}],
 			},
-			sort: sortModel.length === 0 ? sort : toQuerySort(sortModel),
+			sort: toQuerySort(sortModel) ?? sort,
 			projection: {
 				source: 0,
 				decoded: 0,
