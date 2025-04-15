@@ -5,30 +5,33 @@ import type PropsOf from '../../../util/types/PropsOf';
 import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentRestorationDialog from '../DocumentRestorationDialog';
 
-type DocumentSuperDeletionGenericButtonAdditionalProps<
-	C extends React.ElementType,
-> = {
+type DocumentRestorationGenericButtonProps<C extends React.ElementType> = {
 	readonly document: Pick<DocumentDocument, '_id' | 'deleted'>;
 	readonly component: C;
+	readonly hideWhenDisabled: boolean;
 } & PropsOf<C>;
 
-const DocumentSuperDeletionGenericButton = <C extends React.ElementType>({
+const DocumentRestorationGenericButton = <C extends React.ElementType>({
 	document,
 	component: Component,
+	hideWhenDisabled,
 	...rest
-}: DocumentSuperDeletionGenericButtonAdditionalProps<C>) => {
+}: DocumentRestorationGenericButtonProps<C>) => {
 	const [restoring, setRestoring] = useState(false);
+	const disabled = !document.deleted;
 
 	return (
 		<>
-			<Component
-				color="primary"
-				disabled={!document.deleted}
-				onClick={() => {
-					setRestoring(true);
-				}}
-				{...rest}
-			/>
+			{(!disabled || !hideWhenDisabled) && (
+				<Component
+					color="primary"
+					disabled={disabled}
+					onClick={() => {
+						setRestoring(true);
+					}}
+					{...rest}
+				/>
+			)}
 			<DocumentRestorationDialog
 				open={restoring}
 				document={document}
@@ -40,4 +43,4 @@ const DocumentSuperDeletionGenericButton = <C extends React.ElementType>({
 	);
 };
 
-export default DocumentSuperDeletionGenericButton;
+export default DocumentRestorationGenericButton;

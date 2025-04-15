@@ -1,3 +1,7 @@
+import {useCallback, useState} from 'react';
+
+import {useSnackbar} from 'notistack';
+
 import {type DocumentDocument} from '../../../api/collection/documents';
 import call from '../../../api/endpoint/call';
 import documentFetch from '../../../api/endpoint/documents/fetch';
@@ -51,6 +55,27 @@ const downloadDocument = async (document: DocumentDownloadTarget) => {
 		(await call(documentFetch, document._id));
 
 	saveTextAs(text, filename);
+};
+
+export const useDocumentDownload = (document: DocumentDownloadTarget) => {
+	const {enqueueSnackbar} = useSnackbar();
+	const [downloading, setDownloading] = useState(false);
+
+	const download = useCallback(async () => {
+		setDownloading(true);
+		try {
+			await downloadDocument(document);
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : 'unknown error';
+			console.error(message);
+			console.debug({error});
+			enqueueSnackbar(message, {variant: 'error'});
+		} finally {
+			setDownloading(false);
+		}
+	}, [document]);
+
+	return [downloading, download];
 };
 
 export default downloadDocument;

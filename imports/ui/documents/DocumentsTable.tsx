@@ -367,6 +367,7 @@ const DocumentsTable = ({
 				getActions: ({row}: GridRowParams<Row>) => [
 					<DocumentDownloadGenericButton
 						key="download"
+						disableLoadingFeedback
 						showInMenu
 						document={row}
 						component={GridActionsCellItem}

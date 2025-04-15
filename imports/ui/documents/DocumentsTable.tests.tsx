@@ -241,11 +241,15 @@ client(__filename, () => {
 
 		const column = await findByRole('columnheader', {name: 'Datetime'});
 
+		// NOTE: No need to hover.
+		// SEE: https://github.com/mui/mui-x/issues/4644.
 		await user.click(await within(column).findByRole('button', {name: 'Menu'}));
 
 		await user.click(await findByRole('menuitem', {name: 'Filter'}));
 		await user.unhover(await findByRole('columnheader', {name: 'Datetime'}));
 
+		// NOTE: On Desktop, use `role=button` instead.
+		// SEE: https://github.com/mui/mui-x/issues/4644.
 		await user.click(await screen.findByRole('textbox', {name: 'Choose date'}));
 	});
 
@@ -267,6 +271,8 @@ client(__filename, () => {
 
 		const column = await findByRole('columnheader', {name: 'LastVersion'});
 
+		// NOTE: No need to hover.
+		// SEE: https://github.com/mui/mui-x/issues/4644.
 		await user.click(await within(column).findByRole('button', {name: 'Menu'}));
 
 		await user.click(await findByRole('menuitem', {name: 'Filter'}));
