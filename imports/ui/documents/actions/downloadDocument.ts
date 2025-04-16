@@ -77,5 +77,3 @@ export const useDocumentDownload = (document: DocumentDownloadTarget) => {
 
 	return [downloading, download];
 };
-
-export default downloadDocument;
