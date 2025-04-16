@@ -54,29 +54,6 @@ export const $expr = <S extends schema.ZodTypeAny>(
 export const userFilter = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): schema.ZodType<UserFilter<schema.infer<S>>> => {
-	if (tSchema instanceof schema.ZodOptional) {
-		return userFilter(tSchema.unwrap()).optional() as any;
-	}
-
-	if (tSchema instanceof schema.ZodUnion) {
-		return _userFilter(tSchema) as any;
-	}
-
-	if (tSchema instanceof schema.ZodIntersection) {
-		return _userFilter(tSchema) as any;
-	}
-
-	if (tSchema instanceof schema.ZodObject) {
-		return _userFilter(tSchema) as any;
-	}
-
-	console.warn(`Not implemented: userFilter(${tSchema._def.typeName}})`);
-	return schema.undefined() as any;
-};
-
-const _userFilter = <S extends schema.ZodTypeAny>(
-	tSchema: S,
-): schema.ZodType<UserFilter<schema.infer<S>>> => {
 	const as = schema.lazy(() => schema.array(s));
 	const s = schema
 		.object(
@@ -351,18 +328,21 @@ const _unwrapBranded = <
 	return _unwrap(tSchema.unwrap(), (x) => x.brand<B>());
 };
 
-const operator =
-	<O extends (s: schema.ZodTypeAny) => schema.ZodTypeAny | undefined>(op: O) =>
-	<S extends schema.ZodTypeAny>(tSchema: S) => {
+const operator = <
+	O extends (s: schema.ZodTypeAny) => schema.ZodTypeAny | undefined,
+>(
+	op: O,
+) => {
+	const recurse = <S extends schema.ZodTypeAny>(tSchema: S) => {
 		const [_tSchema, wrap] = unwrap(tSchema);
 
 		if (_tSchema instanceof schema.ZodUnion) {
-			return wrap(schema.union(_tSchema.options.map(op).filter(Boolean)));
+			return wrap(schema.union(_tSchema.options.map(recurse).filter(Boolean)));
 		}
 
 		if (_tSchema instanceof schema.ZodIntersection) {
-			const left = op(_tSchema._def.left);
-			const right = op(_tSchema._def.right);
+			const left = recurse(_tSchema._def.left);
+			const right = recurse(_tSchema._def.right);
 			if (left === undefined) return right;
 			if (right === undefined) return left;
 
@@ -371,6 +351,9 @@ const operator =
 
 		return wrap(op(_tSchema));
 	};
+
+	return recurse;
+};
 
 const $all = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 	if (tSchema instanceof schema.ZodArray) {
@@ -383,6 +366,8 @@ const $all = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 });
 
 const $elemMatch = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
+	if (tSchema instanceof schema.ZodAny) return tSchema;
+
 	if (tSchema instanceof schema.ZodArray) {
 		return userFilter(tSchema.element);
 	}
