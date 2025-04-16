@@ -6,6 +6,9 @@ import isAfter from 'date-fns/isAfter';
 
 import {TIME_BREAK, TIME_EVENING} from '../constants';
 
+import useUser from '../users/useUser';
+import {useSetting} from '../settings/hooks';
+
 import NoContent from './NoContent';
 
 const Greetings = () => {
@@ -13,6 +16,10 @@ const Greetings = () => {
 	const today = startOfDay(now);
 	const noon = addHours(today, TIME_BREAK);
 	const evening = addHours(today, TIME_EVENING);
+	const user = useUser();
+	const {loading, value: displayName} = useSetting('user-account-display-name');
+	if (loading) return null;
+
 	let greeting = 'Bonjour';
 	if (isAfter(now, evening)) {
 		greeting = 'Bonsoir';
@@ -20,7 +27,11 @@ const Greetings = () => {
 		greeting = 'Good afternoon';
 	}
 
-	return <NoContent>{greeting} maman!</NoContent>;
+	return (
+		<NoContent>
+			{greeting} {displayName || user?.username}!
+		</NoContent>
+	);
 };
 
 export default Greetings;

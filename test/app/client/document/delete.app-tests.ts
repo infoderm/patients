@@ -21,7 +21,7 @@ client(__filename, () => {
 
 		await navigateTo(app, 'Documents', '/documents');
 
-		await findByRole('heading', {name: 'Nothing to see on page 1.'});
+		await findByText('No rows');
 
 		uploadFile(
 			await findByLabelText('Import Document'),
@@ -30,11 +30,15 @@ client(__filename, () => {
 
 		await findByText('PZ7654321Y9');
 
-		await user.click(await findByRole('button', {name: /^Delete document #/}));
+		await user.click(await findByRole('menuitem', {name: 'more'}));
+
+		await user.click(
+			await findByRole('menuitem', {name: /^Delete document #/}),
+		);
 
 		await user.click(await findByRole('button', {name: 'Delete'}));
 
-		await findByRole('heading', {name: 'Nothing to see on page 1.'});
+		await findByText('No rows');
 
 		await user.click(
 			await findByRole('button', {name: 'Show deleted documents'}),
@@ -46,6 +50,6 @@ client(__filename, () => {
 			await findByRole('button', {name: 'Hide deleted documents'}),
 		);
 
-		await findByRole('heading', {name: 'Nothing to see on page 1.'});
+		await findByText('No rows');
 	});
 });

@@ -24,29 +24,12 @@ const additionalProps = new Set<string | number | Symbol>([
 
 const Chip = styled(MuiChip, {
 	shouldForwardProp: (prop) => !additionalProps.has(prop),
-})<MuiChipProps>(({theme, loading, found, willBeCreated}) => ({
+})<MuiChipProps>(({theme}) => ({
 	marginRight: theme.spacing(1),
 	fontWeight: 'bold',
 	maxWidth: '200px',
-	...(willBeCreated
-		? {
-				backgroundColor: '#8f8',
-				color: '#222',
-		  }
-		: loading
-		? {
-				backgroundColor: '#aaa',
-				color: '#fff',
-		  }
-		: found
-		? {
-				backgroundColor: '#88f',
-				color: '#fff',
-		  }
-		: {
-				backgroundColor: '#f88',
-				color: '#fff',
-		  }),
+	overflow: 'hidden',
+	textOverflow: 'ellipisis',
 }));
 
 type Patient = {
@@ -95,8 +78,12 @@ const StaticPatientChip = React.forwardRef(
 			<Chip
 				ref={ref}
 				key={patient._id}
+				clickable
 				className={className}
 				style={style}
+				color={
+					willBeCreated ? 'green' : loading ? undefined : found ? 'blue' : 'red'
+				}
 				avatar={
 					!loading && found && patient.photo ? (
 						<Avatar src={pngDataURL(patient.photo)} />

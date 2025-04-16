@@ -58,13 +58,7 @@ const Chip = styled(MuiChip, {
 		maxWidth: '200px',
 	}),
 	...(kind === 'unlinked' && {
-		backgroundColor: '#f88',
-		color: '#fff',
 		fontWeight: 'bold',
-	}),
-	...(kind === 'linkoff' && {
-		backgroundColor: '#f88',
-		color: '#fff',
 	}),
 	...(kind === 'anomalies' && {
 		backgroundColor: '#fa8',
@@ -141,6 +135,7 @@ const DocumentChips = ({
 			{patientId ? null : parsed ? (
 				<Chip
 					icon={<LinkOffIcon />}
+					color="red"
 					label={`${subject.lastname} ${subject.firstname}`}
 					kind="unlinked"
 					onClick={(e) => {
@@ -151,6 +146,7 @@ const DocumentChips = ({
 			) : (
 				<Chip
 					icon={<LinkOffIcon />}
+					color="red"
 					label="not linked"
 					kind="linkoff"
 					onClick={(e) => {

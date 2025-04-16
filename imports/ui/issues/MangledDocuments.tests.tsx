@@ -19,18 +19,22 @@ import documentsSuperdelete from '../../api/endpoint/documents/superdelete';
 
 import DateTimeLocalizationProvider from '../i18n/DateTimeLocalizationProvider';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import MangledDocuments from './MangledDocuments';
 
-const textNoIssues = 'All documents have been decoded :)';
+const textNoIssues = 'No rows';
 
 const documentLinkName = (_id: string) => `Open document #${_id} in New Tab`;
 
 const render = (children: React.ReactNode) =>
 	_render(children, {
 		wrapper: ({children}: {children: React.ReactNode}) => (
-			<DateTimeLocalizationProvider>
-				<BrowserRouter>{children}</BrowserRouter>
-			</DateTimeLocalizationProvider>
+			<UserThemeProvider>
+				<DateTimeLocalizationProvider>
+					<BrowserRouter>{children}</BrowserRouter>
+				</DateTimeLocalizationProvider>
+			</UserThemeProvider>
 		),
 	});
 
@@ -169,6 +173,6 @@ client(__filename, () => {
 
 		await user.click(await findByRole('link', {name: 'Page 2'}));
 
-		await findByText('Nothing to see on page 2.');
+		await findByText('No rows');
 	});
 });

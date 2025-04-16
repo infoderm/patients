@@ -1,8 +1,26 @@
+import {useCallback, useState} from 'react';
+
+import {useSnackbar} from 'notistack';
+
+import {type DocumentDocument} from '../../../api/collection/documents';
 import call from '../../../api/endpoint/call';
 import documentFetch from '../../../api/endpoint/documents/fetch';
+import type Optional from '../../../util/types/Optional';
 import saveTextAs from '../../output/saveTextAs';
 
-const downloadDocument = async (document) => {
+export type DocumentDownloadTarget = Pick<
+	Optional<DocumentDocument, 'decoded' | 'source'>,
+	| '_id'
+	| 'parsed'
+	| 'source'
+	| 'decoded'
+	| 'format'
+	| 'identifier'
+	| 'reference'
+	| 'status'
+>;
+
+const downloadDocument = async (document: DocumentDownloadTarget) => {
 	const extensions = {
 		// TODO maybe use LAB/REP kind dichotomy instead
 		// Could also use better naming, for instance Mediris uses
@@ -20,9 +38,10 @@ const downloadDocument = async (document) => {
 		healthone: 'HLT',
 		'DMA-REP': 'REP',
 		// 'medar' : 'MDR' ,
+		unknown: 'UNK',
 	};
 
-	const ext = extensions[document.format] || 'UNK';
+	const ext = extensions[document.format ?? 'unknown'];
 
 	const name = document.parsed
 		? `${document.identifier}-${document.reference}-${document.status}`
@@ -38,4 +57,23 @@ const downloadDocument = async (document) => {
 	saveTextAs(text, filename);
 };
 
-export default downloadDocument;
+export const useDocumentDownload = (document: DocumentDownloadTarget) => {
+	const {enqueueSnackbar} = useSnackbar();
+	const [downloading, setDownloading] = useState(false);
+
+	const download = useCallback(async () => {
+		setDownloading(true);
+		try {
+			await downloadDocument(document);
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : 'unknown error';
+			console.error(message);
+			console.debug({error});
+			enqueueSnackbar(message, {variant: 'error'});
+		} finally {
+			setDownloading(false);
+		}
+	}, [document]);
+
+	return [downloading, download];
+};

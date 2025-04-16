@@ -69,7 +69,6 @@ const SEPAPaymentDetails = lazy(
 const UnpaidConsultationsListRoutes = lazy(
 	async () => import('./consultations/UnpaidConsultationsListRoutes'),
 );
-const Stats = lazy(async () => import('./stats/Stats'));
 const Issues = lazy(async () => import('./issues/Issues'));
 const MergePatientsForm = lazy(async () => import('./merge/MergePatientsForm'));
 
@@ -97,7 +96,10 @@ const AllergyDetailsRoutes = lazy(
 const DrugsSearch = lazy(async () => import('./drugs/DrugsSearch'));
 const DrugDetails = lazy(async () => import('./drugs/DrugDetails'));
 
+const Stats = lazy(async () => import('./stats/Stats'));
+
 const Settings = lazy(async () => import('./settings/Settings'));
+const UserAccount = lazy(async () => import('./users/Account'));
 const Authentication = lazy(async () => import('./auth/Authentication'));
 
 const ConsultationsOfTheDayRoute = () => {
@@ -154,7 +156,6 @@ export default function Routing() {
 				<Route element={<PaidConsultationsListRoutes />} path="paid/*" />
 				<Route element={<UnpaidConsultationsListRoutes />} path="unpaid/*" />
 
-				<Route element={<Stats />} path="stats" />
 				<Route element={<SEPAPaymentDetails />} path="sepa" />
 
 				<Route element={<Issues />} path="issues/*" />
@@ -172,7 +173,10 @@ export default function Routing() {
 				<Route element={<DrugsSearch />} path="drugs" />
 				<Route element={<DrugDetails />} path="drug/:id" />
 
+				<Route element={<Stats />} path="stats" />
+
 				<Route element={<Settings />} path="settings/*" />
+				<Route element={<UserAccount />} path="account" />
 				<Route element={<Authentication />} path="auth" />
 
 				<Route element={<NoMatch />} path="*" />

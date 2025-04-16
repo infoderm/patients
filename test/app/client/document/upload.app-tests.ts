@@ -127,7 +127,7 @@ const macro = (
 
 		await navigateTo(app, 'Documents', '/documents');
 
-		await findByRole('heading', {name: 'Nothing to see on page 1.'});
+		await findByText('No rows');
 
 		const file = new File([contents], filename, metadata);
 

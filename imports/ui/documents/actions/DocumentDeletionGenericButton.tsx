@@ -5,30 +5,33 @@ import type PropsOf from '../../../util/types/PropsOf';
 import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentDeletionDialog from '../DocumentDeletionDialog';
 
-type DocumentDownloadGenericButtonAdditionalProps = {
-	readonly document: DocumentDocument;
-	readonly component: React.ElementType;
-};
+type DocumentDeletionGenericButtonProps<C extends React.ElementType> = {
+	readonly document: Pick<DocumentDocument, '_id' | 'deleted'>;
+	readonly component: C;
+	readonly hideWhenDisabled: boolean;
+} & PropsOf<C>;
 
-const DocumentDownloadGenericButton = ({
+const DocumentDeletionGenericButton = <C extends React.ElementType>({
 	document,
 	component: Component,
+	hideWhenDisabled,
 	...rest
-}: // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-DocumentDownloadGenericButtonAdditionalProps & PropsOf<typeof Component>) => {
+}: DocumentDeletionGenericButtonProps<C>) => {
 	const [deleting, setDeleting] = useState(false);
-
-	if (document.deleted) return null;
+	const disabled = document.deleted;
 
 	return (
 		<>
-			<Component
-				color="secondary"
-				onClick={() => {
-					setDeleting(true);
-				}}
-				{...rest}
-			/>
+			{(!disabled || !hideWhenDisabled) && (
+				<Component
+					color="secondary"
+					disabled={disabled}
+					onClick={() => {
+						setDeleting(true);
+					}}
+					{...rest}
+				/>
+			)}
 			<DocumentDeletionDialog
 				open={deleting}
 				document={document}
@@ -40,4 +43,4 @@ DocumentDownloadGenericButtonAdditionalProps & PropsOf<typeof Component>) => {
 	);
 };
 
-export default DocumentDownloadGenericButton;
+export default DocumentDeletionGenericButton;
