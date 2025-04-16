@@ -145,33 +145,26 @@ isomorphic(__filename, () => {
 		const tSchema = partial(schema.object({count: schema.number()}));
 
 		assert.deepEqual(JSON.parse(toJSON(tSchema)), {
-			def: {
+			_def: {
+				typeName: 'ZodObject',
 				catchall: {
 					_def: {
 						typeName: 'ZodNever',
 					},
 				},
-				typeName: 'ZodObject',
 				unknownKeys: 'strip',
 			},
 			shape: {
 				count: {
 					_def: {
-						options: [
-							{
-								_def: {
-									checks: [],
-									coerce: false,
-									typeName: 'ZodNumber',
-								},
+						typeName: 'ZodOptional',
+						innerType: {
+							_def: {
+								checks: [],
+								coerce: false,
+								typeName: 'ZodNumber',
 							},
-							{
-								_def: {
-									typeName: 'ZodUndefined',
-								},
-							},
-						],
-						typeName: 'ZodUnion',
+						},
 					},
 				},
 			},
