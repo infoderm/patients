@@ -10,25 +10,15 @@ import {
 	type GridRenderCellParams,
 	GridToolbar,
 	type GridValueFormatterParams,
-	type GridColTypeDef,
-	type GridFilterInputValueProps,
 	type GridRowParams,
 	GridActionsCellItem,
 	type GridCallbackDetails,
 	type GridColumnVisibilityModel,
-	type GridFilterInputBooleanProps,
 } from '@mui/x-data-grid';
-
-import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
 
 import {styled} from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select, {type SelectChangeEvent} from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import MuiChip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -56,6 +46,8 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 import {useLocaleText} from '../../i18n/dataGrid';
 import Tooltip from '../accessibility/Tooltip';
 import useDataGridModelContextState from '../data-grid/useDataGridModelContextState';
+import {dateTimeFilterOperators} from '../data-grid/filter/dateTimeFilterOperators';
+import {booleanFilterOperators} from '../data-grid/filter/booleanFilterOperators';
 
 import LinkChip from '../chips/LinkChip';
 
@@ -123,7 +115,7 @@ const DocumentsTable = ({
 				type: 'dateTime',
 				headerName: 'Created at',
 				flex: 1,
-				filterOperators: getDateTimeFilterOperators(true),
+				filterOperators: dateTimeFilterOperators,
 				valueFormatter: dateValueFormatter,
 			},
 			{field: 'encoding', type: 'string', headerName: 'Encoding', width: 50},
@@ -187,7 +179,7 @@ const DocumentsTable = ({
 				type: 'dateTime',
 				headerName: 'Datetime',
 				flex: 1,
-				filterOperators: getDateTimeFilterOperators(true),
+				filterOperators: dateTimeFilterOperators,
 				valueFormatter: dateValueFormatter,
 			},
 			{
@@ -579,135 +571,3 @@ const DocumentsTable = ({
 };
 
 export default DocumentsTable;
-
-function GridFilterDateInput(
-	props: GridFilterInputValueProps & {readonly showTime?: boolean},
-) {
-	const {item, showTime, applyValue, apiRef} = props;
-
-	const Component = showTime ? DateTimePicker : DatePicker;
-
-	const handleFilterChange = (newValue: unknown) => {
-		applyValue({...item, value: newValue});
-	};
-
-	return (
-		<Component
-			autoFocus
-			value={item.value || null}
-			label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-			slotProps={{
-				textField: {
-					variant: 'standard',
-				},
-				inputAdornment: {
-					sx: {
-						'& .MuiButtonBase-root': {
-							marginRight: -1,
-						},
-					},
-				},
-			}}
-			onChange={handleFilterChange}
-		/>
-	);
-}
-
-const serverSideFiltering = (_: unknown) => {
-	throw new Error('Client-side filtering not implemented');
-};
-
-const getDateTimeFilterOperators = (
-	showTime = false,
-): GridColTypeDef['filterOperators'] => {
-	return [
-		{
-			value: 'onOrAfter',
-			getApplyFilterFn: serverSideFiltering,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-		{
-			value: 'after',
-			getApplyFilterFn: serverSideFiltering,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-		{
-			value: 'onOrBefore',
-			getApplyFilterFn: serverSideFiltering,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-		{
-			value: 'before',
-			getApplyFilterFn: serverSideFiltering,
-			InputComponent: GridFilterDateInput,
-			InputComponentProps: {showTime},
-		},
-	];
-};
-
-const _valueForOption = (option: 'any' | 'true' | 'false') => {
-	// eslint-disable-next-line default-case
-	switch (option) {
-		case 'any': {
-			return undefined;
-		}
-
-		case 'true': {
-			return true;
-		}
-
-		case 'false': {
-			return false;
-		}
-	}
-};
-
-function GridFilterBooleanInput({
-	item,
-	applyValue,
-	apiRef,
-}: GridFilterInputBooleanProps) {
-	const handleFilterChange = ({
-		target: {value},
-	}: SelectChangeEvent<'any' | 'true' | 'false'>) => {
-		applyValue({
-			...item,
-			value: _valueForOption(value as 'any' | 'true' | 'false'),
-		});
-	};
-
-	const label = apiRef.current.getLocaleText('filterPanelInputLabel');
-
-	return (
-		<FormControl fullWidth>
-			<InputLabel>{label}</InputLabel>
-			<Select
-				autoFocus
-				value={item.value ?? 'any'}
-				label={label}
-				onChange={handleFilterChange}
-			>
-				<MenuItem value="any">
-					{apiRef.current.getLocaleText('filterValueAny')}
-				</MenuItem>
-				<MenuItem value="true">
-					{apiRef.current.getLocaleText('filterValueTrue')}
-				</MenuItem>
-				<MenuItem value="false">
-					{apiRef.current.getLocaleText('filterValueFalse')}
-				</MenuItem>
-			</Select>
-		</FormControl>
-	);
-}
-
-const booleanFilterOperators: GridColTypeDef['filterOperators'] = [
-	{
-		value: 'is',
-		getApplyFilterFn: serverSideFiltering,
-		InputComponent: GridFilterBooleanInput,
-	},
-];
