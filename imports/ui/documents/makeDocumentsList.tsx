@@ -19,7 +19,6 @@ import DataGridModelProvider from '../data-grid/DataGridModelProvider';
 
 import Paginator from '../navigation/Paginator';
 
-import StaticDocumentList from './StaticDocumentList';
 import DocumentsTable from './DocumentsTable';
 
 type Props = {
@@ -28,7 +27,66 @@ type Props = {
 
 	readonly page?: number;
 	readonly perpage?: number;
-} & Omit<PropsOf<typeof StaticDocumentList>, 'page' | 'perpage' | 'documents'>;
+} & Omit<
+	PropsOf<typeof DocumentsTable>,
+	'page' | 'pageSize' | 'loading' | 'items' | 'showDeleted'
+>;
+
+const makeDocumentsList = (
+	useDocuments: GenericQueryHook<DocumentDocument>,
+) => {
+	const DocumentsList = ({
+		filter = {},
+		sort,
+		page = 1,
+		perpage = 10,
+		...rest
+	}: Props) => {
+		const {sortModel, filterModel} = useDataGridModelContextState();
+
+		const query = {
+			filter: {
+				$and: [filter, _filter(filterModel) ?? {}],
+			},
+			sort: sortModel.length === 0 ? sort : _sort(sortModel),
+			projection: {
+				source: 0,
+				decoded: 0,
+				results: 0,
+				text: 0,
+			} as const,
+			skip: (page - 1) * perpage,
+			limit: perpage,
+		};
+
+		const deps = [JSON.stringify(query)];
+		console.debug({sortModel, filterModel, query});
+
+		const {loading, results: documents} = useDocuments(query, deps);
+
+		return (
+			<>
+				<DocumentsTable
+					loading={Boolean(loading)}
+					items={documents}
+					page={page - 1}
+					pageSize={perpage}
+					showDeleted={filter.deleted === undefined}
+					{...rest}
+				/>
+				<Paginator loading={loading} end={documents.length < perpage} />
+			</>
+		);
+	};
+
+	return (props: Props) => (
+		<DataGridModelProvider>
+			<DocumentsList {...props} />
+		</DataGridModelProvider>
+	);
+};
+
+export default makeDocumentsList;
 
 const _sort = (sortModel: GridSortModel): Sort<DocumentDocument> => {
 	assert(sortModel.length === 1);
@@ -169,63 +227,3 @@ const _filter = ({
 				[op]: filters,
 		  };
 };
-
-const makeDocumentsList = (
-	useDocuments: GenericQueryHook<DocumentDocument>,
-) => {
-	const DocumentsList = ({
-		filter = {},
-		sort,
-		page = 1,
-		perpage = 10,
-		...rest
-	}: Props) => {
-		const {sortModel, filterModel} = useDataGridModelContextState();
-
-		const query = {
-			filter: {
-				$and: [filter, _filter(filterModel) ?? {}],
-			},
-			sort: sortModel.length === 0 ? sort : _sort(sortModel),
-			projection: StaticDocumentList.projection,
-			skip: (page - 1) * perpage,
-			limit: perpage,
-		};
-
-		const deps = [JSON.stringify(query)];
-		console.debug({sortModel, filterModel, query});
-
-		const {loading, results: documents} = useDocuments(query, deps);
-
-		return (
-			<>
-				<DocumentsTable
-					loading={Boolean(loading)}
-					items={documents}
-					page={page - 1}
-					pageSize={perpage}
-					showDeleted={filter.deleted === undefined}
-				/>
-				<Paginator loading={loading} end={documents.length < perpage} />
-			</>
-		);
-
-		return (
-			<StaticDocumentList
-				page={page}
-				perpage={perpage}
-				loading={loading}
-				documents={documents}
-				{...rest}
-			/>
-		);
-	};
-
-	return (props: Props) => (
-		<DataGridModelProvider>
-			<DocumentsList {...props} />
-		</DataGridModelProvider>
-	);
-};
-
-export default makeDocumentsList;
