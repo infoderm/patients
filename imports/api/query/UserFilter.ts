@@ -2,9 +2,11 @@ import {chain} from '@iterable-iterator/chain';
 import {map} from '@iterable-iterator/map';
 import {type BSONRegExp} from 'bson';
 
-import schema from '../../util/schema';
+import schema, {map as mapSchema} from '../../util/schema';
 import type Document from '../Document';
 import {document} from '../Document'; // TODO Replace this
+
+import removeUndefined from '../../util/object/removeUndefined';
 
 import type WithId from './WithId';
 import {
@@ -52,6 +54,29 @@ export const $expr = <S extends schema.ZodTypeAny>(
 export const userFilter = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): schema.ZodType<UserFilter<schema.infer<S>>> => {
+	if (tSchema instanceof schema.ZodOptional) {
+		return userFilter(tSchema.unwrap()).optional() as any;
+	}
+
+	if (tSchema instanceof schema.ZodUnion) {
+		return _userFilter(tSchema) as any;
+	}
+
+	if (tSchema instanceof schema.ZodIntersection) {
+		return _userFilter(tSchema) as any;
+	}
+
+	if (tSchema instanceof schema.ZodObject) {
+		return _userFilter(tSchema) as any;
+	}
+
+	console.warn(`Not implemented: userFilter(${tSchema._def.typeName}})`);
+	return schema.undefined() as any;
+};
+
+const _userFilter = <S extends schema.ZodTypeAny>(
+	tSchema: S,
+): schema.ZodType<UserFilter<schema.infer<S>>> => {
 	const as = schema.lazy(() => schema.array(s));
 	const s = schema
 		.object(
@@ -87,7 +112,7 @@ export type Condition<T> =
  * array types can be searched using their element type
  */
 type AlternativeType<T> = T extends undefined
-	? null | T
+	? UndefinedFilter<T>
 	: T extends Array<infer U>
 	? ArrayFilter<U, T>
 	: T extends string
@@ -95,6 +120,8 @@ type AlternativeType<T> = T extends undefined
 	: T extends number
 	? NumberFilter<T>
 	: T;
+
+type UndefinedFilter<T extends undefined> = null | T;
 
 type ArrayFilter<U, T extends readonly U[] = readonly U[]> = T | Condition<U>;
 
@@ -105,28 +132,44 @@ type NumberFilter<T extends number> = T;
 export const condition = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): schema.ZodType<Condition<schema.infer<S>>> => {
-	const alt = alternativeType(tSchema);
-	return schema.union([alt, filterOperators(alt)]);
+	return schema.union([
+		mapSchema(alternativeType, tSchema),
+		mapSchema(filterOperators, tSchema),
+	]);
 };
 
 const alternativeType = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): schema.ZodType<AlternativeType<schema.infer<S>>> => {
-	const [_tSchema, wrap] = unwrap(tSchema);
-
-	if (_tSchema instanceof schema.ZodArray) {
-		return wrap(arrayFilter(_tSchema));
+	if (tSchema instanceof schema.ZodUndefined) {
+		return undefinedFilter(tSchema) as schema.ZodType<
+			AlternativeType<schema.infer<S>>
+		>;
 	}
 
-	if (_tSchema instanceof schema.ZodString) {
-		return wrap(stringFilter(_tSchema));
+	if (tSchema instanceof schema.ZodArray) {
+		return arrayFilter(tSchema) as schema.ZodType<
+			AlternativeType<schema.infer<S>>
+		>;
 	}
 
-	if (_tSchema instanceof schema.ZodNumber) {
-		return wrap(numberFilter(_tSchema));
+	if (tSchema instanceof schema.ZodString) {
+		return stringFilter(tSchema) as schema.ZodType<
+			AlternativeType<schema.infer<S>>
+		>;
 	}
 
-	return wrap(_tSchema);
+	if (tSchema instanceof schema.ZodNumber) {
+		return numberFilter(tSchema);
+	}
+
+	return tSchema;
+};
+
+const undefinedFilter = <S extends schema.ZodUndefined>(
+	tSchema: S,
+): schema.ZodType<UndefinedFilter<schema.infer<S>>> => {
+	return schema.union([tSchema, schema.null()]);
 };
 
 const arrayFilter = <U extends schema.ZodTypeAny, S extends schema.ZodArray<U>>(
@@ -201,53 +244,56 @@ export const filterOperators = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): schema.ZodType<FilterOperators<schema.infer<S>>> => {
 	const s = schema
-		.object({
-			// Comparison
-			$eq: tSchema,
-			$gt: tSchema,
-			$gte: tSchema,
-			$in: schema.array(tSchema.nullable()),
-			$lt: tSchema,
-			$lte: tSchema,
-			$ne: tSchema,
-			$nin: schema.array(tSchema.nullable()),
-			// Logical
-			$not: schema.lazy(() =>
-				unwrap(tSchema)[0] instanceof schema.ZodString
-					? schema.union(s, schema.instanceof(RegExp))
-					: s,
-			),
-			// Element
-			/**
-			 * When `true`, `$exists` matches the documents that contain the field,
-			 * including documents where the field value is null.
-			 */
-			$exists: schema.boolean(),
-			$type: schema.union([bsonType, schema.array(bsonType)]),
-			// Evaluation
-			$expr: schema.record(schema.string(), schema.any(/* TODO */)),
-			$jsonSchema: schema.record(schema.string(), schema.any()),
-			$mod: $mod(tSchema),
-			$regex: $regex(tSchema),
-			$options: $options(tSchema),
-			// Geospatial
-			$geoIntersects: schema.object({$geometry: document}).strict(),
-			$geoWithin: document,
-			$near: document,
-			$nearSphere: document,
-			$maxDistance: schema.number(),
-			// Array
-			$all: $all(tSchema),
-			$elemMatch: $elemMatch(tSchema),
-			$size: $size(tSchema),
-			// Bitwise
-			$bitsAllClear: bitwiseFilter,
-			$bitsAllSet: bitwiseFilter,
-			$bitsAnyClear: bitwiseFilter,
-			$bitsAnySet: bitwiseFilter,
-			$rand: schema.record(schema.string(), schema.never()),
-		})
-		.partial();
+		.object(
+			removeUndefined({
+				// Comparison
+				$eq: tSchema,
+				$gt: tSchema,
+				$gte: tSchema,
+				$in: schema.array(tSchema.nullable()),
+				$lt: tSchema,
+				$lte: tSchema,
+				$ne: tSchema,
+				$nin: schema.array(tSchema.nullable()),
+				// Logical
+				$not: schema.lazy(() =>
+					unwrap(tSchema)[0] instanceof schema.ZodString
+						? schema.union(s, schema.instanceof(RegExp))
+						: s,
+				),
+				// Element
+				/**
+				 * When `true`, `$exists` matches the documents that contain the field,
+				 * including documents where the field value is null.
+				 */
+				$exists: schema.boolean(),
+				$type: schema.union([bsonType, schema.array(bsonType)]),
+				// Evaluation
+				$expr: schema.record(schema.string(), schema.any(/* TODO */)),
+				$jsonSchema: schema.record(schema.string(), schema.any()),
+				$mod: $mod(tSchema),
+				$regex: $regex(tSchema),
+				$options: $options(tSchema),
+				// Geospatial
+				$geoIntersects: schema.object({$geometry: document}).strict(),
+				$geoWithin: document,
+				$near: document,
+				$nearSphere: document,
+				$maxDistance: schema.number(),
+				// Array
+				$all: $all(tSchema),
+				$elemMatch: $elemMatch(tSchema),
+				$size: $size(tSchema),
+				// Bitwise
+				$bitsAllClear: bitwiseFilter,
+				$bitsAllSet: bitwiseFilter,
+				$bitsAnyClear: bitwiseFilter,
+				$bitsAnySet: bitwiseFilter,
+				$rand: schema.record(schema.string(), schema.never()),
+			}),
+		)
+		.partial()
+		.strict();
 
 	return s;
 };
@@ -306,12 +352,21 @@ const _unwrapBranded = <
 };
 
 const operator =
-	<O extends (s: schema.ZodTypeAny) => schema.ZodTypeAny>(op: O) =>
+	<O extends (s: schema.ZodTypeAny) => schema.ZodTypeAny | undefined>(op: O) =>
 	<S extends schema.ZodTypeAny>(tSchema: S) => {
 		const [_tSchema, wrap] = unwrap(tSchema);
 
 		if (_tSchema instanceof schema.ZodUnion) {
-			return wrap(schema.union(_tSchema.options.map(op)));
+			return wrap(schema.union(_tSchema.options.map(op).filter(Boolean)));
+		}
+
+		if (_tSchema instanceof schema.ZodIntersection) {
+			const left = op(_tSchema._def.left);
+			const right = op(_tSchema._def.right);
+			if (left === undefined) return right;
+			if (right === undefined) return left;
+
+			return wrap(schema.intersection(left, right));
 		}
 
 		return wrap(op(_tSchema));
@@ -324,7 +379,7 @@ const $all = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 
 	// TODO Handle tuples.
 
-	return schema.never();
+	return undefined;
 });
 
 const $elemMatch = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
@@ -334,7 +389,7 @@ const $elemMatch = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 
 	// TODO Handle tuples.
 
-	return schema.never();
+	return undefined;
 });
 
 const $size = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
@@ -345,23 +400,23 @@ const $size = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
 		return schema.number();
 	}
 
-	return schema.never();
+	return undefined;
 });
 
 const $mod = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
-	return tSchema instanceof schema.ZodNumber
+	return tSchema.safeParse(0).success // TODO: Does not work against refinements.
 		? schema.tuple([schema.number(), schema.number()])
-		: schema.never();
+		: undefined;
 });
 
 const $regex = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
-	return unwrap(tSchema)[0] instanceof schema.ZodString
+	return tSchema.safeParse('').success // TODO: Does not work against refinements.
 		? schema.union([
 				schema.string(),
 				schema.instanceof(RegExp),
 				// schema.instanceof(BSONRegExp), // TODO This requires an explicit dependency on bson.
 		  ])
-		: schema.never();
+		: undefined;
 });
 
 const $options = operator(<S extends schema.ZodTypeAny>(tSchema: S) => {
