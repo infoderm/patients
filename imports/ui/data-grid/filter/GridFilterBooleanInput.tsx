@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {type ChangeEvent} from 'react';
 
 import {type GridFilterInputBooleanProps} from '@mui/x-data-grid';
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Select, {type SelectChangeEvent} from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/NativeSelect';
+
+import useUniqueId from '../../hooks/useUniqueId';
 
 export const GridFilterBooleanInput = ({
 	item,
@@ -14,33 +15,36 @@ export const GridFilterBooleanInput = ({
 }: GridFilterInputBooleanProps) => {
 	const handleFilterChange = ({
 		target: {value},
-	}: SelectChangeEvent<'any' | 'true' | 'false'>) => {
+	}: ChangeEvent<HTMLSelectElement>) => {
 		applyValue({
 			...item,
 			value: _valueForOption(value as 'any' | 'true' | 'false'),
 		});
 	};
 
+	const id = useUniqueId('grid-filter-boolean-input-select');
 	const label = apiRef.current.getLocaleText('filterPanelInputLabel');
 
 	return (
 		<FormControl fullWidth>
-			<InputLabel>{label}</InputLabel>
+			<InputLabel htmlFor={id}>{label}</InputLabel>
 			<Select
 				autoFocus
 				value={item.value ?? 'any'}
-				label={label}
+				inputProps={{
+					id,
+				}}
 				onChange={handleFilterChange}
 			>
-				<MenuItem value="any">
+				<option value="any">
 					{apiRef.current.getLocaleText('filterValueAny')}
-				</MenuItem>
-				<MenuItem value="true">
+				</option>
+				<option value="true">
 					{apiRef.current.getLocaleText('filterValueTrue')}
-				</MenuItem>
-				<MenuItem value="false">
+				</option>
+				<option value="false">
 					{apiRef.current.getLocaleText('filterValueFalse')}
-				</MenuItem>
+				</option>
 			</Select>
 		</FormControl>
 	);

@@ -1,15 +1,13 @@
-import assert from 'assert';
-
 import {type GridSortModel} from '@mui/x-data-grid';
 
-import {type DocumentDocument} from '../../../api/collection/documents';
+import type Document from '../../../api/Document';
 import {type Sort} from '../../../api/query/sort';
 
-export const toQuerySort = (
+export const toQuerySort = <T extends Document>(
 	sortModel: GridSortModel,
-): Sort<DocumentDocument> => {
-	assert(sortModel.length === 1);
-	return {
-		[sortModel[0]!.field]: sortModel[0]!.sort === 'asc' ? 1 : -1,
-	} as const;
+): Sort<T> | undefined => {
+	if (sortModel.length === 0) return undefined;
+	return Object.fromEntries(
+		sortModel.map(({field, sort}) => [field, sort === 'asc' ? 1 : -1]),
+	) as Sort<T>;
 };

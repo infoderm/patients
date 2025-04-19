@@ -493,12 +493,7 @@ const DocumentsTable = ({
 				},
 			},
 			sorting: {
-				sortModel: [
-					{
-						field: 'createdAt',
-						sort: 'desc',
-					} as const,
-				],
+				sortModel: [],
 			},
 			pagination: {
 				paginationModel: {page, pageSize},
