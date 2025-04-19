@@ -16,24 +16,21 @@ const useDataGridModelState = () => {
 	});
 
 	const onSortModelChange = useCallback(
-		(sortModel: GridSortModel, details: GridCallbackDetails) => {
-			console.debug({sortModel, details});
+		(sortModel: GridSortModel, _details: GridCallbackDetails) => {
 			setSortModel(sortModel);
 		},
 		[],
 	);
 
 	const onFilterModelChange = useCallback(
-		(filterModel: GridFilterModel, details: GridCallbackDetails) => {
-			console.debug(JSON.stringify({filterModel, details}));
+		(filterModel: GridFilterModel, _details: GridCallbackDetails) => {
 			setFilterModel(filterModel);
 		},
 		[],
 	);
 
 	const onPaginationModelChange = useCallback(
-		(paginationModel: GridPaginationModel, details: GridCallbackDetails) => {
-			console.debug({paginationModel, details});
+		(paginationModel: GridPaginationModel, _details: GridCallbackDetails) => {
 			setPaginationModel(paginationModel);
 		},
 		[],

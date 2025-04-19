@@ -55,7 +55,6 @@ const makeDocumentsList = (
 		};
 
 		const deps = [JSON.stringify(query)];
-		console.debug({sortModel, filterModel, query});
 
 		const {loading, results: documents} = useDocuments(query, deps);
 
