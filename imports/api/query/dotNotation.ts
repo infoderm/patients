@@ -123,29 +123,23 @@ export const _fieldSpecifiers = function* <S extends schema.ZodTypeAny>(
 			}
 		}
 	} else if (tSchema instanceof schema.ZodUnion) {
-		const merged = new Set<string[]>();
 		for (const specifiers of tSchema.options.map(_fieldSpecifiers)) {
-			for (const specifier of specifiers) {
-				merged.add(specifier);
-			}
+			yield* specifiers;
 		}
-
-		yield* merged;
 	} else if (tSchema instanceof schema.ZodIntersection) {
-		const merged = new Set<string[]>();
 		for (const specifiers of [tSchema._def.left, tSchema._def.right].map(
 			_fieldSpecifiers,
 		)) {
-			for (const specifier of specifiers) {
-				merged.add(specifier);
-			}
+			yield* specifiers;
 		}
-
-		yield* merged;
 	}
 };
 
 export const fieldSpecifiers = <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): FieldSpecifiers<schema.infer<typeof tSchema>> =>
-	Array.from(_fieldSpecifiers(tSchema)).map((path) => path.join('.')) as any;
+	Array.from(
+		new Set(
+			Array.from(_fieldSpecifiers(tSchema)).map((path) => path.join('.')),
+		),
+	) as any;
