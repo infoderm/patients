@@ -90,6 +90,50 @@ type Props = {
 	readonly showDeleted: boolean;
 };
 
+const UnlinkedDocumentChip = ({row}: {readonly row: Row}) => {
+	const [linking, setLinking] = useState<boolean>(false);
+
+	return (
+		<>
+			{row.parsed ? (
+				<Tooltip
+					title={`${row['patient.lastname']} ${row['patient.firstname']}`}
+				>
+					<Chip
+						icon={<LinkOffIcon />}
+						color="red"
+						label={`${row['patient.lastname']} ${row['patient.firstname']}`}
+						sx={{fontWeight: 'bold'}}
+						onClick={(e) => {
+							e.stopPropagation();
+							setLinking(true);
+						}}
+					/>
+				</Tooltip>
+			) : (
+				<Tooltip title="not linked">
+					<Chip
+						icon={<LinkOffIcon />}
+						color="red"
+						label="not linked"
+						onClick={(e) => {
+							e.stopPropagation();
+							setLinking(true);
+						}}
+					/>
+				</Tooltip>
+			)}
+			<DocumentLinkingDialog
+				open={linking}
+				document={row}
+				onClose={() => {
+					setLinking(false);
+				}}
+			/>
+		</>
+	);
+};
+
 const DocumentsTable = ({
 	loading,
 	items,
@@ -98,7 +142,6 @@ const DocumentsTable = ({
 	showDeleted,
 }: Props) => {
 	const localeText = useLocaleText();
-	const [linking, setLinking] = useState<Row | null>(null);
 
 	const dateFormat = useDateFormat('Pp');
 
@@ -243,34 +286,7 @@ const DocumentsTable = ({
 					row,
 				}: GridRenderCellParams<any, string>) =>
 					patientId === undefined ? (
-						row.parsed ? (
-							<Tooltip
-								title={`${row['patient.lastname']} ${row['patient.firstname']}`}
-							>
-								<Chip
-									icon={<LinkOffIcon />}
-									color="red"
-									label={`${row['patient.lastname']} ${row['patient.firstname']}`}
-									sx={{fontWeight: 'bold'}}
-									onClick={(e) => {
-										e.stopPropagation();
-										setLinking(row);
-									}}
-								/>
-							</Tooltip>
-						) : (
-							<Tooltip title="not linked">
-								<Chip
-									icon={<LinkOffIcon />}
-									color="red"
-									label="not linked"
-									onClick={(e) => {
-										e.stopPropagation();
-										setLinking(row);
-									}}
-								/>
-							</Tooltip>
-						)
+						<UnlinkedDocumentChip row={row} />
 					) : (
 						<ReactivePatientChip
 							patient={{_id: patientId}}
@@ -554,13 +570,6 @@ const DocumentsTable = ({
 				onSortModelChange={onSortModelChange}
 				onFilterModelChange={onFilterModelChange}
 				onPaginationModelChange={onPaginationModelChange}
-			/>
-			<DocumentLinkingDialog
-				open={Boolean(linking)}
-				document={linking}
-				onClose={() => {
-					setLinking(null);
-				}}
 			/>
 		</Box>
 	);
