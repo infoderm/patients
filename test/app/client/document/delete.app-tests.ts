@@ -30,6 +30,8 @@ client(__filename, () => {
 
 		await findByText('PZ7654321Y9');
 
+		await user.click(await findByRole('menuitem', {name: 'more'}));
+
 		await user.click(await findByRole('button', {name: /^Delete document #/}));
 
 		await user.click(await findByRole('button', {name: 'Delete'}));
