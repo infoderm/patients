@@ -16,8 +16,10 @@ const Greetings = () => {
 	const today = startOfDay(now);
 	const noon = addHours(today, TIME_BREAK);
 	const evening = addHours(today, TIME_EVENING);
-	const {value: displayName} = useSetting('user-account-display-name');
 	const user = useUser();
+	const {loading, value: displayName} = useSetting('user-account-display-name');
+	if (loading) return null;
+
 	let greeting = 'Bonjour';
 	if (isAfter(now, evening)) {
 		greeting = 'Bonsoir';
