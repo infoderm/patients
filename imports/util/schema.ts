@@ -67,6 +67,25 @@ export const map = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
 	return fn(tSchema) as U;
 };
 
+export const toJSON = <T extends schema.ZodTypeAny>(tSchema: T): string => {
+	const x = (tSchema: schema.ZodTypeAny) => {
+		if (tSchema instanceof schema.ZodObject)
+			return {
+				def: tSchema._def,
+				shape: Object.fromEntries(
+					Object.entries(tSchema.shape).map(([key, value]) => [
+						key,
+						map(x, value as any),
+					]),
+				),
+			} as any;
+
+		return tSchema;
+	};
+
+	return JSON.stringify(map(x, tSchema), undefined, 2);
+};
+
 type AtKeyOf<T extends schema.ZodTypeAny> = T extends schema.ZodUnion<infer U>
 	? keyof UnionToIntersection<U>
 	: keyof schema.infer<T>;
