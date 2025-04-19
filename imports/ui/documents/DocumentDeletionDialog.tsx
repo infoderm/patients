@@ -5,6 +5,7 @@ import {useSnackbar} from 'notistack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import {type DocumentDocument} from '../../api/collection/documents';
 import deleteDocument from '../../api/endpoint/documents/delete';
 
 import ConfirmationDialog from '../modal/ConfirmationDialog';
@@ -16,7 +17,7 @@ import useCall from '../action/useCall';
 type Props = {
 	readonly open: boolean;
 	readonly onClose: () => void;
-	readonly document: any;
+	readonly document: Pick<DocumentDocument, '_id'>;
 };
 
 const DocumentDeletionDialog = ({open, onClose, document}: Props) => {
