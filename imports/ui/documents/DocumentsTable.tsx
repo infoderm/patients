@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {Link} from 'react-router-dom';
+
 import isValid from 'date-fns/isValid';
 
 import {
@@ -44,6 +46,8 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import SubjectIcon from '@mui/icons-material/Subject';
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
+import IconButton from '@mui/material/IconButton';
 
 import {useDateFormat} from '../../i18n/datetime';
 
@@ -183,24 +187,8 @@ const DocumentsTable = ({
 				type: 'dateTime',
 				headerName: 'Datetime',
 				flex: 1,
-				hideable: false,
 				filterOperators: getDateTimeFilterOperators(true),
-				renderCell({value, row}: GridRenderCellParams<any, Date>) {
-					if (value === undefined) return null;
-					const label = dateFormat(value);
-					return (
-						<Tooltip title={label}>
-							<LinkChip
-								icon={<OpenInNewIcon />}
-								to={`/document/${row._id}`}
-								label={label}
-								rel="noreferrer"
-								target="_blank"
-								aria-label={`Open document #${row._id} in New Tab`}
-							/>
-						</Tooltip>
-					);
-				},
+				valueFormatter: dateValueFormatter,
 			},
 			{
 				field: 'identifier',
@@ -322,7 +310,7 @@ const DocumentsTable = ({
 						case 'complete': {
 							return (
 								<Tooltip title="complete">
-									<DoneIcon />
+									<DoneIcon fontSize="small" />
 								</Tooltip>
 							);
 						}
@@ -330,7 +318,7 @@ const DocumentsTable = ({
 						case 'partial': {
 							return (
 								<Tooltip title="partial">
-									<HourglassEmptyIcon />
+									<HourglassEmptyIcon fontSize="small" />
 								</Tooltip>
 							);
 						}
@@ -338,7 +326,7 @@ const DocumentsTable = ({
 						default: {
 							return (
 								<Tooltip title={value}>
-									<QuestionMarkIcon />
+									<QuestionMarkIcon fontSize="small" />
 								</Tooltip>
 							);
 						}
@@ -355,7 +343,7 @@ const DocumentsTable = ({
 				renderCell: ({value}: GridRenderCellParams<any, boolean>) =>
 					value ? (
 						<Tooltip title="deleted">
-							<DeleteIcon />
+							<DeleteIcon fontSize="small" />
 						</Tooltip>
 					) : (
 						// eslint-disable-next-line react/jsx-no-useless-fragment
@@ -430,6 +418,26 @@ const DocumentsTable = ({
 								/>,
 						  ]),
 				],
+			},
+			{
+				field: 'Links',
+				type: 'actions',
+				hideable: false,
+				width: 30,
+				renderCell: ({row: {_id}}: GridRenderCellParams<any, boolean>) => (
+					<Tooltip title="Open in New Tab">
+						<IconButton
+							size="small"
+							component={Link}
+							rel="noreferrer"
+							target="_blank"
+							to={`/document/${_id}`}
+							aria-label={`Open document #${_id} in New Tab`}
+						>
+							<OpenInNewIcon fontSize="small" />
+						</IconButton>
+					</Tooltip>
+				),
 			},
 		],
 		[dateValueFormatter, showDeleted],
