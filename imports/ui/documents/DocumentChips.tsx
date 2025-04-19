@@ -50,7 +50,7 @@ type ChipProps = {
 	kind?: string;
 };
 
-const Chip = styled(MuiChip, {
+export const Chip = styled(MuiChip, {
 	shouldForwardProp: (prop) => prop !== 'maxWidth' && prop !== 'kind',
 })<ChipProps>(({theme, maxWidth, kind}) => ({
 	...chipMargins(theme),
