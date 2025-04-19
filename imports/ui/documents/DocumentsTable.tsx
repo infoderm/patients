@@ -20,6 +20,8 @@ import {
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
 
+import {styled} from '@mui/material/styles';
+
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -40,6 +42,8 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SubjectIcon from '@mui/icons-material/Subject';
 
+import MuiChip from '@mui/material/Chip';
+
 import {useDateFormat} from '../../i18n/datetime';
 
 import {type DocumentDocument} from '../../api/collection/documents';
@@ -53,9 +57,13 @@ import LinkChip from '../chips/LinkChip';
 import {myEncodeURIComponent} from '../../util/uri';
 
 import DocumentLinkingDialog from './DocumentLinkingDialog';
-import {Chip} from './DocumentChips';
 import DocumentDeletionGenericButton from './actions/DocumentDeletionGenericButton';
 import DocumentDownloadGenericButton from './actions/DocumentDownloadGenericButton';
+
+const Chip = styled(MuiChip)(() => ({
+	margin: 0,
+	width: '100%',
+}));
 
 type Row = {
 	_id: string;
@@ -259,7 +267,7 @@ const DocumentsTable = ({
 									icon={<LinkOffIcon />}
 									color="red"
 									label={`${row['patient.lastname']} ${row['patient.firstname']}`}
-									kind="unlinked"
+									sx={{fontWeight: 'bold'}}
 									onClick={(e) => {
 										e.stopPropagation();
 										setLinking(row);
@@ -272,7 +280,6 @@ const DocumentsTable = ({
 									icon={<LinkOffIcon />}
 									color="red"
 									label="not linked"
-									kind="linkoff"
 									onClick={(e) => {
 										e.stopPropagation();
 										setLinking(row);
@@ -281,7 +288,10 @@ const DocumentsTable = ({
 							</Tooltip>
 						)
 					) : (
-						<ReactivePatientChip patient={{_id: patientId}} />
+						<ReactivePatientChip
+							patient={{_id: patientId}}
+							style={{margin: 0, width: '100%'}}
+						/>
 					),
 			},
 			{
@@ -363,8 +373,9 @@ const DocumentsTable = ({
 					),
 			},
 			{
-				field: '_actions',
+				field: 'Actions',
 				type: 'actions',
+				hideable: false,
 				width: 30,
 				getActions: ({row}: GridRowParams<Row>) => [
 					row.deleted ? (
