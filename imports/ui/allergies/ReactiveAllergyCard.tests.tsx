@@ -12,11 +12,22 @@ import createUserWithPasswordAndLogin from '../../api/user/createUserWithPasswor
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 
 import patientsInsert from '../../api/endpoint/patients/insert';
-import {render} from '../../_test/react';
+import {render as _render} from '../../_test/react';
 
 import {type FormattedLine, type NormalizedLine} from '../../api/string';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import ReactiveAllergyCard from './ReactiveAllergyCard';
+
+const render = (children: React.ReactNode) =>
+	_render(children, {
+		wrapper: ({children}: {children: React.ReactNode}) => (
+			<UserThemeProvider>
+				<BrowserRouter>{children}</BrowserRouter>
+			</UserThemeProvider>
+		),
+	});
 
 client(__filename, () => {
 	it("should allow to change allergy's color", async () => {
@@ -37,11 +48,7 @@ client(__filename, () => {
 			}),
 		);
 
-		const {findByRole} = render(
-			<BrowserRouter>
-				<ReactiveAllergyCard item={allergy} />
-			</BrowserRouter>,
-		);
+		const {findByRole} = render(<ReactiveAllergyCard item={allergy} />);
 
 		const button = await findByRole('button', {name: 'Color for orange'});
 
