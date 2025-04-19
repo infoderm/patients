@@ -35,6 +35,7 @@ import MergeTypeIcon from '@mui/icons-material/MergeType';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import SecurityIcon from '@mui/icons-material/Security';
+import PersonIcon from '@mui/icons-material/Person';
 
 import {setSetting} from './settings/hooks';
 import Tooltip from './accessibility/Tooltip';
@@ -196,7 +197,19 @@ export const navigationDrawerBlocks: Block[] = [
 	},
 
 	{
-		title: 'app',
+		title: 'data',
+
+		links: [
+			{
+				to: '/stats',
+				icon: <BarChartIcon />,
+				title: 'Stats',
+			},
+		],
+	},
+
+	{
+		title: 'user',
 
 		links: [
 			{
@@ -206,15 +219,15 @@ export const navigationDrawerBlocks: Block[] = [
 			},
 
 			{
-				to: '/auth',
-				icon: <SecurityIcon />,
-				title: 'Auth',
+				to: '/account',
+				icon: <PersonIcon />,
+				title: 'Account',
 			},
 
 			{
-				to: '/stats',
-				icon: <BarChartIcon />,
-				title: 'Stats',
+				to: '/auth',
+				icon: <SecurityIcon />,
+				title: 'Auth',
 			},
 		],
 	},
