@@ -100,7 +100,13 @@ export const at = <
 
 	if (tSchema instanceof schema.ZodObject) {
 		if (key instanceof schema.ZodLiteral) {
-			return tSchema.shape[key.value] ?? schema.never();
+			return (
+				tSchema.shape[key.value] ??
+				(tSchema._def.catchAll instanceof schema.ZodNever &&
+				tSchema._def.unknownKeys === 'strict'
+					? schema.never()
+					: schema.any())
+			);
 		}
 
 		if (key instanceof schema.ZodString) {
