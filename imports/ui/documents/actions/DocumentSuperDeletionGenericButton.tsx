@@ -5,30 +5,33 @@ import type PropsOf from '../../../util/types/PropsOf';
 import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentSuperDeletionDialog from '../DocumentSuperDeletionDialog';
 
-type DocumentSuperDeletionGenericButtonAdditionalProps<
-	C extends React.ElementType,
-> = {
+type DocumentSuperDeletionGenericButtonProps<C extends React.ElementType> = {
 	readonly document: Pick<DocumentDocument, '_id' | 'deleted'>;
 	readonly component: C;
+	readonly hideWhenDisabled: boolean;
 } & PropsOf<C>;
 
 const DocumentSuperDeletionGenericButton = <C extends React.ElementType>({
 	document,
 	component: Component,
+	hideWhenDisabled,
 	...rest
-}: DocumentSuperDeletionGenericButtonAdditionalProps<C>) => {
+}: DocumentSuperDeletionGenericButtonProps<C>) => {
 	const [superDeleting, setSuperDeleting] = useState(false);
+	const disabled = !document.deleted;
 
 	return (
 		<>
-			<Component
-				color="secondary"
-				disabled={!document.deleted}
-				onClick={() => {
-					setSuperDeleting(true);
-				}}
-				{...rest}
-			/>
+			{(!disabled || !hideWhenDisabled) && (
+				<Component
+					color="secondary"
+					disabled={disabled}
+					onClick={() => {
+						setSuperDeleting(true);
+					}}
+					{...rest}
+				/>
+			)}
 			<DocumentSuperDeletionDialog
 				open={superDeleting}
 				document={document}
