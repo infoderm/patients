@@ -9,8 +9,8 @@ import type GenericQueryHook from '../../api/GenericQueryHook';
 
 import useDataGridModelContextState from '../data-grid/useDataGridModelContextState';
 import DataGridModelProvider from '../data-grid/DataGridModelProvider';
-import {toUserFilter} from '../data-grid/server/filter';
-import {toQuerySort} from '../data-grid/server/sort';
+import {toUserFilter} from '../data-grid/filter/convert';
+import {toQuerySort} from '../data-grid/sort/convert';
 
 import Paginator from '../navigation/Paginator';
 
