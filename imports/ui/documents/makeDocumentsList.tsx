@@ -41,67 +41,113 @@ const _filterModelItem = ({
 	field,
 	operator,
 	value,
-}: GridFilterModel['items'][number]) => {
+}: GridFilterModel['items'][number]):
+	| UserFilter<DocumentDocument>
+	| undefined => {
 	switch (operator) {
 		case 'isAnyOf': {
+			if (value === undefined) return undefined;
+			assert(Array.isArray(value));
 			return value === undefined ? undefined : {[field]: {$in: value}};
 		}
 
 		case 'contains': {
-			return value === undefined
-				? undefined
-				: {[field]: {$regex: escapeStringRegexp(value)}};
+			if (value === undefined) return undefined;
+			assert(typeof value === 'string');
+			return {[field]: {$regex: escapeStringRegexp(value), $options: 'i'}};
+		}
+
+		case 'startsWith': {
+			if (value === undefined) return undefined;
+			assert(typeof value === 'string');
+			return {
+				[field]: {$regex: `^${escapeStringRegexp(value)}`, $options: 'i'},
+			};
+		}
+
+		case 'endsWith': {
+			if (value === undefined) return undefined;
+			assert(typeof value === 'string');
+			return {
+				[field]: {$regex: `${escapeStringRegexp(value)}$`, $options: 'i'},
+			};
 		}
 
 		case 'is':
 		case 'equals':
 		case '=': {
-			return value === undefined ? undefined : {[field]: value};
+			if (value === undefined) return undefined;
+			return {[field]: value};
 		}
 
 		case 'not':
 		case '!=': {
-			return value === undefined ? undefined : {[field]: {$ne: value}};
+			if (value === undefined) return undefined;
+			return {[field]: {$ne: value}};
 		}
 
-		case '>':
+		case '>': {
+			if (value === undefined) return undefined;
+			assert(typeof value === 'number');
+			return {[field]: {$gt: value}};
+		}
+
+		case '>=': {
+			if (value === undefined) return undefined;
+			assert(typeof value === 'number');
+			return {[field]: {$gte: value}};
+		}
+
+		case '<': {
+			if (value === undefined) return undefined;
+			assert(typeof value === 'number');
+			return {[field]: {$lt: value}};
+		}
+
+		case '<=': {
+			if (value === undefined) return undefined;
+			assert(typeof value === 'number');
+			return {[field]: {$lte: value}};
+		}
+
 		case 'after': {
-			return value === undefined ? undefined : {[field]: {$gt: value}};
+			if (value === undefined) return undefined;
+			assert(value instanceof Date);
+			return {[field]: {$gt: value}};
 		}
 
-		case '>=':
 		case 'onOrAfter': {
-			return value === undefined ? undefined : {[field]: {$gte: value}};
+			if (value === undefined) return undefined;
+			assert(value instanceof Date);
+			return {[field]: {$gte: value}};
 		}
 
-		case '<':
 		case 'before': {
-			return value === undefined ? undefined : {[field]: {$lt: value}};
+			if (value === undefined) return undefined;
+			assert(value instanceof Date);
+			return {[field]: {$lt: value}};
 		}
 
-		case '<=':
 		case 'onOrBefore': {
-			return value === undefined ? undefined : {[field]: {$lte: value}};
-		}
-
-		case 'startsWith': {
-			return value === undefined
-				? undefined
-				: {[field]: {$regex: `^${escapeStringRegexp(value)}`}};
-		}
-
-		case 'endsWith': {
-			return value === undefined
-				? undefined
-				: {[field]: {$regex: `${escapeStringRegexp(value)}$`}};
+			if (value === undefined) return undefined;
+			assert(value instanceof Date);
+			return {[field]: {$lte: value}};
 		}
 
 		case 'isEmpty': {
-			return {[field]: ''};
+			return {
+				$or: [{[field]: {$exists: false}}, {[field]: ''}, {[field]: null}],
+			};
 		}
 
 		case 'isNotEmpty': {
-			return {[field]: {$ne: ''}};
+			return {
+				$and: [
+					{[field]: {$exists: true}},
+					{[field]: {$ne: ''}},
+					{[field]: {$ne: null}},
+				],
+			};
 		}
 
 		default: {
@@ -158,6 +204,7 @@ const makeDocumentsList = (
 					items={documents}
 					page={page - 1}
 					pageSize={perpage}
+					showDeleted={filter.deleted === undefined}
 				/>
 				<Paginator loading={loading} end={documents.length < perpage} />
 			</>
