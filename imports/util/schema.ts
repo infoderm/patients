@@ -190,6 +190,12 @@ export const at = <
 export const partial = <T extends schema.ZodTypeAny>(
 	tSchema: T,
 ): schema.ZodType<Partial<schema.infer<T>>> => {
+	return map(_partial, tSchema);
+};
+
+const _partial = <T extends schema.ZodTypeAny>(
+	tSchema: T,
+): schema.ZodType<Partial<schema.infer<T>>> => {
 	if (tSchema instanceof schema.ZodNever) {
 		return tSchema;
 	}
@@ -208,17 +214,6 @@ export const partial = <T extends schema.ZodTypeAny>(
 
 	if (tSchema instanceof schema.ZodRecord) {
 		return tSchema;
-	}
-
-	if (tSchema instanceof schema.ZodUnion) {
-		return schema.union(tSchema.options.map((item) => partial(item)));
-	}
-
-	if (tSchema instanceof schema.ZodIntersection) {
-		return schema.intersection(
-			partial(tSchema._def.left),
-			partial(tSchema._def.right),
-		);
 	}
 
 	console.debug({tSchema});
