@@ -54,9 +54,8 @@ import {myEncodeURIComponent} from '../../util/uri';
 
 import DocumentLinkingDialog from './DocumentLinkingDialog';
 import {Chip} from './DocumentChips';
-
-import DocumentDeletionIconButton from './actions/DocumentDeletionIconButton';
-import DocumentDownloadIconButton from './actions/DocumentDownloadIconButton';
+import DocumentDeletionGenericButton from './actions/DocumentDeletionGenericButton';
+import DocumentDownloadGenericButton from './actions/DocumentDownloadGenericButton';
 
 type Row = {
 	_id: string;
@@ -66,7 +65,7 @@ type Row = {
 	datetime?: Date;
 	identifier?: string;
 	reference?: string;
-	parsed?: boolean;
+	parsed: boolean;
 	'patient.firstname'?: string;
 	'patient.lastname'?: string;
 	patientId?: string;
@@ -369,19 +368,23 @@ const DocumentsTable = ({
 					row.deleted ? (
 						<></>
 					) : (
-						<GridActionsCellItem
+						<DocumentDeletionGenericButton
 							showInMenu
+							document={row}
+							component={GridActionsCellItem}
 							icon={<DeleteIcon color="secondary" />}
 							label="Delete"
 							aria-label={`Delete document #${row._id}`}
-							onClick={() => {}}
+							closeMenuOnClick={false}
 						/>
 					),
-					<GridActionsCellItem
+					<DocumentDownloadGenericButton
 						showInMenu
+						document={row}
+						component={GridActionsCellItem}
 						icon={<CloudDownloadIcon color="primary" />}
 						label="Download"
-						onClick={() => {}}
+						aria-label={`Download document #${row._id}`}
 					/>,
 				],
 			},
