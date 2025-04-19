@@ -67,7 +67,10 @@ export const map = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
 	return fn(tSchema) as U;
 };
 
-const simplify = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
+export const simplify = <
+	T extends schema.ZodTypeAny,
+	U extends schema.ZodTypeAny,
+>(
 	tSchema: T,
 ): U => {
 	if (tSchema instanceof schema.ZodReadonly) {
@@ -102,7 +105,22 @@ const simplify = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
 	}
 
 	if (tSchema instanceof schema.ZodUnion) {
-		let options = tSchema.options.map((x: schema.ZodTypeAny) => simplify(x));
+		let options = tSchema.options.map(simplify).map((x: schema.ZodTypeAny) => {
+			const alternatives: schema.ZodTypeAny[] = [];
+			if (x instanceof schema.ZodOptional) {
+				alternatives.push(schema.undefined());
+				x = x.unwrap();
+			}
+
+			if (x instanceof schema.ZodNullable) {
+				alternatives.push(schema.null());
+				x = x.unwrap();
+			}
+
+			return alternatives.length === 0
+				? x
+				: schema.union([x, alternatives[0]!, ...alternatives.slice(1)]);
+		});
 		if (options.length === 0) return schema.never() as unknown as U;
 		if (options.length === 1) return options[0];
 		const unions = options.filter(
@@ -112,7 +130,10 @@ const simplify = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
 			(x: schema.ZodTypeAny) => !(x instanceof schema.ZodUnion),
 		);
 		if (unions.length > 0) {
-			options = [].concat(nonUnion, ...unions.map((u) => u.options));
+			options = [].concat(
+				nonUnion,
+				...unions.map((u: schema.ZodUnion<any>) => u.options),
+			);
 		}
 
 		options = options.filter(
@@ -183,7 +204,11 @@ const simplify = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
 			return _left as unknown as U;
 		if (_left instanceof schema.ZodNumber && _right instanceof schema.ZodNumber)
 			return _left as unknown as U;
+		if (_left instanceof schema.ZodNaN && _right instanceof schema.ZodNaN)
+			return _left as unknown as U;
 		if (_left instanceof schema.ZodString && _right instanceof schema.ZodString)
+			return _left as unknown as U;
+		if (_left instanceof schema.ZodSymbol && _right instanceof schema.ZodSymbol)
 			return _left as unknown as U;
 		if (
 			_left instanceof schema.ZodObject &&
@@ -231,7 +256,7 @@ const _replacer = (_key: string, node: unknown) => {
 };
 
 export const toJSON = <T extends schema.ZodTypeAny>(tSchema: T): string => {
-	return JSON.stringify(simplify(tSchema), _replacer, 2);
+	return JSON.stringify(tSchema, _replacer, 2);
 };
 
 type AtKeyOf<T extends schema.ZodTypeAny> = T extends schema.ZodUnion<infer U>
