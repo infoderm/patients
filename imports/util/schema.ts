@@ -110,7 +110,13 @@ export const at = <
 		}
 
 		if (key instanceof schema.ZodString) {
-			return schema.union(Object.values(tSchema.shape) as any);
+			return schema.union(
+				Object.values(tSchema.shape) as [
+					ZodTypeAny,
+					ZodTypeAny,
+					...ZodTypeAny[],
+				],
+			);
 		}
 	} else if (tSchema instanceof schema.ZodRecord) {
 		if (key instanceof schema.ZodLiteral) {
