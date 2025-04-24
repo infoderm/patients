@@ -1,4 +1,4 @@
-import {z as schema} from 'zod';
+import {z as schema, type ZodTypeAny} from 'zod';
 
 type UnionToIntersectionFn<T> = (
 	T extends unknown ? (k: () => T) => void : never
@@ -81,6 +81,10 @@ export const at = <
 ): schema.ZodType<schema.infer<T>[schema.infer<K>]> => {
 	if (tSchema instanceof schema.ZodOptional) {
 		tSchema = tSchema.unwrap();
+	}
+
+	if (tSchema instanceof schema.ZodAny) {
+		return tSchema;
 	}
 
 	if (tSchema instanceof schema.ZodNever) {
