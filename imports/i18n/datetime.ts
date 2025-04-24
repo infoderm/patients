@@ -1,6 +1,4 @@
-import {useState, useMemo, useEffect} from 'react';
-
-import {type PickersLocaleText} from '@mui/x-date-pickers';
+import {useMemo} from 'react';
 
 import dateFormat from 'date-fns/format';
 import dateFormatDistance from 'date-fns/formatDistance';
@@ -23,6 +21,7 @@ import {
 } from '../util/datetime';
 
 import useLocaleKey from './useLocale';
+import {load, useLoadedValue} from './localesCache';
 
 const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
 	'nl-BE': async () =>
@@ -30,144 +29,18 @@ const localeLoaders: Readonly<Record<string, () => Promise<Locale>>> = {
 	'fr-BE': async () => import('date-fns/locale/fr/index.js') as Promise<Locale>,
 };
 
-type LocaleText = Partial<PickersLocaleText<any>>;
-
-type PickersLocalization = {
-	components: {
-		MuiLocalizationProvider: {
-			defaultProps: {
-				localeText: LocaleText;
-			};
-		};
-	};
-};
-
-const pickersLocalizationLoaders: Readonly<
-	Record<string, () => Promise<PickersLocalization>>
-> = {
-	async 'nl-BE'() {
-		const module = await import('@mui/x-date-pickers/locales/nlNL.js');
-		return module.nlNL;
-	},
-	async 'fr-BE'() {
-		const module = await import('@mui/x-date-pickers/locales/frFR.js');
-		return module.frFR;
-	},
-};
-
 const loadLocale = async (key: string): Promise<Locale | undefined> =>
 	localeLoaders[key]?.();
 
-const loadPickersLocalization = async (
-	key: string,
-): Promise<PickersLocalization | undefined> =>
-	pickersLocalizationLoaders[key]?.();
-
-type Cache<T> = Map<string, T>;
-
 const localesCache = new Map<string, Locale | undefined>();
 
-const pickersLocalizationsCache = new Map<
-	string,
-	PickersLocalization | undefined
->();
-
-const _load = async <T>(
-	kind: string,
-	cache: Cache<T>,
-	load: (key: string) => Promise<T>,
-	key: string,
-): Promise<T | undefined> => {
-	if (cache.has(key)) {
-		return cache.get(key);
-	}
-
-	return load(key).then(
-		(value) => {
-			cache.set(key, value);
-			return value;
-		},
-		(error) => {
-			const message = error instanceof Error ? error.message : 'unknown error';
-			console.error(`failed to load ${kind} ${key}: ${message}`);
-			console.debug({error});
-			return undefined;
-		},
-	);
-};
-
 const _getLocale = async (key: string): Promise<Locale | undefined> => {
-	return _load<Locale | undefined>('locale', localesCache, loadLocale, key);
+	return load<Locale | undefined>('locale', localesCache, loadLocale, key);
 };
 
 const getLocale = async (owner: string): Promise<Locale | undefined> => {
 	const key = getSetting(owner, 'lang');
 	return _getLocale(key);
-};
-
-const _getPickersLocalization = async (
-	key: string,
-): Promise<PickersLocalization | undefined> => {
-	return _load<PickersLocalization | undefined>(
-		'pickers localization',
-		pickersLocalizationsCache,
-		loadPickersLocalization,
-		key,
-	);
-};
-
-const _pickersLocalizationToLocaleText = (
-	localization: PickersLocalization | undefined,
-) => {
-	return localization?.components.MuiLocalizationProvider.defaultProps
-		.localeText;
-};
-
-export const getLocaleText = async (
-	owner: string,
-): Promise<LocaleText | undefined> => {
-	const key = getSetting(owner, 'lang');
-	const localization = await _getPickersLocalization(key);
-	return _pickersLocalizationToLocaleText(localization);
-};
-
-const useLoadedValue = <T>(
-	kind: string,
-	cache: Cache<T>,
-	load: (key: string) => Promise<T>,
-	key: string,
-): T | undefined => {
-	const [lastLoadedValue, setLastLoadedValue] = useState<T | undefined>(
-		undefined,
-	);
-
-	useEffect(() => {
-		if (cache.has(key)) {
-			setLastLoadedValue(cache.get(key));
-			return undefined;
-		}
-
-		let isCancelled = false;
-		load(key).then(
-			(value) => {
-				cache.set(key, value);
-				if (!isCancelled) {
-					setLastLoadedValue(value);
-				}
-			},
-			(error) => {
-				const message =
-					error instanceof Error ? error.message : 'unknown error';
-				console.error(`failed to load ${kind} ${key}: ${message}`);
-				console.debug({error});
-			},
-		);
-		return () => {
-			isCancelled = true;
-		};
-	}, [key, setLastLoadedValue]);
-
-	return cache.has(key) ? cache.get(key) : lastLoadedValue;
 };
 
 export const useLocale = () => {
@@ -178,21 +51,6 @@ export const useLocale = () => {
 		loadLocale,
 		key,
 	);
-};
-
-const usePickersLocalization = (key: string) => {
-	return useLoadedValue<PickersLocalization | undefined>(
-		'pickers localization',
-		pickersLocalizationsCache,
-		loadPickersLocalization,
-		key,
-	);
-};
-
-export const useLocaleText = () => {
-	const key = useLocaleKey();
-	const localization = usePickersLocalization(key);
-	return _pickersLocalizationToLocaleText(localization);
 };
 
 export type WeekStartsOn = WeekDay;
