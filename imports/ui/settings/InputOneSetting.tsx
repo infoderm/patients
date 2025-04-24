@@ -22,6 +22,7 @@ type Props<K extends StringSettingKey> = {
 	readonly className?: string;
 	readonly title?: string;
 	readonly label?: string;
+	readonly placeholder?: string;
 	readonly setting: K;
 	readonly sanitize?: (inputValue: string) => any;
 	readonly validate?: (x: string) => Outcome;
@@ -34,6 +35,7 @@ const InputOneSetting = <K extends StringSettingKey>({
 	validate = () => ({outcome: 1}),
 	label,
 	title,
+	placeholder,
 }: Props<K>) => {
 	const {loading, value, setValue} = useSettingDebounced<K>(setting);
 
@@ -57,6 +59,7 @@ const InputOneSetting = <K extends StringSettingKey>({
 				disabled={loading}
 				label={label}
 				value={value}
+				placeholder={placeholder}
 				error={error}
 				onChange={onChange}
 			/>
