@@ -45,6 +45,33 @@ isomorphic(__filename, () => {
 		assert.deepEqual(tSchema.parse(filter), filter);
 	});
 
+	it('should work on a union of strict object schemas', () => {
+		const filter: UserFilter<{name: undefined} | {name: string}> = {
+			name: {$regex: 'a'},
+		};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.union([
+				schema.object({name: schema.undefined()}).strict(),
+				schema.object({name: schema.string()}).strict(),
+			]),
+		);
+		assert.deepEqual(tSchema.parse(filter), filter);
+	});
+
+	it('should work on an intersection of strict object schemas', () => {
+		const filter: UserFilter<{count: number} & {name: string}> = {
+			count: 1,
+			name: {$regex: 'a'},
+		};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.intersection(
+				schema.object({count: schema.number()}).strict(),
+				schema.object({name: schema.string()}).strict(),
+			),
+		);
+		assert.deepEqual(tSchema.parse(filter), filter);
+	});
+
 	it('should work on a schema containing an array (single value filter)', () => {
 		const filter: UserFilter<{name: string[]}> = {name: 'abcd'};
 		const tSchema: schema.ZodType<typeof filter> = userFilter(
