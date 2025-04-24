@@ -2,7 +2,7 @@ import {assert} from 'chai';
 
 import {isomorphic} from '../_test/fixtures';
 
-import schema, {at} from './schema';
+import schema, {at, keyof, partial, toJSON} from './schema';
 
 const _asserInvalidInput = <T>(
 	result: schema.SafeParseReturnType<T, T>,
@@ -21,6 +21,13 @@ isomorphic(__filename, () => {
 		assert.strictEqual(
 			at(schema.object({name: expected}), schema.literal('name')),
 			expected,
+		);
+	});
+
+	it('`at` should throw on non-implemented types', () => {
+		assert.throws(
+			() => at(schema.string(), schema.number()),
+			'Not implemented: at(ZodString, ZodNumber)',
 		);
 	});
 
@@ -99,5 +106,75 @@ isomorphic(__filename, () => {
 		_asserInvalidInput(tSchema.safeParse('test'), [
 			'Expected never, received string',
 		]);
+	});
+
+	it('`keyof` should throw on non-implemented types', () => {
+		assert.throws(
+			() => keyof(schema.string()),
+			'Not implemented: keyof(ZodString)',
+		);
+	});
+
+	it('`keyof` should work on intersections of unions', () => {
+		const tSchema = keyof(
+			schema.intersection(
+				schema.object({count: schema.number()}),
+				schema.union([
+					schema.object({name: schema.undefined()}),
+					schema.object({name: schema.string()}),
+				]),
+			),
+		);
+
+		assert.deepEqual(JSON.parse(toJSON(tSchema)), {
+			_def: {
+				typeName: 'ZodEnum',
+				values: ['count', 'name'],
+			},
+		});
+	});
+
+	it('`partial` should throw on non-implemented types', () => {
+		assert.throws(
+			() => partial(schema.string()),
+			'Not implemented: partial(ZodString)',
+		);
+	});
+
+	it('`partial` should work on objects', () => {
+		const tSchema = partial(schema.object({count: schema.number()}));
+
+		assert.deepEqual(JSON.parse(toJSON(tSchema)), {
+			def: {
+				catchall: {
+					_def: {
+						typeName: 'ZodNever',
+					},
+				},
+				typeName: 'ZodObject',
+				unknownKeys: 'strip',
+			},
+			shape: {
+				count: {
+					_def: {
+						options: [
+							{
+								_def: {
+									checks: [],
+									coerce: false,
+									typeName: 'ZodNumber',
+								},
+							},
+							{
+								_def: {
+									typeName: 'ZodUndefined',
+								},
+							},
+						],
+						typeName: 'ZodUnion',
+					},
+				},
+			},
+		});
 	});
 });
