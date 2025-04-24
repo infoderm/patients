@@ -28,6 +28,8 @@ const Chip = styled(MuiChip, {
 	marginRight: theme.spacing(1),
 	fontWeight: 'bold',
 	maxWidth: '200px',
+	overflow: 'hidden',
+	textOverflow: 'ellipisis',
 	...(willBeCreated
 		? {
 				backgroundColor: '#8f8',
