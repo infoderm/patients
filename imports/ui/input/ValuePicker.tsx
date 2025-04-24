@@ -22,16 +22,14 @@ type Props<T> = {
 	readonly name?: string;
 };
 
-const ValuePicker = <T extends {}>({
+const ValuePicker = <T,>({
 	label,
 	name,
 	value,
 	onChange,
 	options,
-	// eslint-disable-next-line @typescript-eslint/no-base-to-string
-	optionToString = (x) => x.toString(),
-	// eslint-disable-next-line @typescript-eslint/no-base-to-string
-	pairToKey = (option, _index) => option.toString(),
+	optionToString = (x) => `${x}`,
+	pairToKey = (option, _index) => `${option}`,
 	...rest
 }: Props<T>) => {
 	const id = useUniqueId('value-picker');
