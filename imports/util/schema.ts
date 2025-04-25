@@ -25,6 +25,48 @@ type CastToStringTuple<T> = T extends [string, ...string[]] ? T : never;
 
 export type UnionToTupleString<T> = CastToStringTuple<UnionToTuple<T>>;
 
+export const map = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
+	fn: (x: schema.ZodTypeAny) => schema.ZodTypeAny,
+	tSchema: T,
+): U => {
+	if (tSchema instanceof schema.ZodReadonly) {
+		return map(fn, tSchema.unwrap()).readonly() as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodOptional) {
+		return map(
+			fn,
+			schema.union([tSchema.unwrap(), schema.undefined()]),
+		) as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodNullable) {
+		return map(
+			fn,
+			schema.union([tSchema.unwrap(), schema.null()]),
+		) as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodBranded) {
+		return map(fn, tSchema.unwrap()).brand() as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodUnion) {
+		return schema.union(
+			tSchema.options.map((x: schema.ZodTypeAny) => map(fn, x)),
+		) as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodIntersection) {
+		return schema.intersection(
+			map(fn, tSchema._def.left),
+			map(fn, tSchema._def.right),
+		) as unknown as U;
+	}
+
+	return fn(tSchema) as U;
+};
+
 type AtKeyOf<T extends schema.ZodTypeAny> = T extends schema.ZodUnion<infer U>
 	? keyof UnionToIntersection<U>
 	: keyof schema.infer<T>;
