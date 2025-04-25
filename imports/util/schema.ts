@@ -80,7 +80,10 @@ export const at = <
 	key: K,
 ): schema.ZodType<schema.infer<T>[schema.infer<K>]> => {
 	if (tSchema instanceof schema.ZodOptional) {
-		tSchema = tSchema.unwrap();
+		return schema.union([
+			at(tSchema.unwrap(), key),
+			at(schema.undefined(), schema.never()),
+		]);
 	}
 
 	if (tSchema instanceof schema.ZodAny) {
