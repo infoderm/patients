@@ -234,7 +234,7 @@ export const filterOperators = <S extends schema.ZodTypeAny>(
 				$nin: schema.array(tSchema.nullable()),
 				// Logical
 				$not: schema.lazy(() =>
-					unwrap(tSchema)[0] instanceof schema.ZodString
+					tSchema.safeParse('').success // TODO: Does not work against refinements.
 						? schema.union(s, schema.instanceof(RegExp))
 						: s,
 				),
