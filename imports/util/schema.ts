@@ -10,6 +10,13 @@ type GetUnionLast<T> = UnionToIntersectionFn<T> extends () => infer Last
 	? Last
 	: never;
 
+type UnionToIntersection<T, Intersection = any> = T extends never
+	? Intersection
+	: UnionToIntersection<
+			Exclude<T, GetUnionLast<T>>,
+			GetUnionLast<T> & Intersection
+	  >;
+
 type UnionToTuple<T, Tuple extends unknown[] = []> = [T] extends [never]
 	? Tuple
 	: UnionToTuple<Exclude<T, GetUnionLast<T>>, [GetUnionLast<T>, ...Tuple]>;
@@ -18,9 +25,13 @@ type CastToStringTuple<T> = T extends [string, ...string[]] ? T : never;
 
 export type UnionToTupleString<T> = CastToStringTuple<UnionToTuple<T>>;
 
+type AtKeyOf<T extends schema.ZodTypeAny> = T extends schema.ZodUnion<infer U>
+	? keyof UnionToIntersection<U>
+	: keyof schema.infer<T>;
+
 export const keyof = <T extends schema.ZodTypeAny>(
 	tSchema: T,
-): schema.ZodEnum<UnionToTupleString<keyof schema.infer<T>>> => {
+): schema.ZodEnum<UnionToTupleString<AtKeyOf<T>>> => {
 	if (tSchema instanceof schema.ZodOptional) {
 		tSchema = tSchema.unwrap();
 	}
@@ -63,7 +74,7 @@ export const keyof = <T extends schema.ZodTypeAny>(
 
 export const at = <
 	T extends schema.ZodTypeAny,
-	K extends schema.ZodType<keyof schema.infer<T>>,
+	K extends schema.ZodType<AtKeyOf<T>>,
 >(
 	tSchema: T,
 	key: K,
