@@ -24,8 +24,6 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SubjectIcon from '@mui/icons-material/Subject';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import type PropsOf from '../../util/types/PropsOf';
 
@@ -34,9 +32,6 @@ import {type DocumentDocument} from '../../api/collection/documents';
 import DocumentChips from './DocumentChips';
 import DocumentVersionsButton from './actions/DocumentVersionsButton';
 
-import DocumentDeletionDialog from './DocumentDeletionDialog';
-import DocumentSuperDeletionDialog from './DocumentSuperDeletionDialog';
-import DocumentRestorationDialog from './DocumentRestorationDialog';
 import DocumentLinkingDialog from './DocumentLinkingDialog';
 import DocumentUnlinkingDialog from './DocumentUnlinkingDialog';
 import HealthOneLabResultsTable from './HealthOneLabResultsTable';
@@ -44,6 +39,8 @@ import ReportContents from './ReportContents';
 import DocumentSource from './DocumentSource';
 import DocumentDownloadButton from './actions/DocumentDownloadButton';
 import DocumentDeletionButton from './actions/DocumentDeletionButton';
+import DocumentSuperDeletionButton from './actions/DocumentSuperDeletionButton';
+import DocumentRestorationButton from './actions/DocumentRestorationButton';
 
 const Chips = styled('div')({
 	display: 'flex',
@@ -68,11 +65,8 @@ const DocumentCard = ({
 }: Props) => {
 	const [linking, setLinking] = useState(false);
 	const [unlinking, setUnlinking] = useState(false);
-	const [deleting, setDeleting] = useState(false);
-	const [restoring, setRestoring] = useState(false);
-	const [superdeleting, setSuperdeleting] = useState(false);
 
-	const {patientId, deleted} = document;
+	const {patientId} = document;
 
 	return (
 		<Accordion
@@ -113,29 +107,9 @@ const DocumentCard = ({
 						<LinkOffIcon />
 					</Button>
 				)}
-				{deleted && (
-					<Button
-						color="primary"
-						onClick={() => {
-							setRestoring(true);
-						}}
-					>
-						Restore
-						<RestoreFromTrashIcon />
-					</Button>
-				)}
-				{deleted && (
-					<Button
-						color="secondary"
-						onClick={() => {
-							setSuperdeleting(true);
-						}}
-					>
-						Delete forever
-						<DeleteForeverIcon />
-					</Button>
-				)}
-				<DocumentDeletionButton document={document} />
+				<DocumentRestorationButton hideWhenDisabled document={document} />
+				<DocumentSuperDeletionButton hideWhenDisabled document={document} />
+				<DocumentDeletionButton hideWhenDisabled document={document} />
 				<DocumentLinkingDialog
 					open={linking}
 					document={document}
@@ -149,27 +123,6 @@ const DocumentCard = ({
 					document={document}
 					onClose={() => {
 						setUnlinking(false);
-					}}
-				/>
-				<DocumentDeletionDialog
-					open={deleting}
-					document={document}
-					onClose={() => {
-						setDeleting(false);
-					}}
-				/>
-				<DocumentRestorationDialog
-					open={restoring}
-					document={document}
-					onClose={() => {
-						setRestoring(false);
-					}}
-				/>
-				<DocumentSuperDeletionDialog
-					open={superdeleting}
-					document={document}
-					onClose={() => {
-						setSuperdeleting(false);
 					}}
 				/>
 			</AccordionActions>
