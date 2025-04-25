@@ -202,7 +202,8 @@ export const at = <
 
 	console.debug({key, tSchema});
 	throw new Error(
-		`Not implemented: at(${tSchema._def.typeName}, ${JSON.stringify(key)})`,
+		// @ts-expect-error - NOTE: Typing is incorrect.
+		`Not implemented: at(${tSchema._def.typeName}, ${key._def.typeName})`,
 	);
 };
 
