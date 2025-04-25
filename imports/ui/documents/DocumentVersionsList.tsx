@@ -1,11 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useParams} from 'react-router-dom';
 
 import {myDecodeURIComponent} from '../../util/uri';
 
-import StaticDocumentList from './StaticDocumentList';
-
-import useDocuments from './useDocuments';
+import DocumentsList from './DocumentsList';
 
 type Params = {
 	identifier: string;
@@ -17,41 +15,23 @@ type Props = {
 	readonly perpage?: number;
 };
 
+const sort = {
+	status: 1,
+	datetime: -1,
+} as const;
+
 const DocumentsVersionsList = ({page = 1, perpage = 10}: Props) => {
 	const params = useParams<Params>();
 	const identifier = myDecodeURIComponent(params.identifier);
 	const reference = myDecodeURIComponent(params.reference);
 
-	const filter = {identifier, reference};
-	const sort = {
-		status: 1,
-		datetime: -1,
-	} as const;
-	const projection = {
-		source: 0,
-		decoded: 0,
-		results: 0,
-		text: 0,
-	} as const;
-	const query = {
-		filter,
-		sort,
-		projection,
-		skip: (page - 1) * perpage,
-		limit: perpage,
-	};
-
-	const deps = [JSON.stringify(query)];
-
-	const {loading, results: documents} = useDocuments(query, deps);
+	const filter = useMemo(
+		() => ({identifier, reference}),
+		[identifier, reference],
+	);
 
 	return (
-		<StaticDocumentList
-			page={page}
-			perpage={perpage}
-			loading={loading}
-			documents={documents}
-		/>
+		<DocumentsList filter={filter} sort={sort} page={page} perpage={perpage} />
 	);
 };
 
