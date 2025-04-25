@@ -127,10 +127,10 @@ export const at = <
 	} else if (tSchema instanceof schema.ZodUnion) {
 		return schema.union(tSchema.options.map((item) => at(item, key)));
 	} else if (tSchema instanceof schema.ZodIntersection) {
-		return schema.union([
+		return schema.intersection(
 			at(tSchema._def.left, key),
 			at(tSchema._def.right, key),
-		]);
+		);
 	}
 
 	console.debug({key, tSchema});
