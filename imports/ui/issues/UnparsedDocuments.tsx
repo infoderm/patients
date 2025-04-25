@@ -4,11 +4,11 @@ import {useUnparsedDocuments} from '../../api/issues';
 
 import paged from '../routes/paged';
 
-import makeDocumentsList from '../documents/makeDocumentsList';
+import makeDocumentsTable from '../documents/makeDocumentsTable';
 import DocumentsListAutoFilterToggleButton from '../documents/DocumentsListAutoFilterToggleButton';
 import useDocumentsListAutoFilter from '../documents/useDocumentsListAutoFilter';
 
-const DocumentsPage = makeDocumentsList(useUnparsedDocuments);
+const DocumentsPage = makeDocumentsTable(useUnparsedDocuments);
 const DocumentsPager = paged(DocumentsPage);
 
 type Props = React.JSX.IntrinsicAttributes &
@@ -26,15 +26,6 @@ const UnparsedDocuments = (props: Props) => {
 					sort={{
 						createdAt: 1,
 					}}
-					LoadingIndicator={(_: {}) => <>Loading...</>}
-					EmptyPage={({page}: {readonly page: number}) =>
-						page === 1 ? (
-							<>All documents have been parsed :)</>
-						) : (
-							// eslint-disable-next-line react/jsx-no-useless-fragment
-							<>{`Nothing to see on page ${page}.`}</>
-						)
-					}
 				/>
 			</div>
 
