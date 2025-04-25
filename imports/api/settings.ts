@@ -16,6 +16,7 @@ export type UserSettings = {
 	'theme-palette-mode': PaletteMode;
 	'theme-palette-primary': string;
 	'theme-palette-secondary': string;
+	'theme-palette-contrast-threshold': number;
 	'navigation-drawer-is-open': 'open' | 'closed';
 	'books-sorting-order': -1 | 1;
 	currency: 'EUR';
@@ -41,6 +42,7 @@ export const defaults: UserSettings = {
 	'theme-palette-mode': 'light',
 	'theme-palette-primary': indigo[500],
 	'theme-palette-secondary': pink.A400,
+	'theme-palette-contrast-threshold': 3,
 	'navigation-drawer-is-open': 'closed',
 	'books-sorting-order': -1,
 	currency: 'EUR',
