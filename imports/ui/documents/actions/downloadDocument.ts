@@ -1,8 +1,22 @@
+import {type DocumentDocument} from '../../../api/collection/documents';
 import call from '../../../api/endpoint/call';
 import documentFetch from '../../../api/endpoint/documents/fetch';
+import type Optional from '../../../util/types/Optional';
 import saveTextAs from '../../output/saveTextAs';
 
-const downloadDocument = async (document) => {
+export type DocumentDownloadTarget = Pick<
+	Optional<DocumentDocument, 'decoded' | 'source'>,
+	| '_id'
+	| 'parsed'
+	| 'source'
+	| 'decoded'
+	| 'format'
+	| 'identifier'
+	| 'reference'
+	| 'status'
+>;
+
+const downloadDocument = async (document: DocumentDownloadTarget) => {
 	const extensions = {
 		// TODO maybe use LAB/REP kind dichotomy instead
 		// Could also use better naming, for instance Mediris uses
@@ -20,9 +34,10 @@ const downloadDocument = async (document) => {
 		healthone: 'HLT',
 		'DMA-REP': 'REP',
 		// 'medar' : 'MDR' ,
+		unknown: 'UNK',
 	};
 
-	const ext = extensions[document.format] || 'UNK';
+	const ext = extensions[document.format ?? 'unknown'] ?? 'UNK';
 
 	const name = document.parsed
 		? `${document.identifier}-${document.reference}-${document.status}`

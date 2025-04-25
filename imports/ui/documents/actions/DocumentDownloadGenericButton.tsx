@@ -3,23 +3,21 @@ import React, {useState} from 'react';
 import {useSnackbar} from 'notistack';
 
 import type PropsOf from '../../../util/types/PropsOf';
-import {type DocumentDocument} from '../../../api/collection/documents';
 
-import downloadDocument from './downloadDocument';
+import downloadDocument, {
+	type DocumentDownloadTarget,
+} from './downloadDocument';
 
-type ExtraProps = {
-	readonly document: DocumentDocument;
-	readonly component: React.ElementType;
-	readonly children: React.ReactNode;
-	readonly size?: string;
-};
+type DocumentDownloadGenericButtonProps<C extends React.ElementType> = {
+	readonly document: DocumentDownloadTarget;
+	readonly component: C;
+} & PropsOf<C>;
 
-const DocumentDownloadGenericButton = ({
+const DocumentDownloadGenericButton = <C extends React.ElementType>({
 	document,
 	component: Component,
 	...rest
-}: // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-PropsOf<typeof Component> & ExtraProps) => {
+}: DocumentDownloadGenericButtonProps<C>) => {
 	const {enqueueSnackbar} = useSnackbar();
 	const [downloading, setDownloading] = useState(false);
 
