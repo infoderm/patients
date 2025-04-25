@@ -28,6 +28,8 @@ import documentsLink from '../../api/endpoint/documents/link';
 
 import DateTimeLocalizationProvider from '../i18n/DateTimeLocalizationProvider';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import UnlinkedDocuments from './UnlinkedDocuments';
 
 const textNoIssues = 'All documents have an assigned patient :)';
@@ -37,9 +39,11 @@ const documentLinkName = (_id: string) => `Open document #${_id} in New Tab`;
 const render = (children: React.ReactNode) =>
 	_render(children, {
 		wrapper: ({children}: {children: React.ReactNode}) => (
-			<DateTimeLocalizationProvider>
-				<BrowserRouter>{children}</BrowserRouter>
-			</DateTimeLocalizationProvider>
+			<UserThemeProvider>
+				<DateTimeLocalizationProvider>
+					<BrowserRouter>{children}</BrowserRouter>
+				</DateTimeLocalizationProvider>
+			</UserThemeProvider>
 		),
 	});
 

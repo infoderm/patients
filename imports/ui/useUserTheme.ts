@@ -12,7 +12,7 @@ const useUserTheme = () => {
 		'theme-palette-contrast-threshold',
 	);
 	return useMemo(() => {
-		return responsiveFontSizes(
+		const theme = responsiveFontSizes(
 			createTheme({
 				palette: {
 					mode,
@@ -34,6 +34,31 @@ const useUserTheme = () => {
 				},
 			}),
 		);
+		return createTheme(theme, {
+			palette: {
+				red: theme.palette.augmentColor({
+					color: {
+						main: '#f88',
+						contrastText: '#fff',
+					},
+					name: 'red',
+				}),
+				green: theme.palette.augmentColor({
+					color: {
+						main: '#8f8',
+						contrastText: '#fff',
+					},
+					name: 'green',
+				}),
+				blue: theme.palette.augmentColor({
+					color: {
+						main: '#88f',
+						contrastText: '#fff',
+					},
+					name: 'blue',
+				}),
+			},
+		});
 	}, [mode, primary, secondary, contrastThreshold]);
 };
 

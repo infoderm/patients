@@ -18,14 +18,18 @@ import DateTimeLocalizationProvider from '../i18n/DateTimeLocalizationProvider';
 import insertPatient from '../../api/endpoint/patients/insert';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import PaidConsultationsList from './PaidConsultationsList';
 
 const render = (children: React.ReactNode) =>
 	_render(children, {
 		wrapper: ({children}: {children: React.ReactNode}) => (
-			<DateTimeLocalizationProvider>
-				<BrowserRouter>{children}</BrowserRouter>
-			</DateTimeLocalizationProvider>
+			<UserThemeProvider>
+				<DateTimeLocalizationProvider>
+					<BrowserRouter>{children}</BrowserRouter>
+				</DateTimeLocalizationProvider>
+			</UserThemeProvider>
 		),
 	});
 

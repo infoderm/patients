@@ -24,6 +24,8 @@ import consultationsUpdate from '../../api/endpoint/consultations/update';
 
 import DateTimeLocalizationProvider from '../i18n/DateTimeLocalizationProvider';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import ConsultationsWithPriceZeroNotInBookZero from './ConsultationsWithPriceZeroNotInBookZero';
 
 const textNoIssues = 'All price 0 consultations are in book 0 :)';
@@ -38,9 +40,11 @@ const patientLinkName = ({
 const render = (children: React.ReactNode) =>
 	_render(children, {
 		wrapper: ({children}: {children: React.ReactNode}) => (
-			<DateTimeLocalizationProvider>
-				<BrowserRouter>{children}</BrowserRouter>
-			</DateTimeLocalizationProvider>
+			<UserThemeProvider>
+				<DateTimeLocalizationProvider>
+					<BrowserRouter>{children}</BrowserRouter>
+				</DateTimeLocalizationProvider>
+			</UserThemeProvider>
 		),
 	});
 
