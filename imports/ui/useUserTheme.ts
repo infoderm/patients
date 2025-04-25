@@ -8,6 +8,9 @@ const useUserTheme = () => {
 	const {value: mode} = useSettingCached('theme-palette-mode');
 	const {value: primary} = useSettingCached('theme-palette-primary');
 	const {value: secondary} = useSettingCached('theme-palette-secondary');
+	const {value: contrastThreshold} = useSettingCached(
+		'theme-palette-contrast-threshold',
+	);
 	return useMemo(() => {
 		return responsiveFontSizes(
 			createTheme({
@@ -15,6 +18,7 @@ const useUserTheme = () => {
 					mode,
 					primary: {main: primary},
 					secondary: {main: secondary},
+					contrastThreshold,
 				},
 				components: {
 					MuiTextField: {
@@ -30,7 +34,7 @@ const useUserTheme = () => {
 				},
 			}),
 		);
-	}, [mode, primary, secondary]);
+	}, [mode, primary, secondary, contrastThreshold]);
 };
 
 export default useUserTheme;
