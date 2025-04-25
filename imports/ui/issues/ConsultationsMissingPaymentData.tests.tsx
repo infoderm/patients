@@ -25,6 +25,8 @@ import consultationsUpdate from '../../api/endpoint/consultations/update';
 
 import DateTimeLocalizationProvider from '../i18n/DateTimeLocalizationProvider';
 
+import UserThemeProvider from '../UserThemeProvider';
+
 import ConsultationsMissingPaymentData from './ConsultationsMissingPaymentData';
 
 const textNoIssues = 'All consultations have payment data :)';
@@ -39,9 +41,11 @@ const patientLinkName = ({
 const render = (children: React.ReactNode) =>
 	_render(children, {
 		wrapper: ({children}: {children: React.ReactNode}) => (
-			<DateTimeLocalizationProvider>
-				<BrowserRouter>{children}</BrowserRouter>
-			</DateTimeLocalizationProvider>
+			<UserThemeProvider>
+				<DateTimeLocalizationProvider>
+					<BrowserRouter>{children}</BrowserRouter>
+				</DateTimeLocalizationProvider>
+			</UserThemeProvider>
 		),
 	});
 
