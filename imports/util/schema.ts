@@ -83,6 +83,10 @@ export const at = <
 		tSchema = tSchema.unwrap();
 	}
 
+	if (tSchema instanceof schema.ZodAny) {
+		return tSchema;
+	}
+
 	if (tSchema instanceof schema.ZodNever) {
 		return tSchema;
 	}
