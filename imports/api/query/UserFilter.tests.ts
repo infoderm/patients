@@ -176,6 +176,26 @@ isomorphic(__filename, () => {
 		assert.deepEqual(tSchema.parse(filter), filter);
 	});
 
+	it('should work on an intersection of unions of object schemas with arrays ($and)', () => {
+		const filter: UserFilter<
+			{count: number} & ({users: undefined} | {users: Array<{name: string}>})
+		> = {
+			$and: [{count: 1}, {users: {$elemMatch: {name: {$regex: 'a'}}}}],
+		};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.intersection(
+				schema.object({count: schema.number()}),
+				schema.union([
+					schema.object({users: schema.undefined()}),
+					schema.object({
+						users: schema.array(schema.object({name: schema.string()})),
+					}),
+				]),
+			),
+		);
+		assert.deepEqual(tSchema.parse(filter), filter);
+	});
+
 	it('should work on a schema containing an array (single value filter)', () => {
 		const filter: UserFilter<{name: string[]}> = {name: 'abcd'};
 		const tSchema: schema.ZodType<typeof filter> = userFilter(
@@ -264,7 +284,7 @@ isomorphic(__filename, () => {
 		_asserInvalidInput(tSchema.safeParse(filter));
 	});
 
-	it('should throw an error on a schema containing an array (array `$elemMatch` filter)', () => {
+	it('should throw an error on a schema containing an array of objects (array `$elemMatch` filter)', () => {
 		const filter: UserFilter<{relations: Array<{name: string}>}> = {
 			// @ts-expect-error -- NOTE: This is on purpose for testing.
 			relations: {$elemMatch: {name: 1}},
@@ -272,6 +292,22 @@ isomorphic(__filename, () => {
 		const tSchema: schema.ZodType<typeof filter> = userFilter(
 			schema.object({
 				relations: schema.array(schema.object({name: schema.string()})),
+			}),
+		);
+		_asserInvalidInput(
+			tSchema.safeParse(filter),
+			"Unrecognized key(s) in object: '$elemMatch'",
+		);
+	});
+
+	it('should throw an error on a schema containing an array of strings (array `$elemMatch` filter)', () => {
+		const filter: UserFilter<{relations: string[]}> = {
+			// @ts-expect-error -- NOTE: This is on purpose for testing.
+			relations: {$elemMatch: {name: ''}},
+		};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.object({
+				relations: schema.array(schema.string()),
 			}),
 		);
 		_asserInvalidInput(
