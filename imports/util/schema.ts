@@ -1,4 +1,4 @@
-import {z as schema} from 'zod';
+import {z as schema, type ZodTypeAny} from 'zod';
 
 type UnionToIntersectionFn<T> = (
 	T extends unknown ? (k: () => T) => void : never
@@ -110,7 +110,13 @@ export const at = <
 		}
 
 		if (key instanceof schema.ZodString) {
-			return schema.union(Object.values(tSchema.shape) as any);
+			return schema.union(
+				Object.values(tSchema.shape) as [
+					ZodTypeAny,
+					ZodTypeAny,
+					...ZodTypeAny[],
+				],
+			);
 		}
 	} else if (tSchema instanceof schema.ZodRecord) {
 		if (key instanceof schema.ZodLiteral) {
