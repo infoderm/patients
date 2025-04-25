@@ -67,23 +67,196 @@ export const map = <T extends schema.ZodTypeAny, U extends schema.ZodTypeAny>(
 	return fn(tSchema) as U;
 };
 
+export const simplify = <
+	T extends schema.ZodTypeAny,
+	U extends schema.ZodTypeAny,
+>(
+	tSchema: T,
+): U => {
+	if (tSchema instanceof schema.ZodReadonly) {
+		return simplify(tSchema.unwrap()).readonly() as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodOptional) {
+		return simplify(
+			schema.union([tSchema.unwrap(), schema.undefined()]),
+		) as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodNullable) {
+		return simplify(
+			schema.union([tSchema.unwrap(), schema.null()]),
+		) as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodBranded) {
+		return simplify(tSchema.unwrap()).brand() as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodObject) {
+		return tSchema.extend(
+			Object.fromEntries(
+				Object.entries(tSchema.shape).map(([key, value]) => [
+					key,
+					simplify(value as schema.ZodTypeAny),
+				]),
+			),
+		) as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodUnion) {
+		let options = tSchema.options.map(simplify).map((x: schema.ZodTypeAny) => {
+			const alternatives: schema.ZodTypeAny[] = [];
+			if (x instanceof schema.ZodOptional) {
+				alternatives.push(schema.undefined());
+				x = x.unwrap();
+			}
+
+			if (x instanceof schema.ZodNullable) {
+				alternatives.push(schema.null());
+				x = x.unwrap();
+			}
+
+			return alternatives.length === 0
+				? x
+				: schema.union([x, alternatives[0]!, ...alternatives.slice(1)]);
+		});
+		if (options.length === 0) return schema.never() as unknown as U;
+		if (options.length === 1) return options[0];
+		const unions = options.filter(
+			(x: schema.ZodTypeAny) => x instanceof schema.ZodUnion,
+		);
+		const nonUnion = options.filter(
+			(x: schema.ZodTypeAny) => !(x instanceof schema.ZodUnion),
+		);
+		if (unions.length > 0) {
+			options = [].concat(
+				nonUnion,
+				...unions.map((u: schema.ZodUnion<any>) => u.options),
+			);
+		}
+
+		options = options.filter(
+			(x: schema.ZodTypeAny) => !(x instanceof schema.ZodNever),
+		);
+
+		if (options.length === 0) return schema.never() as unknown as U;
+		if (options.length === 1) return options[0];
+
+		if (options.some((x: schema.ZodTypeAny) => x instanceof schema.ZodAny)) {
+			return schema.any() as unknown as U;
+		}
+
+		if (
+			options.some((x: schema.ZodTypeAny) => x instanceof schema.ZodUnknown)
+		) {
+			return schema.unknown() as unknown as U;
+		}
+
+		const nonUndefined = options.filter(
+			(x: schema.ZodTypeAny) => !(x instanceof schema.ZodUndefined),
+		);
+		const optional = nonUndefined.length !== options.length;
+		options = nonUndefined;
+
+		if (options.length === 0)
+			return (optional ? schema.undefined() : schema.never()) as unknown as U;
+		if (options.length === 1) return nonUndefined[0].optional() as unknown as U;
+
+		const nonNull = options.filter(
+			(x: schema.ZodTypeAny) => !(x instanceof schema.ZodNull),
+		);
+		const nullable = nonNull.length !== options.length;
+		options = nonNull;
+
+		if (options.length === 0)
+			return (optional
+				? nullable
+					? schema.null().optional()
+					: schema.undefined()
+				: nullable
+				? schema.null()
+				: schema.never()) as unknown as U;
+
+		let union = options.length === 1 ? options[0] : schema.union(options);
+		if (nullable) union = union.nullable();
+		if (optional) union = union.optional();
+		return union as unknown as U;
+	}
+
+	if (tSchema instanceof schema.ZodIntersection) {
+		const {left, right} = tSchema._def;
+		const _left = simplify(left);
+		const _right = simplify(right);
+
+		if (_left instanceof schema.ZodNever) return _left as unknown as U;
+		if (_right instanceof schema.ZodNever) return _right as unknown as U;
+		if (_left instanceof schema.ZodAny || _left instanceof schema.ZodUnknown)
+			return _right as unknown as U;
+		if (_right instanceof schema.ZodAny || _right instanceof schema.ZodUnknown)
+			return _left as unknown as U;
+		if (
+			_left instanceof schema.ZodUndefined &&
+			_right instanceof schema.ZodUndefined
+		)
+			return _left as unknown as U;
+		if (_left instanceof schema.ZodNull && _right instanceof schema.ZodNull)
+			return _left as unknown as U;
+		if (_left instanceof schema.ZodNumber && _right instanceof schema.ZodNumber)
+			return _left as unknown as U;
+		if (_left instanceof schema.ZodNaN && _right instanceof schema.ZodNaN)
+			return _left as unknown as U;
+		if (_left instanceof schema.ZodString && _right instanceof schema.ZodString)
+			return _left as unknown as U;
+		if (_left instanceof schema.ZodSymbol && _right instanceof schema.ZodSymbol)
+			return _left as unknown as U;
+		if (
+			_left instanceof schema.ZodObject &&
+			_right instanceof schema.ZodObject
+		) {
+			return _left.merge(_right) as unknown as U;
+		}
+
+		return schema.intersection(_left, _right) as unknown as U;
+	}
+
+	return tSchema as unknown as U;
+};
+
+const _replacer = (_key: string, node: unknown) => {
+	if (node instanceof schema.ZodObject) {
+		const {
+			_def: {typeName, ...rest1},
+			shape,
+		} = node;
+		return {
+			_def: {
+				typeName,
+				...rest1,
+			},
+			shape,
+		};
+	}
+
+	if (node instanceof schema.ZodType) {
+		const {
+			_def: {typeName, ...rest1},
+			...rest2
+		} = node;
+		return {
+			_def: {
+				typeName,
+				...rest1,
+			},
+			...rest2,
+		};
+	}
+
+	return node;
+};
+
 export const toJSON = <T extends schema.ZodTypeAny>(tSchema: T): string => {
-	const x = (tSchema: schema.ZodTypeAny) => {
-		if (tSchema instanceof schema.ZodObject)
-			return {
-				def: tSchema._def,
-				shape: Object.fromEntries(
-					Object.entries(tSchema.shape).map(([key, value]) => [
-						key,
-						map(x, value as any),
-					]),
-				),
-			} as any;
-
-		return tSchema;
-	};
-
-	return JSON.stringify(map(x, tSchema), undefined, 2);
+	return JSON.stringify(tSchema, _replacer, 2);
 };
 
 type AtKeyOf<T extends schema.ZodTypeAny> = T extends schema.ZodUnion<infer U>
