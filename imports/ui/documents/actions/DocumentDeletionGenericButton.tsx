@@ -5,17 +5,17 @@ import type PropsOf from '../../../util/types/PropsOf';
 import {type DocumentDocument} from '../../../api/collection/documents';
 import DocumentDeletionDialog from '../DocumentDeletionDialog';
 
-type DocumentDownloadGenericButtonAdditionalProps = {
-	readonly document: DocumentDocument;
-	readonly component: React.ElementType;
-};
+type DocumentDownloadGenericButtonAdditionalProps<C extends React.ElementType> =
+	{
+		readonly document: Pick<DocumentDocument, '_id' | 'deleted'>;
+		readonly component: C;
+	} & PropsOf<C>;
 
-const DocumentDownloadGenericButton = ({
+const DocumentDownloadGenericButton = <C extends React.ElementType>({
 	document,
 	component: Component,
 	...rest
-}: // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-DocumentDownloadGenericButtonAdditionalProps & PropsOf<typeof Component>) => {
+}: DocumentDownloadGenericButtonAdditionalProps<C>) => {
 	const [deleting, setDeleting] = useState(false);
 
 	if (document.deleted) return null;
