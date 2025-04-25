@@ -109,11 +109,13 @@ export type FieldSpecifiers<TSchema> = Join<NestedPaths<TSchema, []>, '.'>;
 export const _fieldSpecifiers = function* <S extends schema.ZodTypeAny>(
 	tSchema: S,
 ): Iterable<string[]> {
-	if (tSchema instanceof schema.ZodOptional) {
-		tSchema = tSchema.unwrap();
-	}
-
-	if (tSchema instanceof schema.ZodObject) {
+	if (
+		tSchema instanceof schema.ZodOptional ||
+		tSchema instanceof schema.ZodNullable ||
+		tSchema instanceof schema.ZodBranded
+	) {
+		yield* _fieldSpecifiers(tSchema.unwrap());
+	} else if (tSchema instanceof schema.ZodObject) {
 		const keys: any = keyof(tSchema).options;
 		for (const key of keys) {
 			yield [key];
