@@ -349,7 +349,8 @@ const operator = <
 			return wrap(schema.intersection(left, right));
 		}
 
-		return wrap(op(_tSchema));
+		const s = op(_tSchema);
+		return s === undefined ? undefined : wrap(s);
 	};
 
 	return recurse;
