@@ -1,6 +1,4 @@
 import assert from 'assert';
-// @ts-expect-error Needs more recent @types/node
-import {type Buffer} from 'buffer';
 
 import promisify from './async/promisify';
 import schema from './schema';

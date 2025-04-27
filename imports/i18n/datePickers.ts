@@ -57,7 +57,7 @@ const _pickersLocalizationToLocaleText = (
 export const getLocaleText = async (
 	owner: string,
 ): Promise<LocaleText | undefined> => {
-	const key = getSetting(owner, 'lang');
+	const key = await getSetting(owner, 'lang');
 	const localization = await _getPickersLocalization(key);
 	return _pickersLocalizationToLocaleText(localization);
 };
@@ -76,3 +76,4 @@ export const useLocaleText = () => {
 	const localization = usePickersLocalization(key);
 	return _pickersLocalizationToLocaleText(localization);
 };
+
