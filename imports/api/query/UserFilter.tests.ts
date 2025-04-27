@@ -212,6 +212,25 @@ isomorphic(__filename, () => {
 		assert.deepEqual(tSchema.parse(filter), filter);
 	});
 
+	it('should work on a schema containing a union ($in)', () => {
+		const filter: UserFilter<{name?: Array<'a' | 'b' | 'c'>} | null> = {
+			name: {$in: ['a', 'c']},
+		};
+		const tSchema: schema.ZodType<typeof filter> = userFilter(
+			schema.object({
+				name: schema
+					.union([
+						schema.literal('a'),
+						schema.literal('b'),
+						schema.literal('c'),
+					])
+					.nullable()
+					.optional(),
+			}),
+		);
+		assert.deepEqual(tSchema.parse(filter), filter);
+	});
+
 	it('should work on a schema containing an array (array `$elemMatch` filter)', () => {
 		const filter: UserFilter<{relations: Array<{name: string}>}> = {
 			relations: {$elemMatch: {name: 'abcd'}},

@@ -111,7 +111,7 @@ export const condition = <S extends schema.ZodTypeAny>(
 ): schema.ZodType<Condition<schema.infer<S>>> => {
 	return schema.union([
 		mapSchema(alternativeType, tSchema),
-		mapSchema(filterOperators, tSchema),
+		filterOperators(tSchema),
 	]);
 };
 
