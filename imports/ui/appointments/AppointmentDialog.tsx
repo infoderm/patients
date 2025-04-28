@@ -27,6 +27,11 @@ import addMilliseconds from 'date-fns/addMilliseconds';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Dialog from '@mui/material/Dialog';
 
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+
 import TextField from '../input/TextField';
 
 import CancelButton from '../button/CancelButton';
@@ -110,6 +115,12 @@ const AppointmentDialog = ({
 	onSubmit,
 }: AppointmentDialogProps) => {
 	const navigate = useNavigate();
+
+	const [tab, setTab] = React.useState('1');
+
+	const onTabChange = (_: React.SyntheticEvent, newValue: string) => {
+		setTab(newValue);
+	};
 
 	const {loading, value: appointmentDuration} = useSettingCached(
 		'appointment-duration',
@@ -248,8 +259,16 @@ const AppointmentDialog = ({
 	return (
 		<Dialog open={open}>
 			{loading && <LinearProgress />}
-			<DialogTitle>Schedule an appointment</DialogTitle>
+      <TabContext value={tab}>
+		<DialogTitle>
+          <TabList onChange={onTabChange} aria-label="lab API tabs example">
+            <Tab label="Schedule an appointment" value="1" />
+            <Tab label="Schedule an event" value="2" />
+            <Tab label="Schedule time off" value="3" />
+          </TabList>
+        </DialogTitle>
 			<DialogContent>
+        <TabPanel value="1">
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
 						<DatePicker
@@ -383,7 +402,214 @@ const AppointmentDialog = ({
 						/>
 					</Grid>
 				</Grid>
+				</TabPanel>
+        <TabPanel value="2">
+
+				<Grid container spacing={3}>
+					<Grid item xs={4}>
+						<DatePicker
+							value={unserializeDate(date)}
+							label="Date"
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validDate || displayAppointmentIsInThePast,
+									helperText: displayAppointmentIsInThePast
+										? 'Date dans le passé!'
+										: undefined,
+								},
+							}}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setDate(serializeDate(pickedDatetime!));
+									setValidDate(true);
+								} else {
+									setValidDate(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validTime,
+								},
+							}}
+							label="Begin"
+							value={time === '' ? null : unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime!));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validTime,
+								},
+							}}
+							label="End"
+							value={time === '' ? null : unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime!));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					{appointmentOverlapsWithAnotherEvent && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Cet évènement <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Titre de l'évènement"
+							placeholder="Titre de l'évènement"
+							rows={1}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Description de l'évènement"
+							placeholder="Description de l'évènement"
+							rows={4}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+				</Grid>
+
+					</TabPanel>
+        <TabPanel value="3">
+
+				<Grid container spacing={3}>
+					<Grid item xs={4}>
+						<DatePicker
+							value={unserializeDate(date)}
+							label="Date"
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validDate || displayAppointmentIsInThePast,
+									helperText: displayAppointmentIsInThePast
+										? 'Date dans le passé!'
+										: undefined,
+								},
+							}}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setDate(serializeDate(pickedDatetime!));
+									setValidDate(true);
+								} else {
+									setValidDate(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validTime,
+								},
+							}}
+							label="Begin"
+							value={time === '' ? null : unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime!));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: {shrink: true},
+									error: !validTime,
+								},
+							}}
+							label="End"
+							value={time === '' ? null : unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime!));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					{appointmentOverlapsWithAnotherEvent && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Cet évènement <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Titre de l'évènement"
+							placeholder="Titre de l'évènement"
+							rows={1}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Description de l'évènement"
+							placeholder="Description de l'évènement"
+							rows={4}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+				</Grid>
+					</TabPanel>
 			</DialogContent>
+
 			<DialogActions>
 				<CancelButton onClick={onClose} />
 				<LoadingButton
@@ -397,6 +623,7 @@ const AppointmentDialog = ({
 					Schedule
 				</LoadingButton>
 			</DialogActions>
+			</TabContext>
 		</Dialog>
 	);
 };
