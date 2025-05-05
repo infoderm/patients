@@ -1,9 +1,9 @@
 import assert from 'assert';
 
-import React, {useMemo} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import {styled} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -17,7 +17,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import {DatePicker, DesktopTimePicker as TimePicker} from '@mui/x-date-pickers';
+import { DatePicker, DesktopTimePicker as TimePicker } from '@mui/x-date-pickers';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import dateFormat from 'date-fns/format';
 import isValid from 'date-fns/isValid';
@@ -36,12 +36,12 @@ import TextField from '../input/TextField';
 
 import CancelButton from '../button/CancelButton';
 
-import {msToString} from '../../api/duration';
+import { msToString } from '../../api/duration';
 
-import {type AppointmentDocument} from '../../api/collection/appointments';
+import { type AppointmentDocument } from '../../api/collection/appointments';
 
-import {patients} from '../../api/patients';
-import {useSettingCached} from '../settings/hooks';
+import { patients } from '../../api/patients';
+import { useSettingCached } from '../settings/hooks';
 
 import useIntersectingEvents from '../events/useIntersectingEvents';
 
@@ -51,11 +51,11 @@ import useStateWithInitOverride from '../hooks/useStateWithInitOverride';
 
 import withLazyOpening from '../modal/withLazyOpening';
 import PatientPicker from '../patients/PatientPicker';
-import {AVAILABILITY_TIMEZONE, weekShifted} from '../../api/availability';
+import { AVAILABILITY_TIMEZONE, weekShifted } from '../../api/availability';
 import useQuerySortedWorkSchedule from '../settings/useQuerySortedWorkSchedule';
 import nonOverlappingIntersectionQuery from '../../util/interval/nonOverlappingIntersectionQuery';
 import isContiguous from '../../util/interval/isContiguous';
-import {type AppointmentUpdate} from '../../api/appointments';
+import { type AppointmentUpdate } from '../../api/appointments';
 
 const Multiline = styled(TextField)({
 	overflow: 'auto',
@@ -67,9 +67,9 @@ const usePhone = (patientList) => {
 
 	const deps = [patientId];
 
-	const {found, fields: patient} = usePatient(
+	const { found, fields: patient } = usePatient(
 		{},
-		{filter: {_id: patientId}, projection: {phone: 1}},
+		{ filter: { _id: patientId }, projection: { phone: 1 } },
 		deps,
 	);
 
@@ -88,20 +88,25 @@ const unserializeTime = (time: string) =>
 
 const isEqual = (a, b) => a === b;
 
+type InitialPatient = {
+	_id: string;
+	firstname: string;
+	lastname: string;
+	phone: string;
+}
+
+type OnClose = () => void;
+type OnSubmit = (args: AppointmentUpdate) => Promise<{ _id: string }>;
+
 type AppointmentDialogProps = {
 	readonly open: boolean;
 	readonly pending: boolean;
-	readonly onClose: () => void;
-	readonly onSubmit: (args: AppointmentUpdate) => Promise<{_id: string}>;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
 	readonly initialDatetime: Date;
 	readonly noInitialTime?: boolean;
 	readonly initialAppointment?: AppointmentDocument;
-	readonly initialPatient?: {
-		_id: string;
-		firstname: string;
-		lastname: string;
-		phone: string;
-	};
+	readonly initialPatient?: InitialPatient;
 };
 
 const AppointmentDialog = ({
@@ -114,17 +119,87 @@ const AppointmentDialog = ({
 	onClose,
 	onSubmit,
 }: AppointmentDialogProps) => {
-	const navigate = useNavigate();
-
 	const [tab, setTab] = React.useState('1');
 
 	const onTabChange = (_: React.SyntheticEvent, newValue: string) => {
 		setTab(newValue);
 	};
 
-	const {loading, value: appointmentDuration} = useSettingCached(
+	const { loading, value: appointmentDuration } = useSettingCached(
 		'appointment-duration',
 	);
+
+	return (
+		<Dialog open={open}>
+			{loading && <LinearProgress />}
+			<TabContext value={tab}>
+				<DialogTitle>
+					<TabList onChange={onTabChange} aria-label="lab API tabs example">
+						<Tab label="Schedule an appointment" value="1" />
+						<Tab label="Schedule an event" value="2" />
+						<Tab label="Schedule time off" value="3" />
+					</TabList>
+				</DialogTitle>
+				<TabPanel value="1">
+					<AppointmentDialogTab
+						appointmentDuration={appointmentDuration}
+						initialDatetime={initialDatetime}
+						noInitialTime={noInitialTime}
+						initialAppointment={initialAppointment}
+						initialPatient={initialPatient}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+				<TabPanel value="2">
+					<EventSchedulingDialogTab
+						initialDatetime={initialDatetime}
+						noInitialTime={noInitialTime}
+						initialAppointment={initialAppointment}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+
+				</TabPanel>
+				<TabPanel value="3">
+					<TimeOffSchedulingDialogTab
+						initialDatetime={initialDatetime}
+						noInitialTime={noInitialTime}
+						initialAppointment={initialAppointment}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+			</TabContext>
+		</Dialog>
+	);
+};
+
+type AppointmentSchedulingDialogTabProps = {
+	readonly appointmentDuration: number[];
+	readonly initialAppointment?: AppointmentDocument;
+	readonly initialDatetime: Date;
+	readonly noInitialTime: boolean;
+	readonly initialPatient?: InitialPatient;
+	readonly pending: boolean;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
+}
+
+const AppointmentDialogTab = ({
+	appointmentDuration,
+	initialAppointment,
+	initialPatient,
+	initialDatetime,
+	noInitialTime,
+	pending,
+	onClose,
+	onSubmit,
+}: AppointmentSchedulingDialogTabProps) => {
+	const navigate = useNavigate();
 
 	const [date, setDate] = useStateWithInitOverride(
 		serializeDate(initialDatetime),
@@ -143,8 +218,8 @@ const AppointmentDialog = ({
 		appointmentDuration.includes(initialAppointment?.duration!)
 			? initialAppointment!.duration
 			: appointmentDuration.length > 0
-			? appointmentDuration[0]!
-			: 0,
+				? appointmentDuration[0]!
+				: 0,
 		[initialAppointment, appointmentDuration],
 	);
 	const [reason, setReason] = useStateWithInitOverride(
@@ -172,14 +247,14 @@ const AppointmentDialog = ({
 	const _id = initialAppointment?._id;
 	const begin = datetime;
 	const end = addMilliseconds(datetime, duration);
-	const {results: overlappingEvents} = useIntersectingEvents(
+	const { results: overlappingEvents } = useIntersectingEvents(
 		begin,
 		end,
 		{
-			_id: {$ne: _id},
-			isCancelled: {$ne: true},
+			_id: { $ne: _id },
+			isCancelled: { $ne: true },
 		},
-		{limit: 1},
+		{ limit: 1 },
 		[_id, Number(datetime), duration],
 	);
 	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
@@ -188,7 +263,7 @@ const AppointmentDialog = ({
 
 	const appointmentReachesOutsideWorkSchedule = useMemo(() => {
 		if (!isValid(begin) || !isValid(end)) return false;
-		const intervals = workSchedule.map(({beginModuloWeek, endModuloWeek}) => [
+		const intervals = workSchedule.map(({ beginModuloWeek, endModuloWeek }) => [
 			beginModuloWeek,
 			endModuloWeek,
 		]) as Array<[number, number]>;
@@ -200,8 +275,8 @@ const AppointmentDialog = ({
 			intersectionWithWorkSchedule.length === 0
 				? 0
 				: intersectionWithWorkSchedule[
-						intersectionWithWorkSchedule.length - 1
-				  ]![1] - intersectionWithWorkSchedule[0]![0];
+				intersectionWithWorkSchedule.length - 1
+				]![1] - intersectionWithWorkSchedule[0]![0];
 		const measure = Number(end) - Number(begin);
 		assert(span <= measure);
 		return (
@@ -224,16 +299,15 @@ const AppointmentDialog = ({
 			try {
 				const res = await onSubmit(args);
 				console.log(
-					`Appointment #${res._id} ${
-						initialAppointment ? 'updated' : 'created'
+					`Appointment #${res._id} ${initialAppointment ? 'updated' : 'created'
 					}.`,
 				);
 				onClose();
 				if (!initialAppointment) {
-					navigate({pathname: `/consultation/${res._id}`});
+					navigate({ pathname: `/consultation/${res._id}` });
 				}
 			} catch (error: unknown) {
-				console.error({error});
+				console.error({ error });
 			}
 		} else {
 			setPatientError("The patient's name is required");
@@ -255,20 +329,9 @@ const AppointmentDialog = ({
 			? "Edit this patient's phone number by editing their information"
 			: '';
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
-
 	return (
-		<Dialog open={open}>
-			{loading && <LinearProgress />}
-      <TabContext value={tab}>
-		<DialogTitle>
-          <TabList onChange={onTabChange} aria-label="lab API tabs example">
-            <Tab label="Schedule an appointment" value="1" />
-            <Tab label="Schedule an event" value="2" />
-            <Tab label="Schedule time off" value="3" />
-          </TabList>
-        </DialogTitle>
+		<>
 			<DialogContent>
-        <TabPanel value="1">
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
 						<DatePicker
@@ -276,7 +339,7 @@ const AppointmentDialog = ({
 							label="Date"
 							slotProps={{
 								textField: {
-									InputLabelProps: {shrink: true},
+									InputLabelProps: { shrink: true },
 									error: !validDate || displayAppointmentIsInThePast,
 									helperText: displayAppointmentIsInThePast
 										? 'Date dans le passé!'
@@ -297,7 +360,7 @@ const AppointmentDialog = ({
 						<TimePicker
 							slotProps={{
 								textField: {
-									InputLabelProps: {shrink: true},
+									InputLabelProps: { shrink: true },
 									error: !validTime,
 								},
 							}}
@@ -379,7 +442,7 @@ const AppointmentDialog = ({
 							error={phoneError}
 							rows={1}
 							value={phone}
-							InputLabelProps={{shrink: true}}
+							InputLabelProps={{ shrink: true }}
 							margin="normal"
 							readOnly={phoneIsReadOnly}
 							disabled={phoneIsDisabled}
@@ -402,212 +465,6 @@ const AppointmentDialog = ({
 						/>
 					</Grid>
 				</Grid>
-				</TabPanel>
-        <TabPanel value="2">
-
-				<Grid container spacing={3}>
-					<Grid item xs={4}>
-						<DatePicker
-							value={unserializeDate(date)}
-							label="Date"
-							slotProps={{
-								textField: {
-									InputLabelProps: {shrink: true},
-									error: !validDate || displayAppointmentIsInThePast,
-									helperText: displayAppointmentIsInThePast
-										? 'Date dans le passé!'
-										: undefined,
-								},
-							}}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setDate(serializeDate(pickedDatetime!));
-									setValidDate(true);
-								} else {
-									setValidDate(false);
-								}
-							}}
-						/>
-					</Grid>
-					<Grid item xs={4}>
-						<TimePicker
-							slotProps={{
-								textField: {
-									InputLabelProps: {shrink: true},
-									error: !validTime,
-								},
-							}}
-							label="Begin"
-							value={time === '' ? null : unserializeTime(time)}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setTime(serializeTime(pickedDatetime!));
-									setValidTime(true);
-								} else {
-									setValidTime(false);
-								}
-							}}
-						/>
-					</Grid>
-					<Grid item xs={4}>
-						<TimePicker
-							slotProps={{
-								textField: {
-									InputLabelProps: {shrink: true},
-									error: !validTime,
-								},
-							}}
-							label="End"
-							value={time === '' ? null : unserializeTime(time)}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setTime(serializeTime(pickedDatetime!));
-									setValidTime(true);
-								} else {
-									setValidTime(false);
-								}
-							}}
-						/>
-					</Grid>
-					{appointmentOverlapsWithAnotherEvent && (
-						<Grid item xs={12}>
-							<Alert severity="warning">
-								<AlertTitle>Attention</AlertTitle>
-								Cet évènement <strong>chevauche un autre évènement</strong>!
-							</Alert>
-						</Grid>
-					)}
-					<Grid item xs={12}>
-						<Multiline
-							multiline
-							label="Titre de l'évènement"
-							placeholder="Titre de l'évènement"
-							rows={1}
-							value={reason}
-							margin="normal"
-							onChange={(e) => {
-								setReason(e.target.value);
-							}}
-						/>
-					</Grid>
-					<Grid item xs={12}>
-						<Multiline
-							multiline
-							label="Description de l'évènement"
-							placeholder="Description de l'évènement"
-							rows={4}
-							value={reason}
-							margin="normal"
-							onChange={(e) => {
-								setReason(e.target.value);
-							}}
-						/>
-					</Grid>
-				</Grid>
-
-					</TabPanel>
-        <TabPanel value="3">
-
-				<Grid container spacing={3}>
-					<Grid item xs={4}>
-						<DatePicker
-							value={unserializeDate(date)}
-							label="Date"
-							slotProps={{
-								textField: {
-									InputLabelProps: {shrink: true},
-									error: !validDate || displayAppointmentIsInThePast,
-									helperText: displayAppointmentIsInThePast
-										? 'Date dans le passé!'
-										: undefined,
-								},
-							}}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setDate(serializeDate(pickedDatetime!));
-									setValidDate(true);
-								} else {
-									setValidDate(false);
-								}
-							}}
-						/>
-					</Grid>
-					<Grid item xs={4}>
-						<TimePicker
-							slotProps={{
-								textField: {
-									InputLabelProps: {shrink: true},
-									error: !validTime,
-								},
-							}}
-							label="Begin"
-							value={time === '' ? null : unserializeTime(time)}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setTime(serializeTime(pickedDatetime!));
-									setValidTime(true);
-								} else {
-									setValidTime(false);
-								}
-							}}
-						/>
-					</Grid>
-					<Grid item xs={4}>
-						<TimePicker
-							slotProps={{
-								textField: {
-									InputLabelProps: {shrink: true},
-									error: !validTime,
-								},
-							}}
-							label="End"
-							value={time === '' ? null : unserializeTime(time)}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setTime(serializeTime(pickedDatetime!));
-									setValidTime(true);
-								} else {
-									setValidTime(false);
-								}
-							}}
-						/>
-					</Grid>
-					{appointmentOverlapsWithAnotherEvent && (
-						<Grid item xs={12}>
-							<Alert severity="warning">
-								<AlertTitle>Attention</AlertTitle>
-								Cet évènement <strong>chevauche un autre évènement</strong>!
-							</Alert>
-						</Grid>
-					)}
-					<Grid item xs={12}>
-						<Multiline
-							multiline
-							label="Titre de l'évènement"
-							placeholder="Titre de l'évènement"
-							rows={1}
-							value={reason}
-							margin="normal"
-							onChange={(e) => {
-								setReason(e.target.value);
-							}}
-						/>
-					</Grid>
-					<Grid item xs={12}>
-						<Multiline
-							multiline
-							label="Description de l'évènement"
-							placeholder="Description de l'évènement"
-							rows={4}
-							value={reason}
-							margin="normal"
-							onChange={(e) => {
-								setReason(e.target.value);
-							}}
-						/>
-					</Grid>
-				</Grid>
-					</TabPanel>
 			</DialogContent>
 
 			<DialogActions>
@@ -623,9 +480,424 @@ const AppointmentDialog = ({
 					Schedule
 				</LoadingButton>
 			</DialogActions>
-			</TabContext>
-		</Dialog>
-	);
+		</>
+	)
 };
+
+type EventSchedulingDialogTabProps = {
+	readonly initialAppointment?: AppointmentDocument;
+	readonly initialDatetime: Date;
+	readonly noInitialTime: boolean;
+	readonly pending: boolean;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
+}
+
+const EventSchedulingDialogTab = ({
+	initialAppointment,
+	initialDatetime,
+	noInitialTime,
+	pending,
+	onClose,
+	onSubmit,
+}: EventSchedulingDialogTabProps) => {
+	const navigate = useNavigate();
+
+	const [date, setDate] = useStateWithInitOverride(
+		serializeDate(initialDatetime),
+	);
+	const [validDate, setValidDate] = useStateWithInitOverride(
+		isValid(initialDatetime),
+	);
+	const [time, setTime] = useStateWithInitOverride(
+		noInitialTime ? '' : serializeTime(initialDatetime),
+	);
+	const [endTime, setEndTime] = useStateWithInitOverride(
+		noInitialTime ? '' : serializeTime(initialDatetime),
+	);
+	const [validTime, setValidTime] = useStateWithInitOverride(
+		!noInitialTime && isValid(initialDatetime),
+	);
+	const [validEndTime, setValidEndTime] = useStateWithInitOverride(
+		!noInitialTime && isValid(initialDatetime),
+	);
+	const [reason, setReason] = useStateWithInitOverride(
+		initialAppointment?.reason ?? '',
+		[initialAppointment],
+	);
+
+	const datetime = unserializeDatetime(date, time);
+	const appointmentIsInThePast = isBefore(
+		unserializeDate(date),
+		startOfToday(),
+	);
+	const displayAppointmentIsInThePast = appointmentIsInThePast;
+
+	const _id = initialAppointment?._id;
+	const begin = datetime;
+	const end = unserializeDatetime(date, endTime);
+	const { results: overlappingEvents } = useIntersectingEvents(
+		begin,
+		end,
+		{
+			_id: { $ne: _id },
+			isCancelled: { $ne: true },
+		},
+		{ limit: 1 },
+		[_id, Number(begin), Number(end)],
+	);
+	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
+
+	const createOrUpdateAppointment = async (event) => {
+		event.preventDefault();
+
+		const args: AppointmentUpdate = {
+			datetime,
+			duration: end.getTime() - begin.getTime(),
+			reason,
+		};
+		try {
+			const res = await onSubmit(args);
+			console.log(
+				`Appointment #${res._id} ${initialAppointment ? 'updated' : 'created'
+				}.`,
+			);
+			onClose();
+			if (!initialAppointment) {
+				navigate({ pathname: `/consultation/${res._id}` });
+			}
+		} catch (error: unknown) {
+			console.error({ error });
+		}
+	};
+
+	return (
+		<>
+			<DialogContent>
+				<Grid container spacing={3}>
+					<Grid item xs={4}>
+						<DatePicker
+							value={unserializeDate(date)}
+							label="Date"
+							slotProps={{
+								textField: {
+									InputLabelProps: { shrink: true },
+									error: !validDate || displayAppointmentIsInThePast,
+									helperText: displayAppointmentIsInThePast
+										? 'Date dans le passé!'
+										: undefined,
+								},
+							}}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setDate(serializeDate(pickedDatetime!));
+									setValidDate(true);
+								} else {
+									setValidDate(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: { shrink: true },
+									error: !validTime,
+								},
+							}}
+							label="Begin"
+							value={time === '' ? null : unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime!));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: { shrink: true },
+									error: !validEndTime,
+								},
+							}}
+							label="End"
+							value={endTime === '' ? null : unserializeTime(endTime)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setEndTime(serializeTime(pickedDatetime!));
+									setValidEndTime(true);
+								} else {
+									setValidEndTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					{appointmentOverlapsWithAnotherEvent && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Cet évènement <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Titre de l'évènement"
+							placeholder="Titre de l'évènement"
+							rows={1}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Description de l'évènement"
+							placeholder="Description de l'évènement"
+							rows={4}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+				</Grid>
+			</DialogContent>
+
+			<DialogActions>
+				<CancelButton onClick={onClose} />
+				<LoadingButton
+					loading={pending}
+					disabled={!validDate || !validTime || !validEndTime}
+					color="primary"
+					endIcon={<AccessTimeIcon />}
+					loadingPosition="end"
+					onClick={createOrUpdateAppointment}
+				>
+					Schedule
+				</LoadingButton>
+			</DialogActions>
+		</>
+	);
+}
+
+type TimeOffSchedulingDialogTabProps = {
+	readonly initialAppointment?: AppointmentDocument;
+	readonly initialDatetime: Date;
+	readonly noInitialTime: boolean;
+	readonly pending: boolean;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
+}
+
+const TimeOffSchedulingDialogTab = ({
+	initialAppointment,
+	initialDatetime,
+	noInitialTime,
+	pending,
+	onClose,
+	onSubmit,
+}: TimeOffSchedulingDialogTabProps) => {
+	const navigate = useNavigate();
+
+	const [date, setDate] = useStateWithInitOverride(
+		serializeDate(initialDatetime),
+	);
+	const [validDate, setValidDate] = useStateWithInitOverride(
+		isValid(initialDatetime),
+	);
+	const [time, setTime] = useStateWithInitOverride(
+		noInitialTime ? '' : serializeTime(initialDatetime),
+	);
+	const [endTime, setEndTime] = useStateWithInitOverride(
+		noInitialTime ? '' : serializeTime(initialDatetime),
+	);
+	const [validTime, setValidTime] = useStateWithInitOverride(
+		!noInitialTime && isValid(initialDatetime),
+	);
+	const [validEndTime, setValidEndTime] = useStateWithInitOverride(
+		!noInitialTime && isValid(initialDatetime),
+	);
+	const [reason, setReason] = useStateWithInitOverride(
+		initialAppointment?.reason ?? '',
+		[initialAppointment],
+	);
+
+	const datetime = unserializeDatetime(date, time);
+	const appointmentIsInThePast = isBefore(
+		unserializeDate(date),
+		startOfToday(),
+	);
+	const displayAppointmentIsInThePast = appointmentIsInThePast;
+
+	const _id = initialAppointment?._id;
+	const begin = datetime;
+	const end = unserializeDatetime(date, endTime);
+	const { results: overlappingEvents } = useIntersectingEvents(
+		begin,
+		end,
+		{
+			_id: { $ne: _id },
+			isCancelled: { $ne: true },
+		},
+		{ limit: 1 },
+		[_id, Number(begin), Number(end)],
+	);
+	const appointmentOverlapsWithAnotherEvent = overlappingEvents.length > 0;
+
+	const createOrUpdateAppointment = async (event) => {
+		event.preventDefault();
+
+		const args: AppointmentUpdate = {
+			datetime,
+			duration: end.getTime() - begin.getTime(),
+			reason,
+		};
+		try {
+			const res = await onSubmit(args);
+			console.log(
+				`Appointment #${res._id} ${initialAppointment ? 'updated' : 'created'
+				}.`,
+			);
+			onClose();
+			if (!initialAppointment) {
+				navigate({ pathname: `/consultation/${res._id}` });
+			}
+		} catch (error: unknown) {
+			console.error({ error });
+		}
+	};
+	return (
+
+		<>
+			<DialogContent>
+				<Grid container spacing={3}>
+					<Grid item xs={4}>
+						<DatePicker
+							value={unserializeDate(date)}
+							label="Date"
+							slotProps={{
+								textField: {
+									InputLabelProps: { shrink: true },
+									error: !validDate || displayAppointmentIsInThePast,
+									helperText: displayAppointmentIsInThePast
+										? 'Date dans le passé!'
+										: undefined,
+								},
+							}}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setDate(serializeDate(pickedDatetime!));
+									setValidDate(true);
+								} else {
+									setValidDate(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: { shrink: true },
+									error: !validTime,
+								},
+							}}
+							label="Begin"
+							value={time === '' ? null : unserializeTime(time)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setTime(serializeTime(pickedDatetime!));
+									setValidTime(true);
+								} else {
+									setValidTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					<Grid item xs={4}>
+						<TimePicker
+							slotProps={{
+								textField: {
+									InputLabelProps: { shrink: true },
+									error: !validEndTime,
+								},
+							}}
+							label="End"
+							value={endTime === '' ? null : unserializeTime(endTime)}
+							onChange={(pickedDatetime) => {
+								if (isValid(pickedDatetime)) {
+									setEndTime(serializeTime(pickedDatetime!));
+									setValidEndTime(true);
+								} else {
+									setValidEndTime(false);
+								}
+							}}
+						/>
+					</Grid>
+					{appointmentOverlapsWithAnotherEvent && (
+						<Grid item xs={12}>
+							<Alert severity="warning">
+								<AlertTitle>Attention</AlertTitle>
+								Cet évènement <strong>chevauche un autre évènement</strong>!
+							</Alert>
+						</Grid>
+					)}
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Titre de l'évènement"
+							placeholder="Titre de l'évènement"
+							rows={1}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Multiline
+							multiline
+							label="Description de l'évènement"
+							placeholder="Description de l'évènement"
+							rows={4}
+							value={reason}
+							margin="normal"
+							onChange={(e) => {
+								setReason(e.target.value);
+							}}
+						/>
+					</Grid>
+				</Grid>
+			</DialogContent>
+
+			<DialogActions>
+				<CancelButton onClick={onClose} />
+				<LoadingButton
+					loading={pending}
+					disabled={!validDate || !validTime || !validEndTime}
+					color="primary"
+					endIcon={<AccessTimeIcon />}
+					loadingPosition="end"
+					onClick={createOrUpdateAppointment}
+				>
+					Schedule
+				</LoadingButton>
+			</DialogActions>
+		</>
+	)
+}
 
 export default withLazyOpening(AppointmentDialog);
