@@ -140,7 +140,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "7.27.1",
     "@babel/plugin-syntax-jsx": "7.27.1",
-    "@commitlint/cli": "19.7.1",
+    "@commitlint/cli": "19.8.0",
     "@faker-js/faker": "8.4.1",
     "@fontsource/roboto": "5.2.5",
     "@iterable-iterator/repeat": "1.0.1",
