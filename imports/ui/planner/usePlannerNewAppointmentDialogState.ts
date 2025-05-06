@@ -18,7 +18,8 @@ const usePlannerNewAppointmentDialogState = () => {
 	const openOn = useCallback(
 		(begin: Date, end: Date) => {
 			console.debug({begin, end});
-			const noInitialTime = isEqual(addDays(begin, 1), end) && isEqual(begin, startOfDay(begin));
+			const noInitialTime =
+				isEqual(addDays(begin, 1), end) && isEqual(begin, startOfDay(begin));
 			setInitialDatetime(begin);
 			setNoInitialTime(alwaysNoInitialTime || noInitialTime);
 			setOpen(true);
