@@ -1,5 +1,9 @@
 import {useCallback, useState} from 'react';
 
+import isEqual from 'date-fns/isEqual';
+import addDays from 'date-fns/addDays';
+import startOfDay from 'date-fns/startOfDay';
+
 import {useSettingCached} from '../settings/hooks';
 
 const usePlannerNewAppointmentDialogState = () => {
@@ -12,9 +16,11 @@ const usePlannerNewAppointmentDialogState = () => {
 	const alwaysNoInitialTime = agendaSlotClickSetsInitialTime === 'off';
 
 	const openOn = useCallback(
-		(date: Date, noInitialTime = true) => {
-			console.debug({date, noInitialTime});
-			setInitialDatetime(date);
+		(begin: Date, end: Date) => {
+			console.debug({begin, end});
+			const noInitialTime =
+				isEqual(addDays(begin, 1), end) && isEqual(begin, startOfDay(begin));
+			setInitialDatetime(begin);
 			setNoInitialTime(alwaysNoInitialTime || noInitialTime);
 			setOpen(true);
 		},
