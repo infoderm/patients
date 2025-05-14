@@ -9,6 +9,7 @@ import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format';
+import addDays from 'date-fns/addDays';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
@@ -45,7 +46,7 @@ const DayBox = ({classes, cx, day, row, col, onSlotClick}) => {
 	const onClick = useMemo(() => {
 		return onSlotClick
 			? () => {
-					onSlotClick(day);
+					onSlotClick(day, addDays(day, 1));
 			  }
 			: undefined;
 	}, [onSlotClick, day]);
