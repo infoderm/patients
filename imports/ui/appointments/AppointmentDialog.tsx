@@ -83,20 +83,25 @@ const unserializeTime = (time: string) =>
 
 const isEqual = (a, b) => a === b;
 
+type InitialPatient = {
+	_id: string;
+	firstname: string;
+	lastname: string;
+	phone: string;
+};
+
+type OnClose = () => void;
+type OnSubmit = (args: AppointmentUpdate) => Promise<{_id: string}>;
+
 type AppointmentDialogProps = {
 	readonly open: boolean;
 	readonly pending: boolean;
-	readonly onClose: () => void;
-	readonly onSubmit: (args: AppointmentUpdate) => Promise<{_id: string}>;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
 	readonly initialDatetime: Date;
 	readonly noInitialTime?: boolean;
 	readonly initialAppointment?: AppointmentDocument;
-	readonly initialPatient?: {
-		_id: string;
-		firstname: string;
-		lastname: string;
-		phone: string;
-	};
+	readonly initialPatient?: InitialPatient;
 };
 
 const AppointmentDialog = ({
@@ -109,11 +114,50 @@ const AppointmentDialog = ({
 	onClose,
 	onSubmit,
 }: AppointmentDialogProps) => {
-	const navigate = useNavigate();
-
 	const {loading, value: appointmentDuration} = useSettingCached(
 		'appointment-duration',
 	);
+
+	return (
+		<Dialog open={open}>
+			{loading && <LinearProgress />}
+			<DialogTitle>Schedule an appointment</DialogTitle>
+			<AppointmentDialogTab
+				appointmentDuration={appointmentDuration}
+				initialDatetime={initialDatetime}
+				noInitialTime={noInitialTime}
+				initialAppointment={initialAppointment}
+				initialPatient={initialPatient}
+				pending={pending}
+				onClose={onClose}
+				onSubmit={onSubmit}
+			/>
+		</Dialog>
+	);
+};
+
+type AppointmentSchedulingDialogTabProps = {
+	readonly appointmentDuration: number[];
+	readonly initialAppointment?: AppointmentDocument;
+	readonly initialDatetime: Date;
+	readonly noInitialTime: boolean;
+	readonly initialPatient?: InitialPatient;
+	readonly pending: boolean;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
+};
+
+const AppointmentDialogTab = ({
+	appointmentDuration,
+	initialAppointment,
+	initialPatient,
+	initialDatetime,
+	noInitialTime,
+	pending,
+	onClose,
+	onSubmit,
+}: AppointmentSchedulingDialogTabProps) => {
+	const navigate = useNavigate();
 
 	const [date, setDate] = useStateWithInitOverride(
 		serializeDate(initialDatetime),
@@ -244,11 +288,8 @@ const AppointmentDialog = ({
 			? "Edit this patient's phone number by editing their information"
 			: '';
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
-
 	return (
-		<Dialog open={open}>
-			{loading && <LinearProgress />}
-			<DialogTitle>Schedule an appointment</DialogTitle>
+		<>
 			<DialogContent>
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
@@ -384,6 +425,7 @@ const AppointmentDialog = ({
 					</Grid>
 				</Grid>
 			</DialogContent>
+
 			<DialogActions>
 				<CancelButton onClick={onClose} />
 				<LoadingButton
@@ -397,7 +439,7 @@ const AppointmentDialog = ({
 					Schedule
 				</LoadingButton>
 			</DialogActions>
-		</Dialog>
+		</>
 	);
 };
 
