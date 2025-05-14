@@ -27,6 +27,11 @@ import addMilliseconds from 'date-fns/addMilliseconds';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Dialog from '@mui/material/Dialog';
 
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+
 import TextField from '../input/TextField';
 
 import CancelButton from '../button/CancelButton';
@@ -114,6 +119,12 @@ const AppointmentDialog = ({
 	onClose,
 	onSubmit,
 }: AppointmentDialogProps) => {
+	const [tab, setTab] = React.useState('1');
+
+	const onTabChange = (_: React.SyntheticEvent, newValue: string) => {
+		setTab(newValue);
+	};
+
 	const {loading, value: appointmentDuration} = useSettingCached(
 		'appointment-duration',
 	);
@@ -121,17 +132,25 @@ const AppointmentDialog = ({
 	return (
 		<Dialog open={open}>
 			{loading && <LinearProgress />}
-			<DialogTitle>Schedule an appointment</DialogTitle>
-			<AppointmentDialogTab
-				appointmentDuration={appointmentDuration}
-				initialDatetime={initialDatetime}
-				noInitialTime={noInitialTime}
-				initialAppointment={initialAppointment}
-				initialPatient={initialPatient}
-				pending={pending}
-				onClose={onClose}
-				onSubmit={onSubmit}
-			/>
+			<TabContext value={tab}>
+				<DialogTitle>
+					<TabList aria-label="lab API tabs example" onChange={onTabChange}>
+						<Tab label="Schedule an appointment" value="1" />
+					</TabList>
+				</DialogTitle>
+				<TabPanel value="1">
+					<AppointmentDialogTab
+						appointmentDuration={appointmentDuration}
+						initialDatetime={initialDatetime}
+						noInitialTime={noInitialTime}
+						initialAppointment={initialAppointment}
+						initialPatient={initialPatient}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+			</TabContext>
 		</Dialog>
 	);
 };
