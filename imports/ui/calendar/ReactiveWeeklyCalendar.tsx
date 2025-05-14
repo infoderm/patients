@@ -141,7 +141,7 @@ const prepareAvailability = (
 const toProps = (
 	intervals: IterableIterator<[number, number]>,
 	calendar: (begin: Date, end: Date) => string,
-	onSlotClick?: (slot: Date, noInitialTime?: boolean) => void,
+	onSlotClick?: (begin: Date, end: Date) => void,
 ) => {
 	return map(
 		([begin, end]) => ({
@@ -151,7 +151,7 @@ const toProps = (
 			onClick:
 				onSlotClick &&
 				(() => {
-					onSlotClick(begin, false);
+					onSlotClick(begin, end);
 				}),
 		}),
 		intervals,
