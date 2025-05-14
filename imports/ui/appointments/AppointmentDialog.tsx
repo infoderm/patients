@@ -57,6 +57,9 @@ import nonOverlappingIntersectionQuery from '../../util/interval/nonOverlappingI
 import isContiguous from '../../util/interval/isContiguous';
 import {type AppointmentUpdate} from '../../api/appointments';
 
+import TimeOffSchedulingDialogTab from './TimeOffSchedulingDialogTab';
+import EventSchedulingDialogTab from './EventSchedulingDialogTab';
+
 const Multiline = styled(TextField)({
 	overflow: 'auto',
 	width: '100%',
@@ -136,6 +139,8 @@ const AppointmentDialog = ({
 				<DialogTitle>
 					<TabList aria-label="lab API tabs example" onChange={onTabChange}>
 						<Tab label="Schedule an appointment" value="1" />
+						<Tab label="Schedule an event" value="2" />
+						<Tab label="Schedule time off" value="3" />
 					</TabList>
 				</DialogTitle>
 				<TabPanel value="1">
@@ -145,6 +150,26 @@ const AppointmentDialog = ({
 						noInitialTime={noInitialTime}
 						initialAppointment={initialAppointment}
 						initialPatient={initialPatient}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+				<TabPanel value="2">
+					<EventSchedulingDialogTab
+						initialDatetime={initialDatetime}
+						noInitialTime={noInitialTime}
+						initialAppointment={initialAppointment}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+				<TabPanel value="3">
+					<TimeOffSchedulingDialogTab
+						initialDatetime={initialDatetime}
+						noInitialTime={noInitialTime}
+						initialAppointment={initialAppointment}
 						pending={pending}
 						onClose={onClose}
 						onSubmit={onSubmit}
