@@ -3,7 +3,7 @@ FROM alpine:3.21.3
 RUN apk add --no-cache \
   dcron=4.6-r0 \
   bash=5.2.37-r0 \
-  mongodb-tools=100.9.4-r9 \
+  mongodb-tools=100.9.4-r10 \
   age=1.2.1-r4
 
 COPY .deploy/backup/entrypoint.sh /entrypoint.sh
