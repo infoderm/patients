@@ -51,7 +51,7 @@ import {
 	useWeekStartsOn,
 } from '../../i18n/datetime';
 
-import useEvents from '../events/useEvents';
+import useIntersectingEvents from '../events/useIntersectingEvents';
 
 import useAvailability from '../availability/useAvailability';
 import {type SlotDocument} from '../../api/collection/availability';
@@ -141,7 +141,7 @@ const prepareAvailability = (
 const toProps = (
 	intervals: IterableIterator<[number, number]>,
 	calendar: (begin: Date, end: Date) => string,
-	onSlotClick?: (slot: Date, noInitialTime?: boolean) => void,
+	onSlotClick?: (begin: Date, end: Date) => void,
 ) => {
 	return map(
 		([begin, end]) => ({
@@ -151,7 +151,7 @@ const toProps = (
 			onClick:
 				onSlotClick &&
 				(() => {
-					onSlotClick(begin, false);
+					onSlotClick(begin, end);
 				}),
 		}),
 		intervals,
@@ -234,10 +234,13 @@ const ReactiveWeeklyCalendar = ({
 		weekOptions,
 	);
 
-	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
-		Number(begin),
-		Number(end),
-	]);
+	const {results: events} = useIntersectingEvents(
+		begin,
+		end,
+		{},
+		{sort: {begin: 1}},
+		[Number(begin), Number(end)],
+	);
 
 	const thisMorning = startOfToday();
 
