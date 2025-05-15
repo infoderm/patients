@@ -143,7 +143,7 @@ const AppointmentDialog = ({
 					<AppointmentDialogTab
 						appointmentDuration={appointmentDuration}
 						initialDatetime={initialBegin}
-						noInitialTime={isDateEqual(addDays(initialBegin, 1), initialEnd) && isDateEqual(initialBegin, startOfDay(initialEnd))}
+						noInitialTime={isDateEqual(addDays(initialBegin, 1), initialEnd) && isDateEqual(initialBegin, startOfDay(initialBegin))}
 						initialAppointment={initialAppointment}
 						initialPatient={initialPatient}
 						pending={pending}
