@@ -62,7 +62,7 @@ import {type AppointmentUpdate} from '../../api/appointments';
 
 import TimeOffSchedulingDialogTab from './TimeOffSchedulingDialogTab';
 import EventSchedulingDialogTab from './EventSchedulingDialogTab';
-import { useDateTimePickerState } from './useDateTimePickerState';
+import {useDateTimePickerState} from './useDateTimePickerState';
 
 const Multiline = styled(TextField)({
 	overflow: 'auto',
@@ -143,7 +143,10 @@ const AppointmentDialog = ({
 					<AppointmentDialogTab
 						appointmentDuration={appointmentDuration}
 						initialDatetime={initialBegin}
-						noInitialTime={isDateEqual(addDays(initialBegin, 1), initialEnd) && isDateEqual(initialBegin, startOfDay(initialBegin))}
+						noInitialTime={
+							isDateEqual(addDays(initialBegin, 1), initialEnd) &&
+							isDateEqual(initialBegin, startOfDay(initialBegin))
+						}
 						initialAppointment={initialAppointment}
 						initialPatient={initialPatient}
 						pending={pending}
@@ -239,10 +242,7 @@ const AppointmentDialogTab = ({
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
-	const appointmentIsInThePast = isBefore(
-		date,
-		startOfToday(),
-	);
+	const appointmentIsInThePast = isBefore(date, startOfToday());
 	const displayAppointmentIsInThePast = appointmentIsInThePast;
 
 	const _id = initialAppointment?._id;
@@ -471,6 +471,5 @@ const AppointmentDialogTab = ({
 		</>
 	);
 };
-
 
 export default withLazyOpening(AppointmentDialog);

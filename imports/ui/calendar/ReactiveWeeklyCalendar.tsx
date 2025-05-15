@@ -234,10 +234,13 @@ const ReactiveWeeklyCalendar = ({
 		weekOptions,
 	);
 
-	const {results: events} = useIntersectingEvents(begin, end, {}, {sort: {begin: 1}}, [
-		Number(begin),
-		Number(end),
-	]);
+	const {results: events} = useIntersectingEvents(
+		begin,
+		end,
+		{},
+		{sort: {begin: 1}},
+		[Number(begin), Number(end)],
+	);
 
 	const thisMorning = startOfToday();
 
