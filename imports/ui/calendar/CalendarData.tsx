@@ -5,12 +5,14 @@ import {grey} from '@mui/material/colors';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import getMonth from 'date-fns/getMonth';
+import isEqual from 'date-fns/isEqual';
 import minDate from 'date-fns/min';
 import maxDate from 'date-fns/max';
 import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
@@ -167,10 +169,14 @@ function* generateEventProps(
 
 			if (state == undefined) continue;
 			let {usedSlots, totalEvents, shownEvents, lastEvent} = state;
+			const dayBegin = _day;
+			const dayEnd = endOfDay(_day);
 
-			const fragmentBegin = maxDate([event.begin, _day, begin]);
-			const fragmentEnd = minDate([event.end, addDays(_day, 1), end]);
+			const fragmentBegin = maxDate([event.begin, dayBegin, begin]);
+			const fragmentEnd = minDate([event.end, dayEnd, end]);
 			const fragmentDuration = Number(fragmentEnd) - Number(fragmentBegin);
+
+			const isWholeDay = isEqual(fragmentBegin, dayBegin) && isEqual(fragmentEnd, dayEnd);
 
 			const previousEvent: {end: Date} | undefined = lastEvent ?? (dayBegins
 					? {
@@ -178,7 +184,14 @@ function* generateEventProps(
 					  }
 					: undefined);
 
-			const slots = minEventDuration ? Math.ceil((fragmentDuration || minEventDuration) / minEventDuration) : 1;
+			const slots = Math.min(
+				minEventDuration === undefined
+					? 1
+					: isWholeDay
+						? 2
+						: Math.ceil((fragmentDuration || minEventDuration) / minEventDuration),
+				maxLines
+			);
 
 			const skip =
 				skipIdle && previousEvent
