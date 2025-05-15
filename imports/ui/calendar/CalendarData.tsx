@@ -140,6 +140,7 @@ type GenerateEventPropsOptions = {
 	skipIdle: boolean;
 	minEventDuration?: number;
 	dayBegins?: string;
+	displayedWeekDays: Set<number>;
 };
 
 /**
@@ -149,7 +150,7 @@ function* generateEventProps(
 	occupancy: OccupancyMap,
 	begin: Date,
 	end: Date,
-	{maxLines, skipIdle, minEventDuration, dayBegins}: GenerateEventPropsOptions,
+	{maxLines, skipIdle, minEventDuration, dayBegins, displayedWeekDays}: GenerateEventPropsOptions,
 	events: Iterable<Event>,
 ): IterableIterator<EventProps> {
 
@@ -157,7 +158,8 @@ function* generateEventProps(
 		for (
 			const _day of generateDays(
 				startOfDay(maxDate([event.begin, begin])),
-				minDate([event.end, end])
+				minDate([event.end, end]),
+				displayedWeekDays,
 			)
 		) {
 			const day = dayKey(_day);
@@ -580,6 +582,7 @@ const CalendarData = ({
 		skipIdle,
 		minEventDuration,
 		dayBegins,
+		displayedWeekDays: _displayedWeekDays,
 	};
 	const eventProps = Array.from(
 		generateEventProps(occupancy, begin, end, eventPropsOptions, events),
