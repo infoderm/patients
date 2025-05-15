@@ -19,8 +19,9 @@ import useIntersectingEvents from '../events/useIntersectingEvents';
 
 import {type AppointmentDocument} from '../../api/collection/appointments';
 import {type AppointmentUpdate} from '../../api/appointments';
-import { useDateTimePickerState } from './useDateTimePickerState';
-import { SlotPicker } from './SlotPicker';
+
+import {useDateTimePickerState} from './useDateTimePickerState';
+import {SlotPicker} from './SlotPicker';
 
 type OnClose = () => void;
 type OnSubmit = (args: AppointmentUpdate) => Promise<{_id: string}>;
@@ -85,9 +86,7 @@ const EventSchedulingDialogTab = ({
 		try {
 			const res = await onSubmit(args);
 			console.log(
-				`Appointment #${res._id} ${
-					initialEvent ? 'updated' : 'created'
-				}.`,
+				`Appointment #${res._id} ${initialEvent ? 'updated' : 'created'}.`,
 			);
 			onClose();
 			if (!initialEvent) {
@@ -102,10 +101,7 @@ const EventSchedulingDialogTab = ({
 		<>
 			<DialogContent>
 				<Grid container spacing={3}>
-					<SlotPicker
-						begin={begin}
-						end={end}
-					/>
+					<SlotPicker begin={begin} end={end} />
 					{appointmentOverlapsWithAnotherEvent && (
 						<Grid item xs={12}>
 							<Alert severity="warning">
@@ -147,7 +143,9 @@ const EventSchedulingDialogTab = ({
 				<CancelButton onClick={onClose} />
 				<LoadingButton
 					loading={pending}
-					disabled={!begin.isValidDate || !begin.isValidTime || !end.isValidTime}
+					disabled={
+						!begin.isValidDate || !begin.isValidTime || !end.isValidTime
+					}
 					color="primary"
 					endIcon={<AccessTimeIcon />}
 					loadingPosition="end"

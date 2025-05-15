@@ -152,22 +152,25 @@ function* generateEventProps(
 	occupancy: OccupancyMap,
 	begin: Date,
 	end: Date,
-	{maxLines, skipIdle, minEventDuration, dayBegins, displayedWeekDays}: GenerateEventPropsOptions,
+	{
+		maxLines,
+		skipIdle,
+		minEventDuration,
+		dayBegins,
+		displayedWeekDays,
+	}: GenerateEventPropsOptions,
 	events: Iterable<Event>,
 ): IterableIterator<EventProps> {
-
 	for (const event of events) {
-		for (
-			const _day of generateDays(
-				startOfDay(maxDate([event.begin, begin])),
-				minDate([event.end, end]),
-				displayedWeekDays,
-			)
-		) {
+		for (const _day of generateDays(
+			startOfDay(maxDate([event.begin, begin])),
+			minDate([event.end, end]),
+			displayedWeekDays,
+		)) {
 			const day = dayKey(_day);
 			const state = occupancy.get(day);
 
-			if (state == undefined) continue;
+			if (state === undefined) continue;
 			let {usedSlots, totalEvents, shownEvents, lastEvent} = state;
 			const dayBegin = _day;
 			const dayEnd = endOfDay(_day);
@@ -176,11 +179,14 @@ function* generateEventProps(
 			const fragmentEnd = minDate([event.end, dayEnd, end]);
 			const fragmentDuration = Number(fragmentEnd) - Number(fragmentBegin);
 
-			const isWholeDay = isEqual(fragmentBegin, dayBegin) && isEqual(fragmentEnd, dayEnd);
+			const isWholeDay =
+				isEqual(fragmentBegin, dayBegin) && isEqual(fragmentEnd, dayEnd);
 
-			const previousEvent: {end: Date} | undefined = lastEvent ?? (dayBegins
+			const previousEvent: {end: Date} | undefined =
+				lastEvent ??
+				(dayBegins
 					? {
-						end: setTime(_day, dayBegins),
+							end: setTime(_day, dayBegins),
 					  }
 					: undefined);
 
@@ -188,9 +194,11 @@ function* generateEventProps(
 				minEventDuration === undefined
 					? 1
 					: isWholeDay
-						? 2
-						: Math.ceil((fragmentDuration || minEventDuration) / minEventDuration),
-				maxLines
+					? 2
+					: Math.ceil(
+							(fragmentDuration || minEventDuration) / minEventDuration,
+					  ),
+				maxLines,
 			);
 
 			const skip =
