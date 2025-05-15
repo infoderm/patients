@@ -51,7 +51,7 @@ import {
 	useWeekStartsOn,
 } from '../../i18n/datetime';
 
-import useEvents from '../events/useEvents';
+import useIntersectingEvents from '../events/useIntersectingEvents';
 
 import useAvailability from '../availability/useAvailability';
 import {type SlotDocument} from '../../api/collection/availability';
@@ -234,7 +234,7 @@ const ReactiveWeeklyCalendar = ({
 		weekOptions,
 	);
 
-	const {results: events} = useEvents(begin, end, {}, {sort: {begin: 1}}, [
+	const {results: events} = useIntersectingEvents(begin, end, {}, {sort: {begin: 1}}, [
 		Number(begin),
 		Number(end),
 	]);
