@@ -39,8 +39,8 @@ const Planner = <C extends React.ElementType>({
 		open: newAppointmentDialogOpen,
 		onClose: newAppointmentDialogOnClose,
 		openOn: onSlotClick,
-		initialDatetime: selectedSlot,
-		noInitialTime,
+		initialBegin,
+		initialEnd,
 	} = usePlannerNewAppointmentDialogState();
 
 	return (
@@ -53,8 +53,8 @@ const Planner = <C extends React.ElementType>({
 				{...CalendarProps}
 			/>
 			<NewAppointmentDialog
-				noInitialTime={noInitialTime}
-				initialDatetime={selectedSlot}
+				initialBegin={initialBegin}
+				initialEnd={initialEnd}
 				patientId={patientId}
 				open={newAppointmentDialogOpen}
 				onClose={newAppointmentDialogOnClose}
