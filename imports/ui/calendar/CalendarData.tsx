@@ -5,11 +5,13 @@ import {grey} from '@mui/material/colors';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import getMonth from 'date-fns/getMonth';
-import isBefore from 'date-fns/isBefore';
-import isAfter from 'date-fns/isAfter';
+import minDate from 'date-fns/min';
+import maxDate from 'date-fns/max';
 import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format';
 import addDays from 'date-fns/addDays';
+import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
@@ -112,6 +114,7 @@ type Occupancy = {
 	usedSlots: number;
 	totalEvents: number;
 	shownEvents: number;
+	lastEvent?: Event;
 };
 
 type OccupancyMap = Map<string, Occupancy>;
@@ -145,69 +148,71 @@ function* generateEventProps(
 ): IterableIterator<EventProps> {
 	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
 
-	let previousEvent: {end: Date} | undefined;
-	let previousDay: string | undefined;
 	for (const event of events) {
-		if (
-			(event.end && isBefore(event.end, begin)) ||
-			isAfter(event.begin, end)
+		for (
+			const _day of generateDays(
+				startOfDay(maxDate([event.begin, begin])),
+				minDate([event.end, end])
+			)
 		) {
-			continue;
-		}
+			const day = dayKey(_day);
+			const state = occupancy.get(day);
 
-		const day = dayKey(event.begin);
+			if (state == undefined) continue;
+			let {usedSlots, totalEvents, shownEvents, lastEvent} = state;
 
-		if (day !== previousDay) {
-			previousEvent = dayBegins
-				? {
-						end: setTime(event.begin, dayBegins),
-				  }
-				: undefined;
-		}
+			const fragmentBegin = maxDate([event.begin, startOfDay(_day), begin]);
+			const fragmentEnd = minDate([event.end, endOfDay(_day), end]);
+			const fragmentDuration = Number(fragmentEnd) - Number(fragmentBegin);
 
-		const duration =
-			Number(event.end) - Number(event.begin) || minEventDuration;
+			const previousEvent: {end: Date} | undefined = lastEvent ?? (dayBegins
+					? {
+						end: setTime(_day, dayBegins),
+					  }
+					: undefined);
 
-		const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
 
-		const skip =
-			skipIdle && previousEvent
-				? minEventDuration
-					? Math.min(
-							3,
-							Math.max(
-								0,
-								Math.floor(
-									(Number(event.begin) - Number(previousEvent.end)) /
-										minEventDuration,
+			const duration = fragmentDuration || minEventDuration;
+
+			const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
+
+			const skip =
+				skipIdle && previousEvent
+					? minEventDuration
+						? Math.min(
+								3,
+								Math.max(
+									0,
+									Math.floor(
+										(Number(fragmentBegin) - Number(previousEvent.end)) /
+											minEventDuration,
+									),
 								),
-							),
-					  )
-					: 1
-				: 0;
+						  )
+						: 1
+					: 0;
 
-		let {usedSlots, totalEvents, shownEvents} = occupancy.get(day)!;
-		const slot = usedSlots + skip + 1;
-		++totalEvents;
-		usedSlots += skip + slots;
+			const slot = usedSlots + skip + 1;
+			++totalEvents;
+			usedSlots += skip + slots;
 
-		if (usedSlots <= maxLines) {
-			++shownEvents;
-			yield {
-				event,
-				day,
-				slot,
-				slots,
-			};
+			if (usedSlots <= maxLines) {
+				++shownEvents;
+				yield {
+					event,
+					day,
+					slot,
+					slots,
+				};
+			}
+
+			occupancy.set(day, {
+				usedSlots,
+				totalEvents,
+				shownEvents,
+				lastEvent: event,
+			});
 		}
-
-		occupancy.set(day, {
-			usedSlots,
-			totalEvents,
-			shownEvents,
-		});
-		previousEvent = event;
-		previousDay = day;
 	}
 }
 
