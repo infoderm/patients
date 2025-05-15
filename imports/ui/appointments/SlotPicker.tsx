@@ -7,26 +7,16 @@ import startOfToday from 'date-fns/startOfToday';
 
 import {DatePicker, DesktopTimePicker as TimePicker} from '@mui/x-date-pickers';
 
-import { type DateTimePickerState } from './useDateTimePickerState';
-
+import {type DateTimePickerState} from './useDateTimePickerState';
 
 type SlotPickerProps = {
-	begin: DateTimePickerState;
-	end: DateTimePickerState;
+	readonly begin: DateTimePickerState;
+	readonly end: DateTimePickerState;
 };
 
-export const SlotPicker = ({
-	begin,
-	end,
-}: SlotPickerProps) => {
-	const beginIsInThePast = isBefore(
-		begin.datetime,
-		startOfToday(),
-	);
-	const endIsAfterBegin = isBefore(
-		end.datetime,
-		begin.datetime
-	);
+export const SlotPicker = ({begin, end}: SlotPickerProps) => {
+	const beginIsInThePast = isBefore(begin.datetime, startOfToday());
+	const endIsAfterBegin = isBefore(end.datetime, begin.datetime);
 	const displayBeginIsInThePast = beginIsInThePast;
 	const displayEndIsAfterBegin = endIsAfterBegin;
 	return (
@@ -38,7 +28,7 @@ export const SlotPicker = ({
 					slotProps={{
 						textField: {
 							InputLabelProps: {shrink: true},
-							error: !begin.isValidDate|| displayBeginIsInThePast,
+							error: !begin.isValidDate || displayBeginIsInThePast,
 							helperText: displayBeginIsInThePast
 								? 'Date dans le passé!'
 								: undefined,
@@ -68,7 +58,7 @@ export const SlotPicker = ({
 					slotProps={{
 						textField: {
 							InputLabelProps: {shrink: true},
-							error: !end.isValidDate|| displayEndIsAfterBegin,
+							error: !end.isValidDate || displayEndIsAfterBegin,
 							helperText: displayEndIsAfterBegin
 								? 'Fin avant le début!'
 								: undefined,
@@ -80,5 +70,5 @@ export const SlotPicker = ({
 				/>
 			</Grid>
 		</>
-	)
-}
+	);
+};
