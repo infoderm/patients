@@ -86,7 +86,7 @@
     "@visx/scale": "^3.3.0",
     "@visx/shape": "^3.3.0",
     "@visx/tooltip": "^3.3.0",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "canvas": "^2.11.2",
     "chardet": "^2.0.0",
     "colord": "^2.9.3",
