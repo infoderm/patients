@@ -11,7 +11,6 @@ import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
-import endOfDay from 'date-fns/endOfDay';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
@@ -136,6 +135,13 @@ type EventProps = {
 	slots: number;
 };
 
+type GenerateEventPropsOptions = {
+	maxLines: number;
+	skipIdle: boolean;
+	minEventDuration?: number;
+	dayBegins?: string;
+};
+
 /**
  * Assumes the input events are sorted by begin datetime.
  */
@@ -143,10 +149,9 @@ function* generateEventProps(
 	occupancy: OccupancyMap,
 	begin: Date,
 	end: Date,
-	options: any,
+	{maxLines, skipIdle, minEventDuration, dayBegins}: GenerateEventPropsOptions,
 	events: Iterable<Event>,
 ): IterableIterator<EventProps> {
-	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
 
 	for (const event of events) {
 		for (
@@ -161,8 +166,8 @@ function* generateEventProps(
 			if (state == undefined) continue;
 			let {usedSlots, totalEvents, shownEvents, lastEvent} = state;
 
-			const fragmentBegin = maxDate([event.begin, startOfDay(_day), begin]);
-			const fragmentEnd = minDate([event.end, endOfDay(_day), end]);
+			const fragmentBegin = maxDate([event.begin, _day, begin]);
+			const fragmentEnd = minDate([event.end, addDays(_day, 1), end]);
 			const fragmentDuration = Number(fragmentEnd) - Number(fragmentBegin);
 
 			const previousEvent: {end: Date} | undefined = lastEvent ?? (dayBegins
@@ -171,10 +176,7 @@ function* generateEventProps(
 					  }
 					: undefined);
 
-
-			const duration = fragmentDuration || minEventDuration;
-
-			const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
+			const slots = minEventDuration ? Math.ceil((fragmentDuration || minEventDuration) / minEventDuration) : 1;
 
 			const skip =
 				skipIdle && previousEvent
@@ -199,7 +201,11 @@ function* generateEventProps(
 			if (usedSlots <= maxLines) {
 				++shownEvents;
 				yield {
-					event,
+					event: {
+						...event,
+						begin: fragmentBegin,
+						end: fragmentEnd,
+					},
 					day,
 					slot,
 					slots,
