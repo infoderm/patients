@@ -1,16 +1,18 @@
-import React, {useMemo, useState} from 'react';
+import React, {Fragment, useMemo, useState} from 'react';
 
 import {styled} from '@mui/material/styles';
 
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
-import addHours from 'date-fns/addHours';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
-import startOfDay from 'date-fns/startOfDay';
+import getDay from 'date-fns/getDay';
 
-import {count} from '@iterable-iterator/cardinality';
+import {map} from '@iterable-iterator/map';
+import {filter} from '@iterable-iterator/filter';
+import {enumerate} from '@iterable-iterator/zip';
+import {window} from '@iterable-iterator/window';
 
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -19,7 +21,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
-import {TIME_BREAK} from '../constants';
+import { intersectsInterval } from '../../api/events';
 
 import Prev from '../navigation/Prev';
 import Next from '../navigation/Next';
@@ -31,6 +33,11 @@ import {useDateFormat} from '../../i18n/datetime';
 
 import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 import ConsultationsList from './ConsultationsList';
+import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
+import intersection from '../../util/interval/intersection';
+import { DAY_MODULO } from '../../util/datetime';
+import isEmpty from '../../util/interval/isEmpty';
+import addMilliseconds from 'date-fns/addMilliseconds';
 
 const PREFIX = 'ConsultationsOfTheDay';
 
@@ -70,9 +77,8 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		};
 	}, [day]);
 
-	const filter = {datetime: {$gte: day, $lt: nextDay}};
 	const query = {
-		filter,
+		filter: intersectsInterval(day, nextDay),
 		sort: {datetime: 1} as const,
 	};
 	const deps = [Number(day)];
@@ -81,64 +87,86 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		deps,
 	);
 
-	const thisMorning = startOfToday();
-	const am = consultations.filter(
-		(c) =>
-			isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
-			(showConsultations || !c.isDone) &&
-			(showAppointments || c.isDone) &&
-			(showCancelledAppointments || c.isCancelled !== true) &&
-			(showNoShowAppointments ||
-				c.isDone ||
-				Boolean(c.isCancelled) ||
-				!isBefore(c.scheduledDatetime!, thisMorning)),
+	const dayModuloWeek = getDay(day) * DAY_MODULO;
+	const nextDayModuloWeek = getDay(nextDay) * DAY_MODULO;
+	const workSchedule = useSortedWorkSchedule();
+	const intersectingWorkSchedule = filter(
+		([left, right]) => !isEmpty(left, right),
+		map(
+			({beginModuloWeek, endModuloWeek}) => {
+				return intersection(
+					beginModuloWeek,
+					endModuloWeek,
+					dayModuloWeek,
+					nextDayModuloWeek,
+				);
+			},
+			workSchedule
+		)
 	);
-	const pm = consultations.filter(
-		(c) =>
-			!isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
-			(showConsultations || !c.isDone) &&
-			(showAppointments || c.isDone) &&
-			(showCancelledAppointments || c.isCancelled !== true) &&
-			(showNoShowAppointments ||
-				c.isDone ||
-				Boolean(c.isCancelled) ||
-				!isBefore(c.scheduledDatetime!, thisMorning)),
-	);
-	const cam = count(am);
-	const cpm = count(pm);
 
-	const heading = `${localizedDateFormat(
-		day,
-		'PPPP',
-	)} (AM: ${cam}, PM: ${cpm})`;
+	const intervals = filter(
+		({begin, end}) => !isEmpty(begin, end),
+		map(
+			([i, [begin, end]]) => ({begin, end, isWorkScheduleSlot: i % 2 === 1}),
+			enumerate(
+				window(
+					2,
+					map(
+						(m: number) => addMilliseconds(day, m - dayModuloWeek),
+						[
+							dayModuloWeek,
+							...Array.from(intersectingWorkSchedule).flat(),
+							nextDayModuloWeek
+						]
+					)
+				)
+			)
+		)
+	);
+
+	const thisMorning = startOfToday();
+	const shownConsultations = consultations.filter(
+		(c) =>
+			(showConsultations || !c.isDone) &&
+			(showAppointments || c.isDone) &&
+			(showCancelledAppointments || c.isCancelled !== true) &&
+			(showNoShowAppointments ||
+				c.isDone ||
+				Boolean(c.isCancelled) ||
+				!isBefore(c.scheduledDatetime!, thisMorning)),
+	)
+
+	const heading = localizedDateFormat(day, 'PPPP');
 
 	return (
 		<Root>
 			<div>
 				<Typography variant="h4">{heading}</Typography>
-				{cam === 0 ? null : (
-					<ConsultationsList
-						className={classes.container}
-						items={am}
-						loading={loading}
-						itemProps={{
-							PatientChip: ReactivePatientChip,
-							showDate: false,
-						}}
-					/>
-				)}
-				{cpm === 0 || cam === 0 ? null : <Divider />}
-				{cpm === 0 ? null : (
-					<ConsultationsList
-						className={classes.container}
-						items={pm}
-						loading={loading}
-						itemProps={{
-							PatientChip: ReactivePatientChip,
-							showDate: false,
-						}}
-					/>
-				)}
+				{
+					Array.from(intervals).map(
+						({begin, end}, i) => {
+							const items = shownConsultations.filter(
+								(c) => !isEmpty(...intersection(begin, end, c.begin, c.end))
+							);
+							if (items.length === 0) return null;
+							return (
+								<Fragment key={i}>
+									{i === 0 ? null : <Divider />}
+									<ConsultationsList
+										className={classes.container}
+										items={items}
+										loading={loading}
+										itemProps={{
+											PatientChip: ReactivePatientChip,
+											showDate: false,
+										}}
+									/>
+								</Fragment>
+							)
+						}
+					)
+				}
 			</div>
 			<FixedFab
 				col={5}
