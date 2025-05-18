@@ -18,7 +18,7 @@ const MILLISECONDS_MODULO = 1;
 const SECONDS_MODULO = 1000 * MILLISECONDS_MODULO;
 const MINUTE_MODULO = 60 * SECONDS_MODULO;
 const HOUR_MODULO = 60 * MINUTE_MODULO;
-const DAY_MODULO = 24 * HOUR_MODULO;
+export const DAY_MODULO = 24 * HOUR_MODULO;
 export const WEEK_MODULO = 7 * DAY_MODULO;
 
 export const getDayOfWeekModulo = (weekModulo: number) =>
