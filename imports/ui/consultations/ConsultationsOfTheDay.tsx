@@ -1,9 +1,8 @@
-import React, {Fragment, useMemo, useState} from 'react';
-
-import {styled} from '@mui/material/styles';
+import React, {useMemo, useState} from 'react';
 
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
+import addMilliseconds from 'date-fns/addMilliseconds';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
@@ -14,14 +13,15 @@ import {filter} from '@iterable-iterator/filter';
 import {enumerate} from '@iterable-iterator/zip';
 import {window} from '@iterable-iterator/window';
 
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
-import { intersectsInterval } from '../../api/events';
+import {intersectsInterval} from '../../api/events';
 
 import Prev from '../navigation/Prev';
 import Next from '../navigation/Next';
@@ -31,26 +31,15 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-import useConsultationsAndAppointments from './useConsultationsAndAppointments';
-import ConsultationsList from './ConsultationsList';
 import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
 import intersection from '../../util/interval/intersection';
-import { DAY_MODULO } from '../../util/datetime';
+import {DAY_MODULO} from '../../util/datetime';
 import isEmpty from '../../util/interval/isEmpty';
-import addMilliseconds from 'date-fns/addMilliseconds';
 
-const PREFIX = 'ConsultationsOfTheDay';
+import NoContent from '../navigation/NoContent';
 
-const classes = {
-	container: `${PREFIX}-container`,
-};
-
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')(({theme}) => ({
-	[`& .${classes.container}`]: {
-		padding: theme.spacing(3),
-	},
-}));
+import ConsultationsList from './ConsultationsList';
+import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 
 type Props = {
 	readonly day: Date;
@@ -92,20 +81,17 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 	const workSchedule = useSortedWorkSchedule();
 	const intersectingWorkSchedule = filter(
 		([left, right]) => !isEmpty(left, right),
-		map(
-			({beginModuloWeek, endModuloWeek}) => {
-				return intersection(
-					beginModuloWeek,
-					endModuloWeek,
-					dayModuloWeek,
-					nextDayModuloWeek,
-				);
-			},
-			workSchedule
-		)
+		map(({beginModuloWeek, endModuloWeek}) => {
+			return intersection(
+				beginModuloWeek,
+				endModuloWeek,
+				dayModuloWeek,
+				nextDayModuloWeek,
+			);
+		}, workSchedule),
 	);
 
-	const intervals = filter(
+	const intervals: Iterable<{begin: Date; end: Date}> = filter(
 		({begin, end}) => !isEmpty(begin, end),
 		map(
 			([i, [begin, end]]) => ({begin, end, isWorkScheduleSlot: i % 2 === 1}),
@@ -117,12 +103,12 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 						[
 							dayModuloWeek,
 							...Array.from(intersectingWorkSchedule).flat(),
-							nextDayModuloWeek
-						]
-					)
-				)
-			)
-		)
+							nextDayModuloWeek,
+						],
+					),
+				),
+			),
+		),
 	);
 
 	const thisMorning = startOfToday();
@@ -135,26 +121,46 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 				c.isDone ||
 				Boolean(c.isCancelled) ||
 				!isBefore(c.scheduledDatetime!, thisMorning)),
-	)
+	);
 
 	const heading = localizedDateFormat(day, 'PPPP');
 
 	return (
-		<Root>
-			<div>
+		<Box>
+			<Box>
 				<Typography variant="h4">{heading}</Typography>
-				{
-					Array.from(intervals).map(
-						({begin, end}, i) => {
-							const items = shownConsultations.filter(
-								(c) => !isEmpty(...intersection(begin, end, c.begin, c.end))
-							);
-							if (items.length === 0) return null;
-							return (
-								<Fragment key={i}>
-									{i === 0 ? null : <Divider />}
+				{consultations.length === 0 ? (
+					<NoContent>No events on this day</NoContent>
+				) : shownConsultations.length === 0 ? (
+					<NoContent>
+						None of the {consultations.length} events matches the current filter
+					</NoContent>
+				) : (
+					Array.from(intervals).map(({begin, end}, i) => {
+						const items = shownConsultations
+							.map((c) => {
+								const [left, right] = intersection(begin, end, c.begin, c.end);
+								if (isEmpty(left, right)) return undefined;
+								return {
+									...c,
+									datetime: left,
+								};
+							})
+							.filter(Boolean);
+						if (items.length === 0) return null;
+						return (
+							<Grid key={i} container sx={{padding: 3}}>
+								<Grid item sm={2} md={1}>
+									<Box sx={{paddingRight: 2, textAlign: 'right'}}>
+										<Typography variant="h5">{items.length}</Typography>
+										<Typography variant="h6">{`${localizedDateFormat(
+											begin,
+											'p',
+										)} - ${localizedDateFormat(end, 'p')}`}</Typography>
+									</Box>
+								</Grid>
+								<Grid item sm={10} md={11}>
 									<ConsultationsList
-										className={classes.container}
 										items={items}
 										loading={loading}
 										itemProps={{
@@ -162,12 +168,12 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 											showDate: false,
 										}}
 									/>
-								</Fragment>
-							)
-						}
-					)
-				}
-			</div>
+								</Grid>
+							</Grid>
+						);
+					})
+				)}
+			</Box>
 			<FixedFab
 				col={5}
 				color={showConsultations ? 'primary' : 'default'}
@@ -224,7 +230,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 			)}
 			<Prev to={`/calendar/day/${dayBefore}`} />
 			<Next to={`/calendar/day/${dayAfter}`} />
-		</Root>
+		</Box>
 	);
 };
 
