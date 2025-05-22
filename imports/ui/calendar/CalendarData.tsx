@@ -5,10 +5,14 @@ import {grey} from '@mui/material/colors';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import getMonth from 'date-fns/getMonth';
-import isBefore from 'date-fns/isBefore';
-import isAfter from 'date-fns/isAfter';
+import isEqual from 'date-fns/isEqual';
+import minDate from 'date-fns/min';
+import maxDate from 'date-fns/max';
 import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format';
+import addDays from 'date-fns/addDays';
+import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
@@ -45,7 +49,7 @@ const DayBox = ({classes, cx, day, row, col, onSlotClick}) => {
 	const onClick = useMemo(() => {
 		return onSlotClick
 			? () => {
-					onSlotClick(day);
+					onSlotClick(day, addDays(day, 1));
 			  }
 			: undefined;
 	}, [onSlotClick, day]);
@@ -111,6 +115,7 @@ type Occupancy = {
 	usedSlots: number;
 	totalEvents: number;
 	shownEvents: number;
+	lastEvent?: Event;
 };
 
 type OccupancyMap = Map<string, Occupancy>;
@@ -132,6 +137,14 @@ type EventProps = {
 	slots: number;
 };
 
+type GenerateEventPropsOptions = {
+	maxLines: number;
+	skipIdle: boolean;
+	minEventDuration?: number;
+	dayBegins?: string;
+	displayedWeekDays: Set<number>;
+};
+
 /**
  * Assumes the input events are sorted by begin datetime.
  */
@@ -139,74 +152,96 @@ function* generateEventProps(
 	occupancy: OccupancyMap,
 	begin: Date,
 	end: Date,
-	options: any,
+	{
+		maxLines,
+		skipIdle,
+		minEventDuration,
+		dayBegins,
+		displayedWeekDays,
+	}: GenerateEventPropsOptions,
 	events: Iterable<Event>,
 ): IterableIterator<EventProps> {
-	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
-
-	let previousEvent: {end: Date} | undefined;
-	let previousDay: string | undefined;
 	for (const event of events) {
-		if (
-			(event.end && isBefore(event.end, begin)) ||
-			isAfter(event.begin, end)
-		) {
-			continue;
-		}
+		for (const _day of generateDays(
+			startOfDay(maxDate([event.begin, begin])),
+			minDate([event.end, end]),
+			displayedWeekDays,
+		)) {
+			const day = dayKey(_day);
+			const state = occupancy.get(day);
 
-		const day = dayKey(event.begin);
+			if (state === undefined) continue;
+			let {usedSlots, totalEvents, shownEvents, lastEvent} = state;
+			const dayBegin = _day;
+			const dayEnd = endOfDay(_day);
 
-		if (day !== previousDay) {
-			previousEvent = dayBegins
-				? {
-						end: setTime(event.begin, dayBegins),
-				  }
-				: undefined;
-		}
+			const fragmentBegin = maxDate([event.begin, dayBegin, begin]);
+			const fragmentEnd = minDate([event.end, dayEnd, end]);
+			const fragmentDuration = Number(fragmentEnd) - Number(fragmentBegin);
 
-		const duration =
-			Number(event.end) - Number(event.begin) || minEventDuration;
+			const isWholeDay =
+				isEqual(fragmentBegin, dayBegin) && isEqual(fragmentEnd, dayEnd);
 
-		const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
+			const previousEvent: {end: Date} | undefined =
+				lastEvent ??
+				(dayBegins
+					? {
+							end: setTime(_day, dayBegins),
+					  }
+					: undefined);
 
-		const skip =
-			skipIdle && previousEvent
-				? minEventDuration
-					? Math.min(
-							3,
-							Math.max(
-								0,
-								Math.floor(
-									(Number(event.begin) - Number(previousEvent.end)) /
-										minEventDuration,
+			const slots = Math.min(
+				minEventDuration === undefined
+					? 1
+					: isWholeDay
+					? 2
+					: Math.ceil(
+							(fragmentDuration || minEventDuration) / minEventDuration,
+					  ),
+				maxLines,
+			);
+
+			const skip =
+				skipIdle && previousEvent
+					? minEventDuration
+						? Math.min(
+								3,
+								Math.max(
+									0,
+									Math.floor(
+										(Number(fragmentBegin) - Number(previousEvent.end)) /
+											minEventDuration,
+									),
 								),
-							),
-					  )
-					: 1
-				: 0;
+						  )
+						: 1
+					: 0;
 
-		let {usedSlots, totalEvents, shownEvents} = occupancy.get(day)!;
-		const slot = usedSlots + skip + 1;
-		++totalEvents;
-		usedSlots += skip + slots;
+			const slot = usedSlots + skip + 1;
+			++totalEvents;
+			usedSlots += skip + slots;
 
-		if (usedSlots <= maxLines) {
-			++shownEvents;
-			yield {
-				event,
-				day,
-				slot,
-				slots,
-			};
+			if (usedSlots <= maxLines) {
+				++shownEvents;
+				yield {
+					event: {
+						...event,
+						begin: fragmentBegin,
+						end: fragmentEnd,
+					},
+					day,
+					slot,
+					slots,
+				};
+			}
+
+			occupancy.set(day, {
+				usedSlots,
+				totalEvents,
+				shownEvents,
+				lastEvent: event,
+			});
 		}
-
-		occupancy.set(day, {
-			usedSlots,
-			totalEvents,
-			shownEvents,
-		});
-		previousEvent = event;
-		previousDay = day;
 	}
 }
 
@@ -568,6 +603,7 @@ const CalendarData = ({
 		skipIdle,
 		minEventDuration,
 		dayBegins,
+		displayedWeekDays: _displayedWeekDays,
 	};
 	const eventProps = Array.from(
 		generateEventProps(occupancy, begin, end, eventPropsOptions, events),
