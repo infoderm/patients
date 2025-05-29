@@ -306,71 +306,73 @@ const CalendarDataGrid = ({
 }: CalendarDataGridProps) => {
 	const theme = useTheme();
 	return (
-		<Paper>
+		<Paper className={classes.root}>
 			<div className={classes.header}>
 				{WeekNumber && <div className={classes.corner} />}
 				{list(take(days, rowSize)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} cx={cx} {...props} />
 				))}
 			</div>
-			<div className={classes.grid}>
-				{WeekNumber &&
-					days
-						.filter((_, i) => i % rowSize === rowSize - 1)
+			<div className={classes.main}>
+				<div className={classes.grid}>
+					{WeekNumber &&
+						days
+							.filter((_, i) => i % rowSize === rowSize - 1)
+							.map((props, key) => (
+								<WeekNumber
+									key={key}
+									className={cx(classes.weekNumber, {
+										[classes[`row${props.row}`]!]: true,
+									})}
+									weekOptions={weekOptions}
+									{...props}
+								/>
+							))}
+					{days.map((props, key) => (
+						<DayBox
+							key={key}
+							classes={classes}
+							cx={cx}
+							{...props}
+							onSlotClick={onSlotClick}
+						/>
+					))}
+					{days.map((props, key) => (
+						<DayHeader
+							key={key}
+							className={cx(classes.dayHeader, {
+								[classes[`col${props.col}`]!]: true,
+								[classes[`row${props.row}`]!]: true,
+							})}
+							{...props}
+						/>
+					))}
+					{events
+						.filter((props) => `day${props.day}slot${props.slot}` in classes)
 						.map((props, key) => (
-							<WeekNumber
+							<EventFragment
 								key={key}
-								className={cx(classes.weekNumber, {
-									[classes[`row${props.row}`]!]: true,
+								theme={theme}
+								className={cx(classes.slot, {
+									[classes[`slot${props.slots}`]!]: true,
+									[classes[`day${props.day}slot${props.slot}`]!]: true,
 								})}
-								weekOptions={weekOptions}
+								eventProps={{className: classes.event}}
 								{...props}
 							/>
 						))}
-				{days.map((props, key) => (
-					<DayBox
-						key={key}
-						classes={classes}
-						cx={cx}
-						{...props}
-						onSlotClick={onSlotClick}
-					/>
-				))}
-				{days.map((props, key) => (
-					<DayHeader
-						key={key}
-						className={cx(classes.dayHeader, {
-							[classes[`col${props.col}`]!]: true,
-							[classes[`row${props.row}`]!]: true,
-						})}
-						{...props}
-					/>
-				))}
-				{events
-					.filter((props) => `day${props.day}slot${props.slot}` in classes)
-					.map((props, key) => (
-						<EventFragment
-							key={key}
-							theme={theme}
-							className={cx(classes.slot, {
-								[classes[`slot${props.slots}`]!]: true,
-								[classes[`day${props.day}slot${props.slot}`]!]: true,
-							})}
-							eventProps={{className: classes.event}}
-							{...props}
-						/>
-					))}
-				{mores
-					.filter((props) => `day${props.day}more` in classes)
-					.map((props, key) => (
-						<More
-							key={key}
-							className={cx(classes.more, {
-								[classes[`day${props.day}more`]!]: true,
-							})}
-							{...props}
-						/>
-					))}
+					{mores
+						.filter((props) => `day${props.day}more` in classes)
+						.map((props, key) => (
+							<More
+								key={key}
+								className={cx(classes.more, {
+									[classes[`day${props.day}more`]!]: true,
+								})}
+								{...props}
+							/>
+						))}
+				</div>
 			</div>
 		</Paper>
 	);
@@ -382,6 +384,7 @@ type CalendarDataProps = {
 	readonly events: Event[];
 	readonly skipIdle?: boolean;
 	readonly maxLines: number;
+	readonly maxHeight?: number | string;
 	readonly minEventDuration?: number;
 	readonly dayBegins?: string;
 	readonly weekOptions?: {};
@@ -400,6 +403,7 @@ type MakeGridStylesOptions = {
 	lineHeight: string;
 	rowSize: number;
 	maxLines: number;
+	maxHeight?: number | string;
 	eventProps: EventProps[];
 	daysProps: DayProps[];
 };
@@ -414,6 +418,7 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 			lineHeight,
 			rowSize,
 			maxLines,
+			maxHeight,
 			eventProps,
 			daysProps,
 		}: MakeGridStylesOptions,
@@ -426,6 +431,14 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 			.join(' ');
 
 		const gridStyles: CalendarDataGridStyles = {
+			root: {
+				display: 'flex',
+				flexFlow: 'column',
+				maxHeight,
+			},
+			main: {
+				overflowY: 'scroll',
+			},
 			header: {
 				display: 'grid',
 				gridTemplateColumns,
@@ -577,6 +590,7 @@ const CalendarData = ({
 	end,
 	lineHeight = '25px',
 	maxLines,
+	maxHeight,
 	skipIdle = false,
 	minEventDuration,
 	dayBegins,
@@ -617,6 +631,7 @@ const CalendarData = ({
 		headerHeight: 2,
 		rowSize,
 		maxLines,
+		maxHeight,
 		eventProps,
 		daysProps,
 	});
