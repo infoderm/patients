@@ -11,6 +11,7 @@ const PreconfiguredWeeklyPlanner = (props: Props) => {
 		<WeeklyPlanner
 			skipIdle
 			maxLines={40}
+			maxHeight="calc(100vh - 285px)"
 			minEventDuration={15 * 60 * 1000}
 			dayBegins="10:00"
 			{...props}
