@@ -30,15 +30,26 @@ import color, {hoverColor} from '../../util/color';
 import type Event from './Event';
 import EventFragment from './EventFragment';
 
-const ColumnHeader = ({classes, cx, day, col}) => {
+const DayName = ({day}: {readonly day: Date}) => {
 	const getDayName = useDateFormat('cccc');
+	return <>{getDayName(day)}</>;
+};
+
+type ColumnHeaderProps = {
+	readonly classes: Record<string, any>;
+	readonly cx: any;
+	readonly col: number;
+	readonly children: React.ReactNode;
+};
+
+const ColumnHeader = ({classes, cx, col, children}: ColumnHeaderProps) => {
 	return (
 		<div
 			className={cx(classes.columnHeader, {
 				[classes[`col${col}`]]: true,
 			})}
 		>
-			{getDayName(day)}
+			{children}
 		</div>
 	);
 };
@@ -310,7 +321,10 @@ const CalendarDataGrid = ({
 			<div className={classes.header}>
 				{WeekNumber && <div className={classes.corner} />}
 				{list(take(days, rowSize)).map((props, key) => (
-					<ColumnHeader key={key} classes={classes} cx={cx} {...props} />
+					<ColumnHeader key={key} classes={classes} cx={cx} {...props}>
+						<DayName day={props.day} />
+						{days.length <= rowSize && <DayHeader {...props} />}
+					</ColumnHeader>
 				))}
 			</div>
 			<div className={classes.main}>
@@ -337,16 +351,17 @@ const CalendarDataGrid = ({
 							onSlotClick={onSlotClick}
 						/>
 					))}
-					{days.map((props, key) => (
-						<DayHeader
-							key={key}
-							className={cx(classes.dayHeader, {
-								[classes[`col${props.col}`]!]: true,
-								[classes[`row${props.row}`]!]: true,
-							})}
-							{...props}
-						/>
-					))}
+					{days.length > rowSize &&
+						days.map((props, key) => (
+							<DayHeader
+								key={key}
+								className={cx(classes.dayHeader, {
+									[classes[`col${props.col}`]!]: true,
+									[classes[`row${props.row}`]!]: true,
+								})}
+								{...props}
+							/>
+						))}
 					{events
 						.filter((props) => `day${props.day}slot${props.slot}` in classes)
 						.map((props, key) => (
@@ -443,7 +458,7 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				display: 'grid',
 				gridTemplateColumns,
 				gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
-				lineHeight: `calc(2*${lineHeight})`,
+				lineHeight: `calc(${nrows === 1 ? 1 : 2}*${lineHeight})`,
 				backgroundColor: grey[500],
 				gridGap: '1px',
 			},
@@ -558,7 +573,8 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 			for (const j of range(1, maxLines)) {
 				gridStyles[`day${dayId}slot${j}`] = {
 					gridColumnStart: colOffset + col,
-					gridRowStart: (row - 1) * maxLines + 1 + (j as number),
+					gridRowStart:
+						(row - 1) * maxLines + (nrows === 1 ? 0 : 1) + (j as number),
 				};
 			}
 
