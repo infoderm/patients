@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState, useLayoutEffect} from 'react';
 
 import Paper from '@mui/material/Paper';
 import {grey} from '@mui/material/colors';
@@ -14,9 +14,13 @@ import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
 import endOfDay from 'date-fns/endOfDay';
 
+import {key} from '@total-order/key';
+import {increasing} from '@total-order/primitive';
+
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
+import {min} from '@iterable-iterator/reduce';
 import {enumerate} from '@iterable-iterator/zip';
 import {useTheme} from '@mui/material/styles';
 
@@ -215,14 +219,11 @@ function* generateEventProps(
 			const skip =
 				skipIdle && previousEvent
 					? minEventDuration
-						? Math.min(
-								3,
-								Math.max(
-									0,
-									Math.floor(
-										(Number(fragmentBegin) - Number(previousEvent.end)) /
-											minEventDuration,
-									),
+						? Math.max(
+								0,
+								Math.floor(
+									(Number(fragmentBegin) - Number(previousEvent.end)) /
+										minEventDuration,
 								),
 						  )
 						: 1
@@ -316,6 +317,27 @@ const CalendarDataGrid = ({
 	onSlotClick,
 }: CalendarDataGridProps) => {
 	const theme = useTheme();
+	const [main, setMain] = useState<HTMLDivElement | null>(null);
+	const eventsCount = events.length;
+	const singleRow = days.length <= rowSize;
+	useLayoutEffect(() => {
+		if (main?.scrollTop !== 0 || eventsCount === 0 || !singleRow) return;
+		// TODO: Handle scroll to first search result.
+		const firstEvent = min(
+			key(increasing, ([, slot]) => Number.parseInt(slot, 10)),
+			Array.from(main.querySelectorAll('a, span'), (node: Element) => {
+				const parentNode = node.parentNode! as Element;
+				const classList = parentNode?.classList ?? [];
+				return Array.from(classList, (c: string) => [
+					node,
+					/slot(\d+)$/.exec(c)?.[1] ?? Number.POSITIVE_INFINITY,
+				]);
+			}).flat(),
+		)[0];
+
+		firstEvent?.scrollIntoView();
+	}, [main, singleRow, eventsCount, days[0]!.day.getTime()]);
+
 	return (
 		<Paper className={classes.root}>
 			<div className={classes.header}>
@@ -323,11 +345,11 @@ const CalendarDataGrid = ({
 				{list(take(days, rowSize)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} cx={cx} {...props}>
 						<DayName day={props.day} />
-						{days.length <= rowSize && <DayHeader {...props} />}
+						{singleRow && <DayHeader {...props} />}
 					</ColumnHeader>
 				))}
 			</div>
-			<div className={classes.main}>
+			<div ref={setMain} className={classes.main}>
 				<div className={classes.grid}>
 					{WeekNumber &&
 						days
@@ -351,7 +373,7 @@ const CalendarDataGrid = ({
 							onSlotClick={onSlotClick}
 						/>
 					))}
-					{days.length > rowSize &&
+					{!singleRow &&
 						days.map((props, key) => (
 							<DayHeader
 								key={key}
