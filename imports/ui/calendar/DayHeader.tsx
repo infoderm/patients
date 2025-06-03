@@ -6,7 +6,13 @@ import dateFormat from 'date-fns/format';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-const DayHeader = ({className, day, isFirstDisplayedDayOfMonth}) => {
+type Props = {
+	readonly className?: string;
+	readonly day: Date;
+	readonly isFirstDisplayedDayOfMonth?: boolean;
+};
+
+const DayHeader = ({className, day, isFirstDisplayedDayOfMonth}: Props) => {
 	const localizedDateFormat = useDateFormat();
 	const displayFormat = isFirstDisplayedDayOfMonth ? 'MMM d' : 'd';
 	return (
