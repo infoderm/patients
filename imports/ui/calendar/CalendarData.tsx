@@ -13,12 +13,14 @@ import dateFormat from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
 import endOfDay from 'date-fns/endOfDay';
+import setHours from 'date-fns/setHours';
 
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
 import {iterable} from '@total-order/iter';
 
 import {list} from '@iterable-iterator/list';
+import {map} from '@iterable-iterator/map';
 import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
 import {min} from '@iterable-iterator/reduce';
@@ -288,6 +290,7 @@ type CalendarDataGridClasses = {
 type CalendarDataGridProps = {
 	readonly DayHeader: React.ElementType;
 	readonly WeekNumber?: React.ElementType;
+	readonly Hour?: React.ElementType;
 	readonly classes: CalendarDataGridClasses;
 	readonly cx: any;
 	readonly rowSize: number;
@@ -310,6 +313,7 @@ const CalendarDataGrid = ({
 	mores,
 	DayHeader,
 	WeekNumber,
+	Hour,
 	weekOptions,
 	onSlotClick,
 }: CalendarDataGridProps) => {
@@ -329,6 +333,7 @@ const CalendarDataGrid = ({
 		<Paper className={classes.root}>
 			<div className={classes.header}>
 				{WeekNumber && <div className={classes.corner} />}
+				{Hour && <div className={classes.corner} />}
 				{list(take(days, rowSize)).map((props, key) => (
 					<ColumnHeader key={key} classes={classes} cx={cx} {...props}>
 						<DayName day={props.day} />
@@ -351,6 +356,37 @@ const CalendarDataGrid = ({
 									{...props}
 								/>
 							))}
+					{Hour &&
+						days
+							.filter((_, i) => i % rowSize === 0)
+							.map(({row}) => (
+								<div
+									key={row}
+									className={cx(classes.cellBackground, {
+										[classes.col0!]: true,
+										[classes[`row${row}`]!]: true,
+									})}
+								/>
+							))}
+					{Hour &&
+						days
+							.filter((_, i) => i % rowSize === 0)
+							.flatMap(({row, day}) =>
+								list(
+									map(
+										(hours: number) => (
+											<Hour
+												key={row * 24 + hours}
+												time={setHours(day, hours)}
+												className={cx(classes.hour, {
+													[classes[`row${row}hour${hours}`]!]: true,
+												})}
+											/>
+										),
+										range(24),
+									),
+								),
+							)}
 					{days.map((props, key) => (
 						<DayBox
 							key={key}
@@ -415,6 +451,7 @@ type CalendarDataProps = {
 	readonly weekOptions?: {};
 	readonly DayHeader: React.ElementType;
 	readonly WeekNumber?: React.ElementType;
+	readonly Hour?: React.ElementType;
 	readonly lineHeight?: string;
 	readonly displayedWeekDays?: readonly WeekDay[];
 	readonly onSlotClick?: () => void;
@@ -423,6 +460,8 @@ type CalendarDataProps = {
 
 type MakeGridStylesOptions = {
 	displayWeekNumbers: boolean;
+	displayHours: boolean;
+	hourSpan?: number;
 	nrows: number;
 	headerHeight: number;
 	lineHeight: string;
@@ -438,6 +477,8 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 		theme,
 		{
 			displayWeekNumbers,
+			displayHours,
+			hourSpan,
 			nrows,
 			headerHeight,
 			lineHeight,
@@ -450,6 +491,7 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 	) => {
 		const gridTemplateColumns = [
 			displayWeekNumbers && '25px',
+			displayHours && '90px',
 			`repeat(${rowSize}, 1fr)`,
 		]
 			.filter(Boolean)
@@ -520,6 +562,14 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 					},
 				},
 			},
+			hour:
+				hourSpan === undefined
+					? {}
+					: {
+							gridColumnEnd: 'span 1',
+							gridRowEnd: `span ${hourSpan}`,
+							textAlign: 'center',
+					  },
 			cellBackground: {
 				backgroundColor: theme.palette.background.paper,
 				gridColumnEnd: 'span 1',
@@ -564,9 +614,23 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				overflow: 'hidden',
 				fontWeight: 'bold',
 			},
+			col0: {
+				gridColumnStart: 1,
+			},
 		};
 
-		const colOffset = displayWeekNumbers ? 1 : 0;
+		const colOffset = Number(displayWeekNumbers) + Number(displayHours);
+
+		if (hourSpan !== undefined) {
+			for (const i of range(1, nrows + 1)) {
+				for (const j of range(24)) {
+					gridStyles[`row${i}hour${j}`] = {
+						gridColumnStart: 1,
+						gridRowStart: (i - 1) * maxLines + 1 + (j as number) * hourSpan,
+					};
+				}
+			}
+		}
 
 		for (const i of range(1, rowSize + 1)) {
 			gridStyles[`col${i}`] = {
@@ -624,6 +688,7 @@ const CalendarData = ({
 	dayBegins,
 	DayHeader,
 	WeekNumber,
+	Hour,
 	weekOptions,
 	displayedWeekDays = ALL_WEEK_DAYS,
 	onSlotClick,
@@ -654,6 +719,11 @@ const CalendarData = ({
 
 	const {classes, cx} = useGridStyles({
 		displayWeekNumbers: Boolean(WeekNumber),
+		displayHours: Boolean(Hour),
+		hourSpan:
+			minEventDuration === undefined
+				? undefined
+				: (60 * 60 * 1000) / minEventDuration,
 		nrows: days / 7,
 		lineHeight,
 		headerHeight: 2,
@@ -691,6 +761,7 @@ const CalendarData = ({
 			mores={moreProps}
 			DayHeader={DayHeader}
 			WeekNumber={WeekNumber}
+			Hour={Hour}
 			weekOptions={weekOptions}
 			onSlotClick={onSlotClick}
 			onEventClick={onEventClick}
