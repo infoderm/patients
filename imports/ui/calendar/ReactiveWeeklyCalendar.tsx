@@ -177,6 +177,17 @@ const anchorOrigin: SnackbarOrigin = {
 	vertical: 'top',
 };
 
+const Hour = ({
+	className,
+	time,
+}: {
+	readonly className: string;
+	readonly time: Date;
+}) => {
+	const localizedDateFormat = useDateFormat();
+	return <div className={className}>{localizedDateFormat(time, 'p')}</div>;
+};
+
 const ReactiveWeeklyCalendar = ({
 	year,
 	week,
@@ -575,6 +586,7 @@ const ReactiveWeeklyCalendar = ({
 				]}
 				events={displayedEvents}
 				DayHeader={DayHeader}
+				Hour={Hour}
 				weekOptions={weekOptions}
 				onSlotClick={onSlotClick}
 				{...rest}
