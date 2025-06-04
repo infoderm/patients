@@ -290,6 +290,7 @@ type CalendarDataGridProps = {
 	readonly classes: CalendarDataGridClasses;
 	readonly cx: any;
 	readonly rowSize: number;
+	readonly scrollAnchor?: EventProps;
 	readonly days: DayProps[];
 	readonly events: EventProps[];
 	readonly mores: MoreProps[];
@@ -302,6 +303,7 @@ const CalendarDataGrid = ({
 	classes,
 	cx,
 	rowSize,
+	scrollAnchor,
 	days,
 	events,
 	mores,
@@ -313,16 +315,8 @@ const CalendarDataGrid = ({
 	const theme = useTheme();
 	const [main, setMain] = useState<HTMLElement | null>(null);
 	const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-	const eventsCount = events.length;
-	const anchorProps = useMemo(
-		() =>
-			min(
-				key(increasing, ({slot}) => slot),
-				events,
-			),
-		[eventsCount, days[0]!.day.getTime()],
-	);
 
+	const eventsCount = events.length;
 	const singleRow = days.length <= rowSize;
 	useLayoutEffect(() => {
 		if (main?.scrollTop !== 0 || eventsCount === 0 || !singleRow) return;
@@ -381,7 +375,7 @@ const CalendarDataGrid = ({
 						.map((props, key) => (
 							<EventFragment
 								key={key}
-								ref={props === anchorProps ? setAnchor : undefined}
+								ref={props === scrollAnchor ? setAnchor : undefined}
 								theme={theme}
 								className={cx(classes.slot, {
 									[classes[`slot${props.slots}`]!]: true,
@@ -667,11 +661,22 @@ const CalendarData = ({
 		daysProps,
 	});
 
+	const eventsCount = eventProps.length;
+	const scrollAnchor = useMemo(
+		() =>
+			min(
+				key(increasing, ({slot}) => slot),
+				eventProps,
+			),
+		[eventsCount, daysProps[0]!.day.getTime()],
+	);
+
 	return (
 		<CalendarDataGrid
 			classes={classes}
 			cx={cx}
 			rowSize={rowSize}
+			scrollAnchor={scrollAnchor}
 			days={daysProps}
 			events={eventProps}
 			mores={moreProps}
