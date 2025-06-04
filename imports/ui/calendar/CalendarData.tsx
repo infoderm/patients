@@ -341,9 +341,9 @@ const CalendarDataGrid = ({
 					{WeekNumber &&
 						days
 							.filter((_, i) => i % rowSize === rowSize - 1)
-							.map((props, key) => (
+							.map((props) => (
 								<WeekNumber
-									key={key}
+									key={props.row}
 									className={cx(classes.weekNumber, {
 										[classes[`row${props.row}`]!]: true,
 									})}
