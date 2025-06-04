@@ -317,26 +317,24 @@ const CalendarDataGrid = ({
 	onSlotClick,
 }: CalendarDataGridProps) => {
 	const theme = useTheme();
-	const [main, setMain] = useState<HTMLDivElement | null>(null);
+	const [main, setMain] = useState<HTMLElement | null>(null);
+	const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 	const eventsCount = events.length;
+	const anchorProps = useMemo(
+		() =>
+			min(
+				key(increasing, ({slot}) => slot),
+				events,
+			),
+		[eventsCount, days[0]!.day.getTime()],
+	);
+
 	const singleRow = days.length <= rowSize;
 	useLayoutEffect(() => {
 		if (main?.scrollTop !== 0 || eventsCount === 0 || !singleRow) return;
 		// TODO: Handle scroll to first search result.
-		const firstEvent = min(
-			key(increasing, ([, slot]) => Number.parseInt(slot, 10)),
-			Array.from(main.querySelectorAll('a, span'), (node: Element) => {
-				const parentNode = node.parentNode! as Element;
-				const classList = parentNode?.classList ?? [];
-				return Array.from(classList, (c: string) => [
-					node,
-					/slot(\d+)$/.exec(c)?.[1] ?? Number.POSITIVE_INFINITY,
-				]);
-			}).flat(),
-		)[0];
-
-		firstEvent?.scrollIntoView();
-	}, [main, singleRow, eventsCount, days[0]!.day.getTime()]);
+		anchor?.scrollIntoView();
+	}, [main, anchor, singleRow, eventsCount]);
 
 	return (
 		<Paper className={classes.root}>
@@ -389,6 +387,7 @@ const CalendarDataGrid = ({
 						.map((props, key) => (
 							<EventFragment
 								key={key}
+								ref={props === anchorProps ? setAnchor : undefined}
 								theme={theme}
 								className={cx(classes.slot, {
 									[classes[`slot${props.slots}`]!]: true,
