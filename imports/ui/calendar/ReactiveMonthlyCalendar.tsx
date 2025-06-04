@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {Link, useNavigate} from 'react-router-dom';
 
@@ -28,6 +28,27 @@ type Props = {
 	PropsOf<typeof StaticMonthlyCalendar>,
 	'next' | 'prev' | 'weekly' | 'weekOptions' | 'DayHeader' | 'events'
 >;
+
+const WeekNumber = ({
+	className,
+	day,
+}: {
+	readonly className: string;
+	readonly day: Date;
+}) => {
+	const localizedDateFormat = useDateFormat();
+	return (
+		<div className={className}>
+			<Link
+				to={`../../week/${localizedDateFormat(day, 'YYYY/ww', {
+					useAdditionalWeekYearTokens: true,
+				})}`}
+			>
+				{localizedDateFormat(day, 'w')}
+			</Link>
+		</div>
+	);
+};
 
 const ReactiveMonthlyCalendar = ({
 	year,
@@ -71,23 +92,6 @@ const ReactiveMonthlyCalendar = ({
 		(x) =>
 			(Boolean(showCancelledEvents) || !x.isCancelled) &&
 			(Boolean(showNoShowEvents) || !x.isNoShow),
-	);
-
-	const WeekNumber = useMemo(
-		() =>
-			({className, day}) =>
-				(
-					<div className={className}>
-						<Link
-							to={`../../week/${localizedDateFormat(day, 'YYYY/ww', {
-								useAdditionalWeekYearTokens: true,
-							})}`}
-						>
-							{localizedDateFormat(day, 'w')}
-						</Link>
-					</div>
-				),
-		[localizedDateFormat],
 	);
 
 	return (

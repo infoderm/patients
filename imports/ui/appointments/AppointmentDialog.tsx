@@ -19,13 +19,21 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import {DatePicker, DesktopTimePicker as TimePicker} from '@mui/x-date-pickers';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import dateFormat from 'date-fns/format';
+
 import isValid from 'date-fns/isValid';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
 import addMilliseconds from 'date-fns/addMilliseconds';
+import isDateEqual from 'date-fns/isEqual';
+import addDays from 'date-fns/addDays';
+import startOfDay from 'date-fns/startOfDay';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Dialog from '@mui/material/Dialog';
+
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 import TextField from '../input/TextField';
 
@@ -52,6 +60,10 @@ import nonOverlappingIntersectionQuery from '../../util/interval/nonOverlappingI
 import isContiguous from '../../util/interval/isContiguous';
 import {type AppointmentUpdate} from '../../api/appointments';
 
+import TimeOffSchedulingDialogTab from './TimeOffSchedulingDialogTab';
+import EventSchedulingDialogTab from './EventSchedulingDialogTab';
+import {useDateTimePickerState} from './useDateTimePickerState';
+
 const Multiline = styled(TextField)({
 	overflow: 'auto',
 	width: '100%',
@@ -73,35 +85,32 @@ const usePhone = (patientList) => {
 	return useStateWithInitOverride(initPhone);
 };
 
-const serializeDate = (datetime: Date) => dateFormat(datetime, 'yyyy-MM-dd');
-const serializeTime = (datetime: Date) => dateFormat(datetime, 'HH:mm');
-const unserializeDate = (date: string) => new Date(date);
-const unserializeDatetime = (date: string, time: string) =>
-	new Date(`${date}T${time}`);
-const unserializeTime = (time: string) =>
-	unserializeDatetime('1970-01-01', time);
-
 const isEqual = (a, b) => a === b;
+
+type InitialPatient = {
+	_id: string;
+	firstname: string;
+	lastname: string;
+	phone: string;
+};
+
+type OnClose = () => void;
+type OnSubmit = (args: AppointmentUpdate) => Promise<{_id: string}>;
 
 type AppointmentDialogProps = {
 	readonly open: boolean;
 	readonly pending: boolean;
-	readonly onClose: () => void;
-	readonly onSubmit: (args: AppointmentUpdate) => Promise<{_id: string}>;
-	readonly initialDatetime: Date;
-	readonly noInitialTime?: boolean;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
+	readonly initialBegin: Date;
+	readonly initialEnd: Date;
 	readonly initialAppointment?: AppointmentDocument;
-	readonly initialPatient?: {
-		_id: string;
-		firstname: string;
-		lastname: string;
-		phone: string;
-	};
+	readonly initialPatient?: InitialPatient;
 };
 
 const AppointmentDialog = ({
-	initialDatetime,
-	noInitialTime = false,
+	initialBegin,
+	initialEnd,
 	initialAppointment,
 	initialPatient,
 	open,
@@ -109,24 +118,106 @@ const AppointmentDialog = ({
 	onClose,
 	onSubmit,
 }: AppointmentDialogProps) => {
-	const navigate = useNavigate();
+	const [tab, setTab] = React.useState('1');
+
+	const onTabChange = (_: React.SyntheticEvent, newValue: string) => {
+		setTab(newValue);
+	};
 
 	const {loading, value: appointmentDuration} = useSettingCached(
 		'appointment-duration',
 	);
 
-	const [date, setDate] = useStateWithInitOverride(
-		serializeDate(initialDatetime),
+	return (
+		<Dialog open={open}>
+			{loading && <LinearProgress />}
+			<TabContext value={tab}>
+				<DialogTitle>
+					<TabList aria-label="lab API tabs example" onChange={onTabChange}>
+						<Tab label="Schedule an appointment" value="1" />
+						<Tab label="Schedule an event" value="2" />
+						<Tab label="Schedule time off" value="3" />
+					</TabList>
+				</DialogTitle>
+				<TabPanel value="1">
+					<AppointmentDialogTab
+						appointmentDuration={appointmentDuration}
+						initialDatetime={initialBegin}
+						noInitialTime={
+							isDateEqual(addDays(initialBegin, 1), initialEnd) &&
+							isDateEqual(initialBegin, startOfDay(initialBegin))
+						}
+						initialAppointment={initialAppointment}
+						initialPatient={initialPatient}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+				<TabPanel value="2">
+					<EventSchedulingDialogTab
+						initialBegin={initialBegin}
+						initialEnd={initialEnd}
+						initialEvent={initialAppointment}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+				<TabPanel value="3">
+					<TimeOffSchedulingDialogTab
+						initialBegin={initialBegin}
+						initialEnd={initialEnd}
+						initialEvent={initialAppointment}
+						pending={pending}
+						onClose={onClose}
+						onSubmit={onSubmit}
+					/>
+				</TabPanel>
+			</TabContext>
+		</Dialog>
 	);
-	const [validDate, setValidDate] = useStateWithInitOverride(
-		isValid(initialDatetime),
+};
+
+type AppointmentSchedulingDialogTabProps = {
+	readonly appointmentDuration: number[];
+	readonly initialAppointment?: AppointmentDocument;
+	readonly initialDatetime: Date;
+	readonly noInitialTime: boolean;
+	readonly initialPatient?: InitialPatient;
+	readonly pending: boolean;
+	readonly onClose: OnClose;
+	readonly onSubmit: OnSubmit;
+};
+
+const AppointmentDialogTab = ({
+	appointmentDuration,
+	initialAppointment,
+	initialPatient,
+	initialDatetime,
+	noInitialTime,
+	pending,
+	onClose,
+	onSubmit,
+}: AppointmentSchedulingDialogTabProps) => {
+	const navigate = useNavigate();
+
+	const {value: agendaSlotClickSetsInitialTime} = useSettingCached(
+		'agenda-slot-click-sets-initial-time',
 	);
-	const [time, setTime] = useStateWithInitOverride(
-		noInitialTime ? '' : serializeTime(initialDatetime),
-	);
-	const [validTime, setValidTime] = useStateWithInitOverride(
-		!noInitialTime && isValid(initialDatetime),
-	);
+	const alwaysNoInitialTime = agendaSlotClickSetsInitialTime === 'off';
+	const initialTime = !(alwaysNoInitialTime || noInitialTime);
+
+	const {
+		datetime,
+		date,
+		setDate: onDateChange,
+		isValidDate: validDate,
+		time,
+		setTime: onTimeChange,
+		isValidTime: validTime,
+	} = useDateTimePickerState(initialDatetime, initialTime);
+
 	const [duration, setDuration] = useStateWithInitOverride<number>(
 		// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 		appointmentDuration.includes(initialAppointment?.duration!)
@@ -151,11 +242,7 @@ const AppointmentDialog = ({
 	]);
 	const patientIsReadOnly = Boolean(initialPatient);
 
-	const datetime = unserializeDatetime(date, time);
-	const appointmentIsInThePast = isBefore(
-		unserializeDate(date),
-		startOfToday(),
-	);
+	const appointmentIsInThePast = isBefore(date, startOfToday());
 	const displayAppointmentIsInThePast = appointmentIsInThePast;
 
 	const _id = initialAppointment?._id;
@@ -244,16 +331,13 @@ const AppointmentDialog = ({
 			? "Edit this patient's phone number by editing their information"
 			: '';
 	const phoneError = patientIsSelected && !selectedPatientExists && !phone;
-
 	return (
-		<Dialog open={open}>
-			{loading && <LinearProgress />}
-			<DialogTitle>Schedule an appointment</DialogTitle>
+		<>
 			<DialogContent>
 				<Grid container spacing={3}>
 					<Grid item xs={4}>
 						<DatePicker
-							value={unserializeDate(date)}
+							value={date}
 							label="Date"
 							slotProps={{
 								textField: {
@@ -264,14 +348,7 @@ const AppointmentDialog = ({
 										: undefined,
 								},
 							}}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setDate(serializeDate(pickedDatetime!));
-									setValidDate(true);
-								} else {
-									setValidDate(false);
-								}
-							}}
+							onChange={onDateChange}
 						/>
 					</Grid>
 					<Grid item xs={4}>
@@ -283,15 +360,8 @@ const AppointmentDialog = ({
 								},
 							}}
 							label="Time"
-							value={time === '' ? null : unserializeTime(time)}
-							onChange={(pickedDatetime) => {
-								if (isValid(pickedDatetime)) {
-									setTime(serializeTime(pickedDatetime!));
-									setValidTime(true);
-								} else {
-									setValidTime(false);
-								}
-							}}
+							value={time}
+							onChange={onTimeChange}
 						/>
 					</Grid>
 					<Grid item xs={4}>
@@ -384,6 +454,7 @@ const AppointmentDialog = ({
 					</Grid>
 				</Grid>
 			</DialogContent>
+
 			<DialogActions>
 				<CancelButton onClick={onClose} />
 				<LoadingButton
@@ -397,7 +468,7 @@ const AppointmentDialog = ({
 					Schedule
 				</LoadingButton>
 			</DialogActions>
-		</Dialog>
+		</>
 	);
 };
 
