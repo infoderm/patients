@@ -130,7 +130,6 @@ type Occupancy = {
 	usedSlots: number;
 	totalEvents: number;
 	shownEvents: number;
-	lastEvent?: Event;
 };
 
 type OccupancyMap = Map<string, Occupancy>;
@@ -186,7 +185,7 @@ function* generateEventProps(
 			const state = occupancy.get(day);
 
 			if (state === undefined) continue;
-			let {usedSlots, totalEvents, shownEvents, lastEvent} = state;
+			let {usedSlots, totalEvents, shownEvents} = state;
 			const dayBegin = _day;
 			const dayEnd = endOfDay(_day);
 
@@ -197,41 +196,37 @@ function* generateEventProps(
 			const isWholeDay =
 				isEqual(fragmentBegin, dayBegin) && isEqual(fragmentEnd, dayEnd);
 
-			const previousEvent: {end: Date} | undefined =
-				lastEvent ??
-				(dayBegins
-					? {
-							end: setTime(_day, dayBegins),
-					  }
-					: undefined);
+			const startOfSchedule =
+				dayBegins === undefined ? dayBegin : setTime(_day, dayBegins);
 
 			const slots = Math.min(
 				minEventDuration === undefined
 					? 1
 					: isWholeDay
 					? 2
-					: Math.ceil(
-							(fragmentDuration || minEventDuration) / minEventDuration,
+					: Math.max(
+							Math.round(
+								(fragmentDuration || minEventDuration) / minEventDuration,
+							),
+							1,
 					  ),
 				maxLines,
 			);
 
-			const skip =
-				skipIdle && previousEvent
-					? minEventDuration
-						? Math.max(
-								0,
-								Math.floor(
-									(Number(fragmentBegin) - Number(previousEvent.end)) /
-										minEventDuration,
-								),
-						  )
-						: 1
-					: 0;
+			const slot =
+				1 +
+				(skipIdle && minEventDuration
+					? Math.max(
+							usedSlots,
+							Math.round(
+								(Number(fragmentBegin) - Number(startOfSchedule)) /
+									minEventDuration,
+							),
+					  )
+					: usedSlots);
 
-			const slot = usedSlots + skip + 1;
 			++totalEvents;
-			usedSlots += skip + slots;
+			usedSlots = slot + slots - 1;
 
 			if (usedSlots <= maxLines) {
 				++shownEvents;
@@ -251,7 +246,6 @@ function* generateEventProps(
 				usedSlots,
 				totalEvents,
 				shownEvents,
-				lastEvent: event,
 			});
 		}
 	}
