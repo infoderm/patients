@@ -16,6 +16,7 @@ import endOfDay from 'date-fns/endOfDay';
 
 import {key} from '@total-order/key';
 import {increasing} from '@total-order/primitive';
+import {iterable} from '@total-order/iter';
 
 import {list} from '@iterable-iterator/list';
 import {take} from '@iterable-iterator/slice';
@@ -662,14 +663,20 @@ const CalendarData = ({
 	});
 
 	const eventsCount = eventProps.length;
-	const scrollAnchor = useMemo(
-		() =>
-			min(
-				key(increasing, ({slot}) => slot),
-				eventProps,
+	const scrollAnchor = useMemo(() => {
+		const now = new Date();
+		const endOfToday = endOfDay(now);
+		return min(
+			key(
+				iterable(increasing),
+				function* ({event: {begin, end}, slot}: EventProps) {
+					yield end >= now && begin <= endOfToday ? 0 : 1;
+					yield slot;
+				},
 			),
-		[eventsCount, daysProps[0]!.day.getTime()],
-	);
+			eventProps,
+		);
+	}, [eventsCount, daysProps[0]!.day.getTime()]);
 
 	return (
 		<CalendarDataGrid
