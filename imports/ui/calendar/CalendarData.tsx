@@ -71,7 +71,7 @@ const DayBox = ({classes, cx, day, row, col, onSlotClick}) => {
 	}, [onSlotClick, day]);
 	return (
 		<div
-			className={cx(classes.dayBox, {
+			className={cx(classes.cellBackground, classes.dayBox, {
 				[classes[`col${col}`]]: true,
 				[classes[`row${row}`]]: true,
 			})}
@@ -520,10 +520,12 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 					},
 				},
 			},
-			dayBox: {
+			cellBackground: {
 				backgroundColor: theme.palette.background.paper,
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${maxLines}`,
+			},
+			dayBox: {
 				'&:hover': {
 					backgroundColor: hoverColor(
 						theme,
