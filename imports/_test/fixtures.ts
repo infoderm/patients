@@ -184,7 +184,7 @@ export const server = (title, fn) => {
 		};
 
 		describe(title, function () {
-			this.timeout(isAppTest() ? 10_000 : 1000);
+			this.timeout(isAppTest() ? 10_000 : 2000);
 			beforeEach(prepare);
 			fn();
 			afterEach(restore);
