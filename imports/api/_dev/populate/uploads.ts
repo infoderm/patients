@@ -1,4 +1,4 @@
-import {type FileRef} from 'meteor/ostrio:files';
+import {type FileObj} from 'meteor/ostrio:files';
 
 import {randomPNGBuffer, randomPNGDataURI} from '../../../_test/png';
 import {type MetadataType, Uploads} from '../../uploads';
@@ -6,15 +6,15 @@ import {type MetadataType, Uploads} from '../../uploads';
 export const newUpload = async (
 	invocation?: {userId?: string},
 	options?: {name?: string},
-): Promise<FileRef<MetadataType>> => {
+): Promise<FileObj<MetadataType>> => {
 	const type = 'image/png';
-	const fileName = options?.name ?? 'pic.png';
+	const name = options?.name ?? 'pic.png';
 	if (Meteor.isServer) {
 		const buffer = await randomPNGBuffer();
-		return Uploads.write(
+		return Uploads.writeAsync(
 			buffer,
 			{
-				fileName,
+				name,
 				type,
 				userId: invocation?.userId,
 			},
@@ -26,7 +26,7 @@ export const newUpload = async (
 		Uploads.insert({
 			file: randomPNGDataURI(),
 			isBase64: true,
-			fileName,
+			fileName: name,
 			chunkSize: 'dynamic',
 			onUploaded(error, fileRef) {
 				if (error) {

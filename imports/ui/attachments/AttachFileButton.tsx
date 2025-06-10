@@ -164,7 +164,7 @@ const AttachFileButton = React.forwardRef(
 					);
 				});
 
-				upload.start();
+				void upload.start();
 			}
 		};
 
