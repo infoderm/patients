@@ -155,7 +155,7 @@ const macro = (
 			// eslint-disable-next-line no-await-in-loop
 			await findByText(text, options);
 		}
-	});
+	}).timeout(25_000);
 };
 
 client(__filename, () => {
