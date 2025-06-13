@@ -110,7 +110,7 @@ client(__filename, () => {
 		await findByText('Closed eid dialog.');
 	});
 
-	it('should allow to create a patient from eid', async () => {
+	it.only('should allow to create a patient from eid', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();

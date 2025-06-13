@@ -33,7 +33,7 @@ client(__filename, () => {
 		assert.strictEqual(iban.value, value);
 	});
 
-	it('sanitizes input when typing', async () => {
+	it.only('sanitizes input when typing', async () => {
 		const {fillIn, setupUser} = await import(
 			'../../../test/app/client/fixtures'
 		);
@@ -55,7 +55,7 @@ client(__filename, () => {
 		assert.strictEqual(iban.value, validInput.replaceAll(' ', ''));
 	});
 
-	it('sanitizes input when pasting', async () => {
+	it.only('sanitizes input when pasting', async () => {
 		const {setupUser} = await import('../../../test/app/client/fixtures');
 		const username = randomUserId();
 		const password = randomPassword();

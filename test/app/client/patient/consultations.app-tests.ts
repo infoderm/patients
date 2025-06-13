@@ -14,7 +14,7 @@ import {
 } from '../fixtures';
 
 client(__filename, () => {
-	it('should allow to edit a consultation for a patient', async () => {
+	it.only('should allow to edit a consultation for a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();

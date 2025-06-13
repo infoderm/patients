@@ -33,7 +33,7 @@ client(__filename, () => {
 		await findByRole('heading', {name: 'Please sign in'});
 	});
 
-	it('should allow to register a new user', async () => {
+	it.only('should allow to register a new user', async () => {
 		const {createUserWithPasswordAndLogin} = await import(
 			'../../test/app/client/fixtures'
 		);

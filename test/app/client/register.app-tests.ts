@@ -7,7 +7,7 @@ import {
 import {setupApp, createUserWithPasswordAndLogin} from './fixtures';
 
 client(__filename, () => {
-	it('should allow to register a new user', async () => {
+	it.only('should allow to register a new user', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();

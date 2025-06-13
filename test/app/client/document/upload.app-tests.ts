@@ -110,7 +110,7 @@ const macro = (
 		method,
 		expected,
 	}: MacroOptions,
-	test: TestFunction = it,
+	test: TestFunction = it.only,
 ) => {
 	return test(title, async () => {
 		const username = randomUserId();

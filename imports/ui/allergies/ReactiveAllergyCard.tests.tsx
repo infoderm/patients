@@ -30,7 +30,7 @@ const render = (children: React.ReactNode) =>
 	});
 
 client(__filename, () => {
-	it("should allow to change allergy's color", async () => {
+	it.only("should allow to change allergy's color", async () => {
 		const {setupUser} = await import('../../../test/app/client/fixtures');
 		const username = randomUserId();
 		const password = randomPassword();

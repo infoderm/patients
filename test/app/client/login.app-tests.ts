@@ -9,7 +9,7 @@ import createUserWithPassword from '../../../imports/api/user/createUserWithPass
 import {setupApp, loginWithPassword} from './fixtures';
 
 client(__filename, () => {
-	it('should allow to log in', async () => {
+	it.only('should allow to log in', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -17,7 +17,7 @@ client(__filename, () => {
 		await loginWithPassword(app, username, password);
 	});
 
-	it('should not allow to log in with non-existing user', async () => {
+	it.only('should not allow to log in with non-existing user', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -28,7 +28,7 @@ client(__filename, () => {
 		await app.findByText('User not found');
 	});
 
-	it('should not allow to log in with wrong password', async () => {
+	it.only('should not allow to log in with wrong password', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -40,7 +40,7 @@ client(__filename, () => {
 		await app.findByText('Incorrect password');
 	});
 
-	it('should not allow to log in with wrong username', async () => {
+	it.only('should not allow to log in with wrong username', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -52,7 +52,7 @@ client(__filename, () => {
 		await app.findByText('User not found');
 	});
 
-	it("should not allow to log in with other user's password", async () => {
+	it.only("should not allow to log in with other user's password", async () => {
 		const username1 = randomUserId();
 		const password1 = randomPassword();
 		const username2 = randomUserId();

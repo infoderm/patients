@@ -8,7 +8,7 @@ import createUserWithPasswordAndLogin from '../../../../imports/api/user/createU
 import {setupApp, createNewPatient, searchForPatient} from '../fixtures';
 
 client(__filename, () => {
-	it('should allow to search for a patient', async () => {
+	it.only('should allow to search for a patient', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();

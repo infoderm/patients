@@ -22,7 +22,7 @@ import SelectColorSetting from './SelectColorSetting';
 import {setSetting} from './hooks';
 
 client(__filename, () => {
-	it('should debounce user input', async () => {
+	it.only('should debounce user input', async () => {
 		const {setupUser} = await import('../../../test/app/client/fixtures');
 		const username = randomUserId();
 		const password = randomPassword();

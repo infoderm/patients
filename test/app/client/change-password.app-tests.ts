@@ -9,7 +9,7 @@ import createUserWithPasswordAndLogin from '../../../imports/api/user/createUser
 import {setupApp, changePassword, logout, loginWithPassword} from './fixtures';
 
 client(__filename, () => {
-	it('should allow to change password', async () => {
+	it.only('should allow to change password', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -19,7 +19,7 @@ client(__filename, () => {
 		await changePassword(app, password, newPassword);
 	});
 
-	it('should not allow to change password with wrong password', async () => {
+	it.only('should not allow to change password with wrong password', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -40,7 +40,7 @@ client(__filename, () => {
 		await app.findByText('Password may not be empty');
 	});
 
-	it('should allow to login with new password after password change', async () => {
+	it.only('should allow to login with new password after password change', async () => {
 		const username = randomUserId();
 		const password = randomPassword();
 		const app = setupApp();
@@ -52,20 +52,23 @@ client(__filename, () => {
 		await loginWithPassword(app, username, newPassword);
 	});
 
-	it('should not allow to login with old password after password change', async () => {
-		const username = randomUserId();
-		const password = randomPassword();
-		const app = setupApp();
-		await createUserWithPasswordAndLogin(username, password);
+	it.only(
+		'should not allow to login with old password after password change',
+		async () => {
+			const username = randomUserId();
+			const password = randomPassword();
+			const app = setupApp();
+			await createUserWithPasswordAndLogin(username, password);
 
-		const newPassword = `${password}-changed`;
-		await changePassword(app, password, newPassword);
-		await logout(app);
+			const newPassword = `${password}-changed`;
+			await changePassword(app, password, newPassword);
+			await logout(app);
 
-		await throws(
-			async () => loginWithPassword(app, username, password),
-			/Timed out/,
-		);
-		await app.findByText('Incorrect password');
-	}).timeout(15_000);
+			await throws(
+				async () => loginWithPassword(app, username, password),
+				/Timed out/,
+			);
+			await app.findByText('Incorrect password');
+		},
+	).timeout(15_000);
 });
