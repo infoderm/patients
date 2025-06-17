@@ -12,7 +12,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # NOTE Install build tools
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  curl=7.74.0-1.3+deb11u14 \
+  curl=7.74.0-1.3+deb11u15 \
   python3=3.9.2-3 \
   make=4.3-4.1 \
   g++=4:10.2.1-1 \
