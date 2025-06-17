@@ -11,4 +11,7 @@ import 'core-js/features/array/at';
 import 'core-js/features/object/has-own';
 
 // eslint-disable-next-line import/no-unassigned-import
+import 'core-js/features/promise/with-resolvers';
+
+// eslint-disable-next-line import/no-unassigned-import
 import './polyfill/fetch';
