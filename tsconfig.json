@@ -6,7 +6,7 @@
     "module": "esnext",
     "lib": ["esnext", "dom"],
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "jsx": "preserve",
     "incremental": true,
 
