@@ -4,7 +4,16 @@
 
 const fs = require('fs');
 
-const tsc = (paths) => {
+const logErrors = (tool) => (paths) => {
+	try {
+		return tool(paths);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
+
+const tsc = logErrors((paths) => {
 	const encoding = 'utf8';
 	const originalTSConfigPath = 'tsconfig.json';
 	// NOTE: MUST be in same directory.
@@ -18,7 +27,7 @@ const tsc = (paths) => {
 	};
 	fs.writeFileSync(lintStagedTSConfigPath, JSON.stringify(lintStagedTSConfig));
 	return `npm run tsc -- --noEmit --project ${lintStagedTSConfigPath}`;
-};
+});
 
 const lint = 'npm run lint-and-fix';
 
