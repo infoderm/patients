@@ -5,13 +5,6 @@
     "mainModule": {
       "client": "client/main.tsx",
       "server": "server/main.ts"
-    },
-    "nodeModules": {
-      "recompile": {
-        "pdfjs-dist": [
-          "server"
-        ]
-      }
     }
   },
   "postinstall": {
@@ -227,7 +220,8 @@
     "extends": "xo-react",
     "prettier": true,
     "ignores": [
-      "packages/**"
+      "packages/**",
+      "imports/util/pdf/pdfjs-dist/**"
     ],
     "rules": {
       "camelcase": "off",

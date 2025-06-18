@@ -5,7 +5,7 @@ export {type PageViewport} from 'pdfjs-dist/types/src/display/display_utils';
 
 export const WORKER_URL = Meteor.isClient
 	? '/pdfjs-dist/build/pdf.worker.min.js'
-	: 'pdfjs-dist/legacy/build/pdf.worker.js';
+	: './pdf.worker.js';
 export const CMAP_URL = Meteor.isClient
 	? '/pdfjs-dist/cmaps/'
 	: './npm/node_modules/pdfjs-dist/cmaps/';
@@ -14,6 +14,11 @@ export const STANDARD_FONT_DATA_URL = Meteor.isClient
 	? '/pdfjs-dist/standard_fonts/'
 	: './npm/node_modules/pdfjs-dist/standard_fonts/';
 
+export const _embedWoker = async () => {
+	// NOTE: This forces Meteor to embed the worker in the server build.
+	if (Meteor.isServer) await import('./pdfjs-dist/pdf.worker.js');
+};
+
 export async function fetchPDF({
 	cMapUrl = CMAP_URL,
 	cMapPacked = CMAP_PACKED,
@@ -21,9 +26,7 @@ export async function fetchPDF({
 	isEvalSupported = false,
 	...rest
 }: DocumentInitParameters) {
-	const pdfjs = Meteor.isClient
-		? await import('pdfjs-dist')
-		: await import('pdfjs-dist/legacy/build/pdf.js');
+	const pdfjs = await import('./pdfjs-dist/pdf.js');
 
 	if (pdfjs.GlobalWorkerOptions.workerSrc === '') {
 		pdfjs.GlobalWorkerOptions.workerSrc = WORKER_URL;
