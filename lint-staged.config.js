@@ -2,30 +2,31 @@
 
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs/promises');
 
-const logErrors = (tool) => (paths) => {
-	try {
-		return tool(paths);
-	} catch (error) {
+const logErrors = (tool) => async (paths) => {
+	return tool(paths).catch((error) => {
 		console.error(error);
 		throw error;
-	}
+	});
 };
 
-const tsc = logErrors((paths) => {
+const tsc = logErrors(async (paths) => {
 	const encoding = 'utf8';
 	const originalTSConfigPath = 'tsconfig.json';
 	// NOTE: MUST be in same directory.
 	const lintStagedTSConfigPath = 'lint-staged.tsconfig.json';
 	const originalTSConfig = JSON.parse(
-		fs.readFileSync(originalTSConfigPath, encoding),
+		await fs.readFile(originalTSConfigPath, encoding),
 	);
 	const lintStagedTSConfig = {
 		...originalTSConfig,
 		include: ['types/**/*', ...paths],
 	};
-	fs.writeFileSync(lintStagedTSConfigPath, JSON.stringify(lintStagedTSConfig));
+	await fs.writeFile(
+		lintStagedTSConfigPath,
+		JSON.stringify(lintStagedTSConfig),
+	);
 	return `npm run tsc -- --noEmit --project ${lintStagedTSConfigPath}`;
 });
 
