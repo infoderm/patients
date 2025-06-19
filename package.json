@@ -140,9 +140,9 @@
   "devDependencies": {
     "@babel/eslint-parser": "7.27.5",
     "@babel/plugin-syntax-jsx": "7.27.1",
-    "@babel/plugin-transform-class-properties": "^7.27.1",
-    "@babel/plugin-transform-class-static-block": "^7.27.1",
-    "@babel/plugin-transform-private-methods": "^7.27.1",
+    "@babel/plugin-transform-class-properties": "7.27.1",
+    "@babel/plugin-transform-class-static-block": "7.27.1",
+    "@babel/plugin-transform-private-methods": "7.27.1",
     "@commitlint/cli": "19.8.0",
     "@faker-js/faker": "8.4.1",
     "@fontsource/roboto": "5.2.5",
