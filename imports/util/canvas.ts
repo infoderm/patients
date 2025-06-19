@@ -1,11 +1,11 @@
-import {type Canvas} from 'canvas/types';
+import {type Canvas} from 'canvas';
 
 export {
 	type Canvas,
 	type JpegConfig,
 	type PdfConfig,
 	type PngConfig,
-} from 'canvas/types';
+} from 'canvas';
 
 type CreateCanvasOptions = {
 	width: number;
