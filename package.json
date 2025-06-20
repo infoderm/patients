@@ -145,7 +145,7 @@
     "@babel/plugin-transform-private-methods": "^7.27.1",
     "@commitlint/cli": "19.8.0",
     "@faker-js/faker": "8.4.1",
-    "@fontsource/roboto": "5.2.5",
+    "@fontsource/roboto": "5.2.6",
     "@iterable-iterator/repeat": "1.0.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "14.3.1",
