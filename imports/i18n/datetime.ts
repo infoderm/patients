@@ -39,7 +39,7 @@ const _getLocale = async (key: string): Promise<Locale | undefined> => {
 };
 
 const getLocale = async (owner: string): Promise<Locale | undefined> => {
-	const key = getSetting(owner, 'lang');
+	const key = await getSetting(owner, 'lang');
 	return _getLocale(key);
 };
 
@@ -86,7 +86,7 @@ export const useFirstWeekContainsDate = (): FirstWeekContainsDate => {
 };
 
 export const getWeekStartsOn = async (owner: string): Promise<WeekStartsOn> => {
-	const weekStartsOn = getSetting(owner, 'week-starts-on');
+	const weekStartsOn = await getSetting(owner, 'week-starts-on');
 	if (weekStartsOn !== 'locale') return weekStartsOn;
 	const locale = await getLocale(owner);
 	return localeToWeekStartsOn(locale);
@@ -95,7 +95,10 @@ export const getWeekStartsOn = async (owner: string): Promise<WeekStartsOn> => {
 export const getFirstWeekContainsDate = async (
 	owner: string,
 ): Promise<FirstWeekContainsDate> => {
-	const firstWeekContainsDate = getSetting(owner, 'first-week-contains-date');
+	const firstWeekContainsDate = await getSetting(
+		owner,
+		'first-week-contains-date',
+	);
 	if (firstWeekContainsDate !== 'locale') return firstWeekContainsDate;
 	const locale = await getLocale(owner);
 	return localeToFirstWeekContainsDate(locale);

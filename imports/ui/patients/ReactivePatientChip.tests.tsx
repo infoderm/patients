@@ -35,7 +35,7 @@ client(__filename, () => {
 		const password = randomPassword();
 		await createUserWithPasswordAndLogin(username, password);
 
-		const n = 60;
+		const n = 70;
 
 		const patients = await Promise.all(
 			map(async () => {
@@ -67,5 +67,5 @@ client(__filename, () => {
 				findByRole('button', {name: displayName(patient)}, {timeout: 3000}),
 			),
 		);
-	});
+	}).timeout(15_000);
 });

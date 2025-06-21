@@ -9,7 +9,13 @@ import {type SettingKey, type UserSettings} from '../../api/settings';
 
 import {useSettingDebounced} from './hooks';
 
-type BaseProps<K extends SettingKey> = UserSettings[K] extends Array<infer V>
+type ArraySettingKey = {
+	[K in SettingKey]: UserSettings[K] extends unknown[] ? K : never;
+}[SettingKey];
+
+type BaseProps<K extends ArraySettingKey> = UserSettings[K] extends Array<
+	infer V
+>
 	? {
 			className?: string;
 			setting: K;
@@ -25,7 +31,7 @@ type BaseProps<K extends SettingKey> = UserSettings[K] extends Array<infer V>
 	  }
 	: never;
 
-export type InputManySettingProps<K extends SettingKey> = BaseProps<K> &
+export type InputManySettingProps<K extends ArraySettingKey> = BaseProps<K> &
 	Omit<
 		PropsOf<typeof SetPicker>,
 		'onChange' | 'value' | 'useSuggestions' | 'itemToKey' | 'itemToString'
@@ -33,7 +39,7 @@ export type InputManySettingProps<K extends SettingKey> = BaseProps<K> &
 
 const identity = <T,>(x: T) => x;
 
-const InputManySetting = <K extends SettingKey>({
+const InputManySetting = <K extends ArraySettingKey>({
 	className = undefined,
 	setting,
 	makeSuggestions = () => () => ({results: [] as unknown as UserSettings[K]}),
