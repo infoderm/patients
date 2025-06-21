@@ -158,7 +158,6 @@
     "@types/react": "18.3.4",
     "@types/react-color": "3.0.13",
     "@types/react-dom": "18.3.0",
-    "babel-plugin-istanbul": "7.0.0",
     "babel-plugin-transform-remove-console": "6.9.4",
     "chai": "4.5.0",
     "dayjs": "1.11.13",
@@ -208,8 +207,7 @@
                 "warn"
               ]
             }
-          ],
-          "istanbul"
+          ]
         ]
       }
     }
