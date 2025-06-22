@@ -1,3 +1,6 @@
 [submodule "packages/meteortesting:browser-tests"]
 	path = packages/meteortesting:browser-tests
 	url = https://github.com/contribulate/meteor-browser-tests
+[submodule "packages/lmieulet_meteor-coverage"]
+	path = packages/lmieulet_meteor-coverage
+	url = https://github.com/contribulate/meteor-coverage
