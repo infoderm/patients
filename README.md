@@ -27,8 +27,9 @@ User Interface tests are facilitated by
 and
 [`@testing-library/user-event`](https://github.com/testing-library/user-event).
 
-> :warning: Code coverage is currently both incomplete and broken most probably
-> due to a TypeScript/Istanbul incompatibility.
+> :warning: Code coverage currently includes some of the test files. Waiting
+> for a solution where one can list coverage for source and test files
+> separately.
 
 In what follows, `dev` refers to the development machine, and `prod` refers to
 the production machine.

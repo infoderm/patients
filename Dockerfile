@@ -91,6 +91,7 @@ COPY --chown=build:build ./imports imports
 COPY --chown=build:build ./server server
 COPY --chown=build:build ./client client
 COPY --chown=build:build ./.meteor .meteor
+COPY --chown=build:build ./packages/typescript-babel packages/typescript-babel
 COPY --chown=build:build [ \
   "./tsconfig.json", \
   "./" \
