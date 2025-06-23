@@ -14,6 +14,7 @@ export const STANDARD_FONT_DATA_URL = Meteor.isClient
 	? '/pdfjs-dist/standard_fonts/'
 	: './npm/node_modules/pdfjs-dist/standard_fonts/';
 
+/* istanbul ignore next */
 export const _embedWorker = async () => {
 	// NOTE: This forces Meteor to embed the worker in the server build.
 	if (Meteor.isServer) await import('./pdfjs-dist/pdf.worker.js');
