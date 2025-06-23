@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import React, {useState} from 'react';
 
 import {styled} from '@mui/material/styles';
@@ -58,20 +60,23 @@ const AttachmentSuperDeletionDialog = ({open, onClose, attachment}: Props) => {
 			const feedback = debounceSnackbar({enqueueSnackbar, closeSnackbar});
 			feedback('Processing...', {variant: 'info', persist: true});
 			setPending(true);
-			Uploads.remove({_id: attachment._id}, (err) => {
-				if (err) {
-					setPending(false);
-					const message = `[Trash] Error during removal: ${err.message}`;
-					console.error(message, {err});
-					feedback(message, {variant: 'error'});
-				} else {
+			Uploads.removeAsync({_id: attachment._id})
+				.then((count) => {
+					if (count === 0) throw new Error('file already removed');
+					assert(count === 1);
 					setPending(false);
 					const message = '[Trash] File removed from DB and FS';
-					console.log(message);
+					console.debug(message);
 					feedback(message, {variant: 'success'});
 					if (isMounted()) onClose();
-				}
-			});
+				})
+				.catch((error) => {
+					setPending(false);
+					const message = `[Trash] Error during removal: ${error.message}`;
+					console.error(message);
+					console.debug(error);
+					feedback(message, {variant: 'error'});
+				});
 		}
 	};
 
