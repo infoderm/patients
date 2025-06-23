@@ -1,9 +1,7 @@
 import {type PickersLocaleText} from '@mui/x-date-pickers';
 
-import {get as getSetting} from '../api/settings';
-
 import useLocaleKey from './useLocale';
-import {load, useLoadedValue} from './localesCache';
+import {useLoadedValue} from './localesCache';
 
 type LocaleText = Partial<PickersLocaleText<any>>;
 
@@ -36,30 +34,11 @@ const pickersLocalizationsCache = new Map<
 	PickersLocalization | undefined
 >();
 
-const _getPickersLocalization = async (
-	key: string,
-): Promise<PickersLocalization | undefined> => {
-	return load<PickersLocalization | undefined>(
-		'pickers localization',
-		pickersLocalizationsCache,
-		loadPickersLocalization,
-		key,
-	);
-};
-
 const _pickersLocalizationToLocaleText = (
 	localization: PickersLocalization | undefined,
 ) => {
 	return localization?.components.MuiLocalizationProvider.defaultProps
 		.localeText;
-};
-
-export const getLocaleText = async (
-	owner: string,
-): Promise<LocaleText | undefined> => {
-	const key = getSetting(owner, 'lang');
-	const localization = await _getPickersLocalization(key);
-	return _pickersLocalizationToLocaleText(localization);
 };
 
 const usePickersLocalization = (key: string) => {
