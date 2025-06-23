@@ -92,15 +92,6 @@ export const getWeekStartsOn = async (owner: string): Promise<WeekStartsOn> => {
 	return localeToWeekStartsOn(locale);
 };
 
-export const getFirstWeekContainsDate = async (
-	owner: string,
-): Promise<FirstWeekContainsDate> => {
-	const firstWeekContainsDate = getSetting(owner, 'first-week-contains-date');
-	if (firstWeekContainsDate !== 'locale') return firstWeekContainsDate;
-	const locale = await getLocale(owner);
-	return localeToFirstWeekContainsDate(locale);
-};
-
 export const useDefaultDateFormatOptions = () => {
 	const locale = useLocale();
 	const weekStartsOn = useWeekStartsOn();
