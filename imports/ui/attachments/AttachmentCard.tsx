@@ -222,6 +222,7 @@ const AttachmentCard = ({loading = false, attachment, info}: Props) => {
 					<>
 						<IconButton
 							size="large"
+							aria-label={`open menu for ${attachment.name}`}
 							aria-controls={open ? menuId : undefined}
 							aria-haspopup="true"
 							aria-expanded={open ? 'true' : undefined}
