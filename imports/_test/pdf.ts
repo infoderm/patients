@@ -22,7 +22,7 @@ export const randomPDFUint8Array = (): Uint8Array => {
 
 export const randomPDFBuffer = async () => {
 	const {Buffer} = await import('buffer');
-	const array = randomPDFBuffer();
+	const array = randomPDFUint8Array();
 	return Buffer.from(array);
 };
 
