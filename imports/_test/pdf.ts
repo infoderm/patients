@@ -20,6 +20,12 @@ export const randomPDFUint8Array = (): Uint8Array => {
 	return new TextEncoder().encode(document);
 };
 
+export const randomPDFBuffer = async () => {
+	const {Buffer} = await import('buffer');
+	const array = randomPDFBuffer();
+	return Buffer.from(array);
+};
+
 export const randomPDFBlob = (): Blob => {
 	const data = randomPDFUint8Array();
 	return new Blob([data.buffer], {type: 'application/pdf'});
