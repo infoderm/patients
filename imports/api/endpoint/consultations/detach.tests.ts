@@ -32,8 +32,11 @@ server(__filename, () => {
 			{patientId: patientBId, datetime: new Date()},
 		);
 
-		const {_id: uploadAId} = await newUpload({userId});
-		const {_id: uploadBId} = await newUpload({userId});
+		const {_id: uploadAId} = await newUpload({userId}, {type: 'image/png'});
+		const {_id: uploadBId} = await newUpload(
+			{userId},
+			{type: 'application/pdf'},
+		);
 
 		await invoke(consultationsAttach, {userId}, [consultationAId, uploadAId]);
 		await invoke(consultationsAttach, {userId}, [consultationBId, uploadBId]);

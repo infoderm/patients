@@ -192,7 +192,7 @@ client(__filename, () => {
 		await Promise.all(
 			map(async (i: number) => {
 				const name = `img-${i}.png`;
-				return newUpload(undefined, {name});
+				return newUpload(undefined, {name, type: 'image/png'});
 			}, range(n)),
 		);
 
@@ -218,8 +218,8 @@ client(__filename, () => {
 
 		await Promise.all(
 			map(async (i: number) => {
-				const name = `img-${i}.png`;
-				return newUpload(undefined, {name});
+				const name = `file-${i}.pdf`;
+				return newUpload(undefined, {name, type: 'application/pdf'});
 			}, range(n)),
 		);
 
