@@ -18,6 +18,8 @@ import {newUpload} from '../../api/_dev/populate/uploads';
 import {newPatientFormData} from '../../api/_dev/populate/patients';
 import {newConsultationFormData} from '../../api/_dev/populate/consultations';
 
+import {Uploads} from '../../api/uploads';
+
 import call from '../../api/endpoint/call';
 import patientsInsert from '../../api/endpoint/patients/insert';
 import attachToPatient from '../../api/endpoint/patients/attach';
@@ -71,6 +73,24 @@ client(__filename, () => {
 		await newUpload(undefined, {name});
 
 		await findByRole('img', {name});
+	});
+
+	it('rerenders when an upload is deleted', async () => {
+		const username = randomUserId();
+		const password = randomPassword();
+		await createUserWithPasswordAndLogin(username, password);
+
+		const name = faker.string.uuid();
+
+		const {_id: uploadId} = await newUpload(undefined, {name});
+
+		const {findByRole, findByText} = render(<UnattachedUploads />);
+
+		await findByRole('img', {name});
+
+		Uploads.remove({_id: uploadId});
+
+		await findByText(textNoIssues);
 	});
 
 	it('rerenders when an upload is attached to a patient', async () => {
