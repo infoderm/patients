@@ -138,12 +138,12 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.27.5",
+    "@babel/eslint-parser": "7.28.0",
     "@babel/plugin-syntax-jsx": "7.27.1",
     "@babel/plugin-transform-class-properties": "7.27.1",
     "@babel/plugin-transform-class-static-block": "7.27.1",
     "@babel/plugin-transform-private-methods": "7.27.1",
-    "@babel/plugin-transform-typescript": "7.27.1",
+    "@babel/plugin-transform-typescript": "7.28.0",
     "@commitlint/cli": "19.8.1",
     "@faker-js/faker": "8.4.1",
     "@fontsource/roboto": "5.2.6",
