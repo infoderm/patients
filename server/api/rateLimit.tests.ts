@@ -329,5 +329,5 @@ server(__filename, () => {
 				assert.strictEqual(response.text, 'Too Many Requests');
 			}
 		}
-	});
+	}).timeout(2000);
 });

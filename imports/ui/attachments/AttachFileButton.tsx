@@ -153,7 +153,7 @@ const AttachFileButton = React.forwardRef(
 					await onEnd(err, fileObject, uploadFileFeedback);
 				});
 
-				upload.start();
+				void upload.start();
 			}
 		};
 

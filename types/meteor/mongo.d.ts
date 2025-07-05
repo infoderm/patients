@@ -1,5 +1,3 @@
-import {Mongo} from 'meteor/mongo';
-
 export {MongoInternals} from 'meteor/mongo';
 
 declare module 'meteor/mongo' {

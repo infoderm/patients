@@ -24,3 +24,5 @@ export const randomPNGBlob = async (): Promise<Blob> => {
 	const response = await randomPNGResponse();
 	return response.blob();
 };
+
+export const magic = [137, 80, 78, 71, 13, 10, 26, 10];
