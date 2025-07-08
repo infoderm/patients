@@ -285,6 +285,9 @@ export const Uploads = new FilesCollection<MetadataType>({
 		});
 	},
 	protected(fileObj) {
+		// NOTE: Deleted files are "protected".
+		if (fileObj === null) return false;
+
 		// Check if current user is owner of the file
 		return fileObj.userId === this.userId;
 	},
