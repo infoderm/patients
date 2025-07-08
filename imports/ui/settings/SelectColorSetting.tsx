@@ -8,7 +8,11 @@ import {type SettingKey, type UserSettings} from '../../api/settings';
 import {useSettingDebounced, withBrowserCache} from './hooks';
 import SettingResetButton from './SettingResetButton';
 
-type Props<K extends SettingKey> = UserSettings[K] extends string
+type StringSettingKey = {
+	[K in SettingKey]: UserSettings[K] extends string ? K : never;
+}[SettingKey];
+
+type Props<K extends StringSettingKey> = UserSettings[K] extends string
 	? {
 			className?: string;
 			title?: string;
@@ -17,7 +21,7 @@ type Props<K extends SettingKey> = UserSettings[K] extends string
 	  }
 	: never;
 
-const SelectColorSetting = <K extends SettingKey>({
+const SelectColorSetting = <K extends StringSettingKey>({
 	'aria-label': ariaLabel,
 	className,
 	setting,

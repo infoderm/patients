@@ -7,6 +7,8 @@ import {magic} from '../_test/png';
 import absoluteURL from '../app/absoluteURL';
 import head from '../util/stream/head';
 
+import sleep from '../util/async/sleep';
+
 import {newUpload} from './_dev/populate/uploads';
 import {type MetadataType} from './uploads';
 import createUserWithPasswordAndLogin from './user/createUserWithPasswordAndLogin';
@@ -23,6 +25,7 @@ client(__filename, () => {
 		await createUserWithPasswordAndLogin(username, password);
 		const upload = await newUpload(undefined, {type: 'image/png'});
 		await logout();
+		await sleep(1000); // NOTE: Wait for session to be GCed.
 
 		const response = await fetch(original(upload));
 

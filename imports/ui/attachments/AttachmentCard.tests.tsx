@@ -149,7 +149,7 @@ client(__filename, () => {
 
 		const attachment = await newUpload(undefined, {name: attachmentName});
 
-		Uploads.remove({_id: attachment._id});
+		await Uploads.removeAsync({_id: attachment._id});
 
 		const {findByRole, findByText} = render(
 			<AttachmentCard loading attachment={attachment} />,
@@ -167,8 +167,6 @@ client(__filename, () => {
 
 		await user.click(await findByRole('button', {name: 'Delete forever'}));
 
-		await findByText(
-			'[Trash] Error during removal: Cursor is empty, no files is removed [404]',
-		);
+		await findByText('[Trash] Error during removal: file already removed');
 	});
 });

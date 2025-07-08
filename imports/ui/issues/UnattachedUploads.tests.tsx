@@ -88,7 +88,7 @@ client(__filename, () => {
 
 		await findByRole('img', {name});
 
-		Uploads.remove({_id: uploadId});
+		await Uploads.removeAsync({_id: uploadId});
 
 		await findByText(textNoIssues);
 	});

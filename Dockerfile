@@ -13,6 +13,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   curl=7.74.0-1.3+deb11u15 \
+  gnupg=2.2.27-2+deb11u2 \
   python3=3.9.2-3 \
   make=4.3-4.1 \
   g++=4:10.2.1-1 \
@@ -64,8 +65,13 @@ ENV \
 # hadolint ignore=SC1091
 RUN . ./.env; \
   mkdir -p "${NODE_INSTALL_PATH}" && \
-  curl "https://static.meteor.com/dev-bundle-node-os/v${NODE_VERSION}/node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz" | \
-  tar -C "${NODE_INSTALL_PATH}" -xzf - "node-v${NODE_VERSION}-${NODE_ARCH}" --strip-components=1
+  curl -O "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz" && \
+  curl -O "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt.asc" && \
+  # https://github.com/nodejs/node?tab=readme-ov-file#release-keys
+  gpg --keyserver hkps://keys.openpgp.org --recv-keys 890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 && \
+  gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc && \
+  grep " node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz\$" SHASUMS256.txt | sha256sum -c - && \
+  tar -C "${NODE_INSTALL_PATH}" -xzf "node-v${NODE_VERSION}-${NODE_ARCH}.tar.gz" --strip-components=1
 
 
 # NOTE Install the app's dependencies
@@ -92,6 +98,7 @@ COPY --chown=build:build ./server server
 COPY --chown=build:build ./client client
 COPY --chown=build:build ./.meteor .meteor
 COPY --chown=build:build ./packages/typescript-babel packages/typescript-babel
+COPY --chown=build:build ./packages/ostrio:files packages/ostrio:files
 COPY --chown=build:build [ \
   "./tsconfig.json", \
   "./" \
