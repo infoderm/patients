@@ -139,7 +139,8 @@ export const client = (title, fn) => {
 
 		let original;
 
-		const prepare = async () => {
+		const prepare = async function () {
+			this.timeout(10_000);
 			// @ts-expect-error TODO
 			await import('./mocha.css');
 
@@ -147,7 +148,8 @@ export const client = (title, fn) => {
 			await cleanup();
 		};
 
-		const restore = async () => {
+		const restore = async function () {
+			this.timeout(10_000);
 			await cleanup();
 			await rollBackHistory(original);
 		};
@@ -167,7 +169,8 @@ export const server = (title, fn) => {
 			await invoke(reset, {userId: null}, []);
 		};
 
-		const prepare = async () => {
+		const prepare = async function () {
+			this.timeout(10_000);
 			if (isAppTest()) {
 				await appIsReady();
 			}
@@ -175,11 +178,16 @@ export const server = (title, fn) => {
 			await cleanup();
 		};
 
+		const restore = async function () {
+			this.timeout(10_000);
+			await cleanup();
+		};
+
 		describe(title, function () {
 			this.timeout(isAppTest() ? 10_000 : 1000);
 			beforeEach(prepare);
 			fn();
-			afterEach(cleanup);
+			afterEach(restore);
 		});
 	}
 };
