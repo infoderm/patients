@@ -1,3 +1,6 @@
 [submodule "packages/meteortesting:browser-tests"]
 	path = packages/meteortesting:browser-tests
 	url = https://github.com/contribulate/meteor-browser-tests
+[submodule "packages/ostrio:files"]
+	path = packages/ostrio:files
+	url = https://github.com/contribulate/Meteor-Files
