@@ -21,7 +21,7 @@ accounts-password@3.0.0
 meteortesting:mocha@3.1.0-beta300.0
 dynamic-import@0.7.4
 underscore@1.6.4
-ostrio:files
+ostrio:files@3.0.0-rc.4
 static-html@1.3.3
 hot-module-replacement@0.5.4
 typescript-babel@3.0.0

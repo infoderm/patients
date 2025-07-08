@@ -60,7 +60,7 @@ mongo-id@1.0.9
 npm-mongo@4.16.2
 ordered-dict@1.2.0
 ostrio:cookies@2.9.0
-ostrio:files@3.0.0-rc.3
+ostrio:files@3.0.0-rc.4
 promise@1.0.0
 random@1.2.2
 rate-limit@1.1.2
