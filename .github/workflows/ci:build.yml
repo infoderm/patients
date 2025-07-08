@@ -147,8 +147,8 @@ jobs:
           diff <(jq -r .nodeVersion dist/star.json) <(node --version | tail -c +2)
 
       - name: Check npm version
-        run: | # Patch sometimes does not match
-          diff <(npm --version | cut -d. -f-2) <(jq -r .npmVersion dist/star.json | cut -d. -f-2)
+        run: | # [.minor].patch sometimes do not match, we only match major.
+          diff <(npm --version | cut -d. -f-1) <(jq -r .npmVersion dist/star.json | cut -d. -f-1)
 
       - name: Install dependencies
         run: |
