@@ -98,7 +98,7 @@ server(__filename, () => {
 		);
 	});
 
-	it('thumbnailBlob should work', async () => {
+	it('thumbnailBlob should NOT be implemented', async () => {
 		const data = randomPDFUint8Array();
 
 		await throws(
