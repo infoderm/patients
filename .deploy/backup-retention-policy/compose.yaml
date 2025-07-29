@@ -1,5 +1,6 @@
 services:
   patient-db-backup-retention-policy:
+    restart: always
     build:
       context: .
       dockerfile: .deploy/backup-retention-policy/Dockerfile
