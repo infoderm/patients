@@ -1,5 +1,6 @@
 services:
   patient-db-backup:
+    restart: always
     build:
       context: .
       dockerfile: .deploy/backup/Dockerfile
