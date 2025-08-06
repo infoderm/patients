@@ -82,7 +82,7 @@ jobs:
           submodules: true
 
       - name: Load coverage data 💽
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.test-target }}-${{ inputs.test-type }}-coverage
           path: .coverage
