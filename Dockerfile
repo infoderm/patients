@@ -115,13 +115,14 @@ FROM gcr.io/distroless/cc-debian${DEBIAN_VERSION}:nonroot AS main
 # NOTE: Required by `node-canvas`.
 COPY --from=build /usr/lib/x86_64-linux-gnu/libuuid.so.1 /usr/lib/x86_64-linux-gnu/libuuid.so.1
 
-COPY --from=build --chown=nonroot:nonroot /home/build/node/bin/node /home/nonroot/node/bin/node
+COPY --from=build --chown=nonroot:nonroot /home/build/node /home/nonroot/node
 COPY --from=build --chown=nonroot:nonroot /home/build/dist/bundle /home/nonroot/dist
 COPY --chown=nonroot:nonroot [ \
   "./scripts/healthcheck.cjs", \
   "/home/nonroot/scripts/" \
 ]
 
+ENV NODE_PATH="/home/nonroot/node/lib/node_modules"
 ENV PATH="/home/nonroot/node/bin"
 
 ENV \
