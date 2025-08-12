@@ -1,25 +1,27 @@
 import React, {useMemo, useState} from 'react';
 
-import {styled} from '@mui/material/styles';
-
 import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
+import addMilliseconds from 'date-fns/addMilliseconds';
 import subDays from 'date-fns/subDays';
-import addHours from 'date-fns/addHours';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
-import startOfDay from 'date-fns/startOfDay';
+import getDay from 'date-fns/getDay';
 
-import {count} from '@iterable-iterator/cardinality';
+import {map} from '@iterable-iterator/map';
+import {filter} from '@iterable-iterator/filter';
+import {enumerate} from '@iterable-iterator/zip';
+import {window} from '@iterable-iterator/window';
 
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AlarmOffIcon from '@mui/icons-material/AlarmOff';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
-import {TIME_BREAK} from '../constants';
+import {intersectsInterval} from '../../api/events';
 
 import Prev from '../navigation/Prev';
 import Next from '../navigation/Next';
@@ -29,21 +31,15 @@ import ReactivePatientChip from '../patients/ReactivePatientChip';
 
 import {useDateFormat} from '../../i18n/datetime';
 
-import useConsultationsAndAppointments from './useConsultationsAndAppointments';
+import useSortedWorkSchedule from '../settings/useSortedWorkSchedule';
+import intersection from '../../util/interval/intersection';
+import {DAY_MODULO} from '../../util/datetime';
+import isEmpty from '../../util/interval/isEmpty';
+
+import NoContent from '../navigation/NoContent';
+
 import ConsultationsList from './ConsultationsList';
-
-const PREFIX = 'ConsultationsOfTheDay';
-
-const classes = {
-	container: `${PREFIX}-container`,
-};
-
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')(({theme}) => ({
-	[`& .${classes.container}`]: {
-		padding: theme.spacing(3),
-	},
-}));
+import useConsultationsAndAppointments from './useConsultationsAndAppointments';
 
 type Props = {
 	readonly day: Date;
@@ -70,9 +66,8 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		};
 	}, [day]);
 
-	const filter = {datetime: {$gte: day, $lt: nextDay}};
 	const query = {
-		filter,
+		filter: intersectsInterval(day, nextDay),
 		sort: {datetime: 1} as const,
 	};
 	const deps = [Number(day)];
@@ -81,65 +76,104 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 		deps,
 	);
 
-	const thisMorning = startOfToday();
-	const am = consultations.filter(
-		(c) =>
-			isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
-			(showConsultations || !c.isDone) &&
-			(showAppointments || c.isDone) &&
-			(showCancelledAppointments || c.isCancelled !== true) &&
-			(showNoShowAppointments ||
-				c.isDone ||
-				Boolean(c.isCancelled) ||
-				!isBefore(c.scheduledDatetime!, thisMorning)),
+	const dayModuloWeek = getDay(day) * DAY_MODULO;
+	const nextDayModuloWeek = getDay(nextDay) * DAY_MODULO;
+	const workSchedule = useSortedWorkSchedule();
+	const intersectingWorkSchedule = filter(
+		([left, right]) => !isEmpty(left, right),
+		map(({beginModuloWeek, endModuloWeek}) => {
+			return intersection(
+				beginModuloWeek,
+				endModuloWeek,
+				dayModuloWeek,
+				nextDayModuloWeek,
+			);
+		}, workSchedule),
 	);
-	const pm = consultations.filter(
-		(c) =>
-			!isBefore(c.datetime, addHours(startOfDay(c.datetime), TIME_BREAK)) &&
-			(showConsultations || !c.isDone) &&
-			(showAppointments || c.isDone) &&
-			(showCancelledAppointments || c.isCancelled !== true) &&
-			(showNoShowAppointments ||
-				c.isDone ||
-				Boolean(c.isCancelled) ||
-				!isBefore(c.scheduledDatetime!, thisMorning)),
-	);
-	const cam = count(am);
-	const cpm = count(pm);
 
-	const heading = `${localizedDateFormat(
-		day,
-		'PPPP',
-	)} (AM: ${cam}, PM: ${cpm})`;
+	const intervals: Iterable<{begin: Date; end: Date}> = filter(
+		({begin, end}) => !isEmpty(begin, end),
+		map(
+			([i, [begin, end]]) => ({begin, end, isWorkScheduleSlot: i % 2 === 1}),
+			enumerate(
+				window(
+					2,
+					map(
+						(m: number) => addMilliseconds(day, m - dayModuloWeek),
+						[
+							dayModuloWeek,
+							...Array.from(intersectingWorkSchedule).flat(),
+							nextDayModuloWeek,
+						],
+					),
+				),
+			),
+		),
+	);
+
+	const thisMorning = startOfToday();
+	const shownConsultations = consultations.filter(
+		(c) =>
+			(showConsultations || !c.isDone) &&
+			(showAppointments || c.isDone) &&
+			(showCancelledAppointments || c.isCancelled !== true) &&
+			(showNoShowAppointments ||
+				c.isDone ||
+				Boolean(c.isCancelled) ||
+				!isBefore(c.scheduledDatetime!, thisMorning)),
+	);
+
+	const heading = localizedDateFormat(day, 'PPPP');
 
 	return (
-		<Root>
-			<div>
+		<Box>
+			<Box>
 				<Typography variant="h4">{heading}</Typography>
-				{cam === 0 ? null : (
-					<ConsultationsList
-						className={classes.container}
-						items={am}
-						loading={loading}
-						itemProps={{
-							PatientChip: ReactivePatientChip,
-							showDate: false,
-						}}
-					/>
+				{consultations.length === 0 ? (
+					<NoContent>No events on this day</NoContent>
+				) : shownConsultations.length === 0 ? (
+					<NoContent>
+						None of the {consultations.length} events matches the current filter
+					</NoContent>
+				) : (
+					Array.from(intervals).map(({begin, end}, i) => {
+						const items = shownConsultations
+							.map((c) => {
+								const [left, right] = intersection(begin, end, c.begin, c.end);
+								if (isEmpty(left, right)) return undefined;
+								return {
+									...c,
+									datetime: left,
+								};
+							})
+							.filter(Boolean);
+						if (items.length === 0) return null;
+						return (
+							<Grid key={i} container sx={{padding: 3}}>
+								<Grid item sm={2} md={1}>
+									<Box sx={{paddingRight: 2, textAlign: 'right'}}>
+										<Typography variant="h5">{items.length}</Typography>
+										<Typography variant="h6">{`${localizedDateFormat(
+											begin,
+											'p',
+										)} - ${localizedDateFormat(end, 'p')}`}</Typography>
+									</Box>
+								</Grid>
+								<Grid item sm={10} md={11}>
+									<ConsultationsList
+										items={items}
+										loading={loading}
+										itemProps={{
+											PatientChip: ReactivePatientChip,
+											showDate: false,
+										}}
+									/>
+								</Grid>
+							</Grid>
+						);
+					})
 				)}
-				{cpm === 0 || cam === 0 ? null : <Divider />}
-				{cpm === 0 ? null : (
-					<ConsultationsList
-						className={classes.container}
-						items={pm}
-						loading={loading}
-						itemProps={{
-							PatientChip: ReactivePatientChip,
-							showDate: false,
-						}}
-					/>
-				)}
-			</div>
+			</Box>
 			<FixedFab
 				col={5}
 				color={showConsultations ? 'primary' : 'default'}
@@ -196,7 +230,7 @@ const ConsultationsOfTheDay = ({day}: Props) => {
 			)}
 			<Prev to={`/calendar/day/${dayBefore}`} />
 			<Next to={`/calendar/day/${dayAfter}`} />
-		</Root>
+		</Box>
 	);
 };
 

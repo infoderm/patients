@@ -1,9 +1,8 @@
-const windowEventSubscription =
-	(event: string) => (callback: EventListenerOrEventListenerObject) => {
-		window.addEventListener(event, callback);
-		return () => {
-			window.removeEventListener(event, callback);
-		};
-	};
+import eventSubscription from './eventSubscription';
+
+const windowEventSubscription = (
+	event: string,
+	options?: AddEventListenerOptions,
+) => eventSubscription(globalThis, event, options);
 
 export default windowEventSubscription;

@@ -1,18 +1,29 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState, useLayoutEffect} from 'react';
 
 import Paper from '@mui/material/Paper';
 import {grey} from '@mui/material/colors';
 
 import differenceInDays from 'date-fns/differenceInDays';
 import getMonth from 'date-fns/getMonth';
-import isBefore from 'date-fns/isBefore';
-import isAfter from 'date-fns/isAfter';
+import isEqual from 'date-fns/isEqual';
+import minDate from 'date-fns/min';
+import maxDate from 'date-fns/max';
 import dateParse from 'date-fns/parse';
 import dateFormat from 'date-fns/format';
+import addDays from 'date-fns/addDays';
+import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
+import setHours from 'date-fns/setHours';
+
+import {key} from '@total-order/key';
+import {increasing} from '@total-order/primitive';
+import {iterable} from '@total-order/iter';
 
 import {list} from '@iterable-iterator/list';
+import {map} from '@iterable-iterator/map';
 import {take} from '@iterable-iterator/slice';
 import {range} from '@iterable-iterator/range';
+import {min} from '@iterable-iterator/reduce';
 import {enumerate} from '@iterable-iterator/zip';
 import {useTheme} from '@mui/material/styles';
 
@@ -26,15 +37,26 @@ import color, {hoverColor} from '../../util/color';
 import type Event from './Event';
 import EventFragment from './EventFragment';
 
-const ColumnHeader = ({classes, cx, day, col}) => {
+const DayName = ({day}: {readonly day: Date}) => {
 	const getDayName = useDateFormat('cccc');
+	return <>{getDayName(day)}</>;
+};
+
+type ColumnHeaderProps = {
+	readonly classes: Record<string, any>;
+	readonly cx: any;
+	readonly col: number;
+	readonly children: React.ReactNode;
+};
+
+const ColumnHeader = ({classes, cx, col, children}: ColumnHeaderProps) => {
 	return (
 		<div
 			className={cx(classes.columnHeader, {
 				[classes[`col${col}`]]: true,
 			})}
 		>
-			{getDayName(day)}
+			{children}
 		</div>
 	);
 };
@@ -45,13 +67,13 @@ const DayBox = ({classes, cx, day, row, col, onSlotClick}) => {
 	const onClick = useMemo(() => {
 		return onSlotClick
 			? () => {
-					onSlotClick(day);
+					onSlotClick(day, addDays(day, 1));
 			  }
 			: undefined;
 	}, [onSlotClick, day]);
 	return (
 		<div
-			className={cx(classes.dayBox, {
+			className={cx(classes.cellBackground, classes.dayBox, {
 				[classes[`col${col}`]]: true,
 				[classes[`row${row}`]]: true,
 			})}
@@ -132,6 +154,14 @@ type EventProps = {
 	slots: number;
 };
 
+type GenerateEventPropsOptions = {
+	maxLines: number;
+	skipIdle: boolean;
+	minEventDuration?: number;
+	dayBegins?: string;
+	displayedWeekDays: Set<number>;
+};
+
 /**
  * Assumes the input events are sorted by begin datetime.
  */
@@ -139,74 +169,88 @@ function* generateEventProps(
 	occupancy: OccupancyMap,
 	begin: Date,
 	end: Date,
-	options: any,
+	{
+		maxLines,
+		skipIdle,
+		minEventDuration,
+		dayBegins,
+		displayedWeekDays,
+	}: GenerateEventPropsOptions,
 	events: Iterable<Event>,
 ): IterableIterator<EventProps> {
-	const {maxLines, skipIdle, minEventDuration, dayBegins} = options;
-
-	let previousEvent: {end: Date} | undefined;
-	let previousDay: string | undefined;
 	for (const event of events) {
-		if (
-			(event.end && isBefore(event.end, begin)) ||
-			isAfter(event.begin, end)
-		) {
-			continue;
-		}
+		for (const _day of generateDays(
+			startOfDay(maxDate([event.begin, begin])),
+			minDate([event.end, end]),
+			displayedWeekDays,
+		)) {
+			const day = dayKey(_day);
+			const state = occupancy.get(day);
 
-		const day = dayKey(event.begin);
+			if (state === undefined) continue;
+			let {usedSlots, totalEvents, shownEvents} = state;
+			const dayBegin = _day;
+			const dayEnd = endOfDay(_day);
 
-		if (day !== previousDay) {
-			previousEvent = dayBegins
-				? {
-						end: setTime(event.begin, dayBegins),
-				  }
-				: undefined;
-		}
+			const fragmentBegin = maxDate([event.begin, dayBegin, begin]);
+			const fragmentEnd = minDate([event.end, dayEnd, end]);
+			const fragmentDuration = Number(fragmentEnd) - Number(fragmentBegin);
 
-		const duration =
-			Number(event.end) - Number(event.begin) || minEventDuration;
+			const isWholeDay =
+				isEqual(fragmentBegin, dayBegin) && isEqual(fragmentEnd, dayEnd);
 
-		const slots = minEventDuration ? Math.ceil(duration / minEventDuration) : 1;
+			const startOfSchedule =
+				dayBegins === undefined ? dayBegin : setTime(_day, dayBegins);
 
-		const skip =
-			skipIdle && previousEvent
-				? minEventDuration
-					? Math.min(
-							3,
-							Math.max(
-								0,
-								Math.floor(
-									(Number(event.begin) - Number(previousEvent.end)) /
-										minEventDuration,
-								),
+			const slots = Math.min(
+				minEventDuration === undefined
+					? 1
+					: isWholeDay
+					? 2
+					: Math.max(
+							Math.round(
+								(fragmentDuration || minEventDuration) / minEventDuration,
+							),
+							1,
+					  ),
+				maxLines,
+			);
+
+			const slot =
+				1 +
+				(skipIdle && minEventDuration
+					? Math.max(
+							usedSlots,
+							Math.round(
+								(Number(fragmentBegin) - Number(startOfSchedule)) /
+									minEventDuration,
 							),
 					  )
-					: 1
-				: 0;
+					: usedSlots);
 
-		let {usedSlots, totalEvents, shownEvents} = occupancy.get(day)!;
-		const slot = usedSlots + skip + 1;
-		++totalEvents;
-		usedSlots += skip + slots;
+			++totalEvents;
+			usedSlots = slot + slots - 1;
 
-		if (usedSlots <= maxLines) {
-			++shownEvents;
-			yield {
-				event,
-				day,
-				slot,
-				slots,
-			};
+			if (usedSlots <= maxLines) {
+				++shownEvents;
+				yield {
+					event: {
+						...event,
+						begin: fragmentBegin,
+						end: fragmentEnd,
+					},
+					day,
+					slot,
+					slots,
+				};
+			}
+
+			occupancy.set(day, {
+				usedSlots,
+				totalEvents,
+				shownEvents,
+			});
 		}
-
-		occupancy.set(day, {
-			usedSlots,
-			totalEvents,
-			shownEvents,
-		});
-		previousEvent = event;
-		previousDay = day;
 	}
 }
 
@@ -246,9 +290,11 @@ type CalendarDataGridClasses = {
 type CalendarDataGridProps = {
 	readonly DayHeader: React.ElementType;
 	readonly WeekNumber?: React.ElementType;
+	readonly Hour?: React.ElementType;
 	readonly classes: CalendarDataGridClasses;
 	readonly cx: any;
 	readonly rowSize: number;
+	readonly scrollAnchor?: EventProps;
 	readonly days: DayProps[];
 	readonly events: EventProps[];
 	readonly mores: MoreProps[];
@@ -261,81 +307,133 @@ const CalendarDataGrid = ({
 	classes,
 	cx,
 	rowSize,
+	scrollAnchor,
 	days,
 	events,
 	mores,
 	DayHeader,
 	WeekNumber,
+	Hour,
 	weekOptions,
 	onSlotClick,
 }: CalendarDataGridProps) => {
 	const theme = useTheme();
+	const [main, setMain] = useState<HTMLElement | null>(null);
+	const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+
+	const eventsCount = events.length;
+	const singleRow = days.length <= rowSize;
+	useLayoutEffect(() => {
+		if (main?.scrollTop !== 0 || eventsCount === 0 || !singleRow) return;
+		// TODO: Handle scroll to first search result.
+		anchor?.scrollIntoView();
+	}, [main, anchor, singleRow, eventsCount]);
+
 	return (
-		<Paper>
+		<Paper className={classes.root}>
 			<div className={classes.header}>
 				{WeekNumber && <div className={classes.corner} />}
+				{Hour && <div className={classes.corner} />}
 				{list(take(days, rowSize)).map((props, key) => (
-					<ColumnHeader key={key} classes={classes} cx={cx} {...props} />
+					<ColumnHeader key={key} classes={classes} cx={cx} {...props}>
+						<DayName day={props.day} />
+						{singleRow && <DayHeader {...props} />}
+					</ColumnHeader>
 				))}
 			</div>
-			<div className={classes.grid}>
-				{WeekNumber &&
-					days
-						.filter((_, i) => i % rowSize === rowSize - 1)
-						.map((props, key) => (
-							<WeekNumber
+			<div ref={setMain} className={classes.main}>
+				<div className={classes.grid}>
+					{WeekNumber &&
+						days
+							.filter((_, i) => i % rowSize === rowSize - 1)
+							.map((props) => (
+								<WeekNumber
+									key={props.row}
+									className={cx(classes.weekNumber, {
+										[classes[`row${props.row}`]!]: true,
+									})}
+									weekOptions={weekOptions}
+									{...props}
+								/>
+							))}
+					{Hour &&
+						days
+							.filter((_, i) => i % rowSize === 0)
+							.map(({row}) => (
+								<div
+									key={row}
+									className={cx(classes.cellBackground, {
+										[classes.col0!]: true,
+										[classes[`row${row}`]!]: true,
+									})}
+								/>
+							))}
+					{Hour &&
+						days
+							.filter((_, i) => i % rowSize === 0)
+							.flatMap(({row, day}) =>
+								list(
+									map(
+										(hours: number) => (
+											<Hour
+												key={row * 24 + hours}
+												time={setHours(day, hours)}
+												className={cx(classes.hour, {
+													[classes[`row${row}hour${hours}`]!]: true,
+												})}
+											/>
+										),
+										range(24),
+									),
+								),
+							)}
+					{days.map((props, key) => (
+						<DayBox
+							key={key}
+							classes={classes}
+							cx={cx}
+							{...props}
+							onSlotClick={onSlotClick}
+						/>
+					))}
+					{!singleRow &&
+						days.map((props, key) => (
+							<DayHeader
 								key={key}
-								className={cx(classes.weekNumber, {
+								className={cx(classes.dayHeader, {
+									[classes[`col${props.col}`]!]: true,
 									[classes[`row${props.row}`]!]: true,
 								})}
-								weekOptions={weekOptions}
 								{...props}
 							/>
 						))}
-				{days.map((props, key) => (
-					<DayBox
-						key={key}
-						classes={classes}
-						cx={cx}
-						{...props}
-						onSlotClick={onSlotClick}
-					/>
-				))}
-				{days.map((props, key) => (
-					<DayHeader
-						key={key}
-						className={cx(classes.dayHeader, {
-							[classes[`col${props.col}`]!]: true,
-							[classes[`row${props.row}`]!]: true,
-						})}
-						{...props}
-					/>
-				))}
-				{events
-					.filter((props) => `day${props.day}slot${props.slot}` in classes)
-					.map((props, key) => (
-						<EventFragment
-							key={key}
-							theme={theme}
-							className={cx(classes.slot, {
-								[classes[`slot${props.slots}`]!]: true,
-								[classes[`day${props.day}slot${props.slot}`]!]: true,
-							})}
-							eventProps={{className: classes.event}}
-							{...props}
-						/>
-					))}
-				{mores
-					.filter((props) => `day${props.day}more` in classes)
-					.map((props, key) => (
-						<More
-							key={key}
-							className={cx(classes.more, {
-								[classes[`day${props.day}more`]!]: true,
-							})}
-							{...props}
-						/>
-					))}
+					{events
+						.filter((props) => `day${props.day}slot${props.slot}` in classes)
+						.map((props, key) => (
+							<EventFragment
+								key={key}
+								ref={props === scrollAnchor ? setAnchor : undefined}
+								theme={theme}
+								className={cx(classes.slot, {
+									[classes[`slot${props.slots}`]!]: true,
+									[classes[`day${props.day}slot${props.slot}`]!]: true,
+								})}
+								eventProps={{className: classes.event}}
+								{...props}
+							/>
+						))}
+					{mores
+						.filter((props) => `day${props.day}more` in classes)
+						.map((props, key) => (
+							<More
+								key={key}
+								className={cx(classes.more, {
+									[classes[`day${props.day}more`]!]: true,
+								})}
+								{...props}
+							/>
+						))}
+				</div>
 			</div>
 		</Paper>
 	);
@@ -347,11 +445,13 @@ type CalendarDataProps = {
 	readonly events: Event[];
 	readonly skipIdle?: boolean;
 	readonly maxLines: number;
+	readonly maxHeight?: number | string;
 	readonly minEventDuration?: number;
 	readonly dayBegins?: string;
 	readonly weekOptions?: {};
 	readonly DayHeader: React.ElementType;
 	readonly WeekNumber?: React.ElementType;
+	readonly Hour?: React.ElementType;
 	readonly lineHeight?: string;
 	readonly displayedWeekDays?: readonly WeekDay[];
 	readonly onSlotClick?: () => void;
@@ -360,11 +460,14 @@ type CalendarDataProps = {
 
 type MakeGridStylesOptions = {
 	displayWeekNumbers: boolean;
+	displayHours: boolean;
+	hourSpan?: number;
 	nrows: number;
 	headerHeight: number;
 	lineHeight: string;
 	rowSize: number;
 	maxLines: number;
+	maxHeight?: number | string;
 	eventProps: EventProps[];
 	daysProps: DayProps[];
 };
@@ -374,28 +477,40 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 		theme,
 		{
 			displayWeekNumbers,
+			displayHours,
+			hourSpan,
 			nrows,
 			headerHeight,
 			lineHeight,
 			rowSize,
 			maxLines,
+			maxHeight,
 			eventProps,
 			daysProps,
 		}: MakeGridStylesOptions,
 	) => {
 		const gridTemplateColumns = [
 			displayWeekNumbers && '25px',
+			displayHours && '90px',
 			`repeat(${rowSize}, 1fr)`,
 		]
 			.filter(Boolean)
 			.join(' ');
 
 		const gridStyles: CalendarDataGridStyles = {
+			root: {
+				display: 'flex',
+				flexFlow: 'column',
+				maxHeight,
+			},
+			main: {
+				overflowY: 'scroll',
+			},
 			header: {
 				display: 'grid',
 				gridTemplateColumns,
 				gridTemplateRows: `repeat(${headerHeight}, ${lineHeight})`,
-				lineHeight: `calc(2*${lineHeight})`,
+				lineHeight: `calc(${nrows === 1 ? 1 : 2}*${lineHeight})`,
 				backgroundColor: grey[500],
 				gridGap: '1px',
 			},
@@ -447,10 +562,20 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 					},
 				},
 			},
-			dayBox: {
+			hour:
+				hourSpan === undefined
+					? {}
+					: {
+							gridColumnEnd: 'span 1',
+							gridRowEnd: `span ${hourSpan}`,
+							textAlign: 'center',
+					  },
+			cellBackground: {
 				backgroundColor: theme.palette.background.paper,
 				gridColumnEnd: 'span 1',
 				gridRowEnd: `span ${maxLines}`,
+			},
+			dayBox: {
 				'&:hover': {
 					backgroundColor: hoverColor(
 						theme,
@@ -489,9 +614,23 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 				overflow: 'hidden',
 				fontWeight: 'bold',
 			},
+			col0: {
+				gridColumnStart: 1,
+			},
 		};
 
-		const colOffset = displayWeekNumbers ? 1 : 0;
+		const colOffset = Number(displayWeekNumbers) + Number(displayHours);
+
+		if (hourSpan !== undefined) {
+			for (const i of range(1, nrows + 1)) {
+				for (const j of range(24)) {
+					gridStyles[`row${i}hour${j}`] = {
+						gridColumnStart: 1,
+						gridRowStart: (i - 1) * maxLines + 1 + (j as number) * hourSpan,
+					};
+				}
+			}
+		}
 
 		for (const i of range(1, rowSize + 1)) {
 			gridStyles[`col${i}`] = {
@@ -510,7 +649,8 @@ const useGridStyles = makeStyles<MakeGridStylesOptions>()(
 			for (const j of range(1, maxLines)) {
 				gridStyles[`day${dayId}slot${j}`] = {
 					gridColumnStart: colOffset + col,
-					gridRowStart: (row - 1) * maxLines + 1 + (j as number),
+					gridRowStart:
+						(row - 1) * maxLines + (nrows === 1 ? 0 : 1) + (j as number),
 				};
 			}
 
@@ -542,11 +682,13 @@ const CalendarData = ({
 	end,
 	lineHeight = '25px',
 	maxLines,
+	maxHeight,
 	skipIdle = false,
 	minEventDuration,
 	dayBegins,
 	DayHeader,
 	WeekNumber,
+	Hour,
 	weekOptions,
 	displayedWeekDays = ALL_WEEK_DAYS,
 	onSlotClick,
@@ -568,6 +710,7 @@ const CalendarData = ({
 		skipIdle,
 		minEventDuration,
 		dayBegins,
+		displayedWeekDays: _displayedWeekDays,
 	};
 	const eventProps = Array.from(
 		generateEventProps(occupancy, begin, end, eventPropsOptions, events),
@@ -576,25 +719,49 @@ const CalendarData = ({
 
 	const {classes, cx} = useGridStyles({
 		displayWeekNumbers: Boolean(WeekNumber),
+		displayHours: Boolean(Hour),
+		hourSpan:
+			minEventDuration === undefined
+				? undefined
+				: (60 * 60 * 1000) / minEventDuration,
 		nrows: days / 7,
 		lineHeight,
 		headerHeight: 2,
 		rowSize,
 		maxLines,
+		maxHeight,
 		eventProps,
 		daysProps,
 	});
+
+	const eventsCount = eventProps.length;
+	const scrollAnchor = useMemo(() => {
+		const now = new Date();
+		const endOfToday = endOfDay(now);
+		return min(
+			key(
+				iterable(increasing),
+				function* ({event: {begin, end}, slot}: EventProps) {
+					yield end >= now && begin <= endOfToday ? 0 : 1;
+					yield slot;
+				},
+			),
+			eventProps,
+		);
+	}, [eventsCount, daysProps[0]!.day.getTime()]);
 
 	return (
 		<CalendarDataGrid
 			classes={classes}
 			cx={cx}
 			rowSize={rowSize}
+			scrollAnchor={scrollAnchor}
 			days={daysProps}
 			events={eventProps}
 			mores={moreProps}
 			DayHeader={DayHeader}
 			WeekNumber={WeekNumber}
+			Hour={Hour}
 			weekOptions={weekOptions}
 			onSlotClick={onSlotClick}
 			onEventClick={onEventClick}

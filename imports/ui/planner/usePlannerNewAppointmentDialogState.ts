@@ -1,24 +1,18 @@
 import {useCallback, useState} from 'react';
 
-import {useSettingCached} from '../settings/hooks';
-
 const usePlannerNewAppointmentDialogState = () => {
-	const [initialDatetime, setInitialDatetime] = useState(new Date());
-	const [noInitialTime, setNoInitialTime] = useState(true);
+	const [initialBegin, setInitialBegin] = useState(new Date());
+	const [initialEnd, setInitialEnd] = useState(initialBegin);
 	const [open, setOpen] = useState(false);
-	const {value: agendaSlotClickSetsInitialTime} = useSettingCached(
-		'agenda-slot-click-sets-initial-time',
-	);
-	const alwaysNoInitialTime = agendaSlotClickSetsInitialTime === 'off';
 
 	const openOn = useCallback(
-		(date: Date, noInitialTime = true) => {
-			console.debug({date, noInitialTime});
-			setInitialDatetime(date);
-			setNoInitialTime(alwaysNoInitialTime || noInitialTime);
+		(begin: Date, end: Date) => {
+			console.debug({begin, end});
+			setInitialBegin(begin);
+			setInitialEnd(end);
 			setOpen(true);
 		},
-		[setInitialDatetime, setNoInitialTime, setOpen, alwaysNoInitialTime],
+		[setInitialBegin, setInitialEnd, setOpen],
 	);
 
 	const onClose = useCallback(() => {
@@ -28,8 +22,8 @@ const usePlannerNewAppointmentDialogState = () => {
 	return {
 		open,
 		onClose,
-		initialDatetime,
-		noInitialTime,
+		initialBegin,
+		initialEnd,
 		openOn,
 	};
 };

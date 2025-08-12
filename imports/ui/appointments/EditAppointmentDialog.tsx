@@ -63,7 +63,8 @@ const EditAppointmentDialog = ({open, onClose, appointment}: Props) => {
 		<AppointmentFromPatientIdDialog
 			patientId={appointment.patientId}
 			open={open}
-			initialDatetime={appointment.datetime}
+			initialBegin={appointment.begin}
+			initialEnd={appointment.end}
 			initialAppointment={appointment}
 			pending={pending}
 			onClose={onClose}
