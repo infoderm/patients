@@ -183,7 +183,7 @@
     "supertest": "7.1.0",
     "total-order": "4.0.1",
     "typescript": "~4.9.5",
-    "xo": "0.54.2"
+    "xo": "1.2.2"
   },
   "babel": {
     "assumptions": {
