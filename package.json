@@ -92,7 +92,7 @@
     "colord": "^2.9.3",
     "core-js": "^3.32.2",
     "date-fns": "^2.30.0",
-    "debounce": "^1.2.1",
+    "debounce": "^2.0.0",
     "downshift": "^7.2.1",
     "email-addresses": "^5.0.0",
     "emittery": "^1.0.0",
