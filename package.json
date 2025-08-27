@@ -135,7 +135,7 @@
     "tss-react": "^4.9.1",
     "use-debounce": "^10.0.4",
     "xml-js": "^1.6.11",
-    "zod": "^3.22.4"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.28.0",
