@@ -5,19 +5,25 @@ import createPromise from './createPromise';
 type Resolve = (value?: any) => void;
 type Reject = (reason?: any) => void;
 
-type Callback<A extends any[]> = (...args: A) => void;
+type Callback<A extends any[], R> = (...args: A) => Promise<R> | R;
 
-const _pending = new Set<Deferred>();
+const _pending = new Set<Deferred<unknown>>();
 
-export class Deferred {
+export class Deferred<R = unknown> {
 	#timeout: Timeout;
+	#promise: Promise<R | void>;
 	#resolve: Resolve;
 	#reject: Reject;
 
-	constructor(timeout: Timeout, resolve: Resolve, reject: Reject) {
+	constructor(timeout: Timeout, promise: Promise<R | void>, resolve: Resolve, reject: Reject) {
 		this.#timeout = timeout;
+		this.#promise = promise;
 		this.#resolve = resolve;
 		this.#reject = reject;
+	}
+
+	resolution() {
+		return this.#promise;
 	}
 
 	cancel() {
@@ -35,17 +41,17 @@ export class Deferred {
 	}
 }
 
-export const defer = <A extends any[]>(
-	callback: Callback<A>,
+export const defer = <A extends any[], R>(
+	callback: Callback<A, R>,
 	timeout?: number,
 	...args: A
-): Deferred => {
+): Deferred<R> => {
 	const {promise, resolve, reject} = createPromise();
-	promise
+	const resolution = promise
 		.then(
-			() => {
+			async () => {
 				_pending.delete(deferred);
-				callback(...args);
+				return callback(...args);
 			},
 
 			() => {
@@ -55,7 +61,12 @@ export const defer = <A extends any[]>(
 		.catch((error: unknown) => {
 			console.error({error});
 		});
-	const deferred = new Deferred(setTimeout(resolve, timeout), resolve, reject);
+	const deferred = new Deferred(
+		setTimeout(resolve, timeout),
+		resolution,
+		resolve,
+		reject
+	);
 	_pending.add(deferred);
 	return deferred;
 };

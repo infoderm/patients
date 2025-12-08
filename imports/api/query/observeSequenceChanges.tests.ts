@@ -1,6 +1,9 @@
 import {assert} from 'chai';
 
 import {server, waitFor, withMockCollection} from '../../_test/fixtures';
+import sleep from '../../util/async/sleep';
+
+import define from '../collection/define';
 
 import {
 	type Call,
@@ -47,7 +50,7 @@ server(__filename, () => {
 				expected.push(['changed', doc1, {satellite: 'X'}]);
 				await assertExpected();
 			} finally {
-				await handle.emit('stop', undefined);
+				await handle.stop();
 			}
 		}),
 	);
@@ -102,8 +105,51 @@ server(__filename, () => {
 				);
 				await assertExpected();
 			} finally {
-				await handle.emit('stop', undefined);
+				await handle.stop();
 			}
 		}),
 	);
+
+	it.only('works', async () => {
+		const documents = define<MockedDocument>('_mocks')
+		const observer = makeMockedObserver<MockedDocument>();
+
+		const doc1 = await documents.insertAsync({satellite: 'x'});
+
+		const {drain, stop} = await observeSequenceChanges(
+			documents,
+			{},
+			{},
+			observer
+		);
+
+		assert.deepEqual(
+			observer.calls.all(),
+			[
+				['addedBefore', doc1, null, {satellite: 'x'}],
+			]
+		);
+
+		const doc2 = await documents.insertAsync({satellite: 'y'});
+
+		assert.deepEqual(
+			observer.calls.all(),
+			[
+				['addedBefore', doc1, null, {satellite: 'x'}],
+			]
+		);
+
+		await sleep(1000);
+		await drain();
+
+		assert.deepEqual(
+			observer.calls.all(),
+			[
+				['addedBefore', doc1, null, {satellite: 'x'}],
+				['addedBefore', doc2, null, {satellite: 'y'}],
+			]
+		)
+
+		await stop();
+	});
 });
