@@ -5,15 +5,12 @@ description: >
 inputs:
 
   file:
-    type: string
     default: "Dockerfile"
 
   context:
-    type: string
     default: "."
 
   package:
-    type: string
     required: true
 
 outputs:
