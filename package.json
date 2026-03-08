@@ -146,7 +146,7 @@
     "@babel/plugin-transform-typescript": "7.28.0",
     "@commitlint/cli": "19.8.1",
     "@faker-js/faker": "8.4.1",
-    "@fontsource/roboto": "5.2.6",
+    "@fontsource/roboto": "5.2.10",
     "@iterable-iterator/repeat": "1.0.1",
     "@testing-library/dom": "10.4.1",
     "@testing-library/react": "14.3.1",
