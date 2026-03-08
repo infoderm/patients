@@ -1,4 +1,4 @@
-FROM alpine:3.21.3
+FROM alpine:3.23.3
 
 RUN apk add --no-cache \
   dcron=4.6-r0 \
