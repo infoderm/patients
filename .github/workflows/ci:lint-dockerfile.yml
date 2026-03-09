@@ -44,7 +44,7 @@ jobs:
 
       - name: Lint Dockerfile 👕
         id: lint
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: ${{ matrix.dockerfile }}.patched
 
