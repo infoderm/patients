@@ -106,7 +106,7 @@
     "ical-generator": "^4.1.0",
     "iconv-lite": "^0.6.3",
     "idb": "^6.1.5",
-    "jspdf": "^3.0.0",
+    "jspdf": "^3.0.2",
     "lodash.deburr": "^4.1.0",
     "lodash.omit": "^4.5.0",
     "lru-cache": "^10.0.1",
