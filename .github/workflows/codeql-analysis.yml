@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           # Fetch immediate parents so that we can checkout
           # the head if this is a PR.
