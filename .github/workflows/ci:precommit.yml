@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           # TODO Fetch sparingly with something similar to
           # https://github.com/rmacklin/fetch-through-merge-base/blob/main/action.yml
