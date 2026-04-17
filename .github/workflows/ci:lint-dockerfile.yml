@@ -49,7 +49,7 @@ jobs:
           dockerfile: ${{ matrix.dockerfile }}.patched
 
       - name: Clean up previous annotations  🧹
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         if: github.event_name == 'pull_request'
         env:
           DOCKERFILE: ${{ matrix.dockerfile }}
@@ -85,7 +85,7 @@ jobs:
             }
 
       - name: Annotate PR 📣
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         if: github.event_name == 'pull_request' && steps.lint.outcome != 'success'
         env:
           DOCKERFILE: ${{ matrix.dockerfile }}
