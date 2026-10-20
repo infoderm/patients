@@ -1,4 +1,4 @@
-ARG DEBIAN_VERSION=11
+ARG DEBIAN_VERSION=12
 ARG PORT=3000
 
 
@@ -12,12 +12,12 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # NOTE Install build tools
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  curl=7.74.0-1.3+deb11u16 \
-  python3=3.9.2-3 \
+  curl=7.88.1-10+deb12u15 \
+  python3=3.11.2-1+b1 \
   make=4.3-4.1 \
-  g++=4:10.2.1-1 \
-  bzip2=1.0.8-4 \
-  ca-certificates=20210119 \
+  g++=4:12.2.0-3 \
+  bzip2=1.0.8-5+b1 \
+  ca-certificates=20230311+deb12u1 \
   && rm -rf /var/lib/apt/lists/*
 
 
