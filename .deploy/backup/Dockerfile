@@ -1,10 +1,10 @@
-FROM alpine:3.21.3
+FROM alpine:3.24.2
 
 RUN apk add --no-cache \
   dcron=4.6-r0 \
-  bash=5.2.37-r0 \
-  mongodb-tools=100.9.4-r10 \
-  age=1.2.1-r5
+  bash=5.3.9-r1 \
+  mongodb-tools=100.14.1-r5 \
+  age=1.3.2-r1
 
 COPY .deploy/backup/entrypoint.sh /entrypoint.sh
 COPY .deploy/backup/healthcheck.sh /healthcheck.sh
