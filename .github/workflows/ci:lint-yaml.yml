@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install 💾
         id: install
