@@ -111,7 +111,7 @@
     "lodash.omit": "^4.5.0",
     "lru-cache": "^10.0.1",
     "medidoc": "1.2.0",
-    "mem": "^8.1.1",
+    "mem": "^10.0.0",
     "meteor-node-stubs": "^1.2.5",
     "node-fetch": "^3.3.2",
     "notistack": "^3.0.1",
