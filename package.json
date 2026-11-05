@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@async-iterable-iterator/async-iterable-to-array": "0.0.1",
-    "@babel/runtime": "^7.22.15",
+    "@babel/runtime": "^8.0.0",
     "@combinatorics/n-combinations": "^1.0.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -138,12 +138,12 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.29.9",
-    "@babel/plugin-syntax-jsx": "7.29.7",
-    "@babel/plugin-transform-class-properties": "7.29.7",
-    "@babel/plugin-transform-class-static-block": "7.29.7",
-    "@babel/plugin-transform-private-methods": "7.29.7",
-    "@babel/plugin-transform-typescript": "7.29.9",
+    "@babel/eslint-parser": "8.0.7",
+    "@babel/plugin-syntax-jsx": "8.0.1",
+    "@babel/plugin-transform-class-properties": "8.0.1",
+    "@babel/plugin-transform-class-static-block": "8.0.5",
+    "@babel/plugin-transform-private-methods": "8.0.1",
+    "@babel/plugin-transform-typescript": "8.0.6",
     "@commitlint/cli": "21.2.4",
     "@faker-js/faker": "8.4.1",
     "@fontsource/roboto": "5.3.0",
