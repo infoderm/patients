@@ -138,10 +138,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.29.9",
+    "@babel/eslint-parser": "7.29.13",
     "@babel/plugin-syntax-jsx": "7.29.7",
     "@babel/plugin-transform-class-properties": "7.29.7",
-    "@babel/plugin-transform-class-static-block": "7.29.7",
+    "@babel/plugin-transform-class-static-block": "7.29.14",
     "@babel/plugin-transform-private-methods": "7.29.7",
     "@babel/plugin-transform-typescript": "7.29.9",
     "@commitlint/cli": "21.2.4",
