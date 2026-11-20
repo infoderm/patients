@@ -93,7 +93,7 @@
     "core-js": "^3.32.2",
     "date-fns": "^2.30.0",
     "debounce": "^1.2.1",
-    "downshift": "^7.2.1",
+    "downshift": "^9.0.0",
     "email-addresses": "^5.0.0",
     "emittery": "^1.0.0",
     "escape-string-regexp": "^5.0.0",
